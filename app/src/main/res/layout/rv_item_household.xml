@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.home_activity.all_household.AllHouseholdFragment">
+
+    <data>
+
+        <variable
+            name="household"
+            type="org.piramalswasthya.sakhi.model.HouseHoldBasicDomain" />
+
+        <variable
+            name="clickListener"
+            type="org.piramalswasthya.sakhi.adapters.HouseHoldListAdapter.HouseholdClickListener" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_normal"
+        android:elevation="@dimen/padding_normal"
+        app:cardCornerRadius="@dimen/padding_normal"
+        android:onClick="@{()->clickListener.onClicked(household)}"
+        app:cardElevation="@dimen/padding_normal">
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:padding="@dimen/padding_normal"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:textColor="?attr/colorSecondary"
+                android:padding="@dimen/padding_normal"
+                tools:text="HHID : "
+                android:text="@{@string/rv_item_hh_entry_1(household.hhId)}"/>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:textColor="?attr/colorSecondary"
+                android:padding="@dimen/padding_normal"
+                tools:text="HHID : "
+                android:text="@{@string/rv_item_hh_entry_2(household.headName)}"/>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:textColor="?attr/colorSecondary"
+                android:padding="@dimen/padding_normal"
+                tools:text="HHID : "
+                android:text="@{@string/rv_item_hh_entry_3(household.headSurname)}"/>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+</layout>

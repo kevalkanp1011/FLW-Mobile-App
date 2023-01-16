@@ -1,0 +1,78 @@
+<resources>
+    <string name="app_name">Sakhi</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="tv_text_welcome">Welcome</string>
+    <string name="tv_text_welcome_user">Welcome %s</string>
+    <string name="tv_text_sign_in">Log in to continue</string>
+    <string name="tv_text_select_language">Please Select Your language</string>
+
+    <string name="text_english" translatable="false">English</string>
+    <string name="text_hindi" translatable="false">हिंदी</string>
+    <string name="text_assamese" translatable="false">অসমীয়া</string>
+    <string name="cd_assam_nhm_logo">ASSAM NHM_LOGO</string>
+    <string name="til_username_hint_text">Username</string>
+    <string name="til_password_hint_text">Password</string>
+    <string name="cb_login_remember_me_text">Remember me</string>
+    <string name="btn_login_forgot_password_text">Forgot Password?</string>
+    <string name="btn_login_text">Login</string>
+    <string name="btn_continue_text">Continue</string>
+    <string name="data_intent_login_2_home_new">NEW</string>
+
+    <string name="service_type_dd_state_text">State</string>
+    <string name="service_type_dd_district_text">District</string>
+    <string name="service_type_dd_block_text">Block</string>
+    <string name="service_type_dd_village_text">Village</string>
+    <string name="til_hint_selected_village">Selected Village</string>
+    <string name="home_icon_title_all_ben">All Beneficiaries</string>
+    <string name="home_icon_title_elig_coup">Eligible Couples</string>
+    <string name="home_icon_title_child_care">Child Care</string>
+    <string name="home_icon_title_mother_care">Mother Care</string>
+    <string name="home_icon_title_death_rep">Death Reports</string>
+    <string name="home_icon_title_gen_op">General OP Care</string>
+    <string name="home_icon_title_hrp_cases">HRP Cases</string>
+    <string name="home_icon_title_imm_due">Immunization Due</string>
+    <string name="home_icon_title_menopause_stage_list">Menopause Stage List</string>
+    <string name="home_icon_title_ncd">NCD</string>
+    <string name="home_icon_title_village_lvl_forms">Village Level Forms</string>
+    <string name="frag_service_type_title">Select Village</string>
+    <string name="frag_nhhr_title">New Household Registration</string>
+    <string name="home_icon_all_household">All Household List</string>
+    <string name="btn_text_frag_home_nhhr">New Household Registration</string>
+    <string name="cd_icon_grid_icon">icon</string>
+    <string name="PREF_NAME">Sakhi-pref-1</string>
+    <string name="PREF_API_KEY">JWT-Token</string>
+    <string name="tv_required_text_asterisk">*</string>
+
+
+    <string name="rv_item_hh_entry_1">HHID \t\t\t\t\t\t\t\t\t\t\t\t: %1$d</string>
+    <string name="rv_item_hh_entry_2">Family Head Name \t: %1$s</string>
+    <string name="rv_item_hh_entry_3">Surname \t\t\t\t\t\t\t\t\t: %1$s</string>
+    <string name="nhhr_first_name_hof">First Name of Head of the family</string>
+    <string name="nhhr_last_name_hof">Last Name / Surname of head of the family</string>
+    <string name="nhhr_mob_no_hof">Mobile No of Head of Family</string>
+    <string name="nhhr_house_no">House No.</string>
+    <string name="nhhr_ward_no">Ward No.</string>
+    <string name="nhhr_ward_name">Ward Name</string>
+    <string name="nhhr_mohalla_name">Mohalla Name</string>
+    <string name="nhhr_poverty_line">Poverty Line</string>
+
+
+    <string-array name="temp_array">
+        <item>Item 1</item>
+        <item>Item 2</item>
+        <item>Item 3</item>
+        <item>Item 4</item>
+        <item>Item 5</item>
+        <item>Item 6</item>
+    </string-array>
+</resources>
