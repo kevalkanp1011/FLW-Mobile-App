@@ -65,6 +65,16 @@
     <string name="nhhr_ward_name">Ward Name</string>
     <string name="nhhr_mohalla_name">Mohalla Name</string>
     <string name="nhhr_poverty_line">Poverty Line</string>
+    <string name="btn_frag_nhhr_prev">previous</string>
+    <string name="btn_frag_nhhr_next">next</string>
+    <string name="nhhr_type_residential_area">Type of residential area</string>
+    <string name="nhhr_type_of_house">Type of house</string>
+    <string name="nhhr_house_own">House ownership</string>
+    <string name="nhhr_separate_kitchen">Separate Kitchen</string>
+    <string name="nhhr_fuel_cooking">Type of fuel used for Cooking</string>
+    <string name="nhhr_primary_water">Primary Source of Water</string>
+    <string name="nhhr_avail_electricity">Availability of Electricity</string>
+    <string name="nhhr_avail_toilet">Availability of Toilet</string>
 
 
     <string-array name="temp_array">

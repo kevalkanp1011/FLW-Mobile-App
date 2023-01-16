@@ -5,7 +5,8 @@ data class FormInput(
     val title : String,
     val list : List<String>? = null,
     val required : Boolean,
-    var value : String? = null
+    var value : String? = null,
+    val regex : String? = null
 ){
     enum class InputType{
         EDIT_TEXT,

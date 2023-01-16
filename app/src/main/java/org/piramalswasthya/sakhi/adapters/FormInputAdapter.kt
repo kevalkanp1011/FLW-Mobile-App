@@ -35,6 +35,7 @@ class FormInputAdapter : ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBac
             binding.required = item.required
             binding.et.afterTextChanged {
                 item.value = it
+                Timber.d("Item ET : $item")
             }
             binding.executePendingBindings()
         }
@@ -51,6 +52,10 @@ class FormInputAdapter : ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBac
             binding.field = item.title
             binding.required = item.required
             binding.listItems = item.list
+            binding.actvRvDropdown.setOnItemClickListener { _, _, position, _ ->
+                item.value = item.list!![position]
+                Timber.d("Item DD : $item")
+            }
             binding.executePendingBindings()
 
         }
@@ -74,4 +79,16 @@ class FormInputAdapter : ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBac
 
     override fun getItemViewType(position: Int) =
         getItem(position).inputType.ordinal
+
+
+
+    fun validateInput(): Boolean {
+        currentList.forEach {
+            if(it.regex!=null){
+                Timber.d("Regex not null")
+                return false
+            }
+        }
+        return true
+    }
 }
