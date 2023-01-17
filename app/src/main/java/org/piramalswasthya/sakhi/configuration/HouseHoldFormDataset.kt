@@ -1,10 +1,11 @@
 package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
+import android.text.InputType
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.model.FormInput
 
-object HouseHoldFormDataset {
+class HouseHoldFormDataset {
 
     private lateinit var firstPage: MutableList<FormInput>
 
@@ -27,7 +28,9 @@ object HouseHoldFormDataset {
             FormInput(
                 inputType = FormInput.InputType.EDIT_TEXT,
                 title = context.getString(R.string.nhhr_mob_no_hof),
-                required = true
+                required = true,
+                etLength = 10,
+                etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
             ),
             FormInput(
                 inputType = FormInput.InputType.EDIT_TEXT,

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.home_activity.all_household.new_household_registration.NewHouseholdFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".ui.home_activity.all_household.new_household_registration.NewHouseholdFragment">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tl_nhhr"
@@ -19,29 +19,48 @@
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-    <RelativeLayout
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_to_ben"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/margin_normal"
+        android:text="@string/btn_frag_nhhr_to_ben"
+        android:textColor="?attr/colorSecondary"
+        android:visibility="gone"
+        />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/padding_normal">
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:padding="@dimen/padding_normal"
+        >
 
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_prev"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?attr/colorSecondary"
+            android:layout_margin="@dimen/margin_normal"
+
             android:text="@string/btn_frag_nhhr_prev"
-            android:layout_alignParentStart="true"/>
+            android:textColor="?attr/colorSecondary"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?attr/colorSecondary"
+            android:layout_margin="@dimen/margin_normal"
             android:text="@string/btn_frag_nhhr_next"
-            android:layout_alignParentEnd="true"
-            tools:ignore="RelativeOverlap" />
-    </RelativeLayout>
+            android:textColor="?attr/colorSecondary" />
+    </LinearLayout>
 
 
 </LinearLayout>

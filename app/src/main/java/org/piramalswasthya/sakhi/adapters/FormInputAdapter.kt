@@ -1,12 +1,12 @@
 package org.piramalswasthya.sakhi.adapters
 
-import android.text.Editable
+import android.text.InputFilter
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import org.piramalswasthya.sakhi.configuration.FormEditTextDefaultInputFilter
 import org.piramalswasthya.sakhi.databinding.RvItemDropdownBinding
 import org.piramalswasthya.sakhi.databinding.RvItemEditTextBinding
 import org.piramalswasthya.sakhi.model.FormInput
@@ -36,7 +36,20 @@ class FormInputAdapter : ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBac
             binding.et.afterTextChanged {
                 item.value = it
                 Timber.d("Item ET : $item")
+                if(item.errorText!=null && !it.isNullOrBlank()) {
+                    item.errorText = null
+                    binding.tilEditText.error = null
+                }
+
             }
+            item.errorText?.let { binding.tilEditText.error = it }
+            val etFilters = mutableListOf<InputFilter>(InputFilter.LengthFilter(item.etLength))
+            item.etInputType?.let{binding.et.inputType = it}
+            if(item.etInputType==null && item.useFormEditTextDefaultInputFilter) {
+                etFilters.add(FormEditTextDefaultInputFilter)
+            }
+
+            binding.et.filters = etFilters.toTypedArray()
             binding.executePendingBindings()
         }
     }
@@ -55,7 +68,11 @@ class FormInputAdapter : ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBac
             binding.actvRvDropdown.setOnItemClickListener { _, _, position, _ ->
                 item.value = item.list!![position]
                 Timber.d("Item DD : $item")
+                item.errorText = null
+                binding.tilRvDropdown.error = null
             }
+
+            item.errorText?.let { binding.tilRvDropdown.error = it }
             binding.executePendingBindings()
 
         }
@@ -83,12 +100,21 @@ class FormInputAdapter : ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBac
 
 
     fun validateInput(): Boolean {
+        var retVal = true
         currentList.forEach {
-            if(it.regex!=null){
-                Timber.d("Regex not null")
-                return false
+            if(it.required){
+                if(it.value.isNullOrBlank()){
+                    Timber.d("validateInput called for item $it, with index ${currentList.indexOf(it)}")
+                    it.errorText = "Required field cannot be empty !"
+                    notifyItemChanged(currentList.indexOf(it))
+                    retVal= false
+                }
             }
+/*            if(it.regex!=null){
+                Timber.d("Regex not null")
+                retVal= false
+            }*/
         }
-        return true
+        return retVal
     }
 }

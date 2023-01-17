@@ -120,8 +120,7 @@ data class UserNetwork(
     var contactNo: String? = null,
     var userType: String? = null,
     var loggedIn : Boolean = false
-)
-{
+) {
     fun asCacheModel() : UserCache{
         return UserCache(
             userId = userId,
