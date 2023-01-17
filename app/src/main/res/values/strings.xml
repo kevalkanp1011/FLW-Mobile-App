@@ -75,6 +75,10 @@
     <string name="nhhr_primary_water">Primary Source of Water</string>
     <string name="nhhr_avail_electricity">Availability of Electricity</string>
     <string name="nhhr_avail_toilet">Availability of Toilet</string>
+    <string name="btn_frag_nhhr_to_ben">Continue to Beneficiary</string>
+    <string name="notification_sync_channel_name">Sync Data</string>
+    <string name="notification_sync_channel_description">Upload beneficiaries to Server</string>
+    <string name="notification_sync_channel_id">sakhi-sync0</string>
 
 
     <string-array name="temp_array">

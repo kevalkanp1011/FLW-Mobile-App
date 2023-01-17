@@ -5,15 +5,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.adapters.NewHouseholdPagerAdapter
 import org.piramalswasthya.sakhi.configuration.HouseHoldFormDataset
 import org.piramalswasthya.sakhi.databinding.FragmentNewHouseholdFormObjectBinding
 import timber.log.Timber
 
+@AndroidEntryPoint
 class NewHouseholdFormObjectFragment : Fragment() {
 
     private lateinit var binding : FragmentNewHouseholdFormObjectBinding
+
+    private val viewModel : NewHouseholdViewModel by viewModels({requireParentFragment()})
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,28 +35,30 @@ class NewHouseholdFormObjectFragment : Fragment() {
             1 -> binding.nhhrForm.rvInputForm.apply {
                 val adapter = FormInputAdapter()
                 this.adapter = adapter
-                adapter.submitList(HouseHoldFormDataset.getFirstPage(context))
+                adapter.submitList(viewModel.getFirstPage())
             }
             2 -> binding.nhhrForm.rvInputForm.apply {
                 val adapter = FormInputAdapter()
                 this.adapter = adapter
-                adapter.submitList(HouseHoldFormDataset.getSecondPage(context))
+                adapter.submitList(viewModel.getSecondPage())
             }
-            3 -> binding.nhhrForm.rvInputForm.apply {
-                val adapter = FormInputAdapter()
-                this.adapter = adapter
-                adapter.submitList(HouseHoldFormDataset.getThirdPage(context))
+            3 -> {
+                binding.nhhrForm.rvInputForm.apply {
+                    val adapter = FormInputAdapter()
+                    this.adapter = adapter
+                    adapter.submitList(viewModel.getThirdPage())
+                }
             }
         }
 
     }
 
     fun validate(): Boolean {
-        Timber.d("binding $binding rv ${binding.nhhrForm.rvInputForm} adapter ${binding.nhhrForm.rvInputForm.adapter}")
-        return false
+//        Timber.d("binding $binding rv ${binding.nhhrForm.rvInputForm} adapter ${binding.nhhrForm.rvInputForm.adapter}")
+//        return false
 
-//        return (binding.nhhrForm.rvInputForm.adapter?.let{
-//            (it as FormInputAdapter).validateInput()
-//        }?:false)
+        return (binding.nhhrForm.rvInputForm.adapter?.let{
+            (it as FormInputAdapter).validateInput()
+        }?:false)
     }
 }

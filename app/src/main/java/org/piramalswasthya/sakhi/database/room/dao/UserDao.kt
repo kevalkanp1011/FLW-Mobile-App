@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.database.room
+package org.piramalswasthya.sakhi.database.room.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
