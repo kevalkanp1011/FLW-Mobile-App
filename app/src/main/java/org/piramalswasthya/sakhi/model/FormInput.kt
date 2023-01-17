@@ -10,7 +10,9 @@ data class FormInput(
     val useFormEditTextDefaultInputFilter : Boolean = true,
     val etInputType : Int? = null,
     val etLength : Int = 30,
-    var errorText : String? = null
+    var errorText : String? = null,
+    val hiddenFieldTrigger : String? = null,
+    val hiddenField : FormInput? = null
 ){
     enum class InputType{
         EDIT_TEXT,

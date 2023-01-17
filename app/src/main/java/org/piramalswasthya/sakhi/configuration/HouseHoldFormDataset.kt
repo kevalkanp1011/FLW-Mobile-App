@@ -77,7 +77,13 @@ class HouseHoldFormDataset {
                     "Tribal",
                     "Other"
                 ),
-                required = false
+                required = false,
+                hiddenFieldTrigger = "Other",
+                hiddenField = FormInput(
+                    inputType =  FormInput.InputType.EDIT_TEXT,
+                    title = "Other type of residential area",
+                    required = false
+                )
             ),
             FormInput(
                 inputType = FormInput.InputType.DROPDOWN,
@@ -126,7 +132,13 @@ class HouseHoldFormDataset {
                     "LPG",
                     "Other"
                 ),
-                required = true
+                required = true,
+                hiddenFieldTrigger = "Other",
+                hiddenField = FormInput(
+                    inputType =  FormInput.InputType.EDIT_TEXT,
+                    title = "Other Type of fuel used for Cooking",
+                    required = true
+                )
             ),
             FormInput(
                 inputType = FormInput.InputType.DROPDOWN,
@@ -141,7 +153,14 @@ class HouseHoldFormDataset {
                     "Pond",
                     "Other"
                 ),
-                required = true
+                required = true,
+                hiddenFieldTrigger = "Other",
+                hiddenField = FormInput(
+                    inputType =  FormInput.InputType.EDIT_TEXT,
+                    title = "Other Primary Source of Water",
+                    required = true
+                )
+
             ),
             FormInput(
                 inputType = FormInput.InputType.DROPDOWN,
@@ -153,7 +172,14 @@ class HouseHoldFormDataset {
                     "Kerosene Lamp",
                     "Other",
                 ),
-                required = true
+                required = true,
+                hiddenFieldTrigger = "Other",
+                hiddenField = FormInput(
+                    inputType =  FormInput.InputType.EDIT_TEXT,
+                    title = "Other availability of Electricity",
+                    required = true
+                )
+
             ),
             FormInput(
                 inputType = FormInput.InputType.DROPDOWN,
@@ -166,7 +192,14 @@ class HouseHoldFormDataset {
                     "Other",
                     "None"
                 ),
-                required = true
+                required = true,
+                hiddenFieldTrigger = "Other",
+                hiddenField = FormInput(
+                    inputType =  FormInput.InputType.EDIT_TEXT,
+                    title = "Other Availability of Toilet",
+                    required = true
+                )
+
             )
         )
         return thirdPage
