@@ -17,7 +17,9 @@ data class FormInput(
     enum class InputType{
         EDIT_TEXT,
         DROPDOWN,
-//        RADIO,
-//        DATE_PICKER
+        RADIO,
+        DATE_PICKER,
+        TEXT_VIEW,
+        IMAGE_VIEW
     }
 }

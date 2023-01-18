@@ -1,16 +1,16 @@
 package org.piramalswasthya.sakhi.database.room.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import org.piramalswasthya.sakhi.model.UserCache
 
 @Dao
 interface UserDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsert(user : UserCache)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(user : UserCache)
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun update(user : UserCache)
 
     @Query("UPDATE USER SET logged_in = 0")
     suspend fun resetAllUsersLoggedInState()

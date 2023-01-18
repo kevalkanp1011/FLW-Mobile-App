@@ -75,14 +75,174 @@ class FormInputAdapter : ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBac
             binding.required = item.required
             binding.listItems = item.list
             binding.actvRvDropdown.setOnItemClickListener { _, _, index, _ ->
-                if(item.list!![index]==item.value)
+                if (item.list!![index] == item.value)
                     return@setOnItemClickListener
                 item.hiddenFieldTrigger?.let {
                     if (it == item.value && it != item.list[index]) {
                         hidden(item.hiddenField, false)
                     }
                 }
-                item.value = item.list!![index]
+                item.value = item.list[index]
+                if (item.value == item.hiddenFieldTrigger) {
+                    hidden(item.hiddenField, true)
+                }
+                Timber.d("Item DD : $item")
+                item.errorText = null
+                binding.tilRvDropdown.error = null
+            }
+
+            item.errorText?.let { binding.tilRvDropdown.error = it }
+            binding.executePendingBindings()
+
+        }
+    }
+
+    class RadioInputViewHolder private constructor(private val binding: RvItemDropdownBinding) :
+        ViewHolder(binding.root) {
+        companion object {
+            fun from(parent: ViewGroup): ViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = RvItemDropdownBinding.inflate(layoutInflater, parent, false)
+                return RadioInputViewHolder(binding)
+            }
+        }
+
+        fun bind(
+            item: FormInput,
+            hidden: (hiddenForm: FormInput?, show: Boolean) -> Unit
+        ) {
+            binding.field = item.title
+            binding.required = item.required
+            binding.listItems = item.list
+            binding.actvRvDropdown.setOnItemClickListener { _, _, index, _ ->
+                if (item.list!![index] == item.value)
+                    return@setOnItemClickListener
+                item.hiddenFieldTrigger?.let {
+                    if (it == item.value && it != item.list[index]) {
+                        hidden(item.hiddenField, false)
+                    }
+                }
+                item.value = item.list[index]
+                if (item.value == item.hiddenFieldTrigger) {
+                    hidden(item.hiddenField, true)
+                }
+                Timber.d("Item DD : $item")
+                item.errorText = null
+                binding.tilRvDropdown.error = null
+            }
+
+            item.errorText?.let { binding.tilRvDropdown.error = it }
+            binding.executePendingBindings()
+
+        }
+    }
+
+    class DatePickerInputViewHolder private constructor(private val binding: RvItemDropdownBinding) :
+        ViewHolder(binding.root) {
+        companion object {
+            fun from(parent: ViewGroup): ViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = RvItemDropdownBinding.inflate(layoutInflater, parent, false)
+                return DatePickerInputViewHolder(binding)
+            }
+        }
+
+        fun bind(
+            item: FormInput,
+            hidden: (hiddenForm: FormInput?, show: Boolean) -> Unit
+        ) {
+            binding.field = item.title
+            binding.required = item.required
+            binding.listItems = item.list
+            binding.actvRvDropdown.setOnItemClickListener { _, _, index, _ ->
+                if (item.list!![index] == item.value)
+                    return@setOnItemClickListener
+                item.hiddenFieldTrigger?.let {
+                    if (it == item.value && it != item.list[index]) {
+                        hidden(item.hiddenField, false)
+                    }
+                }
+                item.value = item.list[index]
+                if (item.value == item.hiddenFieldTrigger) {
+                    hidden(item.hiddenField, true)
+                }
+                Timber.d("Item DD : $item")
+                item.errorText = null
+                binding.tilRvDropdown.error = null
+            }
+
+            item.errorText?.let { binding.tilRvDropdown.error = it }
+            binding.executePendingBindings()
+
+        }
+    }
+
+    class TextViewInputViewHolder private constructor(private val binding: RvItemDropdownBinding) :
+        ViewHolder(binding.root) {
+        companion object {
+            fun from(parent: ViewGroup): ViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = RvItemDropdownBinding.inflate(layoutInflater, parent, false)
+                return TextViewInputViewHolder(binding)
+            }
+        }
+
+        fun bind(
+            item: FormInput,
+            hidden: (hiddenForm: FormInput?, show: Boolean) -> Unit
+        ) {
+            binding.field = item.title
+            binding.required = item.required
+            binding.listItems = item.list
+            binding.actvRvDropdown.setOnItemClickListener { _, _, index, _ ->
+                if (item.list!![index] == item.value)
+                    return@setOnItemClickListener
+                item.hiddenFieldTrigger?.let {
+                    if (it == item.value && it != item.list[index]) {
+                        hidden(item.hiddenField, false)
+                    }
+                }
+                item.value = item.list[index]
+                if (item.value == item.hiddenFieldTrigger) {
+                    hidden(item.hiddenField, true)
+                }
+                Timber.d("Item DD : $item")
+                item.errorText = null
+                binding.tilRvDropdown.error = null
+            }
+
+            item.errorText?.let { binding.tilRvDropdown.error = it }
+            binding.executePendingBindings()
+
+        }
+    }
+
+    class ImageViewInputViewHolder private constructor(private val binding: RvItemDropdownBinding) :
+        ViewHolder(binding.root) {
+        companion object {
+            fun from(parent: ViewGroup): ViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = RvItemDropdownBinding.inflate(layoutInflater, parent, false)
+                return ImageViewInputViewHolder(binding)
+            }
+        }
+
+        fun bind(
+            item: FormInput,
+            hidden: (hiddenForm: FormInput?, show: Boolean) -> Unit
+        ) {
+            binding.field = item.title
+            binding.required = item.required
+            binding.listItems = item.list
+            binding.actvRvDropdown.setOnItemClickListener { _, _, index, _ ->
+                if (item.list!![index] == item.value)
+                    return@setOnItemClickListener
+                item.hiddenFieldTrigger?.let {
+                    if (it == item.value && it != item.list[index]) {
+                        hidden(item.hiddenField, false)
+                    }
+                }
+                item.value = item.list[index]
                 if (item.value == item.hiddenFieldTrigger) {
                     hidden(item.hiddenField, true)
                 }
@@ -102,6 +262,10 @@ class FormInputAdapter : ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBac
         return when (inputTypes[viewType]) {
             EDIT_TEXT -> EditTextInputViewHolder.from(parent)
             DROPDOWN -> DropDownInputViewHolder.from(parent)
+            RADIO -> TODO()
+            DATE_PICKER -> TODO()
+            TEXT_VIEW -> TODO()
+            IMAGE_VIEW -> TODO()
         }
     }
 
@@ -123,6 +287,10 @@ class FormInputAdapter : ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBac
                     }
                 }
             }
+            RADIO -> TODO()
+            DATE_PICKER -> TODO()
+            TEXT_VIEW -> TODO()
+            IMAGE_VIEW -> TODO()
         }
     }
 

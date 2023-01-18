@@ -9,11 +9,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.HouseHoldListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentAllHouseholdBinding
 import org.piramalswasthya.sakhi.model.HouseHoldBasicDomain
 
+@AndroidEntryPoint
 class AllHouseholdFragment : Fragment() {
 
     companion object {
@@ -40,16 +42,10 @@ class AllHouseholdFragment : Fragment() {
             Toast.makeText(context,"Clicked $it",Toast.LENGTH_SHORT).show()
         })
         binding.rvHousehold.adapter = householdAdapter
-        householdAdapter.submitList(listOf(
-            HouseHoldBasicDomain(93256934795823715,"Head", "Tail"),
-            HouseHoldBasicDomain(93256934795823715,"Head", "Tail"),
-            HouseHoldBasicDomain(93256934795823715,"Head", "Tail"),
-            HouseHoldBasicDomain(93256934795823715,"Head", "Tail"),
-            HouseHoldBasicDomain(93256934795823715,"Head", "Tail"),
-            HouseHoldBasicDomain(93256934795823715,"Head", "Tail"),
-            HouseHoldBasicDomain(93256934795823715,"Head", "Tail"),
 
-        ))
+        viewModel.householdList.observe(viewLifecycleOwner){
+            householdAdapter.submitList(it)
+        }
 
         binding.btnNhhr.setOnClickListener {
             findNavController().navigate(AllHouseholdFragmentDirections.actionAllHouseholdFragmentToNewHouseholdFragment())

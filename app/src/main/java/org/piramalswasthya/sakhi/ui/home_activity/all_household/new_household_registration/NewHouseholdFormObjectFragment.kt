@@ -6,17 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.adapters.NewHouseholdPagerAdapter
-import org.piramalswasthya.sakhi.configuration.HouseHoldFormDataset
-import org.piramalswasthya.sakhi.databinding.FragmentNewHouseholdFormObjectBinding
-import timber.log.Timber
+import org.piramalswasthya.sakhi.databinding.FragmentInputFormPageBinding
 
 @AndroidEntryPoint
 class NewHouseholdFormObjectFragment : Fragment() {
 
-    private lateinit var binding : FragmentNewHouseholdFormObjectBinding
+    private lateinit var binding : FragmentInputFormPageBinding
 
     private val viewModel : NewHouseholdViewModel by viewModels({requireParentFragment()})
 
@@ -24,7 +24,7 @@ class NewHouseholdFormObjectFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding =  FragmentNewHouseholdFormObjectBinding.inflate(layoutInflater,container,false)
+        binding =  FragmentInputFormPageBinding.inflate(layoutInflater,container,false)
         return binding.root
     }
 
@@ -32,18 +32,20 @@ class NewHouseholdFormObjectFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val pageNumber = arguments?.getInt(NewHouseholdPagerAdapter.ARG_OBJECT_INDEX) ?: throw IllegalStateException("No argument passed to viewpager object!")
         when(pageNumber){
-            1 -> binding.nhhrForm.rvInputForm.apply {
+            1 -> binding.inputForm.rvInputForm.apply {
                 val adapter = FormInputAdapter()
                 this.adapter = adapter
-                adapter.submitList(viewModel.getFirstPage())
+                lifecycleScope.launch {
+                    adapter.submitList(viewModel.getFirstPage())
+                }
             }
-            2 -> binding.nhhrForm.rvInputForm.apply {
+            2 -> binding.inputForm.rvInputForm.apply {
                 val adapter = FormInputAdapter()
                 this.adapter = adapter
                 adapter.submitList(viewModel.getSecondPage())
             }
             3 -> {
-                binding.nhhrForm.rvInputForm.apply {
+                binding.inputForm.rvInputForm.apply {
                     val adapter = FormInputAdapter()
                     this.adapter = adapter
                     adapter.submitList(viewModel.getThirdPage())
@@ -57,7 +59,7 @@ class NewHouseholdFormObjectFragment : Fragment() {
 //        Timber.d("binding $binding rv ${binding.nhhrForm.rvInputForm} adapter ${binding.nhhrForm.rvInputForm.adapter}")
 //        return false
 
-        return (binding.nhhrForm.rvInputForm.adapter?.let{
+        return (binding.inputForm.rvInputForm.adapter?.let{
             (it as FormInputAdapter).validateInput()
         }?:false)
     }
