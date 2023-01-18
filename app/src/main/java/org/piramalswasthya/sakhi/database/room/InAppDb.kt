@@ -7,10 +7,12 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import org.piramalswasthya.sakhi.database.converters.StringListConverter
 import org.piramalswasthya.sakhi.database.converters.SyncStateConverter
+import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
 import org.piramalswasthya.sakhi.database.room.dao.UserDao
+import org.piramalswasthya.sakhi.model.HouseholdCache
 import org.piramalswasthya.sakhi.model.UserCache
 
-@Database(entities = [UserCache::class, DummyEntity::class], version = 2, exportSchema = false)
+@Database(entities = [UserCache::class, HouseholdCache::class, DummyEntity::class], version = 1, exportSchema = false)
 
 @TypeConverters(StringListConverter::class, SyncStateConverter::class)
 
@@ -18,6 +20,7 @@ abstract class InAppDb  : RoomDatabase(){
 
     abstract val userDao : UserDao
     abstract val dummyDao : DummyDao
+    abstract val householdDao : HouseholdDao
 
     companion object{
         @Volatile

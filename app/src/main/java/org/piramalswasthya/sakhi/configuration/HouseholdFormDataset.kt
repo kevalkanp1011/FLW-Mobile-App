@@ -4,17 +4,37 @@ import android.content.Context
 import android.text.InputType
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.model.FormInput
+import org.piramalswasthya.sakhi.model.HouseholdCache
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
-class HouseHoldFormDataset {
+class HouseholdFormDataset(context: Context) {
 
-    private lateinit var firstPage: MutableList<FormInput>
+    companion object {
+        private fun getCurrentDate(): String {
+            val calendar = Calendar.getInstance()
+            val mdFormat =
+                SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+            return mdFormat.format(calendar.time)
+        }
 
-    private lateinit var secondPage: MutableList<FormInput>
+        private fun getCurrentTime(): String {
+            val dateFormat: DateFormat =
+                SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
+            val date = Date()
+            return dateFormat.format(date)
+        }
 
-    private lateinit var thirdPage: MutableList<FormInput>
+        fun getHHidFromUserId(userId: Int): Long {
+            val date = getCurrentDate().replace("-", "")
+            val time = getCurrentTime().replace(":", "")
+            return (date + time + userId).toLong()
+        }
+    }
 
-    fun getFirstPage(context: Context): List<FormInput> {
-        firstPage = mutableListOf(
+    val firstPage by lazy {
+        listOf(
             FormInput(
                 inputType = FormInput.InputType.EDIT_TEXT,
                 title = context.getString(R.string.nhhr_first_name_hof),
@@ -63,11 +83,10 @@ class HouseHoldFormDataset {
                 required = true
             )
         )
-        return firstPage
     }
 
-    fun getSecondPage(context: Context): List<FormInput> {
-        secondPage = mutableListOf(
+    val secondPage by lazy {
+        listOf(
             FormInput(
                 inputType = FormInput.InputType.DROPDOWN,
                 title = context.getString(R.string.nhhr_type_residential_area),
@@ -77,7 +96,13 @@ class HouseHoldFormDataset {
                     "Tribal",
                     "Other"
                 ),
-                required = false
+                required = false,
+                hiddenFieldTrigger = "Other",
+                hiddenField = FormInput(
+                    inputType = FormInput.InputType.EDIT_TEXT,
+                    title = "Other type of residential area",
+                    required = false
+                )
             ),
             FormInput(
                 inputType = FormInput.InputType.DROPDOWN,
@@ -100,11 +125,10 @@ class HouseHoldFormDataset {
                 required = true
             )
         )
-        return secondPage
     }
 
-    fun getThirdPage(context: Context): List<FormInput> {
-        thirdPage = mutableListOf(
+    val thirdPage by lazy {
+        listOf(
             FormInput(
                 inputType = FormInput.InputType.DROPDOWN,
                 title = context.getString(R.string.nhhr_separate_kitchen),
@@ -126,7 +150,13 @@ class HouseHoldFormDataset {
                     "LPG",
                     "Other"
                 ),
-                required = true
+                required = true,
+                hiddenFieldTrigger = "Other",
+                hiddenField = FormInput(
+                    inputType = FormInput.InputType.EDIT_TEXT,
+                    title = "Other Type of fuel used for Cooking",
+                    required = true
+                )
             ),
             FormInput(
                 inputType = FormInput.InputType.DROPDOWN,
@@ -141,7 +171,14 @@ class HouseHoldFormDataset {
                     "Pond",
                     "Other"
                 ),
-                required = true
+                required = true,
+                hiddenFieldTrigger = "Other",
+                hiddenField = FormInput(
+                    inputType = FormInput.InputType.EDIT_TEXT,
+                    title = "Other Primary Source of Water",
+                    required = true
+                )
+
             ),
             FormInput(
                 inputType = FormInput.InputType.DROPDOWN,
@@ -153,7 +190,14 @@ class HouseHoldFormDataset {
                     "Kerosene Lamp",
                     "Other",
                 ),
-                required = true
+                required = true,
+                hiddenFieldTrigger = "Other",
+                hiddenField = FormInput(
+                    inputType = FormInput.InputType.EDIT_TEXT,
+                    title = "Other availability of Electricity",
+                    required = true
+                )
+
             ),
             FormInput(
                 inputType = FormInput.InputType.DROPDOWN,
@@ -166,9 +210,67 @@ class HouseHoldFormDataset {
                     "Other",
                     "None"
                 ),
-                required = true
+                required = true,
+                hiddenFieldTrigger = "Other",
+                hiddenField = FormInput(
+                    inputType = FormInput.InputType.EDIT_TEXT,
+                    title = "Other Availability of Toilet",
+                    required = true
+                )
+
             )
         )
-        return thirdPage
     }
+
+    fun getHouseholdForFirstPage(userId: Int, hhId : Long): HouseholdCache {
+
+        val household = HouseholdCache(
+            householdId = hhId,
+            ashaId = userId,
+            isDraft = true
+        )
+        household.apply {
+            familyHeadName = firstPage[0].value
+            familyName = firstPage[1].value
+            familyHeadPhoneNo = firstPage[2].value?.toLong()
+            houseNo = firstPage[3].value
+            wardNo = firstPage[4].value
+            wardName = firstPage[5].value
+            mohallaName = firstPage[6].value
+            povertyLine = firstPage[7].value
+        }
+        return household
+    }
+
+    fun getHouseholdForSecondPage(userId: Int, hhId: Long): HouseholdCache {
+
+        val household = getHouseholdForFirstPage(userId,hhId)
+        household.apply {
+            residentialArea = secondPage[0].value
+            otherResidentialArea = secondPage[0].hiddenField?.value
+            houseType = secondPage[1].value
+            isHouseOwned = secondPage[2].value
+        }
+
+        return household
+    }
+
+    fun getHouseholdForThirdPage(userId: Int,hhId: Long) : HouseholdCache{
+        val household = getHouseholdForSecondPage(userId,hhId)
+        household.apply {
+            separateKitchen = thirdPage[0].value
+            fuelUsed = thirdPage[1].value
+            otherFuelUsed = thirdPage[1].hiddenField?.value
+            sourceOfDrinkingWater = thirdPage[2].value
+            otherSourceOfDrinkingWater = thirdPage[2].hiddenField?.value
+            availabilityOfElectricity = thirdPage[3].value
+            otherAvailabilityOfElectricity = thirdPage[3].hiddenField?.value
+            availabilityOfToilet = thirdPage[4].value
+            otherAvailabilityOfToilet = thirdPage[4].hiddenField?.value
+            isDraft = false
+        }
+        return household
+    }
+
+
 }

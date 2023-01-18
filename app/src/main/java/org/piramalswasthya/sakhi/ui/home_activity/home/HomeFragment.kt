@@ -61,6 +61,9 @@ class HomeFragment : Fragment() {
         binding.etSelectVillage.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionNavHomeToServiceTypeFragment())
         }
+        binding.btnNhhr.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToNewHouseholdFragment())
+        }
         setUpHomeIconRvAdapter()
 
     }

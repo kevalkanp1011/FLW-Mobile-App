@@ -36,8 +36,13 @@ class UserRepo @Inject constructor(
                     if(result) {
                         Timber.d("User Auth Complete!!!!")
                         user?.loggedIn = true
-                        database.userDao.resetAllUsersLoggedInState()
-                        database.userDao.upsert(user!!.asCacheModel())
+                        if(database.userDao.getLoggedInUser()?.userName==userName){
+                            database.userDao.update(user!!.asCacheModel())
+                        }
+                        else {
+                            database.userDao.resetAllUsersLoggedInState()
+                            database.userDao.insert(user!!.asCacheModel())
+                        }
                         return@withContext true
                     }
                 }

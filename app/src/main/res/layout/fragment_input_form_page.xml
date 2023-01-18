@@ -6,7 +6,7 @@
     tools:context=".ui.home_activity.all_household.new_household_registration.NewHouseholdFormObjectFragment">
 
     <include
-        android:id="@+id/nhhr_form"
+        android:id="@+id/input_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         layout="@layout/rv_input_form"
