@@ -72,7 +72,6 @@ class HomeFragment : Fragment() {
         val rvLayoutManager = GridLayoutManager(context, 3)
         binding.rvHomeIcon.rvIconGrid.layoutManager = rvLayoutManager
         binding.rvHomeIcon.rvIconGrid.adapter = IconGridAdapter(IconDataset.getIconDataset(),IconGridAdapter.GridIconClickListener {
-            Toast.makeText(context, "Clicked $it", Toast.LENGTH_LONG).show()
             findNavController().navigate(it)
         })
     }

@@ -15,7 +15,7 @@ import org.piramalswasthya.sakhi.model.FormInput.InputType.*
 import org.piramalswasthya.sakhi.ui.afterTextChanged
 import timber.log.Timber
 
-class FormInputAdapter : ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBack) {
+class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageClickListener?=null): ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBack) {
     object FormInputDiffCallBack : DiffUtil.ItemCallback<FormInput>() {
         override fun areItemsTheSame(oldItem: FormInput, newItem: FormInput) =
             oldItem.title == newItem.title
@@ -35,8 +35,7 @@ class FormInputAdapter : ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBac
         }
 
         fun bind(item: FormInput) {
-            binding.field = item.title
-            binding.required = item.required
+            binding.form = item
             binding.et.afterTextChanged {
                 item.value = it
                 Timber.d("Item ET : $item")
@@ -74,9 +73,7 @@ class FormInputAdapter : ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBac
             item: FormInput,
             hidden: (hiddenForm: FormInput?, show: Boolean) -> Unit
         ) {
-            binding.field = item.title
-            binding.required = item.required
-            binding.listItems = item.list
+            binding.form = item
             binding.actvRvDropdown.setOnItemClickListener { _, _, index, _ ->
                 if (item.list!![index] == item.value)
                     return@setOnItemClickListener
@@ -114,9 +111,7 @@ class FormInputAdapter : ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBac
             item: FormInput,
             hidden: (hiddenForm: FormInput?, show: Boolean) -> Unit
         ) {
-            binding.field = item.title
-            binding.required = item.required
-            binding.listItems = item.list
+            //TODO(bind form to item)
             binding.actvRvDropdown.setOnItemClickListener { _, _, index, _ ->
                 if (item.list!![index] == item.value)
                     return@setOnItemClickListener
@@ -154,9 +149,7 @@ class FormInputAdapter : ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBac
             item: FormInput,
             hidden: (hiddenForm: FormInput?, show: Boolean) -> Unit
         ) {
-            binding.field = item.title
-            binding.required = item.required
-            binding.listItems = item.list
+            //TODO(bind form to item)
             binding.actvRvDropdown.setOnItemClickListener { _, _, index, _ ->
                 if (item.list!![index] == item.value)
                     return@setOnItemClickListener
@@ -194,9 +187,7 @@ class FormInputAdapter : ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBac
             item: FormInput,
             hidden: (hiddenForm: FormInput?, show: Boolean) -> Unit
         ) {
-            binding.field = item.title
-            binding.required = item.required
-            binding.listItems = item.list
+            //TODO(bind form to item)
             binding.actvRvDropdown.setOnItemClickListener { _, _, index, _ ->
                 if (item.list!![index] == item.value)
                     return@setOnItemClickListener
@@ -232,33 +223,20 @@ class FormInputAdapter : ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBac
 
         fun bind(
             item: FormInput,
-            hidden: (hiddenForm: FormInput?, show: Boolean) -> Unit
+            clickListener: ImageClickListener?,
         ) {
-            binding.field = item.title
-            binding.required = item.required
-            binding.listItems = item.list
-            binding.actvRvDropdown.setOnItemClickListener { _, _, index, _ ->
-                if (item.list!![index] == item.value)
-                    return@setOnItemClickListener
-                item.hiddenFieldTrigger?.let {
-                    if (it == item.value && it != item.list[index]) {
-                        hidden(item.hiddenField, false)
-                    }
-                }
-                item.value = item.list[index]
-                if (item.value == item.hiddenFieldTrigger) {
-                    hidden(item.hiddenField, true)
-                }
-                Timber.d("Item DD : $item")
-                item.errorText = null
-                binding.tilRvDropdown.error = null
-            }
-
+            binding.form = item
             item.errorText?.let { binding.tilRvDropdown.error = it }
             binding.executePendingBindings()
 
         }
     }
+    class ImageClickListener(private val imageClick : (form : FormInput) -> Unit) {
+
+        fun onImageClick(form : FormInput) = imageClick(form)
+
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inputTypes = values()
@@ -293,7 +271,7 @@ class FormInputAdapter : ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBac
             RADIO -> TODO()
             DATE_PICKER -> TODO()
             TEXT_VIEW -> TODO()
-            IMAGE_VIEW -> TODO()
+            IMAGE_VIEW -> (holder as ImageViewInputViewHolder).bind(field,imageClickListener)
         }
     }
 

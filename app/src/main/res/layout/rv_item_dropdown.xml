@@ -4,25 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
-            name="field"
-            type="String" />
-
-        <variable
-            name="fieldValue"
-            type="String" />
-
-        <import type="java.util.List" />
-
-        <variable
-            name="listItems"
-            type="List&lt;String>" />
-
-        <variable
-            name="required"
-            type="Boolean" />
-
+            name="form"
+            type="org.piramalswasthya.sakhi.model.FormInput" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,7 +22,7 @@
             app:layout_constraintEnd_toStartOf="@id/tv_nullable"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@{field}"
+            android:hint="@{form.title}"
             android:labelFor="@id/actv_rv_dropdown"
             android:orientation="horizontal">
 
@@ -47,8 +31,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="none"
-                app:listItems="@{listItems}"
-                android:text="@{fieldValue}"
+                app:listItems="@{form.list}"
+                android:text="@{form.value}"
                 tools:ignore="SpeakableTextPresentCheck" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -63,7 +47,7 @@
             android:textColor="@color/design_default_color_error"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/til_rv_dropdown"
-            app:required="@{required}" />
+            app:required="@{form.required}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

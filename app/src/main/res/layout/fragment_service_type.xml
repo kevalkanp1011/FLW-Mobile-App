@@ -54,34 +54,25 @@
                 <include
                     android:id="@+id/dd_state"
                     layout="@layout/rv_item_dropdown"
-                    app:field="@{@string/service_type_dd_state_text}"
-                    app:listItems="@{viewModel.stateList}"
-                    app:required="@{true}"
+                    app:form="@{viewModel.stateList}"
 
                     />
                 <include
                     android:id="@+id/dd_district"
                     layout="@layout/rv_item_dropdown"
-                    app:field="@{@string/service_type_dd_district_text}"
-                    app:listItems="@{viewModel.districtList}"
-                    app:required="@{true}"
+                    app:form="@{viewModel.districtList}"
 
                     />
                 <include
                     android:id="@+id/dd_block"
                     layout="@layout/rv_item_dropdown"
-                    app:field="@{@string/service_type_dd_block_text}"
-                    app:listItems="@{viewModel.blockList}"
-                    app:required="@{true}"
+                    app:form="@{viewModel.blockList}"
 
                     />
                 <include
                     android:id="@+id/dd_village"
                     layout="@layout/rv_item_dropdown"
-                    app:field="@{@string/service_type_dd_village_text}"
-                    app:listItems="@{viewModel.villageList}"
-                    app:required="@{true}"
-
+                    app:form="@{viewModel.villageList}"
                     />
 
                 <com.google.android.material.button.MaterialButton

@@ -33,7 +33,10 @@ class NewHouseholdFormObjectFragment : Fragment() {
         val pageNumber = arguments?.getInt(NewHouseholdPagerAdapter.ARG_OBJECT_INDEX) ?: throw IllegalStateException("No argument passed to viewpager object!")
         when(pageNumber){
             1 -> binding.inputForm.rvInputForm.apply {
-                val adapter = FormInputAdapter()
+                val adapter = FormInputAdapter(FormInputAdapter.ImageClickListener {
+
+                    it.value = "345"
+                })
                 this.adapter = adapter
                 lifecycleScope.launch {
                     adapter.submitList(viewModel.getFirstPage())

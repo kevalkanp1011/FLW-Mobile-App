@@ -46,11 +46,13 @@ data class BenBasicDomain(
 
 data class BenRegCache(
 
+    @ColumnInfo(index = true)
     var householdId: Long,
 
     @PrimaryKey
     var beneficiaryId: Long,
 
+    @ColumnInfo(index = true)
     var ashaId: Int,
 
     var userImage: String? = null,
