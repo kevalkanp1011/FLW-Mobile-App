@@ -19,6 +19,7 @@ import org.piramalswasthya.sakhi.adapters.NewHouseholdPagerAdapter
 import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
 import org.piramalswasthya.sakhi.databinding.FragmentNewHouseholdBinding
 import org.piramalswasthya.sakhi.services.UploadSyncService
+import org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_registration.NewHouseholdViewModel.*
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -183,6 +184,20 @@ class NewHouseholdFragment : Fragment() {
                 } else {
                     activity?.startService(Intent(context, UploadSyncService::class.java))
                 }
+            }
+        }
+
+        viewModel.state.observe(viewLifecycleOwner){ state->
+            when(state!!){
+                State.IDLE -> {
+                }
+                State.SAVING -> {
+
+                }
+                State.SAVE_SUCCESS -> {
+                    findNavController().navigate(NewHouseholdFragmentDirections.actionNewHouseholdFragmentToNewBenRegTypeFragment(viewModel.getHHId()))
+                }
+                State.SAVE_FAILED -> Toast.makeText(context,"Something wend wong! Contact testing!", Toast.LENGTH_LONG).show()
             }
         }
 

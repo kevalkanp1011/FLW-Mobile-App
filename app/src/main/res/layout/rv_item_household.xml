@@ -21,46 +21,105 @@
         android:layout_margin="@dimen/padding_normal"
         android:elevation="@dimen/padding_normal"
         app:cardCornerRadius="@dimen/padding_normal"
-        android:onClick="@{()->clickListener.onClicked(household)}"
         app:cardElevation="@dimen/padding_normal">
-        
-        <LinearLayout
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
-            android:padding="@dimen/padding_normal"
-            android:orientation="vertical">
-
+            android:onClick="@{()->clickListener.onClickedForHHDetails(household)}"
+            android:padding="@dimen/padding_normal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/rv_item_hh_ph_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_normal"
+                android:text="@string/rv_item_hh_ph_1"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:textColor="?attr/colorSecondary"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="@+id/rv_item_hh_ph_2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/rv_item_hh_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_normal"
+                android:text="@{@string/rv_item_hh_entry_1(household.hhId)}"
+                app:layout_constraintStart_toEndOf="@id/rv_item_hh_ph_1"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:textColor="?attr/colorSecondary"
+                app:layout_constraintTop_toTopOf="@id/rv_item_hh_ph_1" />
+
+            <TextView
+                android:id="@+id/rv_item_hh_ph_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="italic"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:textColor="?attr/colorSecondary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_item_hh_ph_1"
+                android:padding="@dimen/padding_normal"
+                android:text="@string/rv_item_hh_ph_2" />
+
+            <TextView
+                android:id="@+id/rv_item_hh_2"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 android:textColor="?attr/colorSecondary"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textStyle="italic"
+                app:layout_constraintStart_toEndOf="@id/rv_item_hh_ph_2"
+                app:layout_constraintTop_toTopOf="@id/rv_item_hh_ph_2"
                 android:padding="@dimen/padding_normal"
-                tools:text="HHID : "
-                android:text="@{@string/rv_item_hh_entry_1(household.hhId)}"/>
-
+                android:text="@{household.headName}"/>
 
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/rv_item_hh_ph_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_normal"
+                android:text="@string/rv_item_hh_ph_3"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:textColor="?attr/colorSecondary"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="@+id/rv_item_hh_ph_2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_item_hh_ph_2" />
+
+            <TextView
+                android:id="@+id/rv_item_hh_3"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 android:textColor="?attr/colorSecondary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/rv_item_hh_ph_3"
+                app:layout_constraintTop_toTopOf="@id/rv_item_hh_ph_3"
                 android:padding="@dimen/padding_normal"
-                tools:text="HHID : "
-                android:text="@{@string/rv_item_hh_entry_2(household.headName)}"/>
+                android:text="@{household.headSurname}"/>
 
-
-            <TextView
-                android:layout_width="match_parent"
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                android:textColor="?attr/colorSecondary"
-                android:padding="@dimen/padding_normal"
-                tools:text="HHID : "
-                android:text="@{@string/rv_item_hh_entry_3(household.headSurname)}"/>
-        </LinearLayout>
+                android:text="@string/btn_rv_item_hh_add_ben"
+                android:onClick="@{()->clickListener.onClickedForNewBen(household)}"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                android:textColor="?attr/colorPrimary"
+                app:backgroundTint="?attr/colorSecondary"
+                app:icon="@drawable/ic__hh"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_item_hh_ph_3" />
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
 </layout>

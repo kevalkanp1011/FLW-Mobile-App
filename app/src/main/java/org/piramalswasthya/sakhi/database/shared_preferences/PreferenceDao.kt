@@ -11,21 +11,40 @@ class PreferenceDao @Inject constructor( @ApplicationContext private val context
 
     private val pref = PreferenceManager.getInstance(context)
 
-    fun getApiToken() : String?{
-        val prefKey = context.getString(R.string.PREF_API_KEY)
+    fun getD2DApiToken() : String?{
+        val prefKey = context.getString(R.string.PREF_D2D_API_KEY)
         return pref.getString(prefKey,null)
     }
 
-    fun registerApiToken(token : String){
+    fun registerD2DApiToken(token : String){
         val editor = pref.edit()
-        val prefKey = context.getString(R.string.PREF_API_KEY)
+        val prefKey = context.getString(R.string.PREF_D2D_API_KEY)
         editor.putString(prefKey,token)
         editor.apply()
     }
 
-    fun deleteApiToken(){
+    fun deletePrimaryApiToken(){
         val editor = pref.edit()
-        val prefKey = context.getString(R.string.PREF_API_KEY)
+        val prefKey = context.getString(R.string.PREF_D2D_API_KEY)
+        editor.remove(prefKey)
+        editor.apply()
+    }
+
+    fun getPrimaryApiToken() : String?{
+        val prefKey = context.getString(R.string.PREF_primary_API_KEY)
+        return pref.getString(prefKey,null)
+    }
+
+    fun registerPrimaryApiToken(token : String){
+        val editor = pref.edit()
+        val prefKey = context.getString(R.string.PREF_primary_API_KEY)
+        editor.putString(prefKey,token)
+        editor.apply()
+    }
+
+    fun deleteD2DApiToken(){
+        val editor = pref.edit()
+        val prefKey = context.getString(R.string.PREF_primary_API_KEY)
         editor.remove(prefKey)
         editor.apply()
     }

@@ -9,6 +9,10 @@
             name="field"
             type="String" />
 
+        <variable
+            name="fieldValue"
+            type="String" />
+
         <import type="java.util.List" />
 
         <variable
@@ -44,6 +48,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="none"
                 app:listItems="@{listItems}"
+                android:text="@{fieldValue}"
                 tools:ignore="SpeakableTextPresentCheck" />
 
         </com.google.android.material.textfield.TextInputLayout>

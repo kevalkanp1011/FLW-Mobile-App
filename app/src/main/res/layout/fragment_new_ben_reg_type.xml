@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,37 +11,43 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
         android:padding="@dimen/padding_normal"
-        android:text="Select Beneficiary Type" />
+        android:text="@string/frag_new_ben_type_select_text"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
 
     <RadioGroup
         android:id="@+id/rg_ben_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/padding_normal"
-        >
+        android:padding="@dimen/padding_normal">
+
         <RadioButton
             android:id="@+id/rb_kid_path"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="New Born / Infant / Child / Adolescent\n( 0 - less than 15 years of age )"/>
+            android:padding="@dimen/padding_normal"
+            android:text="@string/frag_new_ben_type_kid_text"
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            android:buttonTint="?attr/colorPrimary" />
 
         <RadioButton
             android:id="@+id/rb_adult_path"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="General Registration \n( 15 years and above )"/>
+            android:padding="@dimen/padding_normal"
+            android:text="@string/frag_new_ben_type_adult_text"
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            android:buttonTint="?attr/colorPrimary" />
     </RadioGroup>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_continue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_normal"
         android:layout_gravity="center"
-        android:text="Continue"
-        android:textColor="?attr/colorSecondary"/>
+        android:layout_margin="@dimen/margin_normal"
+        android:text="@string/btn_continue_text"
+        android:textColor="?attr/colorSecondary" />
 
 
 </LinearLayout>

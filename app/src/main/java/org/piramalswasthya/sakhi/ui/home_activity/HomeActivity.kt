@@ -1,16 +1,12 @@
 package org.piramalswasthya.sakhi.ui.home_activity
 
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
@@ -36,10 +32,21 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
-        //val appBarConfiguration = AppBarConfiguration(navController.graph,binding.drawerLayout)
-        //binding.toolbar.setupWithNavController(navController,appBarConfiguration)
         binding.navView.setupWithNavController(navController)
-        NavigationUI.setupActionBarWithNavController(this, navController, binding.drawerLayout)
+
+        val appBarConfiguration = AppBarConfiguration
+            .Builder(
+                setOf(
+                    R.id.homeFragment,
+                    R.id.allHouseholdFragment,
+                    R.id.allBenFragment
+                )
+            )
+            .setOpenableLayout(binding.drawerLayout)
+            .build()
+
+        NavigationUI.setupWithNavController(binding.toolbar,navController, appBarConfiguration)
+        NavigationUI.setupActionBarWithNavController(this,navController, appBarConfiguration)
 
         Snackbar.make(binding.root,intent.data.toString(),Snackbar.LENGTH_LONG).show()
     }

@@ -9,7 +9,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HouseholdFormDataset(context: Context) {
+class HouseholdFormDataset(context: Context, private val household: HouseholdCache?= null) {
 
     companion object {
         private fun getCurrentDate(): String {
@@ -38,6 +38,7 @@ class HouseholdFormDataset(context: Context) {
             FormInput(
                 inputType = FormInput.InputType.EDIT_TEXT,
                 title = context.getString(R.string.nhhr_first_name_hof),
+                value = household?.familyHeadName,
                 required = true
             ),
             FormInput(

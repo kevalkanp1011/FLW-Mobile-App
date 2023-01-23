@@ -56,6 +56,7 @@
                     layout="@layout/rv_item_dropdown"
                     app:field="@{@string/service_type_dd_state_text}"
                     app:listItems="@{viewModel.stateList}"
+                    app:required="@{true}"
 
                     />
                 <include
@@ -63,6 +64,7 @@
                     layout="@layout/rv_item_dropdown"
                     app:field="@{@string/service_type_dd_district_text}"
                     app:listItems="@{viewModel.districtList}"
+                    app:required="@{true}"
 
                     />
                 <include
@@ -70,6 +72,7 @@
                     layout="@layout/rv_item_dropdown"
                     app:field="@{@string/service_type_dd_block_text}"
                     app:listItems="@{viewModel.blockList}"
+                    app:required="@{true}"
 
                     />
                 <include
@@ -77,6 +80,7 @@
                     layout="@layout/rv_item_dropdown"
                     app:field="@{@string/service_type_dd_village_text}"
                     app:listItems="@{viewModel.villageList}"
+                    app:required="@{true}"
 
                     />
 

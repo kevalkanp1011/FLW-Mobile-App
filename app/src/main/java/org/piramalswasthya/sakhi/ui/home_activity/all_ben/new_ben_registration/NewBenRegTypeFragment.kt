@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentNewBenRegTypeBinding
@@ -16,6 +17,10 @@ class NewBenRegTypeFragment : Fragment() {
 
     private val binding by lazy {
         FragmentNewBenRegTypeBinding.inflate(layoutInflater)
+    }
+
+    private val hhId by lazy {
+        NewBenRegTypeFragmentArgs.fromBundle(requireArguments()).hhId
     }
 
     private val viewModel: NewBenRegTypeViewModel by viewModels()
@@ -31,8 +36,12 @@ class NewBenRegTypeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.btnContinue.setOnClickListener {
             when (binding.rgBenType.checkedRadioButtonId) {
-                R.id.rb_kid_path -> {}
-                R.id.rb_adult_path -> {}
+                R.id.rb_kid_path -> {
+                    findNavController().navigate(NewBenRegTypeFragmentDirections.actionNewBenRegTypeFragmentToNewBenRegL15Fragment(hhId))
+                }
+                R.id.rb_adult_path -> {
+                    findNavController().navigate(NewBenRegTypeFragmentDirections.actionNewBenRegTypeFragmentToNewBenRegG15Fragment(hhId))
+                }
                 else -> Toast.makeText(
                     context,
                     "Please select type of beneficiary",

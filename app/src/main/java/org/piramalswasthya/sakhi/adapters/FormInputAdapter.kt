@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.adapters
 
 import android.text.InputFilter
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -45,14 +46,16 @@ class FormInputAdapter : ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBac
                 }
 
             }
-            item.errorText?.let { binding.tilEditText.error = it }
+            item.errorText?.also { binding.tilEditText.error = it }?: run{binding.tilEditText.error = null}
             val etFilters = mutableListOf<InputFilter>(InputFilter.LengthFilter(item.etLength))
-            item.etInputType?.let { binding.et.inputType = it }
-            if (item.etInputType == null && item.useFormEditTextDefaultInputFilter) {
+            binding.et.inputType = item.etInputType
+            if (item.etInputType == InputType.TYPE_CLASS_TEXT && item.useFormEditTextDefaultInputFilter) {
                 etFilters.add(FormEditTextDefaultInputFilter)
+                binding.et.filters = etFilters.toTypedArray()
             }
-
-            binding.et.filters = etFilters.toTypedArray()
+            else{
+                binding.et.filters = etFilters.toTypedArray()
+            }
             binding.executePendingBindings()
         }
     }

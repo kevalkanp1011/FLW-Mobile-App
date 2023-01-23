@@ -12,7 +12,7 @@
 
         <variable
             name="clickListener"
-            type="org.piramalswasthya.sakhi.adapters.HomeIconAdapter.HomeIconClickListener" />
+            type="org.piramalswasthya.sakhi.adapters.IconGridAdapter.GridIconClickListener" />
 
     </data>
 
@@ -56,7 +56,7 @@
                         android:padding="@dimen/padding_small"
                         app:imageResource="@{homeIcon.icon}"
 
-                        app:tint="@color/primaryColor"
+                        app:tint="?attr/colorPrimary"
                         tools:src="@drawable/ic__hh" />
                 </LinearLayout>
 

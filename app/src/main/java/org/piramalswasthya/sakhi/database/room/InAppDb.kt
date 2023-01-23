@@ -9,10 +9,15 @@ import org.piramalswasthya.sakhi.database.converters.StringListConverter
 import org.piramalswasthya.sakhi.database.converters.SyncStateConverter
 import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
 import org.piramalswasthya.sakhi.database.room.dao.UserDao
+import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.HouseholdCache
 import org.piramalswasthya.sakhi.model.UserCache
 
-@Database(entities = [UserCache::class, HouseholdCache::class, DummyEntity::class], version = 1, exportSchema = false)
+@Database(entities = [
+    UserCache::class,
+    HouseholdCache::class,
+    BenRegCache::class,
+    DummyEntity::class], version = 2, exportSchema = false)
 
 @TypeConverters(StringListConverter::class, SyncStateConverter::class)
 

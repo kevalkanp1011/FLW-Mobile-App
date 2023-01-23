@@ -7,21 +7,21 @@ import androidx.recyclerview.widget.RecyclerView
 import org.piramalswasthya.sakhi.databinding.RvItemIconGridBinding
 import org.piramalswasthya.sakhi.model.Icon
 
-class HomeIconAdapter(private val iconList : List<Icon>, private val clickListener: HomeIconClickListener) : RecyclerView.Adapter<HomeIconAdapter.HomeIconViewHolder>() {
+class IconGridAdapter(private val iconList : List<Icon>, private val clickListener: GridIconClickListener) : RecyclerView.Adapter<IconGridAdapter.IconViewHolder>() {
 
 
 
-    class HomeIconViewHolder private constructor(private val binding : RvItemIconGridBinding) : RecyclerView.ViewHolder(binding.root) {
+    class IconViewHolder private constructor(private val binding : RvItemIconGridBinding) : RecyclerView.ViewHolder(binding.root) {
 
         companion object{
-            fun from(parent: ViewGroup) : HomeIconViewHolder {
+            fun from(parent: ViewGroup) : IconViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = RvItemIconGridBinding.inflate(layoutInflater,parent,false)
-                return HomeIconViewHolder(binding)
+                return IconViewHolder(binding)
             }
         }
 
-        fun bind(item: Icon, clickListener: HomeIconClickListener){
+        fun bind(item: Icon, clickListener: GridIconClickListener){
             binding.homeIcon = item
             binding.clickListener = clickListener
             binding.executePendingBindings()
@@ -30,15 +30,15 @@ class HomeIconAdapter(private val iconList : List<Icon>, private val clickListen
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        HomeIconViewHolder.from(parent)
+        IconViewHolder.from(parent)
 
-    override fun onBindViewHolder(holder: HomeIconViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: IconViewHolder, position: Int) {
         holder.bind(iconList[position],clickListener)
     }
 
     override fun getItemCount() = iconList.size
 
-    class HomeIconClickListener(val selectedListener: (dest : NavDirections) -> Unit) {
+    class GridIconClickListener(val selectedListener: (dest : NavDirections) -> Unit) {
         fun onClicked(icon : Icon) = selectedListener(icon.navAction)
 
     }
