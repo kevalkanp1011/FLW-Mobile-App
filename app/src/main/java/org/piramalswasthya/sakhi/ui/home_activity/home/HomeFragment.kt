@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import org.piramalswasthya.sakhi.adapters.HomeIconAdapter
+import org.piramalswasthya.sakhi.adapters.IconGridAdapter
 import org.piramalswasthya.sakhi.configuration.IconDataset
 import org.piramalswasthya.sakhi.databinding.FragmentHomeBinding
 import timber.log.Timber
@@ -71,7 +71,7 @@ class HomeFragment : Fragment() {
     private fun setUpHomeIconRvAdapter() {
         val rvLayoutManager = GridLayoutManager(context, 3)
         binding.rvHomeIcon.rvIconGrid.layoutManager = rvLayoutManager
-        binding.rvHomeIcon.rvIconGrid.adapter = HomeIconAdapter(IconDataset.getIconDataset(),HomeIconAdapter.HomeIconClickListener {
+        binding.rvHomeIcon.rvIconGrid.adapter = IconGridAdapter(IconDataset.getIconDataset(),IconGridAdapter.GridIconClickListener {
             Toast.makeText(context, "Clicked $it", Toast.LENGTH_LONG).show()
             findNavController().navigate(it)
         })

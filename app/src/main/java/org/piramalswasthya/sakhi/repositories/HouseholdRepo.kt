@@ -47,13 +47,14 @@ class HouseholdRepo @Inject constructor(
         database.householdDao.upsert(household)
     }
 
-    suspend fun persistThirdPage(form: HouseholdFormDataset) {
+    suspend fun persistThirdPage(form: HouseholdFormDataset) : Long {
 
         val draftHousehold = database.householdDao.getDraftHousehold()
             ?: throw IllegalStateException("no draft saved!!")
         val household =
             form.getHouseholdForThirdPage(draftHousehold.ashaId, draftHousehold.householdId)
         database.householdDao.upsert(household)
+        return household.householdId
     }
 
 

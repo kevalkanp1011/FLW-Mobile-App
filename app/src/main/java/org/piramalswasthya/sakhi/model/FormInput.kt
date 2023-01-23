@@ -1,5 +1,8 @@
 package org.piramalswasthya.sakhi.model
 
+import android.text.InputType.TYPE_CLASS_TEXT
+
+
 data class FormInput(
     val inputType: InputType,
     val title : String,
@@ -8,7 +11,7 @@ data class FormInput(
     var value : String? = null,
     val regex : String? = null,
     val useFormEditTextDefaultInputFilter : Boolean = true,
-    val etInputType : Int? = null,
+    val etInputType : Int = TYPE_CLASS_TEXT,
     val etLength : Int = 30,
     var errorText : String? = null,
     val hiddenFieldTrigger : String? = null,

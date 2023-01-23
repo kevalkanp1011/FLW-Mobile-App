@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.model.UserNetwork
 import org.piramalswasthya.sakhi.network.*
@@ -14,6 +15,7 @@ import javax.inject.Inject
 
 class UserRepo @Inject constructor(
     private val database: InAppDb,
+    private val preferenceDao: PreferenceDao,
     private val d2dNetworkApi: D2DNetworkApiService,
     private val tmcNetworkApiService: TmcNetworkApiService
 ) {
@@ -29,6 +31,16 @@ class UserRepo @Inject constructor(
 
     suspend fun authenticateUser(userName: String, password: String): Boolean {
         return withContext(Dispatchers.IO) {
+            val loggedInUser = database.userDao.getLoggedInUser()
+            loggedInUser?.let {
+                if(it.userName==userName && it.password==password) {
+                    val tokenA= preferenceDao.getD2DApiToken()
+                    val tokenB = preferenceDao.getPrimaryApiToken()
+                    TokenInsertD2DInterceptor.setToken(tokenA?:throw IllegalStateException("User logging offline without pref saved token A!"))
+                    TokenInsertTmcInterceptor.setToken(tokenB?:throw IllegalStateException("User logging offline without pref saved token B!"))
+                    return@withContext true
+                }
+            }
             if (getTokenD2D(userName, password)) {
                 getTokenTmc(userName, password)
                 if (user != null) {
@@ -208,6 +220,7 @@ class UserRepo @Inject constructor(
                     d2dNetworkApi.getJwtToken(D2DAuthUserRequest(userName, password))
                 Timber.d("JWT : $response")
                 TokenInsertD2DInterceptor.setToken(response.jwt)
+                preferenceDao.registerD2DApiToken(response.jwt)
                 saveUserD2D()
                 true
             } catch (e: retrofit2.HttpException) {
@@ -249,6 +262,7 @@ class UserRepo @Inject constructor(
                     user = UserNetwork(userId,userName, password)
                     user?.serviceMapId = serviceMapId
                     TokenInsertTmcInterceptor.setToken(token)
+                    preferenceDao.registerPrimaryApiToken(token)
                 } else {
                     val errorMessage = responseBody.getString("errorMessage")
                     Timber.d("Error Message $errorMessage")

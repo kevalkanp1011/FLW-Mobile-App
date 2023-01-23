@@ -6,29 +6,50 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.adapters.BenListAdapter
+import org.piramalswasthya.sakhi.adapters.HouseHoldListAdapter
+import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
+import org.piramalswasthya.sakhi.ui.home_activity.all_household.AllHouseholdFragmentDirections
+import org.piramalswasthya.sakhi.ui.home_activity.all_household.AllHouseholdViewModel
 
 @AndroidEntryPoint
 class AllBenFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = AllBenFragment()
+
+    private val binding : FragmentDisplaySearchRvButtonBinding by lazy{
+        FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater)
     }
 
-    private lateinit var viewModel: AllBenViewModel
+    private val viewModel: AllBenViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_all_ben, container, false)
+    ): View {
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(AllBenViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.btnNextPage.visibility = View.GONE
+        val benAdapter = BenListAdapter(BenListAdapter.BenClickListener(
+            {Toast.makeText(context,"Ben : $it clicked", Toast.LENGTH_SHORT).show()},
+            {Toast.makeText(context,"Household : $it clicked", Toast.LENGTH_SHORT).show()}
+        ))
+        binding.rvAny.adapter = benAdapter
 
+        viewModel.benList.observe(viewLifecycleOwner){
+            benAdapter.submitList(it)
+        }
+
+        binding.btnNextPage.setOnClickListener {
+            findNavController().navigate(AllHouseholdFragmentDirections.actionAllHouseholdFragmentToNewHouseholdFragment())
+        }
+    }
 }

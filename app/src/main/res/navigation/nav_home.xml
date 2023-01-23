@@ -57,16 +57,23 @@
         android:id="@+id/allHouseholdFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.all_household.AllHouseholdFragment"
         android:label="@string/home_icon_all_household"
-        tools:layout="@layout/fragment_all_household" >
+        tools:layout="@layout/fragment_display_search_rv_button" >
         <action
             android:id="@+id/action_allHouseholdFragment_to_newHouseholdFragment"
             app:destination="@id/newHouseholdFragment" />
+        <action
+            android:id="@+id/action_allHouseholdFragment_to_newBenRegTypeFragment"
+            app:destination="@id/newBenRegTypeFragment" />
     </fragment>
     <fragment
         android:id="@+id/allBenFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.all_ben.AllBenFragment"
         android:label="@string/home_icon_title_all_ben"
-        tools:layout="@layout/fragment_all_ben" />
+        tools:layout="@layout/fragment_all_ben" >
+        <action
+            android:id="@+id/action_allBenFragment_to_newBenRegTypeFragment"
+            app:destination="@id/newBenRegTypeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/eligibleCoupleFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.EligibleCoupleFragment"
@@ -132,6 +139,41 @@
         android:id="@+id/newHouseholdFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_registration.NewHouseholdFragment"
         android:label="@string/frag_nhhr_title"
-        tools:layout="@layout/fragment_new_household" />
+        tools:layout="@layout/fragment_new_household" >
+        <action
+            android:id="@+id/action_newHouseholdFragment_to_newBenRegTypeFragment"
+            app:destination="@id/newBenRegTypeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newBenRegTypeFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment"
+        android:label="@string/frag_new_ben_reg_type_title"
+        tools:layout="@layout/fragment_new_ben_reg_type" >
+        <argument
+            android:name="hhId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_newBenRegTypeFragment_to_newBenRegL15Fragment"
+            app:destination="@id/newBenRegL15Fragment" />
+        <action
+            android:id="@+id/action_newBenRegTypeFragment_to_newBenRegG15Fragment"
+            app:destination="@id/newBenRegG15Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newBenRegL15Fragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_less_15.NewBenRegL15Fragment"
+        android:label="Kid Registration" >
+        <argument
+            android:name="hhId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/newBenRegG15Fragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_more_15.NewBenRegG15Fragment"
+        android:label="Adult Registration" >
+        <argument
+            android:name="hhId"
+            app:argType="long" />
+    </fragment>
 
 </navigation>
