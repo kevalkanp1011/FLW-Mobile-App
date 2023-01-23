@@ -4,11 +4,8 @@
 
     <data>
         <variable
-            name="field"
-            type="String" />
-        <variable
-            name="required"
-            type="Boolean" />
+            name="form"
+            type="org.piramalswasthya.sakhi.model.FormInput" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +21,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_nullable"
-            android:hint="@{field}">
+            android:hint="@{form.title}">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et"
@@ -45,7 +42,7 @@
             android:textColor="@color/design_default_color_error"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/til_edit_text"
-            app:required="@{required}" />
+            app:required="@{form.required}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

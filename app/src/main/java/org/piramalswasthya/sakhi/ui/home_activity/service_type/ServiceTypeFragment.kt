@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentServiceTypeBinding
+import org.piramalswasthya.sakhi.model.FormInput
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import timber.log.Timber
 
