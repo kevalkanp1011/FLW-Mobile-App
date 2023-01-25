@@ -34,13 +34,7 @@ class SignInViewModel @Inject constructor(
 
     fun authUser(username : String, password : String){
         viewModelScope.launch {
-            val result = userRepo.authenticateUser(username,password)
-            if(result){
-                _state.value = State.SUCCESS
-            }
-            else{
-                _state.value = State.ERROR_NETWORK
-            }
+            _state.value = userRepo.authenticateUser(username,password)
         }
     }
 

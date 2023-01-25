@@ -54,7 +54,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Timber.d("onViewCreated() called! $numViewCopies")
-        if (!viewModel.location) {
+        if (!viewModel.isLocationSet()) {
             findNavController().navigate(HomeFragmentDirections.actionNavHomeToServiceTypeFragment())
         }
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, onBackPressedCallback)

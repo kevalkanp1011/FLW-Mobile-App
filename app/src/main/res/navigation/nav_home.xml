@@ -142,7 +142,8 @@
         tools:layout="@layout/fragment_new_household" >
         <action
             android:id="@+id/action_newHouseholdFragment_to_newBenRegTypeFragment"
-            app:destination="@id/newBenRegTypeFragment" />
+            app:destination="@id/newBenRegTypeFragment"
+            app:popUpTo="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/newBenRegTypeFragment"

@@ -6,8 +6,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.configuration.HouseholdFormDataset
+import org.piramalswasthya.sakhi.configuration.BenKidRegFormDataset
 import org.piramalswasthya.sakhi.model.FormInput
+import org.piramalswasthya.sakhi.model.HouseholdCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import timber.log.Timber
 import javax.inject.Inject
@@ -16,7 +17,7 @@ import javax.inject.Inject
 class NewBenRegL15ViewModel @Inject constructor(
     application : Application,
     private val benRepo: BenRepo
-): AndroidViewModel(application) {/*
+): AndroidViewModel(application) {
     enum class State{
         IDLE,
         SAVING,
@@ -26,8 +27,9 @@ class NewBenRegL15ViewModel @Inject constructor(
 
     private var _mTabPosition = 0
     private var hhId = 0L
-
-    fun getHHId()  = hhId.takeIf { it>0 } ?: throw IllegalStateException("Not got no HHId!!!!")
+    fun setHHid(hhId: Long) {
+        this.hhId = hhId
+    }
 
     val mTabPosition: Int
         get() = _mTabPosition
@@ -41,11 +43,13 @@ class NewBenRegL15ViewModel @Inject constructor(
         get() = _state
 
 
-    private lateinit var form : HouseholdFormDataset
+    private lateinit var form : BenKidRegFormDataset
+    private lateinit var household : HouseholdCache
 
     suspend fun getFirstPage(): List<FormInput> {
         return withContext(Dispatchers.IO){
-            form = benRepo.getDraftForm(getApplication())?: HouseholdFormDataset(getApplication())
+            household = benRepo.getBenHousehold(hhId)
+            form = benRepo.getDraftForm(getApplication())?: BenKidRegFormDataset(getApplication())
             form.firstPage
         }
     }
@@ -58,19 +62,7 @@ class NewBenRegL15ViewModel @Inject constructor(
     fun persistFirstPage() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                benRepo.persistFirstPage(form)
-            }
-        }
-    }
-
-    fun getThirdPage(): List<FormInput> {
-        return form.thirdPage
-    }
-
-    fun persistSecondPage() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                benRepo.persistSecondPage(form)
+                benRepo.persistFirstPage(form, hhId)
             }
         }
     }
@@ -80,7 +72,7 @@ class NewBenRegL15ViewModel @Inject constructor(
             _state.value = State.SAVING
             withContext(Dispatchers.IO){
                 try {
-                    hhId = benRepo.persistThirdPage(form)
+                    benRepo.persistSecondPage(form, hhId)
                     _state.postValue(State.SAVE_SUCCESS)
                 }
                 catch (e : Exception){
@@ -91,5 +83,6 @@ class NewBenRegL15ViewModel @Inject constructor(
         }
 
     }
-*/
+
+
 }

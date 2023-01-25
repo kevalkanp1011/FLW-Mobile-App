@@ -324,9 +324,23 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="1076" />
-                            <option name="y" value="3148" />
+                            <option name="x" value="1000" />
+                            <option name="y" value="3032" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_newBenRegTypeFragment_to_newBenRegG15Fragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_newBenRegTypeFragment_to_newBenRegL15Fragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -339,6 +353,15 @@
                             <option name="x" value="914" />
                             <option name="y" value="1834" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_newHouseholdFragment_to_newBenRegTypeFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>

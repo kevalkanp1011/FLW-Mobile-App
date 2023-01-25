@@ -10,7 +10,10 @@ import org.piramalswasthya.sakhi.model.UserNetwork
 import org.piramalswasthya.sakhi.network.*
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertD2DInterceptor
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertTmcInterceptor
+import org.piramalswasthya.sakhi.ui.login_activity.sign_in.SignInViewModel
+import org.piramalswasthya.sakhi.ui.login_activity.sign_in.SignInViewModel.State
 import timber.log.Timber
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 class UserRepo @Inject constructor(
@@ -29,7 +32,7 @@ class UserRepo @Inject constructor(
     }
 
 
-    suspend fun authenticateUser(userName: String, password: String): Boolean {
+    suspend fun authenticateUser(userName: String, password: String): State {
         return withContext(Dispatchers.IO) {
             val loggedInUser = database.userDao.getLoggedInUser()
             loggedInUser?.let {
@@ -38,28 +41,33 @@ class UserRepo @Inject constructor(
                     val tokenB = preferenceDao.getPrimaryApiToken()
                     TokenInsertD2DInterceptor.setToken(tokenA?:throw IllegalStateException("User logging offline without pref saved token A!"))
                     TokenInsertTmcInterceptor.setToken(tokenB?:throw IllegalStateException("User logging offline without pref saved token B!"))
-                    return@withContext true
+                    return@withContext State.SUCCESS
                 }
             }
-            if (getTokenD2D(userName, password)) {
-                getTokenTmc(userName, password)
-                if (user != null) {
-                    val result = getUserDetails()
-                    if(result) {
-                        Timber.d("User Auth Complete!!!!")
-                        user?.loggedIn = true
-                        if(database.userDao.getLoggedInUser()?.userName==userName){
-                            database.userDao.update(user!!.asCacheModel())
+
+            try{
+                if (getTokenD2D(userName, password)) {
+                    getTokenTmc(userName, password)
+                    if (user != null) {
+                        val result = getUserDetails()
+                        if (result) {
+                            Timber.d("User Auth Complete!!!!")
+                            user?.loggedIn = true
+                            if (database.userDao.getLoggedInUser()?.userName == userName) {
+                                database.userDao.update(user!!.asCacheModel())
+                            } else {
+                                database.userDao.resetAllUsersLoggedInState()
+                                database.userDao.insert(user!!.asCacheModel())
+                            }
+                            return@withContext State.SUCCESS
                         }
-                        else {
-                            database.userDao.resetAllUsersLoggedInState()
-                            database.userDao.insert(user!!.asCacheModel())
-                        }
-                        return@withContext true
                     }
+                    return@withContext State.ERROR_SERVER
                 }
+                return@withContext State.ERROR_INPUT
+            }catch (se : SocketTimeoutException){
+                return@withContext State.ERROR_SERVER
             }
-            false
         }
     }
 
@@ -81,8 +89,20 @@ class UserRepo @Inject constructor(
                 this@UserRepo.user?.contactNo = contactNo
                 val userId = user.getInt("userID")
                 val userName = user.getString("userName")
+
                 val healthInstitution = data.getJSONObject("healthInstitution")
                 val state = healthInstitution.getJSONObject("state")
+                val stateName = state.getString("stateName")
+                val district = healthInstitution.getJSONArray("districts").getJSONObject(0)
+                val districtName = district.getString("districtName")
+                val block = healthInstitution.getJSONArray("blockids").getJSONObject(0)
+                val blockName = block.getString("blockName")
+                this@UserRepo.user?.apply{
+                    stateEnglish.add(stateName)
+                    districtEnglish.add(districtName)
+                    blockEnglish.add(blockName)
+                }
+
                 val countryId = state.getInt("countryID")
                 val roleJsonArray = data.getJSONArray("roleids")
                 val role =
@@ -110,38 +130,38 @@ class UserRepo @Inject constructor(
                 val responseString = response.body()?.string() ?: return@withContext false
                 val responseJson = JSONObject(responseString)
                 val data = responseJson.getJSONArray("data")
-                for (i in 0 until data.length()) {
-                    val dataEntry = data.getJSONObject(i)
-                    val state = dataEntry.getJSONObject("state")
-                    val stateId = state.getInt("id")
-                    val stateNameEnglish = state.getString("stateNameInEnglish")
-                    val stateNameHindi = state.getString("stateNameInhindi")
-                    user?.stateEnglish?.add(stateNameEnglish)
-                    user?.stateHindi?.add(stateNameHindi)
-                    val districts = dataEntry.getJSONArray("district")
-                    for (j in 0 until districts.length()) {
-                        val district = districts.getJSONObject(j)
-                        val stateId2 = district.getInt("stateId")
-                        val districtId = district.getInt("id")
-                        val districtNameEnglish = district.getString("districtNameInEnglish")
-                        val districtNameHindi = district.getString("districtNameInHindi")
-                        user?.districtEnglish?.add(districtNameEnglish)
-                        user?.districtHindi?.add(districtNameHindi)
-                        //TODO(Save Above data somewhere)
-                    }
-                    val blocks = dataEntry.getJSONArray("block")
-                    for (k in 0 until blocks.length()) {
-                        val block = blocks.getJSONObject(k)
-                        val blockId = block.getInt("blockId")
-                        val blockNameEnglish = block.getString("blockNameInEnglish")
-                        val blockNameHindi = block.getString("blockNameIndHindi")
-                        user?.blockEnglish?.add(blockNameEnglish)
-                        user?.blockHindi?.add(blockNameHindi)
-                        //TODO(Save Above data somewhere)
-                    }
-                    val villages = dataEntry.getJSONArray("villages")
-                    for (l in 0 until villages.length()) {
-                        val village = villages.getJSONObject(l)
+//                for (i in 0 until data.length()) {
+//                    val dataEntry = data.getJSONObject(i)
+//                    val state = dataEntry.getJSONObject("state")
+//                    val stateId = state.getInt("id")
+//                    val stateNameEnglish = state.getString("stateNameInEnglish")
+//                    val stateNameHindi = state.getString("stateNameInhindi")
+//                    user?.stateEnglish?.add(stateNameEnglish)
+//                    user?.stateHindi?.add(stateNameHindi)
+//                    val districts = dataEntry.getJSONArray("district")
+//                    for (j in 0 until districts.length()) {
+//                        val district = districts.getJSONObject(j)
+//                        val stateId2 = district.getInt("stateId")
+//                        val districtId = district.getInt("id")
+//                        val districtNameEnglish = district.getString("districtNameInEnglish")
+//                        val districtNameHindi = district.getString("districtNameInHindi")
+//                        user?.districtEnglish?.add(districtNameEnglish)
+//                        user?.districtHindi?.add(districtNameHindi)
+//                        //TODO(Save Above data somewhere)
+//                    }
+//                    val blocks = dataEntry.getJSONArray("block")
+//                    for (k in 0 until blocks.length()) {
+//                        val block = blocks.getJSONObject(k)
+//                        val blockId = block.getInt("blockId")
+//                        val blockNameEnglish = block.getString("blockNameInEnglish")
+//                        val blockNameHindi = block.getString("blockNameIndHindi")
+//                        user?.blockEnglish?.add(blockNameEnglish)
+//                        user?.blockHindi?.add(blockNameHindi)
+//                        //TODO(Save Above data somewhere)
+//                    }
+                    //val villages = data.getJSONArray("villages")
+                    for (l in 0 until data.length()) {
+                        val village = data.getJSONObject(l).getJSONArray("villages").getJSONObject(0)
                         val villageId = village.getInt("villageid")
                         val villageNameEnglish = village.getString("villageNameEnglish")
                         val villageNameHindi = village.getString("villageNameHindi")
@@ -149,7 +169,7 @@ class UserRepo @Inject constructor(
                         user?.villageHindi?.add(villageNameHindi)
                         //TODO(Save Above data somewhere)
                     }
-                }
+                //}
                 getUserVanSpDetails()
             } else {
                 false

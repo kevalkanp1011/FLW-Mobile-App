@@ -1,6 +1,8 @@
 package org.piramalswasthya.sakhi.model
 
 import android.text.InputType.TYPE_CLASS_TEXT
+import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.flow.MutableStateFlow
 
 
 data class FormInput(
@@ -8,7 +10,7 @@ data class FormInput(
     val title : String,
     val list : List<String>? = null,
     val required : Boolean,
-    var value : String? = null,
+    var value: MutableStateFlow<String?> = MutableStateFlow(null),
     val regex : String? = null,
     val useFormEditTextDefaultInputFilter : Boolean = true,
     val etInputType : Int = TYPE_CLASS_TEXT,

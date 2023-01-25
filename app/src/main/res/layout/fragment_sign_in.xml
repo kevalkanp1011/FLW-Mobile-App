@@ -52,7 +52,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/padding_wide"
-                        tools:visibility="invisible">
+                        >
 
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/tv_title"
@@ -161,13 +161,27 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
 
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/tv_error"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/red"
+                            android:textAlignment="center"
+                            tools:visibility="visible"
+                            android:visibility="gone"
+                            tools:text="Hello"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                            app:layout_constraintTop_toBottomOf="@id/til_password"
+
+                            />
+
                         <CheckBox
                             android:id="@+id/cb_remember"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:buttonTint="?attr/colorPrimary"
                             android:text="@string/cb_login_remember_me_text"
-                            app:layout_constraintTop_toBottomOf="@id/til_password" />
+                            app:layout_constraintTop_toBottomOf="@id/tv_error" />
 
                         <Button
                             android:id="@+id/tv_forgot_password"

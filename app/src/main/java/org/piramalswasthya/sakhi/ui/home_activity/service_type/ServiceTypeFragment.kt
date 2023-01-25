@@ -7,12 +7,10 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentServiceTypeBinding
-import org.piramalswasthya.sakhi.model.FormInput
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import timber.log.Timber
 
@@ -27,11 +25,26 @@ class ServiceTypeFragment : Fragment() {
     private val onBackPressedCallback by lazy {
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (homeViewModel.location)
+                if (homeViewModel.isLocationSet())
                     findNavController().navigate(ServiceTypeFragmentDirections.actionServiceTypeFragmentToNavHome())
+                else if(dataValid()){
+                    binding.btnContinue.performClick()
+                }
+                else
+                    if(! incompleteLocationAlert.isShowing)
+                        incompleteLocationAlert.show()
 
             }
         }
+    }
+    private val incompleteLocationAlert by lazy {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Missing Detail")
+            .setMessage("At least one of the following is missing value:\n \n\tState\n\tDistrict\n\tBlock\n\tVillage")
+            .setPositiveButton("Understood"){
+                dialog,_-> dialog.dismiss()
+            }
+            .create()
     }
 
     override fun onCreateView(
@@ -46,13 +59,35 @@ class ServiceTypeFragment : Fragment() {
         Timber.d("onViewCreated() called!")
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+        if(homeViewModel.isLocationSet())
+            viewModel.loadLocation(homeViewModel.user,homeViewModel.getState(),homeViewModel.getDistrict(),homeViewModel.getBlock(),homeViewModel.getVillage())
+        else
+            viewModel.loadLocationFromDatabase()
         activity?.onBackPressedDispatcher?.addCallback(
             viewLifecycleOwner, onBackPressedCallback
         )
         binding.btnContinue.setOnClickListener {
-            homeViewModel.location = true
-            findNavController().navigate(ServiceTypeFragmentDirections.actionServiceTypeFragmentToNavHome())
+            if(dataValid()) {
+                homeViewModel.setLocationDetails(
+                    binding.ddState.actvRvDropdown.text.toString(),
+                    binding.ddDistrict.actvRvDropdown.text.toString(),
+                    binding.ddBlock.actvRvDropdown.text.toString(),
+                    binding.ddVillage.actvRvDropdown.text.toString(),
+                )
+                findNavController().navigate(ServiceTypeFragmentDirections.actionServiceTypeFragmentToNavHome())
+            }
+            else
+                incompleteLocationAlert.show()
+
         }
+    }
+
+    private fun dataValid(): Boolean {
+        return !(binding.ddState.actvRvDropdown.text.isNullOrBlank()||
+                binding.ddDistrict.actvRvDropdown.text.isNullOrBlank()||
+                binding.ddBlock.actvRvDropdown.text.isNullOrBlank()||
+                binding.ddVillage.actvRvDropdown.text.isNullOrBlank())
+
     }
 
 

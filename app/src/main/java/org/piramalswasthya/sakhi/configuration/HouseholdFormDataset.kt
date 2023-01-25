@@ -2,6 +2,9 @@ package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
 import android.text.InputType
+import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.model.FormInput
 import org.piramalswasthya.sakhi.model.HouseholdCache
@@ -9,7 +12,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HouseholdFormDataset(context: Context, private val household: HouseholdCache?= null) {
+class HouseholdFormDataset(context: Context, private val household: HouseholdCache? = null) {
 
     companion object {
         private fun getCurrentDate(): String {
@@ -33,197 +36,241 @@ class HouseholdFormDataset(context: Context, private val household: HouseholdCac
         }
     }
 
+    //////////////////////////////// First Page /////////////////////////////////////////
+
+    private val firstNameHeadOfFamily = FormInput(
+        inputType = FormInput.InputType.EDIT_TEXT,
+        title = context.getString(R.string.nhhr_first_name_hof),
+        value = MutableStateFlow(household?.familyHeadName),
+        required = true
+    )
+
+    private val lastNameHeadOfFamily = FormInput(
+        inputType = FormInput.InputType.EDIT_TEXT,
+        title = context.getString(R.string.nhhr_last_name_hof),
+        required = false
+    )
+    private val mobileNoHeadOfFamily = FormInput(
+        inputType = FormInput.InputType.EDIT_TEXT,
+        title = context.getString(R.string.nhhr_mob_no_hof),
+        required = true,
+        etLength = 10,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
+    )
+    private val houseNo = FormInput(
+        inputType = FormInput.InputType.EDIT_TEXT,
+        title = context.getString(R.string.nhhr_house_no),
+        required = false
+    )
+    private val wardNo = FormInput(
+        inputType = FormInput.InputType.EDIT_TEXT,
+        title = context.getString(R.string.nhhr_ward_no),
+        required = false
+    )
+    private val wardName = FormInput(
+        inputType = FormInput.InputType.EDIT_TEXT,
+        title = context.getString(R.string.nhhr_ward_name),
+        required = false
+    )
+    private val mohallaName = FormInput(
+        inputType = FormInput.InputType.EDIT_TEXT,
+        title = context.getString(R.string.nhhr_mohalla_name),
+        required = false
+    )
+    private val povertyLine = FormInput(
+        inputType = FormInput.InputType.DROPDOWN,
+        title = context.getString(R.string.nhhr_poverty_line),
+        list = listOf(
+            "APL",
+            "BPL",
+            "Don't Know"
+        ),
+        required = true
+    )
     val firstPage by lazy {
         listOf(
-            FormInput(
-                inputType = FormInput.InputType.EDIT_TEXT,
-                title = context.getString(R.string.nhhr_first_name_hof),
-                value = household?.familyHeadName,
-                required = true
-            ),
-            FormInput(
-                inputType = FormInput.InputType.EDIT_TEXT,
-                title = context.getString(R.string.nhhr_last_name_hof),
-                required = false
-            ),
-            FormInput(
-                inputType = FormInput.InputType.EDIT_TEXT,
-                title = context.getString(R.string.nhhr_mob_no_hof),
-                required = true,
-                etLength = 10,
-                etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
-            ),
-            FormInput(
-                inputType = FormInput.InputType.EDIT_TEXT,
-                title = context.getString(R.string.nhhr_house_no),
-                required = false
-            ),
-            FormInput(
-                inputType = FormInput.InputType.EDIT_TEXT,
-                title = context.getString(R.string.nhhr_ward_no),
-                required = false
-            ),
-            FormInput(
-                inputType = FormInput.InputType.EDIT_TEXT,
-                title = context.getString(R.string.nhhr_ward_name),
-                required = false
-            ),
-            FormInput(
-                inputType = FormInput.InputType.EDIT_TEXT,
-                title = context.getString(R.string.nhhr_mohalla_name),
-                required = false
-            ),
-            FormInput(
-                inputType = FormInput.InputType.DROPDOWN,
-                title = context.getString(R.string.nhhr_poverty_line),
-                list = listOf(
-                    "APL",
-                    "BPL",
-                    "Don't Know"
-                ),
-                required = true
-            )
+            firstNameHeadOfFamily,
+            lastNameHeadOfFamily,
+            mobileNoHeadOfFamily,
+            houseNo,
+            wardNo,
+            wardName,
+            mohallaName,
+            povertyLine
         )
     }
 
+    //////////////////////////////// Second Page /////////////////////////////////////////
+
+    private val residentialArea = FormInput(
+        inputType = FormInput.InputType.DROPDOWN,
+        title = context.getString(R.string.nhhr_type_residential_area),
+        list = listOf(
+            "Rural",
+            "Urban",
+            "Tribal",
+            "Other"
+        ),
+        required = false
+    )
+
+    val residentialAreaTrigger : FormInput
+        get() = residentialArea
+
+    val otherResidentialArea = FormInput(
+        inputType = FormInput.InputType.EDIT_TEXT,
+        title = "Other type of residential area",
+        required = false
+    )
+
+    private val typeOfHouse = FormInput(
+        inputType = FormInput.InputType.DROPDOWN,
+        title = context.getString(R.string.nhhr_type_of_house),
+        list = listOf(
+            "None",
+            "Kuchcha",
+            "Pucca",
+            "Other"
+        ),
+        required = true
+    )
+    private val houseOwnership = FormInput(
+        inputType = FormInput.InputType.DROPDOWN,
+        title = context.getString(R.string.nhhr_house_own),
+        listOf(
+            "Yes",
+            "No"
+        ),
+        required = true
+    )
     val secondPage by lazy {
         listOf(
-            FormInput(
-                inputType = FormInput.InputType.DROPDOWN,
-                title = context.getString(R.string.nhhr_type_residential_area),
-                list = listOf(
-                    "Rural",
-                    "Urban",
-                    "Tribal",
-                    "Other"
-                ),
-                required = false,
-                hiddenFieldTrigger = "Other",
-                hiddenField = FormInput(
-                    inputType = FormInput.InputType.EDIT_TEXT,
-                    title = "Other type of residential area",
-                    required = false
-                )
-            ),
-            FormInput(
-                inputType = FormInput.InputType.DROPDOWN,
-                title = context.getString(R.string.nhhr_type_of_house),
-                list = listOf(
-                    "None",
-                    "Kuchcha",
-                    "Pucca",
-                    "Other"
-                ),
-                required = true
-            ),
-            FormInput(
-                inputType = FormInput.InputType.DROPDOWN,
-                title = context.getString(R.string.nhhr_house_own),
-                listOf(
-                    "Yes",
-                    "No"
-                ),
-                required = true
-            )
+            residentialArea,
+            typeOfHouse,
+            houseOwnership
         )
     }
+
+    //////////////////////////////// Third Page /////////////////////////////////////////
+
+    private val separateKitchen = FormInput(
+        inputType = FormInput.InputType.DROPDOWN,
+        title = context.getString(R.string.nhhr_separate_kitchen),
+        list = listOf(
+            "Yes",
+            "No"
+        ),
+        required = true
+    )
+
+    private val fuelForCooking = FormInput(
+        inputType = FormInput.InputType.DROPDOWN,
+        title = context.getString(R.string.nhhr_fuel_cooking),
+        list = listOf(
+            "Firewood",
+            "Crop Residue",
+            "Cow dung cake",
+            "Coal",
+            "Kerosene",
+            "LPG",
+            "Other"
+        ),
+        required = true,
+    )
+    val fuelForCookingTrigger : FormInput
+        get() = fuelForCooking
+
+
+    val otherFuelForCooking = FormInput(
+        inputType = FormInput.InputType.EDIT_TEXT,
+        title = "Other Type of fuel used for Cooking",
+        required = true
+    )
+
+
+    private val sourceOfWater = FormInput(
+        inputType = FormInput.InputType.DROPDOWN,
+        title = context.getString(R.string.nhhr_primary_water),
+        list = listOf(
+            "Tap Water",
+            "Hand pump within house",
+            "Hand pump outside of house",
+            "Well",
+            "Tank",
+            "River",
+            "Pond",
+            "Other"
+        ),
+        required = true,
+    )
+
+    val sourceOfWaterTrigger : FormInput
+        get() = sourceOfWater
+
+
+    val otherSourceOfWater = FormInput(
+        inputType = FormInput.InputType.EDIT_TEXT,
+        title = "Other Primary Source of Water",
+        required = true
+    )
+
+
+    private val sourceOfElectricity = FormInput(
+        inputType = FormInput.InputType.DROPDOWN,
+        title = context.getString(R.string.nhhr_avail_electricity),
+        list = listOf(
+            "Electricity Supply",
+            "Generator",
+            "Solar Power",
+            "Kerosene Lamp",
+            "Other",
+        ),
+        required = true
+    )
+    val sourceOfElectricityTrigger : FormInput
+        get() = sourceOfElectricity
+
+    val otherSourceOfElectricity = FormInput(
+        inputType = FormInput.InputType.EDIT_TEXT,
+        title = "Other availability of Electricity",
+        required = true
+    )
+
+
+    private val availOfToilet = FormInput(
+        inputType = FormInput.InputType.DROPDOWN,
+        title = context.getString(R.string.nhhr_avail_toilet),
+        list = listOf(
+            "Flush toilet with running water",
+            "Flush toiler without water",
+            "Pit toilet with running water supply",
+            "Pit toilet without water supply",
+            "Other",
+            "None"
+        ),
+        required = true,
+    )
+
+    val availOfToiletTrigger : FormInput
+        get() = availOfToilet
+
+    val otherAvailOfToilet = FormInput(
+        inputType = FormInput.InputType.EDIT_TEXT,
+        title = "Other Availability of Toilet",
+        required = true
+    )
 
     val thirdPage by lazy {
         listOf(
-            FormInput(
-                inputType = FormInput.InputType.DROPDOWN,
-                title = context.getString(R.string.nhhr_separate_kitchen),
-                list = listOf(
-                    "Yes",
-                    "No"
-                ),
-                required = true
-            ),
-            FormInput(
-                inputType = FormInput.InputType.DROPDOWN,
-                title = context.getString(R.string.nhhr_fuel_cooking),
-                list = listOf(
-                    "Firewood",
-                    "Crop Residue",
-                    "Cow dung cake",
-                    "Coal",
-                    "Kerosene",
-                    "LPG",
-                    "Other"
-                ),
-                required = true,
-                hiddenFieldTrigger = "Other",
-                hiddenField = FormInput(
-                    inputType = FormInput.InputType.EDIT_TEXT,
-                    title = "Other Type of fuel used for Cooking",
-                    required = true
-                )
-            ),
-            FormInput(
-                inputType = FormInput.InputType.DROPDOWN,
-                title = context.getString(R.string.nhhr_primary_water),
-                list = listOf(
-                    "Tap Water",
-                    "Hand pump within house",
-                    "Hand pump outside of house",
-                    "Well",
-                    "Tank",
-                    "River",
-                    "Pond",
-                    "Other"
-                ),
-                required = true,
-                hiddenFieldTrigger = "Other",
-                hiddenField = FormInput(
-                    inputType = FormInput.InputType.EDIT_TEXT,
-                    title = "Other Primary Source of Water",
-                    required = true
-                )
-
-            ),
-            FormInput(
-                inputType = FormInput.InputType.DROPDOWN,
-                title = context.getString(R.string.nhhr_avail_electricity),
-                list = listOf(
-                    "Electricity Supply",
-                    "Generator",
-                    "Solar Power",
-                    "Kerosene Lamp",
-                    "Other",
-                ),
-                required = true,
-                hiddenFieldTrigger = "Other",
-                hiddenField = FormInput(
-                    inputType = FormInput.InputType.EDIT_TEXT,
-                    title = "Other availability of Electricity",
-                    required = true
-                )
-
-            ),
-            FormInput(
-                inputType = FormInput.InputType.DROPDOWN,
-                title = context.getString(R.string.nhhr_avail_toilet),
-                list = listOf(
-                    "Flush toilet with running water",
-                    "Flush toiler without water",
-                    "Pit toilet with running water supply",
-                    "Pit toilet without water supply",
-                    "Other",
-                    "None"
-                ),
-                required = true,
-                hiddenFieldTrigger = "Other",
-                hiddenField = FormInput(
-                    inputType = FormInput.InputType.EDIT_TEXT,
-                    title = "Other Availability of Toilet",
-                    required = true
-                )
-
-            )
+            separateKitchen,
+            fuelForCooking,
+            sourceOfWater,
+            sourceOfElectricity,
+            availOfToilet
         )
     }
 
-    fun getHouseholdForFirstPage(userId: Int, hhId : Long): HouseholdCache {
+    fun getHouseholdForFirstPage(userId: Int, hhId: Long): HouseholdCache {
 
         val household = HouseholdCache(
             householdId = hhId,
@@ -231,43 +278,43 @@ class HouseholdFormDataset(context: Context, private val household: HouseholdCac
             isDraft = true
         )
         household.apply {
-            familyHeadName = firstPage[0].value
-            familyName = firstPage[1].value
-            familyHeadPhoneNo = firstPage[2].value?.toLong()
-            houseNo = firstPage[3].value
-            wardNo = firstPage[4].value
-            wardName = firstPage[5].value
-            mohallaName = firstPage[6].value
-            povertyLine = firstPage[7].value
+            familyHeadName = firstNameHeadOfFamily.value.value
+            familyName = lastNameHeadOfFamily.value.value
+            familyHeadPhoneNo = mobileNoHeadOfFamily.value.value?.toLong()
+            houseNo = this@HouseholdFormDataset.houseNo.value.value
+            wardNo = this@HouseholdFormDataset.wardNo.value.value
+            wardName = this@HouseholdFormDataset.wardName.value.value
+            mohallaName = this@HouseholdFormDataset.mohallaName.value.value
+            povertyLine = this@HouseholdFormDataset.povertyLine.value.value
         }
         return household
     }
 
     fun getHouseholdForSecondPage(userId: Int, hhId: Long): HouseholdCache {
 
-        val household = getHouseholdForFirstPage(userId,hhId)
+        val household = getHouseholdForFirstPage(userId, hhId)
         household.apply {
-            residentialArea = secondPage[0].value
-            otherResidentialArea = secondPage[0].hiddenField?.value
-            houseType = secondPage[1].value
-            isHouseOwned = secondPage[2].value
+            residentialArea = this@HouseholdFormDataset.residentialArea.value.value
+            otherResidentialArea = this@HouseholdFormDataset.otherResidentialArea.value.value
+            houseType = this@HouseholdFormDataset.typeOfHouse.value.value
+            isHouseOwned = this@HouseholdFormDataset.houseOwnership.value.value
         }
 
         return household
     }
 
-    fun getHouseholdForThirdPage(userId: Int,hhId: Long) : HouseholdCache{
-        val household = getHouseholdForSecondPage(userId,hhId)
+    fun getHouseholdForThirdPage(userId: Int, hhId: Long): HouseholdCache {
+        val household = getHouseholdForSecondPage(userId, hhId)
         household.apply {
-            separateKitchen = thirdPage[0].value
-            fuelUsed = thirdPage[1].value
-            otherFuelUsed = thirdPage[1].hiddenField?.value
-            sourceOfDrinkingWater = thirdPage[2].value
-            otherSourceOfDrinkingWater = thirdPage[2].hiddenField?.value
-            availabilityOfElectricity = thirdPage[3].value
-            otherAvailabilityOfElectricity = thirdPage[3].hiddenField?.value
-            availabilityOfToilet = thirdPage[4].value
-            otherAvailabilityOfToilet = thirdPage[4].hiddenField?.value
+            separateKitchen = this@HouseholdFormDataset.separateKitchen.value.value
+            fuelUsed = this@HouseholdFormDataset.fuelForCooking.value.value
+            otherFuelUsed = this@HouseholdFormDataset.otherFuelForCooking.value.value
+            sourceOfDrinkingWater = this@HouseholdFormDataset.sourceOfWater.value.value
+            otherSourceOfDrinkingWater = this@HouseholdFormDataset.otherSourceOfWater.value.value
+            availabilityOfElectricity = this@HouseholdFormDataset.sourceOfElectricity.value.value
+            otherAvailabilityOfElectricity = this@HouseholdFormDataset.otherSourceOfElectricity.value.value
+            availabilityOfToilet = this@HouseholdFormDataset.availOfToilet.value.value
+            otherAvailabilityOfToilet = this@HouseholdFormDataset.otherAvailOfToilet.value.value
             isDraft = false
         }
         return household
