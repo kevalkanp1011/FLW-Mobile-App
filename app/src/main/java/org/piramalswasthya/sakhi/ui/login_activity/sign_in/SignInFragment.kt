@@ -39,12 +39,28 @@ class SignInFragment : Fragment() {
             when(state!!){
                 State.IDLE -> {}
                 State.LOADING -> validateInput()
-                State.ERROR_INPUT -> {}
-                State.ERROR_SERVER -> {}
-                State.ERROR_NETWORK -> {}
+                State.ERROR_INPUT -> {
+                    binding.pbSignIn.visibility = View.GONE
+                    binding.clContent.visibility = View.VISIBLE
+                    binding.tvError.text = "Invalid Username / password !"
+                    binding.tvError.visibility = View.VISIBLE
+                }
+                State.ERROR_SERVER -> {
+                    binding.pbSignIn.visibility = View.GONE
+                    binding.clContent.visibility = View.VISIBLE
+                    binding.tvError.text = "Server timed out, try again!"
+                    binding.tvError.visibility = View.VISIBLE
+                }
+                State.ERROR_NETWORK -> {
+                    binding.pbSignIn.visibility = View.GONE
+                    binding.clContent.visibility = View.VISIBLE
+                    binding.tvError.text = "Unable to connect to network!"
+                    binding.tvError.visibility = View.VISIBLE
+                }
                 State.SUCCESS -> {
                     binding.clContent.visibility = View.INVISIBLE
                     binding.pbSignIn.visibility = View.VISIBLE
+                    binding.tvError.visibility = View.GONE
                     findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToHomeActivity())
                 }
             }

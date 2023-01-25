@@ -27,7 +27,7 @@ data class BenBasicDomain(
 
 
 @Entity(
-    tableName = "BENEFICIARY-GENERAL",
+    tableName = "BENEFICIARY",
     foreignKeys = [
         ForeignKey(
             entity = HouseholdCache::class,
@@ -49,8 +49,8 @@ data class BenRegCache(
     @ColumnInfo(index = true)
     var householdId: Long,
 
-    @PrimaryKey
-    var beneficiaryId: Long,
+    @PrimaryKey(autoGenerate = true)
+    var beneficiaryId: Long = 0,
 
     @ColumnInfo(index = true)
     var ashaId: Int,
@@ -309,7 +309,9 @@ data class BenRegCache(
         Aadhar, lastHrpVisitDate, marriageDate ( 2 copies)
         vanId and serviceMap ID, ( Can get from Foreign key)
      */
-    var syncState : SyncState
+    var syncState : SyncState,
+
+    var isDraft : Boolean
 ){
 
     companion object{
@@ -324,7 +326,7 @@ data class BenRegCache(
             benSurname = lastName?:"Not Available",
             gender = gender?:"Not Available",
             age = if(age==0) "Not Available" else "$age $age_unit",
-            mobileNo = contactNumber?:"Not Available",
+            mobileNo = contactNumber?:mobileNoOfRelation?:"Not Available",
             fatherName = fatherName,
             familyHeadName = "Not implemented at the moment!",
             typeOfList = registrationType?:"Not Available",

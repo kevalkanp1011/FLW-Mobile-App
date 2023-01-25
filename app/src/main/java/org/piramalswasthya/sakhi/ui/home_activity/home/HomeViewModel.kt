@@ -17,6 +17,32 @@ class HomeViewModel @Inject constructor(
     private val userRepo : UserRepo
 ) : ViewModel() {
 
+    private var state :String? = null
+    private var district :String? = null
+    private var block :String? = null
+    private var village :String? = null
+
+    fun setLocationDetails(
+        state : String,
+        district : String,
+        block : String,
+        village : String
+    ){
+        this.state = state
+        this.district = district
+        this.block = block
+        this.village = village
+    }
+    fun getState() = state!!
+    fun getDistrict() = district!!
+    fun getBlock() = block!!
+    fun getVillage() = village!!
+
+
+    fun isLocationSet() : Boolean {
+        return !(state==null || district == null|| block==null || village ==null)
+    }
+
     private lateinit var _user : UserDomain
     val user : UserDomain
         get() = _user
@@ -32,5 +58,6 @@ class HomeViewModel @Inject constructor(
             userRepo.getLoggedInUser()?:throw IllegalStateException("No Logged in user found in DB!!")
         }
     }
-    var location = false
+
+
 }

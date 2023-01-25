@@ -13,8 +13,10 @@ class HouseholdRepo @Inject constructor(
     private val database: InAppDb,
     private val tmcNetworkApiService: TmcNetworkApiService
 ) {
-    val householdList = Transformations.map(database.householdDao.getAllHouseholds()) { list ->
-        list.map { it.asBasicDomainModel() }
+    val householdList by lazy {
+        Transformations.map(database.householdDao.getAllHouseholds()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
     }
 
     suspend fun getDraftForm(context: Context): HouseholdFormDataset? {

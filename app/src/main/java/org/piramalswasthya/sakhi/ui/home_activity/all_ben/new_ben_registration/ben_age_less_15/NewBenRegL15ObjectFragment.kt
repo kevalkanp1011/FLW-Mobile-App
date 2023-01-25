@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.adapters.NewBenKidPagerAdapter
 import org.piramalswasthya.sakhi.adapters.NewHouseholdPagerAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentInputFormPageBinding
 
@@ -18,7 +19,7 @@ class NewBenRegL15ObjectFragment  : Fragment()  {
 
     private lateinit var binding : FragmentInputFormPageBinding
 
-    private val viewModel : NewBenRegL15ViewModel by viewModels()
+    private val viewModel : NewBenRegL15ViewModel by viewModels({requireParentFragment()})
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,26 +31,19 @@ class NewBenRegL15ObjectFragment  : Fragment()  {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val pageNumber = arguments?.getInt(NewHouseholdPagerAdapter.ARG_OBJECT_INDEX) ?: throw IllegalStateException("No argument passed to viewpager object!")
+        val pageNumber = arguments?.getInt(NewBenKidPagerAdapter.ARG_OBJECT_INDEX) ?: throw IllegalStateException("No argument passed to viewpager object!")
         when(pageNumber){
             1 -> binding.inputForm.rvInputForm.apply {
                 val adapter = FormInputAdapter()
                 this.adapter = adapter
                 lifecycleScope.launch {
-                    //adapter.submitList(viewModel.getFirstPage())
+                    adapter.submitList(viewModel.getFirstPage())
                 }
             }
             2 -> binding.inputForm.rvInputForm.apply {
                 val adapter = FormInputAdapter()
                 this.adapter = adapter
-                //adapter.submitList(viewModel.getSecondPage())
-            }
-            3 -> {
-                binding.inputForm.rvInputForm.apply {
-                    val adapter = FormInputAdapter()
-                    this.adapter = adapter
-                    //adapter.submitList(viewModel.getThirdPage())
-                }
+                adapter.submitList(viewModel.getSecondPage())
             }
         }
 

@@ -18,7 +18,7 @@ interface D2DNetworkApiService {
         @Body userInput: D2DSaveUserRequest
     ): D2DSaveUserResponse
 
-    @GET("AssamVillageData/getAssamVillageDetailsByAshaId")
+    @GET("VillageData/getVillageDetailsByAshaId")
     suspend fun getVillageData(
         @Query("ashaId") userId : Int
     ): Response<ResponseBody>

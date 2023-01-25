@@ -39,8 +39,14 @@ class AllBenFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.btnNextPage.visibility = View.GONE
         val benAdapter = BenListAdapter(BenListAdapter.BenClickListener(
-            {Toast.makeText(context,"Ben : $it clicked", Toast.LENGTH_SHORT).show()},
-            {Toast.makeText(context,"Household : $it clicked", Toast.LENGTH_SHORT).show()}
+            {
+                Toast.makeText(context,"Ben : $it clicked", Toast.LENGTH_SHORT).show()
+
+
+            },
+            {Toast.makeText(context,"Household : $it clicked", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(AllBenFragmentDirections.actionAllBenFragmentToNewBenRegTypeFragment(it))
+            }
         ))
         binding.rvAny.adapter = benAdapter
 

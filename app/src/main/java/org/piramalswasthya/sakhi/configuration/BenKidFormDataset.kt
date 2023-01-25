@@ -244,7 +244,7 @@ class BenKidFormDataset (context: Context, private val ben: BenRegCache?= null) 
             return household
         }
 
-        fun getHouseholdForSecondPage(userId: Int, hhId: Long): HouseholdCache {
+        fun getBenForSecondPage(userId: Int, hhId: Long): HouseholdCache {
 
             val household = getHouseholdForFirstPage(userId,hhId)
             household.apply {
@@ -258,7 +258,7 @@ class BenKidFormDataset (context: Context, private val ben: BenRegCache?= null) 
         }
 
         fun getHouseholdForThirdPage(userId: Int,hhId: Long) : HouseholdCache {
-            val household = getHouseholdForSecondPage(userId,hhId)
+            val household = getBenForSecondPage(userId,hhId)
             household.apply {
                 separateKitchen = thirdPage[0].value
                 fuelUsed = thirdPage[1].value

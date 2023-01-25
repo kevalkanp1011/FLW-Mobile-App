@@ -18,4 +18,7 @@ interface HouseholdDao {
 
     @Query("SELECT * FROM HOUSEHOLD WHERE isDraft = 0")
     fun getAllHouseholds() : LiveData<List<HouseholdCache>>
+
+    @Query("SELECT * FROM HOUSEHOLD WHERE householdId =:hhId LIMIT 1")
+    suspend fun getHousehold(hhId  : Long) : HouseholdCache
 }

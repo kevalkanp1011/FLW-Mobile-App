@@ -27,15 +27,14 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    private const val baseD2DUrl = "http://117.245.141.41:9090/api/"
+    private const val baseD2DUrl = "http://d2dapi.piramalswasthya.org:9090/api/"
+        //"http://117.245.141.41:9090/api/"
 
-    private const val baseTmcUrl = "http://assamtmc.piramalswasthya.org:8080/"
+    private const val baseTmcUrl = // "http://assamtmc.piramalswasthya.org:8080/"
+    "http://uatamrit.piramalswasthya.org:8080/"
 
     private val baseClient =
         OkHttpClient.Builder()
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(10, TimeUnit.SECONDS)
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .addInterceptor(ContentTypeInterceptor())
 
@@ -55,6 +54,9 @@ object AppModule {
     fun provideD2DHttpClient() : OkHttpClient {
         return baseClient
             .newBuilder()
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
             .addInterceptor(TokenInsertD2DInterceptor())
             .build()
     }
@@ -65,6 +67,9 @@ object AppModule {
     fun provideTmcHttpClient() : OkHttpClient {
         return baseClient
             .newBuilder()
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
             .addInterceptor(TokenInsertTmcInterceptor())
             .build()
     }
