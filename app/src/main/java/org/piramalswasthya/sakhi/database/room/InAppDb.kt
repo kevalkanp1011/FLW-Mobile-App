@@ -18,14 +18,14 @@ import org.piramalswasthya.sakhi.model.UserCache
     UserCache::class,
     HouseholdCache::class,
     BenRegCache::class,
-    DummyEntity::class], version = 1, exportSchema = false)
+    BeneficiaryIdsAvail::class], version = 3, exportSchema = false)
 
 @TypeConverters(StringListConverter::class, SyncStateConverter::class)
 
 abstract class InAppDb  : RoomDatabase(){
 
     abstract val userDao : UserDao
-    abstract val dummyDao : DummyDao
+    abstract val dummyDao : BeneficiaryIdsAvailDao
     abstract val householdDao : HouseholdDao
     abstract val benDao : BenDao
 

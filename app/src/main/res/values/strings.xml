@@ -115,7 +115,6 @@
     <string name="frag_new_ben_type_adult_text">General Registration \n( 15 years and above )</string>
     <string name="frag_new_ben_type_select_text">Select Beneficiary Type</string>
     <string name="frag_new_ben_reg_type_title">Beneficiary Type for Registration</string>
-    <string name="date_2_string">%2d-%2d-%4d</string>
 
 
     <string-array name="temp_array">

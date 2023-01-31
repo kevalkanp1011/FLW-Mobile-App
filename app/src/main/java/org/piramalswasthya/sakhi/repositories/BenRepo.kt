@@ -54,4 +54,13 @@ class BenRepo @Inject constructor(
 
     }
 
+    private suspend fun extractBenId(){
+
+
+    }
+
+    suspend fun genBen(count : Int = 300){
+
+    }
+
 }
