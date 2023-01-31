@@ -3,7 +3,7 @@ package org.piramalswasthya.sakhi.repositories
 import android.content.Context
 import androidx.lifecycle.Transformations
 import org.piramalswasthya.sakhi.configuration.HouseholdFormDataset
-import org.piramalswasthya.sakhi.database.room.DummyEntity
+import org.piramalswasthya.sakhi.database.room.BeneficiaryIdsAvail
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.network.TmcNetworkApiService
@@ -25,7 +25,7 @@ class HouseholdRepo @Inject constructor(
 
     suspend fun persistFirstPage(form: HouseholdFormDataset) {
         //TODO(Delete this dummy after checking)
-        database.dummyDao.insert(DummyEntity(data = "Entry 1", sync = SyncState.UNSYNCED))
+        //database.dummyDao.insert(BeneficiaryIdsAvail(data = "Entry 1", sync = SyncState.UNSYNCED))
 
         val user =
             database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")

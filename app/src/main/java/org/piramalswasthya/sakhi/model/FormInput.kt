@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 data class FormInput(
     val inputType: InputType,
     val title : String,
-    val list : List<String>? = null,
+    var list : List<String>? = null,
     val required : Boolean,
     var value: MutableStateFlow<String?> = MutableStateFlow(null),
     val regex : String? = null,
@@ -16,6 +16,8 @@ data class FormInput(
     val etInputType : Int = TYPE_CLASS_TEXT,
     val etLength : Int = 30,
     var errorText : String? = null,
+    var max : Long? = null,
+    var min : Long?= null,
     val hiddenFieldTrigger : String? = null,
     val hiddenField : FormInput? = null
 ){
@@ -25,6 +27,7 @@ data class FormInput(
         RADIO,
         DATE_PICKER,
         TEXT_VIEW,
-        IMAGE_VIEW
+        IMAGE_VIEW,
+        CHECKBOXES
     }
 }

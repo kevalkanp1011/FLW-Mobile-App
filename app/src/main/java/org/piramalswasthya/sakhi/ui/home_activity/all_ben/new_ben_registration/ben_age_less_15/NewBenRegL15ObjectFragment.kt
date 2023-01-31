@@ -11,7 +11,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.adapters.NewBenKidPagerAdapter
-import org.piramalswasthya.sakhi.adapters.NewHouseholdPagerAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentInputFormPageBinding
 
 @AndroidEntryPoint
@@ -37,13 +36,13 @@ class NewBenRegL15ObjectFragment  : Fragment()  {
                 val adapter = FormInputAdapter()
                 this.adapter = adapter
                 lifecycleScope.launch {
-                    adapter.submitList(viewModel.getFirstPage())
+                    adapter.submitList(viewModel.getFirstPage(adapter))
                 }
             }
             2 -> binding.inputForm.rvInputForm.apply {
                 val adapter = FormInputAdapter()
                 this.adapter = adapter
-                adapter.submitList(viewModel.getSecondPage())
+                adapter.submitList(viewModel.getSecondPage(adapter))
             }
         }
 

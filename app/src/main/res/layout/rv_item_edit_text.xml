@@ -27,6 +27,7 @@
                 android:id="@+id/et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@{form.value}"
                 android:singleLine="true"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
 

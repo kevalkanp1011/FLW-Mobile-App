@@ -11,11 +11,15 @@ import android.widget.EditText
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onSubscription
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.configuration.FormEditTextDefaultInputFilter
+import org.piramalswasthya.sakhi.databinding.RvItemCheckBinding
 import org.piramalswasthya.sakhi.databinding.RvItemDatepickerBinding
 import org.piramalswasthya.sakhi.databinding.RvItemDropdownBinding
 import org.piramalswasthya.sakhi.databinding.RvItemEditTextBinding
+import org.piramalswasthya.sakhi.databinding.RvItemRadioBinding
 import org.piramalswasthya.sakhi.databinding.RvItemTextViewBinding
 import org.piramalswasthya.sakhi.model.FormInput
 import org.piramalswasthya.sakhi.model.FormInput.InputType.*
@@ -44,7 +48,7 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
 
         fun bind(item: FormInput) {
             binding.form = item
-            binding.et.setText(item.value.value)
+            //binding.et.setText(item.value.value)
             val textWatcher = object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 }
@@ -94,23 +98,10 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
             }
         }
 
-        fun bind(
-            item: FormInput,
-            hidden: (hiddenForm: FormInput?, show: Boolean) -> Unit
-        ) {
+        fun bind(item: FormInput, ) {
             binding.form = item
             binding.actvRvDropdown.setOnItemClickListener { _, _, index, _ ->
-//                if (item.list!![index] == item.value)
-//                    return@setOnItemClickListener
-//                item.hiddenFieldTrigger?.let {
-//                    if (it!="Any" &&it == item.value && it != item.list[index]) {
-//                        hidden(item.hiddenField, false)
-//                    }
-//                }
                 item.value.value = item.list?.get(index)
-//                if (item.hiddenFieldTrigger=="Any" || item.value == item.hiddenFieldTrigger) {
-//                    hidden(item.hiddenField, true)
-//                }
                 Timber.d("Item DD : $item")
                 item.errorText = null
                 binding.tilRvDropdown.error = null
@@ -122,39 +113,41 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
         }
     }
 
-    class RadioInputViewHolder private constructor(private val binding: RvItemDropdownBinding) :
+    class RadioInputViewHolder private constructor(private val binding: RvItemRadioBinding) :
         ViewHolder(binding.root) {
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RvItemDropdownBinding.inflate(layoutInflater, parent, false)
+                val binding = RvItemRadioBinding.inflate(layoutInflater, parent, false)
                 return RadioInputViewHolder(binding)
             }
         }
 
         fun bind(
-            item: FormInput,
-            hidden: (hiddenForm: FormInput?, show: Boolean) -> Unit
-        ) {
-            //TODO(bind form to item)
-            binding.actvRvDropdown.setOnItemClickListener { _, _, index, _ ->
-//                if (item.list!![index] == item.value.value)
-//                    return@setOnItemClickListener
-//                item.hiddenFieldTrigger?.let {
-//                    if (it == item.value && it != item.list[index]) {
-//                        hidden(item.hiddenField, false)
-//                    }
-//                }
-                item.value.value = item.list?.get(index)
-//                if (item.value == item.hiddenFieldTrigger) {
-//                    hidden(item.hiddenField, true)
-//                }
-                Timber.d("Item DD : $item")
-                item.errorText = null
-                binding.tilRvDropdown.error = null
-            }
+            item: FormInput ){
+            binding.form = item
 
-            item.errorText?.let { binding.tilRvDropdown.error = it }
+            //item.errorText?.let { binding.rg.error = it }
+            binding.executePendingBindings()
+
+        }
+    }
+
+    class CheckBoxesInputViewHolder private constructor(private val binding: RvItemCheckBinding) :
+        ViewHolder(binding.root) {
+        companion object {
+            fun from(parent: ViewGroup): ViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = RvItemCheckBinding.inflate(layoutInflater, parent, false)
+                return CheckBoxesInputViewHolder(binding)
+            }
+        }
+
+        fun bind(
+            item: FormInput ){
+            binding.form = item
+
+            //item.errorText?.let { binding.rg.error = it }
             binding.executePendingBindings()
 
         }
@@ -171,9 +164,7 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
         }
 
         fun bind(
-            item: FormInput,
-            hidden: (hiddenForm: FormInput?, show: Boolean) -> Unit
-        ) {
+            item: FormInput) {
             val today = Calendar.getInstance()
             var thisYear = today.get(Calendar.YEAR)
             var thisMonth = today.get(Calendar.MONTH)
@@ -185,31 +176,11 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
                     thisYear = value.substring(6).toInt()
                     thisMonth = value.substring(3,5).trim().toInt()-1
                     thisDay = value.substring(0,2).trim().toInt()
-                    hidden.invoke(item.hiddenField,true)
                 }
                 val datePickerDialog = DatePickerDialog(it.context,
                     { _, year, month, day ->
-                        //(it as EditText).setText()
-                        item.value.value = it.context.getString(R.string.date_2_string,day,month+1,year)
+                        item.value.value = "${if(day > 9)day else "0$day"}-${if(month > 8)month+1 else "0${month + 1}"}-$year"
                         binding.invalidateAll()
-                        val diff = today.time.time - Date(year-1900,month,day).time
-                        val diffDays = TimeUnit.MILLISECONDS.toDays(diff)
-//                        if(diffDays<30){
-//                            item.hiddenField?.value = diffDays.toString()
-//                            item.hiddenField?.hiddenField?.value = "Days"
-//                        }
-//                        else{
-//                            if(diffDays<365){
-//                                item.hiddenField?.value = (diffDays/30).toString()
-//                                item.hiddenField?.hiddenField?.value = "Months"
-//                            }
-//                            else{
-//                                item.hiddenField?.value = (diffDays/365).toString()
-//                                item.hiddenField?.hiddenField?.value = "Years"
-//                            }
-//                        }
-                        hidden.invoke(item.hiddenField,true)
-
                     }, thisYear, thisMonth, thisDay
                 )
                 item.errorText = null
@@ -270,10 +241,11 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
         return when (inputTypes[viewType]) {
             EDIT_TEXT -> EditTextInputViewHolder.from(parent)
             DROPDOWN -> DropDownInputViewHolder.from(parent)
-            RADIO -> TODO()
+            RADIO -> RadioInputViewHolder.from(parent)
             DATE_PICKER -> DatePickerInputViewHolder.from(parent)
             TEXT_VIEW -> TextViewInputViewHolder.from(parent)
             IMAGE_VIEW -> TODO()
+            CHECKBOXES -> CheckBoxesInputViewHolder.from(parent)
         }
     }
 
@@ -281,43 +253,12 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
         val item = getItem(position)
         when (item.inputType) {
             EDIT_TEXT -> (holder as EditTextInputViewHolder).bind(item)
-            DROPDOWN -> {
-                (holder as DropDownInputViewHolder).bind(item)
-                { form, show ->
-                    val currentPosition = currentList.indexOf(item)
-                    val list = currentList.toMutableList()
-                    if (show) {
-                        if(!currentList.contains(form))
-                            list.add(currentPosition + 1, form)
-                        submitList(list)
-                    } else {
-                        list.remove(form)
-                        submitList(list)
-                    }
-                }
-            }
-            RADIO -> TODO()
-            DATE_PICKER ->(holder as DatePickerInputViewHolder).bind(item) { form, show ->
-                val currentPosition = currentList.indexOf(item)
-                val list = currentList.toMutableList()
-                if (show) {
-                    if(!currentList.contains(form)) {
-                        list.add(currentPosition + 1, form)
-                        list.add(currentPosition+2,form?.hiddenField!!)
-                    }
-                    else{
-                        notifyItemChanged(currentPosition+1)
-                        notifyItemChanged(currentPosition+2)
-
-                    }
-                    submitList(list)
-                } else {
-                    list.remove(form)
-                    submitList(list)
-                }
-            }
+            DROPDOWN ->  (holder as DropDownInputViewHolder).bind(item)
+            RADIO -> (holder as RadioInputViewHolder).bind(item)
+            DATE_PICKER ->(holder as DatePickerInputViewHolder).bind(item)
             TEXT_VIEW -> (holder as TextViewInputViewHolder).bind(item)
             IMAGE_VIEW -> (holder as ImageViewInputViewHolder).bind(item,imageClickListener)
+            CHECKBOXES -> (holder as CheckBoxesInputViewHolder).bind(item)
         }
     }
 
