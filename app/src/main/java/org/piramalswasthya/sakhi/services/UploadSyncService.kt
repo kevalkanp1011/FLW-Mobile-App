@@ -62,7 +62,7 @@ class UploadSyncService : Service() {
     }
 
     private suspend fun unsyncedEntries(): Boolean {
-        return database.dummyDao.getNumEntriesBySyncState(SyncState.UNSYNCED)
+        return true
     }
 
     private fun createServiceNotification() {

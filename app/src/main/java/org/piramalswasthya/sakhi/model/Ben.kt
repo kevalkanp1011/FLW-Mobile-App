@@ -1,13 +1,25 @@
 package org.piramalswasthya.sakhi.model
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 import org.piramalswasthya.sakhi.database.room.SyncState
 import java.text.SimpleDateFormat
 import java.util.*
 
+enum class TypeOfList{
+    INFANT,
+    CHILD,
+    ADOLESCENT
+}
+enum class AgeUnit{
+    DAYS,
+    MONTHS,
+    YEARS
+}
+enum class Gender{
+    MALE,
+    FEMALE,
+    TRANSGENDER
+}
 data class BenBasicDomain(
     val benId: Long,
     val hhId: Long,
@@ -23,6 +35,71 @@ data class BenBasicDomain(
     val rchId: String,
     val hrpStatus: String? = null,
     val syncState: SyncState
+)
+
+data class BenRegKid(
+    var childRegisteredAWC: String? = null,
+
+    var childRegisteredAWCId: Int = 0,
+
+    var childRegisteredSchool: String? = null,
+
+    var childRegisteredSchoolId: Int = 0,
+
+    var typeOfSchool: String? = null,
+
+    var typeOfSchoolId: Int = 0,
+    var birthPlace : String? = null,
+    var birthPlaceId : String? = null,
+    var facilityName : String? = null,
+    var facilityid : String? = null,
+    var facilityOther : String? = null,
+    var placeName : String? = null,
+    var conductedDelivery : String? = null,
+    var conductedDeliveryId : String? = null,
+    var conductedDeliveryOther : String? = null,
+    var deliveryType : String? = null,
+    var deliveryTypeId : String? = null,
+    var complications : String? = null,
+    var complicationsId : String? = null,
+    var complicationsOther : String? = null,
+    var term : String? = null,
+    var termid : String? = null,
+    var gestationalAge : String? = null,
+    var gestationalAgeId : String? = null,
+    var corticosteroidGivenMother : String? = null,
+    var corticosteroidGivenMotherId : String? = null,
+    var criedImmediately : String? = null,
+    var criedImmediatelyId : String? = null,
+    var birthDefects : String? = null,
+    var birthDefectsId : String? = null,
+    var birthDefectsOthers : String? = null,
+    var heightAtBirth : String? = null,
+    var weightAtBirth : String? = null,
+    var feedingStarted : String? = null,
+    var feedingStartedId : String? = null,
+    var birthDosage : String? = null,
+    var birthDosageId : String? = null,
+    var opvBatchNo : String? = null,
+    var opvGivenDueDate : String? = null,
+    var opvDate : String? = null,
+    var bcdBatchNo : String? = null,
+    var bcgGivenDueDate : String? = null,
+    var bcgDate : String? = null,
+    var hptBatchNo : String? = null,
+    var hptGivenDueDate : String? = null,
+    var hptDate : String? = null,
+    var vitaminKBatchNo : String? = null,
+    var vitaminKGivenDueDate : String? = null,
+    var vitaminKDate : String? = null,
+    var deliveryTypeOther : String? = null,
+
+    var motherBenId : String? = null,
+    var childMotherName : String? = null,
+    var motherPosition : String? = null,
+    var birthBCG : Boolean = false,
+    var birthHepB : Boolean = false,
+    var birthOPV : Boolean = false,
 )
 
 
@@ -67,7 +144,7 @@ data class BenRegCache(
 
     var lastName: String? = null,
 
-    var gender: String? = null,
+    var gender: Gender? = null,
 
     var genderId: Int = 0,
 
@@ -75,7 +152,7 @@ data class BenRegCache(
 
     var age: Int = 0,
 
-    var age_unit: String? = null,
+    var ageUnit: AgeUnit? = null,
 
     var age_unitId: Int = 0,
 
@@ -119,7 +196,7 @@ data class BenRegCache(
 
     var rchId: String? = null,
 
-    var registrationType: String? = null,
+    var registrationType: TypeOfList? = null,
 
     var latitude: Double = 0.0,
 
@@ -183,32 +260,11 @@ data class BenRegCache(
 
     var isDeathStatus : Boolean = false,
 
-    var childRegisteredAWC: String? = null,
 
-    var childRegisteredAWCId: Int = 0,
-
-    var childRegisteredSchool: String? = null,
-
-    var childRegisteredSchoolId: Int = 0,
-
-    var typeOfSchool: String? = null,
-
-    var typeOfSchoolId: Int = 0,
 
     var expectedDateOfDelivery: String? = null,
 
     var previousLiveBirth: String? = null,
-
-    //these are new fields of new born registration
-    var lastDeliveryConducted: String? = null,
-
-    var lastDeliveryConductedID: Int = 0,
-
-    var facilitySelection: String? = null,
-
-    var whoConductedDelivery: String? = null,
-
-    var whoConductedDeliveryID: Int = 0,
 
     //these are new fields of registration for asha login
     var familyHeadRelation: String? = null,
@@ -254,14 +310,6 @@ data class BenRegCache(
 
     var villageId: Int = 0,
 
-    var childName: String? = null,
-
-    var childBenId: Long = 0,
-
-    var childPos: Int = 0,
-
-    var motherBenId: Long?=null,
-
     var isHrpStatus: Boolean = false,
 
     var hrpIdentificationDate: String? = null,
@@ -296,8 +344,6 @@ data class BenRegCache(
 
     var diagnosisStatus: String? = null,
 
-    var facilityOther: String? = null,
-
     var noOfDaysForDelivery: Int? = null,
 
     var familyHeadRelationOther: String? = null,
@@ -311,8 +357,12 @@ data class BenRegCache(
      */
     var syncState : SyncState,
 
-    var isDraft : Boolean
-){
+    var isDraft : Boolean,
+
+    @Embedded(prefix = "kid_")
+    var kidDetails : BenRegKid?=null,
+
+    ){
 
     companion object{
         private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
@@ -324,12 +374,12 @@ data class BenRegCache(
             regDate = dateFormat.format(Date(regDate!!)),
             benName = firstName?:"Not Available",
             benSurname = lastName?:"Not Available",
-            gender = gender?:"Not Available",
-            age = if(age==0) "Not Available" else "$age $age_unit",
+            gender = gender?.name?:"Not Available",
+            age = if(age==0) "Not Available" else "$age $ageUnit",
             mobileNo = contactNumber?:mobileNoOfRelation?:"Not Available",
             fatherName = fatherName,
             familyHeadName = "Not implemented at the moment!",
-            typeOfList = registrationType?:"Not Available",
+            typeOfList = registrationType?.name?:"Not Available",
             rchId = rchId?:"Not Available",
             hrpStatus = confirmedHrp?:"Not Available",
             syncState = syncState
