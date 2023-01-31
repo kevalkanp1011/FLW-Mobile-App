@@ -2,7 +2,11 @@ package org.piramalswasthya.sakhi.configuration
 
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.model.Icon
+import org.piramalswasthya.sakhi.ui.home_activity.child_care.ChildCareFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeFragmentDirections
+import org.piramalswasthya.sakhi.ui.home_activity.mother_care.MotherCareFragmentDirections
+import org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.NcdFragmentDirections
+import org.piramalswasthya.sakhi.ui.home_activity.village_level_forms.VillageLevelFormsFragmentDirections
 
 object IconDataset {
 
@@ -60,5 +64,77 @@ object IconDataset {
             R.drawable.ic_person, "Village Level Forms",
             HomeFragmentDirections.actionNavHomeToVillageLevelFormsFragment()
         ),
+    )
+
+    fun getChildCareDataset() = listOf(
+        Icon(
+            R.drawable.ic_person,
+            "Infant List",
+            ChildCareFragmentDirections.actionChildCareFragmentToInfantListFragment()
+        ),
+        Icon(
+            R.drawable.ic_person,
+            "Child List",
+            ChildCareFragmentDirections.actionChildCareFragmentToChildListFragment()
+        ),
+        Icon(
+            R.drawable.ic_person,
+            "Adolescent List",
+            ChildCareFragmentDirections.actionChildCareFragmentToAdolescentListFragment()
+        )
+    )
+
+    fun getMotherCareDataset() = listOf(
+        Icon(
+            R.drawable.ic_person,
+            "Pregnancy List",
+            MotherCareFragmentDirections.actionMotherCareFragmentToPregnancyListFragment()
+        ),
+        Icon(
+            R.drawable.ic_person,
+            "Delivery Stage List",
+            MotherCareFragmentDirections.actionMotherCareFragmentToDeliveryStageListFragment()
+        ),
+        Icon(
+            R.drawable.ic_person,
+            "PNC Mother List",
+            MotherCareFragmentDirections.actionMotherCareFragmentToPncMotherListFragment()
+        ),
+        Icon(
+            R.drawable.ic_person,
+            "Reproductive Age List",
+            MotherCareFragmentDirections.actionMotherCareFragmentToReproductiveAgeListFragment()
+        )
+    )
+
+    fun getNCDDataset() = listOf(
+        Icon(
+            R.drawable.ic_person,
+            "NCD List",
+            NcdFragmentDirections.actionNcdFragmentToNcdListFragment()
+        ),
+        Icon(
+            R.drawable.ic_person,
+            "NCD Eligible List",
+            NcdFragmentDirections.actionNcdFragmentToNcdEligibleListFragment()
+        ),
+        Icon(
+            R.drawable.ic_person,
+            "NCD Priority List",
+            NcdFragmentDirections.actionNcdFragmentToNcdPriorityListFragment()
+        ),
+        Icon(
+            R.drawable.ic_person,
+            "NCD Non-Eligible List",
+            NcdFragmentDirections.actionNcdFragmentToNcdNonEligibleListFragment()
+        )
+    )
+
+    fun getVillageLevelFormsDataset() = listOf(
+        Icon(
+            R.drawable.ic_person,
+            "Survey Register",
+            VillageLevelFormsFragmentDirections.actionVillageLevelFormsFragmentToSurveyRegisterFragment()
+        )
     )
 }
