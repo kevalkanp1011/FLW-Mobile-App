@@ -83,12 +83,35 @@
         android:id="@+id/childCareFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.child_care.ChildCareFragment"
         android:label="@string/home_icon_title_child_care"
-        tools:layout="@layout/fragment_child_care" />
+        tools:layout="@layout/rv_icon_grid" >
+        <action
+            android:id="@+id/action_childCareFragment_to_infantListFragment"
+            app:destination="@id/infantListFragment" />
+        <action
+            android:id="@+id/action_childCareFragment_to_adolescentListFragment"
+            app:destination="@id/adolescentListFragment" />
+        <action
+            android:id="@+id/action_childCareFragment_to_childListFragment"
+            app:destination="@id/childListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/motherCareFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.MotherCareFragment"
         android:label="@string/home_icon_title_mother_care"
-        tools:layout="@layout/fragment_mother_care" />
+        tools:layout="@layout/rv_icon_grid" >
+        <action
+            android:id="@+id/action_motherCareFragment_to_pregnancyListFragment"
+            app:destination="@id/pregnancyListFragment" />
+        <action
+            android:id="@+id/action_motherCareFragment_to_deliveryStageListFragment"
+            app:destination="@id/deliveryStageListFragment" />
+        <action
+            android:id="@+id/action_motherCareFragment_to_pncMotherListFragment"
+            app:destination="@id/pncMotherListFragment" />
+        <action
+            android:id="@+id/action_motherCareFragment_to_reproductiveAgeListFragment"
+            app:destination="@id/reproductiveAgeListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/deathReportsFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.death_reports.DeathReportsFragment"
@@ -118,12 +141,29 @@
         android:id="@+id/ncdFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.NcdFragment"
         android:label="@string/home_icon_title_ncd"
-        tools:layout="@layout/fragment_ncd" />
+        tools:layout="@layout/rv_icon_grid" >
+        <action
+            android:id="@+id/action_ncdFragment_to_ncdEligibleListFragment"
+            app:destination="@id/ncdEligibleListFragment" />
+        <action
+            android:id="@+id/action_ncdFragment_to_ncdListFragment"
+            app:destination="@id/ncdListFragment" />
+        <action
+            android:id="@+id/action_ncdFragment_to_ncdNonEligibleListFragment"
+            app:destination="@id/ncdNonEligibleListFragment" />
+        <action
+            android:id="@+id/action_ncdFragment_to_ncdPriorityListFragment"
+            app:destination="@id/ncdPriorityListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/villageLevelFormsFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.village_level_forms.VillageLevelFormsFragment"
         android:label="@string/home_icon_title_village_lvl_forms"
-        tools:layout="@layout/fragment_village_level_forms" />
+        tools:layout="@layout/rv_icon_grid" >
+        <action
+            android:id="@+id/action_villageLevelFormsFragment_to_surveyRegisterFragment"
+            app:destination="@id/surveyRegisterFragment" />
+    </fragment>
     <fragment
         android:id="@+id/serviceTypeFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.service_type.ServiceTypeFragment"
@@ -176,5 +216,65 @@
             android:name="hhId"
             app:argType="long" />
     </fragment>
+    <fragment
+        android:id="@+id/infantListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.InfantListFragment"
+        android:label="@string/child_care_icon_title_infant_list"
+        tools:layout="@layout/fragment_infant_list" />
+    <fragment
+        android:id="@+id/adolescentListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.child_care.adolescent_list.AdolescentListFragment"
+        android:label="@string/child_care_icon_title_adolescent_list"
+        tools:layout="@layout/fragment_adolescent_list" />
+    <fragment
+        android:id="@+id/childListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.child_care.child_list.ChildListFragment"
+        android:label="@string/child_care_icon_title_child_list"
+        tools:layout="@layout/fragment_child_list" />
+    <fragment
+        android:id="@+id/pregnancyListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.pregnancy_list.PregnancyListFragment"
+        android:label="fragment_pregnancy_list"
+        tools:layout="@layout/fragment_pregnancy_list" />
+    <fragment
+        android:id="@+id/deliveryStageListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.delivery_stage_list.DeliveryStageListFragment"
+        android:label="fragment_delivery_stage_list"
+        tools:layout="@layout/fragment_delivery_stage_list" />
+    <fragment
+        android:id="@+id/pncMotherListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.pnc_mother_list.PncMotherListFragment"
+        android:label="fragment_pnc_mother_list"
+        tools:layout="@layout/fragment_pnc_mother_list" />
+    <fragment
+        android:id="@+id/reproductiveAgeListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.reproductive_age_list.ReproductiveAgeListFragment"
+        android:label="fragment_reproductive_age_list"
+        tools:layout="@layout/fragment_reproductive_age_list" />
+    <fragment
+        android:id="@+id/ncdEligibleListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_eligible_list.NcdEligibleListFragment"
+        android:label="fragment_ncd_eligible_list"
+        tools:layout="@layout/fragment_ncd_eligible_list" />
+    <fragment
+        android:id="@+id/ncdListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_list.NcdListFragment"
+        android:label="fragment_ncd_list"
+        tools:layout="@layout/fragment_ncd_list" />
+    <fragment
+        android:id="@+id/ncdNonEligibleListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_non_eligible_list.NcdNonEligibleListFragment"
+        android:label="fragment_ncd_non_eligible_list"
+        tools:layout="@layout/fragment_ncd_non_eligible_list" />
+    <fragment
+        android:id="@+id/ncdPriorityListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_priority_list.NcdPriorityListFragment"
+        android:label="fragment_ncd_priority_list"
+        tools:layout="@layout/fragment_ncd_priority_list" />
+    <fragment
+        android:id="@+id/surveyRegisterFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.village_level_forms.survey_register.SurveyRegisterFragment"
+        android:label="fragment_survey_register"
+        tools:layout="@layout/fragment_survey_register" />
 
 </navigation>

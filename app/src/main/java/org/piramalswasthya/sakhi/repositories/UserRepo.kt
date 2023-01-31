@@ -10,7 +10,6 @@ import org.piramalswasthya.sakhi.model.UserNetwork
 import org.piramalswasthya.sakhi.network.*
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertD2DInterceptor
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertTmcInterceptor
-import org.piramalswasthya.sakhi.ui.login_activity.sign_in.SignInViewModel
 import org.piramalswasthya.sakhi.ui.login_activity.sign_in.SignInViewModel.State
 import timber.log.Timber
 import java.net.SocketTimeoutException

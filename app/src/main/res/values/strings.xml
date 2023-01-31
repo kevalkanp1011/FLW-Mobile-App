@@ -36,6 +36,9 @@
     <string name="home_icon_title_all_ben">All Beneficiaries</string>
     <string name="home_icon_title_elig_coup">Eligible Couples</string>
     <string name="home_icon_title_child_care">Child Care</string>
+    <string name="child_care_icon_title_child_list">Child List</string>
+    <string name="child_care_icon_title_infant_list">Infant List</string>
+    <string name="child_care_icon_title_adolescent_list">Adolescent List</string>
     <string name="home_icon_title_mother_care">Mother Care</string>
     <string name="home_icon_title_death_rep">Death Reports</string>
     <string name="home_icon_title_gen_op">General OP Care</string>
