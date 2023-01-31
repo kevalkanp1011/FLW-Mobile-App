@@ -8,43 +8,50 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.repositories.UserRepo
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val userRepo : UserRepo
+    private val userRepo: UserRepo
 ) : ViewModel() {
 
-    private var state :String? = null
-    private var district :String? = null
-    private var block :String? = null
-    private var village :String? = null
+    private var locationRecord: LocationRecord? = null
 
     fun setLocationDetails(
-        state : String,
-        district : String,
-        block : String,
-        village : String
-    ){
-        this.state = state
-        this.district = district
-        this.block = block
-        this.village = village
+        state: String,
+        district: String,
+        block: String,
+        village: String
+    ) {
+        val stateId = user.stateIds[user.stateEnglish.indexOf(state)]
+        val districtId = user.districtIds[user.districtEnglish.indexOf(district)]
+        val blockId = user.blockIds[user.blockEnglish.indexOf(block)]
+        val villageId = user.villageIds[user.villageEnglish.indexOf(village)]
+        this.locationRecord = LocationRecord(
+            stateId,
+            state,
+            districtId,
+            district,
+            blockId,
+            block,
+            villageId,
+            village,
+            user.countryId
+        )
     }
-    fun getState() = state!!
-    fun getDistrict() = district!!
-    fun getBlock() = block!!
-    fun getVillage() = village!!
+
+    fun getLocationRecord() = locationRecord!!
 
 
-    fun isLocationSet() : Boolean {
-        return !(state==null || district == null|| block==null || village ==null)
+    fun isLocationSet(): Boolean {
+        return locationRecord != null
     }
 
-    private lateinit var _user : UserDomain
-    val user : UserDomain
+    private lateinit var _user: UserDomain
+    val user: UserDomain
         get() = _user
 
     init {
@@ -53,9 +60,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getUserFromRepo() : UserDomain {
+    private suspend fun getUserFromRepo(): UserDomain {
         return withContext(Dispatchers.IO) {
-            userRepo.getLoggedInUser()?:throw IllegalStateException("No Logged in user found in DB!!")
+            userRepo.getLoggedInUser()
+                ?: throw IllegalStateException("No Logged in user found in DB!!")
         }
     }
 

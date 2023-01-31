@@ -132,6 +132,10 @@ data class BenRegCache(
     @ColumnInfo(index = true)
     var ashaId: Int,
 
+    var isKid : Boolean,
+
+    var isAdult : Boolean,
+
     var userImage: String? = null,
 
     @Suppress("ArrayInDataClass")
@@ -172,7 +176,7 @@ data class BenRegCache(
 
     var motherName: String? = null,
 
-    var contactNumber: String? = null,
+    var contactNumber: Long? = null,
 
     var mobileNoOfRelation: String? = null,
 
@@ -275,11 +279,11 @@ data class BenRegCache(
 
     var createdBy: String? = null,
 
-    var createdDate: String? = null,
+    var createdDate: Long? = null,
 
     var updatedBy: String? = null,
 
-    var updatedDate: String? = null,
+    var updatedDate: Long? = null,
 
     var ncdPriority: Int = 0,
 
@@ -376,7 +380,7 @@ data class BenRegCache(
             benSurname = lastName?:"Not Available",
             gender = gender?.name?:"Not Available",
             age = if(age==0) "Not Available" else "$age $ageUnit",
-            mobileNo = contactNumber?:mobileNoOfRelation?:"Not Available",
+            mobileNo = contactNumber?.toString()?:"Not Available",
             fatherName = fatherName,
             familyHeadName = "Not implemented at the moment!",
             typeOfList = registrationType?.name?:"Not Available",

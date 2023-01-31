@@ -60,7 +60,7 @@ class ServiceTypeFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         if(homeViewModel.isLocationSet())
-            viewModel.loadLocation(homeViewModel.user,homeViewModel.getState(),homeViewModel.getDistrict(),homeViewModel.getBlock(),homeViewModel.getVillage())
+            viewModel.loadLocation(homeViewModel.user,homeViewModel.getLocationRecord())
         else
             viewModel.loadLocationFromDatabase()
         activity?.onBackPressedDispatcher?.addCallback(

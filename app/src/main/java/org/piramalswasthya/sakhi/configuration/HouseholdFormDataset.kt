@@ -12,9 +12,39 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HouseholdFormDataset(context: Context, private val household: HouseholdCache? = null) {
+class HouseholdFormDataset(context: Context) {
+
+    private var household: HouseholdCache? = null
+
+    constructor(context: Context, household: HouseholdCache) : this(context) {
+        this.household = household
+        firstNameHeadOfFamily.value.value = household.familyHeadName
+        lastNameHeadOfFamily.value.value = household.familyName
+        mobileNoHeadOfFamily.value.value = household.familyHeadPhoneNo.toString()
+        houseNo.value.value = household.houseNo
+        wardNo.value.value = household.wardNo
+        wardName.value.value = household.wardName
+        mohallaName.value.value = household.mohallaName
+        povertyLine.value.value = household.povertyLine
+        residentialArea.value.value = household.residentialArea
+        otherResidentialArea.value.value = household.otherResidentialArea
+        typeOfHouse.value.value = household.houseType
+        houseOwnership.value.value = household.isHouseOwned
+        separateKitchen.value.value = household.separateKitchen
+        fuelForCooking.value.value = household.fuelUsed
+        otherFuelForCooking.value.value = household.otherFuelUsed
+        sourceOfWater.value.value = household.sourceOfDrinkingWater
+        otherSourceOfWater.value.value = household.otherSourceOfDrinkingWater
+        sourceOfElectricity.value.value = household.availabilityOfElectricity
+        otherSourceOfElectricity.value.value = household.otherAvailabilityOfElectricity
+        availOfToilet.value.value = household.availabilityOfToilet
+        otherAvailOfToilet.value.value = household.otherAvailabilityOfToilet
+    }
+
 
     companion object {
+
+
         private fun getCurrentDate(): String {
             val calendar = Calendar.getInstance()
             val mdFormat =
@@ -41,7 +71,6 @@ class HouseholdFormDataset(context: Context, private val household: HouseholdCac
     private val firstNameHeadOfFamily = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_first_name_hof),
-        value = MutableStateFlow(household?.familyHeadName),
         required = true
     )
 
@@ -114,7 +143,7 @@ class HouseholdFormDataset(context: Context, private val household: HouseholdCac
         required = false
     )
 
-    val residentialAreaTrigger : FormInput
+    val residentialAreaTrigger: FormInput
         get() = residentialArea
 
     val otherResidentialArea = FormInput(
@@ -177,7 +206,7 @@ class HouseholdFormDataset(context: Context, private val household: HouseholdCac
         ),
         required = true,
     )
-    val fuelForCookingTrigger : FormInput
+    val fuelForCookingTrigger: FormInput
         get() = fuelForCooking
 
 
@@ -204,7 +233,7 @@ class HouseholdFormDataset(context: Context, private val household: HouseholdCac
         required = true,
     )
 
-    val sourceOfWaterTrigger : FormInput
+    val sourceOfWaterTrigger: FormInput
         get() = sourceOfWater
 
 
@@ -227,7 +256,7 @@ class HouseholdFormDataset(context: Context, private val household: HouseholdCac
         ),
         required = true
     )
-    val sourceOfElectricityTrigger : FormInput
+    val sourceOfElectricityTrigger: FormInput
         get() = sourceOfElectricity
 
     val otherSourceOfElectricity = FormInput(
@@ -251,7 +280,7 @@ class HouseholdFormDataset(context: Context, private val household: HouseholdCac
         required = true,
     )
 
-    val availOfToiletTrigger : FormInput
+    val availOfToiletTrigger: FormInput
         get() = availOfToilet
 
     val otherAvailOfToilet = FormInput(
@@ -270,14 +299,16 @@ class HouseholdFormDataset(context: Context, private val household: HouseholdCac
         )
     }
 
-    fun getHouseholdForFirstPage(userId: Int, hhId: Long): HouseholdCache {
+    fun getHouseholdForFirstPage(userId: Int): HouseholdCache {
 
-        val household = HouseholdCache(
-            householdId = hhId,
-            ashaId = userId,
-            isDraft = true
-        )
-        household.apply {
+        if (household == null) {
+            household = HouseholdCache(
+                householdId = getHHidFromUserId(userId),
+                ashaId = userId,
+                isDraft = true
+            )
+        }
+        household?.apply {
             familyHeadName = firstNameHeadOfFamily.value.value
             familyName = lastNameHeadOfFamily.value.value
             familyHeadPhoneNo = mobileNoHeadOfFamily.value.value?.toLong()
@@ -287,37 +318,36 @@ class HouseholdFormDataset(context: Context, private val household: HouseholdCac
             mohallaName = this@HouseholdFormDataset.mohallaName.value.value
             povertyLine = this@HouseholdFormDataset.povertyLine.value.value
         }
-        return household
+        return household!!
     }
 
-    fun getHouseholdForSecondPage(userId: Int, hhId: Long): HouseholdCache {
+    fun getHouseholdForSecondPage(): HouseholdCache {
 
-        val household = getHouseholdForFirstPage(userId, hhId)
-        household.apply {
+        household?.apply {
             residentialArea = this@HouseholdFormDataset.residentialArea.value.value
             otherResidentialArea = this@HouseholdFormDataset.otherResidentialArea.value.value
             houseType = this@HouseholdFormDataset.typeOfHouse.value.value
             isHouseOwned = this@HouseholdFormDataset.houseOwnership.value.value
         }
 
-        return household
+        return household!!
     }
 
-    fun getHouseholdForThirdPage(userId: Int, hhId: Long): HouseholdCache {
-        val household = getHouseholdForSecondPage(userId, hhId)
-        household.apply {
+    fun getHouseholdForThirdPage(): HouseholdCache {
+        household?.apply {
             separateKitchen = this@HouseholdFormDataset.separateKitchen.value.value
             fuelUsed = this@HouseholdFormDataset.fuelForCooking.value.value
             otherFuelUsed = this@HouseholdFormDataset.otherFuelForCooking.value.value
             sourceOfDrinkingWater = this@HouseholdFormDataset.sourceOfWater.value.value
             otherSourceOfDrinkingWater = this@HouseholdFormDataset.otherSourceOfWater.value.value
             availabilityOfElectricity = this@HouseholdFormDataset.sourceOfElectricity.value.value
-            otherAvailabilityOfElectricity = this@HouseholdFormDataset.otherSourceOfElectricity.value.value
+            otherAvailabilityOfElectricity =
+                this@HouseholdFormDataset.otherSourceOfElectricity.value.value
             availabilityOfToilet = this@HouseholdFormDataset.availOfToilet.value.value
             otherAvailabilityOfToilet = this@HouseholdFormDataset.otherAvailOfToilet.value.value
             isDraft = false
         }
-        return household
+        return household!!
     }
 
 

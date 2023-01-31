@@ -20,6 +20,7 @@ import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
 import org.piramalswasthya.sakhi.databinding.FragmentNewHouseholdBinding
 import org.piramalswasthya.sakhi.services.UploadSyncService
 import org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_registration.NewHouseholdViewModel.*
+import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -30,6 +31,7 @@ class NewHouseholdFragment : Fragment() {
     }
 
     private val viewModel: NewHouseholdViewModel by viewModels()
+    private val homeViewModel : HomeViewModel by viewModels({requireActivity()})
 
     private val consentAlert by lazy {
         val alertBinding = AlertConsentBinding.inflate(layoutInflater,binding.root,false)
@@ -176,7 +178,7 @@ class NewHouseholdFragment : Fragment() {
         }
         binding.btnToBen.setOnClickListener {
             if (validateFormForPage(2)) {
-                viewModel.persistForm()
+                viewModel.persistForm(homeViewModel.getLocationRecord())
                 //TODO(Move to Add Ben)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 

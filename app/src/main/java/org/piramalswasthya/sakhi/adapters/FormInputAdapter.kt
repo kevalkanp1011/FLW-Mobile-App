@@ -99,6 +99,9 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
         }
 
         fun bind(item: FormInput, ) {
+            val savedValue = item.value.value
+            item.value.value = null
+            item.value.value = savedValue
             binding.form = item
             binding.actvRvDropdown.setOnItemClickListener { _, _, index, _ ->
                 item.value.value = item.list?.get(index)
@@ -186,6 +189,7 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
                 item.errorText = null
                 binding.tilEditText.error = null
                 datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
+                datePickerDialog.datePicker.touchables[0].performClick();
                 datePickerDialog.show()
             }
             binding.executePendingBindings()

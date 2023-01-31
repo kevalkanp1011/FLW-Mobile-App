@@ -16,7 +16,7 @@ import org.piramalswasthya.sakhi.adapters.NewBenKidPagerAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewBenRegBinding
 import org.piramalswasthya.sakhi.services.UploadSyncService
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_less_15.NewBenRegL15ViewModel.State
-import org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_registration.NewHouseholdFormObjectFragment
+import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -30,6 +30,8 @@ class NewBenRegL15Fragment : Fragment() {
         NewBenRegL15FragmentArgs.fromBundle(requireArguments()).hhId
     }
     private val viewModel: NewBenRegL15ViewModel by viewModels()
+
+    private val homeViewModel : HomeViewModel by viewModels({requireActivity()})
 
     private val pageChangeCallback: ViewPager2.OnPageChangeCallback by lazy {
         object : ViewPager2.OnPageChangeCallback() {
@@ -77,8 +79,8 @@ class NewBenRegL15Fragment : Fragment() {
         }
         binding.btnToBen.setOnClickListener {
             if (validateFormForPage(2)) {
-                viewModel.persistForm()
-                Toast.makeText(context,"Beneficary saved successfully", Toast.LENGTH_LONG).show()
+                viewModel.persistForm(homeViewModel.getLocationRecord())
+                Toast.makeText(context,"Beneficiary saved successfully", Toast.LENGTH_LONG).show()
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
                     activity?.startForegroundService(Intent(context, UploadSyncService::class.java))

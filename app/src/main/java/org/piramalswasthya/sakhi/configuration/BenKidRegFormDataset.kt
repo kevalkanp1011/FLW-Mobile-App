@@ -8,7 +8,14 @@ import org.piramalswasthya.sakhi.model.FormInput.InputType
 import java.text.SimpleDateFormat
 import java.util.*
 
-class BenKidRegFormDataset(context: Context, private val household: HouseholdCache? = null) {
+class BenKidRegFormDataset(context: Context) {
+
+    private var ben: BenRegCache? = null
+
+    constructor(context: Context, ben: BenRegCache? = null) : this(context) {
+        this.ben = ben
+        //TODO(SETUP THE VALUES)
+    }
 
     companion object {
         private fun getCurrentDate(): String {
@@ -23,6 +30,8 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
             val date = f.parse(dateString)
             return date?.time ?: throw IllegalStateException("Invalid date for dateReg")
         }
+
+        private fun stringToLong(phNo: String) = phNo.toLong()
     }
 
 
@@ -85,9 +94,21 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
         title = "Mother's Name",
         required = true
     )
+
     val mobileNoOfRelation = FormInput(
+        inputType = InputType.DROPDOWN,
+        title = "Mobile Number Of",
+        list = listOf(
+            "Mother",
+            "Father",
+            "Family Head",
+            "Other"
+        ),
+        required = true,
+    )
+    val contactNumber = FormInput(
         inputType = InputType.EDIT_TEXT,
-        title = "Mobile Number",
+        title = "Contact Number",
         required = true,
         etLength = 10,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL
@@ -240,6 +261,7 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
             fatherName,
             motherName,
             relationToHead,
+            mobileNoOfRelation,
             community,
             religion,
             rchId,
@@ -428,11 +450,11 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
     }
 
     private fun getTypeFromAge(age: Int, ageUnit: AgeUnit?): TypeOfList? {
-        return if(ageUnit==AgeUnit.DAYS || ageUnit==AgeUnit.MONTHS)
+        return if (ageUnit == AgeUnit.DAYS || ageUnit == AgeUnit.MONTHS)
             TypeOfList.INFANT
-        else if(ageUnit==AgeUnit.YEARS && age>1 && age<5)
+        else if (ageUnit == AgeUnit.YEARS && age > 1 && age < 5)
             TypeOfList.CHILD
-        else if(ageUnit==AgeUnit.YEARS && age>5 && age<15)
+        else if (ageUnit == AgeUnit.YEARS && age > 5 && age < 15)
             TypeOfList.ADOLESCENT
         else null
 
@@ -440,27 +462,31 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
 
     fun getBenForFirstPage(userId: Int, hhId: Long): BenRegCache {
 
-        val ben = BenRegCache(
-            householdId = hhId,
-            ashaId = userId,
-            syncState = SyncState.UNSYNCED,
-            kidDetails = BenRegKid(),
-            isDraft = true
-        )
-        ben.apply {
+        if (ben == null) {
+            ben = BenRegCache(
+                householdId = hhId,
+                ashaId = userId,
+                syncState = SyncState.UNSYNCED,
+                isKid = true,
+                isAdult = false,
+                kidDetails = BenRegKid(),
+                isDraft = true
+            )
+        }
+        ben?.apply {
             regDate = getLongFromDate(this@BenKidRegFormDataset.dateOfReg.value.value!!)
             firstName = this@BenKidRegFormDataset.firstName.value.value
             lastName = this@BenKidRegFormDataset.lastName.value.value
             dob = getLongFromDate(this@BenKidRegFormDataset.dob.value.value!!)
             age = this@BenKidRegFormDataset.age.value.value?.toInt() ?: 0
             ageUnit = when (this@BenKidRegFormDataset.ageUnit.value.value) {
-                "YEAR" -> AgeUnit.YEARS
-                "MONTH" -> AgeUnit.MONTHS
-                "DAY" -> AgeUnit.DAYS
+                "Year" -> AgeUnit.YEARS
+                "Month" -> AgeUnit.MONTHS
+                "Day" -> AgeUnit.DAYS
                 else -> null
             }
             registrationType = getTypeFromAge(age, ageUnit)
-            gender = when(this@BenKidRegFormDataset.gender.value.value) {
+            gender = when (this@BenKidRegFormDataset.gender.value.value) {
                 "Male" -> Gender.MALE
                 "Female" -> Gender.FEMALE
                 "Transgender" -> Gender.TRANSGENDER
@@ -471,6 +497,7 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
             familyHeadRelation = this@BenKidRegFormDataset.relationToHead.value.value
             familyHeadRelationOther = this@BenKidRegFormDataset.otherRelationToHead.value.value
             mobileNoOfRelation = this@BenKidRegFormDataset.mobileNoOfRelation.value.value
+            contactNumber = stringToLong(this@BenKidRegFormDataset.contactNumber.value.value!!)
             community = this@BenKidRegFormDataset.community.value.value
             religion = this@BenKidRegFormDataset.religion.value.value
             religionOthers = this@BenKidRegFormDataset.otherReligion.value.value
@@ -481,16 +508,17 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
             kidDetails?.typeOfSchool = this@BenKidRegFormDataset.typeOfSchool.value.value
             rchId = this@BenKidRegFormDataset.rchId.value.value
         }
-        return ben
+        return ben!!
     }
 
-    fun getBenForSecondPage(userId: Int, hhId: Long): BenRegCache {
+    fun getBenForSecondPage(): BenRegCache {
 
-        val ben = getBenForFirstPage(userId, hhId)
-        ben.apply {
+        ben?.apply {
             kidDetails?.birthPlace = this@BenKidRegFormDataset.placeOfBirth.value.value
-            kidDetails?.conductedDelivery = this@BenKidRegFormDataset.whoConductedDelivery.value.value
-            kidDetails?.conductedDeliveryOther = this@BenKidRegFormDataset.otherWhoConductedDelivery.value.value
+            kidDetails?.conductedDelivery =
+                this@BenKidRegFormDataset.whoConductedDelivery.value.value
+            kidDetails?.conductedDeliveryOther =
+                this@BenKidRegFormDataset.otherWhoConductedDelivery.value.value
             kidDetails?.deliveryType = this@BenKidRegFormDataset.typeOfDelivery.value.value
             kidDetails?.complications =
                 this@BenKidRegFormDataset.complicationsDuringDelivery.value.value
@@ -512,6 +540,6 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
             isDraft = false
         }
 
-        return ben
+        return ben!!
     }
 }

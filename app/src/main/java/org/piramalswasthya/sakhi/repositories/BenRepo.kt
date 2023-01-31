@@ -1,10 +1,13 @@
 package org.piramalswasthya.sakhi.repositories
 
-import android.content.Context
 import androidx.lifecycle.Transformations
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.BenKidRegFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.HouseholdCache
+import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.network.TmcNetworkApiService
 import timber.log.Timber
 import javax.inject.Inject
@@ -21,30 +24,48 @@ class BenRepo @Inject constructor(
         }
     }
 
-    suspend fun getDraftForm(context: Context): BenKidRegFormDataset? {
-        return null
+    suspend fun getDraftForm(hhId: Long, isKid: Boolean): BenRegCache? {
+        return withContext(Dispatchers.IO) {
+            if(isKid)
+                database.benDao.getDraftBenKidForHousehold(hhId)
+            else
+                null
+        }
     }
+
 
     suspend fun persistFirstPage(form: BenKidRegFormDataset, hhId: Long) {
         Timber.d("Persisting first page!")
         val user =
             database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
-        val draftBen = database.benDao.getDraftBenForHousehold(hhId)
-        val ben = if (draftBen == null)
-            form.getBenForFirstPage(
-                user.userId,
-                hhId
-            )
-        else
-            form.getBenForFirstPage(draftBen.ashaId, draftBen.householdId)
+        val ben = form.getBenForFirstPage(user.userId, hhId)
         database.benDao.upsert(ben)
     }
 
-    suspend fun persistSecondPage(form: BenKidRegFormDataset, hhId: Long) {
-        val draftBen = database.benDao.getDraftBenForHousehold(hhId)
-            ?: throw IllegalStateException("no draft saved!!")
+    suspend fun persistSecondPage(form: BenKidRegFormDataset, locationRecord: LocationRecord) {
+//        val draftBen = database.benDao.getDraftBenKidForHousehold(hhId)
+//            ?: throw IllegalStateException("no draft saved!!")
+        val user =
+            database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
         val ben =
-            form.getBenForSecondPage(draftBen.ashaId, draftBen.householdId)
+            form.getBenForSecondPage()
+
+        ben.apply {
+            if(this.createdDate==null) {
+                this.createdDate = System.currentTimeMillis()
+                this.createdBy = user.userName
+            }
+            else{
+                this.updatedDate = System.currentTimeMillis()
+                this.updatedBy = user.userName
+            }
+            this.villageName = locationRecord.village
+            this.countyId = locationRecord.countryId
+            this.stateId = locationRecord.stateId
+            this.districtId = locationRecord.districtId
+            this.villageId = locationRecord.villageId
+        }
+
         database.benDao.upsert(ben)
         return
     }
@@ -61,6 +82,12 @@ class BenRepo @Inject constructor(
 
     suspend fun genBen(count : Int = 300){
 
+    }
+
+    suspend fun deleteBenDraft(hhId: Long, isKid: Boolean) {
+        withContext(Dispatchers.IO){
+            database.benDao.deleteBen(hhId,isKid)
+        }
     }
 
 }

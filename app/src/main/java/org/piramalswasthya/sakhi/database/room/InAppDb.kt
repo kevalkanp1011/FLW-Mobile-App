@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import org.piramalswasthya.sakhi.database.converters.StringListConverter
+import org.piramalswasthya.sakhi.database.converters.PrimitiveListConverter
 import org.piramalswasthya.sakhi.database.converters.SyncStateConverter
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
@@ -20,7 +20,7 @@ import org.piramalswasthya.sakhi.model.UserCache
     BenRegCache::class,
     BeneficiaryIdsAvail::class], version = 3, exportSchema = false)
 
-@TypeConverters(StringListConverter::class, SyncStateConverter::class)
+@TypeConverters(PrimitiveListConverter::class, SyncStateConverter::class)
 
 abstract class InAppDb  : RoomDatabase(){
 

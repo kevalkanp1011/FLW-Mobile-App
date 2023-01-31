@@ -54,7 +54,7 @@ class HomeActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration)
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
 
-        Snackbar.make(binding.root, intent.data.toString(), Snackbar.LENGTH_LONG).show()
+       // Snackbar.make(binding.root, intent.data.toString(), Snackbar.LENGTH_LONG).show()
     }
 
 /*    override fun onSupportNavigateUp(): Boolean {

@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -17,6 +16,7 @@ import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.configuration.BenKidRegFormDataset
 import org.piramalswasthya.sakhi.model.FormInput
 import org.piramalswasthya.sakhi.model.HouseholdCache
+import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import timber.log.Timber
 import java.util.*
@@ -25,9 +25,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewBenRegL15ViewModel @Inject constructor(
-    application: Application,
+    private val context: Application,
     private val benRepo: BenRepo
-) : AndroidViewModel(application) {
+) : AndroidViewModel(context) {
     enum class State {
         IDLE,
         SAVING,
@@ -59,7 +59,11 @@ class NewBenRegL15ViewModel @Inject constructor(
     suspend fun getFirstPage(adapter: FormInputAdapter): List<FormInput> {
         withContext(Dispatchers.IO) {
             household = benRepo.getBenHousehold(hhId)
-            form = benRepo.getDraftForm(getApplication()) ?: BenKidRegFormDataset(getApplication())
+            form = benRepo.getDraftForm(hhId, true)?.let {
+                BenKidRegFormDataset(context,it)
+            }?:run{
+                BenKidRegFormDataset(context)
+            }
         }
         viewModelScope.launch {
             var emittedFromDob = false
@@ -169,18 +173,26 @@ class NewBenRegL15ViewModel @Inject constructor(
                 }
             }
             launch {
-                form.relationToHead.value.collect {
+                form.mobileNoOfRelation.value.collect {
                     it?.let {
                         val list = adapter.currentList.toMutableList()
-                        if (!adapter.currentList.contains(form.mobileNoOfRelation)) {
+                        if (!adapter.currentList.contains(form.contactNumber)) {
                             list.add(
-                                adapter.currentList.indexOf(form.relationToHead) + 1,
-                                form.mobileNoOfRelation
+                                adapter.currentList.indexOf(form.mobileNoOfRelation) + 1,
+                                form.contactNumber
                             )
+                            adapter.submitList(list)
                         }
+                    }
+                }
+            }
+            launch {
+                form.relationToHead.value.collect{
+                    it?.let{
+                        val list = adapter.currentList.toMutableList()
                         if (it == "Other") {
                             list.add(
-                                adapter.currentList.indexOf(form.relationToHead) + 1,
+                                adapter.currentList.indexOf(form.contactNumber) + 1,
                                 form.otherRelationToHead
                             )
                             adapter.submitList(list)
@@ -264,14 +276,13 @@ class NewBenRegL15ViewModel @Inject constructor(
                         val day = cal.get(Calendar.DAY_OF_MONTH)
                         val newDob =
                             "${if (day > 9) day else "0$day"}-${if (month > 9) month else "0$month"}-$year"
-                        if (form.dob.value.value != newDob)
+                        if (form.dob.value.value != newDob) {
                             form.dob.value.value = newDob
-                        Timber.d("age : $age ageUnit : $ageUnit ${if (day > 9) day else "0$day"}-${if (month > 9) month else "0$month"}-$year")
-                        adapter.notifyItemChanged(form.firstPage.indexOf(form.dob))
-                    } else {
-                        form.dob.value.value = null
-                        Timber.d("Dob has been reset!")
-                        adapter.notifyItemChanged(form.firstPage.indexOf(form.dob))
+                            Timber.d("age : $age ageUnit : $ageUnit ${if (day > 9) day else "0$day"}-${if (month > 9) month else "0$month"}-$year")
+                            withContext(Dispatchers.Main) {
+                                adapter.notifyItemChanged(form.firstPage.indexOf(form.dob))
+                            }
+                        }
                     }
                 }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
             }
@@ -424,12 +435,12 @@ class NewBenRegL15ViewModel @Inject constructor(
         }
     }
 
-    fun persistForm() {
+    fun persistForm(locationRecord: LocationRecord) {
         viewModelScope.launch {
             _state.value = State.SAVING
             withContext(Dispatchers.IO) {
                 try {
-                    benRepo.persistSecondPage(form, hhId)
+                    benRepo.persistSecondPage(form, locationRecord)
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
                     Timber.d("saving HH data failed!!")

@@ -21,4 +21,7 @@ interface HouseholdDao {
 
     @Query("SELECT * FROM HOUSEHOLD WHERE householdId =:hhId LIMIT 1")
     suspend fun getHousehold(hhId  : Long) : HouseholdCache
+
+    @Query("DELETE  FROM HOUSEHOLD WHERE isDraft=1")
+    suspend fun deleteDraftHousehold()
 }
