@@ -7,25 +7,15 @@ import android.text.InputType
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onSubscription
-import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.configuration.FormEditTextDefaultInputFilter
-import org.piramalswasthya.sakhi.databinding.RvItemCheckBinding
-import org.piramalswasthya.sakhi.databinding.RvItemDatepickerBinding
-import org.piramalswasthya.sakhi.databinding.RvItemDropdownBinding
-import org.piramalswasthya.sakhi.databinding.RvItemEditTextBinding
-import org.piramalswasthya.sakhi.databinding.RvItemRadioBinding
-import org.piramalswasthya.sakhi.databinding.RvItemTextViewBinding
+import org.piramalswasthya.sakhi.databinding.*
 import org.piramalswasthya.sakhi.model.FormInput
 import org.piramalswasthya.sakhi.model.FormInput.InputType.*
 import timber.log.Timber
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageClickListener?=null): ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBack) {
     object FormInputDiffCallBack : DiffUtil.ItemCallback<FormInput>() {
@@ -60,9 +50,21 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
                     if(!editable.isNullOrBlank()) {
                         item.value.value = editable.toString()
                         Timber.d("Item ET : $item")
-                        if (item.errorText != null && editable.isNotBlank()) {
-                            item.errorText = null
-                            binding.tilEditText.error = null
+                        if (item.etInputType == (InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL)) {
+                            val age = editable.toString().toLong()
+                            item.min?.let {
+                                if (age < it) {
+                                    binding.tilEditText.error = "Field value has to be at least $it"
+                                }
+                            }
+                            item.max?.let {
+                                if (age > it) {
+                                    binding.tilEditText.error =
+                                        "Field value has to be less than $it"
+                                }
+                            }
+                            if (item.min != null && item.max != null && age >= item.min!! && age <= item.max!!)
+                                binding.tilEditText.error = null
                         }
 
                     }
@@ -167,7 +169,8 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
         }
 
         fun bind(
-            item: FormInput) {
+            item: FormInput
+        ) {
             val today = Calendar.getInstance()
             var thisYear = today.get(Calendar.YEAR)
             var thisMonth = today.get(Calendar.MONTH)
@@ -178,17 +181,20 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
                 item.value.value?.let {value ->
                     thisYear = value.substring(6).toInt()
                     thisMonth = value.substring(3,5).trim().toInt()-1
-                    thisDay = value.substring(0,2).trim().toInt()
+                    thisDay = value.substring(0, 2).trim().toInt()
                 }
-                val datePickerDialog = DatePickerDialog(it.context,
+                val datePickerDialog = DatePickerDialog(
+                    it.context,
                     { _, year, month, day ->
-                        item.value.value = "${if(day > 9)day else "0$day"}-${if(month > 8)month+1 else "0${month + 1}"}-$year"
+                        item.value.value =
+                            "${if (day > 9) day else "0$day"}-${if (month > 8) month + 1 else "0${month + 1}"}-$year"
                         binding.invalidateAll()
                     }, thisYear, thisMonth, thisDay
                 )
                 item.errorText = null
                 binding.tilEditText.error = null
-                datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
+                datePickerDialog.datePicker.maxDate = item.max ?: 0
+                datePickerDialog.datePicker.minDate = item.min ?: 0
                 datePickerDialog.datePicker.touchables[0].performClick();
                 datePickerDialog.show()
             }

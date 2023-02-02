@@ -52,6 +52,10 @@ class NewBenRegL15ViewModel @Inject constructor(
     val state: LiveData<State>
         get() = _state
 
+    private val _errorMessage = MutableLiveData<String?>(null)
+    val errorMessage: LiveData<String?>
+        get() = _errorMessage
+
 
     private lateinit var form: BenKidRegFormDataset
     private lateinit var household: HouseholdCache
@@ -60,8 +64,8 @@ class NewBenRegL15ViewModel @Inject constructor(
         withContext(Dispatchers.IO) {
             household = benRepo.getBenHousehold(hhId)
             form = benRepo.getDraftForm(hhId, true)?.let {
-                BenKidRegFormDataset(context,it)
-            }?:run{
+                BenKidRegFormDataset(context, it)
+            } ?: run {
                 BenKidRegFormDataset(context)
             }
         }
@@ -87,67 +91,76 @@ class NewBenRegL15ViewModel @Inject constructor(
 //                            && form.relationToHead.list?.contains(currentValue) == false
 //                        )
                         form.relationToHead.value.value = null
+                        adapter.notifyItemChanged(form.firstPage.indexOf(form.relationToHead))
                         if (adapter.currentList.contains(form.otherRelationToHead)) {
                             val list = adapter.currentList.toMutableList()
                             list.remove(form.otherRelationToHead)
                             adapter.submitList(list)
                         }
-                        adapter.notifyItemChanged(form.firstPage.indexOf(form.relationToHead))
+
                     }
                 }
             }
             launch {
                 form.dob.value.collect {
                     it?.let {
-                        if (emittedFromAge) {
-                            emittedFromAge = false
-                            val yearDiff = Calendar.getInstance().get(Calendar.YEAR) - it.substring(6).toInt()
-                            toggleChildRegisteredFieldsVisibility(adapter, yearDiff)
-                            return@collect
-                        }
-                        Timber.d("dob flow emitted $it")
                         val day = it.substring(0, 2).toInt()
                         val month = it.substring(3, 5).toInt() - 1
                         val year = it.substring(6).toInt()
-                        val cal = Calendar.getInstance()
-                        cal.set(year, month, day)
-                        val millisDiff = Calendar.getInstance().time.time - cal.time.time
-                        val dateDiff = TimeUnit.MILLISECONDS.toDays(millisDiff)
-                        Timber.d("Values $millisDiff $dateDiff")
-                        emittedFromDob = true
-                        if (dateDiff / 365 > 0) {
-                            val yearDiff = (dateDiff / 365).toInt()
+                        val calDob = Calendar.getInstance()
+                        calDob.set(year, month, day)
+                        val calNow = Calendar.getInstance()
+                        val yearsDiff = getDiffYears(calDob, calNow)
+                        if (emittedFromAge) {
+                            emittedFromAge = false
+                            toggleChildRegisteredFieldsVisibility(adapter, yearsDiff)
+                            return@collect
+                        }
+                        Timber.d("dob flow emitted $it")
+                        if (yearsDiff > 0) {
                             if (form.ageUnit.value.value != "Year") {
+                                emittedFromDob = true
                                 form.ageUnit.value.value = "Year"
                                 adapter.notifyItemChanged(form.firstPage.indexOf(form.ageUnit))
                             }
-                            toggleChildRegisteredFieldsVisibility(adapter, yearDiff)
-                            if (form.age.value.value?.toInt() != yearDiff) {
-                                form.age.value.value = yearDiff.toString()
+                            if (form.age.value.value == null || form.age.value.value?.toInt() != yearsDiff) {
+                                emittedFromDob = true
+                                form.age.value.value = yearsDiff.toString()
                                 adapter.notifyItemChanged(form.firstPage.indexOf(form.age))
                             }
-                        } else if (dateDiff / 31 > 0) {
-                            val monthDiff = (dateDiff / 31).toInt()
-                            if (form.ageUnit.value.value != "Month") {
-                                form.ageUnit.value.value = "Month"
-                                adapter.notifyItemChanged(form.firstPage.indexOf(form.ageUnit))
-                            }
-                            if (form.age.value.value?.toInt() != monthDiff) {
-                                form.age.value.value = monthDiff.toString()
-                                adapter.notifyItemChanged(form.firstPage.indexOf(form.age))
-                            }
+                            toggleChildRegisteredFieldsVisibility(adapter, yearsDiff)
                         } else {
-                            val dayDiff = dateDiff.toInt()
-                            if (form.ageUnit.value.value != "Day") {
-                                form.ageUnit.value.value = "Day"
-                                adapter.notifyItemChanged(form.firstPage.indexOf(form.ageUnit))
+                            val monthDiff = getDiffMonths(calDob, calNow)
+                            if (monthDiff > 0) {
+                                if (form.ageUnit.value.value != "Month") {
+                                    emittedFromDob = true
+                                    form.ageUnit.value.value = "Month"
+                                    adapter.notifyItemChanged(form.firstPage.indexOf(form.ageUnit))
+                                }
+                                if (form.age.value.value == null || form.age.value.value?.toInt() != monthDiff) {
+                                    emittedFromDob = true
+                                    form.age.value.value = monthDiff.toString()
+                                    adapter.notifyItemChanged(form.firstPage.indexOf(form.age))
+                                }
+                            } else {
+                                val dayDiff = getDiffDays(calDob, calNow)
+                                if (form.ageUnit.value.value != "Day") {
+                                    emittedFromDob = true
+                                    form.ageUnit.value.value = "Day"
+                                    adapter.notifyItemChanged(form.firstPage.indexOf(form.ageUnit))
+                                }
+                                if (form.age.value.value == null || form.age.value.value?.toInt() != dayDiff) {
+                                    emittedFromDob = true
+                                    form.age.value.value = dayDiff.toString()
+                                    adapter.notifyItemChanged(form.firstPage.indexOf(form.age))
+                                }
                             }
-                            if (form.age.value.value?.toInt() != dayDiff) {
-                                form.age.value.value = dayDiff.toString()
-                                adapter.notifyItemChanged(form.firstPage.indexOf(form.age))
-                            }
-
                         }
+                    } ?: run {
+                        if (emittedFromAge)
+                            emittedFromAge = false
+                        form.age.value.value = null
+                        adapter.notifyItemChanged(adapter.currentList.indexOf(form.age))
                     }
                 }
             }
@@ -187,12 +200,12 @@ class NewBenRegL15ViewModel @Inject constructor(
                 }
             }
             launch {
-                form.relationToHead.value.collect{
-                    it?.let{
+                form.relationToHead.value.collect {
+                    it?.let {
                         val list = adapter.currentList.toMutableList()
                         if (it == "Other") {
                             list.add(
-                                adapter.currentList.indexOf(form.contactNumber) + 1,
+                                adapter.currentList.indexOf(form.relationToHead) + 1,
                                 form.otherRelationToHead
                             )
                             adapter.submitList(list)
@@ -233,23 +246,27 @@ class NewBenRegL15ViewModel @Inject constructor(
                             emittedFromDob = false
                             return@combine
                         }
-
+                        emittedFromAge = true
                         if (ageUnit == "Year" && age.toLong() >= 15) {
-                            //Handle error
-
+                            _errorMessage.value = "Age needs to be less than 15 $ageUnit"
+                            form.dob.value.value = null
+                            adapter.notifyItemChanged(adapter.currentList.indexOf(form.dob))
                             return@combine
                         }
                         if (ageUnit == "Month" && age.toLong() > 12) {
-                            //Handle error
-
+                            _errorMessage.value = "Age needs to be less than 12 $ageUnit"
+                            form.dob.value.value = null
+                            adapter.notifyItemChanged(adapter.currentList.indexOf(form.dob))
                             return@combine
                         }
                         if (ageUnit == "Day" && age.toLong() > 31) {
-                            //handle error
+                            _errorMessage.value = "Age needs to be less than 31 $ageUnit"
+                            adapter.notifyItemChanged(adapter.currentList.indexOf(form.dob))
+                            form.dob.value.value = null
 
                             return@combine
                         }
-                        emittedFromAge = true
+
                         val cal = Calendar.getInstance()
                         when (ageUnit) {
                             "Year" -> {
@@ -292,6 +309,43 @@ class NewBenRegL15ViewModel @Inject constructor(
         }
     }
 
+    private fun getDiffYears(a: Calendar, b: Calendar): Int {
+        var diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR)
+        if (a.get(Calendar.YEAR) > b.get(Calendar.YEAR) ||
+            a.get(Calendar.MONTH) == b.get(Calendar.MONTH) && a.get(Calendar.DAY_OF_MONTH) > b.get(
+                Calendar.DAY_OF_MONTH
+            )
+        ) {
+            diff--
+        }
+        return diff
+    }
+
+    private fun getDiffMonths(a: Calendar, b: Calendar): Int {
+        var diffY = b.get(Calendar.YEAR) - a.get(Calendar.YEAR)
+        if (a.get(Calendar.YEAR) > b.get(Calendar.YEAR) ||
+            a.get(Calendar.MONTH) == b.get(Calendar.MONTH) && a.get(Calendar.DAY_OF_MONTH) > b.get(
+                Calendar.DAY_OF_MONTH
+            )
+        ) {
+            diffY--
+        }
+        if (diffY != 0)
+            return -1
+        val diffM = b.get(Calendar.MONTH) - a.get(Calendar.MONTH)
+        if (diffM == 1 &&
+            a.get(Calendar.DAY_OF_MONTH) > b.get(Calendar.DAY_OF_MONTH)
+        ) {
+            return 0
+        }
+        return diffM
+    }
+
+    private fun getDiffDays(a: Calendar, b: Calendar): Int {
+        val millisDiff = b.timeInMillis - a.timeInMillis
+        return TimeUnit.MILLISECONDS.toDays(millisDiff).toInt()
+    }
+
     private fun toggleChildRegisteredFieldsVisibility(
         adapter: FormInputAdapter,
         yearDiff: Int
@@ -327,6 +381,7 @@ class NewBenRegL15ViewModel @Inject constructor(
         }
         adapter.submitList(list)
     }
+
 
     fun getSecondPage(adapter: FormInputAdapter): List<FormInput> {
 
@@ -430,7 +485,7 @@ class NewBenRegL15ViewModel @Inject constructor(
     fun persistFirstPage() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                benRepo.persistFirstPage(form, hhId)
+                benRepo.persistKidFirstPage(form, hhId)
             }
         }
     }
@@ -440,7 +495,7 @@ class NewBenRegL15ViewModel @Inject constructor(
             _state.value = State.SAVING
             withContext(Dispatchers.IO) {
                 try {
-                    benRepo.persistSecondPage(form, locationRecord)
+                    benRepo.persistKidSecondPage(form, locationRecord)
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
                     Timber.d("saving HH data failed!!")
@@ -449,6 +504,10 @@ class NewBenRegL15ViewModel @Inject constructor(
             }
         }
 
+    }
+
+    fun resetErrorMessage() {
+        _errorMessage.value = null
     }
 
 

@@ -14,11 +14,13 @@ import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.HouseholdCache
 import org.piramalswasthya.sakhi.model.UserCache
 
-@Database(entities = [
-    UserCache::class,
-    HouseholdCache::class,
-    BenRegCache::class,
-    BeneficiaryIdsAvail::class], version = 3, exportSchema = false)
+@Database(
+    entities = [
+        UserCache::class,
+        HouseholdCache::class,
+        BenRegCache::class,
+        BeneficiaryIdsAvail::class], version = 1, exportSchema = false
+)
 
 @TypeConverters(PrimitiveListConverter::class, SyncStateConverter::class)
 

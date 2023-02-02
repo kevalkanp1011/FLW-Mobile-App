@@ -39,15 +39,10 @@ data class BenBasicDomain(
 
 data class BenRegKid(
     var childRegisteredAWC: String? = null,
-
     var childRegisteredAWCId: Int = 0,
-
     var childRegisteredSchool: String? = null,
-
     var childRegisteredSchoolId: Int = 0,
-
     var typeOfSchool: String? = null,
-
     var typeOfSchoolId: Int = 0,
     var birthPlace : String? = null,
     var birthPlaceId : String? = null,
@@ -91,17 +86,49 @@ data class BenRegKid(
     var hptDate : String? = null,
     var vitaminKBatchNo : String? = null,
     var vitaminKGivenDueDate : String? = null,
-    var vitaminKDate : String? = null,
-    var deliveryTypeOther : String? = null,
+    var vitaminKDate: String? = null,
+    var deliveryTypeOther: String? = null,
 
-    var motherBenId : String? = null,
-    var childMotherName : String? = null,
-    var motherPosition : String? = null,
-    var birthBCG : Boolean = false,
-    var birthHepB : Boolean = false,
-    var birthOPV : Boolean = false,
+    var motherBenId: String? = null,
+    var childMotherName: String? = null,
+    var motherPosition: String? = null,
+    var birthBCG: Boolean = false,
+    var birthHepB: Boolean = false,
+    var birthOPV: Boolean = false,
 )
 
+data class BenRegGen(
+
+    var maritalStatus: String? = null,
+    var maritalStatusId: Int = 0,
+    var spouseName: String? = null,
+    var ageAtMarriage: Int = 0,
+    var dateOfMarriage: Long = 0,
+    var marriageDate: String? = null,
+    //Menstrual details
+    var menstrualStatus: String? = null,
+    var menstrualStatusId: Int? = 0,
+    var regularityOfMenstrualCycle: String? = null,
+    var regularityOfMenstrualCycleId: Int = 0,
+    var lengthOfMenstrualCycle: String? = null,
+    var lengthOfMenstrualCycleId: Int = 0,
+    var menstrualBFD: String? = null,
+    var menstrualBFDId: Int = 0,
+    var menstrualProblem: String? = null,
+    var menstrualProblemId: Int = 0,
+    var lastMenstrualPeriod: String? = null,
+    var reproductiveStatus: String? = null,
+    var reproductiveStatusId: Int = 0,
+    var formStatus: String? = null,
+    var formType: String? = null,
+    var ancCount: Int = 0,
+    var hrpCount: Int = 0,
+    var hrpSuspected: Boolean = false,
+    var isDeathStatus: Boolean = false,
+    var deliveryDate: String? = null,
+    var expectedDateOfDelivery: String? = null,
+    var previousLiveBirth: String? = null,
+)
 
 @Entity(
     tableName = "BENEFICIARY",
@@ -129,12 +156,14 @@ data class BenRegCache(
     @PrimaryKey(autoGenerate = true)
     var beneficiaryId: Long = 0,
 
+    var benRegId: Int = 0,
+
     @ColumnInfo(index = true)
     var ashaId: Int,
 
-    var isKid : Boolean,
+    var isKid: Boolean,
 
-    var isAdult : Boolean,
+    var isAdult: Boolean,
 
     var userImage: String? = null,
 
@@ -160,41 +189,35 @@ data class BenRegCache(
 
     var age_unitId: Int = 0,
 
-    var maritalStatus: String? = null,
-
-    var maritalStatusId: Int = 0,
-
-    var spouseName: String? = null,
-
-    var ageAtMarriage : Int = 0,
-
-    var dateOfMarriage: Long = 0,
-
-    var marriageDate: String? = null,
-
     var fatherName: String? = null,
 
     var motherName: String? = null,
 
-    var contactNumber: Long? = null,
+    var familyHeadRelation: String? = null,
+
+    var familyHeadRelationPosition: Int = 0,
+
+    var familyHeadRelationOther: String? = null,
 
     var mobileNoOfRelation: String? = null,
 
-    var mobileNoOfRelationId : Int= 0,
+    var mobileNoOfRelationId: Int = 0,
 
     var mobileOthers: String? = null,
 
+    var contactNumber: Long? = null,
+
     var literacy: String? = null,
 
-    var literacyId :Int = 0,
+    var literacyId: Int = 0,
 
     var community: String? = null,
 
-    var communityId : Int = 0,
+    var communityId: Int = 0,
 
     var religion: String? = null,
 
-    var religionId : Int = 0,
+    var religionId: Int = 0,
 
     var religionOthers: String? = null,
 
@@ -206,10 +229,10 @@ data class BenRegCache(
 
     var longitude: Double = 0.0,
 
-        //Bank details
+    ///////////////////////////Bank details Start///////////////////////////
     var aadharNum: String? = null,
 
-    var aadharNumId : Int = 0,
+    var aadharNumId: Int = 0,
 
     var bankAccountId: Int = 0,
 
@@ -221,98 +244,16 @@ data class BenRegCache(
 
     var ifscCode: String? = null,
 
+    ///////////////////////////Bank details End///////////////////////////
     var needOpCare: String? = null,
 
     var needOpCareId: Int = 0,
-
-    //Menstrual details
-    var menstrualStatus: String? = null,
-
-    var menstrualStatusId: Int? = 0,
-
-    var regularityOfMenstrualCycle: String? = null,
-
-    var regularityOfMenstrualCycleId: Int = 0,
-
-    var lengthOfMenstrualCycle: String? = null,
-
-    var lengthOfMenstrualCycleId: Int = 0,
-
-    var menstrualBFD: String? = null,
-
-    var menstrualBFDId: Int = 0,
-
-    var menstrualProblem: String? = null,
-
-    var menstrualProblemId: Int = 0,
-
-    var lastMenstrualPeriod: String? = null,
-
-    var reproductiveStatus: String? = null,
-
-    var reproductiveStatusId: Int = 0,
-
-    var formStatus: String? = null,
-
-    var formType: String? = null,
-
-    var ancCount: Int = 0,
-
-    var hrpCount: Int = 0,
-
-    var hrpSuspected: Boolean = false,
-
-    var isDeathStatus : Boolean = false,
-
-
-
-    var expectedDateOfDelivery: String? = null,
-
-    var previousLiveBirth: String? = null,
-
-    //these are new fields of registration for asha login
-    var familyHeadRelation: String? = null,
-
-    var familyHeadRelationPosition: Int = 0,
-
-    var serverUpdatedStatus: Int = 0,
-
-    var createdBy: String? = null,
-
-    var createdDate: Long? = null,
-
-    var updatedBy: String? = null,
-
-    var updatedDate: Long? = null,
 
     var ncdPriority: Int = 0,
 
     var cbacAvailable: Boolean = false,
 
     var guidelineId: String? = null,
-
-    var villageName: String? = null,
-
-    var deliveryDate: String? = null,
-
-    var benRegId: Int = 0,
-
-/*    var providerServiceMapID: Int = 0,
-
-    var vanID = 0,*/
-    var processed: String? = null,
-
-    var countyId: Int = 0,
-
-    var stateId: Int = 0,
-
-    var districtId: Int = 0,
-
-    var districtName: String? = null,
-
-    var currSubDistrictId: Int = 0,
-
-    var villageId: Int = 0,
 
     var isHrpStatus: Boolean = false,
 
@@ -350,21 +291,49 @@ data class BenRegCache(
 
     var noOfDaysForDelivery: Int? = null,
 
-    var familyHeadRelationOther: String? = null,
-
-    var isImmunizationStatus: Boolean = false,
 
     /*
     5 Skipped:
         Aadhar, lastHrpVisitDate, marriageDate ( 2 copies)
         vanId and serviceMap ID, ( Can get from Foreign key)
      */
-    var syncState : SyncState,
 
-    var isDraft : Boolean,
 
     @Embedded(prefix = "kid_")
-    var kidDetails : BenRegKid?=null,
+    var kidDetails: BenRegKid? = null,
+
+    @Embedded(prefix = "gen_")
+    var genDetails: BenRegGen? = null,
+
+    var countyId: Int = 0,
+
+    var stateId: Int = 0,
+
+    var districtId: Int = 0,
+
+    var districtName: String? = null,
+
+    var currSubDistrictId: Int = 0,
+
+    var villageId: Int = 0,
+
+    var villageName: String? = null,
+
+    var processed: String? = null,
+
+    var serverUpdatedStatus: Int = 0,
+
+    var createdBy: String? = null,
+
+    var createdDate: Long? = null,
+
+    var updatedBy: String? = null,
+
+    var updatedDate: Long? = null,
+
+    var syncState: SyncState,
+
+    var isDraft: Boolean,
 
     ){
 

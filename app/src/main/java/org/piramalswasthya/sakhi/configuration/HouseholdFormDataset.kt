@@ -2,9 +2,6 @@ package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
 import android.text.InputType
-import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.model.FormInput
 import org.piramalswasthya.sakhi.model.HouseholdCache
@@ -107,7 +104,7 @@ class HouseholdFormDataset(context: Context) {
         required = false
     )
     private val povertyLine = FormInput(
-        inputType = FormInput.InputType.DROPDOWN,
+        inputType = FormInput.InputType.RADIO,
         title = context.getString(R.string.nhhr_poverty_line),
         list = listOf(
             "APL",
@@ -164,7 +161,7 @@ class HouseholdFormDataset(context: Context) {
         required = true
     )
     private val houseOwnership = FormInput(
-        inputType = FormInput.InputType.DROPDOWN,
+        inputType = FormInput.InputType.RADIO,
         title = context.getString(R.string.nhhr_house_own),
         listOf(
             "Yes",
@@ -183,7 +180,7 @@ class HouseholdFormDataset(context: Context) {
     //////////////////////////////// Third Page /////////////////////////////////////////
 
     private val separateKitchen = FormInput(
-        inputType = FormInput.InputType.DROPDOWN,
+        inputType = FormInput.InputType.RADIO,
         title = context.getString(R.string.nhhr_separate_kitchen),
         list = listOf(
             "Yes",
