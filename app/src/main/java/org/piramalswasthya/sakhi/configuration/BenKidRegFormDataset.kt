@@ -4,11 +4,18 @@ import android.content.Context
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.*
-import org.piramalswasthya.sakhi.model.FormInput.InputType
+import org.piramalswasthya.sakhi.model.FormInput.InputType.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class BenKidRegFormDataset(context: Context, private val household: HouseholdCache? = null) {
+class BenKidRegFormDataset(context: Context) {
+
+    private var ben: BenRegCache? = null
+
+    constructor(context: Context, ben: BenRegCache? = null) : this(context) {
+        this.ben = ben
+        //TODO(SETUP THE VALUES)
+    }
 
     companion object {
         private fun getCurrentDate(): String {
@@ -23,29 +30,42 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
             val date = f.parse(dateString)
             return date?.time ?: throw IllegalStateException("Invalid date for dateReg")
         }
+
+        private fun stringToLong(phNo: String) = phNo.toLong()
+
+        private fun getMinDobMillis(): Long {
+            val cal = Calendar.getInstance()
+            cal.add(Calendar.YEAR, -15)
+            cal.add(Calendar.DAY_OF_MONTH, +1)
+            return cal.timeInMillis
+        }
+
+        private fun getMaxDobMillis(): Long {
+            return System.currentTimeMillis()
+        }
     }
 
 
     //////////////////////////////////First Page////////////////////////////////////
 
     private val dateOfReg = FormInput(
-        inputType = InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "Date of Registration",
         value = MutableStateFlow(getCurrentDate()),
         required = true
     )
     private val firstName = FormInput(
-        inputType = InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "First Name",
         required = true
     )
     private val lastName = FormInput(
-        inputType = InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "Last Name / Surname",
         required = false,
     )
     val ageUnit = FormInput(
-        inputType = InputType.DROPDOWN,
+        inputType = DROPDOWN,
         title = "Age Unit",
         list = listOf(
             "Year",
@@ -55,18 +75,20 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
         required = true,
     )
     val age = FormInput(
-        inputType = InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "Age",
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = true,
     )
     val dob = FormInput(
-        inputType = InputType.DATE_PICKER,
+        inputType = DATE_PICKER,
         title = "Date of Birth",
+        max = getMaxDobMillis(),
+        min = getMinDobMillis(),
         required = true,
     )
     val gender = FormInput(
-        inputType = InputType.RADIO,
+        inputType = RADIO,
         title = "Gender",
         list = listOf(
             "Male",
@@ -76,18 +98,30 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
         required = true,
     )
     private val fatherName = FormInput(
-        inputType = InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "Father's Name",
         required = true
     )
     private val motherName = FormInput(
-        inputType = InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "Mother's Name",
         required = true
     )
+
     val mobileNoOfRelation = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Mobile Number",
+        inputType = DROPDOWN,
+        title = "Mobile Number Of",
+        list = listOf(
+            "Mother",
+            "Father",
+            "Family Head",
+            "Other"
+        ),
+        required = true,
+    )
+    val contactNumber = FormInput(
+        inputType = EDIT_TEXT,
+        title = "Contact Number",
         required = true,
         etLength = 10,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL
@@ -143,18 +177,18 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
         "Other"
     )
     val relationToHead = FormInput(
-        inputType = InputType.DROPDOWN,
+        inputType = DROPDOWN,
         title = "Relation with family head",
         list = relationToHeadListDefault,
         required = true,
     )
     val otherRelationToHead = FormInput(
-        inputType = InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "Other - Enter relation to head",
         required = true
     )
     private val community = FormInput(
-        inputType = InputType.DROPDOWN,
+        inputType = DROPDOWN,
         title = "Community",
         list = listOf(
             "General",
@@ -168,7 +202,7 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
         required = true
     )
     val religion = FormInput(
-        inputType = InputType.DROPDOWN,
+        inputType = DROPDOWN,
         title = "Religion",
         list = listOf(
             "Hindu",
@@ -184,13 +218,13 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
         required = true
     )
     val otherReligion = FormInput(
-        inputType = InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "Other - Enter Religion",
         required = true
     )
 
     val childRegisteredAtAwc = FormInput(
-        inputType = InputType.DROPDOWN,
+        inputType = DROPDOWN,
         title = "Is the Child registered at AWC",
         listOf(
             "Yes",
@@ -200,7 +234,7 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
     )
 
     val childRegisteredAtSchool = FormInput(
-        inputType = InputType.DROPDOWN,
+        inputType = DROPDOWN,
         title = "Is the Child registered at School",
         listOf(
             "Yes",
@@ -211,7 +245,7 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
 
 
     val typeOfSchool = FormInput(
-        inputType = InputType.DROPDOWN,
+        inputType = DROPDOWN,
         title = "Type of School/Institute",
         listOf(
             "Aganwadi",
@@ -224,9 +258,12 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
 
 
     val rchId = FormInput(
-        inputType = InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "RCH ID",
-        required = false
+        required = false,
+        etLength = 12,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL
+
     )
     val firstPage: List<FormInput> by lazy {
         listOf(
@@ -240,6 +277,7 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
             fatherName,
             motherName,
             relationToHead,
+            mobileNoOfRelation,
             community,
             religion,
             rchId,
@@ -249,7 +287,7 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
     //////////////////////////////////////////Second Page///////////////////////////////////////////
 
     val placeOfBirth = FormInput(
-        inputType = InputType.DROPDOWN,
+        inputType = DROPDOWN,
         title = "Place of birth",
         list = listOf(
             "Home",
@@ -259,7 +297,7 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
         required = true
     )
     val facility = FormInput(
-        inputType = InputType.DROPDOWN,
+        inputType = DROPDOWN,
         title = "Facility Selection",
         list = listOf(
             "Sub Centre",
@@ -276,12 +314,12 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
         required = true
     )
     val otherPlaceOfBirth = FormInput(
-        inputType = InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "Other Place of Birth",
         required = true
     )
     val whoConductedDelivery = FormInput(
-        inputType = InputType.DROPDOWN,
+        inputType = DROPDOWN,
         title = "Who Conducted Delivery",
         list = listOf(
             "ANM",
@@ -295,12 +333,12 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
         required = true
     )
     val otherWhoConductedDelivery = FormInput(
-        inputType = InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "Other - Enter who Conducted Delivery",
         required = true
     )
     val typeOfDelivery = FormInput(
-        inputType = InputType.DROPDOWN,
+        inputType = DROPDOWN,
         title = "Type of Delivery",
         listOf(
             "Normal Delivery",
@@ -310,7 +348,7 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
         required = true
     )
     val complicationsDuringDelivery = FormInput(
-        inputType = InputType.DROPDOWN,
+        inputType = DROPDOWN,
         title = "Complications during delivery",
         listOf(
             "PPH",
@@ -323,7 +361,7 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
         required = true
     )
     val breastFeedWithin1Hr = FormInput(
-        inputType = InputType.DROPDOWN,
+        inputType = DROPDOWN,
         title = "Breast feeding started within 1 hr of birth",
         listOf(
             "Yes",
@@ -333,7 +371,7 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
         required = true
     )
     val birthDose = FormInput(
-        inputType = InputType.DROPDOWN,
+        inputType = DROPDOWN,
         title = "Birth Dose",
         listOf(
             "Given",
@@ -343,7 +381,7 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
         required = true
     )
     val birthDoseGiven = FormInput(
-        inputType = InputType.CHECKBOXES,
+        inputType = CHECKBOXES,
         title = "Given birth dose details",
         listOf(
             "BCG",
@@ -354,7 +392,7 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
     )
 
     val term = FormInput(
-        inputType = InputType.DROPDOWN,
+        inputType = DROPDOWN,
         title = "Term",
         listOf(
             "Full-Term",
@@ -365,7 +403,7 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
     )
 
     val termGestationalAge = FormInput(
-        inputType = InputType.RADIO,
+        inputType = RADIO,
         title = "Term",
         listOf(
             "24-34 Weeks",
@@ -375,7 +413,7 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
         required = true
     )
     val babyCriedImmediatelyAfterBirth = FormInput(
-        inputType = InputType.DROPDOWN,
+        inputType = DROPDOWN,
         title = "Baby cried immediately at birth",
         listOf(
             "Yes",
@@ -385,7 +423,7 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
         required = true
     )
     val anyDefectAtBirth = FormInput(
-        inputType = InputType.DROPDOWN,
+        inputType = DROPDOWN,
         title = "Any Defect Seen at Birth",
         listOf(
             "Yes",
@@ -400,12 +438,12 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
         required = true
     )
     val babyHeight = FormInput(
-        inputType = InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "Height at birth ( cm )",
         required = false
     )
     val babyWeight = FormInput(
-        inputType = InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "Weight at birth (gram )",
         required = false
     )
@@ -428,11 +466,11 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
     }
 
     private fun getTypeFromAge(age: Int, ageUnit: AgeUnit?): TypeOfList? {
-        return if(ageUnit==AgeUnit.DAYS || ageUnit==AgeUnit.MONTHS)
+        return if (ageUnit == AgeUnit.DAYS || ageUnit == AgeUnit.MONTHS)
             TypeOfList.INFANT
-        else if(ageUnit==AgeUnit.YEARS && age>1 && age<5)
+        else if (ageUnit == AgeUnit.YEARS && age > 1 && age < 5)
             TypeOfList.CHILD
-        else if(ageUnit==AgeUnit.YEARS && age>5 && age<15)
+        else if (ageUnit == AgeUnit.YEARS && age > 5 && age < 15)
             TypeOfList.ADOLESCENT
         else null
 
@@ -440,27 +478,31 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
 
     fun getBenForFirstPage(userId: Int, hhId: Long): BenRegCache {
 
-        val ben = BenRegCache(
-            householdId = hhId,
-            ashaId = userId,
-            syncState = SyncState.UNSYNCED,
-            kidDetails = BenRegKid(),
-            isDraft = true
-        )
-        ben.apply {
+        if (ben == null) {
+            ben = BenRegCache(
+                householdId = hhId,
+                ashaId = userId,
+                syncState = SyncState.UNSYNCED,
+                isKid = true,
+                isAdult = false,
+                kidDetails = BenRegKid(),
+                isDraft = true
+            )
+        }
+        ben?.apply {
             regDate = getLongFromDate(this@BenKidRegFormDataset.dateOfReg.value.value!!)
             firstName = this@BenKidRegFormDataset.firstName.value.value
             lastName = this@BenKidRegFormDataset.lastName.value.value
             dob = getLongFromDate(this@BenKidRegFormDataset.dob.value.value!!)
             age = this@BenKidRegFormDataset.age.value.value?.toInt() ?: 0
             ageUnit = when (this@BenKidRegFormDataset.ageUnit.value.value) {
-                "YEAR" -> AgeUnit.YEARS
-                "MONTH" -> AgeUnit.MONTHS
-                "DAY" -> AgeUnit.DAYS
+                "Year" -> AgeUnit.YEARS
+                "Month" -> AgeUnit.MONTHS
+                "Day" -> AgeUnit.DAYS
                 else -> null
             }
             registrationType = getTypeFromAge(age, ageUnit)
-            gender = when(this@BenKidRegFormDataset.gender.value.value) {
+            gender = when (this@BenKidRegFormDataset.gender.value.value) {
                 "Male" -> Gender.MALE
                 "Female" -> Gender.FEMALE
                 "Transgender" -> Gender.TRANSGENDER
@@ -471,6 +513,7 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
             familyHeadRelation = this@BenKidRegFormDataset.relationToHead.value.value
             familyHeadRelationOther = this@BenKidRegFormDataset.otherRelationToHead.value.value
             mobileNoOfRelation = this@BenKidRegFormDataset.mobileNoOfRelation.value.value
+            contactNumber = stringToLong(this@BenKidRegFormDataset.contactNumber.value.value!!)
             community = this@BenKidRegFormDataset.community.value.value
             religion = this@BenKidRegFormDataset.religion.value.value
             religionOthers = this@BenKidRegFormDataset.otherReligion.value.value
@@ -481,16 +524,17 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
             kidDetails?.typeOfSchool = this@BenKidRegFormDataset.typeOfSchool.value.value
             rchId = this@BenKidRegFormDataset.rchId.value.value
         }
-        return ben
+        return ben!!
     }
 
-    fun getBenForSecondPage(userId: Int, hhId: Long): BenRegCache {
+    fun getBenForSecondPage(): BenRegCache {
 
-        val ben = getBenForFirstPage(userId, hhId)
-        ben.apply {
+        ben?.apply {
             kidDetails?.birthPlace = this@BenKidRegFormDataset.placeOfBirth.value.value
-            kidDetails?.conductedDelivery = this@BenKidRegFormDataset.whoConductedDelivery.value.value
-            kidDetails?.conductedDeliveryOther = this@BenKidRegFormDataset.otherWhoConductedDelivery.value.value
+            kidDetails?.conductedDelivery =
+                this@BenKidRegFormDataset.whoConductedDelivery.value.value
+            kidDetails?.conductedDeliveryOther =
+                this@BenKidRegFormDataset.otherWhoConductedDelivery.value.value
             kidDetails?.deliveryType = this@BenKidRegFormDataset.typeOfDelivery.value.value
             kidDetails?.complications =
                 this@BenKidRegFormDataset.complicationsDuringDelivery.value.value
@@ -512,6 +556,6 @@ class BenKidRegFormDataset(context: Context, private val household: HouseholdCac
             isDraft = false
         }
 
-        return ben
+        return ben!!
     }
 }

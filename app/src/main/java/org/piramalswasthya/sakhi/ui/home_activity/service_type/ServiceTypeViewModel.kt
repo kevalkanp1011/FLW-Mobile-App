@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.model.FormInput
+import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.repositories.UserRepo
 import javax.inject.Inject
@@ -68,7 +69,7 @@ class ServiceTypeViewModel @Inject constructor(
                 inputType = FormInput.InputType.DROPDOWN,
                 title = context.getString(R.string.service_type_dd_village_text),
                 list = user?.villageEnglish,
-                //value = MutableStateFlow(if(user?.villageEnglish?.size==1) user.villageEnglish[0]else null),
+                value = MutableStateFlow(if(user?.villageEnglish?.size==1) user.villageEnglish[0]else null),
                 required = true
             )
         }
@@ -76,38 +77,35 @@ class ServiceTypeViewModel @Inject constructor(
 
     fun loadLocation(
         user: UserDomain,
-        state: String,
-        district: String,
-        block: String,
-        village: String
+        location : LocationRecord
     ) {
         _userName.value = user.userName
         _stateList.value = FormInput(
             inputType = FormInput.InputType.DROPDOWN,
             title = context.getString(R.string.service_type_dd_state_text),
             list = user.stateEnglish,
-            value = MutableStateFlow(state),
+            value = MutableStateFlow(location.state),
             required = true
         )
         _districtList.value = FormInput(
             inputType = FormInput.InputType.DROPDOWN,
             title = context.getString(R.string.service_type_dd_district_text),
             list = user.districtEnglish,
-            value = MutableStateFlow(district),
+            value = MutableStateFlow(location.district),
             required = true
         )
         _blockList.value = FormInput(
             inputType = FormInput.InputType.DROPDOWN,
             title = context.getString(R.string.service_type_dd_block_text),
             list = user.blockEnglish,
-            value = MutableStateFlow(block),
+            value = MutableStateFlow(location.block),
             required = true
         )
         _villageList.value = FormInput(
             inputType = FormInput.InputType.DROPDOWN,
             title = context.getString(R.string.service_type_dd_village_text),
             list = user.villageEnglish,
-            value = MutableStateFlow(village),
+            value = MutableStateFlow(location.village),
             required = true
         )
     }

@@ -2,7 +2,6 @@ package org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_r
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -13,6 +12,7 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.configuration.HouseholdFormDataset
 import org.piramalswasthya.sakhi.model.FormInput
+import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.repositories.HouseholdRepo
 import timber.log.Timber
 import javax.inject.Inject
@@ -52,9 +52,11 @@ class NewHouseholdViewModel
 
     suspend fun getFirstPage(): List<FormInput> {
         return withContext(Dispatchers.IO) {
-            form = householdRepo.getDraftForm(getApplication()) ?: HouseholdFormDataset(
-                getApplication()
-            )
+            form = householdRepo.getDraftForm()?.let {
+                HouseholdFormDataset(getApplication(),it)
+            }?:run{
+                HouseholdFormDataset(getApplication())
+            }
             form.firstPage
         }
     }
@@ -161,12 +163,12 @@ class NewHouseholdViewModel
         }
     }
 
-    fun persistForm() {
+    fun persistForm(locationRecord: LocationRecord) {
         viewModelScope.launch {
             _state.value = State.SAVING
             withContext(Dispatchers.IO) {
                 try {
-                    hhId = householdRepo.persistThirdPage(form)
+                    hhId = householdRepo.persistThirdPage(form, locationRecord)
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
                     Timber.d("saving HH data failed!!")

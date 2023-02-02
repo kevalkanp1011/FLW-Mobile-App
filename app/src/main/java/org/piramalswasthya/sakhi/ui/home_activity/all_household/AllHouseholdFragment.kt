@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.HouseHoldListAdapter
@@ -22,10 +23,32 @@ class AllHouseholdFragment : Fragment() {
 
     private val viewModel: AllHouseholdViewModel by viewModels()
 
+
+    private var hasDraft = false
+
+    private val draftLoadAlert by lazy {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Incomplete form found")
+            .setMessage("Do you want to continue with previous form, or create a new form and discard the previous form?")
+            .setPositiveButton("OPEN DRAFT"){
+                    dialog,_->
+                viewModel.navigateToNewHouseholdRegistration(false)
+                dialog.dismiss()
+            }
+            .setNegativeButton("CREATE NEW"){
+                    dialog,_->
+                viewModel.navigateToNewHouseholdRegistration(true)
+                dialog.dismiss()
+            }
+            .create()
+    }
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        viewModel.checkDraft()
         return binding.root
     }
 
@@ -37,16 +60,28 @@ class AllHouseholdFragment : Fragment() {
             Toast.makeText(context,"Clicked $it",Toast.LENGTH_SHORT).show()
         },{
             Toast.makeText(context,"Clicked $it", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(org.piramalswasthya.sakhi.ui.home_activity.all_household.AllHouseholdFragmentDirections.actionAllHouseholdFragmentToNewBenRegTypeFragment(it))
+            findNavController().navigate(AllHouseholdFragmentDirections.actionAllHouseholdFragmentToNewBenRegTypeFragment(it))
         }))
         binding.rvAny.adapter = householdAdapter
 
         viewModel.householdList.observe(viewLifecycleOwner){
             householdAdapter.submitList(it)
         }
+        viewModel.hasDraft.observe(viewLifecycleOwner){
+            hasDraft = it
+        }
+        viewModel.navigateToNewHouseholdRegistration.observe(viewLifecycleOwner){
+            if(it) {
+                findNavController().navigate(AllHouseholdFragmentDirections.actionAllHouseholdFragmentToNewHouseholdFragment())
+                viewModel.navigateToNewHouseholdRegistrationCompleted()
+            }
+        }
 
         binding.btnNextPage.setOnClickListener {
-            findNavController().navigate(AllHouseholdFragmentDirections.actionAllHouseholdFragmentToNewHouseholdFragment())
+            if(hasDraft)
+                draftLoadAlert.show()
+            else
+                viewModel.navigateToNewHouseholdRegistration(false)
         }
     }
 

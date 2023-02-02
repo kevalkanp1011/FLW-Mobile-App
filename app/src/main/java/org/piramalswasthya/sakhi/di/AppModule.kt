@@ -12,9 +12,9 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.network.interceptors.ContentTypeInterceptor
 import org.piramalswasthya.sakhi.network.D2DNetworkApiService
 import org.piramalswasthya.sakhi.network.TmcNetworkApiService
+import org.piramalswasthya.sakhi.network.interceptors.ContentTypeInterceptor
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertD2DInterceptor
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertTmcInterceptor
 import retrofit2.Retrofit
@@ -55,8 +55,8 @@ object AppModule {
         return baseClient
             .newBuilder()
             .connectTimeout(60, TimeUnit.SECONDS)
-            .readTimeout(60, TimeUnit.SECONDS)
-            .writeTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(20, TimeUnit.SECONDS)
+            .writeTimeout(20, TimeUnit.SECONDS)
             .addInterceptor(TokenInsertD2DInterceptor())
             .build()
     }
@@ -67,9 +67,9 @@ object AppModule {
     fun provideTmcHttpClient() : OkHttpClient {
         return baseClient
             .newBuilder()
-            .connectTimeout(60, TimeUnit.SECONDS)
-            .readTimeout(60, TimeUnit.SECONDS)
-            .writeTimeout(60, TimeUnit.SECONDS)
+            .connectTimeout(20, TimeUnit.SECONDS)
+            .readTimeout(20, TimeUnit.SECONDS)
+            .writeTimeout(20, TimeUnit.SECONDS)
             .addInterceptor(TokenInsertTmcInterceptor())
             .build()
     }

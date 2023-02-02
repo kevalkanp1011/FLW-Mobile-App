@@ -10,13 +10,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.adapters.NewBenKidPagerAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewBenRegBinding
 import org.piramalswasthya.sakhi.services.UploadSyncService
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_less_15.NewBenRegL15ViewModel.State
-import org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_registration.NewHouseholdFormObjectFragment
+import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -26,10 +27,23 @@ class NewBenRegL15Fragment : Fragment() {
         FragmentNewBenRegBinding.inflate(layoutInflater)
     }
 
-    private val hhId : Long by lazy {
+    private val hhId: Long by lazy {
         NewBenRegL15FragmentArgs.fromBundle(requireArguments()).hhId
     }
     private val viewModel: NewBenRegL15ViewModel by viewModels()
+
+    private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
+
+    private val errorAlert by lazy {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Error Input")
+            //.setMessage("Do you want to continue with previous form, or create a new form and discard the previous form?")
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+            }
+
+            .create()
+    }
 
     private val pageChangeCallback: ViewPager2.OnPageChangeCallback by lazy {
         object : ViewPager2.OnPageChangeCallback() {
@@ -38,6 +52,7 @@ class NewBenRegL15Fragment : Fragment() {
             }
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -77,8 +92,8 @@ class NewBenRegL15Fragment : Fragment() {
         }
         binding.btnToBen.setOnClickListener {
             if (validateFormForPage(2)) {
-                viewModel.persistForm()
-                Toast.makeText(context,"Beneficary saved successfully", Toast.LENGTH_LONG).show()
+                viewModel.persistForm(homeViewModel.getLocationRecord())
+                Toast.makeText(context,"Beneficiary saved successfully", Toast.LENGTH_LONG).show()
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
                     activity?.startForegroundService(Intent(context, UploadSyncService::class.java))
@@ -96,9 +111,21 @@ class NewBenRegL15Fragment : Fragment() {
 
                 }
                 State.SAVE_SUCCESS -> {
-                    Toast.makeText(context,"Save Successful!!!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
                 }
-                State.SAVE_FAILED -> Toast.makeText(context,"Something wend wong! Contact testing!", Toast.LENGTH_LONG).show()
+                State.SAVE_FAILED -> Toast.makeText(
+                    context,
+                    "Something wend wong! Contact testing!",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                errorAlert.setMessage(it)
+                errorAlert.show()
+                viewModel.resetErrorMessage()
             }
         }
 

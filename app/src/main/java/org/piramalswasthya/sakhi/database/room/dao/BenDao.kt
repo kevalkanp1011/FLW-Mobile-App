@@ -14,11 +14,14 @@ interface BenDao {
     suspend fun upsert(ben : BenRegCache)
 
     @Query("SELECT * FROM BENEFICIARY WHERE isDraft = 1 and householdId =:hhId LIMIT 1")
-    suspend fun getDraftBenForHousehold(hhId: Long) : BenRegCache?
+    suspend fun getDraftBenKidForHousehold(hhId: Long) : BenRegCache?
 
     @Query("SELECT * FROM BENEFICIARY WHERE isDraft = 0")
     fun getAllBen() : LiveData<List<BenRegCache>>
 
     @Query("SELECT * FROM BENEFICIARY WHERE beneficiaryId =:benId LIMIT 1")
     suspend fun getBen(benId  : Long) : BenRegCache
+
+    @Query("DELETE FROM BENEFICIARY WHERE householdId = :hhId and isKid = :kid")
+    suspend fun deleteBen(hhId: Long, kid: Boolean)
 }

@@ -84,25 +84,31 @@ class UserRepo @Inject constructor(
                 val responseJson = JSONObject(responseString)
                 val data = responseJson.getJSONObject("data")
                 val user = data.getJSONObject("user")
-                val contactNo = user.getString("emergencyContactNo")
-                this@UserRepo.user?.contactNo = contactNo
+                val emergencyContactNo = user.getString("emergencyContactNo")
+                this@UserRepo.user?.emergencyContactNo = emergencyContactNo
                 val userId = user.getInt("userID")
-                val userName = user.getString("userName")
+                //val userName = user.getString("userName")
 
                 val healthInstitution = data.getJSONObject("healthInstitution")
                 val state = healthInstitution.getJSONObject("state")
+                val stateId = state.getInt("stateID")
                 val stateName = state.getString("stateName")
                 val district = healthInstitution.getJSONArray("districts").getJSONObject(0)
+                val districtId= district.getInt("districtID")
                 val districtName = district.getString("districtName")
                 val block = healthInstitution.getJSONArray("blockids").getJSONObject(0)
+                val blockId = block.getInt("blockID")
                 val blockName = block.getString("blockName")
-                this@UserRepo.user?.apply{
-                    stateEnglish.add(stateName)
-                    districtEnglish.add(districtName)
-                    blockEnglish.add(blockName)
-                }
-
                 val countryId = state.getInt("countryID")
+                this@UserRepo.user?.apply{
+                    this.stateIds.add(stateId)
+                    this.stateEnglish.add(stateName)
+                    this.districtIds.add(districtId)
+                    this.districtEnglish.add(districtName)
+                    this.blockIds.add(blockId)
+                    this.blockEnglish.add(blockName)
+                    this.countryId = countryId
+                }
                 val roleJsonArray = data.getJSONArray("roleids")
                 val role =
                     if (roleJsonArray.getJSONObject(0)["designationName"].toString()
@@ -164,6 +170,7 @@ class UserRepo @Inject constructor(
                         val villageId = village.getInt("villageid")
                         val villageNameEnglish = village.getString("villageNameEnglish")
                         val villageNameHindi = village.getString("villageNameHindi")
+                        user?.villageIds?.add(villageId)
                         user?.villageEnglish?.add(villageNameEnglish)
                         user?.villageHindi?.add(villageNameHindi)
                         //TODO(Save Above data somewhere)
@@ -197,11 +204,15 @@ class UserRepo @Inject constructor(
 //                    vanSpDetailsArray.getJSONObject(0).getInt("parkingPlaceID")
                 for(i in 0 until vanSpDetailsArray.length()){
                     val vanSp = vanSpDetailsArray.getJSONObject(i)
-                    val id = vanSp.getInt("vanID")
-                    val name = vanSp.getString("vanNoAndType")
+                    val vanId = vanSp.getInt("vanID")
+                    user?.vanId = vanId
+                    //val name = vanSp.getString("vanNoAndType")
                     val servicePointId = vanSp.getInt("servicePointID")
                     user?.servicePointId = servicePointId
                     val servicePointName = vanSp.getString("servicePointName")
+                    user?.servicePointName = servicePointName
+                    user?.parkingPlaceId = vanSp.getInt("parkingPlaceID")
+
                 }
                 getLocationDetails()
             }
@@ -225,6 +236,12 @@ class UserRepo @Inject constructor(
                 val zoneId = otherLocation.getInt("zoneID")
                 val parkingPlaceId = otherLocation.getInt("parkingPlaceID")
                 val zoneName = otherLocation.getString("zoneName")
+                this@UserRepo.user?.apply {
+                    this.parkingPlaceId = parkingPlaceId
+                    this.parkingPlaceName = parkingPlaceName
+                    this.zoneName = zoneName
+                    this.zoneId = zoneId
+                }
                 true
             }
             else
@@ -240,7 +257,7 @@ class UserRepo @Inject constructor(
                 Timber.d("JWT : $response")
                 TokenInsertD2DInterceptor.setToken(response.jwt)
                 preferenceDao.registerD2DApiToken(response.jwt)
-                saveUserD2D()
+                //saveUserD2D()
                 true
             } catch (e: retrofit2.HttpException) {
                 Timber.d("Auth Failed!")
@@ -250,9 +267,9 @@ class UserRepo @Inject constructor(
         }
     }
 
-    private suspend fun saveUserD2D() {
+/*    private suspend fun saveUserD2D() {
 
-    }
+    }*/
 
     private suspend fun getTokenTmc(userName: String, password: String) {
         withContext(Dispatchers.IO) {
@@ -275,10 +292,12 @@ class UserRepo @Inject constructor(
 
                     val privilegesArray = data.getJSONArray("previlegeObj")
                     val privilegesObject = privilegesArray.getJSONObject(0)
-                    val serviceID = privilegesObject.getString("serviceID")
+
+                    user = UserNetwork(userId,userName, password)
+                    val serviceId = privilegesObject.getInt("serviceID")
+                    user?.serviceId = serviceId
                     val serviceMapId =
                         privilegesObject.getInt("providerServiceMapID")
-                    user = UserNetwork(userId,userName, password)
                     user?.serviceMapId = serviceMapId
                     TokenInsertTmcInterceptor.setToken(token)
                     preferenceDao.registerPrimaryApiToken(token)

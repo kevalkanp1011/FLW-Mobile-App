@@ -37,7 +37,16 @@ class SignInFragment : Fragment() {
 
         viewModel.state.observe(viewLifecycleOwner){state->
             when(state!!){
-                State.IDLE -> {}
+                State.IDLE -> {
+                    viewModel.fetchRememberedUserName()?.let {
+                        binding.etUsername.setText(it)
+                    }
+                    viewModel.fetchRememberedPassword()?.let {
+                        binding.etPassword.setText(it)
+                        binding.cbRemember.isChecked = true
+                    }
+
+                }
                 State.LOADING -> validateInput()
                 State.ERROR_INPUT -> {
                     binding.pbSignIn.visibility = View.GONE
@@ -58,9 +67,18 @@ class SignInFragment : Fragment() {
                     binding.tvError.visibility = View.VISIBLE
                 }
                 State.SUCCESS -> {
+                    if(binding.cbRemember.isChecked) {
+                        val username = binding.etUsername.text.toString()
+                        val password = binding.etPassword.text.toString()
+                        viewModel.rememberUser(username,password)
+                    }
+                    else{
+                        viewModel.forgetUser()
+                    }
                     binding.clContent.visibility = View.INVISIBLE
                     binding.pbSignIn.visibility = View.VISIBLE
                     binding.tvError.visibility = View.GONE
+
                     findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToHomeActivity())
                 }
             }

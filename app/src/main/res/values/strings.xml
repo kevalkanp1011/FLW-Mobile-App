@@ -52,9 +52,16 @@
     <string name="home_icon_all_household">All Household List</string>
     <string name="btn_text_frag_home_nhhr">New Household Registration</string>
     <string name="cd_icon_grid_icon">icon</string>
+
+
     <string name="PREF_NAME">Sakhi-pref-1</string>
     <string name="PREF_D2D_API_KEY">JWT-Token_A</string>
     <string name="PREF_primary_API_KEY">JWT-Token_B</string>
+    <string name="PREF_rem_me_uname">user-name-local-saved</string>
+    <string name="PREF_rem_me_pwd">password-local-saved</string>
+
+
+
     <string name="tv_required_text_asterisk">*</string>
 
 
