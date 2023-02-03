@@ -177,7 +177,7 @@ class NewBenRegG15Fragment : Fragment() {
             viewModel.setMTabPosition(i)
         else {
             val validated =
-                true//validateFormForPage(i)
+                validateFormForPage(i)
             if (validated) {
                 viewModel.setMTabPosition(i)
                 when (viewModel.mTabPosition) {

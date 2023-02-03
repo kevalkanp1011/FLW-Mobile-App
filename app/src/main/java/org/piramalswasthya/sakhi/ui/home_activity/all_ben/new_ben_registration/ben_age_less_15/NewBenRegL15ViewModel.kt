@@ -70,7 +70,8 @@ class NewBenRegL15ViewModel @Inject constructor(
             }
         }
         viewModelScope.launch {
-            var emittedFromDob = false
+            var emittedFromDobForAge = false
+            var emittedFromDobForAgeUnit = false
             var emittedFromAge = false
             launch {
                 form.gender.value.collect {
@@ -116,15 +117,16 @@ class NewBenRegL15ViewModel @Inject constructor(
                             toggleChildRegisteredFieldsVisibility(adapter, yearsDiff)
                             return@collect
                         }
+
                         Timber.d("dob flow emitted $it")
                         if (yearsDiff > 0) {
                             if (form.ageUnit.value.value != "Year") {
-                                emittedFromDob = true
+                                emittedFromDobForAgeUnit = true
                                 form.ageUnit.value.value = "Year"
                                 adapter.notifyItemChanged(form.firstPage.indexOf(form.ageUnit))
                             }
                             if (form.age.value.value == null || form.age.value.value?.toInt() != yearsDiff) {
-                                emittedFromDob = true
+                                emittedFromDobForAge = true
                                 form.age.value.value = yearsDiff.toString()
                                 adapter.notifyItemChanged(form.firstPage.indexOf(form.age))
                             }
@@ -133,24 +135,24 @@ class NewBenRegL15ViewModel @Inject constructor(
                             val monthDiff = getDiffMonths(calDob, calNow)
                             if (monthDiff > 0) {
                                 if (form.ageUnit.value.value != "Month") {
-                                    emittedFromDob = true
+                                    emittedFromDobForAgeUnit = true
                                     form.ageUnit.value.value = "Month"
                                     adapter.notifyItemChanged(form.firstPage.indexOf(form.ageUnit))
                                 }
                                 if (form.age.value.value == null || form.age.value.value?.toInt() != monthDiff) {
-                                    emittedFromDob = true
+                                    emittedFromDobForAge = true
                                     form.age.value.value = monthDiff.toString()
                                     adapter.notifyItemChanged(form.firstPage.indexOf(form.age))
                                 }
                             } else {
                                 val dayDiff = getDiffDays(calDob, calNow)
                                 if (form.ageUnit.value.value != "Day") {
-                                    emittedFromDob = true
+                                    emittedFromDobForAgeUnit = true
                                     form.ageUnit.value.value = "Day"
                                     adapter.notifyItemChanged(form.firstPage.indexOf(form.ageUnit))
                                 }
                                 if (form.age.value.value == null || form.age.value.value?.toInt() != dayDiff) {
-                                    emittedFromDob = true
+                                    emittedFromDobForAge = true
                                     form.age.value.value = dayDiff.toString()
                                     adapter.notifyItemChanged(form.firstPage.indexOf(form.age))
                                 }
@@ -242,8 +244,12 @@ class NewBenRegL15ViewModel @Inject constructor(
             launch {
                 form.age.value.combine(form.ageUnit.value) { age, ageUnit ->
                     if (age != null && ageUnit != null) {
-                        if (emittedFromDob) {
-                            emittedFromDob = false
+                        if (emittedFromDobForAge) {
+                            emittedFromDobForAge = false
+                            return@combine
+                        }
+                        if (emittedFromDobForAgeUnit) {
+                            emittedFromDobForAgeUnit = false
                             return@combine
                         }
                         emittedFromAge = true
@@ -311,7 +317,7 @@ class NewBenRegL15ViewModel @Inject constructor(
 
     private fun getDiffYears(a: Calendar, b: Calendar): Int {
         var diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR)
-        if (a.get(Calendar.YEAR) > b.get(Calendar.YEAR) ||
+        if (a.get(Calendar.MONTH) > b.get(Calendar.MONTH) ||
             a.get(Calendar.MONTH) == b.get(Calendar.MONTH) && a.get(Calendar.DAY_OF_MONTH) > b.get(
                 Calendar.DAY_OF_MONTH
             )
@@ -323,7 +329,7 @@ class NewBenRegL15ViewModel @Inject constructor(
 
     private fun getDiffMonths(a: Calendar, b: Calendar): Int {
         var diffY = b.get(Calendar.YEAR) - a.get(Calendar.YEAR)
-        if (a.get(Calendar.YEAR) > b.get(Calendar.YEAR) ||
+        if (a.get(Calendar.MONTH) > b.get(Calendar.MONTH) ||
             a.get(Calendar.MONTH) == b.get(Calendar.MONTH) && a.get(Calendar.DAY_OF_MONTH) > b.get(
                 Calendar.DAY_OF_MONTH
             )
@@ -332,12 +338,13 @@ class NewBenRegL15ViewModel @Inject constructor(
         }
         if (diffY != 0)
             return -1
-        val diffM = b.get(Calendar.MONTH) - a.get(Calendar.MONTH)
-        if (diffM == 1 &&
-            a.get(Calendar.DAY_OF_MONTH) > b.get(Calendar.DAY_OF_MONTH)
-        ) {
-            return 0
+        var diffM = b.get(Calendar.MONTH) - a.get(Calendar.MONTH)
+        if (a.get(Calendar.DAY_OF_MONTH) > b.get(Calendar.DAY_OF_MONTH)) {
+            diffM--
         }
+        if (diffM < 0)
+            diffM += 12
+
         return diffM
     }
 

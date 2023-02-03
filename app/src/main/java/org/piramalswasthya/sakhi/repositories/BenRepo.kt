@@ -72,6 +72,7 @@ class BenRepo @Inject constructor(
             this.stateId = locationRecord.stateId
             this.districtId = locationRecord.districtId
             this.villageId = locationRecord.villageId
+            this.isDraft = false
         }
 
         database.benDao.upsert(ben)
@@ -100,6 +101,7 @@ class BenRepo @Inject constructor(
                 this.stateId = it.stateId
                 this.districtId = it.districtId
                 this.villageId = it.villageId
+                this.isDraft = false
             }
         }
 

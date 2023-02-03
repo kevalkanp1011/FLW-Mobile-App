@@ -21,18 +21,18 @@
             android:text="@{form.title}"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/rg"
             tools:text="Hello you@!!" />
 
         <RadioGroup
             android:id="@+id/rg"
-            form="@{form}"
+            radioForm="@{form}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_title"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tv_nullable"
             app:layout_constraintStart_toEndOf="@+id/tv_title"
-            app:layout_constraintTop_toTopOf="@+id/tv_title">
+            app:layout_constraintTop_toTopOf="parent">
 
 
         </RadioGroup>
