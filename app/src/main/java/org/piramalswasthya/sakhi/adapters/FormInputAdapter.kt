@@ -17,12 +17,14 @@ import org.piramalswasthya.sakhi.model.FormInput.InputType.*
 import timber.log.Timber
 import java.util.*
 
-class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageClickListener?=null): ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBack) {
+class FormInputAdapter(private val imageClickListener: ImageClickListener? = null) :
+    ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBack) {
     object FormInputDiffCallBack : DiffUtil.ItemCallback<FormInput>() {
         override fun areItemsTheSame(oldItem: FormInput, newItem: FormInput) =
             oldItem.title == newItem.title
 
-        override fun areContentsTheSame(oldItem: FormInput, newItem: FormInput) = oldItem == newItem
+        override fun areContentsTheSame(oldItem: FormInput, newItem: FormInput) =
+            (oldItem == newItem)
 
     }
 
@@ -40,50 +42,58 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
             binding.form = item
             //binding.et.setText(item.value.value)
             val textWatcher = object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 }
 
                 override fun afterTextChanged(editable: Editable?) {
-                    if(!editable.isNullOrBlank()) {
-                        item.value.value = editable.toString()
-                        Timber.d("Item ET : $item")
-                        if (item.etInputType == (InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL)) {
-                            val age = editable.toString().toLong()
-                            item.min?.let {
-                                if (age < it) {
-                                    binding.tilEditText.error = "Field value has to be at least $it"
-                                }
-                            }
-                            item.max?.let {
-                                if (age > it) {
-                                    binding.tilEditText.error =
-                                        "Field value has to be less than $it"
-                                }
-                            }
-                            if (item.min != null && item.max != null && age >= item.min!! && age <= item.max!!)
-                                binding.tilEditText.error = null
-                        }
-
+                    if (editable == null || editable.toString() == "") {
+                        item.value.value = null
+                        return
                     }
+                    editable.let { item.value.value = it.toString() }
+                    item.value.value = editable.toString()
+                    Timber.d("Item ET : $item")
+                    if (item.etInputType == (InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL)) {
+                        val age = editable.toString().toLong()
+                        item.min?.let {
+                            if (age < it) {
+                                binding.tilEditText.error = "Field value has to be at least $it"
+                            }
+                        }
+                        item.max?.let {
+                            if (age > it) {
+                                binding.tilEditText.error =
+                                    "Field value has to be less than $it"
+                            }
+                        }
+                        if (item.min != null && item.max != null && age >= item.min!! && age <= item.max!!)
+                            binding.tilEditText.error = null
+                    }
+
                 }
             }
             binding.et.setOnFocusChangeListener { _, hasFocus ->
-                if(hasFocus)
+                if (hasFocus)
                     binding.et.addTextChangedListener(textWatcher)
                 else
                     binding.et.removeTextChangedListener(textWatcher)
             }
-            item.errorText?.also { binding.tilEditText.error = it }?: run{binding.tilEditText.error = null}
+            item.errorText?.also { binding.tilEditText.error = it }
+                ?: run { binding.tilEditText.error = null }
             val etFilters = mutableListOf<InputFilter>(InputFilter.LengthFilter(item.etLength))
             binding.et.inputType = item.etInputType
             if (item.etInputType == InputType.TYPE_CLASS_TEXT && item.useFormEditTextDefaultInputFilter) {
                 etFilters.add(FormEditTextDefaultInputFilter)
                 binding.et.filters = etFilters.toTypedArray()
-            }
-            else{
+            } else {
                 binding.et.filters = etFilters.toTypedArray()
             }
             binding.executePendingBindings()
@@ -100,7 +110,7 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
             }
         }
 
-        fun bind(item: FormInput, ) {
+        fun bind(item: FormInput) {
             val savedValue = item.value.value
             item.value.value = null
             item.value.value = savedValue
@@ -129,7 +139,9 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
         }
 
         fun bind(
-            item: FormInput ){
+            item: FormInput
+        ) {
+            binding.invalidateAll()
             binding.form = item
 
             //item.errorText?.let { binding.rg.error = it }
@@ -149,7 +161,8 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
         }
 
         fun bind(
-            item: FormInput ){
+            item: FormInput
+        ) {
             binding.form = item
 
             //item.errorText?.let { binding.rg.error = it }
@@ -176,11 +189,12 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
             var thisMonth = today.get(Calendar.MONTH)
             var thisDay = today.get(Calendar.DAY_OF_MONTH)
             binding.form = item
-            item.errorText?.also { binding.tilEditText.error = it }?: run{binding.tilEditText.error = null}
-            binding.et.setOnClickListener{
-                item.value.value?.let {value ->
+            item.errorText?.also { binding.tilEditText.error = it }
+                ?: run { binding.tilEditText.error = null }
+            binding.et.setOnClickListener {
+                item.value.value?.let { value ->
                     thisYear = value.substring(6).toInt()
-                    thisMonth = value.substring(3,5).trim().toInt()-1
+                    thisMonth = value.substring(3, 5).trim().toInt() - 1
                     thisDay = value.substring(0, 2).trim().toInt()
                 }
                 val datePickerDialog = DatePickerDialog(
@@ -195,7 +209,7 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
                 binding.tilEditText.error = null
                 datePickerDialog.datePicker.maxDate = item.max ?: 0
                 datePickerDialog.datePicker.minDate = item.min ?: 0
-                datePickerDialog.datePicker.touchables[0].performClick();
+                datePickerDialog.datePicker.touchables[0].performClick()
                 datePickerDialog.show()
             }
             binding.executePendingBindings()
@@ -239,9 +253,10 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
 
         }
     }
-    class ImageClickListener(private val imageClick : (form : FormInput) -> Unit) {
 
-        fun onImageClick(form : FormInput) = imageClick(form)
+    class ImageClickListener(private val imageClick: (form: FormInput) -> Unit) {
+
+        fun onImageClick(form: FormInput) = imageClick(form)
 
     }
 
@@ -263,11 +278,11 @@ class FormInputAdapter (private val imageClickListener : FormInputAdapter.ImageC
         val item = getItem(position)
         when (item.inputType) {
             EDIT_TEXT -> (holder as EditTextInputViewHolder).bind(item)
-            DROPDOWN ->  (holder as DropDownInputViewHolder).bind(item)
+            DROPDOWN -> (holder as DropDownInputViewHolder).bind(item)
             RADIO -> (holder as RadioInputViewHolder).bind(item)
-            DATE_PICKER ->(holder as DatePickerInputViewHolder).bind(item)
+            DATE_PICKER -> (holder as DatePickerInputViewHolder).bind(item)
             TEXT_VIEW -> (holder as TextViewInputViewHolder).bind(item)
-            IMAGE_VIEW -> (holder as ImageViewInputViewHolder).bind(item,imageClickListener)
+            IMAGE_VIEW -> (holder as ImageViewInputViewHolder).bind(item, imageClickListener)
             CHECKBOXES -> (holder as CheckBoxesInputViewHolder).bind(item)
         }
     }

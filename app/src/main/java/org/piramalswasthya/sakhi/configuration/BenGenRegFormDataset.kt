@@ -2,6 +2,7 @@ package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
 import android.text.InputType
+import android.widget.LinearLayout
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.BenRegCache
@@ -46,6 +47,7 @@ class BenGenRegFormDataset(context: Context) {
             cal.add(Calendar.YEAR, -15)
             return cal.timeInMillis
         }
+
     }
 
     //////////////////////////////////First Page////////////////////////////////////
@@ -238,7 +240,7 @@ class BenGenRegFormDataset(context: Context) {
             "Muslim",
             "Christian",
             "Sikh",
-            "Buddism",
+            "Buddhism",
             "Jainism",
             "Other",
             "Parsi",
@@ -296,12 +298,11 @@ class BenGenRegFormDataset(context: Context) {
 
     )
 
-    val secondPage: List<FormInput> by lazy {
+    val secondPage =
         listOf(
             hasAadharNo,
             rchId
         )
-    }
 
 
     //////////////////////////////////Third(if any) Page////////////////////////////////////
@@ -330,13 +331,105 @@ class BenGenRegFormDataset(context: Context) {
         required = true
     )
 
+    val reproductiveStatusOther = FormInput(
+        inputType = EDIT_TEXT,
+        title = "Reproductive Status Other",
+        required = true
+    )
 
-    val thirdPage by lazy {
-        listOf(
-            lastMenstrualPeriod,
-            reproductiveStatus
+    val nishchayKitDeliveryStatus = FormInput(
+        inputType = RADIO,
+        title = "Nishchay Kit Delivery Status",
+        list = listOf("Delivered", "Not Delivered"),
+        orientation = LinearLayout.VERTICAL,
+        required = true,
+
         )
-    }
+
+    val pregnancyTestResult = FormInput(
+        inputType = RADIO,
+        title = "Pregnancy Test Result",
+        list = listOf("Pregnant", "Not Pregnant", "Pending"),
+        orientation = LinearLayout.VERTICAL,
+        required = true,
+
+        )
+
+    val expectedDateOfDelivery = FormInput(
+        inputType = TEXT_VIEW,
+        title = "Expected Date Of Delivery",
+        required = true
+    )
+
+
+    val numPrevLiveBirthOrPregnancy = FormInput(
+        inputType = EDIT_TEXT,
+        title = "No. of Previous Live Birth / Pregnancy",
+        min = 0,
+        max = 20,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        required = true,
+    )
+
+    val lastDeliveryConducted = FormInput(
+        inputType = DROPDOWN,
+        title = "Last Delivery Conducted",
+        list = listOf(
+            "Home",
+            "PHC",
+            "HWC",
+            "CHC",
+            "District Hospital",
+            "Medical college Hospital",
+            "Other",
+        ),
+        required = true
+    )
+    val facility = FormInput(
+        inputType = EDIT_TEXT,
+        title = "Facility Name",
+        required = true
+    )
+    val otherPlaceOfDelivery = FormInput(
+        inputType = EDIT_TEXT,
+        title = " Enter the Place of last delivery conducted",
+        required = true
+    )
+    val whoConductedDelivery = FormInput(
+        inputType = DROPDOWN,
+        title = "Who Conducted Delivery",
+        list = listOf(
+            "ANM",
+            "LHV",
+            "Doctor",
+            "Staff Nurse",
+            "Relative",
+            "TBA(Non-Skilled Birth Attendant)",
+            "Other",
+        ),
+        required = true
+    )
+    val otherWhoConductedDelivery = FormInput(
+        inputType = EDIT_TEXT,
+        title = "Other - Enter who Conducted Delivery",
+        required = true
+    )
+
+    val dateOfDelivery = FormInput(
+        inputType = DATE_PICKER,
+        title = "Date Of Delivery",
+        required = true,
+        min = age.value.value?.let { getLongFromDate(it) } ?: 0L,
+        max = System.currentTimeMillis()
+    )
+
+
+    val thirdPage =
+        listOf(
+            reproductiveStatus,
+            lastMenstrualPeriod,
+
+            )
 
 
     fun getBenForFirstPage(userId: Int, hhId: Long): BenRegCache {

@@ -20,23 +20,25 @@ fun AutoCompleteTextView.setSpinnerItems(list : List<String>?){
     }
 }
 
-@BindingAdapter("form")
-fun RadioGroup.setItems(form : FormInput?){
-    if(this.childCount!=0)
-        return
-    form?.list?.let{items->
-        orientation = LinearLayout.HORIZONTAL
+@BindingAdapter("radioForm")
+fun RadioGroup.setItems(form: FormInput?) {
+//    if(this.childCount!=0)
+//        return
+    this.removeAllViews()
+    form?.list?.let { items ->
+        orientation = form.orientation ?: LinearLayout.HORIZONTAL
         weightSum = items.size.toFloat()
-        items.forEach{
+        items.forEach {
             val rdBtn = RadioButton(this.context)
-            rdBtn.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT,1.0F)
+            rdBtn.layoutParams =
+                LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1.0F)
             rdBtn.id = View.generateViewId()
             rdBtn.text = it
             addView(rdBtn)
-            if(form.value.value==it)
+            if (form.value.value == it)
                 rdBtn.isChecked = true
             rdBtn.setOnCheckedChangeListener { _, b ->
-                if(b) {
+                if (b) {
                     form.value.value = it
                 }
             }
@@ -52,12 +54,12 @@ fun RadioGroup.setItems(form : FormInput?){
     }
 }
 
-@BindingAdapter("form")
+@BindingAdapter("checkBoxesForm")
 fun LinearLayout.setItems(form : FormInput?){
     if(this.childCount!=0)
         return
     form?.list?.let{items->
-        orientation = LinearLayout.VERTICAL
+        orientation = form.orientation ?: LinearLayout.VERTICAL
         weightSum = items.size.toFloat()
         items.forEach{
             val cbx = CheckBox(this.context)

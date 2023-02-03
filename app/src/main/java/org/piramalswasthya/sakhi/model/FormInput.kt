@@ -8,7 +8,7 @@ data class FormInput(
     val inputType: InputType,
     var title: String,
     var list: List<String>? = null,
-    val required: Boolean,
+    var required: Boolean,
     var value: MutableStateFlow<String?> = MutableStateFlow(null),
     val regex: String? = null,
     val useFormEditTextDefaultInputFilter: Boolean = true,
@@ -17,7 +17,10 @@ data class FormInput(
     var errorText: String? = null,
     var max: Long? = null,
     var min: Long? = null,
+    val orientation: Int? = null
 ){
+
+
     enum class InputType{
         EDIT_TEXT,
         DROPDOWN,

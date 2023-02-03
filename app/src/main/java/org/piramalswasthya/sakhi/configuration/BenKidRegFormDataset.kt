@@ -553,7 +553,6 @@ class BenKidRegFormDataset(context: Context) {
             kidDetails?.birthDefects = this@BenKidRegFormDataset.anyDefectAtBirth.value.value
             kidDetails?.heightAtBirth = this@BenKidRegFormDataset.babyHeight.value.value
             kidDetails?.weightAtBirth = this@BenKidRegFormDataset.babyWeight.value.value
-            isDraft = false
         }
 
         return ben!!

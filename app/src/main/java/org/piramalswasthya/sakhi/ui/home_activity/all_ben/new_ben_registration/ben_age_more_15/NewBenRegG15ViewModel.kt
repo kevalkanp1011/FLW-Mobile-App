@@ -75,6 +75,27 @@ class NewBenRegG15ViewModel @Inject constructor(
         return diff
     }
 
+    private fun getDiffMonths(a: Calendar, b: Calendar): Int {
+        var diffY = b.get(Calendar.YEAR) - a.get(Calendar.YEAR)
+        if (a.get(Calendar.MONTH) > b.get(Calendar.MONTH) ||
+            a.get(Calendar.MONTH) == b.get(Calendar.MONTH) && a.get(Calendar.DAY_OF_MONTH) > b.get(
+                Calendar.DAY_OF_MONTH
+            )
+        ) {
+            diffY--
+        }
+        if (diffY != 0)
+            return -1
+        var diffM = b.get(Calendar.MONTH) - a.get(Calendar.MONTH)
+        if (a.get(Calendar.DAY_OF_MONTH) > b.get(Calendar.DAY_OF_MONTH)) {
+            diffM--
+        }
+        if (diffM < 0)
+            diffM += 12
+
+        return diffM
+    }
+
     suspend fun getFirstPage(adapter: FormInputAdapter): List<FormInput> {
         withContext(Dispatchers.IO) {
             household = benRepo.getBenHousehold(hhId)
@@ -90,15 +111,15 @@ class NewBenRegG15ViewModel @Inject constructor(
             launch {
                 form.gender.value.collect {
                     it?.let {
-                        when (it) {
+                        form.relationToHead.list = when (it) {
                             "Male" -> {
-                                form.relationToHead.list = form.relationToHeadListMale
+                                form.relationToHeadListMale
                             }
                             "Female" -> {
-                                form.relationToHead.list = form.relationToHeadListFemale
+                                form.relationToHeadListFemale
                             }
                             else -> {
-                                form.relationToHead.list = form.relationToHeadListDefault
+                                form.relationToHeadListDefault
                             }
                         }
 //                        val currentValue = form.relationToHead.value.value
@@ -331,18 +352,220 @@ class NewBenRegG15ViewModel @Inject constructor(
 
         viewModelScope.launch {
             launch {
-                form.hasAadharNo.value.collect {
+                form.reproductiveStatus.value.collect {
                     it?.let {
-                        val list = adapter.currentList.toMutableList()
-                        if (it == "Yes") {
-                            if (!adapter.currentList.contains(form.aadharNo)) {
-                                list.add(list.indexOf(form.hasAadharNo) + 1, form.aadharNo)
+                        form.lastMenstrualPeriod.value.value = null
+                        form.nishchayKitDeliveryStatus.value.value = null
+                        form.pregnancyTestResult.value.value = null
+                        form.expectedDateOfDelivery.value.value = null
+                        form.numPrevLiveBirthOrPregnancy.value.value = null
+
+                        val list = mutableListOf(*form.thirdPage.toTypedArray())
+                        when (it) {
+                            "Eligible Couple",
+                            "Menopause Stage",
+                            "Teenager",
+                            -> {
+
+                                form.lastMenstrualPeriod.required = false
+                                if (adapter.currentList.contains(form.lastMenstrualPeriod))
+                                    adapter.notifyItemChanged(adapter.currentList.indexOf(form.lastMenstrualPeriod))
+                                Timber.d("list : ${form.thirdPage}")
                             }
-                        } else {
-                            list.remove(form.aadharNo)
+                            "Antenatal Mother",
+                            "Delivery Stage" -> {
+                                form.lastMenstrualPeriod.required = true
+                                if (adapter.currentList.contains(form.lastMenstrualPeriod)) {
+                                    adapter.notifyItemChanged(adapter.currentList.indexOf(form.lastMenstrualPeriod))
+                                }
+                                if (adapter.currentList.contains(form.expectedDateOfDelivery)) {
+                                    adapter.notifyItemChanged(adapter.currentList.indexOf(form.expectedDateOfDelivery))
+                                }
+                                if (adapter.currentList.contains(form.numPrevLiveBirthOrPregnancy)) {
+                                    adapter.notifyItemChanged(adapter.currentList.indexOf(form.numPrevLiveBirthOrPregnancy))
+                                }
+
+                                list.add(
+                                    list.indexOf(form.lastMenstrualPeriod) + 1,
+                                    form.expectedDateOfDelivery
+                                )
+                                list.add(
+                                    list.indexOf(form.expectedDateOfDelivery) + 1,
+                                    form.numPrevLiveBirthOrPregnancy
+                                )
+                            }
+                            "Postnatal Mother-Lactating Mother" -> {
+                                list.remove(form.lastMenstrualPeriod)
+
+                                if (adapter.currentList.contains(form.numPrevLiveBirthOrPregnancy)) {
+                                    adapter.notifyItemChanged(adapter.currentList.indexOf(form.numPrevLiveBirthOrPregnancy))
+                                }
+
+                                list.add(
+                                    list.indexOf(form.reproductiveStatus) + 1,
+                                    form.dateOfDelivery
+                                )
+                                list.add(
+                                    list.indexOf(form.dateOfDelivery) + 1,
+                                    form.numPrevLiveBirthOrPregnancy
+                                )
+
+                            }
+                            else -> {
+                                if (adapter.currentList.contains(form.lastMenstrualPeriod))
+                                    adapter.notifyItemChanged(adapter.currentList.indexOf(form.lastMenstrualPeriod))
+
+                                list.add(
+                                    1,
+                                    form.reproductiveStatusOther
+                                )
+                            }
+
                         }
                         adapter.submitList(list)
 
+                    }
+                }
+            }
+            launch {
+                form.lastMenstrualPeriod.value.collect {
+                    it?.let {
+                        val day = it.substring(0, 2).toInt()
+                        val month = it.substring(3, 5).toInt() - 1
+                        val year = it.substring(6).toInt()
+                        val calLmp = Calendar.getInstance()
+                        calLmp.set(year, month, day)
+                        val calNow = Calendar.getInstance()
+                        val monthsDiff = getDiffMonths(calLmp, calNow)
+                        Timber.d("monthDiff : $monthsDiff")
+                        val list = adapter.currentList.toMutableList()
+                        if (monthsDiff >= 1 && form.reproductiveStatus.value.value == "Eligible Couple") {
+                            if (!list.contains(form.nishchayKitDeliveryStatus))
+                                list.add(
+                                    list.indexOf(form.lastMenstrualPeriod) + 1,
+                                    form.nishchayKitDeliveryStatus
+                                )
+
+                        } else {
+                            list.remove(form.nishchayKitDeliveryStatus)
+                        }
+                        if (list.contains(form.expectedDateOfDelivery)) {
+                            form.expectedDateOfDelivery.value.value =
+                                getExpectedDoDFromLmp(year, month, day)
+                            adapter.notifyItemChanged(list.indexOf(form.expectedDateOfDelivery))
+                        }
+                        adapter.submitList(list)
+                    }
+                }
+            }
+            launch {
+                form.nishchayKitDeliveryStatus.value.collect {
+                    it?.let {
+                        val list = adapter.currentList.toMutableList()
+                        if (it == "Delivered") {
+                            if (!list.contains(form.pregnancyTestResult)) {
+                                list.add(
+                                    list.indexOf(form.nishchayKitDeliveryStatus) + 1,
+                                    form.pregnancyTestResult
+                                )
+                            }
+                        } else {
+                            list.remove(form.pregnancyTestResult)
+                        }
+                        adapter.submitList(list)
+                    }
+                }
+            }
+            launch {
+                form.numPrevLiveBirthOrPregnancy.value.collect {
+                    it?.let {
+                        val count = if (it.isEmpty()) 0 else it.toInt()
+                        val list = adapter.currentList.toMutableList()
+                        if (count in 1..20) {
+                            form.lastDeliveryConducted.value.value = null
+                            form.otherPlaceOfDelivery.value.value = null
+                            form.whoConductedDelivery.value.value = null
+                            form.facility.value.value = null
+                            form.otherWhoConductedDelivery.value.value = null
+                            if (!list.contains(form.lastDeliveryConducted)) {
+                                list.add(
+                                    list.indexOf(form.numPrevLiveBirthOrPregnancy) + 1,
+                                    form.lastDeliveryConducted
+                                )
+                                list.add(
+                                    list.indexOf(form.lastDeliveryConducted) + 1,
+                                    form.whoConductedDelivery
+                                )
+                            }
+                        } else {
+                            list.removeAll(
+                                listOf(
+                                    form.lastDeliveryConducted,
+                                    form.whoConductedDelivery,
+                                    form.otherPlaceOfDelivery,
+                                    form.facility,
+                                    form.otherWhoConductedDelivery
+                                )
+                            )
+                        }
+                        adapter.submitList(list)
+                    }
+                }
+            }
+            launch {
+                form.lastDeliveryConducted.value.collect {
+                    it?.let {
+                        val list = adapter.currentList.toMutableList()
+                        when (it) {
+                            "PHC",
+                            "HWC",
+                            "CHC",
+                            "District Hospital" -> {
+                                list.remove(form.otherPlaceOfDelivery)
+                                if (!list.contains(form.facility)) {
+                                    list.add(
+                                        list.indexOf(form.lastDeliveryConducted) + 1,
+                                        form.facility
+                                    )
+                                }
+                            }
+                            "Medical college Hospital",
+                            "Other" -> {
+                                list.remove(form.facility)
+                                if (!list.contains(form.otherPlaceOfDelivery)) {
+                                    list.add(
+                                        list.indexOf(form.lastDeliveryConducted) + 1,
+                                        form.otherPlaceOfDelivery
+                                    )
+                                }
+                            }
+                            else -> {
+                                list.remove(form.otherPlaceOfDelivery)
+                                list.remove(form.facility)
+                            }
+                        }
+                        adapter.submitList(list)
+                    }
+                }
+            }
+            launch {
+                form.whoConductedDelivery.value.collect {
+                    it?.let {
+                        val list = adapter.currentList.toMutableList()
+                        when (it) {
+                            "Other" -> {
+                                if (!list.contains(form.otherWhoConductedDelivery)) {
+                                    list.add(
+                                        list.indexOf(form.whoConductedDelivery) + 1,
+                                        form.otherWhoConductedDelivery
+                                    )
+                                }
+                            }
+                            else -> {
+                                list.remove(form.otherWhoConductedDelivery)
+                            }
+                        }
+                        adapter.submitList(list)
                     }
                 }
             }
@@ -350,6 +573,19 @@ class NewBenRegG15ViewModel @Inject constructor(
         return form.thirdPage
 
     }
+
+    private fun getExpectedDoDFromLmp(year: Int, month: Int, day: Int): String {
+
+        val cal = Calendar.getInstance()
+        cal.set(year, month, day)
+        cal.add(Calendar.WEEK_OF_YEAR, 40)
+        val dayC = cal.get(Calendar.DAY_OF_MONTH)
+        val monthC = cal.get(Calendar.MONTH)
+        val yearC = cal.get(Calendar.YEAR)
+        return "${if (dayC > 9) dayC else "0$dayC"}-${if (monthC > 8) monthC + 1 else "0${monthC + 1}"}-$yearC"
+
+    }
+
 
     fun persistFirstPage() {
         viewModelScope.launch {
