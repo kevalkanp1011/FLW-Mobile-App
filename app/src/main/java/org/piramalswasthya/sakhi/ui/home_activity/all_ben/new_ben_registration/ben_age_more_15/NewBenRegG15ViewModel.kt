@@ -160,6 +160,7 @@ class NewBenRegG15ViewModel @Inject constructor(
                         if (form.age.value.value == null || form.age.value.value?.toInt() != yearsDiff) {
                             emittedFromDob = true
                             form.age.value.value = yearsDiff.toString()
+                            form.age.errorText = null
                             adapter.notifyItemChanged(form.firstPage.indexOf(form.age))
                         }
                     } ?: run {
@@ -172,6 +173,7 @@ class NewBenRegG15ViewModel @Inject constructor(
                 form.age.value.collect { age ->
                     if (age != null) {
                         if (emittedFromDob) {
+                            form.ageAtMarriage.max = age.toLong()
                             emittedFromDob = false
                             return@collect
                         }
@@ -184,7 +186,7 @@ class NewBenRegG15ViewModel @Inject constructor(
                             }
                             return@collect
                         }
-
+                        form.ageAtMarriage.max = age.toLong()
                         val cal = Calendar.getInstance()
                         cal.add(Calendar.YEAR, -1 * age.toInt())
                         val year = cal.get(Calendar.YEAR)
@@ -285,20 +287,19 @@ class NewBenRegG15ViewModel @Inject constructor(
             launch {
                 form.religion.value.collect {
                     it?.let {
+                        val list = adapter.currentList.toMutableList()
                         if (it == "Other") {
-                            val list = adapter.currentList.toMutableList()
-                            list.add(
-                                adapter.currentList.indexOf(form.religion) + 1,
-                                form.otherReligion
-                            )
-                            adapter.submitList(list)
-                        } else {
-                            if (adapter.currentList.contains(form.otherReligion)) {
-                                val list = adapter.currentList.toMutableList()
-                                list.remove(form.otherReligion)
-                                adapter.submitList(list)
+                            if (!adapter.currentList.contains(form.otherReligion)) {
+                                list.add(
+                                    adapter.currentList.indexOf(form.religion) + 1,
+                                    form.otherReligion
+                                )
                             }
+
+                        } else {
+                            list.remove(form.otherReligion)
                         }
+                        adapter.submitList(list)
                     }
                 }
             }

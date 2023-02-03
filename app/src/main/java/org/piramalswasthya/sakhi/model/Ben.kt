@@ -8,7 +8,16 @@ import java.util.*
 enum class TypeOfList{
     INFANT,
     CHILD,
-    ADOLESCENT
+    ADOLESCENT,
+    GENERAL,
+    ELIGIBLE_COUPLE,
+    ANTENATAL_MOTHER,
+    DELIVERY_STAGE,
+    POSTNATAL_MOTHER,
+    MENOPAUSE,
+    TEENAGER,
+    OTHER,
+
 }
 enum class AgeUnit{
     DAYS,
@@ -119,15 +128,22 @@ data class BenRegGen(
     var lastMenstrualPeriod: String? = null,
     var reproductiveStatus: String? = null,
     var reproductiveStatusId: Int = 0,
-    var formStatus: String? = null,
-    var formType: String? = null,
+    var lastDeliveryConducted: String? = null,
+    var lastDeliveryConductedId: String? = null,
+    var otherLastDeliveryConducted: String? = null,
+    var facilityName: String? = null,
+    var whoConductedDelivery: String? = null,
+    var whoConductedDeliveryId: String? = null,
+    var otherWhoConductedDelivery: String? = null,
+    var deliveryDate: String? = null,
+    var expectedDateOfDelivery: String? = null,
+    var numPreviousLiveBirth: String? = null,
+//    var formStatus: String? = null,
+//    var formType: String? = null,
     var ancCount: Int = 0,
     var hrpCount: Int = 0,
     var hrpSuspected: Boolean = false,
     var isDeathStatus: Boolean = false,
-    var deliveryDate: String? = null,
-    var expectedDateOfDelivery: String? = null,
-    var previousLiveBirth: String? = null,
 )
 
 @Entity(
@@ -230,6 +246,10 @@ data class BenRegCache(
     var longitude: Double = 0.0,
 
     ///////////////////////////Bank details Start///////////////////////////
+    var hasAadhar: Boolean? = false,
+
+    var hasAadharId: Int = 0,
+
     var aadharNum: String? = null,
 
     var aadharNumId: Int = 0,

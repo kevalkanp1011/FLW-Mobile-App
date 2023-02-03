@@ -5,8 +5,7 @@ import android.text.InputType
 import android.widget.LinearLayout
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.piramalswasthya.sakhi.database.room.SyncState
-import org.piramalswasthya.sakhi.model.BenRegCache
-import org.piramalswasthya.sakhi.model.FormInput
+import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.model.FormInput.InputType.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -440,8 +439,41 @@ class BenGenRegFormDataset(context: Context) {
                 isAdult = true,
                 householdId = hhId,
                 isDraft = true,
+                genDetails = BenRegGen(),
                 syncState = SyncState.UNSYNCED
             )
+        }
+        ben?.apply {
+            regDate = getLongFromDate(this@BenGenRegFormDataset.dateOfReg.value.value!!)
+            firstName = this@BenGenRegFormDataset.firstName.value.value
+            lastName = this@BenGenRegFormDataset.lastName.value.value
+            dob = getLongFromDate(this@BenGenRegFormDataset.dob.value.value!!)
+            age = this@BenGenRegFormDataset.age.value.value?.toInt() ?: 0
+            ageUnit = AgeUnit.YEARS
+            gender = when (this@BenGenRegFormDataset.gender.value.value) {
+                "Male" -> Gender.MALE
+                "Female" -> Gender.FEMALE
+                "Transgender" -> Gender.TRANSGENDER
+                else -> null
+            }
+            this.registrationType = TypeOfList.GENERAL
+            genDetails?.maritalStatus = this@BenGenRegFormDataset.maritalStatus.value.value
+            genDetails?.spouseName = this@BenGenRegFormDataset.husbandName.value.value
+                ?: this@BenGenRegFormDataset.wifeName.value.value
+                        ?: this@BenGenRegFormDataset.spouseName.value.value
+            genDetails?.ageAtMarriage =
+                this@BenGenRegFormDataset.ageAtMarriage.value.value?.toInt() ?: 0
+            fatherName = this@BenGenRegFormDataset.fatherName.value.value
+            motherName = this@BenGenRegFormDataset.motherName.value.value
+            familyHeadRelation = this@BenGenRegFormDataset.relationToHead.value.value
+            familyHeadRelationOther = this@BenGenRegFormDataset.otherRelationToHead.value.value
+            mobileNoOfRelation = this@BenGenRegFormDataset.mobileNoOfRelation.value.value
+            contactNumber = stringToLong(this@BenGenRegFormDataset.contactNumber.value.value!!)
+            community = this@BenGenRegFormDataset.community.value.value
+            religion = this@BenGenRegFormDataset.religion.value.value
+            religionOthers = this@BenGenRegFormDataset.otherReligion.value.value
+
+            rchId = this@BenGenRegFormDataset.rchId.value.value
         }
         return ben!!
 
@@ -449,11 +481,37 @@ class BenGenRegFormDataset(context: Context) {
 
 
     fun getBenForSecondPage(): BenRegCache {
+
+        ben?.apply {
+            this.hasAadhar = this@BenGenRegFormDataset.hasAadharNo.value.value == "Yes"
+            this.aadharNum = this@BenGenRegFormDataset.aadharNo.value.value
+            this.rchId = this@BenGenRegFormDataset.rchId.value.value
+        }
         return ben!!
 
     }
 
     fun getBenForThirdPage(): BenRegCache {
+        ben?.apply {
+            this.genDetails?.apply {
+                reproductiveStatus = this@BenGenRegFormDataset.reproductiveStatus.value.value
+                lastMenstrualPeriod = this@BenGenRegFormDataset.lastMenstrualPeriod.value.value
+                nishchayDeliveryStatus =
+                    this@BenGenRegFormDataset.nishchayKitDeliveryStatus.value.value
+                nishchayPregnancyStatus = this@BenGenRegFormDataset.pregnancyTestResult.value.value
+                expectedDateOfDelivery =
+                    this@BenGenRegFormDataset.expectedDateOfDelivery.value.value
+                numPreviousLiveBirth =
+                    this@BenGenRegFormDataset.numPrevLiveBirthOrPregnancy.value.value
+                lastDeliveryConducted = this@BenGenRegFormDataset.lastDeliveryConducted.value.value
+                otherLastDeliveryConducted =
+                    this@BenGenRegFormDataset.otherPlaceOfDelivery.value.value
+                facilityName = this@BenGenRegFormDataset.facility.value.value
+                whoConductedDelivery = this@BenGenRegFormDataset.whoConductedDelivery.value.value
+                otherWhoConductedDelivery =
+                    this@BenGenRegFormDataset.otherWhoConductedDelivery.value.value
+            }
+        }
         return ben!!
     }
 

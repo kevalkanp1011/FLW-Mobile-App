@@ -76,6 +76,12 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
                         }
                         if (item.min != null && item.max != null && age >= item.min!! && age <= item.max!!)
                             binding.tilEditText.error = null
+                    } else {
+                        if (item.errorText != null && editable.isNotBlank()) {
+                            item.errorText = null
+                            binding.tilEditText.error = null
+                        }
+
                     }
 
                 }
