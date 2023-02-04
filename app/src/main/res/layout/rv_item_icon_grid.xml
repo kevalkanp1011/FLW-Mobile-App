@@ -20,11 +20,11 @@
         android:id="@+id/cv_icon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding_small"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
-        android:focusable="true"
-        android:layout_margin="@dimen/padding_small"
         android:elevation="@dimen/padding_normal"
+        android:focusable="true"
         android:onClick="@{()-> clickListener.onClicked(homeIcon)}"
         app:cardCornerRadius="@dimen/padding_normal"
         app:cardElevation="@dimen/padding_normal">
@@ -34,43 +34,58 @@
             android:layout_height="match_parent"
             android:padding="@dimen/padding_normal">
 
-            <RelativeLayout
+
+            <LinearLayout
+                android:id="@+id/ll_icons"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_above="@id/textView2"
+                android:weightSum="2"
+                app:layout_constraintDimensionRatio="2:1"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="8dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_above="@id/textView2"
-                    android:layout_alignParentTop="true"
-                    android:weightSum="2">
+                    android:layout_weight="1"
+                    android:contentDescription="@string/cd_icon_grid_icon"
+                    android:padding="@dimen/padding_small"
+                    app:imageResource="@{homeIcon.icon}"
 
-                    <ImageView
-                        android:id="@+id/imageView2"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:contentDescription="@string/cd_icon_grid_icon"
-                        android:padding="@dimen/padding_small"
-                        app:imageResource="@{homeIcon.icon}"
-
-                        app:tint="?attr/colorPrimary"
-                        tools:src="@drawable/ic__hh" />
-                </LinearLayout>
+                    app:tint="?attr/colorPrimary"
+                    tools:src="@drawable/ic__hh" />
 
                 <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:labelFor="@id/imageView2"
-                    android:padding="@dimen/padding_small"
-                    android:text="@{homeIcon.title}"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                    tools:text="Dummy Text" />
-            </RelativeLayout>
+                    android:id="@+id/tv_count"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="end|top"
+                    android:text="@{@string/long_to_string(homeIcon.count)}"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                    android:textColor="?attr/colorPrimary"
+                    tools:text="2"
+
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_alignParentBottom="true"
+                android:gravity="center_vertical"
+                android:labelFor="@id/imageView2"
+                android:lines="2"
+                android:text="@{homeIcon.title}"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                app:autoSizeMaxTextSize="16sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintDimensionRatio="2:1"
+                app:layout_constraintTop_toBottomOf="@id/ll_icons"
+                tools:text="Dummy Text" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>

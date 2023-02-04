@@ -482,6 +482,7 @@ class BenKidRegFormDataset(context: Context) {
             ben = BenRegCache(
                 householdId = hhId,
                 ashaId = userId,
+                beneficiaryId = -2,
                 syncState = SyncState.UNSYNCED,
                 isKid = true,
                 isAdult = false,
@@ -553,6 +554,7 @@ class BenKidRegFormDataset(context: Context) {
             kidDetails?.birthDefects = this@BenKidRegFormDataset.anyDefectAtBirth.value.value
             kidDetails?.heightAtBirth = this@BenKidRegFormDataset.babyHeight.value.value
             kidDetails?.weightAtBirth = this@BenKidRegFormDataset.babyWeight.value.value
+
         }
 
         return ben!!

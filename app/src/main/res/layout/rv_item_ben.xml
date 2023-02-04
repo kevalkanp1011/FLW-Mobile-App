@@ -30,50 +30,68 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/ll_title_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/colorSecondary"
-                android:orientation="horizontal"
-                android:padding="@dimen/padding_normal"
+                android:paddingHorizontal="@dimen/padding_normal"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/tv_hh_id"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:drawablePadding="@dimen/padding_normal"
-
+                    android:text="@{@string/long_to_string(ben.hhId)}"
                     android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     android:textColor="?attr/colorPrimaryVariant"
                     app:drawableStartCompat="@drawable/ic__hh"
                     app:drawableTint="?attr/colorPrimary"
-                    tools:text="0104185765164225"
-                    android:text="@{@string/long_to_string(ben.hhId)}"/>
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_new_ben"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="0104185765164225" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_new_ben"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_toEndOf="@id/tv_hh_id"
+                    android:onClick="@{()-> clickListener.onClickedHouseHold(ben)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingHorizontal="@dimen/padding_normal"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                    app:cornerRadius="@dimen/padding_normal"
                     android:text="@string/btn_rv_item_hh_add_ben"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_hh_id"
                     android:textColor="?attr/colorPrimary"
                     app:icon="@drawable/ic__hh"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                    android:onClick="@{()-> clickListener.onClickedHouseHold(ben)}"
-                    />
+                    app:layout_constraintEnd_toStartOf="@+id/iv_sync_state"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/tv_hh_id"
+                    app:layout_constraintTop_toTopOf="@+id/tv_hh_id"
+                    app:strokeColor="?attr/colorPrimary" />
 
                 <ImageView
                     android:id="@+id/iv_sync_state"
                     android:layout_width="24dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/btn_new_ben"
                     android:contentDescription="@string/iv_sync_state_tv"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_hh_id"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/btn_new_ben"
+                    app:layout_constraintTop_toTopOf="@+id/tv_hh_id"
                     app:syncState="@{ben.syncState}"
                     tools:src="@drawable/ic_syncing" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -174,7 +192,7 @@
                         app:fieldTitle="@{@string/tv_age_ph}" />
                 </LinearLayout>
 
-                <LinearLayout
+                <!--<LinearLayout
                     android:id="@+id/ll_row_4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -204,7 +222,7 @@
                         app:field="@{ben.hrpStatus}"
                         app:fieldTitle="@{@string/tv_suspected_hrp_ph}" />
 
-                </LinearLayout>
+                </LinearLayout>-->
             </RelativeLayout>
 
 

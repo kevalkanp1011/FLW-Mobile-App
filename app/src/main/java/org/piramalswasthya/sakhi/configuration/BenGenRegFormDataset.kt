@@ -435,6 +435,7 @@ class BenGenRegFormDataset(context: Context) {
         if (ben == null) {
             ben = BenRegCache(
                 ashaId = userId,
+                beneficiaryId = -1L,
                 isKid = false,
                 isAdult = true,
                 householdId = hhId,
@@ -510,6 +511,15 @@ class BenGenRegFormDataset(context: Context) {
                 whoConductedDelivery = this@BenGenRegFormDataset.whoConductedDelivery.value.value
                 otherWhoConductedDelivery =
                     this@BenGenRegFormDataset.otherWhoConductedDelivery.value.value
+                registrationType = when (reproductiveStatus) {
+                    "Eligible Couple" -> TypeOfList.ELIGIBLE_COUPLE
+                    "Antenatal Mother" -> TypeOfList.ANTENATAL_MOTHER
+                    "Delivery Stage" -> TypeOfList.DELIVERY_STAGE
+                    "Postnatal Mother-Lactating Mother" -> TypeOfList.POSTNATAL_MOTHER
+                    "Menopause Stage" -> TypeOfList.MENOPAUSE
+                    "Teenager" -> TypeOfList.TEENAGER
+                    else -> TypeOfList.OTHER
+                }
             }
         }
         return ben!!

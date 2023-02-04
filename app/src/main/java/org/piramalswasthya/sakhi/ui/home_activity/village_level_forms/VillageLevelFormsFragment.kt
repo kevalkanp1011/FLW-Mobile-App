@@ -1,16 +1,15 @@
 package org.piramalswasthya.sakhi.ui.home_activity.village_level_forms
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.adapters.IconGridAdapter
-import org.piramalswasthya.sakhi.configuration.IconDataset
 import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
 
 @AndroidEntryPoint
@@ -40,7 +39,7 @@ class VillageLevelFormsFragment : Fragment() {
         val rvLayoutManager = GridLayoutManager(context, 3)
         binding.rvIconGrid.layoutManager = rvLayoutManager
         binding.rvIconGrid.adapter = IconGridAdapter(
-            IconDataset.getVillageLevelFormsDataset(),
+            //IconDataset.getVillageLevelFormsDataset(),
             IconGridAdapter.GridIconClickListener {
                 findNavController().navigate(it)
             })

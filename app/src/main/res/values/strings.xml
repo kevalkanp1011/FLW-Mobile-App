@@ -12,7 +12,7 @@
 
     <string name="menu_home">Home</string>
     <string name="tv_text_welcome">Welcome</string>
-    <string name="tv_text_welcome_user">Welcome %s</string>
+    <string name="tv_text_welcome_user">Welcome, %s</string>
     <string name="tv_text_sign_in">Log in to continue</string>
     <string name="tv_text_select_language">Please Select Your language</string>
 
@@ -60,6 +60,11 @@
     <string name="PREF_rem_me_uname">user-name-local-saved</string>
     <string name="PREF_rem_me_pwd">password-local-saved</string>
 
+
+    <string name="nav_item_1_text">Name : %s</string>
+    <string name="nav_item_2_text">Role : %s</string>
+    <string name="nav_item_3_text">ID : %d</string>
+    <string name="nav_item_4_text">Version : %s</string>
 
 
     <string name="tv_required_text_asterisk">*</string>
@@ -122,6 +127,8 @@
     <string name="frag_new_ben_type_adult_text">General Registration \n( 15 years and above )</string>
     <string name="frag_new_ben_type_select_text">Select Beneficiary Type</string>
     <string name="frag_new_ben_reg_type_title">Beneficiary Type for Registration</string>
+    <string name="version">2.0.0</string>
+    <string name="tv_text_select_village">Please select the village below.</string>
 
 
     <string-array name="temp_array">

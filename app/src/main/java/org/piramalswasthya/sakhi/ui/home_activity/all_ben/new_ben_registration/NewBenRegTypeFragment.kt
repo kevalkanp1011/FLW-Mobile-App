@@ -9,11 +9,16 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
 import org.piramalswasthya.sakhi.databinding.FragmentNewBenRegTypeBinding
+import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
+import org.piramalswasthya.sakhi.work.GenerateBenIdsWorker
 
 @AndroidEntryPoint
 class NewBenRegTypeFragment : Fragment() {
@@ -28,6 +33,7 @@ class NewBenRegTypeFragment : Fragment() {
 
     private var hasDraftKid = false
     private var hasDraftGen = false
+
 
     private val consentAlert by lazy {
         val alertBinding = AlertConsentBinding.inflate(layoutInflater,binding.root,false)
@@ -64,10 +70,9 @@ class NewBenRegTypeFragment : Fragment() {
                 dialog.dismiss()
 
             }
-            .setNegativeButton("CREATE NEW"){
-                    dialog,_->
-                val isKid = binding.rgBenType.checkedRadioButtonId==binding.rbKidPath.id
-                viewModel.navigateToNewBenRegistration(hhId,true, isKid)
+            .setNegativeButton("CREATE NEW") { dialog, _ ->
+                val isKid = binding.rgBenType.checkedRadioButtonId == binding.rbKidPath.id
+                viewModel.navigateToNewBenRegistration(hhId, true, isKid)
                 dialog.dismiss()
             }
             .create()
@@ -75,10 +80,12 @@ class NewBenRegTypeFragment : Fragment() {
 
     private val viewModel: NewBenRegTypeViewModel by viewModels()
 
+    private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
+
     private val onBackPressedCallback by lazy {
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                Toast.makeText(context,"Back Pressed",Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Back Pressed", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -98,14 +105,35 @@ class NewBenRegTypeFragment : Fragment() {
         activity?.onBackPressedDispatcher?.addCallback(
             viewLifecycleOwner, onBackPressedCallback
         )
-        viewModel.hasDraftForKid.observe(viewLifecycleOwner){
+
+        viewModel.hasDraftForKid.observe(viewLifecycleOwner) {
             this.hasDraftKid = it
         }
-        viewModel.hasDraftForGen.observe(viewLifecycleOwner){
+        viewModel.hasDraftForGen.observe(viewLifecycleOwner) {
             this.hasDraftGen = it
         }
-        viewModel.navigateToNewBenKidRegistration.observe(viewLifecycleOwner){
-            if(it) {
+
+        homeViewModel.iconCount.observe(viewLifecycleOwner) { iconList ->
+            iconList.first().let {
+                if (it.availBenIdsCount in 1..100) {
+                    binding.errorText.text =
+                        "Warning : ID running low, connect to internet at the earliest"
+                    triggerGenBenIdWorker()
+
+                } else if (it.availBenIdsCount == 0) {
+                    binding.btnContinue.visibility = View.GONE
+                    binding.errorText.text =
+                        "Error : No more ben Ids available. Connect to internet to get some."
+                    triggerGenBenIdWorker()
+                } else {
+                    binding.btnContinue.visibility = View.VISIBLE
+                    binding.errorText.text = null
+                }
+            }
+        }
+
+        viewModel.navigateToNewBenKidRegistration.observe(viewLifecycleOwner) {
+            if (it) {
                 findNavController().navigate(
                     NewBenRegTypeFragmentDirections.actionNewBenRegTypeFragmentToNewBenRegL15Fragment(
                         hhId
@@ -149,6 +177,14 @@ class NewBenRegTypeFragment : Fragment() {
 
         }
 
+    }
+
+    private fun triggerGenBenIdWorker() {
+        val workRequest = OneTimeWorkRequestBuilder<GenerateBenIdsWorker>()
+            .setConstraints(GenerateBenIdsWorker.constraint)
+            .build()
+        WorkManager.getInstance(requireContext())
+            .enqueueUniqueWork(GenerateBenIdsWorker.name, ExistingWorkPolicy.KEEP, workRequest)
     }
 
 }
