@@ -63,6 +63,7 @@ class NewBenRegL15Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setHHid(hhId)
+
         binding.vp2Nhhr.adapter = NewBenKidPagerAdapter(this)
         when (viewModel.mTabPosition) {
             0 -> {

@@ -3,10 +3,60 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_home" />
-    </group>
+    <item android:title="General">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_camera"
+                    android:icon="@drawable/ic_menu_camera"
+                    android:title="Home" />
+                <item
+                    android:id="@+id/nav_gallery"
+                    android:icon="@drawable/ic_menu_camera"
+                    android:title="Dashboard" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="Server Sync">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_camera"
+                android:title="Get Data" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_camera"
+                android:title="Sync Beneficiaries" />
+
+            <item
+                android:id="@+id/nav_t"
+                android:icon="@drawable/ic_menu_camera"
+                android:title="Generate Beneficiary Ids" />
+        </menu>
+    </item>
+
+    <item android:title="Data Status">
+        <menu>
+            <item
+                android:id="@+id/qrlkgn"
+                android:icon="@drawable/ic_menu_camera"
+                android:title="DB Upload" />
+            <item
+                android:id="@+id/sjdfn"
+                android:icon="@drawable/ic_menu_camera"
+                android:title="About Us" />
+
+            <item
+                android:id="@+id/sidfhn"
+                android:icon="@drawable/ic_menu_camera"
+                android:title="Help" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/menu_logout"
+        android:icon="@mipmap/ic_launcher"
+        android:menuCategory="container"
+        android:title="Logout" />
 </menu>

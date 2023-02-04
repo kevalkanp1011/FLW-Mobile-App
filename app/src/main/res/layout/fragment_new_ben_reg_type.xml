@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,16 +9,19 @@
     tools:context=".ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment">
 
     <TextView
+        android:id="@+id/tv_type_title_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_normal"
         android:text="@string/frag_new_ben_type_select_text"
+        app:layout_constraintTop_toTopOf="parent"
         android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
 
     <RadioGroup
         android:id="@+id/rg_ben_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_type_title_text"
         android:padding="@dimen/padding_normal">
 
         <RadioButton
@@ -44,10 +47,22 @@
         android:id="@+id/btn_continue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/rg_ben_type"
         android:layout_gravity="center"
         android:layout_margin="@dimen/margin_normal"
         android:text="@string/btn_continue_text"
         android:textColor="?attr/colorSecondary" />
 
+    <TextView
+        android:id="@+id/error_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_normal"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+        android:textColor="@color/red"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rg_ben_type"
+        tools:text="Warning : ID running low, connect to internet at the earliest" />
 
-</LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -63,17 +63,26 @@ class HomeFragment : Fragment() {
 //        binding.btnNhhr.setOnClickListener {
 //            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToNewHouseholdFragment())
 //        }
+
+        if (viewModel.isLocationSet())
+            binding.etSelectVillage.setText(viewModel.getLocationRecord().village)
         setUpHomeIconRvAdapter()
+
 
     }
 
     private fun setUpHomeIconRvAdapter() {
         val rvLayoutManager = GridLayoutManager(context, 3)
         binding.rvHomeIcon.rvIconGrid.layoutManager = rvLayoutManager
-        binding.rvHomeIcon.rvIconGrid.adapter = IconGridAdapter(IconDataset.getIconDataset(),IconGridAdapter.GridIconClickListener {
+        val rvAdapter = IconGridAdapter(IconGridAdapter.GridIconClickListener {
             findNavController().navigate(it)
         })
+        binding.rvHomeIcon.rvIconGrid.adapter = rvAdapter
+        viewModel.iconCount.observe(viewLifecycleOwner) {
+            rvAdapter.submitList(IconDataset.getIconDataset(it[0]))
+        }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

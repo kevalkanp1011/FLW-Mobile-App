@@ -27,7 +27,7 @@ class HouseholdRepo @Inject constructor(
 
     suspend fun persistFirstPage(form: HouseholdFormDataset) {
         //TODO(Delete this dummy after checking)
-        //database.dummyDao.insert(BeneficiaryIdsAvail(data = "Entry 1", sync = SyncState.UNSYNCED))
+        //database.benIdGenDao.insert(BeneficiaryIdsAvail(data = "Entry 1", sync = SyncState.UNSYNCED))
 
         val user =
             database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")

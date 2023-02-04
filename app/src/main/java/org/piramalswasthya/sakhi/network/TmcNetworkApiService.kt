@@ -1,11 +1,8 @@
 package org.piramalswasthya.sakhi.network
 
-import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
@@ -27,6 +24,11 @@ interface TmcNetworkApiService {
     @POST("mmuapi-v1.0/location/getLocDetailsBasedOnSpIDAndPsmID/")
     suspend fun getLocationDetails(
         @Body locationDetails: TmcLocationDetailsRequest
+    ): Response<ResponseBody>
+
+    @POST("bengenapi-v1.0/generateBeneficiaryController/generateBeneficiaryIDs/")
+    suspend fun generateBeneficiaryIDs(
+        @Body obj: TmcGenerateBenIdsRequest
     ): Response<ResponseBody>
 
 

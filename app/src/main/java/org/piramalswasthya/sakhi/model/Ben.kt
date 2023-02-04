@@ -148,6 +148,7 @@ data class BenRegGen(
 
 @Entity(
     tableName = "BENEFICIARY",
+    primaryKeys = ["householdId", "beneficiaryId"],
     foreignKeys = [
         ForeignKey(
             entity = HouseholdCache::class,
@@ -169,8 +170,7 @@ data class BenRegCache(
     @ColumnInfo(index = true)
     var householdId: Long,
 
-    @PrimaryKey(autoGenerate = true)
-    var beneficiaryId: Long = 0,
+    var beneficiaryId: Long,
 
     var benRegId: Int = 0,
 

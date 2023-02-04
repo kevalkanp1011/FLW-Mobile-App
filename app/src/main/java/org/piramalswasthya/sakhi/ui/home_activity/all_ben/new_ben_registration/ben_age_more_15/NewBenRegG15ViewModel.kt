@@ -604,7 +604,7 @@ class NewBenRegG15ViewModel @Inject constructor(
                     if (hasReproductiveStatus.value == true)
                         benRepo.persistGenSecondPage(form, null)
                     else
-                        benRepo.persistGenSecondPage(form, locationRecord)
+                        benRepo.persistGenThirdPage(form, locationRecord)
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
                     Timber.d("saving HH data failed!!")

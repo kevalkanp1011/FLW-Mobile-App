@@ -300,7 +300,7 @@ class HouseholdFormDataset(context: Context) {
 
         if (household == null) {
             household = HouseholdCache(
-                householdId = getHHidFromUserId(userId),
+                householdId = 0,
                 ashaId = userId,
                 isDraft = true
             )
@@ -342,6 +342,7 @@ class HouseholdFormDataset(context: Context) {
                 this@HouseholdFormDataset.otherSourceOfElectricity.value.value
             availabilityOfToilet = this@HouseholdFormDataset.availOfToilet.value.value
             otherAvailabilityOfToilet = this@HouseholdFormDataset.otherAvailOfToilet.value.value
+            householdId = getHHidFromUserId(ashaId)
             isDraft = false
         }
         return household!!

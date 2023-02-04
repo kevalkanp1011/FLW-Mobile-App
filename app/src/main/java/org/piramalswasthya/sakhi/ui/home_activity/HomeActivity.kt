@@ -2,22 +2,18 @@ package org.piramalswasthya.sakhi.ui.home_activity
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
-import androidx.navigation.ui.setupWithNavController
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import com.google.android.material.snackbar.Snackbar
+import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.ActivityHomeBinding
-import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
-import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
-import timber.log.Timber
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
@@ -36,6 +32,29 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(binding.root)
+        setUpActionBar()
+        setUpNavHeader()
+
+        // Snackbar.make(binding.root, intent.data.toString(), Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun setUpNavHeader() {
+        val headerView = binding.navView.getHeaderView(0)
+        viewModel.currentUser.observe(this) {
+            it?.let {
+                headerView.findViewById<TextView>(R.id.tv_nav_name).text =
+                    getString(R.string.nav_item_1_text, it.userName)
+                headerView.findViewById<TextView>(R.id.tv_nav_role).text =
+                    getString(R.string.nav_item_2_text, it.userType)
+                headerView.findViewById<TextView>(R.id.tv_nav_id).text =
+                    getString(R.string.nav_item_3_text, it.userId)
+                headerView.findViewById<TextView>(R.id.tv_nav_version).text =
+                    getString(R.string.version)
+            }
+        }
+    }
+
+    private fun setUpActionBar() {
         setSupportActionBar(binding.toolbar)
 
         binding.navView.setupWithNavController(navController)
@@ -53,8 +72,6 @@ class HomeActivity : AppCompatActivity() {
 
         NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration)
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
-
-       // Snackbar.make(binding.root, intent.data.toString(), Snackbar.LENGTH_LONG).show()
     }
 
 /*    override fun onSupportNavigateUp(): Boolean {

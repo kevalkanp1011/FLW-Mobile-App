@@ -26,9 +26,9 @@ import org.piramalswasthya.sakhi.model.UserCache
 
 abstract class InAppDb  : RoomDatabase(){
 
-    abstract val userDao : UserDao
-    abstract val dummyDao : BeneficiaryIdsAvailDao
-    abstract val householdDao : HouseholdDao
+    abstract val userDao: UserDao
+    abstract val benIdGenDao: BeneficiaryIdsAvailDao
+    abstract val householdDao: HouseholdDao
     abstract val benDao : BenDao
 
     companion object{

@@ -56,6 +56,11 @@ data class TmcLocationDetailsRequest(
     val spPSMID : Int
 )
 
+@JsonClass(generateAdapter = true)
+data class TmcGenerateBenIdsRequest(
+    val benIDRequired: Int,
+    val vanID: Int
+)
 
 
 

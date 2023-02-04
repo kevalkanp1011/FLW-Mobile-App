@@ -1,22 +1,31 @@
 package org.piramalswasthya.sakhi.ui.home_activity.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.model.LocationRecord
+import org.piramalswasthya.sakhi.model.TypeOfList
 import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.repositories.UserRepo
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    database: InAppDb,
     private val userRepo: UserRepo
 ) : ViewModel() {
+
+    val currentUser = database.userDao.getLoggedInUserLiveData()
+
+    val iconCount = Transformations.switchMap(currentUser) {
+        database.userDao.getRecordCounts(it.userId, TypeOfList.ELIGIBLE_COUPLE)
+    }
+
 
     private var locationRecord: LocationRecord? = null
 
