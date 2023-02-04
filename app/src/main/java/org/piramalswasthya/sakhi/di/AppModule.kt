@@ -13,6 +13,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.network.D2DNetworkApiService
+import org.piramalswasthya.sakhi.network.NcdNetworkApiService
 import org.piramalswasthya.sakhi.network.TmcNetworkApiService
 import org.piramalswasthya.sakhi.network.interceptors.ContentTypeInterceptor
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertD2DInterceptor
@@ -32,6 +33,8 @@ object AppModule {
 
     private const val baseTmcUrl = // "http://assamtmc.piramalswasthya.org:8080/"
     "http://uatamrit.piramalswasthya.org:8080/"
+
+    private const val baseNcdURL = "http://117.245.141.46:8080/";
 
     private val baseClient =
         OkHttpClient.Builder()
@@ -76,6 +79,19 @@ object AppModule {
 
     @Singleton
     @Provides
+    @Named("ncdClient")
+    fun provideNcdHttpClient() : OkHttpClient {
+        return baseClient
+            .newBuilder()
+            .connectTimeout(20, TimeUnit.SECONDS)
+            .readTimeout(20, TimeUnit.SECONDS)
+            .writeTimeout(20, TimeUnit.SECONDS)
+            .addInterceptor(TokenInsertTmcInterceptor())
+            .build()
+    }
+
+    @Singleton
+    @Provides
     fun provideD2DApiService(moshi : Moshi,@Named("logInClient") httpClient: OkHttpClient) : D2DNetworkApiService {
         return Retrofit.Builder()
             .addConverterFactory(MoshiConverterFactory.create(moshi))
@@ -96,6 +112,18 @@ object AppModule {
             .client(httpClient)
             .build()
             .create(TmcNetworkApiService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideNcdApiService(moshi : Moshi,@Named("ncdClient") httpClient: OkHttpClient) : NcdNetworkApiService {
+        return Retrofit.Builder()
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            //.addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(baseNcdURL)
+            .client(httpClient)
+            .build()
+            .create(NcdNetworkApiService::class.java)
     }
 
     @Singleton
