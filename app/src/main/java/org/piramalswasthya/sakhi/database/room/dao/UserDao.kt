@@ -32,4 +32,7 @@ interface UserDao {
                 "(SELECT COUNT(*) from BEN_ID_LIST where userId=:userId) AS availBenIdsCount "
     )
     fun getRecordCounts(userId: Int, eligibleCouple: TypeOfList): LiveData<List<IconCount>>
+
+    @Delete
+    suspend fun logout(loggedInUser: UserCache)
 }

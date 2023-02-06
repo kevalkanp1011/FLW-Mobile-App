@@ -122,11 +122,13 @@ class NewBenRegL15ViewModel @Inject constructor(
                         if (yearsDiff > 0) {
                             if (form.ageUnit.value.value != "Year") {
                                 emittedFromDobForAgeUnit = true
+                                form.ageUnit.errorText = null
                                 form.ageUnit.value.value = "Year"
                                 adapter.notifyItemChanged(form.firstPage.indexOf(form.ageUnit))
                             }
                             if (form.age.value.value == null || form.age.value.value?.toInt() != yearsDiff) {
                                 emittedFromDobForAge = true
+                                form.age.errorText = null
                                 form.age.value.value = yearsDiff.toString()
                                 adapter.notifyItemChanged(form.firstPage.indexOf(form.age))
                             }
@@ -136,11 +138,13 @@ class NewBenRegL15ViewModel @Inject constructor(
                             if (monthDiff > 0) {
                                 if (form.ageUnit.value.value != "Month") {
                                     emittedFromDobForAgeUnit = true
+                                    form.ageUnit.errorText = null
                                     form.ageUnit.value.value = "Month"
                                     adapter.notifyItemChanged(form.firstPage.indexOf(form.ageUnit))
                                 }
                                 if (form.age.value.value == null || form.age.value.value?.toInt() != monthDiff) {
                                     emittedFromDobForAge = true
+                                    form.age.errorText = null
                                     form.age.value.value = monthDiff.toString()
                                     adapter.notifyItemChanged(form.firstPage.indexOf(form.age))
                                 }
@@ -148,11 +152,13 @@ class NewBenRegL15ViewModel @Inject constructor(
                                 val dayDiff = getDiffDays(calDob, calNow)
                                 if (form.ageUnit.value.value != "Day") {
                                     emittedFromDobForAgeUnit = true
+                                    form.ageUnit.errorText = null
                                     form.ageUnit.value.value = "Day"
                                     adapter.notifyItemChanged(form.firstPage.indexOf(form.ageUnit))
                                 }
                                 if (form.age.value.value == null || form.age.value.value?.toInt() != dayDiff) {
                                     emittedFromDobForAge = true
+                                    form.age.errorText = null
                                     form.age.value.value = dayDiff.toString()
                                     adapter.notifyItemChanged(form.firstPage.indexOf(form.age))
                                 }
@@ -410,7 +416,7 @@ class NewBenRegL15ViewModel @Inject constructor(
                             }
                         }
                         if (it == "Any other Place") {
-                            if (!adapter.currentList.contains(form.otherPlaceOfBirth)) {
+                            if (!list.contains(form.otherPlaceOfBirth)) {
                                 list.add(
                                     adapter.currentList.indexOf(form.placeOfBirth) + 1,
                                     form.otherPlaceOfBirth
@@ -428,57 +434,57 @@ class NewBenRegL15ViewModel @Inject constructor(
             launch {
                 form.whoConductedDelivery.value.collect {
                     it.let {
+                        val list = adapter.currentList.toMutableList()
                         if (it == "Other") {
-                            val list = adapter.currentList.toMutableList()
-                            list.add(
-                                adapter.currentList.indexOf(form.whoConductedDelivery) + 1,
-                                form.otherWhoConductedDelivery
-                            )
-                            adapter.submitList(list)
+                            if (!list.contains(form.otherWhoConductedDelivery)) {
+                                list.add(
+                                    adapter.currentList.indexOf(form.whoConductedDelivery) + 1,
+                                    form.otherWhoConductedDelivery
+                                )
+                            }
                         } else {
                             if (adapter.currentList.contains(form.whoConductedDelivery)) {
-                                val list = adapter.currentList.toMutableList()
                                 list.remove(form.otherWhoConductedDelivery)
-                                adapter.submitList(list)
                             }
                         }
+                        adapter.submitList(list)
                     }
                 }
             }
             launch {
                 form.birthDose.value.collect {
-                    it.let {
+                    it?.let {
+                        val list = adapter.currentList.toMutableList()
                         if (it == "Given") {
-                            val list = adapter.currentList.toMutableList()
-                            list.add(
-                                adapter.currentList.indexOf(form.birthDose) + 1,
-                                form.birthDoseGiven
-                            )
-                            adapter.submitList(list)
+                            if (!list.contains(form.birthDoseGiven)) {
+                                list.add(
+                                    list.indexOf(form.birthDose) + 1,
+                                    form.birthDoseGiven
+                                )
+                            }
                         } else {
                             if (adapter.currentList.contains(form.birthDoseGiven)) {
                                 form.birthDoseGiven.value.value = null
-                                val list = adapter.currentList.toMutableList()
                                 list.remove(form.birthDoseGiven)
-                                adapter.submitList(list)
                             }
                         }
+                        adapter.submitList(list)
                     }
                 }
             }
             launch {
                 form.term.value.collect {
-                    it.let {
+                    it?.let {
                         val list = adapter.currentList.toMutableList()
                         if (it == "Pre-Term") {
-                            list.add(
-                                adapter.currentList.indexOf(form.term) + 1,
-                                form.termGestationalAge
-                            )
-                        } else {
-                            if (adapter.currentList.contains(form.termGestationalAge)) {
-                                list.remove(form.termGestationalAge)
+                            if (!list.contains(form.termGestationalAge)) {
+                                list.add(
+                                    list.indexOf(form.term) + 1,
+                                    form.termGestationalAge
+                                )
                             }
+                        } else {
+                            list.remove(form.termGestationalAge)
                         }
                         adapter.submitList(list)
                     }

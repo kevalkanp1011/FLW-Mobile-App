@@ -172,7 +172,7 @@ data class BenRegCache(
 
     var beneficiaryId: Long,
 
-    var benRegId: Int = 0,
+    var benRegId: Long = 0,
 
     @ColumnInfo(index = true)
     var ashaId: Int,

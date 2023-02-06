@@ -404,7 +404,7 @@ class BenKidRegFormDataset(context: Context) {
 
     val termGestationalAge = FormInput(
         inputType = RADIO,
-        title = "Term",
+        title = "Gestational Age",
         listOf(
             "24-34 Weeks",
             "34-36 Weeks",

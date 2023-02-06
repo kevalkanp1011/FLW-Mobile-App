@@ -89,6 +89,7 @@
                     app:layout_constraintStart_toEndOf="@+id/btn_new_ben"
                     app:layout_constraintTop_toTopOf="@+id/tv_hh_id"
                     app:syncState="@{ben.syncState}"
+                    android:onClick="@{()-> clickListener.onClickSync(ben)}"
                     tools:src="@drawable/ic_syncing" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
