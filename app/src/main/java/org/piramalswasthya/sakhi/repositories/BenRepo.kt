@@ -287,9 +287,16 @@ class BenRepo @Inject constructor(
         val user =
             database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
         val sendingData = ben.asNetworkSendingModel(user, locationRecord)
-        val response = tmcNetworkApiService.getBenIdFromBeneficiarySending(sendingData)
-        Timber.d(response.body()?.string() ?: "No Body inside the morgue!")
+        //val sendingDataString = Gson().toJson(sendingData)
 
+        try {
+            val response = tmcNetworkApiService.getBenIdFromBeneficiarySending(sendingData)
+            Timber.d(response.body()?.string() ?: "No Body inside the morgue!")
+        } catch (e: java.lang.Exception) {
+            Timber.d("Caugnt error $e")
+        } finally {
+            database.benDao.setSyncState(ben.householdId, ben.beneficiaryId, SyncState.UNSYNCED)
+        }
 
     }
 
@@ -303,6 +310,8 @@ class BenRepo @Inject constructor(
         val ben = database.benDao.getBen(hhId, benId)
         database.benDao.setSyncState(hhId, benId, SyncState.SYNCING)
         val sendingData = ben.asNetworkSendingModel(user, locationRecord)
+        //val sendingDataString = Gson().toJson(sendingData)
+
         try {
             val response = tmcNetworkApiService.getBenIdFromBeneficiarySending(sendingData)
             Timber.d(response.body()?.string() ?: "No Body inside the morgue!")
