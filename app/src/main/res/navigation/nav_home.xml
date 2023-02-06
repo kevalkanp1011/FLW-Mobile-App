@@ -52,6 +52,9 @@
         <action
             android:id="@+id/action_homeFragment_to_newHouseholdFragment"
             app:destination="@id/newHouseholdFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_getBenFragment"
+            app:destination="@id/getBenFragment" />
     </fragment>
     <fragment
         android:id="@+id/allHouseholdFragment"
@@ -276,5 +279,10 @@
         android:name="org.piramalswasthya.sakhi.ui.home_activity.village_level_forms.survey_register.SurveyRegisterFragment"
         android:label="fragment_survey_register"
         tools:layout="@layout/fragment_survey_register" />
+    <fragment
+        android:id="@+id/getBenFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.get_ben_data.GetBenFragment"
+        android:label="fragment_get_ben"
+        tools:layout="@layout/fragment_get_ben" />
 
 </navigation>

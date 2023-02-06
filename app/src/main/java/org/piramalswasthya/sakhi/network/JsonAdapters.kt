@@ -62,6 +62,13 @@ data class TmcGenerateBenIdsRequest(
     val vanID: Int
 )
 
+@JsonClass(generateAdapter = true)
+data class GetBenRequest(
+    val AshaId: String,
+    val pageNo: Int,
+    val fromDate: String,
+    val toDate: String
+)
 
 
 

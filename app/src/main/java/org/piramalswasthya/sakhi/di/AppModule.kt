@@ -83,10 +83,10 @@ object AppModule {
     fun provideNcdHttpClient() : OkHttpClient {
         return baseClient
             .newBuilder()
-            .connectTimeout(20, TimeUnit.SECONDS)
-            .readTimeout(20, TimeUnit.SECONDS)
-            .writeTimeout(20, TimeUnit.SECONDS)
-            .addInterceptor(TokenInsertTmcInterceptor())
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
+            .addInterceptor(TokenInsertD2DInterceptor())
             .build()
     }
 
