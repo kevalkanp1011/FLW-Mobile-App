@@ -12,20 +12,34 @@ import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.HouseholdCache
 import org.piramalswasthya.sakhi.model.LocationRecord
+import org.piramalswasthya.sakhi.network.GetBenRequest
+import org.piramalswasthya.sakhi.network.NcdNetworkApiService
 import org.piramalswasthya.sakhi.network.TmcGenerateBenIdsRequest
 import org.piramalswasthya.sakhi.network.TmcNetworkApiService
 import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 class BenRepo @Inject constructor(
     private val database: InAppDb,
-    private val tmcNetworkApiService: TmcNetworkApiService
+    private val tmcNetworkApiService: TmcNetworkApiService,
+    private val ncdNetworkApiService: NcdNetworkApiService
 ) {
 
     val benList by lazy {
         //TODO(implement BenDao)
         Transformations.map(database.benDao.getAllBen()) { list ->
             list.map { it.asBasicDomainModel() }
+        }
+    }
+
+    companion object {
+        private fun getCurrentDate(): String {
+            val calendar = Calendar.getInstance()
+            val mdFormat =
+                SimpleDateFormat("yyyy-MM-DDThh:mm:ss", Locale.ENGLISH)
+            return mdFormat.format(calendar.time) + ".000Z"
         }
     }
 
@@ -221,6 +235,20 @@ class BenRepo @Inject constructor(
     suspend fun deleteBenDraft(hhId: Long, isKid: Boolean) {
         withContext(Dispatchers.IO) {
             database.benDao.deleteBen(hhId, isKid)
+        }
+    }
+
+    suspend fun getBeneficiariesFromServer() {
+        val user =
+            database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
+        val response =
+            ncdNetworkApiService.getBeneficiaries(GetBenRequest(user.userId.toString(), 0,
+                "2020-10-20T15:50:45.000Z", getCurrentDate()))
+        val statusCode = response.code()
+        if (statusCode == 200) {
+            val responseString = response.body()?.string()
+                ?: throw IllegalStateException("response body empty here!")
+            Timber.d("GetBeneficiaries : $responseString" )
         }
     }
 

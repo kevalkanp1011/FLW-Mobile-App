@@ -21,7 +21,7 @@
     <item android:title="Server Sync">
         <menu>
             <item
-                android:id="@+id/nav_share"
+                android:id="@id/getBenFragment"
                 android:icon="@drawable/ic_menu_camera"
                 android:title="Get Data" />
             <item
