@@ -9,9 +9,11 @@ import org.piramalswasthya.sakhi.configuration.BenGenRegFormDataset
 import org.piramalswasthya.sakhi.configuration.BenKidRegFormDataset
 import org.piramalswasthya.sakhi.database.room.BeneficiaryIdsAvail
 import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.HouseholdCache
 import org.piramalswasthya.sakhi.model.LocationRecord
+import org.piramalswasthya.sakhi.model.asNetworkSendingModel
 import org.piramalswasthya.sakhi.network.GetBenRequest
 import org.piramalswasthya.sakhi.network.NcdNetworkApiService
 import org.piramalswasthya.sakhi.network.TmcGenerateBenIdsRequest
@@ -93,17 +95,21 @@ class BenRepo @Inject constructor(
             this.stateId = locationRecord.stateId
             this.districtId = locationRecord.districtId
             this.villageId = locationRecord.villageId
-
-            if (beneficiaryId == -2L) {
-                val benIdObj = extractBenId()
-                this.beneficiaryId = benIdObj.benId
-                this.benRegId = benIdObj.benRegId
-
-            }
             this.isDraft = false
         }
 
         database.benDao.upsert(ben)
+        if (ben.beneficiaryId == -2L) {
+            Timber.d("saving...")
+            val benIdObj = extractBenId()
+            database.benDao.substituteBenId(
+                ben.householdId,
+                ben.beneficiaryId,
+                benIdObj.benId,
+                benIdObj.benRegId
+            )
+
+        }
         return
     }
 
@@ -139,9 +145,27 @@ class BenRepo @Inject constructor(
                 this.isDraft = false
 
             }
+
+            if (ben.beneficiaryId == -1L) {
+                Timber.d("saving...")
+                val benIdObj = extractBenId()
+                database.benDao.substituteBenId(
+                    ben.householdId,
+                    ben.beneficiaryId,
+                    benIdObj.benId,
+                    benIdObj.benRegId
+                )
+
+            }
         }
 
         database.benDao.upsert(ben)
+        try {
+            if (locationRecord != null)
+                createBenIdAtServerByBeneficiarySending(ben, locationRecord)
+        } catch (e: java.lang.Exception) {
+            Timber.d("Exception raised $e")
+        }
         return
     }
 
@@ -165,15 +189,28 @@ class BenRepo @Inject constructor(
             this.stateId = locationRecord.stateId
             this.districtId = locationRecord.districtId
             this.villageId = locationRecord.villageId
-            if (beneficiaryId < 0) {
-                val benIdObj = extractBenId()
-                this.beneficiaryId = benIdObj.benId
-                this.benRegId = benIdObj.benRegId
-            }
             this.isDraft = false
         }
 
         database.benDao.upsert(ben)
+
+        if (ben.beneficiaryId == -1L) {
+            Timber.d("saving...")
+            val benIdObj = extractBenId()
+            database.benDao.substituteBenId(
+                ben.householdId,
+                ben.beneficiaryId,
+                benIdObj.benId,
+                benIdObj.benRegId
+            )
+
+        }
+
+        try {
+            createBenIdAtServerByBeneficiarySending(ben, locationRecord)
+        } catch (e: java.lang.Exception) {
+            Timber.d("Exception raised $e")
+        }
         return
     }
 
@@ -196,9 +233,13 @@ class BenRepo @Inject constructor(
 
     }
 
-    suspend fun getBenIdsGeneratedFromServer(count: Int = 100) {
+    suspend fun getBenIdsGeneratedFromServer(maxCount: Int = 100) {
         val user =
             database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
+        val benIdCount = database.benIdGenDao.count()
+        if (benIdCount > 90)
+            return
+        val count = maxCount - benIdCount
         val response =
             tmcNetworkApiService.generateBeneficiaryIDs(TmcGenerateBenIdsRequest(count, user.vanId))
         val statusCode = response.code()
@@ -216,7 +257,7 @@ class BenRepo @Inject constructor(
                 for (i in 0 until jsonArray.length()) {
                     val jObj = jsonArray.getJSONObject(i)
                     val beneficiaryId = jObj.getLong("beneficiaryId")
-                    val benRegId = jObj.getInt("benRegId")
+                    val benRegId = jObj.getLong("benRegId")
                     benIdList.add(
                         BeneficiaryIdsAvail(
                             userId = user.userId,
@@ -239,6 +280,50 @@ class BenRepo @Inject constructor(
         withContext(Dispatchers.IO) {
             database.benDao.deleteBen(hhId, isKid)
         }
+    }
+
+    suspend fun createBenIdAtServerByBeneficiarySending(
+        ben: BenRegCache,
+        locationRecord: LocationRecord
+    ) {
+        val user =
+            database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
+        val sendingData = ben.asNetworkSendingModel(user, locationRecord)
+        //val sendingDataString = Gson().toJson(sendingData)
+
+        try {
+            val response = tmcNetworkApiService.getBenIdFromBeneficiarySending(sendingData)
+            Timber.d(response.body()?.string() ?: "No Body inside the morgue!")
+        } catch (e: java.lang.Exception) {
+            Timber.d("Caugnt error $e")
+        } finally {
+            database.benDao.setSyncState(ben.householdId, ben.beneficiaryId, SyncState.UNSYNCED)
+        }
+
+    }
+
+    suspend fun createBenIdAtServerByBeneficiarySending(
+        hhId: Long,
+        benId: Long,
+        locationRecord: LocationRecord
+    ) {
+        val user =
+            database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
+        val ben = database.benDao.getBen(hhId, benId)
+        database.benDao.setSyncState(hhId, benId, SyncState.SYNCING)
+        val sendingData = ben.asNetworkSendingModel(user, locationRecord)
+        //val sendingDataString = Gson().toJson(sendingData)
+
+        try {
+            val response = tmcNetworkApiService.getBenIdFromBeneficiarySending(sendingData)
+            Timber.d(response.body()?.string() ?: "No Body inside the morgue!")
+        } catch (e: java.lang.Exception) {
+            Timber.d("Caugnt error $e")
+        } finally {
+            database.benDao.setSyncState(hhId, benId, SyncState.UNSYNCED)
+        }
+
+
     }
 
     suspend fun getBeneficiariesFromServer() {

@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.ui.home_activity.home
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,7 +24,9 @@ class HomeViewModel @Inject constructor(
     val currentUser = database.userDao.getLoggedInUserLiveData()
 
     val iconCount = Transformations.switchMap(currentUser) {
-        database.userDao.getRecordCounts(it.userId, TypeOfList.ELIGIBLE_COUPLE)
+        it?.let {
+            database.userDao.getRecordCounts(it.userId, TypeOfList.ELIGIBLE_COUPLE)
+        }
     }
 
 
@@ -63,6 +66,10 @@ class HomeViewModel @Inject constructor(
     val user: UserDomain
         get() = _user
 
+    private val _navigateToLoginPage = MutableLiveData(false)
+    val navigateToLoginPage: MutableLiveData<Boolean>
+        get() = _navigateToLoginPage
+
     init {
         viewModelScope.launch {
             _user = getUserFromRepo()
@@ -74,6 +81,17 @@ class HomeViewModel @Inject constructor(
             userRepo.getLoggedInUser()
                 ?: throw IllegalStateException("No Logged in user found in DB!!")
         }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            userRepo.logout()
+            _navigateToLoginPage.value = true
+        }
+    }
+
+    fun navigateToLoginPageComplete() {
+        _navigateToLoginPage.value = false
     }
 
 

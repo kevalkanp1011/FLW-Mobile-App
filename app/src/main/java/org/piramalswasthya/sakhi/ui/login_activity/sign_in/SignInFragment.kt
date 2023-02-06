@@ -1,16 +1,19 @@
 package org.piramalswasthya.sakhi.ui.login_activity.sign_in
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
-import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentSignInBinding
-import org.piramalswasthya.sakhi.ui.login_activity.sign_in.SignInViewModel.*
+import org.piramalswasthya.sakhi.ui.login_activity.sign_in.SignInViewModel.State
+import org.piramalswasthya.sakhi.work.GenerateBenIdsWorker
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -78,8 +81,9 @@ class SignInFragment : Fragment() {
                     binding.clContent.visibility = View.INVISIBLE
                     binding.pbSignIn.visibility = View.VISIBLE
                     binding.tvError.visibility = View.GONE
-
+                    triggerGenBenIdWorker()
                     findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToHomeActivity())
+                    activity?.finish()
                 }
             }
         }
@@ -93,5 +97,13 @@ class SignInFragment : Fragment() {
         val password = binding.etPassword.text.toString()
         Timber.d("Username : $username \n Password : $password")
         viewModel.authUser(username, password)
+    }
+
+    private fun triggerGenBenIdWorker() {
+        val workRequest = OneTimeWorkRequestBuilder<GenerateBenIdsWorker>()
+            .setConstraints(GenerateBenIdsWorker.constraint)
+            .build()
+        WorkManager.getInstance(requireContext())
+            .enqueueUniqueWork(GenerateBenIdsWorker.name, ExistingWorkPolicy.KEEP, workRequest)
     }
 }

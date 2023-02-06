@@ -316,5 +316,12 @@ class UserRepo @Inject constructor(
 
     }
 
+    suspend fun logout() {
+        withContext(Dispatchers.IO) {
+            val loggedInUser = database.userDao.getLoggedInUser()!!
+            database.userDao.logout(loggedInUser)
+        }
+    }
+
 
 }

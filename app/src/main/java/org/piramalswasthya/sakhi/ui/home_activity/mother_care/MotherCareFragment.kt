@@ -10,7 +10,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.adapters.IconGridAdapter
+import org.piramalswasthya.sakhi.configuration.IconDataset
 import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
+import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 
 @AndroidEntryPoint
 class MotherCareFragment : Fragment() {
@@ -20,6 +22,7 @@ class MotherCareFragment : Fragment() {
     }
 
     private val viewModel: MotherCareViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
     private val binding by lazy { RvIconGridBinding.inflate(layoutInflater) }
 
     override fun onCreateView(
@@ -38,11 +41,17 @@ class MotherCareFragment : Fragment() {
     private fun setUpMotherCareIconRvAdapter() {
         val rvLayoutManager = GridLayoutManager(context, 3)
         binding.rvIconGrid.layoutManager = rvLayoutManager
-        binding.rvIconGrid.adapter = IconGridAdapter(
+        val rvAdapter = IconGridAdapter(
             //IconDataset.getMotherCareDataset(),
             IconGridAdapter.GridIconClickListener {
                 findNavController().navigate(it)
             })
+        binding.rvIconGrid.adapter = rvAdapter
+        homeViewModel.iconCount.observe(viewLifecycleOwner) {
+            it?.let {
+                rvAdapter.submitList(IconDataset.getIconDataset(it[0]))
+            }
+        }
     }
 
 }

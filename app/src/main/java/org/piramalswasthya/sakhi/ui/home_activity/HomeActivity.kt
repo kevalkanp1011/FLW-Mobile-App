@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.ui.home_activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.TextView
@@ -10,13 +11,15 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.ActivityHomeBinding
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
+import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
 
 @AndroidEntryPoint
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
 
@@ -34,6 +37,14 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpActionBar()
         setUpNavHeader()
+
+        viewModel.navigateToLoginPage.observe(this) {
+            if (it) {
+                startActivity(Intent(this, LoginActivity::class.java))
+                viewModel.navigateToLoginPageComplete()
+                finish()
+            }
+        }
 
         // Snackbar.make(binding.root, intent.data.toString(), Snackbar.LENGTH_LONG).show()
     }
@@ -70,6 +81,8 @@ class HomeActivity : AppCompatActivity() {
             .setOpenableLayout(binding.drawerLayout)
             .build()
 
+        binding.navView.setNavigationItemSelectedListener(this)
+
         NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration)
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
     }
@@ -96,12 +109,22 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            Toast.makeText(this,"onOptionsItemSelected called!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "onOptionsItemSelected called!", Toast.LENGTH_SHORT).show()
             onBackPressedDispatcher.onBackPressed()
             return true // must return true to consume it here
 
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_logout -> {
+                viewModel.logout()
+                true
+            }
+            else -> false
+        }
     }
 
 
