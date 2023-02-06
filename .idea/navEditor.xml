@@ -204,6 +204,18 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="getBenFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="705" />
+                            <option name="y" value="-395" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="homeFragment">
                     <value>
                       <LayoutPositions>
@@ -606,6 +618,15 @@
                             <option name="x" value="696" />
                             <option name="y" value="368" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_villageLevelFormsFragment_to_surveyRegisterFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>

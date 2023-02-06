@@ -1,32 +1,36 @@
 package org.piramalswasthya.sakhi.ui.home_activity.get_ben_data
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import org.piramalswasthya.sakhi.R
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
+import org.piramalswasthya.sakhi.databinding.FragmentGetBenBinding
 
+@AndroidEntryPoint
 class GetBenFragment : Fragment() {
 
     companion object {
         fun newInstance() = GetBenFragment()
     }
 
-    private lateinit var viewModel: GetBenViewModel
+    private val binding by lazy{
+        FragmentGetBenBinding.inflate(layoutInflater)
+    }
+
+    private val viewModel: GetBenViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_get_ben, container, false)
+    ): View {
+        return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(GetBenViewModel::class.java)
-        // TODO: Use the ViewModel
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.getBeneficiaries()
     }
-
 }

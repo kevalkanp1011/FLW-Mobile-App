@@ -36,10 +36,13 @@ class BenRepo @Inject constructor(
 
     companion object {
         private fun getCurrentDate(): String {
-            val calendar = Calendar.getInstance()
-            val mdFormat =
-                SimpleDateFormat("yyyy-MM-DDThh:mm:ss", Locale.ENGLISH)
-            return mdFormat.format(calendar.time) + ".000Z"
+            val dateLong = System.currentTimeMillis()
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+            val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
+            val dateString = dateFormat.format(dateLong)
+            val timeString = timeFormat.format(dateLong)
+
+            return "${dateString}T${timeString}.000Z"
         }
     }
 
@@ -241,14 +244,18 @@ class BenRepo @Inject constructor(
     suspend fun getBeneficiariesFromServer() {
         val user =
             database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
-        val response =
-            ncdNetworkApiService.getBeneficiaries(GetBenRequest(user.userId.toString(), 0,
-                "2020-10-20T15:50:45.000Z", getCurrentDate()))
-        val statusCode = response.code()
-        if (statusCode == 200) {
-            val responseString = response.body()?.string()
-                ?: throw IllegalStateException("response body empty here!")
-            Timber.d("GetBeneficiaries : $responseString" )
+        try {
+            val response =
+                ncdNetworkApiService.getBeneficiaries(GetBenRequest(user.userId.toString(), 0,
+                    "2020-10-20T15:50:45.000Z", getCurrentDate()))
+            val statusCode = response.code()
+            if (statusCode == 200) {
+                val responseString = response.body()?.string()
+                    ?: throw IllegalStateException("response body empty here!")
+                Timber.d("GetBeneficiaries : $responseString" )
+            }
+        } catch (e: Exception) {
+            Timber.d("get_ben error : $e")
         }
     }
 

@@ -34,7 +34,8 @@ object AppModule {
     private const val baseTmcUrl = // "http://assamtmc.piramalswasthya.org:8080/"
     "http://uatamrit.piramalswasthya.org:8080/"
 
-    private const val baseNcdURL = "http://117.245.141.46:8080/";
+    private const val baseNcdURL = // "http://117.245.141.46:8080/";
+    "http://uatamrit.piramalswasthya.org:8080/"
 
     private val baseClient =
         OkHttpClient.Builder()
@@ -86,7 +87,7 @@ object AppModule {
             .connectTimeout(60, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)
             .writeTimeout(60, TimeUnit.SECONDS)
-            .addInterceptor(TokenInsertD2DInterceptor())
+            .addInterceptor(TokenInsertTmcInterceptor())
             .build()
     }
 
