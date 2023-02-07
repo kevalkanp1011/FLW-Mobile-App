@@ -10,6 +10,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,6 +21,7 @@ import org.piramalswasthya.sakhi.databinding.FragmentNewBenRegBinding
 import org.piramalswasthya.sakhi.services.UploadSyncService
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_more_15.NewBenRegG15ViewModel.State
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
+import org.piramalswasthya.sakhi.work.BenDataSendingWorker
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -131,6 +135,8 @@ class NewBenRegG15Fragment : Fragment() {
                 }
                 State.SAVE_SUCCESS -> {
                     Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
+                    triggerBenDataSendingWorker()
+
                 }
                 State.SAVE_FAILED -> Toast.makeText(
                     context,
@@ -235,5 +241,13 @@ class NewBenRegG15Fragment : Fragment() {
             }"
         )
         return (childFragmentManager.findFragmentByTag(currentItem) as NewBenRegG15ObjectFragment).validate()
+    }
+
+    private fun triggerBenDataSendingWorker() {
+        val workRequest = OneTimeWorkRequestBuilder<BenDataSendingWorker>()
+            .setConstraints(BenDataSendingWorker.constraint)
+            .build()
+        WorkManager.getInstance(requireContext())
+            .enqueueUniqueWork(BenDataSendingWorker.name, ExistingWorkPolicy.APPEND, workRequest)
     }
 }

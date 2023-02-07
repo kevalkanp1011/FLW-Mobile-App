@@ -30,5 +30,15 @@ interface BenDao {
     suspend fun deleteBen(hhId: Long, kid: Boolean)
 
     @Query("UPDATE BENEFICIARY SET beneficiaryId = :newId, benRegId = :benRegId WHERE householdId = :hhId AND beneficiaryId =:oldId")
-    fun substituteBenId(hhId: Long, oldId: Long, newId: Long, benRegId: Long)
+    suspend fun substituteBenId(hhId: Long, oldId: Long, newId: Long, benRegId: Long)
+
+    @Query("UPDATE BENEFICIARY SET beneficiaryId = :newId , processed = \"U\" WHERE householdId = :hhId AND beneficiaryId =:oldId")
+    suspend fun updateToFinalBenId(hhId: Long, oldId: Long, newId: Long)
+
+    @Query("SELECT * FROM BENEFICIARY WHERE isDraft = 0 AND processed = \"N\" AND syncState =:unsynced ")
+    suspend fun getAllUnprocessedBen(unsynced: SyncState = SyncState.UNSYNCED): List<BenRegCache>
+
+    @Query("UPDATE BENEFICIARY SET processed = \"P\", syncState = 2 WHERE beneficiaryId =:benId")
+    suspend fun benSyncedWithServer(vararg benId: Long)
+
 }

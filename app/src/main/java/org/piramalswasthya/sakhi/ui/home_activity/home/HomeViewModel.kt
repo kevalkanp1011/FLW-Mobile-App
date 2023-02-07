@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.model.TypeOfList
 import org.piramalswasthya.sakhi.model.UserDomain
@@ -18,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     database: InAppDb,
+    private val pref: PreferenceDao,
     private val userRepo: UserRepo
 ) : ViewModel() {
 
@@ -53,6 +55,7 @@ class HomeViewModel @Inject constructor(
             village,
             user.countryId
         )
+        pref.saveLocationRecord(locationRecord!!)
     }
 
     fun getLocationRecord() = locationRecord!!

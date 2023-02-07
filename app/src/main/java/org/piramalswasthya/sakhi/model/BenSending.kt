@@ -4,8 +4,6 @@ import androidx.room.ColumnInfo
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.piramalswasthya.sakhi.model.Gender.*
-import java.text.SimpleDateFormat
-import java.util.*
 
 @JsonClass(generateAdapter = true)
 data class BeneficiaryDataSending(
@@ -240,7 +238,7 @@ fun BenRegCache.asNetworkSendingModel(
     return BeneficiaryDataSending(
         firstName = firstName!!,
         lastName = lastName ?: "NA",
-        dOB = getDateTimeStringFromLong(dob),
+        dOB = getDateTimeStringFromLong(dob) ?: "",
         fatherName = fatherName!!,
         motherName = motherName!!,
         spouseName = genDetails?.spouseName ?: "NA",
@@ -314,15 +312,5 @@ fun BenRegCache.asNetworkSendingModel(
 
         )
 }
-private fun getDateTimeStringFromLong(dateLong: Long): String {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-    val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
-    val dateString = dateFormat.format(dateLong)
-    val timeString = timeFormat.format(dateLong)
-    System.currentTimeMillis()
-    return "${dateString}T${timeString}.000Z"
-}
-
-    
 
 
