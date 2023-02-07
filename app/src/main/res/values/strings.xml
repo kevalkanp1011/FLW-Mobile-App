@@ -59,6 +59,7 @@
     <string name="PREF_primary_API_KEY">JWT-Token_B</string>
     <string name="PREF_rem_me_uname">user-name-local-saved</string>
     <string name="PREF_rem_me_pwd">password-local-saved</string>
+    <string name="PREF_location_record_entry">location-record</string>
 
 
     <string name="nav_item_1_text">Name : %s</string>
