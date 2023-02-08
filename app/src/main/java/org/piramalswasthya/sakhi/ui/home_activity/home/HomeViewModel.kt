@@ -11,7 +11,6 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.LocationRecord
-import org.piramalswasthya.sakhi.model.TypeOfList
 import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.repositories.UserRepo
 import javax.inject.Inject
@@ -27,7 +26,7 @@ class HomeViewModel @Inject constructor(
 
     val iconCount = Transformations.switchMap(currentUser) {
         it?.let {
-            database.userDao.getRecordCounts(it.userId, TypeOfList.ELIGIBLE_COUPLE)
+            database.userDao.getRecordCounts(it.userId)
         }
     }
 

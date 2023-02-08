@@ -49,7 +49,7 @@ class MotherCareFragment : Fragment() {
         binding.rvIconGrid.adapter = rvAdapter
         homeViewModel.iconCount.observe(viewLifecycleOwner) {
             it?.let {
-                rvAdapter.submitList(IconDataset.getIconDataset(it[0]))
+                rvAdapter.submitList(IconDataset.getMotherCareDataset(it[0]))
             }
         }
     }
