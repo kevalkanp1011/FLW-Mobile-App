@@ -1,5 +1,7 @@
 package org.piramalswasthya.sakhi.repositories
 
+import android.annotation.SuppressLint
+import android.view.View
 import androidx.lifecycle.Transformations
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -10,6 +12,7 @@ import org.piramalswasthya.sakhi.configuration.BenKidRegFormDataset
 import org.piramalswasthya.sakhi.database.room.BeneficiaryIdsAvail
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.network.GetBenRequest
@@ -398,26 +401,72 @@ class BenRepo @Inject constructor(
 
     }
 
-    suspend fun getBeneficiariesFromServer() {
+    suspend fun getBeneficiariesFromServer(pageNumber: Int): MutableList<BenBasicDomain> {
+        val benDataList = mutableListOf<BenBasicDomain>()
         val user =
             database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
         try {
             val response =
-                ncdNetworkApiService.getBeneficiaries(
-                    GetBenRequest(
-                        user.userId.toString(), 0,
-                        "2020-10-20T15:50:45.000Z", getCurrentDate()
-                    )
-                )
+                ncdNetworkApiService.getBeneficiaries(GetBenRequest(user.userId.toString(), pageNumber,
+                        "2020-10-20T15:50:45.000Z", getCurrentDate()))
             val statusCode = response.code()
             if (statusCode == 200) {
                 val responseString = response.body()?.string()
-                    ?: throw IllegalStateException("response body empty here!")
-                Timber.d("GetBeneficiaries : $responseString")
+                if (responseString != null) {
+                    val jsonObj = JSONObject(responseString)
+
+                    val errorMessage = jsonObj.getString("errorMessage")
+                    val responseStatusCode = jsonObj.getInt("statusCode")
+                    if (responseStatusCode == 200) {
+                        val dataObj = jsonObj.getJSONObject("data")
+                        val jsonArray = dataObj.getJSONArray("data")
+                        val pageSize = dataObj.getInt("totalPage")
+
+                        if (jsonArray.length() != 0) {
+//                                lay_recy.setVisibility(View.VISIBLE)
+//                                lay_no_ben.setVisibility(View.GONE)
+//                                draftLists.clear()
+//                                benServerDataList.clear()
+//                                houseHoldServerData.clear()
+
+                            for (i in 0 until jsonArray.length()) {
+                                val jsonObject = jsonArray.getJSONObject(i)
+                                val houseDataObj = jsonObject.getJSONObject("householdDetails")
+                                val benDataObj = jsonObject.getJSONObject("beneficiaryDetails")
+
+                                benDataList.add(
+                                    BenBasicDomain(
+                                        benId = jsonObject.getLong("benficieryid"),
+                                        hhId = jsonObject.getLong("houseoldId"),
+                                        regDate = benDataObj.getString("registrationDate"),
+                                        benName = benDataObj.getString("firstName"),
+                                        benSurname = benDataObj.getString("lastName"),
+                                        gender = benDataObj.getString("gender"),
+                                        age = benDataObj.getInt("age").toString(),
+                                        mobileNo = benDataObj.getString("contact_number"),
+                                        fatherName = benDataObj.getString("fatherName"),
+                                        familyHeadName = houseDataObj.getString("familyHeadName"),
+                                        rchId = benDataObj.getString("rchid"),
+                                        hrpStatus = benDataObj.getBoolean("hrpStatus").toString(),
+                                        typeOfList = benDataObj.getString("registrationType"),
+                                        syncState = SyncState.UNSYNCED
+                                    )
+                                )
+                            }
+                            return benDataList
+                        }
+                        throw IllegalStateException("Response code !-100")
+                    } else {
+                        Timber.d("getBenData() returned error message : $errorMessage")
+                        throw IllegalStateException("Response code !-100")
+                    }
+                }
             }
+
         } catch (e: Exception) {
             Timber.d("get_ben error : $e")
         }
+        Timber.d("get_ben data : $benDataList")
+        return benDataList
     }
-
 }
