@@ -1,19 +1,18 @@
 package org.piramalswasthya.sakhi.ui.home_activity.get_ben_data
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.adapters.GetBenPageNumberAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentGetBenBinding
-import org.piramalswasthya.sakhi.ui.home_activity.all_ben.AllBenFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.get_ben_data.GetBenViewModel.State.*
+import timber.log.Timber
 
 @AndroidEntryPoint
 class GetBenFragment : Fragment() {
@@ -37,38 +36,48 @@ class GetBenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val benAdapter = BenListAdapter(BenListAdapter.BenClickListener(
-            {
-                Toast.makeText(context,"Ben : $it clicked", Toast.LENGTH_SHORT).show()
-            },
-            {Toast.makeText(context,"Household : $it clicked", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(AllBenFragmentDirections.actionAllBenFragmentToNewBenRegTypeFragment(it))
-            }, {a, b -> {}}
-        ) )
+        val benAdapter = BenListAdapter()
         binding.rvBenServer.adapter = benAdapter
 
-        val pageAdapter = GetBenPageNumberAdapter(10, GetBenPageNumberAdapter.PageClickListener{
-            Toast.makeText(context,"Page : $it clicked", Toast.LENGTH_SHORT).show()
-            viewModel.getBeneficiaries(it)
-        })
-        binding.rvPage.adapter = pageAdapter
+
 
         viewModel.state.observe(viewLifecycleOwner){
             when(it) {
                 IDLE -> {} //TODO()
                 LOADING -> {
+                    binding.clError.visibility = View.GONE
                     binding.clContent.visibility = View.GONE
-                    binding.flLoading.visibility = View.VISIBLE}
+                    binding.flLoading.visibility = View.VISIBLE
+                }
                 ERROR_SERVER -> {
-
+                    binding.clError.visibility = View.VISIBLE
+                    binding.clContent.visibility = View.GONE
+                    binding.flLoading.visibility = View.GONE
                 }
                 ERROR_NETWORK -> {} //TODO()
                 SUCCESS -> {
                     benAdapter.submitList(viewModel.benDataList)
+                    setUpPagesAdapter()
+                    binding.clError.visibility = View.GONE
                     binding.clContent.visibility = View.VISIBLE
                     binding.flLoading.visibility = View.GONE
                 }
+            }
         }
+    }
+
+    private fun setUpPagesAdapter() {
+        if (binding.rvPage.adapter == null) {
+            Timber.d("Num of pages : ${viewModel.numPages}")
+            val pageAdapter =
+                GetBenPageNumberAdapter(
+                    viewModel.numPages,
+                    GetBenPageNumberAdapter.PageClickListener { page ->
+                        Toast.makeText(context, "Page : $page clicked", Toast.LENGTH_SHORT)
+                            .show()
+                        viewModel.getBeneficiaries(page)
+                    })
+            binding.rvPage.adapter = pageAdapter
         }
     }
 }

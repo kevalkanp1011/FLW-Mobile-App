@@ -9,7 +9,7 @@ import org.piramalswasthya.sakhi.databinding.RvItemBenBinding
 import org.piramalswasthya.sakhi.model.BenBasicDomain
 
 
-class BenListAdapter(private val clickListener: BenClickListener) :
+class BenListAdapter(private val clickListener: BenClickListener? = null) :
     ListAdapter<BenBasicDomain, BenListAdapter.BenViewHolder>
         (BenDiffUtilCallBack) {
     private object BenDiffUtilCallBack : DiffUtil.ItemCallback<BenBasicDomain>() {
@@ -37,7 +37,7 @@ class BenListAdapter(private val clickListener: BenClickListener) :
 
         fun bind(
             item: BenBasicDomain,
-            clickListener: BenClickListener
+            clickListener: BenClickListener?
         ) {
             binding.ben = item
             binding.clickListener = clickListener

@@ -11,7 +11,6 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.ActivityHomeBinding
@@ -19,7 +18,7 @@ import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
 
 @AndroidEntryPoint
-class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class HomeActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
 
@@ -81,10 +80,14 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .setOpenableLayout(binding.drawerLayout)
             .build()
 
-        binding.navView.setNavigationItemSelectedListener(this)
-
         NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration)
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
+
+        binding.navView.menu.findItem(R.id.menu_logout).setOnMenuItemClickListener {
+            viewModel.logout()
+            true
+
+        }
     }
 
 /*    override fun onSupportNavigateUp(): Boolean {
@@ -116,16 +119,4 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         return super.onOptionsItemSelected(item)
     }
-
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_logout -> {
-                viewModel.logout()
-                true
-            }
-            else -> false
-        }
-    }
-
-
 }

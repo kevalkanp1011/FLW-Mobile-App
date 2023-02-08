@@ -24,6 +24,7 @@ interface UserDao {
     @Query("SELECT * FROM USER WHERE logged_in = 1 LIMIT 1")
     fun getLoggedInUserLiveData(): LiveData<UserCache>
 
+    //TODO(Map count from immunizationDueCount)
     @Query(
         "SELECT (SELECT COUNT(*)from HOUSEHOLD where ashaId=:userId and isDraft = 0) AS householdCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0) AS allBenCount, " +
@@ -36,6 +37,13 @@ interface UserDao {
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and registrationType = :pncMother) AS pncMotherCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and registrationType = :reproductiveAge) AS reproductiveAgeCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and registrationType = :menopause) AS menopauseCount, " +
+                "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0)  AS immunizationDueCount, " +
+                "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0)  AS generalOpCareCount, " +
+                "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0) AS deathReportCount, " +
+                "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0) AS ncdCount, " +
+                "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0) AS ncdEligibleCount, " +
+                "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0) AS ncdPriorityCount, " +
+                "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0) AS ncdNonEligibleCount, " +
                 "(SELECT COUNT(*) from BEN_ID_LIST where userId=:userId) AS availBenIdsCount "
     )
     fun getRecordCounts(
