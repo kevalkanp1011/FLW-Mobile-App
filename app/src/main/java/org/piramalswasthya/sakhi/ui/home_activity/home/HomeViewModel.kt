@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.ui.home_activity.home
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,8 +9,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.LocationRecord
-import org.piramalswasthya.sakhi.model.TypeOfList
 import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.repositories.UserRepo
 import javax.inject.Inject
@@ -17,13 +18,16 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     database: InAppDb,
+    private val pref: PreferenceDao,
     private val userRepo: UserRepo
 ) : ViewModel() {
 
     val currentUser = database.userDao.getLoggedInUserLiveData()
 
     val iconCount = Transformations.switchMap(currentUser) {
-        database.userDao.getRecordCounts(it.userId, TypeOfList.ELIGIBLE_COUPLE)
+        it?.let {
+            database.userDao.getRecordCounts(it.userId)
+        }
     }
 
 
@@ -50,6 +54,7 @@ class HomeViewModel @Inject constructor(
             village,
             user.countryId
         )
+        pref.saveLocationRecord(locationRecord!!)
     }
 
     fun getLocationRecord() = locationRecord!!
@@ -63,6 +68,10 @@ class HomeViewModel @Inject constructor(
     val user: UserDomain
         get() = _user
 
+    private val _navigateToLoginPage = MutableLiveData(false)
+    val navigateToLoginPage: MutableLiveData<Boolean>
+        get() = _navigateToLoginPage
+
     init {
         viewModelScope.launch {
             _user = getUserFromRepo()
@@ -74,6 +83,17 @@ class HomeViewModel @Inject constructor(
             userRepo.getLoggedInUser()
                 ?: throw IllegalStateException("No Logged in user found in DB!!")
         }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            userRepo.logout()
+            _navigateToLoginPage.value = true
+        }
+    }
+
+    fun navigateToLoginPageComplete() {
+        _navigateToLoginPage.value = false
     }
 
 

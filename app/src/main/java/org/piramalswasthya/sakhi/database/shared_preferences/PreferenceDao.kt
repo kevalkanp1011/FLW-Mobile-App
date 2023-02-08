@@ -1,63 +1,66 @@
 package org.piramalswasthya.sakhi.database.shared_preferences
 
 import android.content.Context
+import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.model.LocationRecord
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PreferenceDao @Inject constructor( @ApplicationContext private val context: Context) {
+class PreferenceDao @Inject constructor(@ApplicationContext private val context: Context) {
 
     private val pref = PreferenceManager.getInstance(context)
 
-    fun getD2DApiToken() : String?{
+    fun getD2DApiToken(): String? {
         val prefKey = context.getString(R.string.PREF_D2D_API_KEY)
-        return pref.getString(prefKey,null)
+        return pref.getString(prefKey, null)
     }
 
-    fun registerD2DApiToken(token : String){
+    fun registerD2DApiToken(token: String) {
         val editor = pref.edit()
         val prefKey = context.getString(R.string.PREF_D2D_API_KEY)
-        editor.putString(prefKey,token)
+        editor.putString(prefKey, token)
         editor.apply()
     }
 
-    fun deletePrimaryApiToken(){
+    fun deletePrimaryApiToken() {
         val editor = pref.edit()
         val prefKey = context.getString(R.string.PREF_D2D_API_KEY)
         editor.remove(prefKey)
         editor.apply()
     }
 
-    fun getPrimaryApiToken() : String?{
+    fun getPrimaryApiToken(): String? {
         val prefKey = context.getString(R.string.PREF_primary_API_KEY)
-        return pref.getString(prefKey,null)
+        return pref.getString(prefKey, null)
     }
 
-    fun registerPrimaryApiToken(token : String){
+    fun registerPrimaryApiToken(token: String) {
         val editor = pref.edit()
         val prefKey = context.getString(R.string.PREF_primary_API_KEY)
-        editor.putString(prefKey,token)
+        editor.putString(prefKey, token)
         editor.apply()
     }
 
-    fun deleteD2DApiToken(){
+    fun deleteD2DApiToken() {
         val editor = pref.edit()
         val prefKey = context.getString(R.string.PREF_primary_API_KEY)
         editor.remove(prefKey)
         editor.apply()
     }
 
-    fun registerLoginCred(userName : String, password : String){
+    fun registerLoginCred(userName: String, password: String) {
         val editor = pref.edit()
         val prefUserKey = context.getString(R.string.PREF_rem_me_uname)
         val prefUserPwdKey = context.getString(R.string.PREF_rem_me_pwd)
-        editor.putString(prefUserKey,userName)
-        editor.putString(prefUserPwdKey,password)
+        editor.putString(prefUserKey, userName)
+        editor.putString(prefUserPwdKey, password)
         editor.apply()
     }
-    fun deleteLoginCred(){
+
+    fun deleteLoginCred() {
         val editor = pref.edit()
         val prefUserKey = context.getString(R.string.PREF_rem_me_uname)
         val prefUserPwdKey = context.getString(R.string.PREF_rem_me_pwd)
@@ -66,14 +69,27 @@ class PreferenceDao @Inject constructor( @ApplicationContext private val context
         editor.apply()
     }
 
-    fun getRememberedUserName() : String?{
-        val key =  context.getString(R.string.PREF_rem_me_uname)
-        return pref.getString(key,null)
+    fun getRememberedUserName(): String? {
+        val key = context.getString(R.string.PREF_rem_me_uname)
+        return pref.getString(key, null)
     }
-    fun getRememberedPassword() : String?{
+
+    fun getRememberedPassword(): String? {
         val key = context.getString(R.string.PREF_rem_me_pwd)
-        return pref.getString(key,null)
+        return pref.getString(key, null)
     }
 
+    fun saveLocationRecord(locationRecord: LocationRecord) {
+        val editor = pref.edit()
+        val prefKey = context.getString(R.string.PREF_location_record_entry)
+        val locationRecordJson = Gson().toJson(locationRecord)
+        editor.putString(prefKey, locationRecordJson)
+        editor.apply()
+    }
 
+    fun getLocationRecord(): LocationRecord? {
+        val prefKey = context.getString(R.string.PREF_location_record_entry)
+        val json = pref.getString(prefKey, null)
+        return Gson().fromJson(json, LocationRecord::class.java)
+    }
 }

@@ -19,7 +19,7 @@ object IconDataset {
             HomeFragmentDirections.actionNavHomeToAllHouseholdFragment()
         ),
         Icon(
-            R.drawable.ic_person,
+            R.drawable.ic__ben,
             "All\nBeneficiaries",
             iconCount.allBenCount,
             HomeFragmentDirections.actionNavHomeToAllBenFragment()
@@ -33,95 +33,100 @@ object IconDataset {
         Icon(
             R.drawable.ic_person,
             "Mother Care",
-            0,
+            null,
             HomeFragmentDirections.actionNavHomeToMotherCareFragment()
         ),
         Icon(
             R.drawable.ic_person,
             "Child Care",
-            0,
+            null,
             HomeFragmentDirections.actionNavHomeToChildCareFragment()
         ),
-        Icon(R.drawable.ic_person, "NCD", 0, HomeFragmentDirections.actionNavHomeToNcdFragment()),
+        Icon(
+            R.drawable.ic_person,
+            "NCD",
+            null,
+            HomeFragmentDirections.actionNavHomeToNcdFragment()
+        ),
         Icon(
             R.drawable.ic_person,
             "Immunization Due List",
-            0,
+            null,
             HomeFragmentDirections.actionNavHomeToImmunizationDueFragment()
         ),
         Icon(
             R.drawable.ic_person,
             "HRP Cases",
-            0,
+            null,
             HomeFragmentDirections.actionNavHomeToHrpCasesFragment()
         ),
         Icon(
             R.drawable.ic_person,
             "General OP Care List",
-            0,
+            null,
             HomeFragmentDirections.actionNavHomeToGeneralOpCareFragment()
         ),
         Icon(
             R.drawable.ic_person, "Menopause Stage List",
-            0,
+            iconCount.menopauseCount,
             HomeFragmentDirections.actionNavHomeToMenopauseStageFragment()
         ),
         Icon(
             R.drawable.ic_person, "Death Reports",
-            0,
+            null,
             HomeFragmentDirections.actionNavHomeToDeathReportsFragment()
         ),
         Icon(
             R.drawable.ic_person, "Village Level Forms",
-            0,
+            null,
             HomeFragmentDirections.actionNavHomeToVillageLevelFormsFragment()
         ),
     )
 
-    fun getChildCareDataset() = listOf(
+    fun getChildCareDataset(iconCount: IconCount) = listOf(
         Icon(
             R.drawable.ic_person,
             "Infant List",
-            0,
+            iconCount.infantCount,
             ChildCareFragmentDirections.actionChildCareFragmentToInfantListFragment()
         ),
         Icon(
             R.drawable.ic_person,
             "Child List",
-            0,
+            iconCount.childCount,
             ChildCareFragmentDirections.actionChildCareFragmentToChildListFragment()
         ),
         Icon(
             R.drawable.ic_person,
             "Adolescent List",
-            0,
+            iconCount.adolescentCount,
             ChildCareFragmentDirections.actionChildCareFragmentToAdolescentListFragment()
         )
     )
 
-    fun getMotherCareDataset() = listOf(
+    fun getMotherCareDataset(iconCount: IconCount) = listOf(
         Icon(
-            R.drawable.ic_person,
+            R.drawable.ic__pregnancy,
             "Pregnancy List",
-            0,
+            iconCount.pregnantCount,
             MotherCareFragmentDirections.actionMotherCareFragmentToPregnancyListFragment()
         ),
         Icon(
             R.drawable.ic_person,
             "Delivery Stage List",
-            0,
+            iconCount.deliveryStageCount,
             MotherCareFragmentDirections.actionMotherCareFragmentToDeliveryStageListFragment()
         ),
         Icon(
-            R.drawable.ic_person,
+            R.drawable.ic__pnc,
             "PNC Mother List",
-            0,
+            iconCount.pncMotherCount,
             MotherCareFragmentDirections.actionMotherCareFragmentToPncMotherListFragment()
         ),
         Icon(
-            R.drawable.ic_person,
+            R.drawable.ic__reproductive_age,
             "Reproductive Age List",
-            0,
+            iconCount.reproductiveAgeCount,
             MotherCareFragmentDirections.actionMotherCareFragmentToReproductiveAgeListFragment()
         )
     )
@@ -130,7 +135,7 @@ object IconDataset {
         Icon(
             R.drawable.ic_person,
             "NCD List",
-            0,
+            null,
             NcdFragmentDirections.actionNcdFragmentToNcdListFragment()
         ),
         Icon(

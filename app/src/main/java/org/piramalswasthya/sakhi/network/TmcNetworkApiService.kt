@@ -1,6 +1,8 @@
 package org.piramalswasthya.sakhi.network
 
 import okhttp3.ResponseBody
+import org.piramalswasthya.sakhi.model.BeneficiaryDataSending
+import org.piramalswasthya.sakhi.model.SendingRMNCHData
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
@@ -30,6 +32,13 @@ interface TmcNetworkApiService {
     suspend fun generateBeneficiaryIDs(
         @Body obj: TmcGenerateBenIdsRequest
     ): Response<ResponseBody>
+
+
+    @POST("tmapi-v1.0/registrar/registrarBeneficaryRegistrationNew")
+    suspend fun getBenIdFromBeneficiarySending(@Body beneficiaryDataSending: BeneficiaryDataSending): Response<ResponseBody>
+
+    @POST("identity-0.0.1/rmnch/syncDataToAmrit")
+    fun submitRmnchDataAmrit(@Body json: SendingRMNCHData): Response<ResponseBody>
 
 
 }

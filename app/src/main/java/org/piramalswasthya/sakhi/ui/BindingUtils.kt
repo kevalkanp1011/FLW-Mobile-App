@@ -112,6 +112,7 @@ fun ImageView.setSyncState(syncState: SyncState?){
             SyncState.SYNCED -> R.drawable.ic_synced
         }
         this.setImageResource(drawable)
+        isClickable = it == SyncState.UNSYNCED
         if(it == SyncState.SYNCING)
             (getDrawable() as AnimatedVectorDrawable).start()
     }

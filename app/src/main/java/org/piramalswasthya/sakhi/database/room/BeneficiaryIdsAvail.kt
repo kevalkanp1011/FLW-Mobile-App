@@ -28,5 +28,5 @@ data class BeneficiaryIdsAvail(
 
     var benId: Long,
 
-    var benRegId: Int = 0
+    var benRegId: Long = 0
 )

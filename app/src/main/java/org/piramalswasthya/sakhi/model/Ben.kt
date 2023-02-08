@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.model
 
 import androidx.room.*
+import com.squareup.moshi.Json
 import org.piramalswasthya.sakhi.database.room.SyncState
 import java.text.SimpleDateFormat
 import java.util.*
@@ -107,6 +108,67 @@ data class BenRegKid(
     var birthOPV: Boolean = false,
 )
 
+data class BenRegKidNetwork(
+    var childName: String? = null,
+    var childRegisteredAWC: String? = null,
+    var childRegisteredAWCId: Int = 0,
+    var childRegisteredSchool: String? = null,
+    var childRegisteredSchoolId: Int = 0,
+    var typeOfSchool: String? = null,
+    var typeOfSchoolId: Int = 0,
+    var birthPlace: String? = null,
+    var birthPlaceId: String? = null,
+    var facilityName: String? = null,
+    var facilityid: String? = null,
+    var facilityOther: String? = null,
+    var placeName: String? = null,
+    var conductedDelivery: String? = null,
+    var conductedDeliveryId: String? = null,
+    var conductedDeliveryOther: String? = null,
+    var deliveryType: String? = null,
+    var deliveryTypeId: String? = null,
+    var complications: String? = null,
+    var complicationsId: String? = null,
+    var complicationsOther: String? = null,
+    var term: String? = null,
+    var termid: String? = null,
+    var gestationalAge: String? = null,
+    var gestationalAgeId: String? = null,
+    var corticosteroidGivenMother: String? = null,
+    var corticosteroidGivenMotherId: String? = null,
+    var criedImmediately: String? = null,
+    var criedImmediatelyId: String? = null,
+    var birthDefects: String? = null,
+    var birthDefectsId: String? = null,
+    var birthDefectsOthers: String? = null,
+    var heightAtBirth: String? = null,
+    var weightAtBirth: String? = null,
+    var feedingStarted: String? = null,
+    var feedingStartedId: String? = null,
+    var birthDosage: String? = null,
+    var birthDosageId: String? = null,
+    var opvBatchNo: String? = null,
+    var opvGivenDueDate: String? = null,
+    var opvDate: String? = null,
+    var bcdBatchNo: String? = null,
+    var bcgGivenDueDate: String? = null,
+    var bcgDate: String? = null,
+    var hptBatchNo: String? = null,
+    var hptGivenDueDate: String? = null,
+    var hptDate: String? = null,
+    var vitaminKBatchNo: String? = null,
+    var vitaminKGivenDueDate: String? = null,
+    var vitaminKDate: String? = null,
+    var deliveryTypeOther: String? = null,
+
+    var motherBenId: String? = null,
+    var childMotherName: String? = null,
+    var motherPosition: String? = null,
+    var birthBCG: Boolean = false,
+    var birthHepB: Boolean = false,
+    var birthOPV: Boolean = false,
+)
+
 data class BenRegGen(
 
     var maritalStatus: String? = null,
@@ -130,11 +192,12 @@ data class BenRegGen(
     var reproductiveStatus: String? = null,
     var reproductiveStatusId: Int = 0,
     var lastDeliveryConducted: String? = null,
-    var lastDeliveryConductedId: String? = null,
+    var lastDeliveryConductedId: Int = 0,
     var otherLastDeliveryConducted: String? = null,
     var facilityName: String? = null,
     var whoConductedDelivery: String? = null,
-    var whoConductedDeliveryId: String? = null,
+    var whoConductedDeliveryId: Int = 0,
+    var noOfDaysForDelivery: Int? = null,
     var otherWhoConductedDelivery: String? = null,
     var deliveryDate: String? = null,
     var expectedDateOfDelivery: String? = null,
@@ -173,7 +236,7 @@ data class BenRegCache(
 
     var beneficiaryId: Long,
 
-    var benRegId: Int = 0,
+    var benRegId: Long = 0,
 
     @ColumnInfo(index = true)
     var ashaId: Int,
@@ -278,6 +341,8 @@ data class BenRegCache(
 
     var isHrpStatus: Boolean = false,
 
+    var immunizationStatus: Boolean = false,
+
     var hrpIdentificationDate: String? = null,
 
     var hrpLastVisitDate: String? = null,
@@ -310,7 +375,7 @@ data class BenRegCache(
 
     var diagnosisStatus: String? = null,
 
-    var noOfDaysForDelivery: Int? = null,
+
 
 
     /*
@@ -326,7 +391,7 @@ data class BenRegCache(
     @Embedded(prefix = "gen_")
     var genDetails: BenRegGen? = null,
 
-    var countyId: Int = 0,
+    var countryId: Int = 0,
 
     var stateId: Int = 0,
 
@@ -366,432 +431,557 @@ data class BenRegCache(
             benId = beneficiaryId,
             hhId = householdId,
             regDate = dateFormat.format(Date(regDate!!)),
-            benName = firstName?:"Not Available",
-            benSurname = lastName?:"Not Available",
-            gender = gender?.name?:"Not Available",
-            age = if(age==0) "Not Available" else "$age $ageUnit",
-            mobileNo = contactNumber?.toString()?:"Not Available",
+            benName = firstName ?: "Not Available",
+            benSurname = lastName ?: "Not Available",
+            gender = gender?.name ?: "Not Available",
+            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            mobileNo = contactNumber?.toString() ?: "Not Available",
             fatherName = fatherName,
             familyHeadName = "Not implemented at the moment!",
-            typeOfList = registrationType?.name?:"Not Available",
-            rchId = rchId?:"Not Available",
-            hrpStatus = confirmedHrp?:"Not Available",
+            typeOfList = registrationType?.name ?: "Not Available",
+            rchId = rchId ?: "Not Available",
+            hrpStatus = confirmedHrp ?: "Not Available",
             syncState = syncState
+        )
+    }
+
+
+    fun asNetworkPostModel(user: UserCache): BenPost {
+        return BenPost(
+            houseoldId = householdId.toString(),
+            benficieryid = beneficiaryId,
+            ashaid = ashaId,
+            registrationDate = getDateTimeStringFromLong(regDate!!),
+            age = age,
+            age_unit = when (ageUnit) {
+                AgeUnit.YEARS -> "Year(s)"
+                AgeUnit.MONTHS -> "Month(s)"
+                AgeUnit.DAYS -> "Day(s)"
+                else -> null
+            },
+            age_unitId = ageUnit!!.ordinal,
+            marriageDate = genDetails?.marriageDate,
+            mobilenoofRelation = mobileNoOfRelation,
+            mobilenoofRelationId = mobileNoOfRelationId,
+            mobileOthers = mobileOthers,
+            literacy = literacy,
+            literacyId = literacyId,
+            religionOthers = religionOthers,
+            rchid = rchId,
+            registrationType = when (registrationType) {
+                TypeOfList.INFANT -> "Infant"
+                TypeOfList.CHILD -> "Child"
+                TypeOfList.ADOLESCENT -> "Adolescent"
+                TypeOfList.GENERAL -> "General"
+                TypeOfList.ELIGIBLE_COUPLE -> "Eligible"
+                TypeOfList.ANTENATAL_MOTHER -> "Antenatal"
+                TypeOfList.DELIVERY_STAGE -> "Delivery"
+                TypeOfList.POSTNATAL_MOTHER -> "Postnatal"
+                TypeOfList.MENOPAUSE -> "Menopause"
+                TypeOfList.TEENAGER -> "Teenager"
+                else -> "Other"
+            },
+            latitude = latitude,
+            longitude = longitude,
+            aadhaNo = aadharNum,
+            aadha_no = if (hasAadhar == true) "Yes" else "No",
+            aadha_noId = hasAadharId,
+            need_opcare = needOpCare,
+            need_opcareId = needOpCareId,
+            menstrualStatusId = genDetails?.menstrualStatusId ?: 0,
+            regularityofMenstrualCycleId = genDetails?.regularityOfMenstrualCycleId ?: 0,
+            lengthofMenstrualCycleId = genDetails?.lengthOfMenstrualCycleId ?: 0,
+            menstrualBFDId = genDetails?.menstrualBFDId ?: 0,
+            menstrualProblemId = genDetails?.menstrualProblemId ?: 0,
+            lastMenstrualPeriod = genDetails?.lastMenstrualPeriod,
+            reproductiveStatus = genDetails?.reproductiveStatus,
+            reproductiveStatusId = genDetails?.reproductiveStatusId ?: 0,
+            noOfDaysForDelivery = 0,
+            formStatus = null,
+            formType = null,
+            childRegisteredAWCID = kidDetails?.childRegisteredAWCId ?: 0,
+            childRegisteredSchoolID = kidDetails?.childRegisteredSchoolId ?: 0,
+            typeofSchoolID = kidDetails?.typeOfSchoolId ?: 0,
+            childRegisteredAWC = kidDetails?.childRegisteredAWC,
+            childRegisteredSchool = kidDetails?.childRegisteredSchool,
+            typeofSchool = kidDetails?.typeOfSchool,
+            previousLiveBirth = genDetails?.numPreviousLiveBirth,
+            lastDeliveryConductedID = genDetails?.lastDeliveryConductedId ?: 0,
+            whoConductedDeliveryID = genDetails?.whoConductedDeliveryId ?: 0,
+            familyHeadRelation = familyHeadRelation,
+            familyHeadRelationPosition = familyHeadRelationPosition,
+            whoConductedDelivery = genDetails?.whoConductedDelivery,
+            lastDeliveryConducted = genDetails?.lastDeliveryConducted,
+            facilitySelection = genDetails?.facilityName,
+            serverUpdatedStatus = serverUpdatedStatus,
+            createdBy = createdBy,
+            createdDate = getDateTimeStringFromLong(createdDate!!),
+            ncd_priority = ncdPriority,
+            guidelineId = guidelineId,
+            villagename = villageName,
+            vanID = user.vanId,
+            countyid = countryId,
+            providerServiceMapID = user.serviceMapId,
+            processed = processed,
+            currSubDistrictId = villageId,
+            expectedDateOfDelivery = genDetails?.expectedDateOfDelivery,
+            isHrpStatus = isHrpStatus,
+            menstrualStatus = genDetails?.menstrualStatus,
+            ageAtMarriage = genDetails?.ageAtMarriage ?: 0,
+            dateMarriage = genDetails?.dateOfMarriage?.let { getDateTimeStringFromLong(it) },
+            deliveryDate = genDetails?.deliveryDate,
+            suspected_hrp = genDetails?.hrpSuspected.toString(),
+            suspected_ncd = suspectedNcd,
+            suspected_tb = suspectedTb,
+            suspected_ncd_diseases = suspectedNcdDiseases,
+            confirmed_ncd = confirmed_Ncd,
+            confirmed_hrp = confirmedHrp,
+            confirmed_tb = confirmedTb,
+            confirmed_ncd_diseases = confirmedNcdDiseases,
+            diagnosis_status = diagnosisStatus,
+            nishchayPregnancyStatus = nishchayPregnancyStatus,
+            nishchayPregnancyStatusPosition = nishchayPregnancyStatusPosition,
+            nishchayDeliveryStatus = nishchayDeliveryStatus,
+            nishchayDeliveryStatusPosition = nishchayDeliveryStatusPosition,
+            nayiPahalDeliveryStatus = nayiPahalDeliveryStatus,
+            nayiPahalDeliveryStatusPosition = nayiPahalDeliveryStatusPosition,
+            isImmunizationStatus = immunizationStatus,
+        )
+    }
+
+    fun asKidNetworkModel(): BenRegKidNetwork {
+        return BenRegKidNetwork(
+
         )
     }
 }
 
-data class BenRegNetwork(
-    var id: Int = 0,
+fun getDateTimeStringFromLong(dateLong: Long?): String? {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+    val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
+    dateLong?.let {
+        val dateString = dateFormat.format(dateLong)
+        val timeString = timeFormat.format(dateLong)
+        return "${dateString}T${timeString}.000Z"
+    } ?: run {
+        return null
+    }
 
-    @ColumnInfo(name = "houseoldId")
+}
+
+data class BenRegNetwork(
+    @Json(name = "houseoldId")
     var houseoldId: String,
 
     @PrimaryKey
-    @ColumnInfo(name = "benficieryid")
-    var benficieryid: Long = 0,
+    @Json(name = "benficieryid")
+    var benficieryid: Long,
 
     //Benficiery Registration fields
-    @ColumnInfo(name = "user_image")
+    @Json(name = "user_image")
     var user_image: String? = null,
 
-    @ColumnInfo(name = "ashaid")
-    var ashaid: Int = 0,
+    @Json(name = "ashaid")
+    var ashaid: Int,
 
     @Suppress("ArrayInDataClass")
-    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
-    var user_image1: ByteArray? = null,
+    var user_image1: String? = null,
 
-    @ColumnInfo(name = "registrationDate")
-    var registrationDate: String,
+    @Json(name = "registrationDate")
+    var registrationDate: String? = null,
 
-    @ColumnInfo(name = "firstName")
+    @Json(name = "firstName")
     var firstName: String? = null,
 
-    @ColumnInfo(name = "lastName")
+    @Json(name = "lastName")
     var lastName: String? = null,
 
-    @ColumnInfo(name = "gender")
+    @Json(name = "gender")
     var gender: String? = null,
 
-    @ColumnInfo(name = "genderId")
+    @Json(name = "genderId")
     var genderId: Int = 0,
 
-    @ColumnInfo(name = "dob")
-    var dob: String,
+    @Json(name = "dob")
+    var dob: String? = null,
 
-    @ColumnInfo(name = "age")
+    @Json(name = "age")
     var age: Int = 0,
 
-    @ColumnInfo(name = "age_unit")
+    @Json(name = "age_unit")
     var age_unit: String? = null,
 
-    @ColumnInfo(name = "age_unitId")
+    @Json(name = "age_unitId")
     var age_unitId: Int = 0,
 
-    @ColumnInfo(name = "maritalstatus")
+    @Json(name = "maritalstatus")
     var maritalstatus: String? = null,
 
-    @ColumnInfo(name = "maritalstatusId")
+    @Json(name = "maritalstatusId")
     var maritalstatusId: Int = 0,
 
-    @ColumnInfo(name = "spousename")
+    @Json(name = "spousename")
     var spousename: String? = null,
 
-    @ColumnInfo(name = "ageAtMarriage")
+    @Json(name = "ageAtMarriage")
     var ageAtMarriage: Int = 0,
 
-    @ColumnInfo(name = "dateMarriage")
-    var dateMarriage: String,
+    @Json(name = "dateMarriage")
+    var dateMarriage: String? = null,
 
-    @ColumnInfo(name = "marriageDate")
+    @Json(name = "marriageDate")
     var marriageDate: String? = null,
 
-    @ColumnInfo(name = "fatherName")
+    @Json(name = "fatherName")
     var fatherName: String? = null,
 
-    @ColumnInfo(name = "motherName")
+    @Json(name = "motherName")
     var motherName: String? = null,
 
-    @ColumnInfo(name = "contact_number")
+    @Json(name = "contact_number")
     var contact_number: String? = null,
 
-    @ColumnInfo(name = "mobilenoofRelation")
+    @Json(name = "mobilenoofRelation")
     var mobilenoofRelation: String? = null,
 
-    @ColumnInfo(name = "mobilenoofRelationId")
+    @Json(name = "mobilenoofRelationId")
     var mobilenoofRelationId: Int = 0,
 
-    @ColumnInfo(name = "mobileOthers")
+    @Json(name = "mobileOthers")
     var mobileOthers: String? = null,
 
-    @ColumnInfo(name = "literacy")
+    @Json(name = "literacy")
     var literacy: String? = null,
 
-    @ColumnInfo(name = "literacyId")
+    @Json(name = "literacyId")
     var literacyId: Int = 0,
 
-    @ColumnInfo(name = "community")
+    @Json(name = "community")
     var community: String? = null,
 
-    @ColumnInfo(name = "communityId")
+    @Json(name = "communityId")
     var communityId: Int = 0,
 
-    @ColumnInfo(name = "religion")
+    @Json(name = "religion")
     var religion: String? = null,
 
-    @ColumnInfo(name = "religionID")
+    @Json(name = "religionID")
     var religionID: Int = 0,
 
-    @ColumnInfo(name = "religionOthers")
+    @Json(name = "religionOthers")
     var religionOthers: String? = null,
 
-    @ColumnInfo(name = "rchid")
+    @Json(name = "rchid")
     var rchid: String? = null,
 
-    @ColumnInfo(name = "registrationType")
+    @Json(name = "registrationType")
     var registrationType: String? = null,
 
-    @ColumnInfo(name = "latitude")
+    @Json(name = "latitude")
     var latitude: Double = 0.0,
 
-    @ColumnInfo(name = "longitude")
+    @Json(name = "longitude")
     var longitude: Double = 0.0,
 
     //Bank details
-    @ColumnInfo(name = "aadha_no")
+    @Json(name = "aadha_no")
     var aadha_no: String? = null,
 
-    @ColumnInfo(name = "aadha_noId")
+    @Json(name = "aadha_noId")
     var aadha_noId: Int = 0,
 
-    @ColumnInfo(name = "aadhaNo")
+    @Json(name = "aadhaNo")
     var aadhaNo: String? = null,
 
-    @ColumnInfo(name = "bank_account")
+    @Json(name = "bank_account")
     var bank_account: String? = null,
 
-    @ColumnInfo(name = "bank_accountId")
+    @Json(name = "bank_accountId")
     var bank_accountId: Int = 0,
 
-    @ColumnInfo(name = "bankAccount")
+    @Json(name = "bankAccount")
     var bankAccount: String? = null,
 
-    @ColumnInfo(name = "nameOfBank")
+    @Json(name = "nameOfBank")
     var nameOfBank: String? = null,
 
-    @ColumnInfo(name = "nameOfBranch")
+    @Json(name = "nameOfBranch")
     var nameOfBranch: String? = null,
 
-    @ColumnInfo(name = "ifscCode")
+    @Json(name = "ifscCode")
     var ifscCode: String? = null,
 
-    @ColumnInfo(name = "need_opcare")
+    @Json(name = "need_opcare")
     var need_opcare: String? = null,
 
-    @ColumnInfo(name = "need_opcareId")
+    @Json(name = "need_opcareId")
     var need_opcareId: Int = 0,
 
     //Menstral details
-    @ColumnInfo(name = "menstrualStatus")
+    @Json(name = "menstrualStatus")
     var menstrualStatus: String? = null,
 
-    @ColumnInfo(name = "menstrualStatusId")
+    @Json(name = "menstrualStatusId")
     var menstrualStatusId: Int = 0,
 
-    @ColumnInfo(name = "regularityofMenstrualCycle")
+    @Json(name = "regularityofMenstrualCycle")
     var regularityofMenstrualCycle: String? = null,
 
-    @ColumnInfo(name = "regularityofMenstrualCycleId")
+    @Json(name = "regularityofMenstrualCycleId")
     var regularityofMenstrualCycleId: Int = 0,
 
-    @ColumnInfo(name = "lengthofMenstrualCycle")
+    @Json(name = "lengthofMenstrualCycle")
     var lengthofMenstrualCycle: String? = null,
 
-    @ColumnInfo(name = "lengthofMenstrualCycleId")
+    @Json(name = "lengthofMenstrualCycleId")
     var lengthofMenstrualCycleId: Int = 0,
 
-    @ColumnInfo(name = "menstrualBFD")
+    @Json(name = "menstrualBFD")
     var menstrualBFD: String? = null,
 
-    @ColumnInfo(name = "menstrualBFDId")
+    @Json(name = "menstrualBFDId")
     var menstrualBFDId: Int = 0,
 
-    @ColumnInfo(name = "menstrualProblem")
+    @Json(name = "menstrualProblem")
     var menstrualProblem: String? = null,
 
-    @ColumnInfo(name = "menstrualProblemId")
+    @Json(name = "menstrualProblemId")
     var menstrualProblemId: Int = 0,
 
-    @ColumnInfo(name = "lastMenstrualPeriod")
+    @Json(name = "lastMenstrualPeriod")
     var lastMenstrualPeriod: String? = null,
 
-    @ColumnInfo(name = "reproductiveStatus")
+    @Json(name = "reproductiveStatus")
     var reproductiveStatus: String? = null,
 
-    @ColumnInfo(name = "reproductiveStatusId")
+    @Json(name = "reproductiveStatusId")
     var reproductiveStatusId: Int = 0,
 
-    @ColumnInfo(name = "formStatus")
+    @Json(name = "formStatus")
     var formStatus: String? = null,
 
-    @ColumnInfo(name = "formType")
+    @Json(name = "formType")
     var formType: String? = null,
 
-    @ColumnInfo(name = "ANCCount")
+    @Json(name = "ANCCount")
     var aNCCount: Int = 0,
 
-    @ColumnInfo(name = "HRPCount")
+    @Json(name = "HRPCount")
     var hRPCount: Int = 0,
 
-    @ColumnInfo(name = "hrp_suspected")
+    @Json(name = "hrp_suspected")
     var hrp_suspected: Boolean? = null,
 
-    @ColumnInfo(name = "death_status")
+    @Json(name = "death_status")
     var isDeath_status: Boolean = false,
 
-    @ColumnInfo(name = "childRegisteredAWC")
+    @Json(name = "childRegisteredAWC")
     var childRegisteredAWC: String? = null,
 
-    @ColumnInfo(name = "childRegisteredAWCID")
+    @Json(name = "childRegisteredAWCID")
     var childRegisteredAWCID: Int = 0,
 
-    @ColumnInfo(name = "childRegisteredSchool")
+    @Json(name = "childRegisteredSchool")
     var childRegisteredSchool: String? = null,
 
-    @ColumnInfo(name = "childRegisteredSchoolID")
+    @Json(name = "childRegisteredSchoolID")
     var childRegisteredSchoolID: Int = 0,
 
-    @ColumnInfo(name = "TypeofSchool")
+    @Json(name = "TypeofSchool")
     var typeofSchool: String? = null,
 
-    @ColumnInfo(name = "TypeofSchoolID")
+    @Json(name = "TypeofSchoolID")
     var typeofSchoolID: Int = 0,
 
-    @ColumnInfo(name = "expectedDateOfDelivery")
+    @Json(name = "expectedDateOfDelivery")
     var expectedDateOfDelivery: String? = null,
 
-    @ColumnInfo(name = "PreviousLiveBirth")
+    @Json(name = "PreviousLiveBirth")
     var previousLiveBirth: String? = null,
 
     //these are new fields of new borr registartion
-    @ColumnInfo(name = "LastDeliveryConducted")
+    @Json(name = "LastDeliveryConducted")
     var lastDeliveryConducted: String? = null,
 
-    @ColumnInfo(name = "LastDeliveryConductedID")
+    @Json(name = "LastDeliveryConductedID")
     var lastDeliveryConductedID: Int = 0,
 
-    @ColumnInfo(name = "facilitySelection")
+    @Json(name = "facilitySelection")
     var facilitySelection: String? = null,
 
-    //    @ColumnInfo(name = "FacilitySectionID")
+    //    @Json(name = "FacilitySectionID")
     //    private int facilitySectionID;
 
-    @ColumnInfo(name = "WhoConductedDelivery")
+    @Json(name = "WhoConductedDelivery")
     var whoConductedDelivery: String? = null,
 
-    @ColumnInfo(name = "WhoConductedDeliveryID")
+    @Json(name = "WhoConductedDeliveryID")
     var whoConductedDeliveryID: Int = 0,
 
     //these are new fields of registration for asha login
-    @ColumnInfo(name = "FamilyHeadRelation")
+    @Json(name = "FamilyHeadRelation")
     var familyHeadRelation: String? = null,
 
-    @ColumnInfo(name = "FamilyHeadRelationPosition")
+    @Json(name = "FamilyHeadRelationPosition")
     var familyHeadRelationPosition: Int = 0,
 
-    /*@ColumnInfo(name = "PreviousLiveBirthID")
+    /*@Json(name = "PreviousLiveBirthID")
       private int PreviousLiveBirthID;*/
-    @ColumnInfo(name = "ServerUpdatedStatus")
+    @Json(name = "ServerUpdatedStatus")
     var serverUpdatedStatus: Int = 0,
 
-    @ColumnInfo(name = "createdBy")
+    @Json(name = "createdBy")
     var createdBy: String? = null,
 
-    @ColumnInfo(name = "createdDate")
+    @Json(name = "createdDate")
     var createdDate: String? = null,
 
-    @ColumnInfo(name = "updatedBy")
+    @Json(name = "updatedBy")
     var updatedBy: String? = null,
 
-    @ColumnInfo(name = "updatedDate")
-    var updatedDate: String,
+    @Json(name = "updatedDate")
+    var updatedDate: String? = null,
 
-    @ColumnInfo(name = "ncd_priority")
+    @Json(name = "ncd_priority")
     var ncd_priority: Int = 0,
 
-    @ColumnInfo(name = "cbac_available")
+    @Json(name = "cbac_available")
     var cbac_available: Boolean = false,
 
-    @ColumnInfo(name = "guidelineId")
+    @Json(name = "guidelineId")
     var guidelineId: String? = null,
 
-    @ColumnInfo(name = "villagename")
+    @Json(name = "villagename")
     var villagename: String? = null,
 
-    @ColumnInfo(name = "deliveryDate")
+    @Json(name = "deliveryDate")
     var deliveryDate: String? = null,
 
-    @ColumnInfo(name = "BenRegId")
+    @Json(name = "BenRegId")
     var benRegId: Int = 0,
 
-    @ColumnInfo(name = "ProviderServiceMapID")
+    @Json(name = "ProviderServiceMapID")
     var providerServiceMapID: Int = 0,
 
-    @ColumnInfo(name = "VanID")
+    @Json(name = "VanID")
     var vanID: Int = 0,
 
-    @ColumnInfo(name = "Processed")
+    @Json(name = "Processed")
     var processed: String? = null,
 
-    @ColumnInfo(name = "Countyid")
+    @Json(name = "Countyid")
     var countyid: Int = 0,
 
-    @ColumnInfo(name = "stateid")
+    @Json(name = "stateid")
     var stateid: Int = 0,
 
-    @ColumnInfo(name = "districtid")
+    @Json(name = "districtid")
     var districtid: Int = 0,
 
-    @ColumnInfo(name = "districtname")
+    @Json(name = "districtname")
     var districtname: String? = null,
 
-    @ColumnInfo(name = "currSubDistrictId")
+    @Json(name = "currSubDistrictId")
     var currSubDistrictId: Int = 0,
 
-    @ColumnInfo(name = "villageid")
+    @Json(name = "villageid")
     var villageid: Int = 0,
 
-    @ColumnInfo(name = "childname")
+    @Json(name = "childname")
     var childname: String? = null,
 
-    @ColumnInfo(name = "childBenId")
+    @Json(name = "childBenId")
     var childBenId: Int = 0,
 
-    @ColumnInfo(name = "childpos")
+    @Json(name = "childpos")
     var childpos: Int = 0,
 
-    @ColumnInfo(name = "motherBenId")
+    @Json(name = "motherBenId")
     var motherBenId: Int = 0,
 
-    @ColumnInfo(name = "hrpStatus")
+    @Json(name = "hrpStatus")
     var isHrpStatus: Boolean = false,
 
-    //    @ColumnInfo(name = "relatedBeneficiaryIds")
+    //    @Json(name = "relatedBeneficiaryIds")
     //    List<RelatedBenIds> relatedBeneficiaryIds;
 
-    @ColumnInfo(name = "hrp_identification_date")
+    @Json(name = "hrp_identification_date")
     var hrp_identification_date: String? = null,
 
-    @ColumnInfo(name = "hrp_last_vist_date")
+    @Json(name = "hrp_last_vist_date")
     var hrp_last_vist_date: String? = null,
 
-    @ColumnInfo(name = "lastHrpVisitDate")
+    @Json(name = "lastHrpVisitDate")
     var lastHrpVisitDate: String? = null,
 
-    @ColumnInfo(name = "nishchayPregnancyStatus")
+    @Json(name = "nishchayPregnancyStatus")
     var nishchayPregnancyStatus: String? = null,
 
-    @ColumnInfo(name = "nishchayPregnancyStatusPosition")
+    @Json(name = "nishchayPregnancyStatusPosition")
     var nishchayPregnancyStatusPosition: Int = 0,
 
-    @ColumnInfo(name = "nishchayDeliveryStatus")
+    @Json(name = "nishchayDeliveryStatus")
     var nishchayDeliveryStatus: String? = null,
 
-    @ColumnInfo(name = "nishchayDeliveryStatusPosition")
+    @Json(name = "nishchayDeliveryStatusPosition")
     var nishchayDeliveryStatusPosition: Int = 0,
 
-    @ColumnInfo(name = "nayiPahalDeliveryStatus")
+    @Json(name = "nayiPahalDeliveryStatus")
     var nayiPahalDeliveryStatus: String? = null,
 
-    @ColumnInfo(name = "nayiPahalDeliveryStatusPosition")
+    @Json(name = "nayiPahalDeliveryStatusPosition")
     var nayiPahalDeliveryStatusPosition: Int = 0,
 
-    @ColumnInfo(name = "suspected_hrp")
+    @Json(name = "suspected_hrp")
     var suspected_hrp: String? = null,
 
-    @ColumnInfo(name = "suspected_ncd")
+    @Json(name = "suspected_ncd")
     var suspected_ncd: String? = null,
 
-    @ColumnInfo(name = "suspected_tb")
+    @Json(name = "suspected_tb")
     var suspected_tb: String? = null,
 
-    @ColumnInfo(name = "suspected_ncd_diseases")
+    @Json(name = "suspected_ncd_diseases")
     var suspected_ncd_diseases: String? = null,
 
-    @ColumnInfo(name = "confirmed_ncd")
+    @Json(name = "confirmed_ncd")
     var confirmed_ncd: String? = null,
 
-    @ColumnInfo(name = "confirmed_hrp")
+    @Json(name = "confirmed_hrp")
     var confirmed_hrp: String? = null,
 
-    @ColumnInfo(name = "confirmed_tb")
+    @Json(name = "confirmed_tb")
     var confirmed_tb: String? = null,
 
-    @ColumnInfo(name = "confirmed_ncd_diseases")
+    @Json(name = "confirmed_ncd_diseases")
     var confirmed_ncd_diseases: String? = null,
 
-    @ColumnInfo(name = "diagnosis_status")
+    @Json(name = "diagnosis_status")
     var diagnosis_status: String? = null,
 
-    @ColumnInfo(name = "facilityOther")
+    @Json(name = "facilityOther")
     var facilityOther: String? = null,
 
-    @ColumnInfo(name = "noOfDaysForDelivery")
+    @Json(name = "noOfDaysForDelivery")
     var noOfDaysForDelivery: Int? = null,
 
     //    public String getFacility_other() {
-    @ColumnInfo(name = "FamilyHeadRelationOther")
+    @Json(name = "FamilyHeadRelationOther")
     var familyHeadRelationOther: String? = null,
 
-    @ColumnInfo(name = "immunizationStatus")
+    @Json(name = "immunizationStatus")
     var isImmunizationStatus: Boolean = false
 )
 
-private fun getLongFromDate(dateString: String): Long {
+private fun getLongFromDate(dateString: String?): Long {
     val f = SimpleDateFormat("yyyy-MM-DDThh:mm:ss.sssTZD", Locale.ENGLISH)
-    val date = f.parse(dateString)
-    return date?.time ?: throw IllegalStateException("Invalid date for dateReg")
+    dateString?.let {
+        val date = f.parse(it)
+        return date?.time ?: throw IllegalStateException("Invalid date for dateReg")
+    } ?: run {
+        return 0L
+    }
+
 }
 
 fun asCacheModel(benRegNetwork: BenRegNetwork, newBornRegNetwork: NewBornRegNetwork?): BenRegCache {
@@ -811,11 +1001,11 @@ fun asCacheModel(benRegNetwork: BenRegNetwork, newBornRegNetwork: NewBornRegNetw
            isKid = !(age_unit == "Year(s)" && age > 14),
            isAdult = (age_unit == "Year(s)" && age > 14),
            userImage = user_image,
-           userImageBlob = user_image1,
+           userImageBlob = user_image1!!.toByteArray(),
            regDate = getLongFromDate(registrationDate),
            firstName = firstName,
            lastName = lastName,
-           gender = when(gender) {
+           gender = when (gender) {
                "Male" -> Gender.MALE
                "Female" -> Gender.FEMALE
                "Transgender" -> Gender.TRANSGENDER
@@ -887,8 +1077,7 @@ fun asCacheModel(benRegNetwork: BenRegNetwork, newBornRegNetwork: NewBornRegNetw
            confirmedTb = confirmed_tb,
            confirmedNcdDiseases = confirmed_ncd_diseases,
            diagnosisStatus = diagnosis_status,
-           noOfDaysForDelivery = noOfDaysForDelivery,
-           countyId = countyid,
+           countryId = countyid,
            stateId = stateid,
            districtId = districtid,
            districtName = districtname,
@@ -928,12 +1117,13 @@ fun asCacheModel(benRegNetwork: BenRegNetwork, newBornRegNetwork: NewBornRegNetw
                reproductiveStatus = reproductiveStatus,
                reproductiveStatusId = reproductiveStatusId,
                lastDeliveryConducted = lastDeliveryConducted,
-               lastDeliveryConductedId = lastDeliveryConductedID.toString(),
+               lastDeliveryConductedId = lastDeliveryConductedID,
                facilityName = facilitySelection,
                whoConductedDelivery = whoConductedDelivery,
-               whoConductedDeliveryId = whoConductedDeliveryID.toString(),
+               whoConductedDeliveryId = whoConductedDeliveryID,
                deliveryDate = deliveryDate,
                expectedDateOfDelivery = expectedDateOfDelivery,
+               noOfDaysForDelivery = noOfDaysForDelivery,
 
                ),
            syncState = SyncState.UNSYNCED,
@@ -991,7 +1181,7 @@ fun asCacheModel(benRegNetwork: BenRegNetwork, newBornRegNetwork: NewBornRegNetw
             ben.kidDetails?.birthHepB = it.birthHepB
             ben.kidDetails?.birthOPV = it.birthOPV
         }
-        return ben;
+        return ben
    }
 
 }
