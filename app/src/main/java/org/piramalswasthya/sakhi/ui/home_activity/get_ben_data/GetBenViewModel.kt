@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.model.BenBasicDomain
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import javax.inject.Inject
 
@@ -23,9 +24,21 @@ class GetBenViewModel @Inject constructor(private val benRepo: BenRepo) : ViewMo
     val state: LiveData<State>
         get() = _state
 
-    fun getBeneficiaries() {
+    private var _benDataList = listOf<BenBasicDomain>()
+    val benDataList: List<BenBasicDomain>
+        get() =_benDataList
+
+    fun getBeneficiaries(pageNumber: Int) {
         viewModelScope.launch {
-            benRepo.getBeneficiariesFromServer();
+            _state.value = State.LOADING
+            val list = benRepo.getBeneficiariesFromServer(pageNumber)
+
+            _state.value = if (list.isEmpty()) State.ERROR_SERVER else State.SUCCESS
+            if (list.isNotEmpty()) _benDataList = list
         }
+    }
+
+    init {
+        getBeneficiaries(0)
     }
 }
