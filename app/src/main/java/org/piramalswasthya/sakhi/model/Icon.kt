@@ -25,4 +25,12 @@ data class IconCount(
     val pncMotherCount: Int,
     val reproductiveAgeCount: Int,
     val menopauseCount: Int,
+    val immunizationDueCount: Int,
+    val generalOpCareCount: Int,
+    val deathReportCount: Int,
+    val ncdCount: Int,
+    val ncdEligibleCount: Int,
+    val ncdPriorityCount: Int,
+    val ncdNonEligibleCount: Int
+
 )

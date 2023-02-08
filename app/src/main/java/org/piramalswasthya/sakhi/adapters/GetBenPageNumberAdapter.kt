@@ -1,19 +1,21 @@
 package org.piramalswasthya.sakhi.adapters
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import org.piramalswasthya.sakhi.databinding.RvItemPageNumBinding
 
 class GetBenPageNumberAdapter(private val maxPageNumber: Int, private val clickListener: PageClickListener) :
     RecyclerView.Adapter<GetBenPageNumberAdapter.PageNumberViewHolder>() {
 
-    class PageNumberViewHolder private constructor(private val textView: TextView) :
-        RecyclerView.ViewHolder(textView) {
+    class PageNumberViewHolder private constructor(private val binding: RvItemPageNumBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         companion object {
             fun from(parent: ViewGroup): PageNumberViewHolder {
-                val textView = TextView(parent.context)
-                return PageNumberViewHolder(textView)
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = RvItemPageNumBinding.inflate(layoutInflater, parent, false)
+                return PageNumberViewHolder(binding)
             }
         }
 
@@ -21,8 +23,9 @@ class GetBenPageNumberAdapter(private val maxPageNumber: Int, private val clickL
             item: Int,
             clickListener: PageClickListener
         ) {
-            textView.text = item.toString()
-            textView.setOnClickListener{clickListener}
+            binding.page = item
+            binding.clickListener = clickListener
+            binding.executePendingBindings()
         }
     }
 
@@ -40,7 +43,7 @@ class GetBenPageNumberAdapter(private val maxPageNumber: Int, private val clickL
     class PageClickListener(
         private val selectedPage: (page: Int) -> Unit,
     ) {
-        fun onClickedBen(item: Int) = selectedPage(item)
+        fun onClickedPage(item: Int) = selectedPage(item)
     }
 
     override fun getItemCount(): Int {

@@ -1,32 +1,51 @@
 package org.piramalswasthya.sakhi.ui.home_activity.hrp_cases
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import org.piramalswasthya.sakhi.R
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
+import org.piramalswasthya.sakhi.adapters.IconGridAdapter
+import org.piramalswasthya.sakhi.configuration.IconDataset
+import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
+import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 
+@AndroidEntryPoint
 class HrpCasesFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = HrpCasesFragment()
-    }
-
-    private lateinit var viewModel: HrpCasesViewModel
+    private val viewModel: HrpCasesViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
+    private val binding by lazy { RvIconGridBinding.inflate(layoutInflater) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_hrp_cases, container, false)
+    ): View {
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(HrpCasesViewModel::class.java)
-        // TODO: Use the ViewModel
+        setUpHrpCasesRvAdapter()
+
     }
 
+    private fun setUpHrpCasesRvAdapter() {
+        val rvLayoutManager = GridLayoutManager(context, 3)
+        binding.rvIconGrid.layoutManager = rvLayoutManager
+        val iconAdapter = IconGridAdapter(
+            IconGridAdapter.GridIconClickListener {
+                findNavController().navigate(it)
+            })
+        binding.rvIconGrid.adapter = iconAdapter
+        homeViewModel.iconCount.observe(viewLifecycleOwner) {
+            it?.let {
+                iconAdapter.submitList(IconDataset.getNCDDataset(it[0]))
+            }
+        }
+    }
 }

@@ -51,7 +51,7 @@ object IconDataset {
         Icon(
             R.drawable.ic_person,
             "Immunization Due List",
-            null,
+            iconCount.immunizationDueCount,
             HomeFragmentDirections.actionNavHomeToImmunizationDueFragment()
         ),
         Icon(
@@ -63,7 +63,7 @@ object IconDataset {
         Icon(
             R.drawable.ic_person,
             "General OP Care List",
-            null,
+            iconCount.generalOpCareCount,
             HomeFragmentDirections.actionNavHomeToGeneralOpCareFragment()
         ),
         Icon(
@@ -73,7 +73,7 @@ object IconDataset {
         ),
         Icon(
             R.drawable.ic_person, "Death Reports",
-            null,
+            iconCount.deathReportCount,
             HomeFragmentDirections.actionNavHomeToDeathReportsFragment()
         ),
         Icon(
@@ -131,29 +131,29 @@ object IconDataset {
         )
     )
 
-    fun getNCDDataset() = listOf(
+    fun getNCDDataset(iconCount: IconCount) = listOf(
         Icon(
             R.drawable.ic_person,
             "NCD List",
-            null,
+            iconCount.ncdCount,
             NcdFragmentDirections.actionNcdFragmentToNcdListFragment()
         ),
         Icon(
             R.drawable.ic_person,
             "NCD Eligible List",
-            0,
+            iconCount.ncdEligibleCount,
             NcdFragmentDirections.actionNcdFragmentToNcdEligibleListFragment()
         ),
         Icon(
             R.drawable.ic_person,
             "NCD Priority List",
-            0,
+            iconCount.ncdPriorityCount,
             NcdFragmentDirections.actionNcdFragmentToNcdPriorityListFragment()
         ),
         Icon(
             R.drawable.ic_person,
             "NCD Non-Eligible List",
-            0,
+            iconCount.ncdNonEligibleCount,
             NcdFragmentDirections.actionNcdFragmentToNcdNonEligibleListFragment()
         )
     )
