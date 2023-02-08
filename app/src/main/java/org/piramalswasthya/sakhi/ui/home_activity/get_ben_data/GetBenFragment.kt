@@ -1,11 +1,11 @@
 package org.piramalswasthya.sakhi.ui.home_activity.get_ben_data
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -14,6 +14,7 @@ import org.piramalswasthya.sakhi.adapters.GetBenPageNumberAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentGetBenBinding
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.AllBenFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.get_ben_data.GetBenViewModel.State.*
+import timber.log.Timber
 
 @AndroidEntryPoint
 class GetBenFragment : Fragment() {
@@ -32,6 +33,7 @@ class GetBenFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Timber.d("onCreateView Called! 1231")
         return binding.root
     }
 
