@@ -6,7 +6,7 @@ import androidx.room.ColumnInfo
 data class Icon(
     val icon: Int,
     val title: String,
-    var count: Int,
+    var count: Int?,
     val navAction: NavDirections
 )
 
@@ -14,10 +14,15 @@ data class Icon(
 data class IconCount(
     @ColumnInfo(name = "householdCount")
     val householdCount: Int,
-    @ColumnInfo(name = "allBenCount")
     val allBenCount: Int,
-    @ColumnInfo(name = "eligibleCoupleCount")
     val eligibleCoupleCount: Int,
-    @ColumnInfo(name = "availBenIdsCount")
     val availBenIdsCount: Int,
+    val infantCount: Int,
+    val childCount: Int,
+    val adolescentCount: Int,
+    val pregnantCount: Int,
+    val deliveryStageCount: Int,
+    val pncMotherCount: Int,
+    val reproductiveAgeCount: Int,
+    val menopauseCount: Int,
 )
