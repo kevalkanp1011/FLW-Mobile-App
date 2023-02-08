@@ -401,7 +401,6 @@ class BenRepo @Inject constructor(
 
     }
 
-    suspend fun getBeneficiariesFromServer() {
     suspend fun getBeneficiariesFromServer(pageNumber: Int): MutableList<BenBasicDomain> {
         val benDataList = mutableListOf<BenBasicDomain>()
         val user =
@@ -469,17 +468,5 @@ class BenRepo @Inject constructor(
         }
         Timber.d("get_ben data : $benDataList")
         return benDataList
-    }
-
-    @SuppressLint("SimpleDateFormat")
-    fun getStringFromDate(date: String): String {
-        val originalFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH)
-        val targetFormat = SimpleDateFormat("yyyy-MM-dd")
-        val targetTime = SimpleDateFormat("HH:MM:SS")
-        val date = originalFormat.parse(date)
-        val formattedDate = targetFormat.format(date)
-        val formattedTime = targetTime.format(date)
-
-        return formattedDate + "T" + formattedTime + ".000Z"
     }
 }

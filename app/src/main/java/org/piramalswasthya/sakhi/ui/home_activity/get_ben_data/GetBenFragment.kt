@@ -43,8 +43,8 @@ class GetBenFragment : Fragment() {
             },
             {Toast.makeText(context,"Household : $it clicked", Toast.LENGTH_SHORT).show()
                 findNavController().navigate(AllBenFragmentDirections.actionAllBenFragmentToNewBenRegTypeFragment(it))
-            }
-        ))
+            }, {a, b -> {}}
+        ) )
         binding.rvBenServer.adapter = benAdapter
 
         val pageAdapter = GetBenPageNumberAdapter(10, GetBenPageNumberAdapter.PageClickListener{
