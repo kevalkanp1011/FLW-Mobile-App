@@ -12,7 +12,7 @@ import org.piramalswasthya.sakhi.model.BenRegCache
 interface BenDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsert(ben: BenRegCache)
+    suspend fun upsert(vararg ben: BenRegCache)
 
     @Query("SELECT * FROM BENEFICIARY WHERE isDraft = 1 and householdId =:hhId LIMIT 1")
     suspend fun getDraftBenKidForHousehold(hhId: Long): BenRegCache?
@@ -21,7 +21,7 @@ interface BenDao {
     fun getAllBen(): LiveData<List<BenRegCache>>
 
     @Query("SELECT * FROM BENEFICIARY WHERE beneficiaryId =:benId AND householdId = :hhId LIMIT 1")
-    suspend fun getBen(hhId: Long, benId: Long): BenRegCache
+    suspend fun getBen(hhId: Long, benId: Long): BenRegCache?
 
     @Query("UPDATE BENEFICIARY SET syncState = :syncState WHERE beneficiaryId =:benId AND householdId = :hhId")
     suspend fun setSyncState(hhId: Long, benId: Long, syncState: SyncState)

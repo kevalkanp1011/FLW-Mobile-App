@@ -383,7 +383,7 @@ class BenRepo @Inject constructor(
             database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
         val ben = database.benDao.getBen(hhId, benId)
         database.benDao.setSyncState(hhId, benId, SyncState.SYNCING)
-        val sendingData = ben.asNetworkSendingModel(user, locationRecord)
+        val sendingData = ben!!.asNetworkSendingModel(user, locationRecord)
         //val sendingDataString = Gson().toJson(sendingData)
 
         try {
@@ -438,6 +438,10 @@ class BenRepo @Inject constructor(
                                     val houseDataObj = jsonObject.getJSONObject("householdDetails")
                                     val benDataObj = jsonObject.getJSONObject("beneficiaryDetails")
 
+                                    val benId = jsonObject.getLong("benficieryid")
+                                    val hhId = jsonObject.getLong("houseoldId")
+                                    val benExists = database.benDao.getBen(hhId, benId) != null
+
                                     benDataList.add(
                                         BenBasicDomain(
                                             benId = jsonObject.getLong("benficieryid"),
@@ -454,10 +458,12 @@ class BenRepo @Inject constructor(
                                             hrpStatus = benDataObj.getBoolean("hrpStatus")
                                                 .toString(),
                                             typeOfList = benDataObj.getString("registrationType"),
-                                            syncState = SyncState.UNSYNCED
+                                            syncState = if (benExists) SyncState.SYNCED else SyncState.SYNCING
                                         )
                                     )
                                 }
+                                database.benDao.upsert(*getBenCacheFromServerResponse(responseString).toTypedArray())
+
                                 Timber.d("GeTBenDataList: $pageSize $benDataList")
                                 return@withContext Pair(pageSize, benDataList)
                             }
@@ -475,5 +481,181 @@ class BenRepo @Inject constructor(
             Timber.d("get_ben data : $benDataList")
             Pair(0, benDataList)
         }
+    }
+
+    suspend fun getBenCacheFromServerResponse(response: String): MutableList<BenRegCache> {
+        val jsonObj = JSONObject(response)
+        val result = mutableListOf<BenRegCache>()
+
+        val responseStatusCode = jsonObj.getInt("statusCode")
+        if (responseStatusCode == 200) {
+            val dataObj = jsonObj.getJSONObject("data")
+            val jsonArray = dataObj.getJSONArray("data")
+
+            if (jsonArray.length() != 0) {
+                for (i in 0 until jsonArray.length()) {
+                    val jsonObject = jsonArray.getJSONObject(i)
+                    val houseDataObj = jsonObject.getJSONObject("householdDetails")
+                    val benDataObj = jsonObject.getJSONObject("beneficiaryDetails")
+
+                    val benId = jsonObject.getLong("benficieryid")
+                    val hhId = jsonObject.getLong("houseoldId")
+                    val benExists = database.benDao.getBen(hhId, benId) != null
+
+                    if(benExists) {
+                       continue
+                    }
+                    result.add(
+                        BenRegCache(
+                            householdId = jsonObject.getLong("houseoldId"),
+                            beneficiaryId = jsonObject.getLong("benficieryid"),
+                            ashaId = jsonObject.getInt("ashaId"),
+                            benRegId = jsonObject.getLong("BenRegId"),
+                            age = benDataObj.getInt("age"),
+                            ageUnit = when (benDataObj.getString("age_unit")) {
+                                "Year(s)" -> AgeUnit.YEARS
+                                "Month(s)" -> AgeUnit.MONTHS
+                                "Day(s)" -> AgeUnit.DAYS
+                                else -> AgeUnit.YEARS },
+                            isKid = !(benDataObj.getString("age_unit") == "Year(s)" && benDataObj.getInt("age") > 14),
+                            isAdult = (benDataObj.getString("age_unit") == "Year(s)" && benDataObj.getInt("age") > 14),
+                            userImageBlob = benDataObj.getString("user_image").toByteArray(),
+                            regDate = getLongFromDate(benDataObj.getString("registrationDate")),
+                            firstName = benDataObj.getString("firstName"),
+                            lastName = benDataObj.getString("lastName"),
+                            gender = when (benDataObj.getString("gender")) {
+                                "Male" -> Gender.MALE
+                                "Female" -> Gender.FEMALE
+                                "Transgender" -> Gender.TRANSGENDER
+                                else -> Gender.MALE
+                            },
+                            genderId = benDataObj.getInt("genderId"),
+                            dob = getLongFromDate(benDataObj.getString("dob")),
+                            age_unitId = benDataObj.getInt("age_unitId"),
+                            fatherName = benDataObj.getString("fatherName"),
+                            motherName = benDataObj.getString("motherName"),
+                            familyHeadRelation = benDataObj.getString("familyHeadRelation"),
+                            familyHeadRelationPosition = benDataObj.getInt("familyHeadRelation"),
+//                            familyHeadRelationOther = benDataObj.getString("familyHeadRelationOther"),
+                            mobileNoOfRelation = benDataObj.getString("mobilenoofRelation"),
+                            mobileNoOfRelationId = benDataObj.getInt("mobilenoofRelationId"),
+                            mobileOthers = benDataObj.getString("mobileOthers"),
+                            contactNumber = benDataObj.getString("contact_number").toLong(),
+//                            literacy = literacy,
+                            literacyId = benDataObj.getInt("literacyId"),
+                            community = benDataObj.getString("community"),
+                            communityId = benDataObj.getInt("communityId"),
+                            religion = benDataObj.getString("religion"),
+                            religionId = benDataObj.getInt("religionID"),
+                            religionOthers = benDataObj.getString("religionOthers"),
+                            rchId = benDataObj.getString("rchid"),
+                            registrationType = when(benDataObj.getString("registrationType")) {
+                                "Infant" -> TypeOfList.INFANT
+                                "Child" -> TypeOfList.CHILD
+                                "Adolescent" -> TypeOfList.ADOLESCENT
+                                "General" -> TypeOfList.GENERAL
+                                "Eligible Couple" -> TypeOfList.ELIGIBLE_COUPLE
+                                "Antenatal Mother" -> TypeOfList.ANTENATAL_MOTHER
+                                "Delivery Stage" -> TypeOfList.DELIVERY_STAGE
+                                "Postnatal Mother" -> TypeOfList.POSTNATAL_MOTHER
+                                "Menopause" -> TypeOfList.MENOPAUSE
+                                "Teenager" -> TypeOfList.TEENAGER
+                                else -> TypeOfList.OTHER
+                            },
+                            latitude = benDataObj.getDouble("latitude"),
+                            longitude = benDataObj.getDouble("longitude"),
+//                            aadharNum = aadhaNo,
+//                            aadharNumId = aadha_noId,
+//                            hasAadhar = (aadhaNo != null),
+//                            hasAadharId = aadha_noId,
+//                            bankAccountId = bank_accountId,
+//                            bankAccount = bankAccount,
+//                            nameOfBank = nameOfBank,
+//                            nameOfBranch = nameOfBranch,
+//                            ifscCode = ifscCode,
+//                            needOpCare = need_opcare,
+//                            needOpCareId = need_opcareId,
+//                            ncdPriority = ncd_priority,
+//                            cbacAvailable = cbac_available,
+//                            guidelineId = guidelineId,
+//                            isHrpStatus = isHrpStatus,
+//                            hrpIdentificationDate = hrp_identification_date,
+//                            hrpLastVisitDate = hrp_last_vist_date,
+//                            nishchayPregnancyStatus = nishchayPregnancyStatus,
+//                            nishchayPregnancyStatusPosition = nishchayPregnancyStatusPosition,
+//                            nishchayDeliveryStatus = nishchayDeliveryStatus,
+//                            nishchayDeliveryStatusPosition = nishchayDeliveryStatusPosition,
+//                            nayiPahalDeliveryStatus = nayiPahalDeliveryStatus,
+//                            nayiPahalDeliveryStatusPosition = nayiPahalDeliveryStatusPosition,
+//                            suspectedNcd = suspected_ncd,
+//                            suspectedNcdDiseases = suspected_ncd_diseases,
+//                            suspectedTb = suspected_tb,
+//                            confirmed_Ncd = confirmed_ncd,
+//                            confirmedHrp = confirmed_hrp,
+//                            confirmedTb = confirmed_tb,
+//                            confirmedNcdDiseases = confirmed_ncd_diseases,
+//                            diagnosisStatus = diagnosis_status,
+//                            countryId = countyid,
+//                            stateId = stateid,
+//                            districtId = districtid,
+//                            districtName = districtname,
+//                            currSubDistrictId = currSubDistrictId,
+//                            villageId = villageid,
+//                            villageName = villagename,
+                            processed = "P",
+                            serverUpdatedStatus = 1,
+//                            createdBy = createdBy,
+//                            createdDate = getLongFromDate(updatedDate),
+//                            kidDetails = BenRegKid(
+//                                childRegisteredAWC = childRegisteredAWC,
+//                                childRegisteredAWCId = childRegisteredAWCID,
+//                                childRegisteredSchool = childRegisteredSchool,
+//                                childRegisteredSchoolId = childRegisteredSchoolID,
+//                                typeOfSchool = typeofSchool,
+//                                typeOfSchoolId = typeofSchoolID
+//                            ),
+//                            genDetails = BenRegGen(
+//                                maritalStatus = maritalstatus,
+//                                maritalStatusId = maritalstatusId,
+//                                spouseName = spousename,
+//                                ageAtMarriage = ageAtMarriage,
+//                                dateOfMarriage = getLongFromDate(dateMarriage),
+//                                marriageDate = marriageDate,
+//                                menstrualStatus = menstrualStatus,
+//                                menstrualStatusId = menstrualStatusId,
+//                                regularityOfMenstrualCycle = regularityofMenstrualCycle,
+//                                regularityOfMenstrualCycleId = regularityofMenstrualCycleId,
+//                                lengthOfMenstrualCycle = lengthofMenstrualCycle,
+//                                lengthOfMenstrualCycleId = lengthofMenstrualCycleId,
+//                                menstrualBFD = menstrualBFD,
+//                                menstrualBFDId = menstrualBFDId,
+//                                menstrualProblem = menstrualProblem,
+//                                menstrualProblemId = menstrualProblemId,
+//                                lastMenstrualPeriod = lastMenstrualPeriod,
+//                                reproductiveStatus = reproductiveStatus,
+//                                reproductiveStatusId = reproductiveStatusId,
+//                                lastDeliveryConducted = lastDeliveryConducted,
+//                                lastDeliveryConductedId = lastDeliveryConductedID,
+//                                facilityName = facilitySelection,
+//                                whoConductedDelivery = whoConductedDelivery,
+//                                whoConductedDeliveryId = whoConductedDeliveryID,
+//                                deliveryDate = deliveryDate,
+//                                expectedDateOfDelivery = expectedDateOfDelivery,
+//                                noOfDaysForDelivery = noOfDaysForDelivery,
+//
+//                                ),
+                            syncState = SyncState.SYNCED,
+                            isDraft = false
+                    )
+                    )
+                }
+            }
+        }
+        return result
+    }
+
+    fun getLongFromDate(date: String): Long {
+        //TODO ()
+        return 0
     }
 }
