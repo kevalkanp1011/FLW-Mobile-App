@@ -18,7 +18,7 @@ class AllBenViewModel @Inject constructor(
 
     fun manualSync(hhId: Long, benId: Long, locationRecord: LocationRecord) {
         viewModelScope.launch {
-            benRepo.createBenIdAtServerByBeneficiarySending(hhId, benId, locationRecord)
+            benRepo.processNewBen()
         }
     }
 }

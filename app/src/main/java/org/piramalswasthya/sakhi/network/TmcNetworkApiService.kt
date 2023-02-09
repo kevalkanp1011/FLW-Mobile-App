@@ -38,7 +38,7 @@ interface TmcNetworkApiService {
     suspend fun getBenIdFromBeneficiarySending(@Body beneficiaryDataSending: BeneficiaryDataSending): Response<ResponseBody>
 
     @POST("identity-0.0.1/rmnch/syncDataToAmrit")
-    fun submitRmnchDataAmrit(@Body json: SendingRMNCHData): Response<ResponseBody>
+    suspend fun submitRmnchDataAmrit(@Body sendingRMNCHData: SendingRMNCHData): Response<ResponseBody>
 
 
 }

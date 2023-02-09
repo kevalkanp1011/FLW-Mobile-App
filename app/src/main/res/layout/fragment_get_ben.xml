@@ -9,8 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:visibility="invisible">
+        android:layout_height="match_parent">
 
 
         <LinearLayout
@@ -49,6 +48,7 @@
             android:padding="@dimen/padding_normal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
+            tools:itemCount="2"
             tools:listitem="@layout/rv_item_page_num" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -68,7 +68,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_error"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:visibility="invisible">
 
         <ImageView
             android:id="@+id/iv_offline"

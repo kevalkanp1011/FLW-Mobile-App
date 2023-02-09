@@ -1,8 +1,9 @@
 package org.piramalswasthya.sakhi.model
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
-
+@JsonClass(generateAdapter = true)
 data class SendingRMNCHData(
     @Json(name = "houseHoldDetails")
     var houseHoldRegistrationData: List<HouseholdNetwork>? = null,
