@@ -59,8 +59,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="1184" />
-                            <option name="y" value="591" />
+                            <option name="x" value="1156" />
+                            <option name="y" value="1099" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -149,8 +149,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="958" />
-                            <option name="y" value="849" />
+                            <option name="x" value="1158" />
+                            <option name="y" value="809" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -227,6 +227,11 @@
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_homeFragment_to_getBenFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_homeFragment_to_newHouseholdFragment">
                               <value>
                                 <LayoutPositions />
@@ -331,8 +336,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="963" />
-                            <option name="y" value="544" />
+                            <option name="x" value="1161" />
+                            <option name="y" value="518" />
                           </Point>
                         </option>
                       </LayoutPositions>

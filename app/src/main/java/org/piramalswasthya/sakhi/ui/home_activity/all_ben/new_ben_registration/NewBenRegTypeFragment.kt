@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
 import org.piramalswasthya.sakhi.databinding.FragmentNewBenRegTypeBinding
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
+import org.piramalswasthya.sakhi.work.BenDataSendingWorker
 import org.piramalswasthya.sakhi.work.GenerateBenIdsWorker
 
 @AndroidEntryPoint
@@ -115,7 +117,7 @@ class NewBenRegTypeFragment : Fragment() {
 
         homeViewModel.iconCount.observe(viewLifecycleOwner) { iconList ->
             iconList.first().let {
-                if (it.availBenIdsCount in 1..100) {
+                if (it.availBenIdsCount in 1..80) {
                     binding.errorText.text =
                         "Warning : ID running low, connect to internet at the earliest"
                     triggerGenBenIdWorker()
@@ -185,6 +187,20 @@ class NewBenRegTypeFragment : Fragment() {
             .build()
         WorkManager.getInstance(requireContext())
             .enqueueUniqueWork(GenerateBenIdsWorker.name, ExistingWorkPolicy.KEEP, workRequest)
+    }
+
+    companion object {
+        fun triggerBenDataSendingWorker(context: Context) {
+            val workRequest = OneTimeWorkRequestBuilder<BenDataSendingWorker>()
+                .setConstraints(BenDataSendingWorker.constraint)
+                .build()
+            WorkManager.getInstance(context)
+                .enqueueUniqueWork(
+                    BenDataSendingWorker.name,
+                    ExistingWorkPolicy.APPEND,
+                    workRequest
+                )
+        }
     }
 
 }

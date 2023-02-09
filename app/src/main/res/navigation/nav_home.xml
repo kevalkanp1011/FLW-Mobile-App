@@ -198,10 +198,12 @@
             app:argType="long" />
         <action
             android:id="@+id/action_newBenRegTypeFragment_to_newBenRegL15Fragment"
-            app:destination="@id/newBenRegL15Fragment" />
+            app:destination="@id/newBenRegL15Fragment"
+            app:popUpTo="@id/homeFragment" />
         <action
             android:id="@+id/action_newBenRegTypeFragment_to_newBenRegG15Fragment"
-            app:destination="@id/newBenRegG15Fragment" />
+            app:destination="@id/newBenRegG15Fragment"
+            app:popUpTo="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/newBenRegL15Fragment"

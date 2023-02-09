@@ -457,8 +457,17 @@ class BenGenRegFormDataset(context: Context) {
                 "Transgender" -> Gender.TRANSGENDER
                 else -> null
             }
+            genderId = when (this@BenGenRegFormDataset.gender.value.value) {
+                "Male" -> 1
+                "Female" -> 2
+                "Transgender" -> 3
+                else -> 0
+            }
             this.registrationType = TypeOfList.GENERAL
             genDetails?.maritalStatus = this@BenGenRegFormDataset.maritalStatus.value.value
+            genDetails?.maritalStatusId =
+                (this@BenGenRegFormDataset.maritalStatus.list?.indexOf(genDetails?.maritalStatus!!))?.let { it + 1 }
+                    ?: 0
             genDetails?.spouseName = this@BenGenRegFormDataset.husbandName.value.value
                 ?: this@BenGenRegFormDataset.wifeName.value.value
                         ?: this@BenGenRegFormDataset.spouseName.value.value
@@ -471,7 +480,12 @@ class BenGenRegFormDataset(context: Context) {
             mobileNoOfRelation = this@BenGenRegFormDataset.mobileNoOfRelation.value.value
             contactNumber = stringToLong(this@BenGenRegFormDataset.contactNumber.value.value!!)
             community = this@BenGenRegFormDataset.community.value.value
+            communityId =
+                (this@BenGenRegFormDataset.community.list?.indexOf(community!!))?.let { it + 1 }
+                    ?: 0
             religion = this@BenGenRegFormDataset.religion.value.value
+            religionId =
+                (this@BenGenRegFormDataset.religion.list?.indexOf(religion!!))?.let { it + 1 } ?: 0
             religionOthers = this@BenGenRegFormDataset.otherReligion.value.value
 
             rchId = this@BenGenRegFormDataset.rchId.value.value

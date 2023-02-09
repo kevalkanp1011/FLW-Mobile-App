@@ -1,7 +1,7 @@
 package org.piramalswasthya.sakhi.model
 
 import androidx.room.*
-import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import org.piramalswasthya.sakhi.database.room.SyncState
 import java.text.SimpleDateFormat
 import java.util.*
@@ -108,6 +108,7 @@ data class BenRegKid(
     var birthOPV: Boolean = false,
 )
 
+@JsonClass(generateAdapter = true)
 data class BenRegKidNetwork(
     var childName: String? = null,
     var childRegisteredAWC: String? = null,
@@ -391,19 +392,8 @@ data class BenRegCache(
     @Embedded(prefix = "gen_")
     var genDetails: BenRegGen? = null,
 
-    var countryId: Int = 0,
-
-    var stateId: Int = 0,
-
-    var districtId: Int = 0,
-
-    var districtName: String? = null,
-
-    var currSubDistrictId: Int = 0,
-
-    var villageId: Int = 0,
-
-    var villageName: String? = null,
+    @Embedded(prefix = "loc_")
+    var locationRecord: LocationRecord? = null,
 
     var processed: String? = null,
 
@@ -518,12 +508,12 @@ data class BenRegCache(
             createdDate = getDateTimeStringFromLong(createdDate!!),
             ncd_priority = ncdPriority,
             guidelineId = guidelineId,
-            villagename = villageName,
+            villagename = locationRecord?.village,
             vanID = user.vanId,
-            countyid = countryId,
+            countyid = locationRecord?.countryId!!,
             providerServiceMapID = user.serviceMapId,
             processed = processed,
-            currSubDistrictId = villageId,
+            currSubDistrictId = locationRecord?.villageId!!,
             expectedDateOfDelivery = genDetails?.expectedDateOfDelivery,
             isHrpStatus = isHrpStatus,
             menstrualStatus = genDetails?.menstrualStatus,
@@ -568,6 +558,7 @@ fun getDateTimeStringFromLong(dateLong: Long?): String? {
     }
 
 }
+/*
 
 data class BenRegNetwork(
     @Json(name = "houseoldId")
@@ -825,8 +816,10 @@ data class BenRegNetwork(
     @Json(name = "FamilyHeadRelationPosition")
     var familyHeadRelationPosition: Int = 0,
 
-    /*@Json(name = "PreviousLiveBirthID")
-      private int PreviousLiveBirthID;*/
+    */
+/*@Json(name = "PreviousLiveBirthID")
+      private int PreviousLiveBirthID;*//*
+
     @Json(name = "ServerUpdatedStatus")
     var serverUpdatedStatus: Int = 0,
 
@@ -972,18 +965,6 @@ data class BenRegNetwork(
     @Json(name = "immunizationStatus")
     var isImmunizationStatus: Boolean = false
 )
-
-private fun getLongFromDate(dateString: String?): Long {
-    val f = SimpleDateFormat("yyyy-MM-DDThh:mm:ss.sssTZD", Locale.ENGLISH)
-    dateString?.let {
-        val date = f.parse(it)
-        return date?.time ?: throw IllegalStateException("Invalid date for dateReg")
-    } ?: run {
-        return 0L
-    }
-
-}
-
 fun asCacheModel(benRegNetwork: BenRegNetwork, newBornRegNetwork: NewBornRegNetwork?): BenRegCache {
 
     benRegNetwork.apply {
@@ -1124,7 +1105,6 @@ fun asCacheModel(benRegNetwork: BenRegNetwork, newBornRegNetwork: NewBornRegNetw
                deliveryDate = deliveryDate,
                expectedDateOfDelivery = expectedDateOfDelivery,
                noOfDaysForDelivery = noOfDaysForDelivery,
-
                ),
            syncState = SyncState.UNSYNCED,
            isDraft = false
@@ -1186,4 +1166,5 @@ fun asCacheModel(benRegNetwork: BenRegNetwork, newBornRegNetwork: NewBornRegNetw
 
 }
 
+*/
 
