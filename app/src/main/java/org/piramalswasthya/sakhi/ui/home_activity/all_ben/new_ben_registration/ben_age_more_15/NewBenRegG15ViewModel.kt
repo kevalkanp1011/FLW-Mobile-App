@@ -589,6 +589,7 @@ class NewBenRegG15ViewModel @Inject constructor(
 
 
     fun persistFirstPage() {
+        Timber.d("Persist first page called!")
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 benRepo.persistGenFirstPage(form, hhId)
@@ -596,13 +597,23 @@ class NewBenRegG15ViewModel @Inject constructor(
         }
     }
 
+    fun persistSecondPage() {
+        Timber.d("Persist second page called!")
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                benRepo.persistGenSecondPage(form, null)
+            }
+        }
+    }
+
     fun persistForm(locationRecord: LocationRecord) {
+        Timber.d("Persist form called!")
         viewModelScope.launch {
             _state.value = State.SAVING
             withContext(Dispatchers.IO) {
                 try {
-                    if (hasReproductiveStatus.value == true)
-                        benRepo.persistGenSecondPage(form, null)
+                    if (hasReproductiveStatus.value == false)
+                        benRepo.persistGenSecondPage(form, locationRecord)
                     else
                         benRepo.persistGenThirdPage(form, locationRecord)
                     _state.postValue(State.SAVE_SUCCESS)

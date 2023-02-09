@@ -91,6 +91,8 @@ class BenRepo @Inject constructor(
                     benIdObj.benId,
                     benIdObj.benRegId
                 )
+                this.beneficiaryId = benIdObj.benId
+                this.benRegId = benIdObj.benRegId
             }
             if (this.createdDate == null) {
                 this.processed = "N"
@@ -101,11 +103,7 @@ class BenRepo @Inject constructor(
                 this.updatedDate = System.currentTimeMillis()
                 this.updatedBy = user.userName
             }
-            this.villageName = locationRecord.village
-            this.countryId = locationRecord.countryId
-            this.stateId = locationRecord.stateId
-            this.districtId = locationRecord.districtId
-            this.villageId = locationRecord.villageId
+            this.locationRecord = locationRecord
             this.isDraft = false
         }
 
@@ -134,6 +132,8 @@ class BenRepo @Inject constructor(
                         benIdObj.benId,
                         benIdObj.benRegId
                     )
+                    this.beneficiaryId = benIdObj.benId
+                    this.benRegId = benIdObj.benRegId
                 }
                 if (this.createdDate == null) {
                     this.processed = "N"
@@ -144,11 +144,7 @@ class BenRepo @Inject constructor(
                     this.updatedBy = user.userName
                 }
                 this.serverUpdatedStatus = 0
-                this.villageName = it.village
-                this.countryId = it.countryId
-                this.stateId = it.stateId
-                this.districtId = it.districtId
-                this.villageId = it.villageId
+                this.locationRecord = it
                 this.isDraft = false
 
             }
@@ -180,6 +176,8 @@ class BenRepo @Inject constructor(
                     benIdObj.benId,
                     benIdObj.benRegId
                 )
+                this.beneficiaryId = benIdObj.benId
+                this.benRegId = benIdObj.benRegId
             }
             if (this.createdDate == null) {
                 this.processed = "N"
@@ -190,11 +188,7 @@ class BenRepo @Inject constructor(
                 this.updatedDate = System.currentTimeMillis()
                 this.updatedBy = user.userName
             }
-            this.villageName = locationRecord.village
-            this.countryId = locationRecord.countryId
-            this.stateId = locationRecord.stateId
-            this.districtId = locationRecord.districtId
-            this.villageId = locationRecord.villageId
+            this.locationRecord = locationRecord
             this.isDraft = false
         }
 
@@ -284,15 +278,14 @@ class BenRepo @Inject constructor(
                     ?: throw IllegalStateException("No user logged in!!")
 
             val benList = database.benDao.getAllUnprocessedBen()
-            val locationRecord =
-                pref.getLocationRecord() ?: return@withContext false
 
             val benNetworkPostList = mutableSetOf<BenPost>()
             val householdNetworkPostList = mutableSetOf<HouseholdNetwork>()
             val kidNetworkPostList = mutableSetOf<BenRegKidNetwork>()
 
             benList.forEach {
-                val isSuccess = createBenIdAtServerByBeneficiarySending(it, user, locationRecord)
+                val isSuccess =
+                    createBenIdAtServerByBeneficiarySending(it, user, it.locationRecord!!)
                 if (isSuccess) {
                     benNetworkPostList.add(it.asNetworkPostModel(user))
                     householdNetworkPostList.add(
@@ -346,9 +339,10 @@ class BenRepo @Inject constructor(
         user: UserCache,
         locationRecord: LocationRecord
     ): Boolean {
+
         val sendingData = ben.asNetworkSendingModel(user, locationRecord)
         //val sendingDataString = Gson().toJson(sendingData)
-
+        database.benDao.setSyncState(ben.householdId, ben.beneficiaryId, SyncState.SYNCING)
         try {
             val response = tmcNetworkApiService.getBenIdFromBeneficiarySending(sendingData)
             val responseString = response.body()?.string()
