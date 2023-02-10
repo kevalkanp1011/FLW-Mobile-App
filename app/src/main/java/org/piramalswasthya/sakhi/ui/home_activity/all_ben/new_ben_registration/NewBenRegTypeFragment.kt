@@ -197,7 +197,7 @@ class NewBenRegTypeFragment : Fragment() {
             WorkManager.getInstance(context)
                 .enqueueUniqueWork(
                     BenDataSendingWorker.name,
-                    ExistingWorkPolicy.APPEND,
+                    ExistingWorkPolicy.APPEND_OR_REPLACE,
                     workRequest
                 )
         }
