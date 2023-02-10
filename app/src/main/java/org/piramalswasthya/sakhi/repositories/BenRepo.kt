@@ -4,6 +4,7 @@ import androidx.lifecycle.Transformations
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import org.piramalswasthya.sakhi.configuration.BenGenRegFormDataset
 import org.piramalswasthya.sakhi.configuration.BenKidRegFormDataset
@@ -205,7 +206,7 @@ class BenRepo @Inject constructor(
     }
 
 
-    suspend fun getBenHousehold(hhId: Long): HouseholdCache {
+    suspend fun getBenHousehold(hhId: Long): HouseholdCache? {
         return database.householdDao.getHousehold(hhId)
 
     }
@@ -290,7 +291,7 @@ class BenRepo @Inject constructor(
                 if (isSuccess) {
                     benNetworkPostList.add(it.asNetworkPostModel(user))
                     householdNetworkPostList.add(
-                        database.householdDao.getHousehold(it.householdId).asNetworkModel(user)
+                        database.householdDao.getHousehold(it.householdId)!!.asNetworkModel(user)
                     )
                     if (it.isKid)
                         kidNetworkPostList.add(it.asKidNetworkModel())
@@ -457,6 +458,12 @@ class BenRepo @Inject constructor(
                                         )
                                     )
                                 }
+                                try {
+                                    database.householdDao.upsert(*getHouseholdCacheFromServerResponse(responseString).toTypedArray())
+                                } catch (e: Exception) {
+                                    Timber.d("HouseHold list not synced $e")
+                                    return@withContext Pair(0, benDataList)
+                                }
                                 database.benDao.upsert(*getBenCacheFromServerResponse(responseString).toTypedArray())
 
                                 Timber.d("GeTBenDataList: $pageSize $benDataList")
@@ -505,6 +512,12 @@ class BenRepo @Inject constructor(
                     if(benExists) {
                        continue
                     }
+                    val hhExists = database.householdDao.getHousehold(hhId) != null
+
+                    if(!hhExists) {
+                        continue
+                    }
+
                     result.add(
                         BenRegCache(
                             householdId = jsonObject.getLong("houseoldId"),
@@ -535,7 +548,7 @@ class BenRepo @Inject constructor(
                             fatherName = benDataObj.getString("fatherName"),
                             motherName = benDataObj.getString("motherName"),
                             familyHeadRelation = benDataObj.getString("familyHeadRelation"),
-                            familyHeadRelationPosition = benDataObj.getInt("familyHeadRelation"),
+                            familyHeadRelationPosition = benDataObj.getInt("familyHeadRelationPosition"),
 //                            familyHeadRelationOther = benDataObj.getString("familyHeadRelationOther"),
                             mobileNoOfRelation = benDataObj.getString("mobilenoofRelation"),
                             mobileNoOfRelationId = benDataObj.getInt("mobilenoofRelationId"),
@@ -654,5 +667,94 @@ class BenRepo @Inject constructor(
         return result
     }
 
+    suspend fun getHouseholdCacheFromServerResponse(response: String): MutableList<HouseholdCache> {
+        val jsonObj = JSONObject(response)
+        val result = mutableListOf<HouseholdCache>()
 
+        val responseStatusCode = jsonObj.getInt("statusCode")
+        if (responseStatusCode == 200) {
+            val dataObj = jsonObj.getJSONObject("data")
+            val jsonArray = dataObj.getJSONArray("data")
+
+            if (jsonArray.length() != 0) {
+                for (i in 0 until jsonArray.length()) {
+                    val jsonObject = jsonArray.getJSONObject(i)
+                    val houseDataObj = jsonObject.getJSONObject("householdDetails")
+                    val benDataObj = jsonObject.getJSONObject("beneficiaryDetails")
+
+                    val hhId = jsonObject.getLong("houseoldId")
+                    val hhExists = database.householdDao.getHousehold(hhId) != null
+                            || result.map { it.householdId }.contains(hhId)
+
+                    if(hhExists) {
+                        continue
+                    }
+                    Timber.d("HouseHoldList $result")
+                    try {
+                        result.add(
+                            HouseholdCache(
+                                householdId = jsonObject.getLong("houseoldId"),
+                                ashaId = jsonObject.getInt("ashaId"),
+                                benId = jsonObject.getLong("benficieryid"),
+                                familyHeadName = houseDataObj.getString("familyHeadName"),
+                                familyName = houseDataObj.getString("familyName"),
+                                familyHeadPhoneNo = houseDataObj.getString("familyHeadPhoneNo").toLong(),
+                                houseNo = houseDataObj.getString("houseno"),
+//                            rationCardDetails = houseDataObj.getString("rationCardDetails"),
+                                povertyLine = houseDataObj.getString("type_bpl_apl"),
+                                residentialArea = houseDataObj.getString("residentialArea"),
+                                otherResidentialArea = houseDataObj.getString("other_residentialArea"),
+                                houseType = houseDataObj.getString("houseType"),
+                                otherHouseType = houseDataObj.getString("other_houseType"),
+                                isHouseOwned = houseDataObj.getString("houseOwnerShip"),
+//                            isLandOwned = houseDataObj.getString("landOwned") == "Yes",
+//                            isLandIrrigated = houseDataObj.has("landIrregated") && houseDataObj.getString("landIrregated") == "Yes",
+//                            isLivestockOwned = houseDataObj.getString("liveStockOwnerShip") == "Yes",
+//                            street = houseDataObj.getString("street"),
+//                            colony = houseDataObj.getString("colony"),
+//                            pincode = houseDataObj.getInt("pincode"),
+                                separateKitchen = houseDataObj.getString("seperateKitchen"),
+                                fuelUsed = houseDataObj.getString("fuelUsed"),
+                                otherFuelUsed = houseDataObj.getString("other_fuelUsed"),
+                                sourceOfDrinkingWater = houseDataObj.getString("sourceofDrinkingWater"),
+                                otherSourceOfDrinkingWater = houseDataObj.getString("other_sourceofDrinkingWater"),
+                                availabilityOfElectricity = houseDataObj.getString("avalabilityofElectricity"),
+                                otherAvailabilityOfElectricity = houseDataObj.getString("other_avalabilityofElectricity"),
+                                availabilityOfToilet = houseDataObj.getString("availabilityofToilet"),
+                                otherAvailabilityOfToilet = houseDataObj.getString("other_availabilityofToilet"),
+//                            motorizedVehicle = houseDataObj.getString("motarizedVehicle"),
+//                            otherMotorizedVehicle = houseDataObj.getString("other_motarizedVehicle"),
+//                            registrationType = if(houseDataObj.has("registrationType")) houseDataObj.getString("registrationType") else null,
+                                state =  houseDataObj.getString("state"),
+                                stateId =  houseDataObj.getInt("stateid"),
+                                district = benDataObj.getString("districtname"),
+                                districtId = houseDataObj.getInt("districtid"),
+                                block = benDataObj.getString("blockName"),
+                                blockId = houseDataObj.getInt("blockid"),
+                                village = houseDataObj.getString("village"),
+                                villageId = houseDataObj.getInt("villageid"),
+                                countyId = houseDataObj.getInt("Countyid"),
+                                serverUpdatedStatus = houseDataObj.getInt("serverUpdatedStatus"),
+                                createdBy = houseDataObj.getString("createdBy"),
+                                createdTimeStamp = getLongFromDate(houseDataObj.getString("createdDate")),
+//                            updatedBy = houseDataObj.getString("other_houseType"),
+//                            updatedTimeStamp = houseDataObj.getString("other_houseType"),
+                                processed = "P",
+                                isDraft = false,
+                            )
+                        )
+                    } catch (e: JSONException) {
+                        Timber.i("Household skipped: ${jsonObject.getLong("houseoldId")} with error $e")
+                    }
+                }
+            }
+        }
+        return result
+    }
+
+
+    fun getLongFromDate(date: String): Long {
+        //TODO ()
+        return 0
+    }
 }

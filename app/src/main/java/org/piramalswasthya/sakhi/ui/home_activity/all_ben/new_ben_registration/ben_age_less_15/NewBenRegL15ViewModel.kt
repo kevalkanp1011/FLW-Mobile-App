@@ -62,7 +62,7 @@ class NewBenRegL15ViewModel @Inject constructor(
 
     suspend fun getFirstPage(adapter: FormInputAdapter): List<FormInput> {
         withContext(Dispatchers.IO) {
-            household = benRepo.getBenHousehold(hhId)
+            household = benRepo.getBenHousehold(hhId)!!
             form = benRepo.getDraftForm(hhId, true)?.let {
                 BenKidRegFormDataset(context, it)
             } ?: run {

@@ -284,7 +284,7 @@
     <fragment
         android:id="@+id/getBenFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.get_ben_data.GetBenFragment"
-        android:label="fragment_get_ben"
+        android:label="Beneficiaries Data"
         tools:layout="@layout/fragment_get_ben" />
 
 </navigation>

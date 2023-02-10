@@ -11,7 +11,7 @@ import org.piramalswasthya.sakhi.model.HouseholdCache
 interface HouseholdDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsert(household : HouseholdCache)
+    suspend fun upsert(vararg household : HouseholdCache)
 
     @Query("SELECT * FROM HOUSEHOLD WHERE isDraft = 1 LIMIT 1")
     suspend fun getDraftHousehold() : HouseholdCache?
@@ -20,7 +20,7 @@ interface HouseholdDao {
     fun getAllHouseholds() : LiveData<List<HouseholdCache>>
 
     @Query("SELECT * FROM HOUSEHOLD WHERE householdId =:hhId LIMIT 1")
-    suspend fun getHousehold(hhId  : Long) : HouseholdCache
+    suspend fun getHousehold(hhId  : Long) : HouseholdCache?
 
     @Query("DELETE  FROM HOUSEHOLD WHERE isDraft=1")
     suspend fun deleteDraftHousehold()
