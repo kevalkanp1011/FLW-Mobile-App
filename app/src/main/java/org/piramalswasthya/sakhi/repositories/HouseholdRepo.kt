@@ -70,6 +70,7 @@ class HouseholdRepo @Inject constructor(
             block = locationRecord.block
             villageId = locationRecord.villageId
             village = locationRecord.village
+            countyId = locationRecord.countryId
         }
         database.householdDao.upsert(household)
         return household.householdId

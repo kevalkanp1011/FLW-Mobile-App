@@ -302,7 +302,8 @@ class HouseholdFormDataset(context: Context) {
             household = HouseholdCache(
                 householdId = 0,
                 ashaId = userId,
-                isDraft = true
+                isDraft = true,
+                processed = "N"
             )
         }
         household?.apply {
@@ -314,6 +315,9 @@ class HouseholdFormDataset(context: Context) {
             wardName = this@HouseholdFormDataset.wardName.value.value
             mohallaName = this@HouseholdFormDataset.mohallaName.value.value
             povertyLine = this@HouseholdFormDataset.povertyLine.value.value
+            povertyLineId =
+                this@HouseholdFormDataset.povertyLine.list?.indexOf(povertyLine)?.let { it + 1 }
+                    ?: 0
         }
         return household!!
     }
@@ -322,9 +326,17 @@ class HouseholdFormDataset(context: Context) {
 
         household?.apply {
             residentialArea = this@HouseholdFormDataset.residentialArea.value.value
+            residentialAreaId =
+                this@HouseholdFormDataset.residentialArea.list?.indexOf(residentialArea)
+                    ?.let { it + 1 } ?: 0
             otherResidentialArea = this@HouseholdFormDataset.otherResidentialArea.value.value
             houseType = this@HouseholdFormDataset.typeOfHouse.value.value
+            houseTypeId =
+                this@HouseholdFormDataset.typeOfHouse.list?.indexOf(houseType)?.let { it + 1 } ?: 0
             isHouseOwned = this@HouseholdFormDataset.houseOwnership.value.value
+            isHouseOwnedId =
+                this@HouseholdFormDataset.houseOwnership.list?.indexOf(isHouseOwned)?.let { it + 1 }
+                    ?: 0
         }
 
         return household!!
@@ -333,16 +345,38 @@ class HouseholdFormDataset(context: Context) {
     fun getHouseholdForThirdPage(): HouseholdCache {
         household?.apply {
             separateKitchen = this@HouseholdFormDataset.separateKitchen.value.value
+            separateKitchenId =
+                this@HouseholdFormDataset.separateKitchen.list?.indexOf(separateKitchen)
+                    ?.let { it + 1 } ?: 0
             fuelUsed = this@HouseholdFormDataset.fuelForCooking.value.value
+            fuelUsedId =
+                this@HouseholdFormDataset.fuelForCooking.list?.indexOf(fuelUsed)?.let { it + 1 }
+                    ?: 0
             otherFuelUsed = this@HouseholdFormDataset.otherFuelForCooking.value.value
             sourceOfDrinkingWater = this@HouseholdFormDataset.sourceOfWater.value.value
+            sourceOfDrinkingWaterId =
+                this@HouseholdFormDataset.sourceOfWater.list?.indexOf(sourceOfDrinkingWater)
+                    ?.let { it + 1 } ?: 0
             otherSourceOfDrinkingWater = this@HouseholdFormDataset.otherSourceOfWater.value.value
             availabilityOfElectricity = this@HouseholdFormDataset.sourceOfElectricity.value.value
+            availabilityOfElectricityId =
+                this@HouseholdFormDataset.sourceOfElectricity.list?.indexOf(
+                    availabilityOfElectricity
+                )?.let { it + 1 } ?: 0
             otherAvailabilityOfElectricity =
                 this@HouseholdFormDataset.otherSourceOfElectricity.value.value
             availabilityOfToilet = this@HouseholdFormDataset.availOfToilet.value.value
+            availabilityOfToiletId =
+                this@HouseholdFormDataset.availOfToilet.list?.indexOf(availabilityOfToilet)
+                    ?.let { it + 1 } ?: 0
             otherAvailabilityOfToilet = this@HouseholdFormDataset.otherAvailOfToilet.value.value
-            householdId = getHHidFromUserId(ashaId)
+            if (householdId == 0L) {
+                householdId = getHHidFromUserId(ashaId)
+                serverUpdatedStatus = 2
+                processed = "N"
+            } else {
+                serverUpdatedStatus = 1
+            }
             isDraft = false
         }
         return household!!

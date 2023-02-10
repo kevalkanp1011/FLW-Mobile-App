@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.ui
 
 import android.graphics.drawable.AnimatedVectorDrawable
+import android.net.Uri
 import android.os.Build
 import android.view.View
 import android.widget.*
@@ -113,9 +114,18 @@ fun ImageView.setSyncState(syncState: SyncState?){
         }
         this.setImageResource(drawable)
         isClickable = it == SyncState.UNSYNCED
-        if(it == SyncState.SYNCING)
+        if (it == SyncState.SYNCING)
             (getDrawable() as AnimatedVectorDrawable).start()
     }
+}
+
+
+@BindingAdapter("benImage")
+fun ImageView.setBenImage(uriString: String?) {
+    if (uriString == null)
+        setImageResource(R.drawable.ic_menu_camera)
+    else
+        setImageURI(Uri.parse(uriString))
 }
 
 //fun EditText.afterTextChanged(afterTextChanged: (String?) -> Unit) {

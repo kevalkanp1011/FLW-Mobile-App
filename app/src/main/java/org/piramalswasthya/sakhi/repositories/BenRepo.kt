@@ -62,6 +62,7 @@ class BenRepo @Inject constructor(
         Timber.d("Persisting first page!")
         val user =
             database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
+
         val ben = form.getBenForFirstPage(user.userId, hhId)
         database.benDao.upsert(ben)
     }
@@ -484,7 +485,12 @@ class BenRepo @Inject constructor(
         }
     }
 
-    suspend fun getBenCacheFromServerResponse(response: String): MutableList<BenRegCache> {
+    private fun getLongFromDate(date: String): Long {
+        //TODO ()
+        return 0
+    }
+
+    private suspend fun getBenCacheFromServerResponse(response: String): MutableList<BenRegCache> {
         val jsonObj = JSONObject(response)
         val result = mutableListOf<BenRegCache>()
 

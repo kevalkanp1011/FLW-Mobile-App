@@ -239,12 +239,12 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
         }
     }
 
-    class ImageViewInputViewHolder private constructor(private val binding: RvItemDropdownBinding) :
+    class ImageViewInputViewHolder private constructor(private val binding: RvItemImageViewBinding) :
         ViewHolder(binding.root) {
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RvItemDropdownBinding.inflate(layoutInflater, parent, false)
+                val binding = RvItemImageViewBinding.inflate(layoutInflater, parent, false)
                 return ImageViewInputViewHolder(binding)
             }
         }
@@ -254,7 +254,7 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
             clickListener: ImageClickListener?,
         ) {
             binding.form = item
-            item.errorText?.let { binding.tilRvDropdown.error = it }
+            binding.clickListener = clickListener
             binding.executePendingBindings()
 
         }
@@ -275,7 +275,7 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
             RADIO -> RadioInputViewHolder.from(parent)
             DATE_PICKER -> DatePickerInputViewHolder.from(parent)
             TEXT_VIEW -> TextViewInputViewHolder.from(parent)
-            IMAGE_VIEW -> TODO()
+            IMAGE_VIEW -> ImageViewInputViewHolder.from(parent)
             CHECKBOXES -> CheckBoxesInputViewHolder.from(parent)
         }
     }
