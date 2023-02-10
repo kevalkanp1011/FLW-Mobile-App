@@ -1,20 +1,26 @@
 package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
+import id.zelory.compressor.Compressor
+import id.zelory.compressor.constraint.quality
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.model.FormInput.InputType.*
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
-class BenKidRegFormDataset(context: Context) {
+class BenKidRegFormDataset(private val context: Context) {
 
     private var ben: BenRegCache? = null
 
     constructor(context: Context, ben: BenRegCache? = null) : this(context) {
         this.ben = ben
-        //TODO(SETUP THE VALUES)
+
+        //TODO(SETUP THE VALUES
     }
 
     companion object {
@@ -47,6 +53,12 @@ class BenKidRegFormDataset(context: Context) {
 
 
     //////////////////////////////////First Page////////////////////////////////////
+
+    private val pic = FormInput(
+        inputType = IMAGE_VIEW,
+        title = "Image",
+        required = true
+    )
 
     private val dateOfReg = FormInput(
         inputType = TEXT_VIEW,
@@ -267,6 +279,7 @@ class BenKidRegFormDataset(context: Context) {
     )
     val firstPage: List<FormInput> by lazy {
         listOf(
+            pic,
             dateOfReg,
             firstName,
             lastName,
@@ -476,7 +489,7 @@ class BenKidRegFormDataset(context: Context) {
 
     }
 
-    fun getBenForFirstPage(userId: Int, hhId: Long): BenRegCache {
+    suspend fun getBenForFirstPage(userId: Int, hhId: Long): BenRegCache {
 
         if (ben == null) {
             ben = BenRegCache(
@@ -491,6 +504,7 @@ class BenKidRegFormDataset(context: Context) {
             )
         }
         ben?.apply {
+            userImageBlob = getByteArrayFromImageUri(pic.value.value!!)
             regDate = getLongFromDate(this@BenKidRegFormDataset.dateOfReg.value.value!!)
             firstName = this@BenKidRegFormDataset.firstName.value.value
             lastName = this@BenKidRegFormDataset.lastName.value.value
@@ -526,6 +540,28 @@ class BenKidRegFormDataset(context: Context) {
             rchId = this@BenKidRegFormDataset.rchId.value.value
         }
         return ben!!
+    }
+
+    private suspend fun getByteArrayFromImageUri(uriString: String): ByteArray? {
+        val file = File(context.cacheDir, uriString.substringAfterLast("/"))
+        val compressedFile = Compressor.compress(context, file) {
+            quality(70)
+        }
+        val iStream = compressedFile.inputStream()
+        val byteArray = getBytes(iStream)
+        iStream.close()
+        return byteArray
+    }
+
+    private fun getBytes(inputStream: InputStream): ByteArray? {
+        val byteBuffer = ByteArrayOutputStream()
+        val bufferSize = 1024
+        val buffer = ByteArray(bufferSize)
+        var len = 0
+        while (inputStream.read(buffer).also { len = it } != -1) {
+            byteBuffer.write(buffer, 0, len)
+        }
+        return byteBuffer.toByteArray()
     }
 
     fun getBenForSecondPage(): BenRegCache {

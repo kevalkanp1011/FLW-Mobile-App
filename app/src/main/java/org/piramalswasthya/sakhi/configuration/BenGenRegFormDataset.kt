@@ -50,7 +50,11 @@ class BenGenRegFormDataset(context: Context) {
     }
 
     //////////////////////////////////First Page////////////////////////////////////
-
+    private val pic = FormInput(
+        inputType = IMAGE_VIEW,
+        title = "Image",
+        required = true
+    )
     private val dateOfReg = FormInput(
         inputType = TEXT_VIEW,
         title = "Date of Registration",
@@ -255,6 +259,7 @@ class BenGenRegFormDataset(context: Context) {
 
     val firstPage: List<FormInput> by lazy {
         listOf(
+            pic,
             dateOfReg,
             firstName,
             lastName,

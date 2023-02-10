@@ -36,7 +36,6 @@ data class HouseholdCache(
 
     var houseNo: String? = null,
 
-    var houseNum: String? = null,
 
     var wardNo: String? = null,
 
@@ -47,17 +46,21 @@ data class HouseholdCache(
     var rationCardDetails: String? = null,
 
     var povertyLine: String? = null,
+    var povertyLineId: Int = 0,
 
     //household Details
     var residentialArea: String? = null,
+    var residentialAreaId: Int = 0,
 
     var otherResidentialArea: String? = null,
 
     var houseType: String? = null,
+    var houseTypeId: Int = 0,
 
     var otherHouseType: String? = null,
 
     var isHouseOwned: String? = null,
+    var isHouseOwnedId: Int = 0,
 
     var isLandOwned: Boolean? = null,
 
@@ -65,32 +68,40 @@ data class HouseholdCache(
 
     var isLivestockOwned: Boolean? = null,
 
-    var street: String? = null,
+    var street: String = "null",
 
-    var colony: String? = null,
+    var colony: String = "null",
 
-    var pincode: Int? = null,
+    var pincode: Int = 0,
 
     //HH Amenities
     var separateKitchen: String? = null,
+    var separateKitchenId: Int = 0,
 
     var fuelUsed: String? = null,
+    var fuelUsedId: Int = 0,
 
     var otherFuelUsed: String? = null,
 
     var sourceOfDrinkingWater: String? = null,
+    var sourceOfDrinkingWaterId: Int = 0,
 
     var otherSourceOfDrinkingWater: String? = null,
 
     var availabilityOfElectricity: String? = null,
+    var availabilityOfElectricityId: Int = 0,
 
     var otherAvailabilityOfElectricity: String? = null,
 
+
     var availabilityOfToilet: String? = null,
+    var availabilityOfToiletId: Int = 0,
 
     var otherAvailabilityOfToilet: String? = null,
 
     var motorizedVehicle: String? = null,
+    var motorizedVehicleId: Int = 0,
+
 
     var otherMotorizedVehicle: String? = null,
 
@@ -99,21 +110,21 @@ data class HouseholdCache(
 
     var state: String? = null,
 
-    var stateId: Int? = null,
+    var stateId: Int = 0,
 
     var district: String? = null,
 
-    var districtId: Int? = null,
+    var districtId: Int = 0,
 
     var block: String? = null,
 
-    var blockId: Int? = null,
+    var blockId: Int = 0,
 
     var village: String? = null,
 
-    var villageId: Int? = null,
+    var villageId: Int = 0,
 
-    var countyId: Int? = null,
+    var countyId: Int = 0,
 
     var serverUpdatedStatus: Int = 0,
 
@@ -129,7 +140,7 @@ data class HouseholdCache(
 //
 //    var vanId :Int? = null,
 
-    var processed: String? = null,
+    var processed: String,
 
     var isDraft: Boolean
 
@@ -145,49 +156,58 @@ data class HouseholdCache(
 
     fun asNetworkModel(userCache: UserCache): HouseholdNetwork {
         return HouseholdNetwork(
-            householdId = householdId.toString(),
+            Countyid = countyId,
+            Processed = processed,
+            ProviderServiceMapID = userCache.serviceMapId,
+            VanID = userCache.vanId,
             ashaId = ashaId,
-            benId = benId ?: 0,
+            availabilityOfToilet = availabilityOfToilet,
+            availabilityofToiletId = availabilityOfToiletId,
+            availabilityOfElectricity = availabilityOfElectricity,
+            avalabilityofElectricityId = availabilityOfElectricityId,
+            blockid = blockId,
+            povertyLineId = povertyLineId,
+            createdBy = createdBy,
+            createdDate = getDateTimeStringFromLong(createdTimeStamp),
+            districtid = districtId,
             familyHeadName = familyHeadName,
+            familyHeadPhoneNo = familyHeadPhoneNo.toString(),
+            fuelUsed = fuelUsed,
+            fuelUsedId = fuelUsedId,
+            isHouseOwned = isHouseOwned,
+            houseOwnerShipId = isHouseOwnedId,
+            houseType = houseType,
+            houseTypeId = houseTypeId,
+            houseNo = houseNo ?: "null",
+            householdId = householdId.toString(),
+            otherAvailabilityOfToilet = otherAvailabilityOfToilet ?: "null",
+            otherAvailabilityOfElectricity = otherAvailabilityOfElectricity ?: "null",
+            otherFuelUsed = otherFuelUsed ?: "",
+            otherHouseType = otherHouseType ?: "",
+            otherMotorizedVehicle = otherMotorizedVehicle ?: "null",
+            otherResidentialArea = otherResidentialArea ?: "",
+            otherSourceOfDrinkingWater = otherSourceOfDrinkingWater ?: "null",
+            residentialArea = residentialArea ?: "null",
+            residentialAreaId = residentialAreaId,
+            separateKitchen = separateKitchen,
+            seperateKitchenId = separateKitchenId,
+            serverUpdatedStatus = serverUpdatedStatus,
+            sourceOfDrinkingWater = sourceOfDrinkingWater,
+            sourceofDrinkingWaterId = sourceOfDrinkingWaterId,
+            state = state,
+            stateid = stateId,
+            povertyLine = povertyLine,
+            updatedBy = updatedBy,
+            updatedDate = getDateTimeStringFromLong(updatedTimeStamp),
+            village = village,
+            villageid = villageId,
             familyName = familyName,
-            familyHeadPhoneNo = familyHeadPhoneNo,
-            houseNo = houseNo,
-            houseNum = houseNum,
+
             wardNo = wardNo,
             wardName = wardName,
             mohallaName = mohallaName,
             rationCardDetails = rationCardDetails,
-            povertyLine = povertyLine,
-            residentialArea = residentialArea,
-            otherResidentialArea = otherResidentialArea,
-            houseType = houseType,
-            otherHouseType = otherHouseType,
-            separateKitchen = separateKitchen,
-            fuelUsed = fuelUsed,
-            otherFuelUsed = otherFuelUsed,
-            sourceOfDrinkingWater = sourceOfDrinkingWater,
-            availabilityOfElectricity = availabilityOfElectricity,
-            otherAvailabilityOfElectricity = otherAvailabilityOfElectricity,
-            availabilityOfToilet = availabilityOfToilet,
-            otherAvailabilityOfToilet = otherAvailabilityOfToilet,
-            state = state,
-            district = district,
-            block = block,
-            village = village,
-            serverUpdatedStatus = serverUpdatedStatus,
-            createdBy = createdBy,
-            createdDate = getDateTimeStringFromLong(createdTimeStamp),
-            updatedBy = updatedBy,
-            updatedDate = getDateTimeStringFromLong(updatedTimeStamp),
-            ProviderServiceMapID = userCache.serviceMapId,
-            VanID = userCache.vanId,
-            Processed = processed,
-            Countyid = countyId ?: 0,
-            stateid = stateId ?: 0,
-            districtid = districtId ?: 0,
             districtname = district,
-            blockid = blockId ?: 0,
-            villageid = villageId ?: 0
         )
 
     }
@@ -209,11 +229,9 @@ data class HouseholdNetwork(
 
     val familyName: String? = null,
 
-    val familyHeadPhoneNo: Long? = null,
+    val familyHeadPhoneNo: String,
     @Json(name = "houseno")
-    val houseNo: String? = null,
-    @Json(name = "houseNum")
-    val houseNum: String? = null,
+    val houseNo: String,
 
     val wardNo: String? = null,
 
@@ -227,12 +245,12 @@ data class HouseholdNetwork(
     @Json(name = "bpl_aplId")
     val povertyLineId: Int = 0,
     //household Details
-    val residentialArea: String? = null,
+    val residentialArea: String,
 
     @Json(name = "residentialAreaId")
     val residentialAreaId: Int = 0,
     @Json(name = "other_residentialArea")
-    val otherResidentialArea: String? = null,
+    val otherResidentialArea: String,
 
     val houseType: String? = null,
     @Json(name = "houseTypeId")
@@ -247,28 +265,28 @@ data class HouseholdNetwork(
     val houseOwnerShipId: Int = 0,
 
     @Json(name = "landOwned")
-    val isLandOwned: Boolean? = null,
+    val isLandOwned: String = "< 2acres",
     @Json(name = "landOwnedId")
     val landOwnedId: Int = 0,
 
     @Json(name = "landIrregated")
-    val landIrregated: String? = null,
+    val landIrregated: String = "None",
     @Json(name = "landIrregatedId")
     val landIrregatedId: Int = 0,
 
     @Json(name = "liveStockOwnerShip")
-    val isLivestockOwned: Boolean? = null,
+    val isLivestockOwned: String = "No",
     @Json(name = "liveStockOwnerShipId")
     val liveStockOwnerShipId: Int = 0,
 
     @Json(name = "Street")
-    val street: String? = null,
+    val street: String = "null",
 
     @Json(name = "Colony")
-    val colony: String? = null,
+    val colony: String = "null",
 
     @Json(name = "Pincode")
-    val pincode: Int? = null,
+    val pincode: Int = 0,
 
     //HH Amenities
     @Json(name = "seperateKitchen")
@@ -280,21 +298,21 @@ data class HouseholdNetwork(
     @Json(name = "fuelUsedId")
     val fuelUsedId: Int = 0,
     @Json(name = "other_fuelUsed")
-    val otherFuelUsed: String? = null,
+    val otherFuelUsed: String,
 
     @Json(name = "sourceofDrinkingWater")
     val sourceOfDrinkingWater: String? = null,
     @Json(name = "sourceofDrinkingWaterId")
     val sourceofDrinkingWaterId: Int = 0,
     @Json(name = "other_sourceofDrinkingWater")
-    val otherSourceOfDrinkingWater: String? = null,
+    val otherSourceOfDrinkingWater: String,
 
     @Json(name = "avalabilityofElectricity")
     val availabilityOfElectricity: String? = null,
     @Json(name = "avalabilityofElectricityId")
     val avalabilityofElectricityId: Int = 0,
     @Json(name = "other_avalabilityofElectricity")
-    val otherAvailabilityOfElectricity: String? = null,
+    val otherAvailabilityOfElectricity: String,
 
     @Json(name = "availabilityofToilet")
     val availabilityOfToilet: String? = null,
@@ -303,7 +321,7 @@ data class HouseholdNetwork(
     @Json(name = "other_availabilityofToilet")
     val otherAvailabilityOfToilet: String? = null,
     @Json(name = "motarizedVehicle")
-    val motorizedVehicle: String? = null,
+    val motorizedVehicle: String = "Motor Bike",
     @Json(name = "motarizedVehicleId")
     val motarizedVehicleId: Int = 0,
     @Json(name = "other_motarizedVehicle")
@@ -338,16 +356,16 @@ data class HouseholdNetwork(
     val updatedDate: String? = null,
 
     @Json(name = "ProviderServiceMapID")
-    val ProviderServiceMapID: Int = 0,
+    val ProviderServiceMapID: Int,
 
     @Json(name = "VanID")
-    val VanID: Int = 0,
+    val VanID: Int,
 
     @Json(name = "Processed")
-    val Processed: String? = null,
+    val Processed: String,
 
     @Json(name = "Countyid")
-    val Countyid: Int = 0,
+    val Countyid: Int,
 
     @Json(name = "stateid")
     val stateid: Int = 0,
