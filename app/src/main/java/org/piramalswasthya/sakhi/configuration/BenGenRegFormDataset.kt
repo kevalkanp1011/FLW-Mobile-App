@@ -3,14 +3,19 @@ package org.piramalswasthya.sakhi.configuration
 import android.content.Context
 import android.text.InputType
 import android.widget.LinearLayout
+import id.zelory.compressor.Compressor
+import id.zelory.compressor.constraint.quality
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.model.FormInput.InputType.*
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
-class BenGenRegFormDataset(context: Context) {
+class BenGenRegFormDataset(private val context: Context) {
 
     private var ben: BenRegCache? = null
 
@@ -438,7 +443,7 @@ class BenGenRegFormDataset(context: Context) {
             )
 
 
-    fun getBenForFirstPage(userId: Int, hhId: Long): BenRegCache {
+    suspend fun getBenForFirstPage(userId: Int, hhId: Long): BenRegCache {
         if (ben == null) {
             ben = BenRegCache(
                 ashaId = userId,
@@ -452,6 +457,7 @@ class BenGenRegFormDataset(context: Context) {
             )
         }
         ben?.apply {
+            userImageBlob = getByteArrayFromImageUri(pic.value.value!!)
             regDate = getLongFromDate(this@BenGenRegFormDataset.dateOfReg.value.value!!)
             firstName = this@BenGenRegFormDataset.firstName.value.value
             lastName = this@BenGenRegFormDataset.lastName.value.value
@@ -506,6 +512,28 @@ class BenGenRegFormDataset(context: Context) {
         }
         return ben!!
 
+    }
+
+    private suspend fun getByteArrayFromImageUri(uriString: String): ByteArray? {
+        val file = File(context.cacheDir, uriString.substringAfterLast("/"))
+        val compressedFile = Compressor.compress(context, file) {
+            quality(70)
+        }
+        val iStream = compressedFile.inputStream()
+        val byteArray = getBytes(iStream)
+        iStream.close()
+        return byteArray
+    }
+
+    private fun getBytes(inputStream: InputStream): ByteArray? {
+        val byteBuffer = ByteArrayOutputStream()
+        val bufferSize = 1024
+        val buffer = ByteArray(bufferSize)
+        var len = 0
+        while (inputStream.read(buffer).also { len = it } != -1) {
+            byteBuffer.write(buffer, 0, len)
+        }
+        return byteBuffer.toByteArray()
     }
 
     private fun getDoMFromDoR(ageAtMarriage: Int?, regDate: Long): Long? {
