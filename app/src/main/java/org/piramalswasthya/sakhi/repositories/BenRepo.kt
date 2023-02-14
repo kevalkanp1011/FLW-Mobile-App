@@ -456,7 +456,6 @@ class BenRepo @Inject constructor(
 
     suspend fun getBeneficiariesFromServerForWorker(pageNumber: Int): Int {
         return withContext(Dispatchers.IO) {
-            val benDataList = mutableListOf<BenBasicDomain>()
             val user =
                 database.userDao.getLoggedInUser()
                     ?: throw IllegalStateException("No user logged in!!")
@@ -477,67 +476,25 @@ class BenRepo @Inject constructor(
                         val errorMessage = jsonObj.getString("errorMessage")
                         val responseStatusCode = jsonObj.getInt("statusCode")
                         if (responseStatusCode != 200)
-                            throw SocketTimeoutException("User logged out!")
+                            throw IllegalStateException("User logged out!")
                         val dataObj = jsonObj.getJSONObject("data")
-                        val jsonArray = dataObj.getJSONArray("data")
                         val pageSize = dataObj.getInt("totalPage")
 
-                        if (jsonArray.length() != 0) {
-//                                lay_recy.setVisibility(View.VISIBLE)
-//                                lay_no_ben.setVisibility(View.GONE)
-//                                draftLists.clear()
-//                                benServerDataList.clear()
-//                                houseHoldServerData.clear()
-
-                            for (i in 0 until jsonArray.length()) {
-                                val jsonObject = jsonArray.getJSONObject(i)
-                                val houseDataObj = jsonObject.getJSONObject("householdDetails")
-                                val benDataObj = jsonObject.getJSONObject("beneficiaryDetails")
-
-                                val benId =
-                                    if (jsonObject.has("benficieryid")) jsonObject.getLong("benficieryid") else -1L
-                                val hhId =
-                                    if (jsonObject.has("houseoldId")) jsonObject.getLong("houseoldId") else -1L
-                                if (benId == -1L || hhId == -1L)
-                                    continue
-                                val benExists = database.benDao.getBen(hhId, benId) != null
-
-                                benDataList.add(
-                                    BenBasicDomain(
-                                        benId = jsonObject.getLong("benficieryid"),
-                                        hhId = jsonObject.getLong("houseoldId"),
-                                        regDate = benDataObj.getString("registrationDate"),
-                                        benName = benDataObj.getString("firstName"),
-                                        benSurname = benDataObj.getString("lastName"),
-                                        gender = benDataObj.getString("gender"),
-                                        age = benDataObj.getInt("age").toString(),
-                                        mobileNo = benDataObj.getString("contact_number"),
-                                        fatherName = benDataObj.getString("fatherName"),
-                                        familyHeadName = houseDataObj.getString("familyHeadName"),
-                                        rchId = benDataObj.getString("rchid"),
-                                        hrpStatus = benDataObj.getBoolean("hrpStatus")
-                                            .toString(),
-                                        typeOfList = benDataObj.getString("registrationType"),
-                                        syncState = if (benExists) SyncState.SYNCED else SyncState.SYNCING
-                                    )
-                                )
-                            }
-                            try {
-                                database.householdDao.upsert(
-                                    *getHouseholdCacheFromServerResponse(
-                                        responseString
-                                    ).toTypedArray()
-                                )
-                            } catch (e: Exception) {
-                                Timber.d("HouseHold list not synced $e")
-                                return@withContext -1
-                            }
-                            database.benDao.upsert(*getBenCacheFromServerResponse(responseString).toTypedArray())
-
-                            Timber.d("GeTBenDataList: $pageSize $benDataList")
-                            return@withContext pageSize
+                        try {
+                            database.householdDao.upsert(
+                                *getHouseholdCacheFromServerResponse(
+                                    responseString
+                                ).toTypedArray()
+                            )
+                        } catch (e: Exception) {
+                            Timber.d("HouseHold list not synced $e")
+                            return@withContext 0
                         }
-                        throw IllegalStateException("Response code !-100")
+                        val benCacheList = getBenCacheFromServerResponse(responseString);
+                        database.benDao.upsert(*benCacheList.toTypedArray())
+
+                        Timber.d("GeTBenDataList: $pageSize")
+                        return@withContext pageSize
                     }
                 }
 
@@ -546,7 +503,6 @@ class BenRepo @Inject constructor(
                 return@withContext getBeneficiariesFromServerForWorker(pageNumber)
 
             }
-            Timber.d("get_ben data : $benDataList")
             -1
         }
     }
@@ -664,7 +620,6 @@ class BenRepo @Inject constructor(
             if (jsonArray.length() != 0) {
                 for (i in 0 until jsonArray.length()) {
                     val jsonObject = jsonArray.getJSONObject(i)
-                    val houseDataObj = jsonObject.getJSONObject("householdDetails")
                     val benDataObj = jsonObject.getJSONObject("beneficiaryDetails")
                     val cbacDataObj = jsonObject.getJSONObject("cbacDetails")
                     val childDataObj = jsonObject.getJSONObject("bornbirthDeatils")
@@ -682,47 +637,48 @@ class BenRepo @Inject constructor(
                         continue
                     }
 
-                    result.add(
-                        BenRegCache(
-                            householdId = jsonObject.getLong("houseoldId"),
-                            beneficiaryId = jsonObject.getLong("benficieryid"),
-                            ashaId = jsonObject.getInt("ashaId"),
-                            benRegId = jsonObject.getLong("BenRegId"),
-                            age = benDataObj.getInt("age"),
-                            ageUnit = when (benDataObj.getString("age_unit")) {
-                                "Year(s)" -> AgeUnit.YEARS
-                                "Month(s)" -> AgeUnit.MONTHS
-                                "Day(s)" -> AgeUnit.DAYS
-                                else -> AgeUnit.YEARS
-                            },
-                            isKid = !(benDataObj.getString("age_unit") == "Year(s)" && benDataObj.getInt(
-                                "age"
-                            ) > 14),
-                            isAdult = (benDataObj.getString("age_unit") == "Year(s)" && benDataObj.getInt(
-                                "age"
-                            ) > 14),
-                            userImageBlob = benDataObj.getString("user_image").toByteArray(),
-                            regDate = getLongFromDate(benDataObj.getString("registrationDate")),
-                            firstName = benDataObj.getString("firstName"),
-                            lastName = benDataObj.getString("lastName"),
-                            gender = when (benDataObj.getString("gender")) {
-                                "Male" -> Gender.MALE
-                                "Female" -> Gender.FEMALE
-                                "Transgender" -> Gender.TRANSGENDER
-                                else -> Gender.MALE
-                            },
-                            genderId = benDataObj.getInt("genderId"),
-                            dob = getLongFromDate(benDataObj.getString("dob")),
-                            age_unitId = benDataObj.getInt("age_unitId"),
-                            fatherName = benDataObj.getString("fatherName"),
-                            motherName = benDataObj.getString("motherName"),
-                            familyHeadRelation = benDataObj.getString("familyHeadRelation"),
-                            familyHeadRelationPosition = benDataObj.getInt("familyHeadRelationPosition"),
+                    try {
+                        result.add(
+                            BenRegCache(
+                                householdId = jsonObject.getLong("houseoldId"),
+                                beneficiaryId = jsonObject.getLong("benficieryid"),
+                                ashaId = jsonObject.getInt("ashaId"),
+                                benRegId = jsonObject.getLong("BenRegId"),
+                                age = benDataObj.getInt("age"),
+                                ageUnit = when (benDataObj.getString("age_unit")) {
+                                    "Year(s)" -> AgeUnit.YEARS
+                                    "Month(s)" -> AgeUnit.MONTHS
+                                    "Day(s)" -> AgeUnit.DAYS
+                                    else -> AgeUnit.YEARS
+                                },
+                                isKid = !(benDataObj.getString("age_unit") == "Year(s)" && benDataObj.getInt(
+                                    "age"
+                                ) > 14),
+                                isAdult = (benDataObj.getString("age_unit") == "Year(s)" && benDataObj.getInt(
+                                    "age"
+                                ) > 14),
+                                userImageBlob = benDataObj.getString("user_image").toByteArray(),
+                                regDate = getLongFromDate(benDataObj.getString("registrationDate")),
+                                firstName = benDataObj.getString("firstName"),
+                                lastName = benDataObj.getString("lastName"),
+                                gender = when (benDataObj.getString("gender")) {
+                                    "Male" -> Gender.MALE
+                                    "Female" -> Gender.FEMALE
+                                    "Transgender" -> Gender.TRANSGENDER
+                                    else -> Gender.MALE
+                                },
+                                genderId = benDataObj.getInt("genderId"),
+                                dob = getLongFromDate(benDataObj.getString("dob")),
+                                age_unitId = benDataObj.getInt("age_unitId"),
+                                fatherName = benDataObj.getString("fatherName"),
+                                motherName = benDataObj.getString("motherName"),
+                                familyHeadRelation = benDataObj.getString("familyHeadRelation"),
+                                familyHeadRelationPosition = benDataObj.getInt("familyHeadRelationPosition"),
 //                            familyHeadRelationOther = benDataObj.getString("familyHeadRelationOther"),
-                            mobileNoOfRelation = benDataObj.getString("mobilenoofRelation"),
-                            mobileNoOfRelationId = benDataObj.getInt("mobileNoOfRelationId"),
-                            mobileOthers = benDataObj.getString("mobileOthers"),
-                            contactNumber = benDataObj.getString("contact_number").toLong(),
+                                mobileNoOfRelation = benDataObj.getString("mobilenoofRelation"),
+                                mobileNoOfRelationId = benDataObj.getInt("mobileNoOfRelationId"),
+                                mobileOthers = benDataObj.getString("mobileOthers"),
+                                contactNumber = benDataObj.getString("contact_number").toLong(),
 //                            literacy = literacy,
                             literacyId = benDataObj.getInt("literacyId"),
                             community = benDataObj.getString("community"),
@@ -751,10 +707,10 @@ class BenRepo @Inject constructor(
                             hasAadhar = benDataObj.getString("aadhaNo") != "",
                             hasAadharId = if (benDataObj.getInt("aadha_noId") == 1) 1 else 0,
 //                            bankAccountId = bank_accountId,
-                            bankAccount = benDataObj.getString("bankAccount"),
-                            nameOfBank = benDataObj.getString("nameOfBank"),
+                                bankAccount = benDataObj.getString("bankAccount"),
+                                nameOfBank = benDataObj.getString("nameOfBank"),
 //                            nameOfBranch = nameOfBranch,
-                            ifscCode = benDataObj.getString("ifscCode"),
+                                ifscCode = benDataObj.getString("ifscCode"),
 //                            needOpCare = need_opcare,
                             needOpCareId = benDataObj.getInt("need_opcareId"),
                             ncdPriority = benDataObj.getInt("ncd_priority"),
@@ -769,121 +725,124 @@ class BenRepo @Inject constructor(
 //                            nishchayDeliveryStatusPosition = nishchayDeliveryStatusPosition,
 //                            nayiPahalDeliveryStatus = nayiPahalDeliveryStatus,
 //                            nayiPahalDeliveryStatusPosition = nayiPahalDeliveryStatusPosition,
-                            suspectedNcd = cbacDataObj.getString("suspected_ncd"),
-                            suspectedNcdDiseases = cbacDataObj.getString("suspected_ncd_diseases"),
-                            suspectedTb = cbacDataObj.getString("suspected_tb"),
-                            confirmed_Ncd = cbacDataObj.getString("confirmed_ncd"),
-                            confirmedHrp = cbacDataObj.getString("confirmed_hrp"),
-                            confirmedTb = cbacDataObj.getString("confirmed_tb"),
-                            confirmedNcdDiseases = cbacDataObj.getString("confirmed_ncd_diseases"),
-                            diagnosisStatus = cbacDataObj.getString("diagnosis_status"),
-                            locationRecord = LocationRecord (
-                                countryId = benDataObj.getInt("countyId"),
-                                stateId = benDataObj.getInt("stateId"),
-                                state = benDataObj.getString("stateName"),
-                                districtId = benDataObj.getInt("districtid"),
-                                district = benDataObj.getString("districtname"),
-                                blockId = benDataObj.getInt("blockId"),
-                                block = benDataObj.getString("blockName"),
-                                villageId = benDataObj.getInt("villageId"),
-                                village = benDataObj.getString("villageName"),
-                            ),
-                            processed = "P",
-                            serverUpdatedStatus = 1,
-                            createdBy = benDataObj.getString("createdBy"),
-                            createdDate = getLongFromDate(benDataObj.getString("createdDate")),
-                            kidDetails = BenRegKid(
+                                suspectedNcd = cbacDataObj.getString("suspected_ncd"),
+                                suspectedNcdDiseases = cbacDataObj.getString("suspected_ncd_diseases"),
+                                suspectedTb = cbacDataObj.getString("suspected_tb"),
+                                confirmed_Ncd = cbacDataObj.getString("confirmed_ncd"),
+                                confirmedHrp = cbacDataObj.getString("confirmed_hrp"),
+                                confirmedTb = cbacDataObj.getString("confirmed_tb"),
+                                confirmedNcdDiseases = cbacDataObj.getString("confirmed_ncd_diseases"),
+                                diagnosisStatus = cbacDataObj.getString("diagnosis_status"),
+                                locationRecord = LocationRecord (
+                                    countryId = benDataObj.getInt("countyId"),
+                                    stateId = benDataObj.getInt("stateId"),
+                                    state = benDataObj.getString("stateName"),
+                                    districtId = benDataObj.getInt("districtid"),
+                                    district = benDataObj.getString("districtname"),
+                                    blockId = benDataObj.getInt("blockId"),
+                                    block = benDataObj.getString("blockName"),
+                                    villageId = benDataObj.getInt("villageId"),
+                                    village = benDataObj.getString("villageName"),
+                                ),
+                                processed = "P",
+                                serverUpdatedStatus = 1,
+                                createdBy = benDataObj.getString("createdBy"),
+                                createdDate = getLongFromDate(benDataObj.getString("createdDate")),
+                                kidDetails = BenRegKid(
 //                                childRegisteredAWC = childRegisteredAWC,
-                                childRegisteredAWCId = benDataObj.getInt("childRegisteredAWCID"),
+                                    childRegisteredAWCId = benDataObj.getInt("childRegisteredAWCID"),
 //                                childRegisteredSchool = childRegisteredSchool,
-                                childRegisteredSchoolId = benDataObj.getInt("childRegisteredSchoolID"),
+                                    childRegisteredSchoolId = benDataObj.getInt("childRegisteredSchoolID"),
 //                                typeOfSchool = typeofSchool,
-                                typeOfSchoolId = benDataObj.getInt("typeofSchoolID"),
-                                birthPlace  = childDataObj.getString("birthPlace"),
-                                birthPlaceId  = childDataObj.getInt("birthPlaceid").toString(),
-                                facilityName  = childDataObj.getString("facilityName"),
-                                facilityid  = childDataObj.getInt("facilityid").toString(),
-                                facilityOther  = childDataObj.getString("facilityOther"),
-                                placeName  = childDataObj.getString("placeName"),
-                                conductedDelivery  = childDataObj.getString("conductedDelivery"),
-                                conductedDeliveryId  = childDataObj.getInt("conductedDeliveryid").toString(),
-                                conductedDeliveryOther  = childDataObj.getString("conductedDeliveryOther"),
-                                deliveryType  = childDataObj.getString("deliveryType"),
-                                deliveryTypeId  = childDataObj.getInt("deliveryTypeid").toString(),
-                                complications  = childDataObj.getString("complecations"),
-                                complicationsId  = childDataObj.getInt("complecationsid").toString(),
-                                complicationsOther  = childDataObj.getString("complicationsOther"),
-                                term  = childDataObj.getString("term"),
-                                termid  = childDataObj.getInt("termid").toString(),
+                                    typeOfSchoolId = benDataObj.getInt("typeofSchoolID"),
+                                    birthPlace  = childDataObj.getString("birthPlace"),
+                                    birthPlaceId  = childDataObj.getInt("birthPlaceid").toString(),
+                                    facilityName  = childDataObj.getString("facilityName"),
+                                    facilityid  = childDataObj.getInt("facilityid").toString(),
+                                    facilityOther  = childDataObj.getString("facilityOther"),
+                                    placeName  = childDataObj.getString("placeName"),
+                                    conductedDelivery  = childDataObj.getString("conductedDelivery"),
+                                    conductedDeliveryId  = childDataObj.getInt("conductedDeliveryid").toString(),
+                                    conductedDeliveryOther  = childDataObj.getString("conductedDeliveryOther"),
+                                    deliveryType  = childDataObj.getString("deliveryType"),
+                                    deliveryTypeId  = childDataObj.getInt("deliveryTypeid").toString(),
+                                    complications  = childDataObj.getString("complecations"),
+                                    complicationsId  = childDataObj.getInt("complecationsid").toString(),
+                                    complicationsOther  = childDataObj.getString("complicationsOther"),
+                                    term  = childDataObj.getString("term"),
+                                    termid  = childDataObj.getInt("termid").toString(),
 //                                gestationalAge  = childDataObj.getString("gestationalAge"),
-                                gestationalAgeId  = childDataObj.getInt("gestationalAgeid").toString(),
+                                    gestationalAgeId  = childDataObj.getInt("gestationalAgeid").toString(),
 //                                corticosteroidGivenMother  = childDataObj.getString("corticosteroidGivenMother"),
-                                corticosteroidGivenMotherId  = childDataObj.getInt("corticosteroidGivenMotherid").toString(),
-                                criedImmediately  = childDataObj.getString("criedImmediately"),
-                                criedImmediatelyId = childDataObj.getInt("criedImmediatelyid").toString(),
-                                birthDefects  = childDataObj.getString("birthDefects"),
-                                birthDefectsId  = childDataObj.getInt("birthDefectsid").toString(),
-                                birthDefectsOthers  = childDataObj.getString("birthDefectsOthers"),
-                                heightAtBirth  = childDataObj.getInt("heightAtBirth").toString(),
-                                weightAtBirth  = childDataObj.getInt("weightAtBirth").toString(),
-                                feedingStarted  = childDataObj.getString("feedingStarted"),
-                                feedingStartedId  = childDataObj.getInt("feedingStartedid").toString(),
-                                birthDosage  = childDataObj.getString("birthDosage"),
-                                birthDosageId  = childDataObj.getInt("birthDosageid").toString(),
-                                opvBatchNo  = childDataObj.getString("opvBatchNo"),
+                                    corticosteroidGivenMotherId  = childDataObj.getInt("corticosteroidGivenMotherid").toString(),
+                                    criedImmediately  = childDataObj.getString("criedImmediately"),
+                                    criedImmediatelyId = childDataObj.getInt("criedImmediatelyid").toString(),
+                                    birthDefects  = childDataObj.getString("birthDefects"),
+                                    birthDefectsId  = childDataObj.getInt("birthDefectsid").toString(),
+                                    birthDefectsOthers  = childDataObj.getString("birthDefectsOthers"),
+                                    heightAtBirth  = childDataObj.getInt("heightAtBirth").toString(),
+                                    weightAtBirth  = childDataObj.getInt("weightAtBirth").toString(),
+                                    feedingStarted  = childDataObj.getString("feedingStarted"),
+                                    feedingStartedId  = childDataObj.getInt("feedingStartedid").toString(),
+                                    birthDosage  = childDataObj.getString("birthDosage"),
+                                    birthDosageId  = childDataObj.getInt("birthDosageid").toString(),
+                                    opvBatchNo  = childDataObj.getString("opvBatchNo"),
 //                                opvGivenDueDate  = childDataObj.getString("opvGivenDueDate"),
 //                                opvDate  = childDataObj.getString("opvDate"),
-                                bcdBatchNo  = childDataObj.getString("bcdBatchNo"),
+                                    bcdBatchNo  = childDataObj.getString("bcdBatchNo"),
 //                                bcgGivenDueDate  = childDataObj.getString("bcgGivenDueDate"),
 //                                bcgDate  = childDataObj.getString("bcgDate"),
-                                hptBatchNo  = childDataObj.getString("hptdBatchNo"),
+                                    hptBatchNo  = childDataObj.getString("hptdBatchNo"),
 //                                hptGivenDueDate  = childDataObj.getString("hptGivenDueDate"),
 //                                hptDate  = childDataObj.getString("hptDate"),
-                                vitaminKBatchNo  = childDataObj.getString("vitaminkBatchNo"),
+                                    vitaminKBatchNo  = childDataObj.getString("vitaminkBatchNo"),
 //                                vitaminKGivenDueDate  =  childDataObj.getString("vitaminKGivenDueDate"),
 //                                vitaminKDate =  childDataObj.getString("vitaminKDate"),
-                                deliveryTypeOther =  childDataObj.getString("deliveryTypeOther"),
+                                    deliveryTypeOther =  childDataObj.getString("deliveryTypeOther"),
 
 //                                motherBenId =  childDataObj.getString("conductedDeliveryOther"),
 //                                childMotherName =  childDataObj.getString("conductedDeliveryOther"),
 //                                motherPosition =  childDataObj.getString("conductedDeliveryOther"),
-                                birthBCG = childDataObj.getBoolean("birthBCG"),
-                                birthHepB = childDataObj.getBoolean("birthHepB"),
-                                birthOPV = childDataObj.getBoolean("birthOPV"),
-                            ),
-                            genDetails = BenRegGen(
-                                maritalStatus = benDataObj.getString("maritalstatus"),
-                                maritalStatusId = benDataObj.getInt("maritalstatusId"),
-                                spouseName = benDataObj.getString("spousename"),
-                                ageAtMarriage = benDataObj.getInt("ageAtMarriage"),
+                                    birthBCG = childDataObj.getBoolean("birthBCG"),
+                                    birthHepB = childDataObj.getBoolean("birthHepB"),
+                                    birthOPV = childDataObj.getBoolean("birthOPV"),
+                                ),
+                                genDetails = BenRegGen(
+                                    maritalStatus = benDataObj.getString("maritalstatus"),
+                                    maritalStatusId = benDataObj.getInt("maritalstatusId"),
+                                    spouseName = benDataObj.getString("spousename"),
+                                    ageAtMarriage = benDataObj.getInt("ageAtMarriage"),
 //                                dateOfMarriage = getLongFromDate(dateMarriage),
-//                                marriageDate = benDataObj.getString("marriageDate"),
+                                    marriageDate = getLongFromDate(benDataObj.getString("marriageDate")),
 //                                menstrualStatus = menstrualStatus,
-                                menstrualStatusId = benDataObj.getInt("menstrualStatusId"),
+                                    menstrualStatusId = benDataObj.getInt("menstrualStatusId"),
 //                                regularityOfMenstrualCycle = regularityofMenstrualCycle,
-                                regularityOfMenstrualCycleId = benDataObj.getInt("regularityofMenstrualCycleId"),
+                                    regularityOfMenstrualCycleId = benDataObj.getInt("regularityofMenstrualCycleId"),
 //                                lengthOfMenstrualCycle = lengthofMenstrualCycle,
-                                lengthOfMenstrualCycleId = benDataObj.getInt("lengthofMenstrualCycleId"),
+                                    lengthOfMenstrualCycleId = benDataObj.getInt("lengthofMenstrualCycleId"),
 //                                menstrualBFD = menstrualBFD,
-                                menstrualBFDId = benDataObj.getInt("menstrualBFDId"),
+                                    menstrualBFDId = benDataObj.getInt("menstrualBFDId"),
 //                                menstrualProblem = menstrualProblem,
-                                menstrualProblemId = benDataObj.getInt("menstrualProblemId"),
+                                    menstrualProblemId = benDataObj.getInt("menstrualProblemId"),
 //                                lastMenstrualPeriod = lastMenstrualPeriod,
-                                reproductiveStatus = benDataObj.getString("reproductiveStatus"),
-                                reproductiveStatusId = benDataObj.getInt("reproductiveStatusId"),
+                                    reproductiveStatus = benDataObj.getString("reproductiveStatus"),
+                                    reproductiveStatusId = benDataObj.getInt("reproductiveStatusId"),
 //                                lastDeliveryConducted = lastDeliveryConducted,
-                                lastDeliveryConductedId = benDataObj.getInt("lastDeliveryConductedID"),
+                                    lastDeliveryConductedId = benDataObj.getInt("lastDeliveryConductedID"),
 //                                facilityName = facilitySelection,
 //                                whoConductedDelivery = whoConductedDelivery,
-                                whoConductedDeliveryId = benDataObj.getInt("whoConductedDeliveryID"),
+                                    whoConductedDeliveryId = benDataObj.getInt("whoConductedDeliveryID"),
 //                                deliveryDate = deliveryDate,
-//                                expectedDateOfDelivery = benDataObj.getString("expectedDateOfDelivery"),
+                                    expectedDateOfDelivery = getLongFromDate(benDataObj.getString("expectedDateOfDelivery")),
 //                                noOfDaysForDelivery = noOfDaysForDelivery,
                                 ),
-                            syncState = SyncState.SYNCED,
-                            isDraft = false
+                                syncState = SyncState.SYNCED,
+                                isDraft = false
+                            )
                         )
-                    )
+                    }catch (e: JSONException) {
+                        Timber.i("Beneficiary skipped: ${jsonObject.getLong("benficieryid")} with error $e")
+                    }
                 }
             }
         }
