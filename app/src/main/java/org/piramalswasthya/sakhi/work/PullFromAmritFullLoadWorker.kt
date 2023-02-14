@@ -38,6 +38,9 @@ class PullFromAmritFullLoadWorker @AssistedInject constructor(
             withContext(Dispatchers.IO) {
                 val startTime = System.currentTimeMillis()
                 val numPages = benRepo.getBeneficiariesFromServerForWorker(0)
+                if(numPages == -1) {
+                 Timber.d("Page size returned -1")
+                }
                 for (j in 0 until n) {
                     if (j < numPages)
                         getBenForPage(numPages, j)
