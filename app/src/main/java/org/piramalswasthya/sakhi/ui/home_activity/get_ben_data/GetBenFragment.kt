@@ -39,8 +39,6 @@ class GetBenFragment : Fragment() {
         val benAdapter = BenListAdapter()
         binding.rvBenServer.adapter = benAdapter
 
-
-
         viewModel.state.observe(viewLifecycleOwner){
             when(it) {
                 IDLE -> {} //TODO()
@@ -56,7 +54,6 @@ class GetBenFragment : Fragment() {
                 }
                 ERROR_NETWORK -> {} //TODO()
                 SUCCESS -> {
-                    benAdapter.submitList(viewModel.benDataList)
                     setUpPagesAdapter()
                     binding.clError.visibility = View.GONE
                     binding.clContent.visibility = View.VISIBLE
