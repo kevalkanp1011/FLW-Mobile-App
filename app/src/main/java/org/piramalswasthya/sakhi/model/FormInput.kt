@@ -2,6 +2,7 @@ package org.piramalswasthya.sakhi.model
 
 import android.text.InputType.TYPE_CLASS_TEXT
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.io.File
 
 
 data class FormInput(
@@ -17,7 +18,8 @@ data class FormInput(
     var errorText: String? = null,
     var max: Long? = null,
     var min: Long? = null,
-    val orientation: Int? = null
+    val orientation: Int? = null,
+    var imageFile: File? = null
 ){
 
 

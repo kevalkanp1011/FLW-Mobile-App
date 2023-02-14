@@ -96,5 +96,10 @@ class HomeViewModel @Inject constructor(
         _navigateToLoginPage.value = false
     }
 
+    fun checkIfFullLoadCompletedBefore(): Boolean {
+        return pref.isFullLoadCompleted()
+
+    }
+
 
 }

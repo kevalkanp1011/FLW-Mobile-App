@@ -12,6 +12,27 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <LinearLayout
+            android:id="@+id/ll_full_load_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_normal"
+                android:text="Full load under progress..."
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true" />
+        </LinearLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_select_village"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -19,7 +40,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/padding_normal"
             android:hint="@string/til_hint_selected_village"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/ll_full_load_progress">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_select_village"
@@ -28,8 +49,7 @@
                 android:focusable="false"
                 android:drawableEnd="@drawable/ic_edit"
                 android:inputType="textNoSuggestions"
-                tools:text="NONE"
-                />
+                tools:text="NONE" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView

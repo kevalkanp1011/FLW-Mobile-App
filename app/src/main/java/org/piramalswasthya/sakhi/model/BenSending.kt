@@ -237,7 +237,7 @@ fun BenRegCache.asNetworkSendingModel(
         ifscCode = ifscCode ?: "",
         accountNo = bankAccount,
         ageAtMarriage = genDetails?.ageAtMarriage?.toString(),
-        marriageDate = genDetails?.marriageDate,
+        marriageDate = getDateTimeStringFromLong(genDetails?.marriageDate),
         genderID = genderId,
         genderName = when (gender) {
             MALE -> "Male"

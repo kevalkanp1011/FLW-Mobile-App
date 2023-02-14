@@ -19,8 +19,8 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
 import org.piramalswasthya.sakhi.databinding.FragmentNewBenRegTypeBinding
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
-import org.piramalswasthya.sakhi.work.BenDataSendingWorker
 import org.piramalswasthya.sakhi.work.GenerateBenIdsWorker
+import org.piramalswasthya.sakhi.work.PushToAmritWorker
 
 @AndroidEntryPoint
 class NewBenRegTypeFragment : Fragment() {
@@ -191,13 +191,13 @@ class NewBenRegTypeFragment : Fragment() {
 
     companion object {
         fun triggerBenDataSendingWorker(context: Context) {
-            val workRequest = OneTimeWorkRequestBuilder<BenDataSendingWorker>()
-                .setConstraints(BenDataSendingWorker.constraint)
+            val workRequest = OneTimeWorkRequestBuilder<PushToAmritWorker>()
+                .setConstraints(PushToAmritWorker.constraint)
                 .build()
             WorkManager.getInstance(context)
                 .enqueueUniqueWork(
-                    BenDataSendingWorker.name,
-                    ExistingWorkPolicy.APPEND,
+                    PushToAmritWorker.name,
+                    ExistingWorkPolicy.APPEND_OR_REPLACE,
                     workRequest
                 )
         }
