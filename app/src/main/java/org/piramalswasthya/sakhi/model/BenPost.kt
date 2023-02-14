@@ -124,7 +124,7 @@ data class BenPost(
     @Json(name = "typeofSchoolID")
     val typeOfSchoolId: Int,
     @Json(name = "user_image")
-    val userImage: ByteArray,
+    val userImage: String,
     @Json(name = "villageid")
     val villageId: Int,
     @Json(name = "villagename")
