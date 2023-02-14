@@ -41,4 +41,31 @@ interface BenDao {
     @Query("UPDATE BENEFICIARY SET processed = \"P\", syncState = 2 WHERE beneficiaryId =:benId")
     suspend fun benSyncedWithServer(vararg benId: Long)
 
+    @Query("SELECT beneficiaryId FROM BENEFICIARY WHERE beneficiaryId IN (:list)")
+    fun getAllBeneficiaryFromList(list: List<Long>): LiveData<List<Long>>
+
+    @Query("SELECT * FROM BENEFICIARY WHERE age BETWEEN 15 AND 49 and gender = \"Female\" and gen_marriageDate IS NOT NULL")
+    fun getAllEligibleCoupleList(): LiveData<List<BenRegCache>>
+
+    @Query("SELECT * FROM BENEFICIARY WHERE gender = \"Female\" and nishchayPregnancyStatus IS NOT NULL")
+    fun getAllPregnancyWomenList(): LiveData<List<BenRegCache>>
+
+    @Query("SELECT * FROM BENEFICIARY WHERE gender = \"Female\" and nishchayDeliveryStatus IS NOT NULL")
+    fun getAllDeliveryStageWomenList(): LiveData<List<BenRegCache>>
+
+    @Query("SELECT * FROM BENEFICIARY WHERE age >= 30")
+    fun getAllNCDEligibleList(): LiveData<List<BenRegCache>>
+
+//    @Query("SELECT * FROM BENEFICIARY WHERE age >= 30 and cbacScore > 4")
+//    fun getAllNCDPriorityList(): LiveData<List<BenRegCache>>
+
+    @Query("SELECT * FROM BENEFICIARY WHERE age < 30")
+    fun getAllNCDNonEligibleList(): LiveData<List<BenRegCache>>
+
+    // have to add those as well who we are adding to menopause list manually from app
+    @Query("SELECT * FROM BENEFICIARY WHERE gender = \"Female\" and age > 50")
+    fun getAllMenopauseStageList(): LiveData<List<BenRegCache>>
+
+    @Query("SELECT * FROM BENEFICIARY WHERE gender = \"Female\" and gen_reproductiveStatus = \"Delivery Stage\"")
+    fun getAllReproductiveAgeList(): LiveData<List<BenRegCache>>
 }

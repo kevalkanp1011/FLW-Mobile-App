@@ -45,7 +45,7 @@ data class BenBasicDomain(
     val typeOfList: String,
     val rchId: String,
     val hrpStatus: String? = null,
-    val syncState: SyncState
+    var syncState: SyncState
 )
 
 data class BenRegKid(
