@@ -14,11 +14,12 @@
         android:background="@color/secondaryLightColor">
 
 
-        <SearchView
+        <EditText
             android:id="@+id/searchView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:iconifiedByDefault="false"
+            android:drawableStart="@android:drawable/ic_menu_search"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView

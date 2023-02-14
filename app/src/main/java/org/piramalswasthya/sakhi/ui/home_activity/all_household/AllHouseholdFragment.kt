@@ -1,9 +1,12 @@
 package org.piramalswasthya.sakhi.ui.home_activity.all_household
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -78,10 +81,31 @@ class AllHouseholdFragment : Fragment() {
         }
 
         binding.btnNextPage.setOnClickListener {
-            if(hasDraft)
+            if (hasDraft)
                 draftLoadAlert.show()
             else
                 viewModel.navigateToNewHouseholdRegistration(false)
+        }
+        val searchTextWatcher = object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                viewModel.filterText(p0?.toString() ?: "")
+            }
+
+        }
+        binding.searchView.setOnFocusChangeListener { searchView, b ->
+            if (b)
+                (searchView as EditText).addTextChangedListener(searchTextWatcher)
+            else
+                (searchView as EditText).removeTextChangedListener(searchTextWatcher)
+
         }
     }
 

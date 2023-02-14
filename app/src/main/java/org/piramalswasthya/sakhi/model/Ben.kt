@@ -549,7 +549,7 @@ data class BenRegCache(
             nishchayDeliveryStatusPosition = nishchayDeliveryStatusPosition,
             nayiPahalDeliveryStatusPosition = nayiPahalDeliveryStatusPosition,
             isImmunizationStatus = immunizationStatus,
-            userImage = userImageBlob!!,
+            userImage = userImageBlob.toString(),
         )
     }
 

@@ -2,7 +2,6 @@ package org.piramalswasthya.sakhi.repositories
 
 import androidx.lifecycle.Transformations
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONException
@@ -12,7 +11,6 @@ import org.piramalswasthya.sakhi.configuration.BenKidRegFormDataset
 import org.piramalswasthya.sakhi.database.room.BeneficiaryIdsAvail
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
-import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.network.GetBenRequest
 import org.piramalswasthya.sakhi.network.NcdNetworkApiService
@@ -26,7 +24,6 @@ import javax.inject.Inject
 
 class BenRepo @Inject constructor(
     private val database: InAppDb,
-    private val pref: PreferenceDao,
     private val tmcNetworkApiService: TmcNetworkApiService,
     private val ncdNetworkApiService: NcdNetworkApiService
 ) {
@@ -44,6 +41,43 @@ class BenRepo @Inject constructor(
             list.map { it.asBasicDomainModel() }
         }
     }
+    val pregnantList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllPregnancyWomenList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
+    val deliveryList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllDeliveryStageWomenList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
+    val ncdEligibleList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllNCDEligibleList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
+    val ncdNonEligibleList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllNCDNonEligibleList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
+    val menopauseList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllMenopauseStageList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
+    val reproductiveAgeList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllReproductiveAgeList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
+
 
     companion object {
         private fun getCurrentDate(): String {
@@ -295,6 +329,8 @@ class BenRepo @Inject constructor(
             val kidNetworkPostList = mutableSetOf<BenRegKidNetwork>()
 
             benList.forEach {
+                benNetworkPostList.clear()
+                householdNetworkPostList.clear()
                 val isSuccess =
                     createBenIdAtServerByBeneficiarySending(it, user, it.locationRecord!!)
                 if (isSuccess) {
@@ -304,44 +340,83 @@ class BenRepo @Inject constructor(
                     )
                     if (it.isKid)
                         kidNetworkPostList.add(it.asKidNetworkModel())
+                    val uploadDone = postDataToAmritServer(
+                        benNetworkPostList,
+                        householdNetworkPostList,
+                        kidNetworkPostList
+                    )
+                    if (!uploadDone)
+                        database.benDao.benSyncWithServerFailed(*benNetworkPostList.map { ben -> ben.benId }
+                            .toTypedArray().toLongArray())
                 }
             }
-            if (benNetworkPostList.isEmpty() && householdNetworkPostList.isEmpty() && kidNetworkPostList.isEmpty())
-                return@withContext false
-            val rmnchData = SendingRMNCHData(
-                householdNetworkPostList.toList(),
-                benNetworkPostList.toList(),
-                null,
-                kidNetworkPostList.toList()
-            )
-            try {
-                val response = tmcNetworkApiService.submitRmnchDataAmrit(rmnchData)
-                val statusCode = response.code()
+            return@withContext true
+        }
+    }
 
-                if (statusCode == 200) {
-                    var responseString: String? = null
+    private suspend fun postDataToAmritServer(
+        benNetworkPostList: MutableSet<BenPost>,
+        householdNetworkPostList: MutableSet<HouseholdNetwork>,
+        kidNetworkPostList: MutableSet<BenRegKidNetwork>
+    ): Boolean {
+        if (benNetworkPostList.isEmpty() && householdNetworkPostList.isEmpty() && kidNetworkPostList.isEmpty())
+            return false
+        val rmnchData = SendingRMNCHData(
+            householdNetworkPostList.toList(),
+            benNetworkPostList.toList(),
+            null,
+            kidNetworkPostList.toList()
+        )
+        try {
+            val response = tmcNetworkApiService.submitRmnchDataAmrit(rmnchData)
+            val statusCode = response.code()
 
-                    responseString = response.body()?.string()
-                    if (responseString != null) {
-                        val jsonObj = JSONObject(responseString)
-                        val responseStatusCode = jsonObj.getInt("statusCode")
-                        val errorMessage = jsonObj.getString("errorMessage")
-                        if (responseStatusCode == 200) {
-                            val benToUpdateList =
-                                benNetworkPostList.map { it.benId }.toTypedArray()
-                            database.benDao.benSyncedWithServer(*benToUpdateList.toLongArray())
-                            householdNetworkPostList.map { it.householdId }
-                            //TODO(Add sync up to household too)
-                            return@withContext true
+            if (statusCode == 200) {
+                var responseString: String? = null
+
+                responseString = response.body()?.string()
+                if (responseString != null) {
+                    val jsonObj = JSONObject(responseString)
+                    val responseStatusCode = jsonObj.getInt("statusCode")
+                    val errorMessage = jsonObj.getString("errorMessage")
+                    if (responseStatusCode == 200) {
+                        val data = jsonObj.getJSONObject("data")
+                        val hhCount = if (data.getJSONArray("houseHoldDetails").get(0)
+                                .equals(null)
+                        ) 0 else data.getJSONArray("houseHoldDetails").getInt(0)
+                        val benCount = if (data.getJSONArray("beneficiaryDetails").get(0)
+                                .equals(null)
+                        ) 0 else data.getJSONArray("beneficiaryDetails").getInt(0)
+                        val kidCount = if (data.getJSONArray("bornBirthDeatils").get(0)
+                                .equals(null)
+                        ) 0 else if (data.getJSONArray("bornBirthDeatils")
+                                .length() == 0
+                        ) 0 else data.getJSONArray("beneficiaryDetails").getInt(0)
+                        if (hhCount != householdNetworkPostList.size || benCount != benNetworkPostList.size || kidCount != kidNetworkPostList.size) {
+                            Timber.d("Bad Response from server, need to check $householdNetworkPostList\n$benNetworkPostList\n$kidNetworkPostList $data ")
+                            return false
                         }
+                        val benToUpdateList =
+                            benNetworkPostList.map { it.benId }.toTypedArray()
+                        val hhToUpdateList =
+                            householdNetworkPostList.map { it.householdId.toLong() }.toTypedArray()
+                        database.benDao.benSyncedWithServer(*benToUpdateList.toLongArray())
+                        database.householdDao.householdSyncedWithServer(*hhToUpdateList.toLongArray())
+                        householdNetworkPostList.map { it.householdId }
+                        //TODO(Add sync up to household too)
+                        return true
                     }
                 }
-                return@withContext false
-            } catch (e: java.lang.Exception) {
-
-                Timber.d("Caught exception $e here")
-                return@withContext false
             }
+            Timber.d("Bad Response from server, need to check $householdNetworkPostList\n$benNetworkPostList\n$kidNetworkPostList $response ")
+            return false
+        } catch (e: SocketTimeoutException) {
+            Timber.d("Caught exception $e here")
+            return postDataToAmritServer(
+                benNetworkPostList,
+                householdNetworkPostList,
+                kidNetworkPostList
+            )
         }
     }
 
@@ -376,30 +451,6 @@ class BenRepo @Inject constructor(
             Timber.d("Caugnt error $e")
             return false
         }
-
-    }
-
-    suspend fun createBenIdAtServerByBeneficiarySending(
-        hhId: Long,
-        benId: Long,
-        locationRecord: LocationRecord
-    ) {
-        val user =
-            database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
-        val ben = database.benDao.getBen(hhId, benId)
-        database.benDao.setSyncState(hhId, benId, SyncState.SYNCING)
-        val sendingData = ben!!.asNetworkSendingModel(user, locationRecord)
-        //val sendingDataString = Gson().toJson(sendingData)
-
-        try {
-            val response = tmcNetworkApiService.getBenIdFromBeneficiarySending(sendingData)
-            Timber.d(response.body()?.string() ?: "No Body inside the morgue!")
-        } catch (e: java.lang.Exception) {
-            Timber.d("Caugnt error $e")
-        } finally {
-            database.benDao.setSyncState(hhId, benId, SyncState.UNSYNCED)
-        }
-
 
     }
 
@@ -530,7 +581,7 @@ class BenRepo @Inject constructor(
                                     Timber.d("HouseHold list not synced $e")
                                     return@withContext Pair(0, benDataList)
                                 }
-                                val benCacheList = getBenCacheFromServerResponse(responseString);
+                                val benCacheList = getBenCacheFromServerResponse(responseString)
                                 database.benDao.upsert(*benCacheList.toTypedArray())
 
                                 Timber.d("GeTBenDataList: $pageSize $benDataList")
@@ -629,43 +680,43 @@ class BenRepo @Inject constructor(
                                 mobileOthers = benDataObj.getString("mobileOthers"),
                                 contactNumber = benDataObj.getString("contact_number").toLong(),
 //                            literacy = literacy,
-                                literacyId = benDataObj.getInt("literacyId"),
-                                community = benDataObj.getString("community"),
-                                communityId = benDataObj.getInt("communityId"),
-                                religion = benDataObj.getString("religion"),
-                                religionId = benDataObj.getInt("religionID"),
-                                religionOthers = benDataObj.getString("religionOthers"),
-                                rchId = benDataObj.getString("rchid"),
-                                registrationType = when (benDataObj.getString("registrationType")) {
-                                    "Infant" -> TypeOfList.INFANT
-                                    "Child" -> TypeOfList.CHILD
-                                    "Adolescent" -> TypeOfList.ADOLESCENT
-                                    "General" -> TypeOfList.GENERAL
-                                    "Eligible Couple" -> TypeOfList.ELIGIBLE_COUPLE
-                                    "Antenatal Mother" -> TypeOfList.ANTENATAL_MOTHER
-                                    "Delivery Stage" -> TypeOfList.DELIVERY_STAGE
-                                    "Postnatal Mother" -> TypeOfList.POSTNATAL_MOTHER
-                                    "Menopause" -> TypeOfList.MENOPAUSE
-                                    "Teenager" -> TypeOfList.TEENAGER
-                                    else -> TypeOfList.OTHER
-                                },
-                                latitude = benDataObj.getDouble("latitude"),
-                                longitude = benDataObj.getDouble("longitude"),
-                                aadharNum = benDataObj.getString("aadhaNo"),
-                                aadharNumId = benDataObj.getInt("aadha_noId"),
-                                hasAadhar = benDataObj.getString("aadhaNo") != "",
-                                hasAadharId = if(benDataObj.getInt("aadha_noId") == 1) 1 else 0,
+                            literacyId = benDataObj.getInt("literacyId"),
+                            community = benDataObj.getString("community"),
+                            communityId = benDataObj.getInt("communityId"),
+                            religion = benDataObj.getString("religion"),
+                            religionId = benDataObj.getInt("religionID"),
+                            religionOthers = benDataObj.getString("religionOthers"),
+                            rchId = benDataObj.getString("rchid"),
+                            registrationType = when (benDataObj.getString("registrationType")) {
+                                "Infant" -> TypeOfList.INFANT
+                                "Child" -> TypeOfList.CHILD
+                                "Adolescent" -> TypeOfList.ADOLESCENT
+                                "General" -> TypeOfList.GENERAL
+                                "Eligible Couple" -> TypeOfList.ELIGIBLE_COUPLE
+                                "Antenatal Mother" -> TypeOfList.ANTENATAL_MOTHER
+                                "Delivery Stage" -> TypeOfList.DELIVERY_STAGE
+                                "Postnatal Mother" -> TypeOfList.POSTNATAL_MOTHER
+                                "Menopause" -> TypeOfList.MENOPAUSE
+                                "Teenager" -> TypeOfList.TEENAGER
+                                else -> TypeOfList.OTHER
+                            },
+                            latitude = benDataObj.getDouble("latitude"),
+                            longitude = benDataObj.getDouble("longitude"),
+                            aadharNum = benDataObj.getString("aadhaNo"),
+                            aadharNumId = benDataObj.getInt("aadha_noId"),
+                            hasAadhar = benDataObj.getString("aadhaNo") != "",
+                            hasAadharId = if (benDataObj.getInt("aadha_noId") == 1) 1 else 0,
 //                            bankAccountId = bank_accountId,
                                 bankAccount = benDataObj.getString("bankAccount"),
                                 nameOfBank = benDataObj.getString("nameOfBank"),
 //                            nameOfBranch = nameOfBranch,
                                 ifscCode = benDataObj.getString("ifscCode"),
 //                            needOpCare = need_opcare,
-                                needOpCareId = benDataObj.getInt("need_opcareId"),
-                                ncdPriority = benDataObj.getInt("ncd_priority"),
-                                cbacAvailable = cbacDataObj != null,
-                                guidelineId = benDataObj.getString("guidelineId"),
-                                isHrpStatus = benDataObj.getBoolean("hrpStatus"),
+                            needOpCareId = benDataObj.getInt("need_opcareId"),
+                            ncdPriority = benDataObj.getInt("ncd_priority"),
+                            cbacAvailable = cbacDataObj.length() != 0,
+                            guidelineId = benDataObj.getString("guidelineId"),
+                            isHrpStatus = benDataObj.getBoolean("hrpStatus"),
 //                            hrpIdentificationDate = hrp_identification_date,
 //                            hrpLastVisitDate = hrp_last_vist_date,
 //                            nishchayPregnancyStatus = nishchayPregnancyStatus,
@@ -841,31 +892,41 @@ class BenRepo @Inject constructor(
                                 houseNo = houseDataObj.getString("houseno"),
                                 rationCardDetails = houseDataObj.getString("rationCardDetails"),
                                 povertyLine = houseDataObj.getString("type_bpl_apl"),
+                                povertyLineId = houseDataObj.getInt("bpl_aplId"),
                                 residentialArea = houseDataObj.getString("residentialArea"),
+                                residentialAreaId = houseDataObj.getInt("residentialAreaId"),
                                 otherResidentialArea = houseDataObj.getString("other_residentialArea"),
                                 houseType = houseDataObj.getString("houseType"),
+                                houseTypeId = houseDataObj.getInt("houseTypeId"),
                                 otherHouseType = houseDataObj.getString("other_houseType"),
                                 isHouseOwned = houseDataObj.getString("houseOwnerShip"),
-                                isLandOwned = houseDataObj.getString("landOwned") == "Yes",
-                                isLandIrrigated = houseDataObj.has("landIrregated") && houseDataObj.getString("landIrregated") == "Yes",
-                                isLivestockOwned = houseDataObj.getString("liveStockOwnerShip") == "Yes",
+                                isHouseOwnedId = houseDataObj.getInt("houseOwnerShipId"),
+//                                isLandOwned = houseDataObj.getString("landOwned") == "Yes",
+//                                isLandIrrigated = houseDataObj.has("landIrregated") && houseDataObj.getString("landIrregated") == "Yes",
+//                                isLivestockOwned = houseDataObj.getString("liveStockOwnerShip") == "Yes",
                                 street = houseDataObj.getString("street"),
                                 colony = houseDataObj.getString("colony"),
                                 pincode = houseDataObj.getInt("pincode"),
                                 separateKitchen = houseDataObj.getString("seperateKitchen"),
                                 fuelUsed = houseDataObj.getString("fuelUsed"),
+                                fuelUsedId = houseDataObj.getInt("fuelUsedId"),
                                 otherFuelUsed = houseDataObj.getString("other_fuelUsed"),
                                 sourceOfDrinkingWater = houseDataObj.getString("sourceofDrinkingWater"),
+                                sourceOfDrinkingWaterId = houseDataObj.getInt("sourceofDrinkingWaterId"),
                                 otherSourceOfDrinkingWater = houseDataObj.getString("other_sourceofDrinkingWater"),
                                 availabilityOfElectricity = houseDataObj.getString("avalabilityofElectricity"),
+                                availabilityOfElectricityId = houseDataObj.getInt("avalabilityofElectricityId"),
                                 otherAvailabilityOfElectricity = houseDataObj.getString("other_avalabilityofElectricity"),
                                 availabilityOfToilet = houseDataObj.getString("availabilityofToilet"),
+                                availabilityOfToiletId = houseDataObj.getInt("availabilityofToiletId"),
                                 otherAvailabilityOfToilet = houseDataObj.getString("other_availabilityofToilet"),
-                                motorizedVehicle = houseDataObj.getString("motarizedVehicle"),
-                                otherMotorizedVehicle = houseDataObj.getString("other_motarizedVehicle"),
-                                registrationType = if(houseDataObj.has("registrationType")) houseDataObj.getString("registrationType") else null,
-                                state =  houseDataObj.getString("state"),
-                                stateId =  houseDataObj.getInt("stateid"),
+//                                motorizedVehicle = houseDataObj.getString("motarizedVehicle"),
+//                                otherMotorizedVehicle = houseDataObj.getString("other_motarizedVehicle"),
+                                registrationType = if (houseDataObj.has("registrationType")) houseDataObj.getString(
+                                    "registrationType"
+                                ) else null,
+                                state = houseDataObj.getString("state"),
+                                stateId = houseDataObj.getInt("stateid"),
                                 district = benDataObj.getString("districtname"),
                                 districtId = houseDataObj.getInt("districtid"),
                                 block = benDataObj.getString("blockName"),

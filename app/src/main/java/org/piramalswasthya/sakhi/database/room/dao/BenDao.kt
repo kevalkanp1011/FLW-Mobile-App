@@ -41,6 +41,9 @@ interface BenDao {
     @Query("UPDATE BENEFICIARY SET processed = \"P\", syncState = 2 WHERE beneficiaryId =:benId")
     suspend fun benSyncedWithServer(vararg benId: Long)
 
+    @Query("UPDATE BENEFICIARY SET processed = \"U\", syncState = 0 WHERE beneficiaryId =:benId")
+    suspend fun benSyncWithServerFailed(vararg benId: Long)
+
     @Query("SELECT beneficiaryId FROM BENEFICIARY WHERE beneficiaryId IN (:list)")
     fun getAllBeneficiaryFromList(list: List<Long>): LiveData<List<Long>>
 
