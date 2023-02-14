@@ -15,7 +15,7 @@ import timber.log.Timber
 import java.net.SocketTimeoutException
 
 @HiltWorker
-class BenDataSendingWorker @AssistedInject constructor(
+class PushToAmritWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted params: WorkerParameters,
     private val benRepo: BenRepo,

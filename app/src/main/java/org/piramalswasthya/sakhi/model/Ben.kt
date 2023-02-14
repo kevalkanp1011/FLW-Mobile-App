@@ -5,6 +5,7 @@ import com.squareup.moshi.JsonClass
 import org.piramalswasthya.sakhi.database.room.SyncState
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 enum class TypeOfList{
     INFANT,
@@ -177,7 +178,7 @@ data class BenRegGen(
     var spouseName: String? = null,
     var ageAtMarriage: Int = 0,
     var dateOfMarriage: Long = 0,
-    var marriageDate: String? = null,
+    var marriageDate: Long? = null,
     //Menstrual details
     var menstrualStatus: String? = null,
     var menstrualStatusId: Int? = 0,
@@ -189,7 +190,7 @@ data class BenRegGen(
     var menstrualBFDId: Int = 0,
     var menstrualProblem: String? = null,
     var menstrualProblemId: Int = 0,
-    var lastMenstrualPeriod: String? = null,
+    var lastMenstrualPeriod: Long? = null,
     var reproductiveStatus: String? = null,
     var reproductiveStatusId: Int = 0,
     var lastDeliveryConducted: String? = null,
@@ -201,8 +202,8 @@ data class BenRegGen(
     var noOfDaysForDelivery: Int? = null,
     var otherWhoConductedDelivery: String? = null,
     var deliveryDate: String? = null,
-    var expectedDateOfDelivery: String? = null,
-    var numPreviousLiveBirth: String? = null,
+    var expectedDateOfDelivery: Long? = null,
+    var numPreviousLiveBirth: Int = 0,
 //    var formStatus: String? = null,
 //    var formType: String? = null,
     var ancCount: Int = 0,
@@ -438,86 +439,99 @@ data class BenRegCache(
 
     fun asNetworkPostModel(user: UserCache): BenPost {
         return BenPost(
-            houseoldId = householdId.toString(),
-            benficieryid = beneficiaryId,
-            ashaid = ashaId,
-            registrationDate = getDateTimeStringFromLong(regDate!!),
+            householdId = householdId.toString(),
+            benRegId = benRegId,
+            countyid = locationRecord?.countryId!!,
+            processed = processed,
+            providerServiceMapID = user.serviceMapId,
+            vanID = user.vanId,
+            aadhaNo = aadharNum ?: "",
+            aadha_no = when (hasAadhar) {
+                true -> "Yes"
+                false -> "No"
+                else -> "null"
+            },
+            aadha_noId = hasAadharId,
             age = age,
+            ageAtMarriage = genDetails?.ageAtMarriage ?: 0,
             age_unit = when (ageUnit) {
                 AgeUnit.YEARS -> "Year(s)"
                 AgeUnit.MONTHS -> "Month(s)"
                 AgeUnit.DAYS -> "Day(s)"
-                else -> null
+                else -> throw IllegalStateException("age_unit enum invalid data!")
             },
             age_unitId = ageUnit!!.ordinal,
-            marriageDate = genDetails?.marriageDate,
-            mobilenoofRelation = mobileNoOfRelation,
-            mobilenoofRelationId = mobileNoOfRelationId,
-            mobileOthers = mobileOthers,
+            ashaId = ashaId,
+            benId = beneficiaryId,
+            registrationDate = getDateTimeStringFromLong(regDate!!)!!,
+            marriageDate = getDateTimeStringFromLong(genDetails?.marriageDate),
+            mobileNoOfRelation = mobileNoOfRelation,
+            mobileNoOfRelationId = mobileNoOfRelationId,
+            mobileOthers = mobileOthers ?: "",
             literacy = literacy,
             literacyId = literacyId,
-            religionOthers = religionOthers,
-            rchid = rchId,
+            religionOthers = religionOthers ?: "",
+            rchId = rchId ?: "",
             registrationType = when (registrationType) {
-                TypeOfList.INFANT -> "Infant"
-                TypeOfList.CHILD -> "Child"
-                TypeOfList.ADOLESCENT -> "Adolescent"
-                TypeOfList.GENERAL -> "General"
-                TypeOfList.ELIGIBLE_COUPLE -> "Eligible"
-                TypeOfList.ANTENATAL_MOTHER -> "Antenatal"
-                TypeOfList.DELIVERY_STAGE -> "Delivery"
-                TypeOfList.POSTNATAL_MOTHER -> "Postnatal"
-                TypeOfList.MENOPAUSE -> "Menopause"
-                TypeOfList.TEENAGER -> "Teenager"
+                TypeOfList.INFANT,
+                TypeOfList.CHILD,
+                TypeOfList.ADOLESCENT -> "NewBorn"
+                TypeOfList.GENERAL,
+                TypeOfList.ELIGIBLE_COUPLE,
+                TypeOfList.ANTENATAL_MOTHER,
+                TypeOfList.DELIVERY_STAGE,
+                TypeOfList.POSTNATAL_MOTHER,
+                TypeOfList.MENOPAUSE,
+                TypeOfList.TEENAGER -> "General Beneficiary"
                 else -> "Other"
             },
             latitude = latitude,
             longitude = longitude,
-            aadhaNo = aadharNum,
-            aadha_no = if (hasAadhar == true) "Yes" else "No",
-            aadha_noId = hasAadharId,
-            need_opcare = needOpCare,
-            need_opcareId = needOpCareId,
+            needOpCare = needOpCare ?: "null",
+            needOpCareId = needOpCareId,
             menstrualStatusId = genDetails?.menstrualStatusId ?: 0,
             regularityofMenstrualCycleId = genDetails?.regularityOfMenstrualCycleId ?: 0,
             lengthofMenstrualCycleId = genDetails?.lengthOfMenstrualCycleId ?: 0,
             menstrualBFDId = genDetails?.menstrualBFDId ?: 0,
             menstrualProblemId = genDetails?.menstrualProblemId ?: 0,
-            lastMenstrualPeriod = genDetails?.lastMenstrualPeriod,
-            reproductiveStatus = genDetails?.reproductiveStatus,
+            lastMenstrualPeriod = getDateTimeStringFromLong(genDetails?.lastMenstrualPeriod),
+            reproductiveStatus = genDetails?.reproductiveStatus ?: "",
             reproductiveStatusId = genDetails?.reproductiveStatusId ?: 0,
-            noOfDaysForDelivery = 0,
+            noOfDaysForDelivery = if (registrationType == TypeOfList.DELIVERY_STAGE || registrationType == TypeOfList.ANTENATAL_MOTHER) getNumDaysForDeliveryFromLastMenstrualPeriod(
+                genDetails?.lastMenstrualPeriod
+            ) else null,
             formStatus = null,
             formType = null,
             childRegisteredAWCID = kidDetails?.childRegisteredAWCId ?: 0,
             childRegisteredSchoolID = kidDetails?.childRegisteredSchoolId ?: 0,
-            typeofSchoolID = kidDetails?.typeOfSchoolId ?: 0,
-            childRegisteredAWC = kidDetails?.childRegisteredAWC,
+            typeOfSchoolId = kidDetails?.typeOfSchoolId ?: 0,
             childRegisteredSchool = kidDetails?.childRegisteredSchool,
             typeofSchool = kidDetails?.typeOfSchool,
-            previousLiveBirth = genDetails?.numPreviousLiveBirth,
+            previousLiveBirth = genDetails?.numPreviousLiveBirth?.toString() ?: "0",
             lastDeliveryConductedID = genDetails?.lastDeliveryConductedId ?: 0,
             whoConductedDeliveryID = genDetails?.whoConductedDeliveryId ?: 0,
-            familyHeadRelation = familyHeadRelation,
+            familyHeadRelation = familyHeadRelation ?: "Other",
             familyHeadRelationPosition = familyHeadRelationPosition,
+            firstName = firstName ?: "",
+            lastName = lastName ?: "",
+            fatherName = fatherName ?: "",
+            motherName = motherName ?: "",
+            spouseName = genDetails?.spouseName ?: "",
             whoConductedDelivery = genDetails?.whoConductedDelivery,
             lastDeliveryConducted = genDetails?.lastDeliveryConducted,
-            facilitySelection = genDetails?.facilityName,
+
+            facilitySelection = genDetails?.facilityName ?: "",
             serverUpdatedStatus = serverUpdatedStatus,
-            createdBy = createdBy,
-            createdDate = getDateTimeStringFromLong(createdDate!!),
-            ncd_priority = ncdPriority,
-            guidelineId = guidelineId,
-            villagename = locationRecord?.village,
-            vanID = user.vanId,
-            countyid = locationRecord?.countryId!!,
-            providerServiceMapID = user.serviceMapId,
-            processed = processed,
-            currSubDistrictId = locationRecord?.villageId!!,
-            expectedDateOfDelivery = genDetails?.expectedDateOfDelivery,
+            createdBy = createdBy!!,
+            createdDate = getDateTimeStringFromLong(createdDate!!)!!,
+            ncdPriority = ncdPriority,
+            guidelineId = guidelineId ?: "0",
+            villageName = locationRecord?.village,
+            currSubDistrictId = locationRecord?.blockId!!,
+            villageId = locationRecord?.villageId!!,
+            expectedDateOfDelivery = getDateTimeStringFromLong(genDetails?.expectedDateOfDelivery),
             isHrpStatus = isHrpStatus,
             menstrualStatus = genDetails?.menstrualStatus,
-            ageAtMarriage = genDetails?.ageAtMarriage ?: 0,
             dateMarriage = genDetails?.dateOfMarriage?.let { getDateTimeStringFromLong(it) },
             deliveryDate = genDetails?.deliveryDate,
             suspected_hrp = genDetails?.hrpSuspected.toString(),
@@ -529,14 +543,24 @@ data class BenRegCache(
             confirmed_tb = confirmedTb,
             confirmed_ncd_diseases = confirmedNcdDiseases,
             diagnosis_status = diagnosisStatus,
-            nishchayPregnancyStatus = nishchayPregnancyStatus,
+            nishchayPregnancyStatus = nishchayPregnancyStatus ?: "select",
             nishchayPregnancyStatusPosition = nishchayPregnancyStatusPosition,
-            nishchayDeliveryStatus = nishchayDeliveryStatus,
+            nishchayDeliveryStatus = nishchayDeliveryStatus ?: "select",
             nishchayDeliveryStatusPosition = nishchayDeliveryStatusPosition,
-            nayiPahalDeliveryStatus = nayiPahalDeliveryStatus,
             nayiPahalDeliveryStatusPosition = nayiPahalDeliveryStatusPosition,
             isImmunizationStatus = immunizationStatus,
+            userImage = userImageBlob!!,
         )
+    }
+
+    private fun getNumDaysForDeliveryFromLastMenstrualPeriod(lastMenstrualPeriod: Long?): Int? {
+        if (lastMenstrualPeriod == null)
+            return null
+        val millisCurrent = System.currentTimeMillis()
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = lastMenstrualPeriod
+        cal.add(Calendar.WEEK_OF_YEAR, 40)
+        return TimeUnit.MILLISECONDS.toDays(cal.timeInMillis - millisCurrent).toInt()
     }
 
     fun asKidNetworkModel(): BenRegKidNetwork {
@@ -632,11 +656,11 @@ data class BenRegNetwork(
     @Json(name = "contact_number")
     var contact_number: String? = null,
 
-    @Json(name = "mobilenoofRelation")
-    var mobilenoofRelation: String? = null,
+    @Json(name = "mobileNoOfRelation")
+    var mobileNoOfRelation: String? = null,
 
-    @Json(name = "mobilenoofRelationId")
-    var mobilenoofRelationId: Int = 0,
+    @Json(name = "mobileNoOfRelationId")
+    var mobileNoOfRelationId: Int = 0,
 
     @Json(name = "mobileOthers")
     var mobileOthers: String? = null,
@@ -1000,8 +1024,8 @@ fun asCacheModel(benRegNetwork: BenRegNetwork, newBornRegNetwork: NewBornRegNetw
            familyHeadRelation = familyHeadRelation,
            familyHeadRelationPosition = familyHeadRelationPosition,
            familyHeadRelationOther = familyHeadRelationOther,
-           mobileNoOfRelation = mobilenoofRelation,
-           mobileNoOfRelationId = mobilenoofRelationId,
+           mobileNoOfRelation = mobileNoOfRelation,
+           mobileNoOfRelationId = mobileNoOfRelationId,
            mobileOthers = mobileOthers,
            contactNumber = contact_number?.toLong() ?:0L,
            literacy = literacy,

@@ -516,6 +516,12 @@ class BenKidRegFormDataset(private val context: Context) {
                 "Day" -> AgeUnit.DAYS
                 else -> null
             }
+            age_unitId = when (ageUnit) {
+                AgeUnit.YEARS -> 3
+                AgeUnit.MONTHS -> 2
+                AgeUnit.DAYS -> 1
+                else -> 0
+            }
             registrationType = getTypeFromAge(age, ageUnit)
             gender = when (this@BenKidRegFormDataset.gender.value.value) {
                 "Male" -> Gender.MALE
@@ -526,17 +532,31 @@ class BenKidRegFormDataset(private val context: Context) {
             fatherName = this@BenKidRegFormDataset.fatherName.value.value
             motherName = this@BenKidRegFormDataset.motherName.value.value
             familyHeadRelation = this@BenKidRegFormDataset.relationToHead.value.value
+            familyHeadRelationPosition =
+                this@BenKidRegFormDataset.relationToHeadListDefault.indexOf(familyHeadRelation) + 1
             familyHeadRelationOther = this@BenKidRegFormDataset.otherRelationToHead.value.value
             mobileNoOfRelation = this@BenKidRegFormDataset.mobileNoOfRelation.value.value
+            mobileNoOfRelationId =
+                (this@BenKidRegFormDataset.mobileNoOfRelation.list?.indexOf(mobileNoOfRelation!!))?.let { it + 1 }
+                    ?: 0
             contactNumber = stringToLong(this@BenKidRegFormDataset.contactNumber.value.value!!)
             community = this@BenKidRegFormDataset.community.value.value
             religion = this@BenKidRegFormDataset.religion.value.value
             religionOthers = this@BenKidRegFormDataset.otherReligion.value.value
             kidDetails?.childRegisteredAWC =
                 this@BenKidRegFormDataset.childRegisteredAtAwc.value.value
+            kidDetails?.childRegisteredAWCId =
+                this@BenKidRegFormDataset.childRegisteredAtAwc.list?.indexOf(kidDetails?.childRegisteredAWC)
+                    ?.let { it + 1 } ?: 0
             kidDetails?.childRegisteredSchool =
                 this@BenKidRegFormDataset.childRegisteredAtSchool.value.value
+            kidDetails?.childRegisteredSchoolId =
+                this@BenKidRegFormDataset.childRegisteredAtSchool.list?.indexOf(kidDetails?.childRegisteredSchool)
+                    ?.let { it + 1 } ?: 0
             kidDetails?.typeOfSchool = this@BenKidRegFormDataset.typeOfSchool.value.value
+            kidDetails?.typeOfSchoolId =
+                this@BenKidRegFormDataset.typeOfSchool.list?.indexOf(kidDetails?.typeOfSchool)
+                    ?.let { it + 1 } ?: 0
             rchId = this@BenKidRegFormDataset.rchId.value.value
         }
         return ben!!

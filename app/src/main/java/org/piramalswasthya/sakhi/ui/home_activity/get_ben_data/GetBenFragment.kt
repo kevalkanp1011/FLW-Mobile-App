@@ -75,7 +75,7 @@ class GetBenFragment : Fragment() {
                     GetBenPageNumberAdapter.PageClickListener { page ->
                         Toast.makeText(context, "Page : $page clicked", Toast.LENGTH_SHORT)
                             .show()
-                        viewModel.getBeneficiaries(page)
+                        viewModel.getBeneficiaries(page - 1)
                     })
             binding.rvPage.adapter = pageAdapter
         }

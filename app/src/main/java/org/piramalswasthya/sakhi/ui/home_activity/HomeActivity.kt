@@ -11,11 +11,16 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.ActivityHomeBinding
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
+import org.piramalswasthya.sakhi.work.PullFromAmritFullLoadWorker
+import org.piramalswasthya.sakhi.work.PushToAmritWorker
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
@@ -36,6 +41,7 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpActionBar()
         setUpNavHeader()
+        setUpFullLoadPullWorker()
 
         viewModel.navigateToLoginPage.observe(this) {
             if (it) {
@@ -46,6 +52,20 @@ class HomeActivity : AppCompatActivity() {
         }
 
         // Snackbar.make(binding.root, intent.data.toString(), Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun setUpFullLoadPullWorker() {
+        if (viewModel.checkIfFullLoadCompletedBefore())
+            return
+        val workRequest = OneTimeWorkRequestBuilder<PullFromAmritFullLoadWorker>()
+            .setConstraints(PullFromAmritFullLoadWorker.constraint)
+            .build()
+        val workManager = WorkManager.getInstance(this)
+        workManager.enqueueUniqueWork(
+            PushToAmritWorker.name,
+            ExistingWorkPolicy.KEEP,
+            workRequest
+        )
     }
 
     private fun setUpNavHeader() {

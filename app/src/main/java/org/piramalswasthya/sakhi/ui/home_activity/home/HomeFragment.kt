@@ -9,10 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.adapters.IconGridAdapter
 import org.piramalswasthya.sakhi.configuration.IconDataset
 import org.piramalswasthya.sakhi.databinding.FragmentHomeBinding
+import org.piramalswasthya.sakhi.work.PullFromAmritFullLoadWorker
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -67,6 +70,20 @@ class HomeFragment : Fragment() {
         if (viewModel.isLocationSet())
             binding.etSelectVillage.setText(viewModel.getLocationRecord().village)
         setUpHomeIconRvAdapter()
+
+        WorkManager.getInstance(requireContext())
+            .getWorkInfosForUniqueWorkLiveData(PullFromAmritFullLoadWorker.name)
+            .observe(viewLifecycleOwner) {
+                it?.let { list ->
+                    list.first().let { workInfo ->
+                        binding.llFullLoadProgress.visibility =
+                            if (workInfo.state == WorkInfo.State.RUNNING)
+                                View.VISIBLE
+                            else
+                                View.GONE
+                    }
+                }
+            }
 
 
     }

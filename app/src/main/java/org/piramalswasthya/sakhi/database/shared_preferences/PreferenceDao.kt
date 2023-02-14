@@ -92,4 +92,17 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
         val json = pref.getString(prefKey, null)
         return Gson().fromJson(json, LocationRecord::class.java)
     }
+
+    fun setFullLoadStatus(isDone: Boolean) {
+        val editor = pref.edit()
+        val prefKey = context.getString(R.string.PREF_full_load_pull_progress)
+        editor.putBoolean(prefKey, isDone)
+        editor.apply()
+    }
+
+    fun isFullLoadCompleted(): Boolean {
+        val prefKey = context.getString(R.string.PREF_full_load_pull_progress)
+        return pref.getBoolean(prefKey, false)
+
+    }
 }

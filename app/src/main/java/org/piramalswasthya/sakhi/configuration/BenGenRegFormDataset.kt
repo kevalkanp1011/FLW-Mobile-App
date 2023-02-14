@@ -146,6 +146,8 @@ class BenGenRegFormDataset(context: Context) {
         inputType = DROPDOWN,
         title = "Mobile Number Of",
         list = listOf(
+            "Self",
+            "Husband",
             "Mother",
             "Father",
             "Family Head",
@@ -456,6 +458,7 @@ class BenGenRegFormDataset(context: Context) {
             dob = getLongFromDate(this@BenGenRegFormDataset.dob.value.value!!)
             age = this@BenGenRegFormDataset.age.value.value?.toInt() ?: 0
             ageUnit = AgeUnit.YEARS
+            age_unitId = 3
             gender = when (this@BenGenRegFormDataset.gender.value.value) {
                 "Male" -> Gender.MALE
                 "Female" -> Gender.FEMALE
@@ -478,11 +481,17 @@ class BenGenRegFormDataset(context: Context) {
                         ?: this@BenGenRegFormDataset.spouseName.value.value
             genDetails?.ageAtMarriage =
                 this@BenGenRegFormDataset.ageAtMarriage.value.value?.toInt() ?: 0
+            genDetails?.marriageDate = getDoMFromDoR(genDetails?.ageAtMarriage, regDate!!)
             fatherName = this@BenGenRegFormDataset.fatherName.value.value
             motherName = this@BenGenRegFormDataset.motherName.value.value
             familyHeadRelation = this@BenGenRegFormDataset.relationToHead.value.value
+            familyHeadRelationPosition =
+                this@BenGenRegFormDataset.relationToHeadListDefault.indexOf(familyHeadRelation) + 1
             familyHeadRelationOther = this@BenGenRegFormDataset.otherRelationToHead.value.value
             mobileNoOfRelation = this@BenGenRegFormDataset.mobileNoOfRelation.value.value
+            mobileNoOfRelationId =
+                (this@BenGenRegFormDataset.mobileNoOfRelation.list?.indexOf(mobileNoOfRelation!!))?.let { it + 1 }
+                    ?: 0
             contactNumber = stringToLong(this@BenGenRegFormDataset.contactNumber.value.value!!)
             community = this@BenGenRegFormDataset.community.value.value
             communityId =
@@ -499,11 +508,30 @@ class BenGenRegFormDataset(context: Context) {
 
     }
 
+    private fun getDoMFromDoR(ageAtMarriage: Int?, regDate: Long): Long? {
+        if (ageAtMarriage == null)
+            return null
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = regDate
+        cal.add(Calendar.YEAR, -1 * ageAtMarriage)
+        return cal.timeInMillis
+
+    }
+
 
     fun getBenForSecondPage(): BenRegCache {
 
         ben?.apply {
-            this.hasAadhar = this@BenGenRegFormDataset.hasAadharNo.value.value == "Yes"
+            this.hasAadhar = when (this@BenGenRegFormDataset.hasAadharNo.value.value) {
+                "Yes" -> true
+                "No" -> false
+                else -> null
+            }
+            this.hasAadharId = when (this.hasAadhar) {
+                true -> 1
+                false -> 2
+                else -> 0
+            }
             this.aadharNum = this@BenGenRegFormDataset.aadharNo.value.value
             this.rchId = this@BenGenRegFormDataset.rchId.value.value
         }
@@ -515,19 +543,43 @@ class BenGenRegFormDataset(context: Context) {
         ben?.apply {
             this.genDetails?.apply {
                 reproductiveStatus = this@BenGenRegFormDataset.reproductiveStatus.value.value
-                lastMenstrualPeriod = this@BenGenRegFormDataset.lastMenstrualPeriod.value.value
+                reproductiveStatusId =
+                    (this@BenGenRegFormDataset.reproductiveStatus.list?.indexOf(reproductiveStatus))?.let { it + 1 }
+                        ?: 0
+                lastMenstrualPeriod =
+                    getLongFromDate(this@BenGenRegFormDataset.lastMenstrualPeriod.value.value!!)
                 nishchayDeliveryStatus =
                     this@BenGenRegFormDataset.nishchayKitDeliveryStatus.value.value
+                nishchayDeliveryStatusPosition =
+                    (this@BenGenRegFormDataset.nishchayKitDeliveryStatus.list?.indexOf(
+                        nishchayDeliveryStatus
+                    ))?.let { it + 1 } ?: 0
                 nishchayPregnancyStatus = this@BenGenRegFormDataset.pregnancyTestResult.value.value
+                nishchayPregnancyStatusPosition =
+                    (this@BenGenRegFormDataset.pregnancyTestResult.list?.indexOf(
+                        nishchayPregnancyStatus
+                    ))?.let { it + 1 } ?: 0
                 expectedDateOfDelivery =
-                    this@BenGenRegFormDataset.expectedDateOfDelivery.value.value
+                    this@BenGenRegFormDataset.expectedDateOfDelivery.value.value?.let {
+                        getLongFromDate(
+                            it
+                        )
+                    }
                 numPreviousLiveBirth =
-                    this@BenGenRegFormDataset.numPrevLiveBirthOrPregnancy.value.value
+                    this@BenGenRegFormDataset.numPrevLiveBirthOrPregnancy.value.value?.toInt() ?: 0
                 lastDeliveryConducted = this@BenGenRegFormDataset.lastDeliveryConducted.value.value
+                lastDeliveryConductedId =
+                    (this@BenGenRegFormDataset.lastDeliveryConducted.list?.indexOf(
+                        lastDeliveryConducted
+                    )) ?: 0
                 otherLastDeliveryConducted =
                     this@BenGenRegFormDataset.otherPlaceOfDelivery.value.value
                 facilityName = this@BenGenRegFormDataset.facility.value.value
                 whoConductedDelivery = this@BenGenRegFormDataset.whoConductedDelivery.value.value
+                whoConductedDeliveryId =
+                    (this@BenGenRegFormDataset.whoConductedDelivery.list?.indexOf(
+                        whoConductedDelivery
+                    ))?.let { it + 1 } ?: 0
                 otherWhoConductedDelivery =
                     this@BenGenRegFormDataset.otherWhoConductedDelivery.value.value
                 registrationType = when (reproductiveStatus) {
@@ -539,6 +591,8 @@ class BenGenRegFormDataset(context: Context) {
                     "Teenager" -> TypeOfList.TEENAGER
                     else -> TypeOfList.OTHER
                 }
+
+
             }
         }
         return ben!!
