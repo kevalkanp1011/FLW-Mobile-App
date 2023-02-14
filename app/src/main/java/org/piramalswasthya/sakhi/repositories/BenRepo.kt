@@ -18,6 +18,7 @@ import org.piramalswasthya.sakhi.network.NcdNetworkApiService
 import org.piramalswasthya.sakhi.network.TmcGenerateBenIdsRequest
 import org.piramalswasthya.sakhi.network.TmcNetworkApiService
 import timber.log.Timber
+import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -319,7 +320,7 @@ class BenRepo @Inject constructor(
                         val errorMessage = jsonObj.getString("errorMessage")
                         if (responseStatusCode == 200) {
                             val benToUpdateList =
-                                benNetworkPostList.map { it.benficieryid }.toTypedArray()
+                                benNetworkPostList.map { it.benId }.toTypedArray()
                             database.benDao.benSyncedWithServer(*benToUpdateList.toLongArray())
                             householdNetworkPostList.map { it.householdId }
                             //TODO(Add sync up to household too)
@@ -395,6 +396,104 @@ class BenRepo @Inject constructor(
     }
 
 
+    suspend fun getBeneficiariesFromServerForWorker(pageNumber: Int): Int {
+        return withContext(Dispatchers.IO) {
+            val benDataList = mutableListOf<BenBasicDomain>()
+            val user =
+                database.userDao.getLoggedInUser()
+                    ?: throw IllegalStateException("No user logged in!!")
+            try {
+                val response =
+                    ncdNetworkApiService.getBeneficiaries(
+                        GetBenRequest(
+                            user.userId.toString(), pageNumber,
+                            "2020-10-20T15:50:45.000Z", getCurrentDate()
+                        )
+                    )
+                val statusCode = response.code()
+                if (statusCode == 200) {
+                    val responseString = response.body()?.string()
+                    if (responseString != null) {
+                        val jsonObj = JSONObject(responseString)
+
+                        val errorMessage = jsonObj.getString("errorMessage")
+                        val responseStatusCode = jsonObj.getInt("statusCode")
+                        if (responseStatusCode != 200)
+                            throw SocketTimeoutException("User logged out!")
+                        val dataObj = jsonObj.getJSONObject("data")
+                        val jsonArray = dataObj.getJSONArray("data")
+                        val pageSize = dataObj.getInt("totalPage")
+
+                        if (jsonArray.length() != 0) {
+//                                lay_recy.setVisibility(View.VISIBLE)
+//                                lay_no_ben.setVisibility(View.GONE)
+//                                draftLists.clear()
+//                                benServerDataList.clear()
+//                                houseHoldServerData.clear()
+
+                            for (i in 0 until jsonArray.length()) {
+                                val jsonObject = jsonArray.getJSONObject(i)
+                                val houseDataObj = jsonObject.getJSONObject("householdDetails")
+                                val benDataObj = jsonObject.getJSONObject("beneficiaryDetails")
+
+                                val benId =
+                                    if (jsonObject.has("benficieryid")) jsonObject.getLong("benficieryid") else -1L
+                                val hhId =
+                                    if (jsonObject.has("houseoldId")) jsonObject.getLong("houseoldId") else -1L
+                                if (benId == -1L || hhId == -1L)
+                                    continue
+                                val benExists = database.benDao.getBen(hhId, benId) != null
+
+                                benDataList.add(
+                                    BenBasicDomain(
+                                        benId = jsonObject.getLong("benficieryid"),
+                                        hhId = jsonObject.getLong("houseoldId"),
+                                        regDate = benDataObj.getString("registrationDate"),
+                                        benName = benDataObj.getString("firstName"),
+                                        benSurname = benDataObj.getString("lastName"),
+                                        gender = benDataObj.getString("gender"),
+                                        age = benDataObj.getInt("age").toString(),
+                                        mobileNo = benDataObj.getString("contact_number"),
+                                        fatherName = benDataObj.getString("fatherName"),
+                                        familyHeadName = houseDataObj.getString("familyHeadName"),
+                                        rchId = benDataObj.getString("rchid"),
+                                        hrpStatus = benDataObj.getBoolean("hrpStatus")
+                                            .toString(),
+                                        typeOfList = benDataObj.getString("registrationType"),
+                                        syncState = if (benExists) SyncState.SYNCED else SyncState.SYNCING
+                                    )
+                                )
+                            }
+                            try {
+                                database.householdDao.upsert(
+                                    *getHouseholdCacheFromServerResponse(
+                                        responseString
+                                    ).toTypedArray()
+                                )
+                            } catch (e: Exception) {
+                                Timber.d("HouseHold list not synced $e")
+                                return@withContext -1
+                            }
+                            database.benDao.upsert(*getBenCacheFromServerResponse(responseString).toTypedArray())
+
+                            Timber.d("GeTBenDataList: $pageSize $benDataList")
+                            return@withContext pageSize
+                        }
+                        throw IllegalStateException("Response code !-100")
+                    }
+                }
+
+            } catch (e: SocketTimeoutException) {
+                Timber.d("get_ben error : $e")
+                return@withContext getBeneficiariesFromServerForWorker(pageNumber)
+
+            }
+            Timber.d("get_ben data : $benDataList")
+            -1
+        }
+    }
+
+
     suspend fun getBeneficiariesFromServer(pageNumber: Int): Pair<Int, MutableList<BenBasicDomain>> {
         return withContext(Dispatchers.IO) {
             val benDataList = mutableListOf<BenBasicDomain>()
@@ -459,7 +558,11 @@ class BenRepo @Inject constructor(
                                     )
                                 }
                                 try {
-                                    database.householdDao.upsert(*getHouseholdCacheFromServerResponse(responseString).toTypedArray())
+                                    database.householdDao.upsert(
+                                        *getHouseholdCacheFromServerResponse(
+                                            responseString
+                                        ).toTypedArray()
+                                    )
                                 } catch (e: Exception) {
                                     Timber.d("HouseHold list not synced $e")
                                     return@withContext Pair(0, benDataList)
@@ -509,12 +612,12 @@ class BenRepo @Inject constructor(
                     val hhId = jsonObject.getLong("houseoldId")
                     val benExists = database.benDao.getBen(hhId, benId) != null
 
-                    if(benExists) {
-                       continue
+                    if (benExists) {
+                        continue
                     }
                     val hhExists = database.householdDao.getHousehold(hhId) != null
 
-                    if(!hhExists) {
+                    if (!hhExists) {
                         continue
                     }
 
@@ -529,9 +632,14 @@ class BenRepo @Inject constructor(
                                 "Year(s)" -> AgeUnit.YEARS
                                 "Month(s)" -> AgeUnit.MONTHS
                                 "Day(s)" -> AgeUnit.DAYS
-                                else -> AgeUnit.YEARS },
-                            isKid = !(benDataObj.getString("age_unit") == "Year(s)" && benDataObj.getInt("age") > 14),
-                            isAdult = (benDataObj.getString("age_unit") == "Year(s)" && benDataObj.getInt("age") > 14),
+                                else -> AgeUnit.YEARS
+                            },
+                            isKid = !(benDataObj.getString("age_unit") == "Year(s)" && benDataObj.getInt(
+                                "age"
+                            ) > 14),
+                            isAdult = (benDataObj.getString("age_unit") == "Year(s)" && benDataObj.getInt(
+                                "age"
+                            ) > 14),
                             userImageBlob = benDataObj.getString("user_image").toByteArray(),
                             regDate = getLongFromDate(benDataObj.getString("registrationDate")),
                             firstName = benDataObj.getString("firstName"),
@@ -551,7 +659,7 @@ class BenRepo @Inject constructor(
                             familyHeadRelationPosition = benDataObj.getInt("familyHeadRelationPosition"),
 //                            familyHeadRelationOther = benDataObj.getString("familyHeadRelationOther"),
                             mobileNoOfRelation = benDataObj.getString("mobilenoofRelation"),
-                            mobileNoOfRelationId = benDataObj.getInt("mobilenoofRelationId"),
+                            mobileNoOfRelationId = benDataObj.getInt("mobileNoOfRelationId"),
                             mobileOthers = benDataObj.getString("mobileOthers"),
                             contactNumber = benDataObj.getString("contact_number").toLong(),
 //                            literacy = literacy,
@@ -562,7 +670,7 @@ class BenRepo @Inject constructor(
                             religionId = benDataObj.getInt("religionID"),
                             religionOthers = benDataObj.getString("religionOthers"),
                             rchId = benDataObj.getString("rchid"),
-                            registrationType = when(benDataObj.getString("registrationType")) {
+                            registrationType = when (benDataObj.getString("registrationType")) {
                                 "Infant" -> TypeOfList.INFANT
                                 "Child" -> TypeOfList.CHILD
                                 "Adolescent" -> TypeOfList.ADOLESCENT
@@ -659,7 +767,7 @@ class BenRepo @Inject constructor(
 //                                ),
                             syncState = SyncState.SYNCED,
                             isDraft = false
-                    )
+                        )
                     )
                 }
             }
@@ -667,7 +775,7 @@ class BenRepo @Inject constructor(
         return result
     }
 
-    suspend fun getHouseholdCacheFromServerResponse(response: String): MutableList<HouseholdCache> {
+    private suspend fun getHouseholdCacheFromServerResponse(response: String): MutableList<HouseholdCache> {
         val jsonObj = JSONObject(response)
         val result = mutableListOf<HouseholdCache>()
 
@@ -679,14 +787,19 @@ class BenRepo @Inject constructor(
             if (jsonArray.length() != 0) {
                 for (i in 0 until jsonArray.length()) {
                     val jsonObject = jsonArray.getJSONObject(i)
+                    val benId =
+                        if (jsonObject.has("benficieryid")) jsonObject.getLong("benficieryid") else -1L
+                    val hhId =
+                        if (jsonObject.has("houseoldId")) jsonObject.getLong("houseoldId") else -1L
+                    if (benId == -1L || hhId == -1L)
+                        continue
                     val houseDataObj = jsonObject.getJSONObject("householdDetails")
                     val benDataObj = jsonObject.getJSONObject("beneficiaryDetails")
 
-                    val hhId = jsonObject.getLong("houseoldId")
                     val hhExists = database.householdDao.getHousehold(hhId) != null
                             || result.map { it.householdId }.contains(hhId)
 
-                    if(hhExists) {
+                    if (hhExists) {
                         continue
                     }
                     Timber.d("HouseHoldList $result")
@@ -697,8 +810,11 @@ class BenRepo @Inject constructor(
                                 ashaId = jsonObject.getInt("ashaId"),
                                 benId = jsonObject.getLong("benficieryid"),
                                 familyHeadName = houseDataObj.getString("familyHeadName"),
-                                familyName = houseDataObj.getString("familyName"),
-                                familyHeadPhoneNo = houseDataObj.getString("familyHeadPhoneNo").toLong(),
+                                familyName = if (jsonObject.has("familyName")) jsonObject.getString(
+                                    "familyName"
+                                ) else null,
+                                familyHeadPhoneNo = houseDataObj.getString("familyHeadPhoneNo")
+                                    .toLong(),
                                 houseNo = houseDataObj.getString("houseno"),
 //                            rationCardDetails = houseDataObj.getString("rationCardDetails"),
                                 povertyLine = houseDataObj.getString("type_bpl_apl"),
@@ -725,8 +841,8 @@ class BenRepo @Inject constructor(
 //                            motorizedVehicle = houseDataObj.getString("motarizedVehicle"),
 //                            otherMotorizedVehicle = houseDataObj.getString("other_motarizedVehicle"),
 //                            registrationType = if(houseDataObj.has("registrationType")) houseDataObj.getString("registrationType") else null,
-                                state =  houseDataObj.getString("state"),
-                                stateId =  houseDataObj.getInt("stateid"),
+                                state = houseDataObj.getString("state"),
+                                stateId = houseDataObj.getInt("stateid"),
                                 district = benDataObj.getString("districtname"),
                                 districtId = houseDataObj.getInt("districtid"),
                                 block = benDataObj.getString("blockName"),
@@ -753,8 +869,4 @@ class BenRepo @Inject constructor(
     }
 
 
-    fun getLongFromDate(date: String): Long {
-        //TODO ()
-        return 0
-    }
 }

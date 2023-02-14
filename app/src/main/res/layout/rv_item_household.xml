@@ -34,7 +34,7 @@
                 android:id="@+id/rv_item_hh_ph_1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/padding_normal"
+                android:paddingVertical="@dimen/padding_normal"
                 android:text="@string/rv_item_hh_ph_1"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 android:textColor="?attr/colorSecondary"
@@ -49,42 +49,42 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_normal"
                 android:text="@{@string/rv_item_hh_entry_1(household.hhId)}"
-                app:layout_constraintStart_toEndOf="@id/rv_item_hh_ph_1"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 android:textColor="?attr/colorSecondary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/rv_item_hh_ph_1"
                 app:layout_constraintTop_toTopOf="@id/rv_item_hh_ph_1" />
 
             <TextView
                 android:id="@+id/rv_item_hh_ph_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="italic"
+                android:paddingVertical="@dimen/padding_normal"
+                android:text="@string/rv_item_hh_ph_2"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 android:textColor="?attr/colorSecondary"
+                android:textStyle="italic"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rv_item_hh_ph_1"
-                android:padding="@dimen/padding_normal"
-                android:text="@string/rv_item_hh_ph_2" />
+                app:layout_constraintTop_toBottomOf="@id/rv_item_hh_ph_1" />
 
             <TextView
                 android:id="@+id/rv_item_hh_2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:padding="@dimen/padding_normal"
+                android:text="@{household.headName}"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 android:textColor="?attr/colorSecondary"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/rv_item_hh_ph_2"
-                app:layout_constraintTop_toTopOf="@id/rv_item_hh_ph_2"
-                android:padding="@dimen/padding_normal"
-                android:text="@{household.headName}"/>
+                app:layout_constraintTop_toTopOf="@id/rv_item_hh_ph_2" />
 
             <TextView
                 android:id="@+id/rv_item_hh_ph_3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/padding_normal"
+                android:paddingVertical="@dimen/padding_normal"
                 android:text="@string/rv_item_hh_ph_3"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 android:textColor="?attr/colorSecondary"
@@ -97,19 +97,19 @@
                 android:id="@+id/rv_item_hh_3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:padding="@dimen/padding_normal"
+                android:text="@{household.headSurname}"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 android:textColor="?attr/colorSecondary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/rv_item_hh_ph_3"
-                app:layout_constraintTop_toTopOf="@id/rv_item_hh_ph_3"
-                android:padding="@dimen/padding_normal"
-                android:text="@{household.headSurname}"/>
+                app:layout_constraintTop_toTopOf="@id/rv_item_hh_ph_3" />
 
             <com.google.android.material.button.MaterialButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/btn_rv_item_hh_add_ben"
                 android:onClick="@{()->clickListener.onClickedForNewBen(household)}"
+                android:text="@string/btn_rv_item_hh_add_ben"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 android:textColor="?attr/colorPrimary"
                 app:backgroundTint="?attr/colorSecondary"

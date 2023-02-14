@@ -5,251 +5,217 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class BenPost(
-    @Json(name = "houseoldId")
-    var houseoldId: String,
-
-    var benficieryid: Long,
-
-    @Json(name = "ashaid")
-    var ashaid: Int = 0,
-
-    @Json(name = "registrationDate")
-    var registrationDate: String? = null,
-
+    @Json(name = "benRegId")
+    val benRegId: Long,
+    @Json(name = "Countyid")
+    val countyid: Int = 0,
+    @Json(name = "Processed")
+    val processed: String? = null,
+    @Json(name = "ProviderServiceMapID")
+    val providerServiceMapID: Int = 0,
+    @Json(name = "VanID")
+    val vanID: Int = 0,
+    @Json(name = "aadhaNo")
+    val aadhaNo: String,
+    @Json(name = "aadha_no")
+    val aadha_no: String,
+    @Json(name = "aadha_noId")
+    val aadha_noId: Int,
     @Json(name = "age")
-    var age: Int = 0,
-
+    val age: Int,
+    @Json(name = "ageAtMarriage")
+    val ageAtMarriage: Int = 0,
     @Json(name = "age_unit")
-    var age_unit: String? = null,
-
+    val age_unit: String,
     @Json(name = "age_unitId")
-    var age_unitId: Int = 0,
-
+    val age_unitId: Int,
+    @Json(name = "ashaid")
+    val ashaId: Int,
+    @Json(name = "benficieryid")
+    val benId: Long,
+    @Json(name = "childRegisteredAWCID")
+    val childRegisteredAWCID: Int = 0,
+    @Json(name = "childRegisteredSchoolID")
+    val childRegisteredSchoolID: Int = 0,
+    @Json(name = "createdBy")
+    val createdBy: String,
+    @Json(name = "createdDate")
+    val createdDate: String,
+    @Json(name = "currSubDistrictId")
+    val currSubDistrictId: Int,
+    @Json(name = "expectedDateOfDelivery")
+    val expectedDateOfDelivery: String? = null,
+    @Json(name = "facilitySelection")
+    val facilitySelection: String,
+    @Json(name = "FamilyHeadRelation")
+    val familyHeadRelation: String,
+    @Json(name = "FamilyHeadRelationPosition")
+    val familyHeadRelationPosition: Int,
+    val fatherName: String,
+    val firstName: String,
+    @Json(name = "guidelineId")
+    val guidelineId: String,
+    @Json(name = "houseoldId")
+    val householdId: String,
+    @Json(name = "hrpStatus")
+    val isHrpStatus: Boolean,
+    @Json(name = "id")
+    val dummyIdMayBe: Int = 1,
+    @Json(name = "immunizationStatus")
+    val isImmunizationStatus: Boolean,
+    @Json(name = "LastDeliveryConducted")
+    val lastDeliveryConducted: String? = null,
+    @Json(name = "LastDeliveryConductedID")
+    val lastDeliveryConductedID: Int = 0,
+    @Json(name = "lastMenstrualPeriod")
+    val lastMenstrualPeriod: String? = null,
+    val lastName: String,
+    @Json(name = "latitude")
+    val latitude: Double,
+    @Json(name = "longitude")
+    val longitude: Double,
     @Json(name = "marriageDate")
-    var marriageDate: String? = null,
-
-    @Json(name = "mobilenoofRelation")
-    var mobilenoofRelation: String? = null,
-
-    @Json(name = "mobilenoofRelationId")
-    var mobilenoofRelationId: Int = 0,
-
+    val marriageDate: String?,
     @Json(name = "mobileOthers")
-    var mobileOthers: String? = null,
+    val mobileOthers: String? = null,
+    @Json(name = "mobilenoofRelation")
+    val mobileNoOfRelation: String? = null,
+    @Json(name = "mobilenoofRelationId")
+    val mobileNoOfRelationId: Int = 0,
+    val motherName: String,
+    @Json(name = "nayiPahalDeliveryStatus")
+    val nayiPahalDeliveryStatus: String = "Select",
+    @Json(name = "nayiPahalDeliveryStatusPosition")
+    val nayiPahalDeliveryStatusPosition: Int = 0,
+    @Json(name = "ncd_priority")
+    val ncdPriority: Int = 0,
+    @Json(name = "need_opcare")
+    val needOpCare: String,
+    @Json(name = "need_opcareId")
+    val needOpCareId: Int = 0,
+    @Json(name = "nishchayPregnancyStatus")
+    val nishchayPregnancyStatus: String,
+    @Json(name = "nishchayPregnancyStatusPosition")
+    val nishchayPregnancyStatusPosition: Int,
+    @Json(name = "nishchayDeliveryStatus")
+    val nishchayDeliveryStatus: String,
+    @Json(name = "nishchayDeliveryStatusPosition")
+    val nishchayDeliveryStatusPosition: Int,
+    @Json(name = "noOfDaysForDelivery")
+    val noOfDaysForDelivery: Int?,
+    @Json(name = "PreviousLiveBirth")
+    val previousLiveBirth: String,
+    @Json(name = "rchid")
+    val rchId: String,
+    @Json(name = "registrationDate")
+    val registrationDate: String,
+    @Json(name = "registrationType")
+    val registrationType: String,
+    @Json(name = "religionOthers")
+    val religionOthers: String,
+    @Json(name = "reproductiveStatus")
+    val reproductiveStatus: String,
+    @Json(name = "reproductiveStatusId")
+    val reproductiveStatusId: Int,
+    @Json(name = "ServerUpdatedStatus")
+    val serverUpdatedStatus: Int,
+    @Json(name = "spousename")
+    val spouseName: String,
+    @Json(name = "typeofSchoolID")
+    val typeOfSchoolId: Int,
+    @Json(name = "user_image")
+    val userImage: ByteArray,
+    @Json(name = "villageid")
+    val villageId: Int,
+    @Json(name = "villagename")
+    val villageName: String? = null,
+    @Json(name = "WhoConductedDeliveryID")
+    val whoConductedDeliveryID: Int = 0,
+    @Json(name = "WhoConductedDelivery")
+    val whoConductedDelivery: String? = null,
+
 
     @Json(name = "literacy")
-    var literacy: String? = null,
+    val literacy: String? = null,
 
     @Json(name = "literacyId")
-    var literacyId: Int = 0,
+    val literacyId: Int = 0,
 
-    @Json(name = "religionOthers")
-    var religionOthers: String? = null,
-
-    @Json(name = "rchid")
-    var rchid: String? = null,
-
-    @Json(name = "registrationType")
-    var registrationType: String? = null,
-
-    @Json(name = "latitude")
-    var latitude: Double = 0.0,
-
-    @Json(name = "longitude")
-    var longitude: Double = 0.0,
 
     //Bank details
-    @Json(name = "aadha_no")
-    var aadha_no: String? = null,
 
-    @Json(name = "aadha_noId")
-    var aadha_noId: Int = 0,
-
-    @Json(name = "aadhaNo")
-    var aadhaNo: String? = null,
-
-    @Json(name = "need_opcare")
-    var need_opcare: String? = null,
-
-    @Json(name = "need_opcareId")
-    var need_opcareId: Int = 0,
 
     //Menstrual details
     @Json(name = "menstrualStatusId")
-    var menstrualStatusId: Int = 0,
+    val menstrualStatusId: Int = 0,
 
     @Json(name = "regularityofMenstrualCycleId")
-    var regularityofMenstrualCycleId: Int = 0,
+    val regularityofMenstrualCycleId: Int = 0,
 
     @Json(name = "lengthofMenstrualCycleId")
-    var lengthofMenstrualCycleId: Int = 0,
+    val lengthofMenstrualCycleId: Int = 0,
 
     @Json(name = "menstrualBFDId")
-    var menstrualBFDId: Int = 0,
+    val menstrualBFDId: Int = 0,
 
     @Json(name = "menstrualProblemId")
-    var menstrualProblemId: Int = 0,
+    val menstrualProblemId: Int = 0,
 
-    @Json(name = "lastMenstrualPeriod")
-    var lastMenstrualPeriod: String? = null,
-
-    @Json(name = "reproductiveStatus")
-    var reproductiveStatus: String? = null,
-
-    @Json(name = "reproductiveStatusId")
-    var reproductiveStatusId: Int = 0,
-
-    @Json(name = "noOfDaysForDelivery")
-    var noOfDaysForDelivery: Int? = null,
 
     @Json(name = "formStatus")
-    var formStatus: String? = null,
+    val formStatus: String? = null,
 
     @Json(name = "formType")
-    var formType: String? = null,
+    val formType: String? = null,
 
     //these are new fields of new born registration
-    @Json(name = "childRegisteredAWCID")
-    var childRegisteredAWCID: Int = 0,
-
-    @Json(name = "childRegisteredSchoolID")
-    var childRegisteredSchoolID: Int = 0,
-
-    @Json(name = "TypeofSchoolID")
-    var typeofSchoolID: Int = 0,
-
     //strings
-    @Json(name = "childRegisteredAWC")
-    var childRegisteredAWC: String? = null,
 
     @Json(name = "childRegisteredSchool")
-    var childRegisteredSchool: String? = null,
+    val childRegisteredSchool: String? = null,
 
     @Json(name = "TypeofSchool")
-    var typeofSchool: String? = null,
+    val typeofSchool: String? = null,
 
     //these are new fields of registration for asha login
-    @Json(name = "PreviousLiveBirth")
-    var previousLiveBirth: String? = null,
 
-    @Json(name = "LastDeliveryConductedID")
-    var lastDeliveryConductedID: Int = 0,
-
-    @Json(name = "WhoConductedDeliveryID")
-    var whoConductedDeliveryID: Int = 0,
-
-    @Json(name = "FamilyHeadRelation")
-    var familyHeadRelation: String? = null,
-
-    @Json(name = "FamilyHeadRelationPosition")
-    var familyHeadRelationPosition: Int = 0,
-
-    //strings
-    @Json(name = "WhoConductedDelivery")
-    var whoConductedDelivery: String? = null,
-
-    @Json(name = "LastDeliveryConducted")
-    var lastDeliveryConducted: String? = null,
-
-    @Json(name = "facilitySelection")
-    var facilitySelection: String? = null,
-
-    @Json(name = "ServerUpdatedStatus")
-    var serverUpdatedStatus: Int = 0,
-
-    @Json(name = "createdBy")
-    var createdBy: String? = null,
-
-    @Json(name = "createdDate")
-    var createdDate: String? = null,
-
-    @Json(name = "ncd_priority")
-    var ncd_priority: Int = 0,
-
-    @Json(name = "guidelineId")
-    var guidelineId: String? = null,
-
-    @Json(name = "villagename")
-    var villagename: String? = null,
-
-    @Json(name = "VanID")
-    var vanID: Int = 0,
-
-    @Json(name = "Countyid")
-    var countyid: Int = 0,
-
-    @Json(name = "ProviderServiceMapID")
-    var providerServiceMapID: Int = 0,
-
-    @Json(name = "Processed")
-    var processed: String? = null,
-
-    @Json(name = "currSubDistrictId")
-    var currSubDistrictId: Int = 0,
-
-    @Json(name = "expectedDateOfDelivery")
-    var expectedDateOfDelivery: String? = null,
-
-    @Json(name = "hrpStatus")
-    var isHrpStatus: Boolean = false,
 
     @Json(name = "menstrualStatus")
-    var menstrualStatus: String? = null,
+    val menstrualStatus: String? = null,
 
-    @Json(name = "ageAtMarriage")
-    var ageAtMarriage: Int = 0,
 
     @Json(name = "dateMarriage")
-    var dateMarriage: String? = null,
+    val dateMarriage: String? = null,
 
     @Json(name = "deliveryDate")
-    var deliveryDate: String? = null,
+    val deliveryDate: String? = null,
 
     @Json(name = "suspected_hrp")
-    var suspected_hrp: String? = null,
+    val suspected_hrp: String? = null,
 
     @Json(name = "suspected_ncd")
-    var suspected_ncd: String? = null,
+    val suspected_ncd: String? = null,
 
     @Json(name = "suspected_tb")
-    var suspected_tb: String? = null,
+    val suspected_tb: String? = null,
 
     @Json(name = "suspected_ncd_diseases")
-    var suspected_ncd_diseases: String? = null,
+    val suspected_ncd_diseases: String? = null,
 
     @Json(name = "confirmed_ncd")
-    var confirmed_ncd: String? = null,
+    val confirmed_ncd: String? = null,
 
     @Json(name = "confirmed_hrp")
-    var confirmed_hrp: String? = null,
+    val confirmed_hrp: String? = null,
 
     @Json(name = "confirmed_tb")
-    var confirmed_tb: String? = null,
+    val confirmed_tb: String? = null,
 
     @Json(name = "confirmed_ncd_diseases")
-    var confirmed_ncd_diseases: String? = null,
+    val confirmed_ncd_diseases: String? = null,
 
     @Json(name = "diagnosis_status")
-    var diagnosis_status: String? = null,
+    val diagnosis_status: String? = null,
 
-    @Json(name = "nishchayPregnancyStatus")
-    var nishchayPregnancyStatus: String? = null,
 
-    @Json(name = "nishchayPregnancyStatusPosition")
-    var nishchayPregnancyStatusPosition: Int = 0,
-
-    @Json(name = "nishchayDeliveryStatus")
-    var nishchayDeliveryStatus: String? = null,
-
-    @Json(name = "nishchayDeliveryStatusPosition")
-    var nishchayDeliveryStatusPosition: Int = 0,
-
-    @Json(name = "nayiPahalDeliveryStatus")
-    var nayiPahalDeliveryStatus: String? = null,
-
-    @Json(name = "nayiPahalDeliveryStatusPosition")
-    var nayiPahalDeliveryStatusPosition: Int = 0,
-
-    @Json(name = "immunizationStatus")
-    var isImmunizationStatus: Boolean = false
-)
+    )
