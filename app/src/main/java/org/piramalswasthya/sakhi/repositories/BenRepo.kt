@@ -623,8 +623,12 @@ class BenRepo @Inject constructor(
                     val houseDataObj = jsonObject.getJSONObject("householdDetails")
                     val cbacDataObj = jsonObject.getJSONObject("cbacDetails")
                     val childDataObj = jsonObject.getJSONObject("bornbirthDeatils")
-                    val benId = jsonObject.getLong("benficieryid")
-                    val hhId = jsonObject.getLong("houseoldId")
+                    val benId =
+                        if (jsonObject.has("benficieryid")) jsonObject.getLong("benficieryid") else -1L
+                    val hhId =
+                        if (jsonObject.has("houseoldId")) jsonObject.getLong("houseoldId") else -1L
+                    if (benId == -1L || hhId == -1L)
+                        continue
                     val benExists = database.benDao.getBen(hhId, benId) != null
 
                     if (benExists) {
@@ -758,36 +762,36 @@ class BenRepo @Inject constructor(
                                     childRegisteredSchoolId = if(benDataObj.has("childRegisteredSchoolID")) benDataObj.getInt("childRegisteredSchoolID") else 0,
                                     typeOfSchoolId = if(benDataObj.has("typeofSchoolID")) benDataObj.getInt("typeofSchoolID") else 0,
                                     birthPlace  = if(childDataObj.has("birthPlace")) childDataObj.getString("birthPlace") else null,
-                                    birthPlaceId  = if(childDataObj.has("birthPlaceid")) childDataObj.getInt("birthPlaceid").toString() else null,
+                                    birthPlaceId  = if(childDataObj.has("birthPlaceid")) childDataObj.getInt("birthPlaceid") else 0,
                                     facilityName  = if(childDataObj.has("facilityName")) childDataObj.getString("facilityName") else null,
-                                    facilityid  = if(childDataObj.has("facilityid")) childDataObj.getInt("facilityid").toString() else null,
+                                    facilityId  = if(childDataObj.has("facilityid")) childDataObj.getInt("facilityid") else 0,
                                     facilityOther  = if(childDataObj.has("facilityOther")) childDataObj.getString("facilityOther") else null,
                                     placeName  = if(childDataObj.has("placeName")) childDataObj.getString("placeName") else null,
                                     conductedDelivery  = if(childDataObj.has("conductedDelivery")) childDataObj.getString("conductedDelivery") else null,
-                                    conductedDeliveryId  = if(childDataObj.has("conductedDeliveryid")) childDataObj.getInt("conductedDeliveryid").toString() else null,
+                                    conductedDeliveryId  = if(childDataObj.has("conductedDeliveryid")) childDataObj.getInt("conductedDeliveryid") else 0,
                                     conductedDeliveryOther  = if(childDataObj.has("conductedDeliveryOther")) childDataObj.getString("conductedDeliveryOther") else null,
                                     deliveryType  = if(childDataObj.has("deliveryType")) childDataObj.getString("deliveryType") else null,
-                                    deliveryTypeId  = if(childDataObj.has("deliveryTypeid")) childDataObj.getInt("deliveryTypeid").toString() else null,
+                                    deliveryTypeId  = if(childDataObj.has("deliveryTypeid")) childDataObj.getInt("deliveryTypeid") else 0,
                                     complications  = if(childDataObj.has("complecations")) childDataObj.getString("complecations") else null,
-                                    complicationsId  = if(childDataObj.has("complecationsid")) childDataObj.getInt("complecationsid").toString() else null,
+                                    complicationsId  = if(childDataObj.has("complecationsid")) childDataObj.getInt("complecationsid") else 0,
                                     complicationsOther  = if(childDataObj.has("complicationsOther")) childDataObj.getString("complicationsOther") else null,
                                     term  = if(childDataObj.has("term")) childDataObj.getString("term") else null,
-                                    termid  = if(childDataObj.has("termid")) childDataObj.getInt("termid").toString() else null,
+                                    termId  = if(childDataObj.has("termid")) childDataObj.getInt("termid") else 0,
 //                                    gestationalAge  = if(childDataObj.has("gestationalAge")) childDataObj.getString("gestationalAge") else null,
-                                    gestationalAgeId  = if(childDataObj.has("gestationalAgeid")) childDataObj.getInt("gestationalAgeid").toString() else null,
+                                    gestationalAgeId  = if(childDataObj.has("gestationalAgeid")) childDataObj.getInt("gestationalAgeid") else 0,
 //                                    corticosteroidGivenMother  = if(childDataObj.has("corticosteroidGivenMother")) childDataObj.getString("corticosteroidGivenMother") else null,
-                                    corticosteroidGivenMotherId  = if(childDataObj.has("corticosteroidGivenMotherid")) childDataObj.getInt("corticosteroidGivenMotherid").toString() else null,
+                                    corticosteroidGivenMotherId  = if(childDataObj.has("corticosteroidGivenMotherid")) childDataObj.getInt("corticosteroidGivenMotherid") else 0,
                                     criedImmediately  = if(childDataObj.has("criedImmediately")) childDataObj.getString("criedImmediately") else null,
-                                    criedImmediatelyId = if(childDataObj.has("criedImmediatelyid")) childDataObj.getInt("criedImmediatelyid").toString() else null,
+                                    criedImmediatelyId = if(childDataObj.has("criedImmediatelyid")) childDataObj.getInt("criedImmediatelyid") else 0,
                                     birthDefects  = if(childDataObj.has("birthDefects")) childDataObj.getString("birthDefects") else null,
-                                    birthDefectsId  = if(childDataObj.has("birthDefectsid")) childDataObj.getInt("birthDefectsid").toString() else null,
+                                    birthDefectsId  = if(childDataObj.has("birthDefectsid")) childDataObj.getInt("birthDefectsid") else 0,
                                     birthDefectsOthers  = if(childDataObj.has("birthDefectsOthers")) childDataObj.getString("birthDefectsOthers") else null,
-                                    heightAtBirth  = if(childDataObj.has("heightAtBirth")) childDataObj.getInt("heightAtBirth").toString() else null,
-                                    weightAtBirth  = if(childDataObj.has("weightAtBirth")) childDataObj.getInt("weightAtBirth").toString() else null,
+                                    heightAtBirth  = if(childDataObj.has("heightAtBirth")) childDataObj.getInt("heightAtBirth") else 0,
+                                    weightAtBirth  = if(childDataObj.has("weightAtBirth")) childDataObj.getInt("weightAtBirth") else 0,
                                     feedingStarted  = if(childDataObj.has("feedingStarted")) childDataObj.getString("feedingStarted") else null,
-                                    feedingStartedId  = if(childDataObj.has("feedingStartedid")) childDataObj.getInt("feedingStartedid").toString() else null,
+                                    feedingStartedId  = if(childDataObj.has("feedingStartedid")) childDataObj.getInt("feedingStartedid") else 0,
                                     birthDosage  = if(childDataObj.has("birthDosage")) childDataObj.getString("birthDosage") else null,
-                                    birthDosageId  = if(childDataObj.has("birthDosageid")) childDataObj.getInt("birthDosageid").toString() else null,
+                                    birthDosageId  = if(childDataObj.has("birthDosageid")) childDataObj.getInt("birthDosageid") else 0,
                                     opvBatchNo  = if(childDataObj.has("opvBatchNo")) childDataObj.getString("opvBatchNo") else null,
 //                                opvGivenDueDate  = childDataObj.getString("opvGivenDueDate"),
 //                                opvDate  = childDataObj.getString("opvDate"),

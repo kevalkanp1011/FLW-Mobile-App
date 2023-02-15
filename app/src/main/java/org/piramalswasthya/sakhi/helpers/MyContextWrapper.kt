@@ -50,4 +50,10 @@ class MyContextWrapper(base: Context) : ContextWrapper(base) {
             config.setLocale(locale)
         }
     }
+
+    enum class Languages(val symbol: String) {
+        ENGLISH("en"),
+        HINDI("hi"),
+        ASSAMESE("as")
+    }
 }

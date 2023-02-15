@@ -14,7 +14,7 @@ import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.databinding.FragmentSignInBinding
-import org.piramalswasthya.sakhi.helpers.LocaleHelper.Languages.*
+import org.piramalswasthya.sakhi.helpers.MyContextWrapper.Languages.*
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
 import org.piramalswasthya.sakhi.ui.login_activity.sign_in.SignInViewModel.State
 import org.piramalswasthya.sakhi.work.GenerateBenIdsWorker
