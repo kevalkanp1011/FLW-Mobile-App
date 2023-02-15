@@ -52,7 +52,7 @@ class AllBenFragment : Fragment() {
                 )
             },
             { hhId, benId ->
-                viewModel.manualSync(hhId, benId, homeViewModel.getLocationRecord())
+                viewModel.manualSync()
             }
         ))
         binding.rvAny.adapter = benAdapter
