@@ -50,8 +50,6 @@ class HomeActivity : AppCompatActivity() {
                 finish()
             }
         }
-
-        // Snackbar.make(binding.root, intent.data.toString(), Snackbar.LENGTH_LONG).show()
     }
 
     private fun setUpFullLoadPullWorker() {

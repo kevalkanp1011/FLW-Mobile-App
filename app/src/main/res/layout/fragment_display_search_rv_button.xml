@@ -20,6 +20,8 @@
             android:layout_height="wrap_content"
             android:iconifiedByDefault="false"
             android:drawableStart="@android:drawable/ic_menu_search"
+            android:drawablePadding="@dimen/padding_normal"
+            android:hint="Search"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -30,9 +32,23 @@
             app:layout_constraintBottom_toTopOf="@id/btn_next_page"
             app:layout_constraintTop_toBottomOf="@+id/searchView"
             tools:itemCount="2"
-            tools:layout_editor_absoluteX="0dp"
-
             tools:listitem="@layout/rv_item_household" />
+
+        <FrameLayout
+            android:id="@+id/fl_empty"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/btn_next_page"
+            app:layout_constraintTop_toBottomOf="@+id/searchView">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="No Records Found !!"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
+        </FrameLayout>
+
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_next_page"

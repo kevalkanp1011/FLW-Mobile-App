@@ -1,35 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Sakhi</string>
-
-    <!--    Pref-->
-    <string name="PREF_NAME" translatable="false">Sakhi-pref-1</string>
-    <string name="PREF_D2D_API_KEY" translatable="false">JWT-Token_A</string>
-    <string name="PREF_primary_API_KEY" translatable="false">JWT-Token_B</string>
-    <string name="PREF_rem_me_uname" translatable="false">user-name-local-saved</string>
-    <string name="PREF_rem_me_pwd" translatable="false">password-local-saved</string>
-    <string name="PREF_location_record_entry" translatable="false">location-record</string>
-    <string name="PREF_full_load_pull_progress" translatable="false">full_load_sync_pull_amrit</string>
-    <string name="PREF_current_saved_language" translatable="false">Locale.Helper.Selected.Language</string>
+    <string name="navigation_drawer_open">নেভিগেচন ড্ৰয়াৰ খোলক</string>
+    <string name="navigation_drawer_close">নেভিগেচন ড্ৰয়াৰ বন্ধ কৰক</string>
 
     <!--    Login-->
-    <string name="tv_text_welcome">Welcome</string>
-    <string name="tv_text_welcome_user">Welcome, %s</string>
-    <string name="tv_text_sign_in">Log in to continue</string>
-    <string name="tv_text_select_language">Please Select Your language</string>
+    <string name="tv_text_welcome">স্বাগতম</string>
+    <string name="tv_text_welcome_user">স্বাগতম, %s</string>
+    <string name="tv_text_sign_in">আগবাঢ়ি যাবলৈ লগ ইন কৰক</string>
+    <string name="tv_text_select_language">অনুগ্ৰহ কৰি আপোনাৰ ভাষা নিৰ্বাচন কৰক</string>
     <string name="text_english" translatable="false">English</string>
     <string name="text_hindi" translatable="false">हिंदी</string>
     <string name="text_assamese" translatable="false">অসমীয়া</string>
-    <string name="cd_assam_nhm_logo" translatable="false">ASSAM NHM_LOGO</string>
-    <string name="til_username_hint_text">Username</string>
-    <string name="til_password_hint_text">Password</string>
-    <string name="cb_login_remember_me_text">Remember me</string>
-    <string name="btn_login_forgot_password_text">Forgot Password?</string>
-    <string name="btn_login_text">Login</string>
+    <string name="til_username_hint_text">ব্যৱহাৰকাৰীৰ নাম</string>
+    <string name="til_password_hint_text">পাছৱৰ্ড</string>
+    <string name="cb_login_remember_me_text">মোক মনত পেলাওক</string>
+    <string name="btn_login_forgot_password_text">পাচৱৰ্ড পাহৰিলে??</string>
+    <string name="btn_login_text">লগইন কৰক</string>
+
+    <!--   To Be Deleeted-->
 
 
     <string name="title_activity_home" translatable="false">HomeActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_desc" translatable="false">Navigation header</string>
 
     <string name="menu_home">Home</string>
@@ -61,8 +52,6 @@
     <string name="home_icon_all_household">All Household List</string>
     <string name="btn_text_frag_home_nhhr">New Household Registration</string>
     <string name="cd_icon_grid_icon">icon</string>
-
-
 
 
     <string name="nav_item_1_text">Name : %s</string>
@@ -108,8 +97,6 @@
     <string name="long_to_string">%d</string>
 
 
-
-
     <string name="tv_reg_date_ph">Registration Date</string>
     <string name="tv_ben_name_ph">Beneficiary Name</string>
     <string name="tv_type_of_list">Type of List</string>
@@ -143,4 +130,6 @@
         <item>Item 5</item>
         <item>Item 6</item>
     </string-array>
+
+
 </resources>

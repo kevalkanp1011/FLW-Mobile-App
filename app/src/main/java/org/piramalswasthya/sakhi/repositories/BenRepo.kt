@@ -339,7 +339,7 @@ class BenRepo @Inject constructor(
                         database.householdDao.getHousehold(it.householdId)!!.asNetworkModel(user)
                     )
                     if (it.isKid)
-                        kidNetworkPostList.add(it.asKidNetworkModel())
+                        kidNetworkPostList.add(it.asKidNetworkModel(user))
                     val uploadDone = postDataToAmritServer(
                         benNetworkPostList,
                         householdNetworkPostList,
@@ -372,9 +372,8 @@ class BenRepo @Inject constructor(
             val statusCode = response.code()
 
             if (statusCode == 200) {
-                var responseString: String? = null
 
-                responseString = response.body()?.string()
+                val responseString: String? = response.body()?.string()
                 if (responseString != null) {
                     val jsonObj = JSONObject(responseString)
                     val responseStatusCode = jsonObj.getInt("statusCode")
@@ -624,7 +623,6 @@ class BenRepo @Inject constructor(
                     val houseDataObj = jsonObject.getJSONObject("householdDetails")
                     val cbacDataObj = jsonObject.getJSONObject("cbacDetails")
                     val childDataObj = jsonObject.getJSONObject("bornbirthDeatils")
-
                     val benId = jsonObject.getLong("benficieryid")
                     val hhId = jsonObject.getLong("houseoldId")
                     val benExists = database.benDao.getBen(hhId, benId) != null
@@ -894,7 +892,7 @@ class BenRepo @Inject constructor(
                                 familyHeadPhoneNo = houseDataObj.getString("familyHeadPhoneNo")
                                     .toLong(),
                                 houseNo = houseDataObj.getString("houseno"),
-                                rationCardDetails = houseDataObj.getString("rationCardDetails"),
+//                                rationCardDetails = houseDataObj.getString("rationCardDetails"),
                                 povertyLine = houseDataObj.getString("type_bpl_apl"),
                                 povertyLineId = houseDataObj.getInt("bpl_aplId"),
                                 residentialArea = houseDataObj.getString("residentialArea"),
@@ -908,10 +906,11 @@ class BenRepo @Inject constructor(
 //                                isLandOwned = houseDataObj.getString("landOwned") == "Yes",
 //                                isLandIrrigated = houseDataObj.has("landIrregated") && houseDataObj.getString("landIrregated") == "Yes",
 //                                isLivestockOwned = houseDataObj.getString("liveStockOwnerShip") == "Yes",
-                                street = houseDataObj.getString("street"),
-                                colony = houseDataObj.getString("colony"),
-                                pincode = houseDataObj.getInt("pincode"),
+//                                street = houseDataObj.getString("street"),
+//                                colony = houseDataObj.getString("colony"),
+//                                pincode = houseDataObj.getInt("pincode"),
                                 separateKitchen = houseDataObj.getString("seperateKitchen"),
+                                separateKitchenId = houseDataObj.getInt("seperateKitchenId"),
                                 fuelUsed = houseDataObj.getString("fuelUsed"),
                                 fuelUsedId = houseDataObj.getInt("fuelUsedId"),
                                 otherFuelUsed = houseDataObj.getString("other_fuelUsed"),

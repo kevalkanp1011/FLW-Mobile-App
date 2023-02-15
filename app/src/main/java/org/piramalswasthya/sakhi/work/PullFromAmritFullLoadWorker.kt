@@ -29,7 +29,7 @@ class PullFromAmritFullLoadWorker @AssistedInject constructor(
         val constraint = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
-        const val n = 4
+        const val n = 4 // Number of threads!
     }
 
 
@@ -38,13 +38,12 @@ class PullFromAmritFullLoadWorker @AssistedInject constructor(
             withContext(Dispatchers.IO) {
                 val startTime = System.currentTimeMillis()
                 val numPages = benRepo.getBeneficiariesFromServerForWorker(0)
-                if(numPages == -1) {
-                 Timber.d("Page size returned -1")
-                }
-                for (j in 0 until n) {
-                    if (j < numPages)
-                        getBenForPage(numPages, j)
-                }
+                for (i in 1 until numPages)
+                    benRepo.getBeneficiariesFromServerForWorker(i)
+//                for (j in 0 until n) {
+//                    if (j < numPages)
+//                        getBenForPage(numPages, j)
+//                }
                 val endTime = System.currentTimeMillis()
                 val timeTaken = TimeUnit.MILLISECONDS.toSeconds(endTime - startTime)
                 Timber.d("Full load took $timeTaken seconds for $numPages pages")
@@ -63,7 +62,7 @@ class PullFromAmritFullLoadWorker @AssistedInject constructor(
             withContext(Dispatchers.IO) {
                 var page: Int = rem
                 while (page < numPages) {
-                    if (numPages % n == rem) {
+                    if ((numPages % n) == rem) {
                         benRepo.getBeneficiariesFromServerForWorker(page)
                         page += n
                     }

@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.ui.login_activity.sign_in
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,19 +12,27 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.databinding.FragmentSignInBinding
+import org.piramalswasthya.sakhi.helpers.LocaleHelper.Languages.*
+import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
 import org.piramalswasthya.sakhi.ui.login_activity.sign_in.SignInViewModel.State
 import org.piramalswasthya.sakhi.work.GenerateBenIdsWorker
 import timber.log.Timber
+import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class SignInFragment : Fragment() {
 
-    private val binding by lazy{
+    @Inject
+    lateinit var prefDao: PreferenceDao
+
+    private val binding by lazy {
         FragmentSignInBinding.inflate(layoutInflater)
     }
 
-    private val viewModel : SignInViewModel by viewModels()
+    private val viewModel: SignInViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,9 +46,32 @@ class SignInFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        when (prefDao.getCurrentLanguage()) {
+            ENGLISH -> binding.rgLangSelect.check(binding.rbEng.id)
+            HINDI -> binding.rgLangSelect.check(binding.rbHindi.id)
+            ASSAMESE -> binding.rgLangSelect.check(binding.rbAssamese.id)
+        }
 
-        viewModel.state.observe(viewLifecycleOwner){state->
-            when(state!!){
+        binding.rgLangSelect.setOnCheckedChangeListener { _, i ->
+            val currentLanguage = when (i) {
+                binding.rbEng.id -> ENGLISH
+                binding.rbHindi.id -> HINDI
+                binding.rbAssamese.id -> ASSAMESE
+                else -> ENGLISH
+            }
+            prefDao.saveSetLanguage(currentLanguage)
+            val refresh = Intent(requireContext(), LoginActivity::class.java)
+            //Timber.d("refresh Called!-${Locale.getDefault().language}-${savedLanguage.symbol}-")
+            requireActivity().finish()
+            startActivity(refresh)
+            activity?.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+
+
+        }
+
+
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            when (state!!) {
                 State.IDLE -> {
                     viewModel.fetchRememberedUserName()?.let {
                         binding.etUsername.setText(it)
