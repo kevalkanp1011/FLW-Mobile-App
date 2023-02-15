@@ -339,7 +339,7 @@ class BenRepo @Inject constructor(
                         database.householdDao.getHousehold(it.householdId)!!.asNetworkModel(user)
                     )
                     if (it.isKid)
-                        kidNetworkPostList.add(it.asKidNetworkModel())
+                        kidNetworkPostList.add(it.asKidNetworkModel(user))
                     val uploadDone = postDataToAmritServer(
                         benNetworkPostList,
                         householdNetworkPostList,
@@ -372,9 +372,8 @@ class BenRepo @Inject constructor(
             val statusCode = response.code()
 
             if (statusCode == 200) {
-                var responseString: String? = null
 
-                responseString = response.body()?.string()
+                val responseString: String? = response.body()?.string()
                 if (responseString != null) {
                     val jsonObj = JSONObject(responseString)
                     val responseStatusCode = jsonObj.getInt("statusCode")
@@ -477,7 +476,7 @@ class BenRepo @Inject constructor(
                         val errorMessage = jsonObj.getString("errorMessage")
                         val responseStatusCode = jsonObj.getInt("statusCode")
                         if (responseStatusCode != 200)
-                            throw SocketTimeoutException("User logged out!")
+                            throw IllegalStateException("User logged out!")
                         val dataObj = jsonObj.getJSONObject("data")
                         val jsonArray = dataObj.getJSONArray("data")
                         val pageSize = dataObj.getInt("totalPage")
@@ -668,7 +667,6 @@ class BenRepo @Inject constructor(
                     val benDataObj = jsonObject.getJSONObject("beneficiaryDetails")
                     val cbacDataObj = jsonObject.getJSONObject("cbacDetails")
                     val childDataObj = jsonObject.getJSONObject("bornbirthDeatils")
-
                     val benId = jsonObject.getLong("benficieryid")
                     val hhId = jsonObject.getLong("houseoldId")
                     val benExists = database.benDao.getBen(hhId, benId) != null
@@ -720,7 +718,7 @@ class BenRepo @Inject constructor(
                             familyHeadRelationPosition = benDataObj.getInt("familyHeadRelationPosition"),
 //                            familyHeadRelationOther = benDataObj.getString("familyHeadRelationOther"),
                             mobileNoOfRelation = benDataObj.getString("mobilenoofRelation"),
-                            mobileNoOfRelationId = benDataObj.getInt("mobileNoOfRelationId"),
+                            mobileNoOfRelationId = benDataObj.getInt("mobilenoofRelationId"),
                             mobileOthers = benDataObj.getString("mobileOthers"),
                             contactNumber = benDataObj.getString("contact_number").toLong(),
 //                            literacy = literacy,
@@ -777,8 +775,8 @@ class BenRepo @Inject constructor(
                             confirmedTb = cbacDataObj.getString("confirmed_tb"),
                             confirmedNcdDiseases = cbacDataObj.getString("confirmed_ncd_diseases"),
                             diagnosisStatus = cbacDataObj.getString("diagnosis_status"),
-                            locationRecord = LocationRecord (
-                                countryId = benDataObj.getInt("countyId"),
+                            locationRecord = LocationRecord(
+                                countryId = benDataObj.getInt("CountyId"),
                                 stateId = benDataObj.getInt("stateId"),
                                 state = benDataObj.getString("stateName"),
                                 districtId = benDataObj.getInt("districtid"),
@@ -799,47 +797,47 @@ class BenRepo @Inject constructor(
                                 childRegisteredSchoolId = benDataObj.getInt("childRegisteredSchoolID"),
 //                                typeOfSchool = typeofSchool,
                                 typeOfSchoolId = benDataObj.getInt("typeofSchoolID"),
-                                birthPlace  = childDataObj.getString("birthPlace"),
-                                birthPlaceId  = childDataObj.getInt("birthPlaceid").toString(),
-                                facilityName  = childDataObj.getString("facilityName"),
-                                facilityid  = childDataObj.getInt("facilityid").toString(),
-                                facilityOther  = childDataObj.getString("facilityOther"),
-                                placeName  = childDataObj.getString("placeName"),
-                                conductedDelivery  = childDataObj.getString("conductedDelivery"),
-                                conductedDeliveryId  = childDataObj.getInt("conductedDeliveryid").toString(),
-                                conductedDeliveryOther  = childDataObj.getString("conductedDeliveryOther"),
-                                deliveryType  = childDataObj.getString("deliveryType"),
-                                deliveryTypeId  = childDataObj.getInt("deliveryTypeid").toString(),
-                                complications  = childDataObj.getString("complecations"),
-                                complicationsId  = childDataObj.getInt("complecationsid").toString(),
-                                complicationsOther  = childDataObj.getString("complicationsOther"),
-                                term  = childDataObj.getString("term"),
-                                termid  = childDataObj.getInt("termid").toString(),
+                                birthPlace = childDataObj.getString("birthPlace"),
+                                birthPlaceId = childDataObj.getInt("birthPlaceid"),
+                                facilityName = childDataObj.getString("facilityName"),
+                                facilityId = childDataObj.getInt("facilityid"),
+                                facilityOther = childDataObj.getString("facilityOther"),
+                                placeName = childDataObj.getString("placeName"),
+                                conductedDelivery = childDataObj.getString("conductedDelivery"),
+                                conductedDeliveryId = childDataObj.getInt("conductedDeliveryid"),
+                                conductedDeliveryOther = childDataObj.getString("conductedDeliveryOther"),
+                                deliveryType = childDataObj.getString("deliveryType"),
+                                deliveryTypeId = childDataObj.getInt("deliveryTypeid"),
+                                complications = childDataObj.getString("complecations"),
+                                complicationsId = childDataObj.getInt("complecationsid"),
+                                complicationsOther = childDataObj.getString("complicationsOther"),
+                                term = childDataObj.getString("term"),
+                                termId = childDataObj.getInt("termid"),
 //                                gestationalAge  = childDataObj.getString("gestationalAge"),
-                                gestationalAgeId  = childDataObj.getInt("gestationalAgeid").toString(),
+                                gestationalAgeId = childDataObj.getInt("gestationalAgeid"),
 //                                corticosteroidGivenMother  = childDataObj.getString("corticosteroidGivenMother"),
-                                corticosteroidGivenMotherId  = childDataObj.getInt("corticosteroidGivenMotherid").toString(),
-                                criedImmediately  = childDataObj.getString("criedImmediately"),
-                                criedImmediatelyId = childDataObj.getInt("criedImmediatelyid").toString(),
-                                birthDefects  = childDataObj.getString("birthDefects"),
-                                birthDefectsId  = childDataObj.getInt("birthDefectsid").toString(),
-                                birthDefectsOthers  = childDataObj.getString("birthDefectsOthers"),
-                                heightAtBirth  = childDataObj.getInt("heightAtBirth").toString(),
-                                weightAtBirth  = childDataObj.getInt("weightAtBirth").toString(),
-                                feedingStarted  = childDataObj.getString("feedingStarted"),
-                                feedingStartedId  = childDataObj.getInt("feedingStartedid").toString(),
-                                birthDosage  = childDataObj.getString("birthDosage"),
-                                birthDosageId  = childDataObj.getInt("birthDosageid").toString(),
-                                opvBatchNo  = childDataObj.getString("opvBatchNo"),
+                                corticosteroidGivenMotherId = childDataObj.getInt("corticosteroidGivenMotherid"),
+                                criedImmediately = childDataObj.getString("criedImmediately"),
+                                criedImmediatelyId = childDataObj.getInt("criedImmediatelyid"),
+                                birthDefects = childDataObj.getString("birthDefects"),
+                                birthDefectsId = childDataObj.getInt("birthDefectsid"),
+                                birthDefectsOthers = childDataObj.getString("birthDefectsOthers"),
+                                heightAtBirth = childDataObj.getInt("heightAtBirth"),
+                                weightAtBirth = childDataObj.getInt("weightAtBirth"),
+                                feedingStarted = childDataObj.getString("feedingStarted"),
+                                feedingStartedId = childDataObj.getInt("feedingStartedid"),
+                                birthDosage = childDataObj.getString("birthDosage"),
+                                birthDosageId = childDataObj.getInt("birthDosageid"),
+                                opvBatchNo = childDataObj.getString("opvBatchNo"),
 //                                opvGivenDueDate  = childDataObj.getString("opvGivenDueDate"),
 //                                opvDate  = childDataObj.getString("opvDate"),
-                                bcdBatchNo  = childDataObj.getString("bcdBatchNo"),
+                                bcdBatchNo = childDataObj.getString("bcdBatchNo"),
 //                                bcgGivenDueDate  = childDataObj.getString("bcgGivenDueDate"),
 //                                bcgDate  = childDataObj.getString("bcgDate"),
-                                hptBatchNo  = childDataObj.getString("hptdBatchNo"),
+                                hptBatchNo = childDataObj.getString("hptdBatchNo"),
 //                                hptGivenDueDate  = childDataObj.getString("hptGivenDueDate"),
 //                                hptDate  = childDataObj.getString("hptDate"),
-                                vitaminKBatchNo  = childDataObj.getString("vitaminkBatchNo"),
+                                vitaminKBatchNo = childDataObj.getString("vitaminkBatchNo"),
 //                                vitaminKGivenDueDate  =  childDataObj.getString("vitaminKGivenDueDate"),
 //                                vitaminKDate =  childDataObj.getString("vitaminKDate"),
                                 deliveryTypeOther =  childDataObj.getString("deliveryTypeOther"),
@@ -931,7 +929,7 @@ class BenRepo @Inject constructor(
                                 familyHeadPhoneNo = houseDataObj.getString("familyHeadPhoneNo")
                                     .toLong(),
                                 houseNo = houseDataObj.getString("houseno"),
-                                rationCardDetails = houseDataObj.getString("rationCardDetails"),
+//                                rationCardDetails = houseDataObj.getString("rationCardDetails"),
                                 povertyLine = houseDataObj.getString("type_bpl_apl"),
                                 povertyLineId = houseDataObj.getInt("bpl_aplId"),
                                 residentialArea = houseDataObj.getString("residentialArea"),
@@ -945,10 +943,11 @@ class BenRepo @Inject constructor(
 //                                isLandOwned = houseDataObj.getString("landOwned") == "Yes",
 //                                isLandIrrigated = houseDataObj.has("landIrregated") && houseDataObj.getString("landIrregated") == "Yes",
 //                                isLivestockOwned = houseDataObj.getString("liveStockOwnerShip") == "Yes",
-                                street = houseDataObj.getString("street"),
-                                colony = houseDataObj.getString("colony"),
-                                pincode = houseDataObj.getInt("pincode"),
+//                                street = houseDataObj.getString("street"),
+//                                colony = houseDataObj.getString("colony"),
+//                                pincode = houseDataObj.getInt("pincode"),
                                 separateKitchen = houseDataObj.getString("seperateKitchen"),
+                                separateKitchenId = houseDataObj.getInt("seperateKitchenId"),
                                 fuelUsed = houseDataObj.getString("fuelUsed"),
                                 fuelUsedId = houseDataObj.getInt("fuelUsedId"),
                                 otherFuelUsed = houseDataObj.getString("other_fuelUsed"),

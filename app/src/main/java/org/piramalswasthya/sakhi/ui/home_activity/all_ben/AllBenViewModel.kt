@@ -1,9 +1,6 @@
 package org.piramalswasthya.sakhi.ui.home_activity.all_ben
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.model.BenBasicDomain
@@ -22,6 +19,15 @@ class AllBenViewModel @Inject constructor(
         get() = _benList
 
 
+    init {
+        viewModelScope.launch {
+            allBenList.asFlow().collect {
+                _benList.value = it
+            }
+        }
+    }
+
+
     fun manualSync(/*hhId: Long, benId: Long, locationRecord: LocationRecord*/) {
         viewModelScope.launch {
             benRepo.processNewBen()
@@ -32,12 +38,12 @@ class AllBenViewModel @Inject constructor(
         if (filterText == "")
             _benList.value = allBenList.value
         else
-            _benList.value = _benList.value?.filter {
+            _benList.value = allBenList.value?.filter {
                 it.hhId.toString().contains(filterText) ||
                         it.benId.toString().contains(filterText) ||
                         it.regDate.contains((filterText)) ||
                         it.age.contains(filterText) ||
-                        it.benName.contains(filterText) ||
+                        it.benName.lowercase().contains(filterText) ||
                         it.familyHeadName.contains(filterText) ||
                         it.benSurname?.contains(filterText) ?: false ||
                         it.typeOfList.contains(filterText) ||
