@@ -577,7 +577,7 @@ class BenKidRegFormDataset(private val context: Context) {
         val byteBuffer = ByteArrayOutputStream()
         val bufferSize = 1024
         val buffer = ByteArray(bufferSize)
-        var len = 0
+        var len: Int
         while (inputStream.read(buffer).also { len = it } != -1) {
             byteBuffer.write(buffer, 0, len)
         }
@@ -608,8 +608,11 @@ class BenKidRegFormDataset(private val context: Context) {
             kidDetails?.criedImmediately =
                 this@BenKidRegFormDataset.babyCriedImmediatelyAfterBirth.value.value
             kidDetails?.birthDefects = this@BenKidRegFormDataset.anyDefectAtBirth.value.value
-            kidDetails?.heightAtBirth = this@BenKidRegFormDataset.babyHeight.value.value
-            kidDetails?.weightAtBirth = this@BenKidRegFormDataset.babyWeight.value.value
+            kidDetails?.heightAtBirth =
+                this@BenKidRegFormDataset.babyHeight.value.value?.toInt() ?: 0
+            kidDetails?.weightAtBirth =
+                this@BenKidRegFormDataset.babyWeight.value.value?.toInt() ?: 0
+
 
         }
 

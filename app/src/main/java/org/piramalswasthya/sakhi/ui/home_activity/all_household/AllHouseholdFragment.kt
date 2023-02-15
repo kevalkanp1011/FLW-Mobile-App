@@ -68,6 +68,10 @@ class AllHouseholdFragment : Fragment() {
         binding.rvAny.adapter = householdAdapter
 
         viewModel.householdList.observe(viewLifecycleOwner){
+            if (it.isNullOrEmpty())
+                binding.flEmpty.visibility = View.VISIBLE
+            else
+                binding.flEmpty.visibility = View.GONE
             householdAdapter.submitList(it)
         }
         viewModel.hasDraft.observe(viewLifecycleOwner){

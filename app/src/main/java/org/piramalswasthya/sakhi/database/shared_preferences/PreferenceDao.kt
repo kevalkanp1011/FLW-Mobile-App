@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.helpers.LocaleHelper
 import org.piramalswasthya.sakhi.model.LocationRecord
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -103,6 +104,22 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
     fun isFullLoadCompleted(): Boolean {
         val prefKey = context.getString(R.string.PREF_full_load_pull_progress)
         return pref.getBoolean(prefKey, false)
+    }
 
+    fun saveSetLanguage(language: LocaleHelper.Languages) {
+        val key = context.getString(R.string.PREF_current_saved_language)
+        val editor = pref.edit()
+        editor.putString(key, language.symbol)
+        editor.apply()
+    }
+
+    fun getCurrentLanguage(): LocaleHelper.Languages {
+        val key = context.getString(R.string.PREF_current_saved_language)
+        return when (pref.getString(key, null)) {
+            LocaleHelper.Languages.ASSAMESE.symbol -> LocaleHelper.Languages.ASSAMESE
+            LocaleHelper.Languages.HINDI.symbol -> LocaleHelper.Languages.HINDI
+            LocaleHelper.Languages.ENGLISH.symbol -> LocaleHelper.Languages.ENGLISH
+            else -> LocaleHelper.Languages.ENGLISH
+        }
     }
 }
