@@ -32,6 +32,54 @@ enum class Gender{
     FEMALE,
     TRANSGENDER
 }
+
+@DatabaseView(viewName = "BEN_BASIC_CACHE", value="SELECT b.beneficiaryId as benId, b.householdId as hhId, b.regDate, b.firstName as benName, b.lastName as benSurname, b.gender, b.age" +
+        ", b.ageUnit, b.contactNumber as mobileNo, b.fatherName, h.familyHeadName, b.registrationType as typeOfList, b.rchId" +
+        ", b.isHrpStatus as hrpStatus, b.syncState, b.gen_reproductiveStatusId as reproductiveStatusId, b.isKid, b.immunizationStatus" +
+        " from BENEFICIARY b JOIN HOUSEHOLD h ON b.householdId = h.householdId where b.isDraft = 0")
+data class BenBasicCache(
+    val benId: Long,
+    val hhId: Long,
+    val regDate: Long,
+    val benName: String,
+    val benSurname: String? = null,
+    val gender: Gender,
+    val age: Int,
+    val ageUnit: AgeUnit,
+    val mobileNo: Long,
+    val fatherName: String? = null,
+    val familyHeadName: String? = null,
+    val typeOfList: TypeOfList,
+    val rchId: String? = null,
+    val hrpStatus: String? = null,
+    val syncState: SyncState,
+    val reproductiveStatusId: Int,
+    val isKid: Boolean,
+    val immunizationStatus: Boolean
+) {
+    companion object{
+        private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+    }
+    fun asBasicDomainModel(): BenBasicDomain {
+        return BenBasicDomain (
+            benId = benId,
+            hhId = hhId,
+            regDate = dateFormat.format(Date(regDate!!)),
+            benName = benName,
+            benSurname = benSurname ?: "Not Available",
+            gender = gender.name,
+            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            mobileNo = mobileNo.toString(),
+            fatherName = fatherName,
+            familyHeadName = familyHeadName?: "Not Available",
+            typeOfList = typeOfList.name,
+            rchId = rchId?: "Not Available",
+            hrpStatus = hrpStatus?: "Not Available",
+            syncState = syncState
+                )
+    }
+}
+
 data class BenBasicDomain(
     val benId: Long,
     val hhId: Long,
@@ -271,7 +319,7 @@ data class BenRegCache(
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
     var userImageBlob: ByteArray? = null,
 
-    var regDate: Long? = null,
+    var regDate: Long = 0,
 
     var firstName: String? = null,
 
@@ -305,7 +353,7 @@ data class BenRegCache(
 
     var mobileOthers: String? = null,
 
-    var contactNumber: Long? = null,
+    var contactNumber: Long = 0,
 
     var literacy: String? = null,
 
@@ -433,7 +481,7 @@ data class BenRegCache(
     ){
 
     companion object{
-         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+         private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
     }
     fun asBasicDomainModel() : BenBasicDomain{
         return BenBasicDomain(

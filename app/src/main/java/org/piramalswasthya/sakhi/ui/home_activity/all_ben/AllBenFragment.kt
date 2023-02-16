@@ -16,6 +16,7 @@ import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.all_household.AllHouseholdFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
+import timber.log.Timber
 
 @AndroidEntryPoint
 class AllBenFragment : Fragment() {
@@ -43,8 +44,6 @@ class AllBenFragment : Fragment() {
         val benAdapter = BenListAdapter(BenListAdapter.BenClickListener(
             {
                 Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
-
-
             },
             {
                 Toast.makeText(context, "Household : $it clicked", Toast.LENGTH_SHORT).show()

@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.model.BenBasicCache
 import org.piramalswasthya.sakhi.model.BenRegCache
 
 @Dao
@@ -17,8 +18,8 @@ interface BenDao {
     @Query("SELECT * FROM BENEFICIARY WHERE isDraft = 1 and householdId =:hhId LIMIT 1")
     suspend fun getDraftBenKidForHousehold(hhId: Long): BenRegCache?
 
-    @Query("SELECT * FROM BENEFICIARY WHERE isDraft = 0")
-    fun getAllBen(): LiveData<List<BenRegCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE")
+    fun getAllBen(): LiveData<List<BenBasicCache>>
 
     @Query("SELECT * FROM BENEFICIARY WHERE beneficiaryId =:benId AND householdId = :hhId LIMIT 1")
     suspend fun getBen(hhId: Long, benId: Long): BenRegCache?
@@ -47,46 +48,46 @@ interface BenDao {
     @Query("SELECT beneficiaryId FROM BENEFICIARY WHERE beneficiaryId IN (:list)")
     fun getAllBeneficiaryFromList(list: List<Long>): LiveData<List<Long>>
 
-    @Query("SELECT * FROM BENEFICIARY WHERE age BETWEEN 15 AND 49 and gender = \"Female\" and gen_marriageDate IS NOT NULL")
-    fun getAllEligibleCoupleList(): LiveData<List<BenRegCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE age BETWEEN 15 AND 49 and reproductiveStatusId = 1")
+    fun getAllEligibleCoupleList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BENEFICIARY WHERE gender = \"Female\" and nishchayPregnancyStatus IS NOT NULL")
-    fun getAllPregnancyWomenList(): LiveData<List<BenRegCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 2")
+    fun getAllPregnancyWomenList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BENEFICIARY WHERE gender = \"Female\" and nishchayDeliveryStatus IS NOT NULL")
-    fun getAllDeliveryStageWomenList(): LiveData<List<BenRegCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 3")
+    fun getAllDeliveryStageWomenList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BENEFICIARY WHERE age >= 30")
-    fun getAllNCDEligibleList(): LiveData<List<BenRegCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE age >= 30")
+    fun getAllNCDEligibleList(): LiveData<List<BenBasicCache>>
 
-//    @Query("SELECT * FROM BENEFICIARY WHERE age >= 30 and cbacScore > 4")
-//    fun getAllNCDPriorityList(): LiveData<List<BenRegCache>>
+//    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE age >= 30 and cbacScore > 4")
+//    fun getAllNCDPriorityList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BENEFICIARY WHERE age < 30")
-    fun getAllNCDNonEligibleList(): LiveData<List<BenRegCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE age < 30 and isKid = 0")
+    fun getAllNCDNonEligibleList(): LiveData<List<BenBasicCache>>
 
     // have to add those as well who we are adding to menopause list manually from app
-    @Query("SELECT * FROM BENEFICIARY WHERE gender = \"Female\" and age > 50")
-    fun getAllMenopauseStageList(): LiveData<List<BenRegCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 5")
+    fun getAllMenopauseStageList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BENEFICIARY WHERE gender = \"Female\" and gen_reproductiveStatus = \"Delivery Stage\"")
-    fun getAllReproductiveAgeList(): LiveData<List<BenRegCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE gender = \"Female\" and age BETWEEN 15 AND 49")
+    fun getAllReproductiveAgeList(): LiveData<List<BenBasicCache>>
 
-//    @Query("SELECT * FROM BENEFICIARY WHERE gender = \"Female\" and nishchayPregnancyStatus IS NOT NULL")
-//    fun getAllPNCMotherList(): LiveData<List<BenRegCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 4")
+    fun getAllPNCMotherList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BENEFICIARY WHERE age < 2")
-    fun getAllInfantList(): LiveData<List<BenRegCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE age < 2")
+    fun getAllInfantList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BENEFICIARY WHERE age between 2 and 6")
-    fun getAllChildList(): LiveData<List<BenRegCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE age between 2 and 6")
+    fun getAllChildList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BENEFICIARY WHERE age between 6 and 14")
-    fun getAllAdolescentList(): LiveData<List<BenRegCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE age between 6 and 14")
+    fun getAllAdolescentList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BENEFICIARY WHERE immunizationStatus = 1")
-    fun getAllImmunizationDueList(): LiveData<List<BenRegCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE immunizationStatus = 1")
+    fun getAllImmunizationDueList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BENEFICIARY WHERE isHrpStatus = 1")
-    fun getAllHrpCasesList(): LiveData<List<BenRegCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE hrpStatus = 1")
+    fun getAllHrpCasesList(): LiveData<List<BenBasicCache>>
 }

@@ -115,6 +115,13 @@ class BenRepo @Inject constructor(
         }
     }
 
+    val pncMotherList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllPNCMotherList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
+
     companion object {
         private fun getCurrentDate(): String {
             val dateLong = System.currentTimeMillis()
@@ -639,7 +646,7 @@ class BenRepo @Inject constructor(
     }
 
     private fun getLongFromDate(date: String): Long {
-//        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+//        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 //        val localDateTime = LocalDateTime.parse(date, formatter)
 //        return localDateTime.toInstant(java.time.ZoneOffset.UTC).toEpochMilli()
         return 0
@@ -701,7 +708,7 @@ class BenRepo @Inject constructor(
                                     "age"
                                 ) > 14),
                                 userImageBlob = if(benDataObj.has("user_image")) benDataObj.getString("user_image").toByteArray() else null,
-                                regDate = if(benDataObj.has("registrationDate")) getLongFromDate(benDataObj.getString("registrationDate")) else null,
+                                regDate = if(benDataObj.has("registrationDate")) getLongFromDate(benDataObj.getString("registrationDate")) else 0,
                                 firstName = if(benDataObj.has("firstName")) benDataObj.getString("firstName") else null,
                                 lastName = if(benDataObj.has("lastName")) benDataObj.getString("lastName") else null,
                                 gender = if(benDataObj.has("gender")){
