@@ -57,7 +57,7 @@ object IconDataset {
         Icon(
             R.drawable.ic_person,
             "HRP Cases",
-            null,
+            iconCount.hrpCount,
             HomeFragmentDirections.actionNavHomeToHrpCasesFragment()
         ),
         Icon(

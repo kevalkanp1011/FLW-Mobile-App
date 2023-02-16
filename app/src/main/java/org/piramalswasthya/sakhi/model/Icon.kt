@@ -26,6 +26,7 @@ data class IconCount(
     val reproductiveAgeCount: Int,
     val menopauseCount: Int,
     val immunizationDueCount: Int,
+    val hrpCount: Int,
     val generalOpCareCount: Int,
     val deathReportCount: Int,
     val ncdCount: Int,
