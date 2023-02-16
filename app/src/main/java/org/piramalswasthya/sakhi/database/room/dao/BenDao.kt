@@ -71,4 +71,22 @@ interface BenDao {
 
     @Query("SELECT * FROM BENEFICIARY WHERE gender = \"Female\" and gen_reproductiveStatus = \"Delivery Stage\"")
     fun getAllReproductiveAgeList(): LiveData<List<BenRegCache>>
+
+//    @Query("SELECT * FROM BENEFICIARY WHERE gender = \"Female\" and nishchayPregnancyStatus IS NOT NULL")
+//    fun getAllPNCMotherList(): LiveData<List<BenRegCache>>
+
+    @Query("SELECT * FROM BENEFICIARY WHERE age < 2")
+    fun getAllInfantList(): LiveData<List<BenRegCache>>
+
+    @Query("SELECT * FROM BENEFICIARY WHERE age between 2 and 6")
+    fun getAllChildList(): LiveData<List<BenRegCache>>
+
+    @Query("SELECT * FROM BENEFICIARY WHERE age between 6 and 14")
+    fun getAllAdolescentList(): LiveData<List<BenRegCache>>
+
+    @Query("SELECT * FROM BENEFICIARY WHERE immunizationStatus = 1")
+    fun getAllImmunizationDueList(): LiveData<List<BenRegCache>>
+
+    @Query("SELECT * FROM BENEFICIARY WHERE isHrpStatus = 1")
+    fun getAllHrpCasesList(): LiveData<List<BenRegCache>>
 }

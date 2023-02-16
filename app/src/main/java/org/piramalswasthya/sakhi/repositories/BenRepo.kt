@@ -19,6 +19,8 @@ import org.piramalswasthya.sakhi.network.TmcNetworkApiService
 import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 
@@ -78,6 +80,40 @@ class BenRepo @Inject constructor(
         }
     }
 
+    val infantList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllInfantList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
+
+    val childList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllChildList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
+
+    val adolescentList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllAdolescentList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
+
+    val immunizationList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllImmunizationDueList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
+
+    val hrpList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllHrpCasesList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
 
     companion object {
         private fun getCurrentDate(): String {
@@ -603,7 +639,9 @@ class BenRepo @Inject constructor(
     }
 
     private fun getLongFromDate(date: String): Long {
-        //TODO ()
+//        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+//        val localDateTime = LocalDateTime.parse(date, formatter)
+//        return localDateTime.toInstant(java.time.ZoneOffset.UTC).toEpochMilli()
         return 0
     }
 
