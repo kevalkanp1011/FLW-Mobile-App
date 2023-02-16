@@ -3,7 +3,9 @@ package org.piramalswasthya.sakhi.configuration
 import android.content.Context
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.quality
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.model.FormInput.InputType.*
@@ -529,6 +531,12 @@ class BenKidRegFormDataset(private val context: Context) {
                 "Transgender" -> Gender.TRANSGENDER
                 else -> null
             }
+            genderId = when (this@BenKidRegFormDataset.gender.value.value) {
+                "Male" -> 1
+                "Female" -> 2
+                "Transgender" -> 3
+                else -> 0
+            }
             fatherName = this@BenKidRegFormDataset.fatherName.value.value
             motherName = this@BenKidRegFormDataset.motherName.value.value
             familyHeadRelation = this@BenKidRegFormDataset.relationToHead.value.value
@@ -541,7 +549,14 @@ class BenKidRegFormDataset(private val context: Context) {
                     ?: 0
             contactNumber = stringToLong(this@BenKidRegFormDataset.contactNumber.value.value!!)
             community = this@BenKidRegFormDataset.community.value.value
+            communityId =
+                (this@BenKidRegFormDataset.community.list?.indexOf(community!!))?.let { it + 1 }
+                    ?: 0
+
             religion = this@BenKidRegFormDataset.religion.value.value
+            religionId =
+                (this@BenKidRegFormDataset.religion.list?.indexOf(religion!!))?.let { it + 1 } ?: 0
+
             religionOthers = this@BenKidRegFormDataset.otherReligion.value.value
             kidDetails?.childRegisteredAWC =
                 this@BenKidRegFormDataset.childRegisteredAtAwc.value.value
@@ -563,14 +578,16 @@ class BenKidRegFormDataset(private val context: Context) {
     }
 
     private suspend fun getByteArrayFromImageUri(uriString: String): ByteArray? {
-        val file = File(context.cacheDir, uriString.substringAfterLast("/"))
-        val compressedFile = Compressor.compress(context, file) {
-            quality(70)
+        return withContext(Dispatchers.IO) {
+            val file = File(context.cacheDir, uriString.substringAfterLast("/"))
+            val compressedFile = Compressor.compress(context, file) {
+                quality(70)
+            }
+            val iStream = compressedFile.inputStream()
+            val byteArray = getBytes(iStream)
+            iStream.close()
+            byteArray
         }
-        val iStream = compressedFile.inputStream()
-        val byteArray = getBytes(iStream)
-        iStream.close()
-        return byteArray
     }
 
     private fun getBytes(inputStream: InputStream): ByteArray? {
@@ -588,15 +605,33 @@ class BenKidRegFormDataset(private val context: Context) {
 
         ben?.apply {
             kidDetails?.birthPlace = this@BenKidRegFormDataset.placeOfBirth.value.value
+            kidDetails?.birthPlaceId =
+                this@BenKidRegFormDataset.placeOfBirth.list?.indexOf(kidDetails?.birthPlace)
+                    ?.let { it + 1 } ?: 0
             kidDetails?.conductedDelivery =
                 this@BenKidRegFormDataset.whoConductedDelivery.value.value
+            kidDetails?.conductedDeliveryId =
+                this@BenKidRegFormDataset.whoConductedDelivery.list?.indexOf(kidDetails?.conductedDelivery)
+                    ?.let { it + 1 } ?: 0
             kidDetails?.conductedDeliveryOther =
                 this@BenKidRegFormDataset.otherWhoConductedDelivery.value.value
             kidDetails?.deliveryType = this@BenKidRegFormDataset.typeOfDelivery.value.value
+            kidDetails?.deliveryTypeId =
+                this@BenKidRegFormDataset.typeOfDelivery.list?.indexOf(kidDetails?.deliveryType)
+                    ?.let { it + 1 } ?: 0
             kidDetails?.complications =
                 this@BenKidRegFormDataset.complicationsDuringDelivery.value.value
+            kidDetails?.complicationsId =
+                this@BenKidRegFormDataset.complicationsDuringDelivery.list?.indexOf(kidDetails?.complications)
+                    ?.let { it + 1 } ?: 0
             kidDetails?.feedingStarted = this@BenKidRegFormDataset.breastFeedWithin1Hr.value.value
+            kidDetails?.feedingStartedId =
+                this@BenKidRegFormDataset.breastFeedWithin1Hr.list?.indexOf(kidDetails?.feedingStarted)
+                    ?.let { it + 1 } ?: 0
             kidDetails?.birthDosage = this@BenKidRegFormDataset.birthDose.value.value
+            kidDetails?.birthDosageId =
+                this@BenKidRegFormDataset.birthDose.list?.indexOf(kidDetails?.birthDosage)
+                    ?.let { it + 1 } ?: 0
             kidDetails?.birthBCG =
                 this@BenKidRegFormDataset.birthDoseGiven.value.value?.contains("BCG") ?: false
             kidDetails?.birthHepB =
@@ -604,10 +639,21 @@ class BenKidRegFormDataset(private val context: Context) {
             kidDetails?.birthOPV =
                 this@BenKidRegFormDataset.birthDoseGiven.value.value?.contains("BCG") ?: false
             kidDetails?.term = this@BenKidRegFormDataset.term.value.value
+            kidDetails?.termId = this@BenKidRegFormDataset.term.list?.indexOf(kidDetails?.term)
+                ?.let { it + 1 } ?: 0
             kidDetails?.gestationalAge = this@BenKidRegFormDataset.termGestationalAge.value.value
+            kidDetails?.gestationalAgeId =
+                this@BenKidRegFormDataset.termGestationalAge.list?.indexOf(kidDetails?.gestationalAge)
+                    ?.let { it + 1 } ?: 0
             kidDetails?.criedImmediately =
                 this@BenKidRegFormDataset.babyCriedImmediatelyAfterBirth.value.value
+            kidDetails?.criedImmediatelyId =
+                this@BenKidRegFormDataset.babyCriedImmediatelyAfterBirth.list?.indexOf(kidDetails?.criedImmediately)
+                    ?.let { it + 1 } ?: 0
             kidDetails?.birthDefects = this@BenKidRegFormDataset.anyDefectAtBirth.value.value
+            kidDetails?.birthDefectsId =
+                this@BenKidRegFormDataset.anyDefectAtBirth.list?.indexOf(kidDetails?.birthDefects)
+                    ?.let { it + 1 } ?: 0
             kidDetails?.heightAtBirth =
                 this@BenKidRegFormDataset.babyHeight.value.value?.toInt() ?: 0
             kidDetails?.weightAtBirth =

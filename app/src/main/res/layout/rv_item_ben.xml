@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_normal"
         android:elevation="@dimen/padding_normal"
-        app:cardBackgroundColor="?attr/colorPrimary"
+        android:backgroundTint="?attr/colorPrimary"
         app:cardCornerRadius="@dimen/padding_normal"
         app:cardElevation="@dimen/padding_normal">
 
@@ -57,9 +57,9 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="0104185765164225" />
 
-                <com.google.android.material.button.MaterialButton
+                <Button
                     android:id="@+id/btn_new_ben"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_toEndOf="@id/tv_hh_id"
                     android:onClick="@{()-> clickListener.onClickedHouseHold(ben)}"
                     android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
                     android:text="@string/btn_rv_item_hh_add_ben"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_hh_id"
                     android:textColor="?attr/colorPrimary"
-                    app:icon="@drawable/ic__hh"
+                    app:icon="@drawable/ic__ben"
                     app:layout_constraintEnd_toStartOf="@+id/iv_sync_state"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/tv_hh_id"
@@ -90,7 +90,7 @@
                     app:layout_constraintTop_toTopOf="@+id/tv_hh_id"
                     app:syncState="@{ben.syncState}"
                     android:onClick="@{()-> clickListener.onClickSync(ben)}"
-                    tools:src="@drawable/ic_syncing" />
+                    tools:src="@drawable/ic_synced" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

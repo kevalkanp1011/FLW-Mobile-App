@@ -55,6 +55,7 @@ class GetBenFragment : Fragment() {
                 ERROR_NETWORK -> {} //TODO()
                 SUCCESS -> {
                     setUpPagesAdapter()
+                    benAdapter.submitList(viewModel.benDataList)
                     binding.clError.visibility = View.GONE
                     binding.clContent.visibility = View.VISIBLE
                     binding.flLoading.visibility = View.GONE
