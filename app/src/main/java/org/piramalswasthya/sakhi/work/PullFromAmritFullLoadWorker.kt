@@ -2,14 +2,14 @@ package org.piramalswasthya.sakhi.work
 
 import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.repositories.BenRepo
@@ -43,19 +43,38 @@ class PullFromAmritFullLoadWorker @AssistedInject constructor(
             setForeground(createForegroundInfo("Downloading"))
             withContext(Dispatchers.IO) {
                 val startTime = System.currentTimeMillis()
-                val numPages = benRepo.getBeneficiariesFromServerForWorker(0)
-                for (i in 1 until numPages)
-                    benRepo.getBeneficiariesFromServerForWorker(i)
+                var numPages: Int
+                do {
+                    numPages = benRepo.getBeneficiariesFromServerForWorker(0)
+                } while (numPages == -2)
+//                for (i in 1 until numPages)
+//                    benRepo.getBeneficiariesFromServerForWorker(i)
+                val result1 =
+                    awaitAll(
+                        async { getBenForPage(numPages, 0) },
+                        async { getBenForPage(numPages, 1) },
+                        async { getBenForPage(numPages, 2) },
+                        async { getBenForPage(numPages, 3) },
+                    )
+                val endTime = System.currentTimeMillis()
+                val timeTaken = TimeUnit.MILLISECONDS.toSeconds(endTime - startTime)
+                Timber.d("Full load took $timeTaken seconds for $numPages pages  $result1")
+
+                if (result1.all { it }) {
+                    preferenceDao.setFullLoadStatus(true)
+                    return@withContext Result.success()
+                }
+                return@withContext Result.failure()
+
+
 //                for (j in 0 until n) {
 //                    if (j < numPages)
 //                        getBenForPage(numPages, j)
 //                }
-                val endTime = System.currentTimeMillis()
-                val timeTaken = TimeUnit.MILLISECONDS.toSeconds(endTime - startTime)
-                Timber.d("Full load took $timeTaken seconds for $numPages pages")
+
+
             }
-            preferenceDao.setFullLoadStatus(true)
-            Result.success()
+
         } catch (e: java.lang.Exception) {
             Timber.d("Error occurred in PullFromAmritFullLoadWorker $e")
             preferenceDao.setFullLoadStatus(false)
@@ -72,25 +91,25 @@ class PullFromAmritFullLoadWorker @AssistedInject constructor(
             .setContentTitle("Syncing Data")
             .setContentText(progress)
             .setSmallIcon(org.piramalswasthya.sakhi.R.drawable.ic_launcher_foreground)
-            .setProgress(0,100,true)
+            .setProgress(0, 100, true)
             .build()
 
         return ForegroundInfo(0, notification)
     }
 
 
-    private suspend fun getBenForPage(numPages: Int, rem: Int) {
-        coroutineScope {
-            withContext(Dispatchers.IO) {
-                var page: Int = rem
-                while (page < numPages) {
-                    if ((numPages % n) == rem) {
-                        benRepo.getBeneficiariesFromServerForWorker(page)
-                        page += n
-                    }
-
-                }
+    private suspend fun getBenForPage(numPages: Int, rem: Int): Boolean {
+        return withContext(Dispatchers.IO) {
+            var page: Int = rem
+            while (page < numPages) {
+                val ret = benRepo.getBeneficiariesFromServerForWorker(page)
+                if (ret == -1)
+                    throw IllegalStateException("benRepo.getBeneficiariesFromServerForWorker(page) returned -1 ")
+                if (ret != -2)
+                    page += n
             }
+            true
         }
     }
+
 }

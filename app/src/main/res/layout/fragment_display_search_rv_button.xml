@@ -18,8 +18,7 @@
             android:id="@+id/searchView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:iconifiedByDefault="false"
-            android:drawableStart="@android:drawable/ic_menu_search"
+            android:drawableStart="@drawable/ic_search"
             android:drawablePadding="@dimen/padding_normal"
             android:hint="Search"
             app:layout_constraintTop_toTopOf="parent" />

@@ -222,7 +222,8 @@ data class HouseholdNetwork(
     val ashaId: Int,
     @Json(name = "benficieryid")
     val benId: Long = 0,
-
+    @Json(name = "id")
+    val dummyIdMayBe: Int = 1,
     //FamilyDetails
 
     val familyHeadName: String? = null,
@@ -382,11 +383,7 @@ data class HouseholdNetwork(
     @Json(name = "villageid")
     val villageid: Int = 0,
 
-    ) {
-    fun asCacheModel() {
-
-    }
-}
+    )
 
 data class HouseHoldBasicDomain(
     val hhId: Long,

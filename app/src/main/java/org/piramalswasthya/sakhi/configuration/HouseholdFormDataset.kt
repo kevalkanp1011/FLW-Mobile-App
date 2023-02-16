@@ -372,10 +372,10 @@ class HouseholdFormDataset(context: Context) {
             otherAvailabilityOfToilet = this@HouseholdFormDataset.otherAvailOfToilet.value.value
             if (householdId == 0L) {
                 householdId = getHHidFromUserId(ashaId)
-                serverUpdatedStatus = 2
+                serverUpdatedStatus = 1
                 processed = "N"
             } else {
-                serverUpdatedStatus = 1
+                serverUpdatedStatus = 2
             }
             isDraft = false
         }

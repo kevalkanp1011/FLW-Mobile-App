@@ -1,9 +1,11 @@
 package org.piramalswasthya.sakhi.ui
 
-import android.graphics.drawable.AnimatedVectorDrawable
 import android.net.Uri
 import android.os.Build
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
 import android.widget.*
 import android.widget.RadioGroup.LayoutParams
 import androidx.core.view.children
@@ -15,9 +17,9 @@ import timber.log.Timber
 
 
 @BindingAdapter("listItems")
-fun AutoCompleteTextView.setSpinnerItems(list : List<String>?){
-    list?.let{
-        this.setAdapter(ArrayAdapter(context,android.R.layout.simple_spinner_dropdown_item,it))
+fun AutoCompleteTextView.setSpinnerItems(list: List<String>?) {
+    list?.let {
+        this.setAdapter(ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, it))
     }
 }
 
@@ -44,49 +46,49 @@ fun RadioGroup.setItems(form: FormInput?) {
                 }
             }
         }
-        form.value.value?.let { value->
+        form.value.value?.let { value ->
             children.forEach {
-                if((it as RadioButton).text==value){
+                if ((it as RadioButton).text == value) {
                     clearCheck()
                     check(it.id)
+                }
             }
-        }
         }
     }
 }
 
 @BindingAdapter("checkBoxesForm")
-fun LinearLayout.setItems(form : FormInput?){
-    if(this.childCount!=0)
+fun LinearLayout.setItems(form: FormInput?) {
+    if (this.childCount != 0)
         return
-    form?.list?.let{items->
+    form?.list?.let { items ->
         orientation = form.orientation ?: LinearLayout.VERTICAL
         weightSum = items.size.toFloat()
-        items.forEach{
+        items.forEach {
             val cbx = CheckBox(this.context)
-            cbx.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT,1.0F)
+            cbx.layoutParams =
+                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1.0F)
             cbx.id = View.generateViewId()
-            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-                cbx.setTextAppearance(context,android.R.style.TextAppearance_Material_Medium)
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+                cbx.setTextAppearance(context, android.R.style.TextAppearance_Material_Medium)
             else
                 cbx.setTextAppearance(android.R.style.TextAppearance_Material_Subhead)
             cbx.text = it
             addView(cbx)
-            if(form.value.value?.contains(it) == true)
+            if (form.value.value?.contains(it) == true)
                 cbx.isChecked = true
             cbx.setOnCheckedChangeListener { _, b ->
-                if(b) {
-                    if(form.value.value!=null)
+                if (b) {
+                    if (form.value.value != null)
                         form.value.value = form.value.value + it
                     else
                         form.value.value = it
-                }
-                else
-                    if(form.value.value?.contains(it) == true){
-                        form.value.value = form.value.value?.replace(it,"")
+                } else
+                    if (form.value.value?.contains(it) == true) {
+                        form.value.value = form.value.value?.replace(it, "")
                     }
-                if(form.value.value.isNullOrBlank()){
-                    form.value.value= null
+                if (form.value.value.isNullOrBlank()) {
+                    form.value.value = null
                 }
                 Timber.d("Checkbox values : ${form.value.value}")
             }
@@ -95,19 +97,29 @@ fun LinearLayout.setItems(form : FormInput?){
 }
 
 @BindingAdapter("required")
-fun TextView.setRequired(required : Boolean? = true){
-    required?.let{
-        visibility = if(it)
+fun TextView.setRequired(required: Boolean? = true) {
+    required?.let {
+        visibility = if (it)
             View.VISIBLE
         else
             View.INVISIBLE
     }
 }
 
+private val rotate = RotateAnimation(
+    360F,
+    0F, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
+).apply {
+    duration = 1000
+    interpolator = LinearInterpolator()
+    repeatCount = Animation.INFINITE
+}
+
+
 @BindingAdapter("syncState")
-fun ImageView.setSyncState(syncState: SyncState?){
-    syncState?.let{
-        val drawable = when(it){
+fun ImageView.setSyncState(syncState: SyncState?) {
+    syncState?.let {
+        val drawable = when (it) {
             SyncState.UNSYNCED -> R.drawable.ic_unsynced
             SyncState.SYNCING -> R.drawable.ic_syncing
             SyncState.SYNCED -> R.drawable.ic_synced
@@ -115,7 +127,7 @@ fun ImageView.setSyncState(syncState: SyncState?){
         this.setImageResource(drawable)
         isClickable = it == SyncState.UNSYNCED
         if (it == SyncState.SYNCING)
-            (getDrawable() as AnimatedVectorDrawable).start()
+            this.startAnimation(rotate)
     }
 }
 
