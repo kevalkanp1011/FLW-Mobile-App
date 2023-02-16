@@ -19,6 +19,8 @@ import org.piramalswasthya.sakhi.network.TmcNetworkApiService
 import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 
@@ -78,6 +80,47 @@ class BenRepo @Inject constructor(
         }
     }
 
+    val infantList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllInfantList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
+
+    val childList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllChildList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
+
+    val adolescentList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllAdolescentList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
+
+    val immunizationList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllImmunizationDueList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
+
+    val hrpList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllHrpCasesList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
+
+    val pncMotherList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllPNCMotherList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
 
     companion object {
         private fun getCurrentDate(): String {
@@ -603,7 +646,9 @@ class BenRepo @Inject constructor(
     }
 
     private fun getLongFromDate(date: String): Long {
-        //TODO ()
+//        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+//        val localDateTime = LocalDateTime.parse(date, formatter)
+//        return localDateTime.toInstant(java.time.ZoneOffset.UTC).toEpochMilli()
         return 0
     }
 
@@ -663,7 +708,7 @@ class BenRepo @Inject constructor(
                                     "age"
                                 ) > 14),
                                 userImageBlob = if(benDataObj.has("user_image")) benDataObj.getString("user_image").toByteArray() else null,
-                                regDate = if(benDataObj.has("registrationDate")) getLongFromDate(benDataObj.getString("registrationDate")) else null,
+                                regDate = if(benDataObj.has("registrationDate")) getLongFromDate(benDataObj.getString("registrationDate")) else 0,
                                 firstName = if(benDataObj.has("firstName")) benDataObj.getString("firstName") else null,
                                 lastName = if(benDataObj.has("lastName")) benDataObj.getString("lastName") else null,
                                 gender = if(benDataObj.has("gender")){
