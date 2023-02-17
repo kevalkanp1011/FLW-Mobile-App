@@ -72,7 +72,7 @@ class ServiceTypeViewModel @Inject constructor(
                 inputType = FormInput.InputType.DROPDOWN,
                 title = context.getString(R.string.service_type_dd_village_text),
                 list = user?.villageEnglish,
-                value = MutableStateFlow(if(user?.villageEnglish?.size==1) user.villageEnglish[0]else null),
+               // value = MutableStateFlow(if(user?.villageEnglish?.size==1) user.villageEnglish[0]else null),
                 required = true
             )
         }

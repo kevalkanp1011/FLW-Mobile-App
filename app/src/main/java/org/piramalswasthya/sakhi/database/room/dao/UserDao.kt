@@ -3,7 +3,6 @@ package org.piramalswasthya.sakhi.database.room.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import org.piramalswasthya.sakhi.model.IconCount
-import org.piramalswasthya.sakhi.model.TypeOfList
 import org.piramalswasthya.sakhi.model.UserCache
 
 @Dao
@@ -44,7 +43,7 @@ interface UserDao {
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0) AS ncdCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and age >= 30) AS ncdEligibleCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0) AS ncdPriorityCount, " +
-                "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and age < 30) AS ncdNonEligibleCount, " +
+                "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and age < 30 and isKid = 0) AS ncdNonEligibleCount, " +
                 "(SELECT COUNT(*) from BEN_ID_LIST where userId=:userId) AS availBenIdsCount "
     )
     fun getRecordCounts(

@@ -182,7 +182,7 @@
         android:id="@+id/newHouseholdFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_registration.NewHouseholdFragment"
         android:label="@string/frag_nhhr_title"
-        tools:layout="@layout/fragment_new_household" >
+        tools:layout="@layout/fragment_new_form_viewpager">
         <action
             android:id="@+id/action_newHouseholdFragment_to_newBenRegTypeFragment"
             app:destination="@id/newBenRegTypeFragment"

@@ -88,6 +88,7 @@ class HomeViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             userRepo.logout()
+            pref.setFullLoadStatus(false)
             _navigateToLoginPage.value = true
         }
     }

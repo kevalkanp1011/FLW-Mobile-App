@@ -14,7 +14,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.adapters.NewBenGenPagerAdapter
-import org.piramalswasthya.sakhi.databinding.FragmentNewBenRegBinding
+import org.piramalswasthya.sakhi.databinding.FragmentNewFormViewpagerBinding
 import org.piramalswasthya.sakhi.services.UploadSyncService
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_more_15.NewBenRegG15ViewModel.State
@@ -24,8 +24,8 @@ import timber.log.Timber
 @AndroidEntryPoint
 class NewBenRegG15Fragment : Fragment() {
 
-    private val binding: FragmentNewBenRegBinding by lazy {
-        FragmentNewBenRegBinding.inflate(layoutInflater)
+    private val binding: FragmentNewFormViewpagerBinding by lazy {
+        FragmentNewFormViewpagerBinding.inflate(layoutInflater)
     }
 
     private val hhId: Long by lazy {

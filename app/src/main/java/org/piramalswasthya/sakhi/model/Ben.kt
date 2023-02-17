@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.model
 
+import android.util.Base64
 import androidx.room.*
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -573,7 +574,7 @@ data class BenRegCache(
             typeOfSchoolId = kidDetails?.typeOfSchoolId ?: 0,
             childRegisteredSchool = kidDetails?.childRegisteredSchool,
             typeofSchool = kidDetails?.typeOfSchool,
-            previousLiveBirth = genDetails?.numPreviousLiveBirth?.toString() ?: "0",
+            previousLiveBirth = genDetails?.numPreviousLiveBirth?.toString() ?: "",
             lastDeliveryConductedID = genDetails?.lastDeliveryConductedId ?: 0,
             whoConductedDeliveryID = genDetails?.whoConductedDeliveryId ?: 0,
             familyHeadRelation = familyHeadRelation ?: "Other",
@@ -615,7 +616,7 @@ data class BenRegCache(
             nishchayDeliveryStatusPosition = nishchayDeliveryStatusPosition,
             nayiPahalDeliveryStatusPosition = nayiPahalDeliveryStatusPosition,
             isImmunizationStatus = immunizationStatus,
-            userImage = userImageBlob.toString(),
+            userImage = Base64.encodeToString(userImageBlob, Base64.DEFAULT),
         )
     }
 

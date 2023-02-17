@@ -17,9 +17,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.NewHouseholdPagerAdapter
 import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
-import org.piramalswasthya.sakhi.databinding.FragmentNewHouseholdBinding
+import org.piramalswasthya.sakhi.databinding.FragmentNewFormViewpagerBinding
 import org.piramalswasthya.sakhi.services.UploadSyncService
-import org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_registration.NewHouseholdViewModel.*
+import org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_registration.NewHouseholdViewModel.State
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import timber.log.Timber
 
@@ -27,7 +27,8 @@ import timber.log.Timber
 class NewHouseholdFragment : Fragment() {
 
     private val binding by lazy {
-        FragmentNewHouseholdBinding.inflate(layoutInflater)
+        FragmentNewFormViewpagerBinding.inflate(layoutInflater)
+
     }
 
     private val viewModel: NewHouseholdViewModel by viewModels()

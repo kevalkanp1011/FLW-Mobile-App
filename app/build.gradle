@@ -103,6 +103,7 @@ dependencies {
     //moshi
     implementation "com.squareup.moshi:moshi:$moshi_version"
     implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
 
     //Gson
     implementation "com.google.code.gson:gson:$gson_version"

@@ -19,8 +19,6 @@ import org.piramalswasthya.sakhi.network.TmcNetworkApiService
 import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 
@@ -432,7 +430,7 @@ class BenRepo @Inject constructor(
                         val kidCount = if (data.getJSONArray("bornBirthDeatils").length() == 0)
                             0 else if (data.getJSONArray("bornBirthDeatils").get(0).equals(null))
                             0 else data.getJSONArray("beneficiaryDetails").getInt(0)
-                        Timber.d("Currently checking...$householdNetworkPostList\n$benNetworkPostList\n$kidNetworkPostList\n $hhCount $benCount $kidCount")
+                        Timber.d("Currently checking... $hhCount $benCount $kidCount \n${householdNetworkPostList.size}\n${benNetworkPostList.size}\n${kidNetworkPostList.size}\n $hhCount $benCount $kidCount")
                         if (hhCount != householdNetworkPostList.size || benCount != benNetworkPostList.size || kidCount != kidNetworkPostList.size) {
                             Timber.d("Bad Response from server, need to check $householdNetworkPostList\n$benNetworkPostList\n$kidNetworkPostList $data ")
                             return false
@@ -441,8 +439,9 @@ class BenRepo @Inject constructor(
                             benNetworkPostList.map { it.benId }.toTypedArray()
                         val hhToUpdateList =
                             householdNetworkPostList.map { it.householdId.toLong() }.toTypedArray()
-                        database.benDao.benSyncedWithServer(benToUpdateList.toLongArray().first())
-                        database.householdDao.householdSyncedWithServer(*hhToUpdateList.toLongArray())
+                        Timber.d("Yuuhooo  -- ---${benNetworkPostList.first().benId}  ${householdNetworkPostList.first().householdId}")
+                        database.benDao.benSyncedWithServer(benNetworkPostList.first().benId)
+                        database.householdDao.householdSyncedWithServer(householdNetworkPostList.first().householdId.toLong())
                         householdNetworkPostList.map { it.householdId }
                         //TODO(Add sync up to household too)
                         return true
@@ -486,6 +485,7 @@ class BenRepo @Inject constructor(
                     val benNumber = resBenId.substring(resBenId.length - 12)
                     val newBenId = java.lang.Long.valueOf(benNumber)
                     database.benDao.updateToFinalBenId(ben.householdId, ben.beneficiaryId, newBenId)
+                    ben.beneficiaryId = newBenId
                     return true
                 }
             }
@@ -719,7 +719,7 @@ class BenRepo @Inject constructor(
                                 ).toByteArray() else null,
                                 regDate = if (benDataObj.has("registrationDate")) getLongFromDate(
                                     benDataObj.getString("registrationDate")
-                                ) else null,
+                                ) else 0,
                                 firstName = if (benDataObj.has("firstName")) benDataObj.getString("firstName") else null,
                                 lastName = if (benDataObj.has("lastName")) benDataObj.getString("lastName") else null,
                                 gender = if (benDataObj.has("gender")) {

@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.model
 
+import android.util.Base64
 import androidx.room.ColumnInfo
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -23,7 +24,7 @@ data class BeneficiaryDataSending(
     val createdBy: String,
 
     @Json(name = "dOB")
-    private val dOB: String,
+    val dob: String,
 
     @Json(name = "email")
     val email: String,
@@ -221,10 +222,10 @@ fun BenRegCache.asNetworkSendingModel(
 ): BeneficiaryDataSending {
 
     return BeneficiaryDataSending(
-        benImage = userImageBlob.toString(),
+        benImage = Base64.encodeToString(userImageBlob, Base64.DEFAULT),
         firstName = firstName!!,
         lastName = lastName ?: "NA",
-        dOB = getDateTimeStringFromLong(dob) ?: "",
+        dob = getDateTimeStringFromLong(dob) ?: "",
         fatherName = fatherName!!,
         motherName = motherName!!,
         spouseName = genDetails?.spouseName,
