@@ -113,6 +113,18 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="cbacFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="1810" />
+                            <option name="y" value="4140" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="childCareFragment">
                     <value>
                       <LayoutPositions>

@@ -24,4 +24,12 @@ class CbacFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.tvBenName.text = viewModel.getBenName()
+        binding.tvAgeGender.text = viewModel.getAgeGender()
+        binding.actvSmokeDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setSmoke(i) }
+        binding.actvSmokeDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setAlcohol(i) }
+    }
+
 }

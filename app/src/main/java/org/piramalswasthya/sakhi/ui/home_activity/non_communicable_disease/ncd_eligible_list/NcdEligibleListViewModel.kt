@@ -2,17 +2,23 @@ package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_
 
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.model.BenBasicDomain
+import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.repositories.BenRepo
+import org.piramalswasthya.sakhi.repositories.UserRepo
 import javax.inject.Inject
 
 @HiltViewModel
 class NcdEligibleListViewModel @Inject constructor(
-    private val benRepo: BenRepo
+    private val benRepo: BenRepo,
+    private val userRepo: UserRepo,
 ) : ViewModel() {
 
     val ncdEligibleList = benRepo.ncdEligibleList
+    private lateinit var user: UserDomain
     private val _benList = MutableLiveData<List<BenBasicDomain>>()
     val benList: LiveData<List<BenBasicDomain>>
         get() = _benList
@@ -22,8 +28,13 @@ class NcdEligibleListViewModel @Inject constructor(
             ncdEligibleList.asFlow().collect {
                 _benList.value = it
             }
+            withContext(Dispatchers.IO) {
+                user = userRepo.getLoggedInUser()!!
+            }
         }
     }
+
+    fun getUserId(): Int = user.userId
 
     fun filterText(filterText: String) {
         if (filterText == "")
