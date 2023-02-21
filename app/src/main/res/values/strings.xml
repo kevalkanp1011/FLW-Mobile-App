@@ -267,6 +267,7 @@
     <string name="cbac_remarks">Remarks</string>
     <string name="cbac_risk_assessment_tv">Risk Assessment</string>
 
+    <string name="evac_patient_info">Patient Information </string>
 
     <string-array name="temp_array">
         <item>Item 1</item>

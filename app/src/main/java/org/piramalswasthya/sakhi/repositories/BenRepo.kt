@@ -19,6 +19,8 @@ import org.piramalswasthya.sakhi.network.TmcNetworkApiService
 import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 
@@ -653,10 +655,9 @@ class BenRepo @Inject constructor(
     }
 
     private fun getLongFromDate(date: String): Long {
-//        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-//        val localDateTime = LocalDateTime.parse(date, formatter)
-//        return localDateTime.toInstant(java.time.ZoneOffset.UTC).toEpochMilli()
-        return 0
+        val formatter = SimpleDateFormat("MMM dd, yyyy HH:mm:ss a")
+        val localDateTime = formatter.parse(date)
+        return localDateTime.getTime();
     }
 
     private suspend fun getBenCacheFromServerResponse(response: String): MutableList<BenRegCache> {
@@ -708,10 +709,10 @@ class BenRepo @Inject constructor(
                                         else -> AgeUnit.YEARS
                                     }
                                 } else null,
-                                isKid = !(benDataObj.getString("age_unit") == "Year(s)" && benDataObj.getInt(
+                                isKid = !(benDataObj.getString("age_unit") == "Years" && benDataObj.getInt(
                                     "age"
                                 ) > 14),
-                                isAdult = (benDataObj.getString("age_unit") == "Year(s)" && benDataObj.getInt(
+                                isAdult = (benDataObj.getString("age_unit") == "Years" && benDataObj.getInt(
                                     "age"
                                 ) > 14),
                                 userImageBlob = if (benDataObj.has("user_image")) benDataObj.getString(
@@ -757,36 +758,37 @@ class BenRepo @Inject constructor(
                                     "contact_number"
                                 ).toLong() else 0,
 //                            literacy = literacy,
-                                literacyId = if (benDataObj.has("literacyId")) benDataObj.getInt("literacyId") else 0,
-                                community = if (benDataObj.has("community")) benDataObj.getString("community") else null,
-                                communityId = if (benDataObj.has("communityId")) benDataObj.getInt("communityId") else 0,
-                                religion = if (benDataObj.has("religion")) benDataObj.getString("religion") else null,
-                                religionId = if (benDataObj.has("religionID")) benDataObj.getInt("religionID") else 0,
-                                religionOthers = if (benDataObj.has("religionOthers")) benDataObj.getString(
-                                    "religionOthers"
-                                ) else null,
-                                rchId = if (benDataObj.has("rchid")) benDataObj.getString("rchid") else null,
-                                registrationType = if (benDataObj.has("registrationType")) {
-                                    when (benDataObj.getString("registrationType")) {
-                                        "Infant" -> TypeOfList.INFANT
-                                        "Child" -> TypeOfList.CHILD
-                                        "Adolescent" -> TypeOfList.ADOLESCENT
-                                        "General" -> TypeOfList.GENERAL
-                                        "Eligible Couple" -> TypeOfList.ELIGIBLE_COUPLE
-                                        "Antenatal Mother" -> TypeOfList.ANTENATAL_MOTHER
-                                        "Delivery Stage" -> TypeOfList.DELIVERY_STAGE
-                                        "Postnatal Mother" -> TypeOfList.POSTNATAL_MOTHER
-                                        "Menopause" -> TypeOfList.MENOPAUSE
-                                        "Teenager" -> TypeOfList.TEENAGER
-                                        else -> TypeOfList.OTHER
-                                    }
-                                } else null,
-                                latitude = benDataObj.getDouble("latitude"),
-                                longitude = benDataObj.getDouble("longitude"),
-                                aadharNum = if (benDataObj.has("aadhaNo")) benDataObj.getString("aadhaNo") else null,
-                                aadharNumId = benDataObj.getInt("aadha_noId"),
-                                hasAadhar = if (benDataObj.has("aadhaNo")) benDataObj.getString("aadhaNo") != "" else false,
-                                hasAadharId = if (benDataObj.getInt("aadha_noId") == 1) 1 else 0,
+                            literacyId = if(benDataObj.has("literacyId")) benDataObj.getInt("literacyId") else 0,
+                            community = if(benDataObj.has("community")) benDataObj.getString("community") else null,
+                            communityId = if(benDataObj.has("communityId")) benDataObj.getInt("communityId") else 0,
+                            religion = if(benDataObj.has("religion")) benDataObj.getString("religion") else null,
+                            religionId = if(benDataObj.has("religionID")) benDataObj.getInt("religionID") else 0,
+                            religionOthers = if(benDataObj.has("religionOthers")) benDataObj.getString("religionOthers") else null,
+                            rchId = if(benDataObj.has("rchid")) benDataObj.getString("rchid") else null,
+                            registrationType = if(benDataObj.has("registrationType")) {
+                                when (benDataObj.getString("registrationType")) {
+                                    "NewBorn" -> { if (benDataObj.getString("age_unit") != "Years" ||  benDataObj.getInt("age") < 2) TypeOfList.INFANT
+                                                else if (benDataObj.getInt("age") < 6) TypeOfList.CHILD
+                                                else TypeOfList.ADOLESCENT }
+                                    "General Beneficiary", "सामान्य लाभार्थी" -> if(benDataObj.has("reproductiveStatus")) {
+                                        when(benDataObj.getString("reproductiveStatus")) {
+                                            "Eligible Couple" -> TypeOfList.ELIGIBLE_COUPLE
+                                            "Antenatal Mother" -> TypeOfList.ANTENATAL_MOTHER
+                                            "Delivery Stage" -> TypeOfList.DELIVERY_STAGE
+                                            "Postnatal Mother" -> TypeOfList.POSTNATAL_MOTHER
+                                            "Menopause" -> TypeOfList.MENOPAUSE
+                                            "Teenager" -> TypeOfList.TEENAGER
+                                            else -> TypeOfList.OTHER
+                                        }} else TypeOfList.OTHER
+                                    else -> TypeOfList.GENERAL
+                                }
+                                } else TypeOfList.OTHER,
+                            latitude = benDataObj.getDouble("latitude"),
+                            longitude = benDataObj.getDouble("longitude"),
+                            aadharNum = if(benDataObj.has("aadhaNo")) benDataObj.getString("aadhaNo") else null,
+                            aadharNumId = benDataObj.getInt("aadha_noId"),
+                            hasAadhar = if(benDataObj.has("aadhaNo")) benDataObj.getString("aadhaNo") != "" else false,
+                            hasAadharId = if (benDataObj.getInt("aadha_noId") == 1) 1 else 0,
 //                            bankAccountId = benDataObj.getString("bank_accountId"),
                                 bankAccount = if (benDataObj.has("bankAccount")) benDataObj.getString(
                                     "bankAccount"
