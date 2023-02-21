@@ -245,7 +245,11 @@
         android:id="@+id/deliveryStageListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.delivery_stage_list.DeliveryStageListFragment"
         android:label="fragment_delivery_stage_list"
-        tools:layout="@layout/fragment_delivery_stage_list" />
+        tools:layout="@layout/fragment_delivery_stage_list" >
+        <action
+            android:id="@+id/action_deliveryStageListFragment_to_pmsmaFragment"
+            app:destination="@id/pmsmaFragment" />
+    </fragment>
     <fragment
         android:id="@+id/pncMotherListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.pnc_mother_list.PncMotherListFragment"
@@ -294,6 +298,21 @@
         android:id="@+id/cbacFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_eligible_list.cbac.CbacFragment"
         android:label="CbacFragment">
+        <argument
+            android:name="hhId"
+            app:argType="long" />
+        <argument
+            android:name="benId"
+            app:argType="long" />
+        <argument
+            android:name="userId"
+            app:argType="integer" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/pmsmaFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.delivery_stage_list.pmsma.PMSMAFragment"
+        android:label="PMSMAFragment">
         <argument
             android:name="hhId"
             app:argType="long" />

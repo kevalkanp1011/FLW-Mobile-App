@@ -11,11 +11,10 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
-import org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.EligibleCoupleViewModel
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 
 @AndroidEntryPoint
@@ -49,7 +48,13 @@ class DeliveryStageListFragment : Fragment() {
                     Toast.makeText(context, "Household : $it clicked", Toast.LENGTH_SHORT).show()
                 },
                 { hhId, benId ->
-                    viewModel.manualSync()
+                    findNavController().navigate(
+                        DeliveryStageListFragmentDirections.actionDeliveryStageListFragmentToPmsmaFragment(
+                            hhId,
+                            benId,
+                            viewModel.getUserId()
+                        )
+                    )
                 }
             ))
         binding.rvAny.adapter = benAdapter

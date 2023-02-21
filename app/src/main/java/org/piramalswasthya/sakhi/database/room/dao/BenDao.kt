@@ -79,7 +79,7 @@ interface BenDao {
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE age < 2")
     fun getAllInfantList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE age between 2 and 6")
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE age >= 2 and age < 6")
     fun getAllChildList(): LiveData<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE age between 6 and 14")
