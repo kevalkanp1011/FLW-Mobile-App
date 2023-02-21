@@ -28,9 +28,13 @@ class NcdEligibleListViewModel @Inject constructor(
             ncdEligibleList.asFlow().collect {
                 _benList.value = it
             }
-            withContext(Dispatchers.IO) {
-                user = userRepo.getLoggedInUser()!!
-            }
+
+        }
+    }
+
+    suspend fun loadUser() {
+        withContext(Dispatchers.IO) {
+            user = userRepo.getLoggedInUser()!!
         }
     }
 

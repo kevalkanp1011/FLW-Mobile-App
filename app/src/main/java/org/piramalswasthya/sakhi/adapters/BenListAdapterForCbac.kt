@@ -65,7 +65,7 @@ class BenListAdapterForCbac(private val clickListener: ClickListener? = null) :
         fun onClickedBen(item: BenBasicDomain) = clickedBen(item.benId)
         fun onClickedHouseHold(item: BenBasicDomain) = clickedHousehold(item.hhId)
         fun onClickSync(item: BenBasicDomain) = clickedSync(item.hhId, item.benId)
-        fun onClickCbac(item: BenBasicDomain) = clickedSync(item.hhId, item.benId)
+        fun onClickCbac(item: BenBasicDomain) = clickedCbac(item.hhId, item.benId)
     }
 
 }

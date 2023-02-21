@@ -4,7 +4,10 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'androidx.navigation.safeargs.kotlin'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
     id 'kotlin-kapt'
+
 
 }
 
@@ -49,22 +52,26 @@ android {
 dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.hilt:hilt-common:1.0.0'
+    implementation platform('com.google.firebase:firebase-bom:31.2.2')
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
     def nav_version = "2.5.3"
     def frag_version = "1.5.5"
     def room_version = "2.5.0"
     def lifecycle_version = "2.5.1"
     def coroutine_version = "1.6.4"
-    def work_version = "2.7.1"
-    def hilt_version  = "2.44"
+    def work_version = "2.8.0"
+    def hilt_version = "2.44"
     def retrofit_version = "2.9.0"
     def moshi_version = "1.13.0"
     def okhttp_version = "4.10.0"
     def timber_version = "5.0.1"
-    def gson_version ="2.9.0"
+    def gson_version = "2.9.0"
 
     implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.appcompat:appcompat:1.6.0'
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     //Navigation
