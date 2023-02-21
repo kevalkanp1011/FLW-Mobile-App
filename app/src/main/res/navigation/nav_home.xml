@@ -182,7 +182,7 @@
         android:id="@+id/newHouseholdFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_registration.NewHouseholdFragment"
         android:label="@string/frag_nhhr_title"
-        tools:layout="@layout/fragment_new_household" >
+        tools:layout="@layout/fragment_new_form_viewpager">
         <action
             android:id="@+id/action_newHouseholdFragment_to_newBenRegTypeFragment"
             app:destination="@id/newBenRegTypeFragment"
@@ -260,7 +260,11 @@
         android:id="@+id/ncdEligibleListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_eligible_list.NcdEligibleListFragment"
         android:label="fragment_ncd_eligible_list"
-        tools:layout="@layout/fragment_ncd_eligible_list" />
+        tools:layout="@layout/fragment_ncd_eligible_list">
+        <action
+            android:id="@+id/action_ncdEligibleListFragment_to_cbacFragment"
+            app:destination="@id/cbacFragment" />
+    </fragment>
     <fragment
         android:id="@+id/ncdListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_list.NcdListFragment"
@@ -286,5 +290,20 @@
         android:name="org.piramalswasthya.sakhi.ui.home_activity.get_ben_data.GetBenFragment"
         android:label="Beneficiaries Data"
         tools:layout="@layout/fragment_get_ben" />
+    <fragment
+        android:id="@+id/cbacFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_eligible_list.cbac.CbacFragment"
+        android:label="CbacFragment">
+        <argument
+            android:name="hhId"
+            app:argType="long" />
+        <argument
+            android:name="benId"
+            app:argType="long" />
+        <argument
+            android:name="userId"
+            app:argType="integer" />
+
+    </fragment>
 
 </navigation>

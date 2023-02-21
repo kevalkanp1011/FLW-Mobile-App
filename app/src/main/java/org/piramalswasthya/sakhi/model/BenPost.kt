@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class BenPost(
-    @Json(name = "benRegId")
+    @Json(name = "BenRegId")
     val benRegId: Long,
     @Json(name = "Countyid")
     val countyid: Int = 0,
@@ -47,9 +47,9 @@ data class BenPost(
     val expectedDateOfDelivery: String? = null,
     @Json(name = "facilitySelection")
     val facilitySelection: String,
-    @Json(name = "FamilyHeadRelation")
+    @Json(name = "familyHeadRelation")
     val familyHeadRelation: String,
-    @Json(name = "FamilyHeadRelationPosition")
+    @Json(name = "familyHeadRelationPosition")
     val familyHeadRelationPosition: Int,
     val fatherName: String,
     val firstName: String,
@@ -63,9 +63,9 @@ data class BenPost(
     val dummyIdMayBe: Int = 1,
     @Json(name = "immunizationStatus")
     val isImmunizationStatus: Boolean,
-    @Json(name = "LastDeliveryConducted")
+    @Json(name = "lastDeliveryConducted")
     val lastDeliveryConducted: String? = null,
-    @Json(name = "LastDeliveryConductedID")
+    @Json(name = "lastDeliveryConductedID")
     val lastDeliveryConductedID: Int = 0,
     @Json(name = "lastMenstrualPeriod")
     val lastMenstrualPeriod: String? = null,
@@ -103,7 +103,7 @@ data class BenPost(
     val nishchayDeliveryStatusPosition: Int,
     @Json(name = "noOfDaysForDelivery")
     val noOfDaysForDelivery: Int?,
-    @Json(name = "PreviousLiveBirth")
+    @Json(name = "previousLiveBirth")
     val previousLiveBirth: String,
     @Json(name = "rchid")
     val rchId: String,
@@ -117,7 +117,7 @@ data class BenPost(
     val reproductiveStatus: String,
     @Json(name = "reproductiveStatusId")
     val reproductiveStatusId: Int,
-    @Json(name = "ServerUpdatedStatus")
+    @Json(name = "serverUpdatedStatus")
     val serverUpdatedStatus: Int,
     @Json(name = "spousename")
     val spouseName: String,
@@ -129,9 +129,9 @@ data class BenPost(
     val villageId: Int,
     @Json(name = "villagename")
     val villageName: String? = null,
-    @Json(name = "WhoConductedDeliveryID")
+    @Json(name = "whoConductedDeliveryID")
     val whoConductedDeliveryID: Int = 0,
-    @Json(name = "WhoConductedDelivery")
+    @Json(name = "whoConductedDelivery")
     val whoConductedDelivery: String? = null,
 
 

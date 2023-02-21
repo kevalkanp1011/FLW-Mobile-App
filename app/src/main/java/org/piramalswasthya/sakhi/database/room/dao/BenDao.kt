@@ -33,16 +33,16 @@ interface BenDao {
     @Query("UPDATE BENEFICIARY SET beneficiaryId = :newId, benRegId = :benRegId WHERE householdId = :hhId AND beneficiaryId =:oldId")
     suspend fun substituteBenId(hhId: Long, oldId: Long, newId: Long, benRegId: Long)
 
-    @Query("UPDATE BENEFICIARY SET serverUpdatedStatus = 1, beneficiaryId = :newId , processed = \"U\"  WHERE householdId = :hhId AND beneficiaryId =:oldId")
+    @Query("UPDATE BENEFICIARY SET serverUpdatedStatus = 1 , beneficiaryId = :newId , processed = 'U'  WHERE householdId = :hhId AND beneficiaryId =:oldId")
     suspend fun updateToFinalBenId(hhId: Long, oldId: Long, newId: Long)
 
-    @Query("SELECT * FROM BENEFICIARY WHERE isDraft = 0 AND processed = \"N\" AND syncState =:unsynced ")
+    @Query("SELECT * FROM BENEFICIARY WHERE isDraft = 0 AND processed = 'N' AND syncState =:unsynced ")
     suspend fun getAllUnprocessedBen(unsynced: SyncState = SyncState.UNSYNCED): List<BenRegCache>
 
-    @Query("UPDATE BENEFICIARY SET processed = \"P\" ,  syncState = :synced WHERE beneficiaryId =:benId")
+    @Query("UPDATE BENEFICIARY SET processed = 'P' , syncState = :synced WHERE beneficiaryId =:benId")
     suspend fun benSyncedWithServer(benId: Long, synced: SyncState = SyncState.SYNCED)
 
-    @Query("UPDATE BENEFICIARY SET processed = \"U\", syncState = 0 WHERE beneficiaryId =:benId")
+    @Query("UPDATE BENEFICIARY SET processed = 'U' , syncState = 0 WHERE beneficiaryId =:benId")
     suspend fun benSyncWithServerFailed(vararg benId: Long)
 
     @Query("SELECT beneficiaryId FROM BENEFICIARY WHERE beneficiaryId IN (:list)")

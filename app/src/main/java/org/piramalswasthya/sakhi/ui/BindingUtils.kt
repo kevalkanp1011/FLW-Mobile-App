@@ -23,6 +23,14 @@ fun AutoCompleteTextView.setSpinnerItems(list: List<String>?) {
     }
 }
 
+@BindingAdapter("listItems")
+fun AutoCompleteTextView.setSpinnerItems(list: Array<String>?) {
+    list?.let {
+        this.setAdapter(ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, it))
+    }
+}
+
+
 @BindingAdapter("radioForm")
 fun RadioGroup.setItems(form: FormInput?) {
 //    if(this.childCount!=0)

@@ -75,7 +75,7 @@ class HomeFragment : Fragment() {
             .getWorkInfosForUniqueWorkLiveData(PullFromAmritFullLoadWorker.name)
             .observe(viewLifecycleOwner) {
                 it?.let { list ->
-                    list.first().let { workInfo ->
+                    list.first()?.let { workInfo ->
                         binding.llFullLoadProgress.visibility =
                             if (workInfo.state == WorkInfo.State.RUNNING)
                                 View.VISIBLE
