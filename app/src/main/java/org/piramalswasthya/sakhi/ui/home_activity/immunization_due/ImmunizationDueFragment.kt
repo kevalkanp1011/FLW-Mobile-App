@@ -11,12 +11,14 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
+import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
-import org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.EligibleCoupleViewModel
+import org.piramalswasthya.sakhi.model.TypeOfList
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
+import org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_eligible_list.NcdEligibleListFragmentDirections
 
 @AndroidEntryPoint
 class ImmunizationDueFragment : Fragment() {
@@ -40,18 +42,26 @@ class ImmunizationDueFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapter(
-            BenListAdapter.BenClickListener(
+        val benAdapter = BenListAdapterForForm(
+            BenListAdapterForForm.ClickListener(
                 {
                     Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
+
                 },
                 {
                     Toast.makeText(context, "Household : $it clicked", Toast.LENGTH_SHORT).show()
                 },
                 { hhId, benId ->
                     viewModel.manualSync()
+                },
+                { hhId, benId  ->
+                    findNavController().navigate(
+                        ImmunizationDueFragmentDirections.actionImmunizationDueFragmentToImmunizationListFragment(
+                            hhId,
+                            benId)
+                    )
                 }
-            ))
+            ), "Vaccine Form")
         binding.rvAny.adapter = benAdapter
 
         viewModel.immunizationList.observe(viewLifecycleOwner) {

@@ -1,6 +1,15 @@
 package org.piramalswasthya.sakhi.model
 
+import androidx.room.PrimaryKey
+
 data class ImmunisationCache (
+
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+
+    val benId: Long,
+
+    val hhId: Long,
 
     var motherName: String? = null,
 

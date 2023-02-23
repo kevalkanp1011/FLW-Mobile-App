@@ -269,6 +269,8 @@
 
     <string name="evac_patient_info">Patient Information </string>
 
+    <string name="immunization_dosage_count">%d/%d</string>
+
     <string-array name="temp_array">
         <item>Item 1</item>
         <item>Item 2</item>

@@ -10,7 +10,6 @@ data class Icon(
     val navAction: NavDirections
 )
 
-
 data class IconCount(
     @ColumnInfo(name = "householdCount")
     val householdCount: Int,
@@ -34,4 +33,13 @@ data class IconCount(
     val ncdPriorityCount: Int,
     val ncdNonEligibleCount: Int
 
+)
+
+data class ImmunizationIcon(
+    val benId: Long,
+    val hhId: Long,
+    val title: String,
+    val count: Int,
+    val maxCount: Int = 5,
+    val typeOfList: TypeOfList
 )

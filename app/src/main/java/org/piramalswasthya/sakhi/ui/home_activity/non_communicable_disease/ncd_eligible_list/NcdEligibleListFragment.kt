@@ -14,7 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.adapters.BenListAdapterForCbac
+import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 
 @AndroidEntryPoint
@@ -41,8 +41,9 @@ class NcdEligibleListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapterForCbac(
-            BenListAdapterForCbac.ClickListener(
+
+        val benAdapter = BenListAdapterForForm(
+            BenListAdapterForForm.ClickListener(
                 {
                     Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
 
@@ -62,7 +63,7 @@ class NcdEligibleListFragment : Fragment() {
                         )
                     )
                 }
-            ))
+            ), "CBAC Form")
         binding.rvAny.adapter = benAdapter
 
         viewModel.ncdEligibleList.observe(viewLifecycleOwner) {

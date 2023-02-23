@@ -101,6 +101,11 @@
                             android:text="@string/cbac_score"
                             android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium" />
 
+                        <TextView
+                            android:id="@+id/cbac_tv_pa"
+                            style="@style/cbac_tv_hint_risk_assessment"
+                            android:text="@string/cbac_hint_pa" />
+
                     </LinearLayout>
 
                     <RelativeLayout
@@ -302,12 +307,6 @@
                         style="@style/cbac_rl_risk_assessment"
                         app:layout_constraintTop_toBottomOf="@id/cbac_rl_waist"
                         tools:ignore="MissingConstraints">
-
-                        <TextView
-                            android:id="@+id/cbac_tv_pa"
-                            style="@style/cbac_tv_hint_risk_assessment"
-                            android:layout_toStartOf="@+id/dd_pa_score"
-                            android:text="@string/cbac_hint_pa" />
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/til_pa_dropdown"

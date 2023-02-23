@@ -6,8 +6,10 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.model.AgeUnit
 import org.piramalswasthya.sakhi.model.BenBasicCache
 import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.TypeOfList
 
 @Dao
 interface BenDao {
@@ -76,16 +78,16 @@ interface BenDao {
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 4")
     fun getAllPNCMotherList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE age < 2")
-    fun getAllInfantList(): LiveData<List<BenBasicCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE typeOfList = :infant")
+    fun getAllInfantList(infant: TypeOfList = TypeOfList.INFANT): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE age >= 2 and age < 6")
-    fun getAllChildList(): LiveData<List<BenBasicCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE ageUnit = :ageUnit and age >= 2 and age < 6")
+    fun getAllChildList(ageUnit: AgeUnit = AgeUnit.YEARS): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE age between 6 and 14")
-    fun getAllAdolescentList(): LiveData<List<BenBasicCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE ageUnit = :ageUnit and age between 6 and 14")
+    fun getAllAdolescentList(ageUnit: AgeUnit = AgeUnit.YEARS): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE immunizationStatus = 1")
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE isKid = 1 or reproductiveStatusId in (2, 3) ")
     fun getAllImmunizationDueList(): LiveData<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE hrpStatus = 1")
