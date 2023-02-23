@@ -68,19 +68,24 @@ class HouseholdFormDataset(context: Context) {
     private val firstNameHeadOfFamily = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_first_name_hof),
+        allCaps = true,
         required = true
     )
 
     private val lastNameHeadOfFamily = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_last_name_hof),
+        allCaps = true,
         required = false
     )
     private val mobileNoHeadOfFamily = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_mob_no_hof),
         required = true,
-        etLength = 10,
+        etMaxLength = 10,
+        isMobileNumber = true,
+        min = 6000000000,
+        max = 9999999999,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
     )
     private val houseNo = FormInput(

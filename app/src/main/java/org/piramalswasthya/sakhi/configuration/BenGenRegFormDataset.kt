@@ -164,7 +164,7 @@ class BenGenRegFormDataset(private val context: Context) {
         inputType = EDIT_TEXT,
         title = "Contact Number",
         required = true,
-        etLength = 10,
+        etMaxLength = 10,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
     )
 
@@ -296,7 +296,7 @@ class BenGenRegFormDataset(private val context: Context) {
         inputType = EDIT_TEXT,
         title = "Enter Aadhar Number",
         required = true,
-        etLength = 12,
+        etMaxLength = 12,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
     )
 
@@ -304,7 +304,7 @@ class BenGenRegFormDataset(private val context: Context) {
         inputType = EDIT_TEXT,
         title = "RCH ID",
         required = false,
-        etLength = 12,
+        etMaxLength = 12,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
 
     )

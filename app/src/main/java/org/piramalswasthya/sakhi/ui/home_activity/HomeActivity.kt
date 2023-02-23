@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.ui.home_activity
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -14,9 +15,15 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.databinding.ActivityHomeBinding
+import org.piramalswasthya.sakhi.helpers.MyContextWrapper
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
 import org.piramalswasthya.sakhi.work.PullFromAmritFullLoadWorker
@@ -24,6 +31,13 @@ import org.piramalswasthya.sakhi.work.PushToAmritWorker
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
+
+
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface WrapperEntryPoint {
+        val preferenceDao: PreferenceDao
+    }
 
     private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
 
@@ -33,6 +47,14 @@ class HomeActivity : AppCompatActivity() {
         val navHostFragment: NavHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_home) as NavHostFragment
         navHostFragment.navController
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        val pref = EntryPointAccessors.fromApplication(
+            newBase,
+            WrapperEntryPoint::class.java
+        ).preferenceDao
+        super.attachBaseContext(MyContextWrapper.wrap(newBase, pref.getCurrentLanguage().symbol))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,8 +98,9 @@ class HomeActivity : AppCompatActivity() {
                     getString(R.string.nav_item_2_text, it.userType)
                 headerView.findViewById<TextView>(R.id.tv_nav_id).text =
                     getString(R.string.nav_item_3_text, it.userId)
-                headerView.findViewById<TextView>(R.id.tv_nav_version).text =
-                    getString(R.string.version)
+
+//                headerView.findViewById<TextView>(R.id.tv_nav_version).text =
+//                    getString(R.string.version)
             }
         }
     }
@@ -103,6 +126,12 @@ class HomeActivity : AppCompatActivity() {
 
         binding.navView.menu.findItem(R.id.menu_logout).setOnMenuItemClickListener {
             viewModel.logout()
+            true
+
+        }
+        binding.navView.menu.findItem(R.id.homeFragment).setOnMenuItemClickListener {
+            navController.popBackStack(R.id.homeFragment, false)
+            binding.drawerLayout.close()
             true
 
         }

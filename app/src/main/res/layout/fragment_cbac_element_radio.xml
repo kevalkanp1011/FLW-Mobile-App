@@ -27,11 +27,13 @@
             style="@style/cbac_ed_rg">
 
             <RadioButton
+                android:id="@+id/rb_yes"
                 style="@style/cbac_ed_rb"
                 android:text="@string/cbac_yes" />
 
 
             <RadioButton
+                android:id="@+id/rb_no"
                 style="@style/cbac_ed_rb"
                 android:text="@string/cbac_no" />
         </RadioGroup>

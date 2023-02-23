@@ -324,5 +324,13 @@
             app:argType="integer" />
 
     </fragment>
+    <fragment
+        android:id="@+id/aboutUsFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.AboutUsFragment"
+        android:label="AboutUsFragment" />
+    <fragment
+        android:id="@+id/helpFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.HelpFragment"
+        android:label="HelpFragment" />
 
 </navigation>

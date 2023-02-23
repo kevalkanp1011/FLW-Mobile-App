@@ -104,7 +104,7 @@ class NewBenRegL15ObjectFragment  : Fragment() {
 //        return false
 
         return (binding.inputForm.rvInputForm.adapter?.let {
-            (it as FormInputAdapter).validateInput()
+            (it as FormInputAdapter).validateInput() == 0
         } ?: false)
     }
 }

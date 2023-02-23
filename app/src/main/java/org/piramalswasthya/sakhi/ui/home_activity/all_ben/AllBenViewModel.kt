@@ -5,6 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.model.BenBasicDomain
 import org.piramalswasthya.sakhi.repositories.BenRepo
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,6 +31,7 @@ class AllBenViewModel @Inject constructor(
 
     fun manualSync(/*hhId: Long, benId: Long, locationRecord: LocationRecord*/) {
         viewModelScope.launch {
+            Timber.d("manual sync called!")
             benRepo.processNewBen()
         }
     }

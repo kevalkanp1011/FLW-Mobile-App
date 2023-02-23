@@ -102,7 +102,7 @@ class NewBenRegTypeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if(viewModel.isConsentAgreed)
+        if (!viewModel.isConsentAgreed)
             consentAlert.show()
         activity?.onBackPressedDispatcher?.addCallback(
             viewLifecycleOwner, onBackPressedCallback

@@ -12,6 +12,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.databinding.FragmentServiceTypeBinding
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
+import org.piramalswasthya.sakhi.ui.home_activity.service_type.ServiceTypeViewModel.State.*
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -27,12 +28,9 @@ class ServiceTypeFragment : Fragment() {
             override fun handleOnBackPressed() {
                 if (homeViewModel.isLocationSet())
                     findNavController().navigate(ServiceTypeFragmentDirections.actionServiceTypeFragmentToNavHome())
-                else if(dataValid()){
-                    binding.btnContinue.performClick()
-                }
                 else
-                    if(! incompleteLocationAlert.isShowing)
-                        incompleteLocationAlert.show()
+                    if (!exitAlert.isShowing)
+                        exitAlert.show()
 
             }
         }
@@ -41,8 +39,20 @@ class ServiceTypeFragment : Fragment() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Missing Detail")
             .setMessage("At least one of the following is missing value:\n \n\tState\n\tDistrict\n\tBlock\n\tVillage")
-            .setPositiveButton("Understood"){
-                dialog,_-> dialog.dismiss()
+            .setPositiveButton("Understood") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+    }
+    private val exitAlert by lazy {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Exit Application")
+            .setMessage("Do you want to exit application")
+            .setPositiveButton("Yes") { _, _ ->
+                activity?.finish()
+            }
+            .setNegativeButton("No") { d, _ ->
+                d.dismiss()
             }
             .create()
     }
@@ -59,34 +69,76 @@ class ServiceTypeFragment : Fragment() {
         Timber.d("onViewCreated() called!")
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        if(homeViewModel.isLocationSet())
-            viewModel.loadLocation(homeViewModel.user,homeViewModel.getLocationRecord())
-        else
-            viewModel.loadLocationFromDatabase()
+
+
         activity?.onBackPressedDispatcher?.addCallback(
             viewLifecycleOwner, onBackPressedCallback
         )
+        binding.actvStateDropdown.setOnItemClickListener { _, _, i, _ ->
+            viewModel.setStateId(i)
+        }
+        binding.actvDistrictDropdown.setOnItemClickListener { _, _, i, _ ->
+            viewModel.setDistrictId(i)
+        }
+        binding.actvBlockDropdown.setOnItemClickListener { _, _, i, _ ->
+            viewModel.setBlockId(i)
+        }
+        binding.actvVillageDropdown.setOnItemClickListener { _, _, i, _ ->
+            viewModel.setVillageId(i)
+        }
         binding.btnContinue.setOnClickListener {
-            if(dataValid()) {
+            if (dataValid()) {
                 homeViewModel.setLocationDetails(
-                    binding.ddState.actvRvDropdown.text.toString(),
-                    binding.ddDistrict.actvRvDropdown.text.toString(),
-                    binding.ddBlock.actvRvDropdown.text.toString(),
-                    binding.ddVillage.actvRvDropdown.text.toString(),
+                    viewModel.selectedState!!,
+                    viewModel.selectedDistrict!!,
+                    viewModel.selectedBlock!!,
+                    viewModel.selectedVillage!!,
                 )
                 findNavController().navigate(ServiceTypeFragmentDirections.actionServiceTypeFragmentToNavHome())
-            }
-            else
+            } else
                 incompleteLocationAlert.show()
 
+        }
+        viewModel.state.observe(viewLifecycleOwner) {
+            when (it) {
+                IDLE -> {}//TODO()
+                LOADING -> {}//TODO()
+                SUCCESS -> {
+                    if (homeViewModel.isLocationSet())
+                        viewModel.loadLocation(homeViewModel.getLocationRecord())
+                    else {
+                        viewModel.loadDefaultLocation()
+                    }
+                }
+            }
+        }
+        viewModel.selectedStateId.observe(viewLifecycleOwner) {
+            if (it >= 0)
+                viewModel.stateList.value?.get(it)
+                    ?.let { state -> binding.actvStateDropdown.setText(state) }
+        }
+        viewModel.selectedDistrictId.observe(viewLifecycleOwner) {
+            if (it >= 0)
+                viewModel.districtList.value?.get(it)
+                    ?.let { state -> binding.actvDistrictDropdown.setText(state) }
+        }
+        viewModel.selectedBlockId.observe(viewLifecycleOwner) {
+            if (it >= 0)
+                viewModel.blockList.value?.get(it)
+                    ?.let { state -> binding.actvBlockDropdown.setText(state) }
+        }
+        viewModel.selectedVillageId.observe(viewLifecycleOwner) {
+            if (it >= 0)
+                viewModel.villageList.value?.get(it)
+                    ?.let { state -> binding.actvVillageDropdown.setText(state) }
         }
     }
 
     private fun dataValid(): Boolean {
-        return !(binding.ddState.actvRvDropdown.text.isNullOrBlank()||
-                binding.ddDistrict.actvRvDropdown.text.isNullOrBlank()||
-                binding.ddBlock.actvRvDropdown.text.isNullOrBlank()||
-                binding.ddVillage.actvRvDropdown.text.isNullOrBlank())
+        return !(binding.actvStateDropdown.text.isNullOrBlank() ||
+                binding.actvDistrictDropdown.text.isNullOrBlank() ||
+                binding.actvBlockDropdown.text.isNullOrBlank() ||
+                binding.actvVillageDropdown.text.isNullOrBlank())
 
     }
 

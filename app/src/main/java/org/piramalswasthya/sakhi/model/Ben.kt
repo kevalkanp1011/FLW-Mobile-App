@@ -52,7 +52,7 @@ data class BenBasicCache(
     val familyHeadName: String? = null,
     val typeOfList: TypeOfList,
     val rchId: String? = null,
-    val hrpStatus: String? = null,
+    val hrpStatus: Boolean,
     val syncState: SyncState,
     val reproductiveStatusId: Int,
     val isKid: Boolean,
@@ -72,12 +72,12 @@ data class BenBasicCache(
             age = if (age == 0) "Not Available" else "$age $ageUnit",
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
-            familyHeadName = familyHeadName?: "Not Available",
+            familyHeadName = familyHeadName ?: "Not Available",
             typeOfList = typeOfList.name,
-            rchId = rchId?: "Not Available",
-            hrpStatus = hrpStatus?: "Not Available",
+            rchId = rchId ?: "Not Available",
+            hrpStatus = hrpStatus,
             syncState = syncState
-                )
+        )
     }
 }
 
@@ -94,7 +94,7 @@ data class BenBasicDomain(
     val familyHeadName: String,
     val typeOfList: String,
     val rchId: String,
-    val hrpStatus: String? = null,
+    val hrpStatus: Boolean = false,
     var syncState: SyncState
 )
 
@@ -176,6 +176,7 @@ data class BenRegKidNetwork(
     val conductedDeliveryOther: String? = null,
     val deliveryType: String? = null,
     val deliveryTypeid: Int = 0,
+    val deliveryTypeOther: String? = null,
     @Json(name = "complecations")
     val complications: String? = null,
     @Json(name = "complecationsid")
@@ -210,14 +211,13 @@ data class BenRegKidNetwork(
     val vitaminkBatchNo: String? = null,
     val vitaminkGivenDueDate: String? = null,
     val vitaminkDate: String? = null,
+
     val createdBy: String? = null,
     val createdDate: String? = null,
     val serverUpdatedStatus: Int = 0,
     val updatedBy: String? = null,
     val updatedDate: String? = null,
-    val deliveryTypeOther: String? = null,
 
-//private int BenRegId;//Commenting by AHex,
     val ProviderServiceMapID: Int = 0,
     val VanID: Int = 0,
     val Processed: String? = null,
@@ -227,9 +227,9 @@ data class BenRegKidNetwork(
     val districtname: String? = null,
     val villageid: Int = 0,
 
-    var motherBenId: Long? = null,
-    var motherName: String? = null,
-    var motherposition: Int? = 0,
+    val motherBenId: Long? = null,
+    val motherName: String? = null,
+    val motherposition: Int? = 0,
 
 
     val birthBCG: Boolean? = null,
@@ -438,6 +438,8 @@ data class BenRegCache(
 
     var confirmedHrp: String? = null,
 
+    var suspectedHrp: String? = null,
+
     var confirmedTb: String? = null,
 
     var confirmedNcdDiseases: String? = null,
@@ -480,29 +482,6 @@ data class BenRegCache(
     var isDraft: Boolean,
 
     ){
-
-    companion object{
-         private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
-    }
-    fun asBasicDomainModel() : BenBasicDomain{
-        return BenBasicDomain(
-            benId = beneficiaryId,
-            hhId = householdId,
-            regDate = dateFormat.format(Date(regDate!!)),
-            benName = firstName ?: "Not Available",
-            benSurname = lastName ?: "Not Available",
-            gender = gender?.name ?: "Not Available",
-            age = if (age == 0) "Not Available" else "$age $ageUnit",
-            mobileNo = contactNumber?.toString() ?: "Not Available",
-            fatherName = fatherName,
-            familyHeadName = "Not implemented at the moment!",
-            typeOfList = registrationType?.name ?: "Not Available",
-            rchId = rchId ?: "Not Available",
-            hrpStatus = confirmedHrp ?: "Not Available",
-            syncState = syncState
-        )
-    }
-
 
     fun asNetworkPostModel(user: UserCache): BenPost {
         return BenPost(
@@ -633,12 +612,12 @@ data class BenRegCache(
     fun asKidNetworkModel(user: UserCache): BenRegKidNetwork {
         return BenRegKidNetwork(
             benficieryid = beneficiaryId,
-
             childName = firstName,
             birthPlace = kidDetails!!.birthPlace,
             birthPlaceid = kidDetails!!.birthPlaceId,
             facilityName = kidDetails!!.facilityName,
             facilityid = kidDetails!!.facilityId,
+            ashaid = ashaId,
             facilityOther = kidDetails!!.facilityOther,
             placeName = kidDetails!!.placeName,
             conductedDelivery = kidDetails!!.conductedDelivery,

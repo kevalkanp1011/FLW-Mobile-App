@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import org.piramalswasthya.sakhi.configuration.FormEditTextDefaultInputFilter
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.*
 import org.piramalswasthya.sakhi.model.FormInput
 import org.piramalswasthya.sakhi.model.FormInput.InputType.*
@@ -61,17 +61,27 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
                     editable.let { item.value.value = it.toString() }
                     item.value.value = editable.toString()
                     Timber.d("Item ET : $item")
-                    if (item.etInputType == (InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL)) {
+                    if (item.isMobileNumber) {
+                        if (editable.first().toString().toInt() < 6 || editable.length != 10) {
+                            item.errorText = "Invalid Mobile Number !"
+                            binding.tilEditText.error = item.errorText
+                        } else {
+                            item.errorText = null
+                            binding.tilEditText.error = item.errorText
+                        }
+                    } else if (item.etInputType == (InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL)) {
                         val age = editable.toString().toLong()
                         item.min?.let {
                             if (age < it) {
                                 binding.tilEditText.error = "Field value has to be at least $it"
+                                item.errorText = binding.tilEditText.error.toString()
                             }
                         }
                         item.max?.let {
                             if (age > it) {
                                 binding.tilEditText.error =
                                     "Field value has to be less than $it"
+                                item.errorText = binding.tilEditText.error.toString()
                             }
                         }
                         if (item.min != null && item.max != null && age >= item.min!! && age <= item.max!!)
@@ -94,10 +104,10 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
             }
             item.errorText?.also { binding.tilEditText.error = it }
                 ?: run { binding.tilEditText.error = null }
-            val etFilters = mutableListOf<InputFilter>(InputFilter.LengthFilter(item.etLength))
+            val etFilters = mutableListOf<InputFilter>(InputFilter.LengthFilter(item.etMaxLength))
             binding.et.inputType = item.etInputType
-            if (item.etInputType == InputType.TYPE_CLASS_TEXT && item.useFormEditTextDefaultInputFilter) {
-                etFilters.add(FormEditTextDefaultInputFilter)
+            if (item.etInputType == InputType.TYPE_CLASS_TEXT && item.allCaps) {
+                etFilters.add(InputFilter.AllCaps())
                 binding.et.filters = etFilters.toTypedArray()
             } else {
                 binding.et.filters = etFilters.toTypedArray()
@@ -149,6 +159,10 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
         ) {
             binding.invalidateAll()
             binding.form = item
+            if (item.errorText != null)
+                binding.clRi.setBackgroundResource(R.drawable.state_errored)
+            else
+                binding.clRi.setBackgroundResource(0)
 
             //item.errorText?.let { binding.rg.error = it }
             binding.executePendingBindings()
@@ -296,16 +310,30 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
     override fun getItemViewType(position: Int) =
         getItem(position).inputType.ordinal
 
-
-    fun validateInput(): Boolean {
-        var retVal = true
+    /**
+     * Validation Result : -1 -> all good
+     * else index of element creating trouble
+     */
+    fun validateInput(): Int {
+        var retVal = -1
+        currentList.forEach {
+            Timber.d("Error text for ${it.title} ${it.errorText}")
+            if (it.errorText != null) {
+                retVal = currentList.indexOf(it)
+                return@forEach
+            }
+        }
+        Timber.d("Validation : $retVal")
+        if (retVal != -1)
+            return retVal
         currentList.forEach {
             if (it.required) {
                 if (it.value.value.isNullOrBlank()) {
                     Timber.d("validateInput called for item $it, with index ${currentList.indexOf(it)}")
                     it.errorText = "Required field cannot be empty !"
                     notifyItemChanged(currentList.indexOf(it))
-                    retVal = false
+                    if (retVal == -1)
+                        retVal = currentList.indexOf(it)
                 }
             }
 /*            if(it.regex!=null){

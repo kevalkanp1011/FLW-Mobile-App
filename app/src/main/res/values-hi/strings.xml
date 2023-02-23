@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="navigation_drawer_open">नेविगेशन ड्रावर खोलें</string>
-    <string name="navigation_drawer_close">नेविगेशन ड्रावर बंद करें</string>
+
 
     <!--    Login-->
     <string name="tv_text_welcome">स्वागत</string>
@@ -17,21 +16,26 @@
     <string name="cb_login_remember_me_text">पहचाना की नहीं</string>
     <string name="btn_login_forgot_password_text">पासवर्ड भूल गए?</string>
     <string name="btn_login_text">लॉग इन करें</string>
+
+
+    <!--Home -->
+    <string name="menu_home">मुखपृष्ठ</string>
+    <string name="navigation_drawer_open">नेविगेशन ड्रावर खोलें</string>
+    <string name="navigation_drawer_close">नेविगेशन ड्रावर बंद करें</string>
+    <string name="frag_service_type_title">गांव का चयन करें</string>
+    <string name="tv_text_select_village">कृपया नीचे गांव का चयन करें।</string>
+    <string name="service_type_dd_state_text">राज्य</string>
+    <string name="service_type_dd_district_text">ज़िला</string>
+    <string name="service_type_dd_block_text">उप जिला</string>
+    <string name="service_type_dd_village_text">गांव</string>
+    <string name="btn_continue_text">जारी रखें</string>
     <!--   To Be Deleeted-->
 
 
     <string name="title_activity_home" translatable="false">HomeActivity</string>
     <string name="nav_header_desc" translatable="false">Navigation header</string>
 
-    <string name="menu_home">Home</string>
 
-
-    <string name="btn_continue_text">Continue</string>
-
-    <string name="service_type_dd_state_text">State</string>
-    <string name="service_type_dd_district_text">District</string>
-    <string name="service_type_dd_block_text">Block</string>
-    <string name="service_type_dd_village_text">Village</string>
     <string name="til_hint_selected_village">Selected Village</string>
     <string name="home_icon_title_all_ben">All Beneficiaries</string>
     <string name="home_icon_title_elig_coup">Eligible Couples</string>
@@ -47,7 +51,7 @@
     <string name="home_icon_title_menopause_stage_list">Menopause Stage List</string>
     <string name="home_icon_title_ncd">NCD</string>
     <string name="home_icon_title_village_lvl_forms">Village Level Forms</string>
-    <string name="frag_service_type_title">Select Village</string>
+
     <string name="frag_nhhr_title">New Household Registration</string>
     <string name="home_icon_all_household">All Household List</string>
     <string name="btn_text_frag_home_nhhr">New Household Registration</string>
@@ -119,7 +123,6 @@
     <string name="frag_new_ben_type_select_text">Select Beneficiary Type</string>
     <string name="frag_new_ben_reg_type_title">Beneficiary Type for Registration</string>
     <string name="version">2.0.0</string>
-    <string name="tv_text_select_village">Please select the village below.</string>
 
 
     <string-array name="temp_array">
