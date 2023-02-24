@@ -125,6 +125,18 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="cdrListFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="2037" />
+                            <option name="y" value="2106" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="childCareFragment">
                     <value>
                       <LayoutPositions>
@@ -401,6 +413,18 @@
                           <Point>
                             <option name="x" value="1161" />
                             <option name="y" value="518" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="mdsrListFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="2028" />
+                            <option name="y" value="1754" />
                           </Point>
                         </option>
                       </LayoutPositions>

@@ -270,6 +270,10 @@
     <string name="evac_patient_info">Patient Information </string>
 
     <string name="immunization_dosage_count">%d/%d</string>
+    <string name="select_death_type">Select Beneficiary Death Type</string>
+    <string name="death_type_cdr">CDR (Child Death Review)</string>
+    <string name="death_type_mdsr">MDSR (Maternal Death Surveillance and Response)</string>
+    <string name="continue_button">CONTINUE</string>
 
     <string-array name="temp_array">
         <item>Item 1</item>
