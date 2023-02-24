@@ -1,6 +1,5 @@
-package org.piramalswasthya.sakhi.ui.home_activity.immunization_due
+package org.piramalswasthya.sakhi.ui.home_activity.death_reports.cdr
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,25 +10,18 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
-import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
-import org.piramalswasthya.sakhi.model.TypeOfList
-import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
-import org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_eligible_list.NcdEligibleListFragmentDirections
 
 @AndroidEntryPoint
-class ImmunizationDueFragment : Fragment() {
+class CdrListFragment : Fragment() {
 
     private val binding: FragmentDisplaySearchRvButtonBinding by lazy {
         FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: ImmunizationDueViewModel by viewModels()
-
-    private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
+    private val viewModel: CdrListViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,29 +34,21 @@ class ImmunizationDueFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapterForForm(
-            BenListAdapterForForm.ClickListener(
+        val benAdapter = BenListAdapter(
+            BenListAdapter.BenClickListener(
                 {
                     Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
-
                 },
                 {
                     Toast.makeText(context, "Household : $it clicked", Toast.LENGTH_SHORT).show()
                 },
                 { hhId, benId ->
                     viewModel.manualSync()
-                },
-                { hhId, benId  ->
-//                    findNavController().navigate(
-//                        ImmunizationDueFragmentDirections.actionImmunizationDueFragmentToImmunizationListFragment(
-//                            hhId,
-//                            benId)
-//                    )
                 }
-            ), "Vaccine Form")
+            ))
         binding.rvAny.adapter = benAdapter
 
-        viewModel.immunizationList.observe(viewLifecycleOwner) {
+        viewModel.cdrList.observe(viewLifecycleOwner) {
             if (it.isNullOrEmpty())
                 binding.flEmpty.visibility = View.VISIBLE
             else

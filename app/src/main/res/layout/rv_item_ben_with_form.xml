@@ -11,7 +11,7 @@
 
         <variable
             name="clickListener"
-            type="org.piramalswasthya.sakhi.adapters.BenListAdapterForCbac.ClickListener" />
+            type="org.piramalswasthya.sakhi.adapters.BenListAdapterForForm.ClickListener" />
 
     </data>
 
@@ -202,8 +202,8 @@
                     android:layout_below="@id/ll_row_3"
                     android:layout_alignParentEnd="true"
                     android:backgroundTint="?attr/colorSecondary"
-                    android:onClick="@{()-> clickListener.onClickCbac(ben)}"
-                    android:text="CBAC Form" />
+                    android:onClick="@{()-> clickListener.onClickButton(ben)}"
+                    tools:text="CBAC Form" />
 
             </RelativeLayout>
 

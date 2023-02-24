@@ -122,6 +122,20 @@ class BenRepo @Inject constructor(
         }
     }
 
+    val cdrList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllCDRList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
+
+    val mdsrList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllMDSRList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
+
     companion object {
         private fun getCurrentDate(): String {
             val dateLong = System.currentTimeMillis()

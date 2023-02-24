@@ -2,7 +2,9 @@ package org.piramalswasthya.sakhi.database.room.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import org.piramalswasthya.sakhi.model.AgeUnit
 import org.piramalswasthya.sakhi.model.IconCount
+import org.piramalswasthya.sakhi.model.TypeOfList
 import org.piramalswasthya.sakhi.model.UserCache
 
 @Dao
@@ -28,15 +30,15 @@ interface UserDao {
         "SELECT (SELECT COUNT(*)from HOUSEHOLD where ashaId=:userId and isDraft = 0) AS householdCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0) AS allBenCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and age BETWEEN 15 AND 49 and gen_reproductiveStatusId = 1) AS eligibleCoupleCount, " +
-                "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and age < 2) AS infantCount, " +
-                "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and age >= 2 and age < 6 ) AS childCount, " +
-                "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and age between 6 and 14) AS adolescentCount, " +
+                "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and registrationType = :infant) AS infantCount, " +
+                "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and ageUnit = :ageUnit and age >= 2 and age < 6 ) AS childCount, " +
+                "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and ageUnit = :ageUnit and age between 6 and 14) AS adolescentCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and gen_reproductiveStatusId = 2) AS pregnantCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and gen_reproductiveStatusId = 3) AS deliveryStageCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and gen_reproductiveStatusId = 4) AS pncMotherCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and gender = \"Female\" and age BETWEEN 15 AND 49) AS reproductiveAgeCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and gen_reproductiveStatusId = 5) AS menopauseCount, " +
-                "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and immunizationStatus = 1)  AS immunizationDueCount, " +
+                "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and isKid = 1 or gen_reproductiveStatusId in (2, 3)) AS immunizationDueCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and isHrpStatus = 1)  AS hrpCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0)  AS generalOpCareCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0) AS deathReportCount, " +
@@ -48,6 +50,8 @@ interface UserDao {
     )
     fun getRecordCounts(
         userId: Int,
+        ageUnit: AgeUnit = AgeUnit.YEARS,
+        infant: TypeOfList = TypeOfList.INFANT
         ): LiveData<List<IconCount>>
 
     @Delete

@@ -1,28 +1,25 @@
-package org.piramalswasthya.sakhi.ui.home_activity.immunization_due
+package org.piramalswasthya.sakhi.ui.home_activity.death_reports.cdr
 
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.model.BenBasicDomain
-import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import javax.inject.Inject
 
 @HiltViewModel
-class ImmunizationDueViewModel @Inject constructor(
+class CdrListViewModel @Inject constructor(
     private val benRepo: BenRepo
 ) : ViewModel() {
 
-    val immunizationList = benRepo.immunizationList
-    private lateinit var user: UserDomain
+    val cdrList = benRepo.cdrList
     private val _benList = MutableLiveData<List<BenBasicDomain>>()
     val benList: LiveData<List<BenBasicDomain>>
         get() = _benList
 
     init {
         viewModelScope.launch {
-            immunizationList.asFlow().collect {
+            cdrList.asFlow().collect {
                 _benList.value = it
             }
         }
@@ -30,9 +27,9 @@ class ImmunizationDueViewModel @Inject constructor(
 
     fun filterText(filterText: String) {
         if (filterText == "")
-            _benList.value = immunizationList.value
+            _benList.value = cdrList.value
         else
-            _benList.value = immunizationList.value?.filter {
+            _benList.value = cdrList.value?.filter {
                 it.hhId.toString().contains(filterText) ||
                         it.benId.toString().contains(filterText) ||
                         it.regDate.contains((filterText)) ||

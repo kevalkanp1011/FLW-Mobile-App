@@ -119,7 +119,14 @@
         android:id="@+id/deathReportsFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.death_reports.DeathReportsFragment"
         android:label="@string/home_icon_title_death_rep"
-        tools:layout="@layout/fragment_death_reports" />
+        tools:layout="@layout/fragment_death_reports" >
+        <action
+            android:id="@+id/action_deathReportsFragment_to_mdsrListFragment"
+            app:destination="@id/mdsrListFragment" />
+        <action
+            android:id="@+id/action_deathReportsFragment_to_cdrListFragment"
+            app:destination="@id/cdrListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/generalOpCareFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.general_op_care.GeneralOpCareFragment"
@@ -134,7 +141,11 @@
         android:id="@+id/immunizationDueFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.immunization_due.ImmunizationDueFragment"
         android:label="@string/home_icon_title_imm_due"
-        tools:layout="@layout/fragment_immunization_due" />
+        tools:layout="@layout/fragment_immunization_due" >
+        <action
+            android:id="@+id/action_immunizationDueFragment_to_immunizationListFragment"
+            app:destination="@id/immunizationListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/menopauseStageFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.menopause_stage.MenopauseStageFragment"
@@ -332,5 +343,47 @@
         android:id="@+id/helpFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.HelpFragment"
         android:label="HelpFragment" />
+    <fragment
+        android:id="@+id/immunizationObjectFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.immunization_due.immunization_object.ImmunizationObjectFragment"
+        android:label="Immunization Details" >
+        <argument
+            android:name="vaccine"
+            app:argType="string" />
+        <argument
+            android:name="dosageTaken"
+            app:argType="integer" />
+        <argument
+            android:name="maxCount"
+            app:argType="integer" />
+        <argument
+            android:name="benId"
+            app:argType="long" />
+        <argument
+            android:name="hhId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/immunizationListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.immunization_due.immunization_list.ImmunizationListFragment"
+        android:label="Immunization List">
+        <argument
+            android:name="hhId"
+            app:argType="long" />
+        <argument
+            android:name="benId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_immunizationListFragment_to_immunizationObjectFragment"
+            app:destination="@id/immunizationObjectFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cdrListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.death_reports.cdr.CdrListFragment"
+        android:label="CdrListFragment" />
+    <fragment
+        android:id="@+id/mdsrListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.death_reports.mdsr.MdsrListFragment"
+        android:label="MdsrListFragment" />
 
 </navigation>
