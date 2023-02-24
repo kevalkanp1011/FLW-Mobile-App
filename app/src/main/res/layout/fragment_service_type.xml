@@ -52,29 +52,69 @@
                     android:text="@string/tv_text_select_village"
                     android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
 
-                <include
-                    android:id="@+id/dd_state"
-                    layout="@layout/rv_item_dropdown"
-                    app:form="@{viewModel.stateList}"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_state_dropdown"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/service_type_dd_state_text"
+                    android:labelFor="@id/actv_state_dropdown">
 
-                    />
-                <include
-                    android:id="@+id/dd_district"
-                    layout="@layout/rv_item_dropdown"
-                    app:form="@{viewModel.districtList}"
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/actv_state_dropdown"
+                        listItems="@{viewModel.stateList}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                    />
-                <include
-                    android:id="@+id/dd_block"
-                    layout="@layout/rv_item_dropdown"
-                    app:form="@{viewModel.blockList}"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_district_dropdown"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/service_type_dd_district_text"
+                    android:labelFor="@id/actv_district_dropdown">
 
-                    />
-                <include
-                    android:id="@+id/dd_village"
-                    layout="@layout/rv_item_dropdown"
-                    app:form="@{viewModel.villageList}"
-                    />
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/actv_district_dropdown"
+                        listItems="@{viewModel.districtList}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_block_dropdown"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/service_type_dd_block_text"
+                    android:labelFor="@id/actv_block_dropdown">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/actv_block_dropdown"
+                        listItems="@{viewModel.blockList}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_village_dropdown"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/service_type_dd_village_text"
+                    android:labelFor="@id/actv_village_dropdown">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/actv_village_dropdown"
+                        listItems="@{viewModel.villageList}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_continue"

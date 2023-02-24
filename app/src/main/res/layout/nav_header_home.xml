@@ -6,6 +6,7 @@
     android:layout_height="@dimen/nav_header_height"
     android:background="@drawable/side_nav_bar"
     android:padding="@dimen/padding_normal"
+    android:layout_marginTop="?attr/actionBarSize"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
@@ -30,7 +31,6 @@
         <TextView
             android:id="@+id/tv_nav_name"
             style="@style/nav_header_item_tv"
-            android:text="@{}"
             />
 
         <TextView
@@ -41,8 +41,5 @@
             android:id="@+id/tv_nav_id"
             style="@style/nav_header_item_tv" />
 
-        <TextView
-            android:id="@+id/tv_nav_version"
-            style="@style/nav_header_item_tv" />
     </LinearLayout>
 </RelativeLayout>

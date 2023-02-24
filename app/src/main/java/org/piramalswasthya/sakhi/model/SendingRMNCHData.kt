@@ -12,7 +12,7 @@ data class SendingRMNCHData(
     var benficieryRegistrationData: List<BenPost>? = null,
 
     @Json(name = "cBACDetails")
-    var cbacData: List<String>? = null,
+    var cbacData: List<CbacPost>? = null,
 
     @Json(name = "bornBirthDeatils")
     var birthDetails: List<BenRegKidNetwork>? = null,

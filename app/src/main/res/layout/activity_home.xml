@@ -45,5 +45,17 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_home"
-        app:menu="@menu/activity_main_drawer" />
+        app:menu="@menu/activity_main_drawer">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_margin="@dimen/margin_normal"
+            android:padding="@dimen/padding_normal"
+            android:text="Version 2.0.0"
+            android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
+
+    </com.google.android.material.navigation.NavigationView>
 </androidx.drawerlayout.widget.DrawerLayout>

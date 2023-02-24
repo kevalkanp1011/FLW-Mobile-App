@@ -9,6 +9,7 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.model.FormInput.InputType.*
+import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
@@ -137,7 +138,7 @@ class BenKidRegFormDataset(private val context: Context) {
         inputType = EDIT_TEXT,
         title = "Contact Number",
         required = true,
-        etLength = 10,
+        etMaxLength = 10,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL
     )
 
@@ -275,7 +276,7 @@ class BenKidRegFormDataset(private val context: Context) {
         inputType = EDIT_TEXT,
         title = "RCH ID",
         required = false,
-        etLength = 12,
+        etMaxLength = 12,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL
 
     )
@@ -481,11 +482,12 @@ class BenKidRegFormDataset(private val context: Context) {
     }
 
     private fun getTypeFromAge(age: Int, ageUnit: AgeUnit?): TypeOfList? {
-        return if (ageUnit == AgeUnit.DAYS || ageUnit == AgeUnit.MONTHS)
+        Timber.d("Values Here $age $ageUnit")
+        return if (ageUnit == AgeUnit.DAYS || ageUnit == AgeUnit.MONTHS || (ageUnit == AgeUnit.YEARS && age < 2))
             TypeOfList.INFANT
-        else if (ageUnit == AgeUnit.YEARS && age > 1 && age < 5)
+        else if (ageUnit == AgeUnit.YEARS && age < 6)
             TypeOfList.CHILD
-        else if (ageUnit == AgeUnit.YEARS && age > 5 && age < 15)
+        else if (ageUnit == AgeUnit.YEARS && age < 15)
             TypeOfList.ADOLESCENT
         else null
 
@@ -512,12 +514,14 @@ class BenKidRegFormDataset(private val context: Context) {
             lastName = this@BenKidRegFormDataset.lastName.value.value
             dob = getLongFromDate(this@BenKidRegFormDataset.dob.value.value!!)
             age = this@BenKidRegFormDataset.age.value.value?.toInt() ?: 0
+
             ageUnit = when (this@BenKidRegFormDataset.ageUnit.value.value) {
                 "Year" -> AgeUnit.YEARS
                 "Month" -> AgeUnit.MONTHS
                 "Day" -> AgeUnit.DAYS
                 else -> null
             }
+            Timber.d("$ageUnit ${this@BenKidRegFormDataset.ageUnit.value.value}")
             age_unitId = when (ageUnit) {
                 AgeUnit.YEARS -> 3
                 AgeUnit.MONTHS -> 2
