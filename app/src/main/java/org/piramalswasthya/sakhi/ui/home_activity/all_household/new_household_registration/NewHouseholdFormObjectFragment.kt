@@ -1,10 +1,10 @@
 package org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_registration
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.adapters.NewHouseholdPagerAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentInputFormPageBinding
+import timber.log.Timber
 
 @AndroidEntryPoint
 class NewHouseholdFormObjectFragment : Fragment() {
@@ -58,9 +59,17 @@ class NewHouseholdFormObjectFragment : Fragment() {
     fun validate(): Boolean {
 //        Timber.d("binding $binding rv ${binding.nhhrForm.rvInputForm} adapter ${binding.nhhrForm.rvInputForm.adapter}")
 //        return false
-
-        return (binding.inputForm.rvInputForm.adapter?.let{
+        val result = binding.inputForm.rvInputForm.adapter?.let {
             (it as FormInputAdapter).validateInput()
-        }?:false)
+        }
+        Timber.d("Validation : $result")
+        return if (result == -1)
+            true
+        else {
+            if (result != null) {
+                binding.inputForm.rvInputForm.scrollToPosition(result)
+            }
+            false
+        }
     }
 }

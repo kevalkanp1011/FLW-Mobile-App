@@ -1,10 +1,7 @@
 package org.piramalswasthya.sakhi.database.room.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.AgeUnit
 import org.piramalswasthya.sakhi.model.BenBasicCache
@@ -16,6 +13,9 @@ interface BenDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(vararg ben: BenRegCache)
+
+    @Update
+    suspend fun updateBen(ben: BenRegCache)
 
     @Query("SELECT * FROM BENEFICIARY WHERE isDraft = 1 and householdId =:hhId LIMIT 1")
     suspend fun getDraftBenKidForHousehold(hhId: Long): BenRegCache?
@@ -40,6 +40,9 @@ interface BenDao {
 
     @Query("SELECT * FROM BENEFICIARY WHERE isDraft = 0 AND processed = 'N' AND syncState =:unsynced ")
     suspend fun getAllUnprocessedBen(unsynced: SyncState = SyncState.UNSYNCED): List<BenRegCache>
+
+    @Query("SELECT * FROM BENEFICIARY WHERE isDraft = 0 AND processed = 'U' AND syncState =:unsynced ")
+    suspend fun getAllBenForSyncWithServer(unsynced: SyncState = SyncState.UNSYNCED): List<BenRegCache>
 
     @Query("UPDATE BENEFICIARY SET processed = 'P' , syncState = :synced WHERE beneficiaryId =:benId")
     suspend fun benSyncedWithServer(benId: Long, synced: SyncState = SyncState.SYNCED)

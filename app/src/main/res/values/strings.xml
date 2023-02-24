@@ -27,6 +27,10 @@
     <string name="btn_login_text">Login</string>
 
 
+    <!-- HOME -->
+    <string name="menu_home">Home</string>
+
+
     <!--   CBAC -->
 
     <string name="cbac_ask_pat">Ask if Patient has any of these Symptoms</string>
@@ -123,20 +127,14 @@
     <string name="ncd_diabcancer">Related to NCD (Diabetes, Cancer), Please consult the doctor or Call 104</string>
     <string name="ncd_mentalhealth">Related to NCD (Mental Health Disorder), Please consult the doctor or Call 104</string>
     <string name="cbac_tbcase">Suspected TB case, please collect the sputum sample and send it to nearest TB testing center. Also tracing of all family members need to be done. </string>
+    <string name="cbac_tb_collect_sputum">Suspected TB case, please collect the sputum sample and send it to nearest TB testing center. </string>
+    <string name="cbac_tv_moic_treat">Send the patient to MOIC of nearest health center for treatment </string>
+    <string name="cbac_unsteady">Feeling unsteady while standing or walking</string>
+    <string name="cbac_pd_rm">Suffering from any physical disability that restricts movement</string>
+    <string name="cbac_nhop">Needing help from others to perform everyday activities such as eating, getting dressed, grooming, bathing, walking, or using the toilet</string>
+    <string name="cbac_forget_names">Forgetting the names of your near ones or your own home address </string>
 
 
-    <string-array name="cbac_waist_mes_female">
-        <item>Measurement of waist (in cm)</item>
-        <item>80 cm or less</item>
-        <item>81-90 cm</item>
-        <item>More than 90 cm</item>
-    </string-array>
-    <string-array name="cbac_waist_mes_male">
-        <item>Measurement of waist (in cm)</item>
-        <item>90 cm or less</item>
-        <item>91-100 cm</item>
-        <item>More than 100 cm</item>
-    </string-array>
     <string-array name="cbac_age">
         <item>0-29 years</item>
         <item>30-39 years</item>
@@ -153,14 +151,56 @@
         <item>No</item>
         <item>Yes</item>
     </string-array>
+    <string-array name="cbac_waist_mes_female">
+        <item>80 cm or less</item>
+        <item>81-90 cm</item>
+        <item>More than 90 cm</item>
+    </string-array>
+    <string-array name="cbac_waist_mes_male">
+        <item>90 cm or less</item>
+        <item>91-100 cm</item>
+        <item>More than 100 cm</item>
+    </string-array>
+    <string-array name="cbac_pa">
+        <item>At least 150 minutes in a week</item>
+        <item>Less than 150 minutes in a week</item>
+    </string-array>
+    <string-array name="cbac_fh">
+        <item>No</item>
+        <item>Yes</item>
+    </string-array>
+
+    <string-array name="cbac_type_Cooking_fuel">
+        <item>Firewood</item>
+        <item>Crop Residue</item>
+        <item>Cow dung cake</item>
+        <item>Coal</item>
+        <item>Kerosene</item>
+    </string-array>
+    <string-array name="cbac_type_occupational_exposure">
+        <item>Crop residue burning</item>
+        <item>Leaves</item>
+        <item>Working in industries with smoke</item>
+        <item>Gas and dust exposure such as brick kilns and glass factories etc.</item>
+    </string-array>
+    <string-array name="cbac_li">
+        <item>Not at all</item>
+        <item>Several Days</item>
+        <item>More than half the days</item>
+        <item>Nearly everyday</item>
+    </string-array>
+    <string-array name="cbac_fd">
+        <item>Not at all</item>
+        <item>Several Days</item>
+        <item>More than half the days</item>
+        <item>Nearly everyday</item>
+    </string-array>
 
 
     <string name="title_activity_home" translatable="false">HomeActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_desc" translatable="false">Navigation header</string>
-
-    <string name="menu_home">Home</string>
 
 
     <string name="btn_continue_text">Continue</string>
@@ -191,11 +231,9 @@
     <string name="cd_icon_grid_icon">icon</string>
 
 
-
-
-    <string name="nav_item_1_text">Name : %s</string>
-    <string name="nav_item_2_text">Role : %s</string>
-    <string name="nav_item_3_text">ID : %d</string>
+    <string name="nav_item_1_text">Name : <b>%s</b></string>
+    <string name="nav_item_2_text">Role : <b>%s</b></string>
+    <string name="nav_item_3_text">ID :  <b>%d</b></string>
     <string name="nav_item_4_text">Version : %s</string>
 
 
@@ -236,8 +274,6 @@
     <string name="long_to_string">%d</string>
 
 
-
-
     <string name="tv_reg_date_ph">Registration Date</string>
     <string name="tv_ben_name_ph">Beneficiary Name</string>
     <string name="tv_type_of_list">Type of List</string>
@@ -268,6 +304,7 @@
     <string name="cbac_risk_assessment_tv">Risk Assessment</string>
 
     <string name="evac_patient_info">Patient Information </string>
+    <string name="cbac_tv_bl_menopause">Inform ASHA Facilitator</string>
 
     <string name="immunization_dosage_count">%d/%d</string>
     <string name="select_death_type">Select Beneficiary Death Type</string>
@@ -283,4 +320,23 @@
         <item>Item 5</item>
         <item>Item 6</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+
+
+    <string name="about_us">Piramal Swasthya is focusing on bridging the gaps of Public Healthcare by supplementing and complementing Government of India’s vision to meet Universal Health Care for all. Piramal Swasthya is one of the largest not-for-profit organizations in India - in the primary public health care space with a focus on Maternal health, Child and Adolescent Health, Non-communicable diseases. Piramal Swasthya has over a decade-long experience in operating several healthcare innovations at scale, which are addressing the primary health care needs of most underserved and marginalized populations across India. Piramal Swasthya is operational in 20 states in India through 35 innovative public health care delivery programs and has served more than 10.7 Crore beneficiaries thus far, with its services designed to reach the last village and the last household. Piramal Swasthya employs 2260 employees including 250 medical doctors who work around the core value of Seva Bhav (beneficiary-centricity) through an outcome oriented approach. Over the last twelve years, the focus has been on, Building platforms for sustainable impact at scale, Innovations to scale as a journey, Influencing policies, governance, and accountability of the public health care system as a knowledge and implementation partner of the NITI Aayog. Innovation in the form of intervention design, modelling, piloting and scaling-up those pilots has been an approach at Piramal Swasthya. Piramal Swasthya is committed to make primary healthcare not only affordable, accessible and available to all, but also to ensure that it is complete, continuous and comprehensive.</string>
+    <string name="about_us_powered">Powered By</string>
+    <string name="text_help"> <b>Q - Is this app available offline?</b> \n Yes, once the app is downloaded and login is completed, you can use the app offline to collect the data. Please not for downloading and first login, internet is required. \n\n
+        <b>Q - Is it mandatory to fill all the details?</b> \n No, it is not mandatory to fill all the details. But there are few fields which are marked by asterisk (star-shaped symbol * ) and it is mandatory to fill them otherwise you will not be able submit the details. \n\n
+        <b>Q - What does Sync Back option do?</b> \n On clicking the Sync Back option, the screen will show household pending records, beneficiary pending records, and CBAC records which are not synced. After clicking on OK button all the data which have been collected will be automatically to the server for storage. \n\n
+        <b>Q - What do Sync Status option do?</b> \n On clicking the Sync Status option, it will show records which are synced by the user. \n\n
+        <b>Q - How to navigate to next tab?</b> \n To navigate the next tabs \n
+        1. You can click on the tab name at the top of the app \n
+        2. You can swipe the screen and the next tab will appear (Swiping left and right is enabled in the app) \n\n
+        <b>Q - After navigating to the next tab, can we edit the data entered in the previous tabs?</b> \n
+        Yes, you can edit the data entered in any of the previous tabs. Once the data is submitted, you cannot edit it. \n\n
+        <b>Q - How to navigate to Piramal Swasthya site?</b> \n
+        On clicking on Hamburger menu, please click on the \'About Us\' option. On selecting this option, the user will be navigated to the Piramal Swasthya\'s website inside the app. \n\n
+        In case of any doubts and concerns, please write an e-mail to IT SUPPORT TEAM \n
+        <b>it.support@piramalfoundation.org</b>
+    </string>
 </resources>

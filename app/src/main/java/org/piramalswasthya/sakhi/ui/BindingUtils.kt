@@ -8,6 +8,7 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import android.widget.*
 import android.widget.RadioGroup.LayoutParams
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.databinding.BindingAdapter
 import org.piramalswasthya.sakhi.R
@@ -32,33 +33,39 @@ fun AutoCompleteTextView.setSpinnerItems(list: Array<String>?) {
 
 
 @BindingAdapter("radioForm")
-fun RadioGroup.setItems(form: FormInput?) {
+fun ConstraintLayout.setItems(form: FormInput?) {
 //    if(this.childCount!=0)
 //        return
-    this.removeAllViews()
-    form?.list?.let { items ->
-        orientation = form.orientation ?: LinearLayout.HORIZONTAL
-        weightSum = items.size.toFloat()
-        items.forEach {
-            val rdBtn = RadioButton(this.context)
-            rdBtn.layoutParams =
-                LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1.0F)
-            rdBtn.id = View.generateViewId()
-            rdBtn.text = it
-            addView(rdBtn)
-            if (form.value.value == it)
-                rdBtn.isChecked = true
-            rdBtn.setOnCheckedChangeListener { _, b ->
-                if (b) {
-                    form.value.value = it
+
+    val rg = this.findViewById<RadioGroup>(R.id.rg)
+    rg.removeAllViews()
+    rg.apply {
+        form?.list?.let { items ->
+            orientation = form.orientation ?: LinearLayout.HORIZONTAL
+            weightSum = items.size.toFloat()
+            items.forEach {
+                val rdBtn = RadioButton(this.context)
+                rdBtn.layoutParams =
+                    LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1.0F)
+                rdBtn.id = View.generateViewId()
+                rdBtn.text = it
+                addView(rdBtn)
+                if (form.value.value == it)
+                    rdBtn.isChecked = true
+                rdBtn.setOnCheckedChangeListener { _, b ->
+                    if (b) {
+                        form.value.value = it
+                    }
+                    form.errorText = null
+                    this@setItems.setBackgroundResource(0)
                 }
             }
-        }
-        form.value.value?.let { value ->
-            children.forEach {
-                if ((it as RadioButton).text == value) {
-                    clearCheck()
-                    check(it.id)
+            form.value.value?.let { value ->
+                children.forEach {
+                    if ((it as RadioButton).text == value) {
+                        clearCheck()
+                        check(it.id)
+                    }
                 }
             }
         }

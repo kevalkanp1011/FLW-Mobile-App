@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.repositories
 
+import android.app.Application
 import androidx.lifecycle.Transformations
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -19,12 +20,11 @@ import org.piramalswasthya.sakhi.network.TmcNetworkApiService
 import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 
 class BenRepo @Inject constructor(
+    private val context: Application,
     private val database: InAppDb,
     private val tmcNetworkApiService: TmcNetworkApiService,
     private val ncdNetworkApiService: NcdNetworkApiService
@@ -384,6 +384,7 @@ class BenRepo @Inject constructor(
             val benNetworkPostList = mutableSetOf<BenPost>()
             val householdNetworkPostList = mutableSetOf<HouseholdNetwork>()
             val kidNetworkPostList = mutableSetOf<BenRegKidNetwork>()
+            val cbacPostList = mutableSetOf<CbacPost>()
 
             benList.forEach {
                 benNetworkPostList.clear()
@@ -397,15 +398,55 @@ class BenRepo @Inject constructor(
                     )
                     if (it.isKid)
                         kidNetworkPostList.add(it.asKidNetworkModel(user))
+                    val cbac = database.cbacDao.getCbacFromBenId(it.beneficiaryId)
+                    cbac?.let { form ->
+                        cbacPostList.add(
+                            form.asPostModel(
+                                it.gender!!,
+                                context.resources
+                            )
+                        )
+                    }
                     val uploadDone = postDataToAmritServer(
                         benNetworkPostList,
                         householdNetworkPostList,
-                        kidNetworkPostList
+                        kidNetworkPostList,
+                        cbacPostList
                     )
                     if (!uploadDone)
                         database.benDao.benSyncWithServerFailed(*benNetworkPostList.map { ben -> ben.benId }
                             .toTypedArray().toLongArray())
                 }
+            }
+
+            val updateBenList = database.benDao.getAllBenForSyncWithServer()
+            updateBenList.forEach {
+                database.benDao.setSyncState(it.householdId, it.beneficiaryId, SyncState.SYNCING)
+                benNetworkPostList.add(it.asNetworkPostModel(user))
+                householdNetworkPostList.add(
+                    database.householdDao.getHousehold(it.householdId)!!.asNetworkModel(user)
+                )
+                if (it.isKid)
+                    kidNetworkPostList.add(it.asKidNetworkModel(user))
+                val cbac = database.cbacDao.getCbacFromBenId(it.beneficiaryId)
+                cbac?.let { form ->
+                    cbacPostList.add(
+                        form.asPostModel(
+                            it.gender!!,
+                            context.resources
+                        )
+                    )
+                }
+                val uploadDone = postDataToAmritServer(
+                    benNetworkPostList,
+                    householdNetworkPostList,
+                    kidNetworkPostList,
+                    cbacPostList
+                )
+                if (!uploadDone)
+                    database.benDao.benSyncWithServerFailed(*benNetworkPostList.map { ben -> ben.benId }
+                        .toTypedArray().toLongArray())
+
             }
             return@withContext true
         }
@@ -414,14 +455,15 @@ class BenRepo @Inject constructor(
     private suspend fun postDataToAmritServer(
         benNetworkPostList: MutableSet<BenPost>,
         householdNetworkPostList: MutableSet<HouseholdNetwork>,
-        kidNetworkPostList: MutableSet<BenRegKidNetwork>
+        kidNetworkPostList: MutableSet<BenRegKidNetwork>,
+        cbacPostList: MutableSet<CbacPost>
     ): Boolean {
         if (benNetworkPostList.isEmpty() && householdNetworkPostList.isEmpty() && kidNetworkPostList.isEmpty())
             return false
         val rmnchData = SendingRMNCHData(
             householdNetworkPostList.toList(),
             benNetworkPostList.toList(),
-            null,
+            cbacPostList.toList(),
             kidNetworkPostList.toList()
         )
         try {
@@ -471,7 +513,8 @@ class BenRepo @Inject constructor(
             return postDataToAmritServer(
                 benNetworkPostList,
                 householdNetworkPostList,
-                kidNetworkPostList
+                kidNetworkPostList,
+                cbacPostList
             )
         } catch (e: JSONException) {
             Timber.d("Caught exception $e here")
@@ -629,8 +672,7 @@ class BenRepo @Inject constructor(
                                             fatherName = benDataObj.getString("fatherName"),
                                             familyHeadName = houseDataObj.getString("familyHeadName"),
                                             rchId = benDataObj.getString("rchid"),
-                                            hrpStatus = benDataObj.getBoolean("hrpStatus")
-                                                .toString(),
+                                            hrpStatus = benDataObj.getBoolean("hrpStatus"),
                                             typeOfList = benDataObj.getString("registrationType"),
                                             syncState = if (benExists) SyncState.SYNCED else SyncState.SYNCING
                                         )

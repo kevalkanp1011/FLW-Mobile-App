@@ -10,12 +10,12 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
+import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 
 @AndroidEntryPoint
 class NcdEligibleListFragment : Fragment() {
@@ -25,15 +25,13 @@ class NcdEligibleListFragment : Fragment() {
     }
 
     private val viewModel: NcdEligibleListViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        lifecycleScope.launch {
-            viewModel.loadUser()
-        }
         return binding.root
     }
 
@@ -59,7 +57,7 @@ class NcdEligibleListFragment : Fragment() {
                         NcdEligibleListFragmentDirections.actionNcdEligibleListFragmentToCbacFragment(
                             hhId,
                             benId,
-                            viewModel.getUserId()
+                            homeViewModel.currentUser.value!!.userId
                         )
                     )
                 }

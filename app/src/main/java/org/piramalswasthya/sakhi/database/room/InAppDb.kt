@@ -8,6 +8,7 @@ import androidx.room.TypeConverters
 import org.piramalswasthya.sakhi.database.converters.PrimitiveListConverter
 import org.piramalswasthya.sakhi.database.converters.SyncStateConverter
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
+import org.piramalswasthya.sakhi.database.room.dao.CbacDao
 import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
 import org.piramalswasthya.sakhi.database.room.dao.UserDao
 import org.piramalswasthya.sakhi.model.*
@@ -30,7 +31,8 @@ abstract class InAppDb  : RoomDatabase(){
     abstract val userDao: UserDao
     abstract val benIdGenDao: BeneficiaryIdsAvailDao
     abstract val householdDao: HouseholdDao
-    abstract val benDao : BenDao
+    abstract val benDao: BenDao
+    abstract val cbacDao: CbacDao
 
     companion object{
         @Volatile

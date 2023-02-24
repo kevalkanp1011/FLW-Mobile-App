@@ -336,6 +336,14 @@
 
     </fragment>
     <fragment
+        android:id="@+id/aboutUsFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.AboutUsFragment"
+        android:label="AboutUsFragment" />
+    <fragment
+        android:id="@+id/helpFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.HelpFragment"
+        android:label="HelpFragment" />
+    <fragment
         android:id="@+id/immunizationObjectFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.immunization_due.immunization_object.ImmunizationObjectFragment"
         android:label="Immunization Details" >

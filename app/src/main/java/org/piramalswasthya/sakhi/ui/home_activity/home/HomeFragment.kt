@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.adapters.IconGridAdapter
 import org.piramalswasthya.sakhi.configuration.IconDataset
@@ -26,12 +27,26 @@ class HomeFragment : Fragment() {
         var numCopies = 0
     }
 
+    private val exitAlert by lazy {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Exit Application")
+            .setMessage("Do you want to exit application")
+            .setPositiveButton("Yes") { _, _ ->
+                activity?.finish()
+            }
+            .setNegativeButton("No") { d, _ ->
+                d.dismiss()
+            }
+            .create()
+    }
+
     private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
-    private val viewModel : HomeViewModel by viewModels ({ requireActivity() })
+    private val viewModel: HomeViewModel by viewModels({ requireActivity() })
     private val onBackPressedCallback by lazy {
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                Timber.d("Back pressed()")
+                if (!exitAlert.isShowing)
+                    exitAlert.show()
 
             }
         }
