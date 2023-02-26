@@ -10,8 +10,10 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
+import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 
 @AndroidEntryPoint
@@ -34,8 +36,8 @@ class MdsrListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapter(
-            BenListAdapter.BenClickListener(
+        val benAdapter = BenListAdapterForForm(
+            BenListAdapterForForm.ClickListener(
                 {
                     Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
                 },
@@ -44,8 +46,12 @@ class MdsrListFragment : Fragment() {
                 },
                 { hhId, benId ->
                     viewModel.manualSync()
+                },
+                { hhId, benId ->
+                    findNavController().navigate(
+                        MdsrListFragmentDirections.actionMdsrListFragmentToMdsrObjectFragment(hhId, benId))
                 }
-            ))
+            ), "MDSR Form")
         binding.rvAny.adapter = benAdapter
 
         viewModel.mdsrList.observe(viewLifecycleOwner) {
@@ -68,7 +74,6 @@ class MdsrListFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {
                 viewModel.filterText(p0?.toString() ?: "")
             }
-
         }
         binding.searchView.setOnFocusChangeListener { searchView, b ->
             if (b)
