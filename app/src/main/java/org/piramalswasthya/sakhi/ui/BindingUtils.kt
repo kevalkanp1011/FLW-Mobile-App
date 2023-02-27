@@ -17,12 +17,12 @@ import org.piramalswasthya.sakhi.model.FormInput
 import timber.log.Timber
 
 
-@BindingAdapter("listItems")
-fun AutoCompleteTextView.setSpinnerItems(list: List<String>?) {
-    list?.let {
-        this.setAdapter(ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, it))
-    }
-}
+//@BindingAdapter("listItems")
+//fun AutoCompleteTextView.setSpinnerItems(list: List<String>?) {
+//    list?.let {
+//        this.setAdapter(ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, it))
+//    }
+//}
 
 @BindingAdapter("listItems")
 fun AutoCompleteTextView.setSpinnerItems(list: Array<String>?) {

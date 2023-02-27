@@ -54,11 +54,20 @@ class HouseholdRepo @Inject constructor(
         val user =
             database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
         household.apply {
-            if(createdTimeStamp==null) {
+            if (householdId == 0L) {
+                val newId = HouseholdFormDataset.getHHidFromUserId(ashaId)
+                database.householdDao.substituteBenId(householdId, newId)
+                householdId = newId
+                serverUpdatedStatus = 1
+                processed = "N"
+            } else {
+                serverUpdatedStatus = 2
+            }
+
+            if (createdTimeStamp == null) {
                 createdTimeStamp = System.currentTimeMillis()
                 createdBy = user.userName
-            }
-            else {
+            } else {
                 updatedTimeStamp = System.currentTimeMillis()
                 updatedBy = user.userName
             }

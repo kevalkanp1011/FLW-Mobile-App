@@ -1,9 +1,9 @@
 package org.piramalswasthya.sakhi.model
 
 import android.content.res.Resources
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import org.piramalswasthya.sakhi.R
 
@@ -20,16 +20,14 @@ import org.piramalswasthya.sakhi.R
             parentColumns = arrayOf("user_id"),
             childColumns = arrayOf("ashaId"),
             onDelete = ForeignKey.CASCADE
-        )]
+        )],
+    indices = [Index(name = "ind", value = ["benId", "hhId", "ashaId"])]
 )
 data class CbacCache(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    @ColumnInfo(index = true)
     val benId: Long,
-    @ColumnInfo(index = true)
     val hhId: Long,
-    @ColumnInfo(index = true)
     val ashaId: Int,
     var cbac_age_posi: Int = 0,
     var cbac_smoke_posi: Int = 0,
@@ -113,7 +111,10 @@ data class CbacCache(
     var ncd_confirmed: Boolean? = null,
     var confirmed_ncd: String? = null,
     var suspected_tb: String? = null,
-    var suspected_ncd_diseases: String? = null
+    var confirmed_tb: String? = null,
+    var suspected_ncd_diseases: String? = null,
+    var confirmed_ncd_diseases: String? = null,
+    var diagnosis_status: String? = null
 
 
 ) {
@@ -270,7 +271,7 @@ data class CbacCache(
             Countyid = Countyid,
             stateid = stateid,
             districtid = districtid,
-            districtname = districtname!!,
+            districtname = districtname,
             villageid = villageid,
             hrp_suspected = hrp_suspected!!,
             suspected_hrp = suspected_hrp!!,
@@ -432,6 +433,7 @@ data class CbacCache(
 }
 
 data class CbacPost(
+    val id: Int = 1,
     val houseoldId: Long,
     val benficieryid: Long,
     val ashaid: Int,
@@ -500,7 +502,7 @@ data class CbacPost(
     val Countyid: Int,
     val stateid: Int,
     val districtid: Int,
-    val districtname: String,
+    val districtname: String?,
     val villageid: Int,
     val hrp_suspected: Boolean,
     val suspected_hrp: String,

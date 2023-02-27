@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
@@ -64,7 +63,7 @@ class NcdEligibleListFragment : Fragment() {
             ), "CBAC Form")
         binding.rvAny.adapter = benAdapter
 
-        viewModel.ncdEligibleList.observe(viewLifecycleOwner) {
+        viewModel.benList.observe(viewLifecycleOwner) {
             if (it.isNullOrEmpty())
                 binding.flEmpty.visibility = View.VISIBLE
             else

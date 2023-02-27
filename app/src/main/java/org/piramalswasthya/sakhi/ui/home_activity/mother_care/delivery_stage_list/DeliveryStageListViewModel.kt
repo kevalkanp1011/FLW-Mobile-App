@@ -17,7 +17,7 @@ class DeliveryStageListViewModel @Inject constructor(
     private val userRepo: UserRepo,
 ) : ViewModel() {
 
-    val deliveryList = benRepo.deliveryList
+    private val deliveryList = benRepo.deliveryList
     private lateinit var user: UserDomain
     private val _benList = MutableLiveData<List<BenBasicDomain>>()
     val benList: LiveData<List<BenBasicDomain>>

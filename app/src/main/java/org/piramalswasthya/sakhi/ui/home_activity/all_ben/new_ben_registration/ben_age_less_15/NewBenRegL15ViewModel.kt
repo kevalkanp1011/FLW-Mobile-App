@@ -307,6 +307,7 @@ class NewBenRegL15ViewModel @Inject constructor(
                             "${if (day > 9) day else "0$day"}-${if (month > 9) month else "0$month"}-$year"
                         if (form.dob.value.value != newDob) {
                             form.dob.value.value = newDob
+                            form.dob.errorText = null
                             Timber.d("age : $age ageUnit : $ageUnit ${if (day > 9) day else "0$day"}-${if (month > 9) month else "0$month"}-$year")
                             withContext(Dispatchers.Main) {
                                 adapter.notifyItemChanged(form.firstPage.indexOf(form.dob))
@@ -485,6 +486,21 @@ class NewBenRegL15ViewModel @Inject constructor(
                             }
                         } else {
                             list.remove(form.termGestationalAge)
+                            form.corticosteroidGivenAtLabor.value.value = null
+                            list.remove(form.corticosteroidGivenAtLabor)
+                        }
+                        adapter.submitList(list)
+                    }
+                }
+            }
+            launch {
+                form.termGestationalAge.value.collect {
+                    it?.let {
+                        val list = adapter.currentList.toMutableList()
+                        if (it.contains("24") && !adapter.currentList.contains(form.corticosteroidGivenAtLabor)) {
+                            list.add(form.corticosteroidGivenAtLabor)
+                        } else {
+                            list.remove(form.corticosteroidGivenAtLabor)
                         }
                         adapter.submitList(list)
                     }

@@ -51,9 +51,4 @@ class MyContextWrapper(base: Context) : ContextWrapper(base) {
         }
     }
 
-    enum class Languages(val symbol: String) {
-        ENGLISH("en"),
-        HINDI("hi"),
-        ASSAMESE("as")
-    }
 }

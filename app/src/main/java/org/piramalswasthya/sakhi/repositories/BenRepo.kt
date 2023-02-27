@@ -26,6 +26,7 @@ import javax.inject.Inject
 class BenRepo @Inject constructor(
     private val context: Application,
     private val database: InAppDb,
+    private val userRepo: UserRepo,
     private val tmcNetworkApiService: TmcNetworkApiService,
     private val ncdNetworkApiService: NcdNetworkApiService
 ) {
@@ -55,9 +56,21 @@ class BenRepo @Inject constructor(
             list.map { it.asBasicDomainModel() }
         }
     }
+    val ncdList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllNCDList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
     val ncdEligibleList by lazy {
         //TODO(implement BenDao)
         Transformations.map(database.benDao.getAllNCDEligibleList()) { list ->
+            list.map { it.asBasicDomainModel() }
+        }
+    }
+    val ncdPriorityList by lazy {
+        //TODO(implement BenDao)
+        Transformations.map(database.benDao.getAllNCDPriorityList()) { list ->
             list.map { it.asBasicDomainModel() }
         }
     }
@@ -172,6 +185,7 @@ class BenRepo @Inject constructor(
         val user =
             database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
         val ben = form.getBenForFirstPage(user.userId, hhId)
+
         database.benDao.upsert(ben)
     }
 
@@ -201,10 +215,9 @@ class BenRepo @Inject constructor(
                 this.serverUpdatedStatus = 0
                 this.createdDate = System.currentTimeMillis()
                 this.createdBy = user.userName
-            } else {
-                this.updatedDate = System.currentTimeMillis()
-                this.updatedBy = user.userName
             }
+            this.updatedDate = System.currentTimeMillis()
+            this.updatedBy = user.userName
             this.locationRecord = locationRecord
             this.isDraft = false
         }
@@ -236,15 +249,22 @@ class BenRepo @Inject constructor(
                     )
                     this.beneficiaryId = benIdObj.benId
                     this.benRegId = benIdObj.benRegId
+//                    if (ben.familyHeadRelationPosition == 19) {
+//                        val household = database.householdDao.getHousehold(ben.householdId)
+//                        household?.benId = ben.beneficiaryId
+//                        household?.familyHeadName = ben.firstName
+//                        household?.processed = "N"
+//                        household?.let { it1 -> database.householdDao.upsert(it1) }
+//                    }
                 }
                 if (this.createdDate == null) {
                     this.processed = "N"
                     this.createdDate = System.currentTimeMillis()
                     this.createdBy = user.userName
-                } else {
-                    this.updatedDate = System.currentTimeMillis()
-                    this.updatedBy = user.userName
                 }
+
+                this.updatedDate = System.currentTimeMillis()
+                this.updatedBy = user.userName
                 this.serverUpdatedStatus = 0
                 this.locationRecord = it
                 this.isDraft = false
@@ -280,16 +300,22 @@ class BenRepo @Inject constructor(
                 )
                 this.beneficiaryId = benIdObj.benId
                 this.benRegId = benIdObj.benRegId
+//                if (ben.familyHeadRelationPosition == 19) {
+//                    val household = database.householdDao.getHousehold(ben.householdId)
+//                    household?.benId = ben.beneficiaryId
+//                    household?.familyHeadName = ben.firstName
+//                    household?.processed = "N"
+//                    household?.let { it1 -> database.householdDao.upsert(it1) }
+//                }
             }
             if (this.createdDate == null) {
                 this.processed = "N"
                 this.serverUpdatedStatus = 0
                 this.createdDate = System.currentTimeMillis()
                 this.createdBy = user.userName
-            } else {
-                this.updatedDate = System.currentTimeMillis()
-                this.updatedBy = user.userName
             }
+            this.updatedDate = System.currentTimeMillis()
+            this.updatedBy = user.userName
             this.locationRecord = locationRecord
             this.isDraft = false
         }
@@ -507,10 +533,15 @@ class BenRepo @Inject constructor(
                         householdNetworkPostList.map { it.householdId }
                         //TODO(Add sync up to household too)
                         return true
+                    } else if (responseStatusCode == 5002) {
+                        val user = userRepo.getLoggedInUser()
+                            ?: throw IllegalStateException("User seems to be logged out!!")
+                        userRepo.refreshTokenTmc(user.userName, user.password)
+                        throw SocketTimeoutException("Refreshed Token!")
                     }
                 }
             }
-            Timber.d("Bad Response from server, need to check $householdNetworkPostList\n$benNetworkPostList\n$kidNetworkPostList $response ")
+            Timber.w("Bad Response from server, need to check $householdNetworkPostList\n$benNetworkPostList\n$kidNetworkPostList $response ")
             return false
         } catch (e: SocketTimeoutException) {
             Timber.d("Caught exception $e here")
@@ -582,26 +613,40 @@ class BenRepo @Inject constructor(
 
                         val errorMessage = jsonObj.getString("errorMessage")
                         val responseStatusCode = jsonObj.getInt("statusCode")
-                        if (responseStatusCode != 200)
-                            throw IllegalStateException("User logged out!")
-                        val dataObj = jsonObj.getJSONObject("data")
-                        val pageSize = dataObj.getInt("totalPage")
+                        when (responseStatusCode) {
+                            200 -> {
 
-                        try {
-                            database.householdDao.upsert(
-                                *getHouseholdCacheFromServerResponse(
-                                    responseString
-                                ).toTypedArray()
-                            )
-                        } catch (e: Exception) {
-                            Timber.d("HouseHold list not synced $e")
-                            return@withContext 0
+                                val dataObj = jsonObj.getJSONObject("data")
+                                val pageSize = dataObj.getInt("totalPage")
+
+                                try {
+                                    database.householdDao.upsert(
+                                        *getHouseholdCacheFromServerResponse(
+                                            responseString
+                                        ).toTypedArray()
+                                    )
+                                } catch (e: Exception) {
+                                    Timber.d("HouseHold list not synced $e")
+                                    return@withContext 0
+                                }
+                                val benCacheList = getBenCacheFromServerResponse(responseString)
+                                database.benDao.upsert(*benCacheList.toTypedArray())
+                                val cbacCacheList = getCbacCacheFromServerResponse(responseString)
+                                database.cbacDao.upsert(*cbacCacheList.toTypedArray())
+
+                                Timber.d("GeTBenDataList: $pageSize")
+                                return@withContext pageSize
+                            }
+                            5002 -> {
+                                val user = userRepo.getLoggedInUser()
+                                    ?: throw IllegalStateException("User seems to be logged out!!")
+                                userRepo.refreshTokenTmc(user.userName, user.password)
+                                throw SocketTimeoutException("Refreshed Token!")
+                            }
+                            else -> {
+                                throw IllegalStateException("User logged out!")
+                            }
                         }
-                        val benCacheList = getBenCacheFromServerResponse(responseString);
-                        database.benDao.upsert(*benCacheList.toTypedArray())
-
-                        Timber.d("GeTBenDataList: $pageSize")
-                        return@withContext pageSize
                     }
                 }
 
@@ -715,9 +760,120 @@ class BenRepo @Inject constructor(
     }
 
     private fun getLongFromDate(date: String): Long {
-        val formatter = SimpleDateFormat("MMM dd, yyyy HH:mm:ss a")
+        val formatter = SimpleDateFormat("MMM dd, yyyy HH:mm:ss a", Locale.ENGLISH)
         val localDateTime = formatter.parse(date)
-        return localDateTime.getTime();
+        return localDateTime?.time ?: 0
+    }
+
+    private suspend fun getCbacCacheFromServerResponse(response: String): MutableList<CbacCache> {
+        val jsonObj = JSONObject(response)
+        val result = mutableListOf<CbacCache>()
+
+        val responseStatusCode = jsonObj.getInt("statusCode")
+        if (responseStatusCode == 200) {
+            val dataObj = jsonObj.getJSONObject("data")
+            val jsonArray = dataObj.getJSONArray("data")
+
+            if (jsonArray.length() != 0) {
+                for (i in 0 until jsonArray.length()) {
+                    val jsonObject = jsonArray.getJSONObject(i)
+                    val cbacDataObj = jsonObject.getJSONObject("cbacDetails")
+                    val benId =
+                        if (jsonObject.has("benficieryid")) jsonObject.getLong("benficieryid") else -1L
+                    val hhId =
+                        if (jsonObject.has("houseoldId")) jsonObject.getLong("houseoldId") else -1L
+                    if (benId == -1L || hhId == -1L)
+                        continue
+                    if (cbacDataObj.length() == 0) continue
+                    if (database.cbacDao.getCbacFromBenId(benId) != null) continue
+                    val ben = database.benDao.getBen(hhId, benId) ?: continue
+                    val user = database.userDao.getLoggedInUser()!!
+
+
+                    try {
+                        result.add(
+                            CbacCache(
+                                benId = ben.beneficiaryId,
+                                ashaId = ben.ashaId,
+                                cbac_reg_id = if (cbacDataObj.has("BenRegId")) cbacDataObj.getLong("BenRegId") else 1L,
+                                cbac_age_posi = cbacDataObj.getInt("cbac_age_posi"),
+                                cbac_alcohol_posi = cbacDataObj.getInt("cbac_alcohol_posi"),
+                                cbac_antitbdrugs_pos = cbacDataObj.getInt("cbac_antitbdrugs_pos"),
+                                cbac_bleedingafterintercourse_pos = cbacDataObj.getInt("cbac_bleedingafterintercourse_pos"),
+                                cbac_bleedingaftermenopause_pos = cbacDataObj.getInt("cbac_bleedingaftermenopause_pos"),
+                                cbac_bleedingbtwnperiods_pos = cbacDataObj.getInt("cbac_bleedingbtwnperiods_pos"),
+                                cbac_blooddischage_pos = cbacDataObj.getInt("cbac_blooddischage_pos"),
+                                cbac_bloodsputum_pos = cbacDataObj.getInt("cbac_bloodsputum_pos"),
+                                cbac_changeinbreast_pos = cbacDataObj.getInt("cbac_changeinbreast_pos"),
+                                cbac_coughing_pos = cbacDataObj.getInt("cbac_coughing_pos"),
+                                cbac_difficultyinmouth_pos = cbacDataObj.getInt("cbac_difficultyinmouth_pos"),
+                                cbac_familyhistory_posi = cbacDataObj.getInt("cbac_familyhistory_posi"),
+                                cbac_fivermore_pos = cbacDataObj.getInt("cbac_fivermore_pos"),
+                                cbac_foulveginaldischarge_pos = cbacDataObj.getInt("cbac_foulveginaldischarge_pos"),
+                                cbac_historyoffits_pos = cbacDataObj.getInt("cbac_historyoffits_pos"),
+                                cbac_loseofweight_pos = cbacDataObj.getInt("cbac_loseofweight_pos"),
+                                cbac_lumpinbreast_pos = cbacDataObj.getInt("cbac_lumpinbreast_pos"),
+                                cbac_nightsweats_pos = cbacDataObj.getInt("cbac_nightsweats_pos"),
+                                cbac_pa_posi = cbacDataObj.getInt("cbac_pa_posi"),
+                                cbac_referpatient_mo = cbacDataObj.getInt("cbac_referpatient_mo")
+                                    .toString(),
+                                cbac_smoke_posi = cbacDataObj.getInt("cbac_smoke_posi"),
+                                cbac_sortnesofbirth_pos = cbacDataObj.getInt("cbac_sortnesofbirth_pos"),
+                                cbac_sputemcollection = cbacDataObj.getInt("cbac_sputemcollection")
+                                    .toString(),
+                                cbac_sufferingtb_pos = cbacDataObj.getInt("cbac_sufferingtb_pos"),
+                                cbac_tbhistory_pos = cbacDataObj.getInt("cbac_tbhistory_pos"),
+                                cbac_toneofvoice_pos = cbacDataObj.getInt("cbac_toneofvoice_pos"),
+                                cbac_tracing_all_fm = cbacDataObj.getInt("cbac_tracing_all_fm")
+                                    .toString(),
+                                cbac_uicers_pos = cbacDataObj.getInt("cbac_uicers_pos"),
+                                cbac_waist_posi = cbacDataObj.getInt("cbac_waist_posi"),
+                                hhId = cbacDataObj.getLong("houseoldId"),
+                                Countyid = cbacDataObj.getInt("Countyid"),
+                                stateid = cbacDataObj.getInt("stateid"),
+                                districtid = cbacDataObj.getInt("districtid"),
+                                villageid = cbacDataObj.getInt("villageid"),
+                                serverUpdatedStatus = cbacDataObj.getInt("serverUpdatedStatus"),
+                                total_score = cbacDataObj.getInt("total_score"),
+                                Processed = cbacDataObj.getString("Processed"),
+                                createdBy = cbacDataObj.getString("createdBy"),
+                                createdDate = getLongFromDate(cbacDataObj.getString("createdDate")),
+                                VanID = if (cbacDataObj.has("vanID")) cbacDataObj.getInt("vanID") else user.vanId,
+                                ProviderServiceMapID = cbacDataObj.getInt("ProviderServiceMapID"),
+                                cbac_Pain_while_chewing_posi = cbacDataObj.getInt("cbac_Pain_while_chewing_posi"),
+                                cbac_any_thickend_skin_posi = cbacDataObj.getInt("cbac_any_thickend_skin_posi"),
+                                cbac_clawing_of_fingers_posi = cbacDataObj.getInt("cbac_clawing_of_fingers_posi"),
+                                cbac_diff_holding_obj_posi = cbacDataObj.getInt("cbac_diff_holding_obj_posi"),
+                                cbac_feeling_down_posi = cbacDataObj.getInt("cbac_feeling_down_posi"),
+                                cbac_feeling_down_score = cbacDataObj.getInt("cbac_feeling_down_score"),
+                                cbac_fuel_used_posi = cbacDataObj.getInt("cbac_fuel_used_posi"),
+                                cbac_growth_in_mouth_posi = cbacDataObj.getInt("cbac_growth_in_mouth_posi"),
+                                cbac_hyper_pigmented_patch_posi = cbacDataObj.getInt("cbac_hyper_pigmented_patch_posi"),
+                                cbac_inability_close_eyelid_posi = cbacDataObj.getInt("cbac_inability_close_eyelid_posi"),
+                                cbac_little_interest_posi = cbacDataObj.getInt("cbac_little_interest_posi"),
+                                cbac_little_interest_score = cbacDataObj.getInt("cbac_little_interest_score"),
+                                cbac_nodules_on_skin_posi = cbacDataObj.getInt("cbac_nodules_on_skin_posi"),
+                                cbac_numbness_on_palm_posi = cbacDataObj.getInt("cbac_numbness_on_palm_posi"),
+                                cbac_occupational_exposure_posi = cbacDataObj.getInt("cbac_occupational_exposure_posi"),
+                                cbac_tingling_or_numbness_posi = cbacDataObj.getInt("cbac_tingling_or_numbness_posi"),
+                                cbac_weekness_in_feet_posi = cbacDataObj.getInt("cbac_weekness_in_feet_posi"),
+                                suspected_hrp = cbacDataObj.getString("suspected_hrp"),
+                                suspected_ncd = cbacDataObj.getString("suspected_ncd"),
+                                suspected_tb = cbacDataObj.getString("suspected_tb"),
+                                suspected_ncd_diseases = cbacDataObj.getString("suspected_ncd_diseases"),
+                                confirmed_hrp = cbacDataObj.getString("confirmed_hrp"),
+                                confirmed_ncd = cbacDataObj.getString("confirmed_ncd"),
+                                confirmed_tb = cbacDataObj.getString("confirmed_tb"),
+                                diagnosis_status = cbacDataObj.getString("confirmed_tb"),
+                            )
+                        )
+                    } catch (e: JSONException) {
+                        Timber.i("Cbac skipped: ${jsonObject.getLong("benficieryid")} with error $e")
+                    }
+                }
+            }
+        }
+        return result
     }
 
     private suspend fun getBenCacheFromServerResponse(response: String): MutableList<BenRegCache> {
@@ -818,37 +974,48 @@ class BenRepo @Inject constructor(
                                     "contact_number"
                                 ).toLong() else 0,
 //                            literacy = literacy,
-                            literacyId = if(benDataObj.has("literacyId")) benDataObj.getInt("literacyId") else 0,
-                            community = if(benDataObj.has("community")) benDataObj.getString("community") else null,
-                            communityId = if(benDataObj.has("communityId")) benDataObj.getInt("communityId") else 0,
-                            religion = if(benDataObj.has("religion")) benDataObj.getString("religion") else null,
-                            religionId = if(benDataObj.has("religionID")) benDataObj.getInt("religionID") else 0,
-                            religionOthers = if(benDataObj.has("religionOthers")) benDataObj.getString("religionOthers") else null,
-                            rchId = if(benDataObj.has("rchid")) benDataObj.getString("rchid") else null,
-                            registrationType = if(benDataObj.has("registrationType")) {
-                                when (benDataObj.getString("registrationType")) {
-                                    "NewBorn" -> { if (benDataObj.getString("age_unit") != "Years" ||  benDataObj.getInt("age") < 2) TypeOfList.INFANT
-                                                else if (benDataObj.getInt("age") < 6) TypeOfList.CHILD
-                                                else TypeOfList.ADOLESCENT }
-                                    "General Beneficiary", "सामान्य लाभार्थी" -> if(benDataObj.has("reproductiveStatus")) {
-                                        when(benDataObj.getString("reproductiveStatus")) {
-                                            "Eligible Couple" -> TypeOfList.ELIGIBLE_COUPLE
-                                            "Antenatal Mother" -> TypeOfList.ANTENATAL_MOTHER
-                                            "Delivery Stage" -> TypeOfList.DELIVERY_STAGE
-                                            "Postnatal Mother" -> TypeOfList.POSTNATAL_MOTHER
-                                            "Menopause" -> TypeOfList.MENOPAUSE
-                                            "Teenager" -> TypeOfList.TEENAGER
-                                            else -> TypeOfList.OTHER
-                                        }} else TypeOfList.OTHER
-                                    else -> TypeOfList.GENERAL
-                                }
+                                literacyId = if (benDataObj.has("literacyId")) benDataObj.getInt("literacyId") else 0,
+                                community = if (benDataObj.has("community")) benDataObj.getString("community") else null,
+                                communityId = if (benDataObj.has("communityId")) benDataObj.getInt("communityId") else 0,
+                                religion = if (benDataObj.has("religion")) benDataObj.getString("religion") else null,
+                                religionId = if (benDataObj.has("religionID")) benDataObj.getInt("religionID") else 0,
+                                religionOthers = if (benDataObj.has("religionOthers")) benDataObj.getString(
+                                    "religionOthers"
+                                ) else null,
+                                rchId = if (benDataObj.has("rchid")) benDataObj.getString("rchid") else null,
+                                registrationType = if (benDataObj.has("registrationType")) {
+                                    when (benDataObj.getString("registrationType")) {
+                                        "NewBorn" -> {
+                                            if (benDataObj.getString("age_unit") != "Years" || benDataObj.getInt(
+                                                    "age"
+                                                ) < 2
+                                            ) TypeOfList.INFANT
+                                            else if (benDataObj.getInt("age") < 6) TypeOfList.CHILD
+                                            else TypeOfList.ADOLESCENT
+                                        }
+                                        "General Beneficiary", "सामान्य लाभार्थी" -> if (benDataObj.has(
+                                                "reproductiveStatus"
+                                            )
+                                        ) {
+                                            when (benDataObj.getString("reproductiveStatus")) {
+                                                "Eligible Couple" -> TypeOfList.ELIGIBLE_COUPLE
+                                                "Antenatal Mother" -> TypeOfList.ANTENATAL_MOTHER
+                                                "Delivery Stage" -> TypeOfList.DELIVERY_STAGE
+                                                "Postnatal Mother" -> TypeOfList.POSTNATAL_MOTHER
+                                                "Menopause" -> TypeOfList.MENOPAUSE
+                                                "Teenager" -> TypeOfList.TEENAGER
+                                                else -> TypeOfList.OTHER
+                                            }
+                                        } else TypeOfList.GENERAL
+                                        else -> TypeOfList.GENERAL
+                                    }
                                 } else TypeOfList.OTHER,
-                            latitude = benDataObj.getDouble("latitude"),
-                            longitude = benDataObj.getDouble("longitude"),
-                            aadharNum = if(benDataObj.has("aadhaNo")) benDataObj.getString("aadhaNo") else null,
-                            aadharNumId = benDataObj.getInt("aadha_noId"),
-                            hasAadhar = if(benDataObj.has("aadhaNo")) benDataObj.getString("aadhaNo") != "" else false,
-                            hasAadharId = if (benDataObj.getInt("aadha_noId") == 1) 1 else 0,
+                                latitude = benDataObj.getDouble("latitude"),
+                                longitude = benDataObj.getDouble("longitude"),
+                                aadharNum = if (benDataObj.has("aadhaNo")) benDataObj.getString("aadhaNo") else null,
+                                aadharNumId = benDataObj.getInt("aadha_noId"),
+                                hasAadhar = if (benDataObj.has("aadhaNo")) benDataObj.getString("aadhaNo") != "" else false,
+                                hasAadharId = if (benDataObj.getInt("aadha_noId") == 1) 1 else 0,
 //                            bankAccountId = benDataObj.getString("bank_accountId"),
                                 bankAccount = if (benDataObj.has("bankAccount")) benDataObj.getString(
                                     "bankAccount"
@@ -1163,11 +1330,13 @@ class BenRepo @Inject constructor(
                                 ) else null,
                                 familyHeadPhoneNo = houseDataObj.getString("familyHeadPhoneNo")
                                     .toLong(),
-                                houseNo = houseDataObj.getString("houseno"),
+                                houseNo = houseDataObj.getString("houseno")
+                                    .let { if (it == "null") null else it },
 //                                rationCardDetails = houseDataObj.getString("rationCardDetails"),
                                 povertyLine = houseDataObj.getString("type_bpl_apl"),
                                 povertyLineId = houseDataObj.getInt("bpl_aplId"),
-                                residentialArea = houseDataObj.getString("residentialArea"),
+                                residentialArea = houseDataObj.getString("residentialArea")
+                                    .let { if (it == "null") null else it },
                                 residentialAreaId = houseDataObj.getInt("residentialAreaId"),
                                 otherResidentialArea = houseDataObj.getString("other_residentialArea"),
                                 houseType = houseDataObj.getString("houseType"),

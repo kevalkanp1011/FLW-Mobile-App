@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/colorSecondary"
-                android:paddingHorizontal="@dimen/padding_normal"
+                android:paddingHorizontal="@dimen/padding_tiny"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
@@ -43,7 +43,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:drawablePadding="@dimen/padding_normal"
                     android:text="@{@string/long_to_string(ben.hhId)}"
                     android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     android:textColor="?attr/colorPrimaryVariant"
@@ -61,10 +60,10 @@
                     android:id="@+id/btn_new_ben"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_toEndOf="@id/tv_hh_id"
+                    android:paddingHorizontal="@dimen/padding_tiny"
                     android:onClick="@{()-> clickListener.onClickedHouseHold(ben)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/padding_normal"
                     android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     app:cornerRadius="@dimen/padding_normal"
                     android:text="@string/btn_rv_item_hh_add_ben"

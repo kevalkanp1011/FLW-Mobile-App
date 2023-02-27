@@ -434,6 +434,7 @@ class CbacViewModel @Inject constructor(
             _state.value = State.MISSING_FIELD
             return
         }
+        cbac.total_score = _raTotalScore.value!!
         var flagForHrp = false
         if (ben.genDetails?.reproductiveStatusId == 1 || ben.genDetails?.reproductiveStatusId == 2 || ben.genDetails?.reproductiveStatusId == 3) {
             //hrp related posibilities
@@ -479,17 +480,18 @@ class CbacViewModel @Inject constructor(
         cbac.hrp_suspected = flagForHrp
         cbac.suspected_hrp = if (flagForHrp) "Yes" else "No"
         ben.suspectedHrp = if (flagForHrp) "Yes" else "No"
-        val flagForTb = (cbac.cbac_coughing_pos == 1 ||
-                cbac.cbac_familyhistory_posi == 1 ||
-                cbac.cbac_tbhistory_pos == 1 ||
-                cbac.cbac_bloodsputum_pos == 1 ||
-                cbac.cbac_fivermore_pos == 1 ||
-                cbac.cbac_loseofweight_pos == 1 ||
-                cbac.cbac_nightsweats_pos == 1 ||
-                cbac.cbac_antitbdrugs_pos == 1 ||
-                cbac.cbac_growth_in_mouth_posi == 1)
+        val flagForTb = (
+                cbac.cbac_coughing_pos == 1 ||
+                        cbac.cbac_familyhistory_posi == 1 ||
+                        cbac.cbac_tbhistory_pos == 1 ||
+                        cbac.cbac_bloodsputum_pos == 1 ||
+                        cbac.cbac_fivermore_pos == 1 ||
+                        cbac.cbac_loseofweight_pos == 1 ||
+                        cbac.cbac_nightsweats_pos == 1 ||
+                        cbac.cbac_antitbdrugs_pos == 1 ||
+                        cbac.cbac_growth_in_mouth_posi == 1)
         cbac.suspected_tb = if (flagForTb) "Yes" else "No"
-        ben.suspectedTb = if (flagForHrp) "Yes" else "No"
+        ben.suspectedTb = if (flagForTb) "Yes" else "No"
         cbac.suspected_ncd_diseases = ""
         //val diseasesList = mutableListOf<String>()
 
@@ -516,7 +518,7 @@ class CbacViewModel @Inject constructor(
         cbac.Countyid = ben.locationRecord?.countryId ?: 0
         cbac.stateid = ben.locationRecord?.stateId ?: 0
         cbac.districtid = ben.locationRecord?.districtId ?: 0
-        cbac.districtname = ben.locationRecord?.district
+//        cbac.districtname = ben.locationRecord?.district
         cbac.villageid = ben.locationRecord?.villageId ?: 0
         cbac.cbac_reg_id = ben.benRegId
 

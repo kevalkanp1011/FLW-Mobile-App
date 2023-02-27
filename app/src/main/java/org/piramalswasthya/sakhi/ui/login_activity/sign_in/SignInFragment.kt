@@ -11,10 +11,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.databinding.FragmentSignInBinding
-import org.piramalswasthya.sakhi.helpers.MyContextWrapper.Languages.*
+import org.piramalswasthya.sakhi.helpers.Languages.*
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
 import org.piramalswasthya.sakhi.ui.login_activity.sign_in.SignInViewModel.State
 import org.piramalswasthya.sakhi.work.GenerateBenIdsWorker
@@ -102,12 +104,18 @@ class SignInFragment : Fragment() {
                     binding.tvError.visibility = View.VISIBLE
                 }
                 State.SUCCESS -> {
-                    if(binding.cbRemember.isChecked) {
+                    val firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext())
+                    firebaseAnalytics.logEvent("Click_Dice_track_2") {
+                        param(
+                            "LOG STATE",
+                            "${binding.etUsername.text} logged in!"
+                        ) // send predefined parameters
+                    }
+                    if (binding.cbRemember.isChecked) {
                         val username = binding.etUsername.text.toString()
                         val password = binding.etPassword.text.toString()
-                        viewModel.rememberUser(username,password)
-                    }
-                    else{
+                        viewModel.rememberUser(username, password)
+                    } else {
                         viewModel.forgetUser()
                     }
                     binding.clContent.visibility = View.INVISIBLE
