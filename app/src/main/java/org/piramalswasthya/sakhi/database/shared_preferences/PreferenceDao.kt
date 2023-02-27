@@ -4,7 +4,7 @@ import android.content.Context
 import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.helpers.MyContextWrapper
+import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.LocationRecord
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -106,20 +106,20 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
         return pref.getBoolean(prefKey, false)
     }
 
-    fun saveSetLanguage(language: MyContextWrapper.Languages) {
+    fun saveSetLanguage(language: Languages) {
         val key = context.getString(R.string.PREF_current_saved_language)
         val editor = pref.edit()
         editor.putString(key, language.symbol)
         editor.apply()
     }
 
-    fun getCurrentLanguage(): MyContextWrapper.Languages {
+    fun getCurrentLanguage(): Languages {
         val key = context.getString(R.string.PREF_current_saved_language)
         return when (pref.getString(key, null)) {
-            MyContextWrapper.Languages.ASSAMESE.symbol -> MyContextWrapper.Languages.ASSAMESE
-            MyContextWrapper.Languages.HINDI.symbol -> MyContextWrapper.Languages.HINDI
-            MyContextWrapper.Languages.ENGLISH.symbol -> MyContextWrapper.Languages.ENGLISH
-            else -> MyContextWrapper.Languages.ENGLISH
+            Languages.ASSAMESE.symbol -> Languages.ASSAMESE
+            Languages.HINDI.symbol -> Languages.HINDI
+            Languages.ENGLISH.symbol -> Languages.ENGLISH
+            else -> Languages.ENGLISH
         }
     }
 }

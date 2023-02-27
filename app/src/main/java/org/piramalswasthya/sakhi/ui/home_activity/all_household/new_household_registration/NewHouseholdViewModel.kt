@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.configuration.HouseholdFormDataset
 import org.piramalswasthya.sakhi.model.FormInput
@@ -20,9 +21,9 @@ import javax.inject.Inject
 @HiltViewModel
 class NewHouseholdViewModel
 @Inject constructor(
-    application: Application,
+    private val context: Application,
     private val householdRepo: HouseholdRepo
-) : AndroidViewModel(application) {
+) : AndroidViewModel(context) {
 
     enum class State {
         IDLE,
@@ -52,6 +53,7 @@ class NewHouseholdViewModel
 
     suspend fun getFirstPage(): List<FormInput> {
         return withContext(Dispatchers.IO) {
+
             form = householdRepo.getDraftForm()?.let {
                 HouseholdFormDataset(getApplication(),it)
             }?:run{
@@ -63,9 +65,9 @@ class NewHouseholdViewModel
 
     fun getSecondPage(adapter: FormInputAdapter): List<FormInput> {
         viewModelScope.launch {
-            form.residentialAreaTrigger.value.collect {
+            form.residentialArea.value.collect {
                 toggleFieldOnTrigger(
-                    form.residentialAreaTrigger,
+                    form.residentialArea,
                     form.otherResidentialArea,
                     it,
                     adapter
@@ -83,13 +85,15 @@ class NewHouseholdViewModel
         adapter: FormInputAdapter
     ) {
         value?.let {
-            if (it == "Other") {
+            if (it == context.getString(R.string.nhhr_fuel_cooking_7)) {
                 val list = adapter.currentList.toMutableList()
-                list.add(
-                    adapter.currentList.indexOf(causeField) + 1,
-                    effectField
-                )
-                adapter.submitList(list)
+                if (!list.contains(effectField)) {
+                    list.add(
+                        adapter.currentList.indexOf(causeField) + 1,
+                        effectField
+                    )
+                    adapter.submitList(list)
+                }
             } else {
                 if (adapter.currentList.contains(effectField)) {
                     val list = adapter.currentList.toMutableList()

@@ -1,8 +1,10 @@
 package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
+import android.content.res.Configuration
 import android.text.InputType
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.FormInput
 import org.piramalswasthya.sakhi.model.HouseholdCache
 import java.text.DateFormat
@@ -36,6 +38,12 @@ class HouseholdFormDataset(context: Context) {
         otherSourceOfElectricity.value.value = household.otherAvailabilityOfElectricity
         availOfToilet.value.value = household.availabilityOfToilet
         otherAvailOfToilet.value.value = household.otherAvailabilityOfToilet
+    }
+
+    private val defResources by lazy {
+        val configuration = Configuration(context.resources.configuration)
+        configuration.setLocale(Locale(Languages.ENGLISH.symbol))
+        context.createConfigurationContext(configuration).resources
     }
 
 
@@ -83,9 +91,7 @@ class HouseholdFormDataset(context: Context) {
         title = context.getString(R.string.nhhr_mob_no_hof),
         required = true,
         etMaxLength = 10,
-        isMobileNumber = true,
-        min = 6000000000,
-        max = 9999999999,
+
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
     )
     private val houseNo = FormInput(
@@ -111,11 +117,7 @@ class HouseholdFormDataset(context: Context) {
     private val povertyLine = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = context.getString(R.string.nhhr_poverty_line),
-        list = listOf(
-            "APL",
-            "BPL",
-            "Don't Know"
-        ),
+        list = context.resources.getStringArray(R.array.nhhr_poverty_line_array),
         required = true
     )
     val firstPage by lazy {
@@ -133,45 +135,30 @@ class HouseholdFormDataset(context: Context) {
 
     //////////////////////////////// Second Page /////////////////////////////////////////
 
-    private val residentialArea = FormInput(
+    val residentialArea = FormInput(
         inputType = FormInput.InputType.DROPDOWN,
         title = context.getString(R.string.nhhr_type_residential_area),
-        list = listOf(
-            "Rural",
-            "Urban",
-            "Tribal",
-            "Other"
-        ),
+        list = context.resources.getStringArray(R.array.nhhr_type_residential_area_array),
         required = false
     )
 
-    val residentialAreaTrigger: FormInput
-        get() = residentialArea
 
     val otherResidentialArea = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
-        title = "Other type of residential area",
+        title = context.getString(R.string.nhhr_type_residential_area_other),
         required = false
     )
 
     private val typeOfHouse = FormInput(
         inputType = FormInput.InputType.DROPDOWN,
         title = context.getString(R.string.nhhr_type_of_house),
-        list = listOf(
-            "None",
-            "Kuchcha",
-            "Pucca",
-            "Other"
-        ),
+        list = context.resources.getStringArray(R.array.nhhr_type_of_house_array),
         required = true
     )
     private val houseOwnership = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = context.getString(R.string.nhhr_house_own),
-        listOf(
-            "Yes",
-            "No"
-        ),
+        list = context.resources.getStringArray(R.array.nhhr_house_own_array),
         required = true
     )
     val secondPage by lazy {
@@ -187,25 +174,14 @@ class HouseholdFormDataset(context: Context) {
     private val separateKitchen = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = context.getString(R.string.nhhr_separate_kitchen),
-        list = listOf(
-            "Yes",
-            "No"
-        ),
+        list = context.resources.getStringArray(R.array.nhhr_separate_kitchen_array),
         required = true
     )
 
     private val fuelForCooking = FormInput(
         inputType = FormInput.InputType.DROPDOWN,
         title = context.getString(R.string.nhhr_fuel_cooking),
-        list = listOf(
-            "Firewood",
-            "Crop Residue",
-            "Cow dung cake",
-            "Coal",
-            "Kerosene",
-            "LPG",
-            "Other"
-        ),
+        list = context.resources.getStringArray(R.array.nhhr_fuel_cooking_array),
         required = true,
     )
     val fuelForCookingTrigger: FormInput
@@ -214,7 +190,7 @@ class HouseholdFormDataset(context: Context) {
 
     val otherFuelForCooking = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
-        title = "Other Type of fuel used for Cooking",
+        title = context.getString(R.string.nhhr_fuel_cooking_other),
         required = true
     )
 
@@ -222,16 +198,7 @@ class HouseholdFormDataset(context: Context) {
     private val sourceOfWater = FormInput(
         inputType = FormInput.InputType.DROPDOWN,
         title = context.getString(R.string.nhhr_primary_water),
-        list = listOf(
-            "Tap Water",
-            "Hand pump within house",
-            "Hand pump outside of house",
-            "Well",
-            "Tank",
-            "River",
-            "Pond",
-            "Other"
-        ),
+        list = context.resources.getStringArray(R.array.nhhr_primary_water_array),
         required = true,
     )
 
@@ -241,7 +208,7 @@ class HouseholdFormDataset(context: Context) {
 
     val otherSourceOfWater = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
-        title = "Other Primary Source of Water",
+        title = context.getString(R.string.nhhr_primary_water_other),
         required = true
     )
 
@@ -249,13 +216,7 @@ class HouseholdFormDataset(context: Context) {
     private val sourceOfElectricity = FormInput(
         inputType = FormInput.InputType.DROPDOWN,
         title = context.getString(R.string.nhhr_avail_electricity),
-        list = listOf(
-            "Electricity Supply",
-            "Generator",
-            "Solar Power",
-            "Kerosene Lamp",
-            "Other",
-        ),
+        list = context.resources.getStringArray(R.array.nhhr_avail_electricity_array),
         required = true
     )
     val sourceOfElectricityTrigger: FormInput
@@ -263,7 +224,7 @@ class HouseholdFormDataset(context: Context) {
 
     val otherSourceOfElectricity = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
-        title = "Other availability of Electricity",
+        title = context.getString(R.string.nhhr_avail_electricity_other),
         required = true
     )
 
@@ -271,14 +232,7 @@ class HouseholdFormDataset(context: Context) {
     private val availOfToilet = FormInput(
         inputType = FormInput.InputType.DROPDOWN,
         title = context.getString(R.string.nhhr_avail_toilet),
-        list = listOf(
-            "Flush toilet with running water",
-            "Flush toiler without water",
-            "Pit toilet with running water supply",
-            "Pit toilet without water supply",
-            "Other",
-            "None"
-        ),
+        list = context.resources.getStringArray(R.array.nhhr_avail_toilet_array),
         required = true,
     )
 
@@ -287,7 +241,7 @@ class HouseholdFormDataset(context: Context) {
 
     val otherAvailOfToilet = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
-        title = "Other Availability of Toilet",
+        title = context.getString(R.string.nhhr_avail_toilet_other),
         required = true
     )
 
@@ -319,10 +273,13 @@ class HouseholdFormDataset(context: Context) {
             wardNo = this@HouseholdFormDataset.wardNo.value.value
             wardName = this@HouseholdFormDataset.wardName.value.value
             mohallaName = this@HouseholdFormDataset.mohallaName.value.value
-            povertyLine = this@HouseholdFormDataset.povertyLine.value.value
+            val povertyLineLocal = this@HouseholdFormDataset.povertyLine.value.value
             povertyLineId =
-                this@HouseholdFormDataset.povertyLine.list?.indexOf(povertyLine)?.let { it + 1 }
+                this@HouseholdFormDataset.povertyLine.list?.indexOf(povertyLineLocal)
+                    ?.let { it + 1 }
                     ?: 0
+            povertyLine =
+                defResources.getStringArray(R.array.nhhr_poverty_line_array)[povertyLineId - 1]
         }
         return household!!
     }
@@ -375,13 +332,7 @@ class HouseholdFormDataset(context: Context) {
                 this@HouseholdFormDataset.availOfToilet.list?.indexOf(availabilityOfToilet)
                     ?.let { it + 1 } ?: 0
             otherAvailabilityOfToilet = this@HouseholdFormDataset.otherAvailOfToilet.value.value
-            if (householdId == 0L) {
-                householdId = getHHidFromUserId(ashaId)
-                serverUpdatedStatus = 1
-                processed = "N"
-            } else {
-                serverUpdatedStatus = 2
-            }
+
             isDraft = false
         }
         return household!!

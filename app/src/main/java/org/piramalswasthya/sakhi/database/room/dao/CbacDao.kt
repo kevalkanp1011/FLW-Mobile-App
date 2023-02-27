@@ -10,7 +10,7 @@ import org.piramalswasthya.sakhi.model.CbacCache
 interface CbacDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsert(cbacCache: CbacCache)
+    suspend fun upsert(vararg cbacCache: CbacCache)
 
     @Query("SELECT * FROM CBAC WHERE benId = :benId LIMIT 1")
     suspend fun getCbacFromBenId(benId: Long): CbacCache?

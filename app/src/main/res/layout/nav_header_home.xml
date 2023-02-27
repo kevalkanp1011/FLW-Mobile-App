@@ -6,7 +6,6 @@
     android:layout_height="@dimen/nav_header_height"
     android:background="@drawable/side_nav_bar"
     android:padding="@dimen/padding_normal"
-    android:layout_marginTop="?attr/actionBarSize"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView

@@ -101,11 +101,6 @@
                             android:text="@string/cbac_score"
                             android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium" />
 
-                        <TextView
-                            android:id="@+id/cbac_tv_pa"
-                            style="@style/cbac_tv_hint_risk_assessment"
-                            android:text="@string/cbac_hint_pa" />
-
                     </LinearLayout>
 
                     <RelativeLayout
@@ -308,6 +303,12 @@
                         app:layout_constraintTop_toBottomOf="@id/cbac_rl_waist"
                         tools:ignore="MissingConstraints">
 
+                        <TextView
+                            android:id="@+id/cbac_tv_pa"
+                            style="@style/cbac_tv_hint_risk_assessment"
+                            android:layout_toStartOf="@+id/dd_pa_score"
+                            android:text="@string/cbac_hint_pa" />
+
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/til_pa_dropdown"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -315,8 +316,8 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/cbac_tv_pa"
                             android:layout_alignStart="@+id/cbac_tv_pa"
-                            android:layout_alignEnd="@+id/cbac_tv_pa"
-                            android:layout_marginEnd="@dimen/margin_huge"
+                            android:layout_marginEnd="32dp"
+                            android:layout_toStartOf="@+id/dd_pa_score"
                             android:hint="@string/cbac_select"
                             android:labelFor="@id/actv_pa_dropdown"
                             app:expandedHintEnabled="true">

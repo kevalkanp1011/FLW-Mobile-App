@@ -8,7 +8,7 @@ import java.io.File
 data class FormInput(
     val inputType: InputType,
     var title: String,
-    var list: List<String>? = null,
+    var list: Array<String>? = null,
     var required: Boolean,
     var value: MutableStateFlow<String?> = MutableStateFlow(null),
     val regex: String? = null,

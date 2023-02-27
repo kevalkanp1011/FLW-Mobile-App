@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.helpers.MyContextWrapper
+import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.repositories.UserRepo
@@ -32,8 +32,8 @@ class ServiceTypeViewModel @Inject constructor(
     val userName: LiveData<String>
         get() = _userName
 
-    private val _stateList = MutableLiveData<List<String>>()
-    val stateList: LiveData<List<String>>
+    private val _stateList = MutableLiveData<Array<String>>()
+    val stateList: LiveData<Array<String>>
         get() = _stateList
     private val _selectedStateId = MutableLiveData(-1)
     val selectedStateId: LiveData<Int>
@@ -42,8 +42,8 @@ class ServiceTypeViewModel @Inject constructor(
     val selectedState: String?
         get() = _selectedState
 
-    private val _districtList = MutableLiveData<List<String>>()
-    val districtList: LiveData<List<String>>
+    private val _districtList = MutableLiveData<Array<String>>()
+    val districtList: LiveData<Array<String>>
         get() = _districtList
     private val _selectedDistrictId = MutableLiveData(-1)
     val selectedDistrictId: LiveData<Int>
@@ -52,8 +52,8 @@ class ServiceTypeViewModel @Inject constructor(
     val selectedDistrict: String?
         get() = _selectedDistrict
 
-    private val _blockList = MutableLiveData<List<String>>()
-    val blockList: LiveData<List<String>>
+    private val _blockList = MutableLiveData<Array<String>>()
+    val blockList: LiveData<Array<String>>
         get() = _blockList
     private val _selectedBlockId = MutableLiveData(-1)
     val selectedBlockId: LiveData<Int>
@@ -62,8 +62,8 @@ class ServiceTypeViewModel @Inject constructor(
     val selectedBlock: String?
         get() = _selectedBlock
 
-    private val _villageList = MutableLiveData<List<String>>()
-    val villageList: LiveData<List<String>>
+    private val _villageList = MutableLiveData<Array<String>>()
+    val villageList: LiveData<Array<String>>
         get() = _villageList
     private val _selectedVillageId = MutableLiveData(-1)
     val selectedVillageId: LiveData<Int>
@@ -101,16 +101,32 @@ class ServiceTypeViewModel @Inject constructor(
 
 
     private fun loadLocationFromDatabase() {
-        if (currLanguage == MyContextWrapper.Languages.ENGLISH) {
-            _stateList.value = user.stateEnglish
-            _districtList.value = user.districtEnglish
-            _blockList.value = user.blockEnglish
-            _villageList.value = user.villageEnglish
-        } else if (pref.getCurrentLanguage() == MyContextWrapper.Languages.HINDI) {
-            _stateList.value = user.stateHindi.ifEmpty { user.stateEnglish }
-            _districtList.value = user.districtHindi.ifEmpty { user.districtEnglish }
-            _blockList.value = user.blockHindi.ifEmpty { user.blockEnglish }
-            _villageList.value = user.villageHindi.ifEmpty { user.villageEnglish }
+        if (currLanguage == Languages.ENGLISH) {
+            _stateList.value = user.stateEnglish.toTypedArray()
+            _districtList.value = user.districtEnglish.toTypedArray()
+            _blockList.value = user.blockEnglish.toTypedArray()
+            _villageList.value = user.villageEnglish.toTypedArray()
+        } else if (pref.getCurrentLanguage() == Languages.HINDI) {
+            _stateList.value = if (user.stateHindi.isNotEmpty()) {
+                user.stateHindi.toTypedArray()
+            } else {
+                user.stateEnglish.toTypedArray()
+            }
+            _districtList.value = if (user.districtHindi.isNotEmpty()) {
+                user.districtHindi.toTypedArray()
+            } else {
+                user.districtEnglish.toTypedArray()
+            }
+            _blockList.value = if (user.blockHindi.isNotEmpty()) {
+                user.blockHindi.toTypedArray()
+            } else {
+                user.blockEnglish.toTypedArray()
+            }
+            _villageList.value = if (user.villageHindi.isNotEmpty()) {
+                user.villageHindi.toTypedArray()
+            } else {
+                user.villageEnglish.toTypedArray()
+            }
         }
     }
 

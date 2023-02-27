@@ -12,7 +12,7 @@ class NcdNonEligibleListViewModel @Inject constructor(
     private val benRepo: BenRepo
 ) : ViewModel() {
 
-    val ncdNonEligibleList = benRepo.ncdNonEligibleList
+    private val ncdNonEligibleList = benRepo.ncdNonEligibleList
     private val _benList = MutableLiveData<List<BenBasicDomain>>()
     val benList: LiveData<List<BenBasicDomain>>
         get() = _benList

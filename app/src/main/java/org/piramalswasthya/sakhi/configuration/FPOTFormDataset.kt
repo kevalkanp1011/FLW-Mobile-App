@@ -24,7 +24,7 @@ class FPOTFormDataset(context: Context, private val fpot: FPOTCache? = null) {
     private val category = FormInput(
         inputType = FormInput.InputType.DROPDOWN,
         title = "Category",
-        list = listOf(
+        list = arrayOf(
             "Above Poverty Line (APL)",
             "Below Poverty Line (BPL)",
             "Anu Shuchit Jati (SC)",

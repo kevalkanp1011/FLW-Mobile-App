@@ -12,7 +12,7 @@ class InfantListViewModel @Inject constructor(
     private val benRepo: BenRepo
 ) : ViewModel() {
 
-    val infantList = benRepo.infantList
+    private val infantList = benRepo.infantList
     private val _benList = MutableLiveData<List<BenBasicDomain>>()
     val benList: LiveData<List<BenBasicDomain>>
         get() = _benList

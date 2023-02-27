@@ -5,6 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.model.BenBasicDomain
 import org.piramalswasthya.sakhi.repositories.BenRepo
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -12,7 +13,7 @@ class EligibleCoupleViewModel @Inject constructor(
     private val benRepo: BenRepo
 ) : ViewModel() {
 
-    val eligibleCoupleList = benRepo.eligibleCoupleList
+    private val eligibleCoupleList = benRepo.eligibleCoupleList
     private val _benList = MutableLiveData<List<BenBasicDomain>>()
     val benList: LiveData<List<BenBasicDomain>>
         get() = _benList
@@ -26,6 +27,7 @@ class EligibleCoupleViewModel @Inject constructor(
     }
 
     fun filterText(filterText: String) {
+        Timber.d("filter called!!")
         if (filterText == "")
             _benList.value = eligibleCoupleList.value
         else

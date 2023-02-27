@@ -94,7 +94,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val gender = FormInput(
         inputType = RADIO,
         title = "Gender",
-        list = listOf(
+        list = arrayOf(
             "Male",
             "Female",
             "Transgender"
@@ -104,7 +104,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val maritalStatus = FormInput(
         inputType = DROPDOWN,
         title = "Marital Status",
-        list = listOf(
+        list = arrayOf(
             "Unmarried",
             "Married",
             "Divorced",
@@ -150,7 +150,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val mobileNoOfRelation = FormInput(
         inputType = DROPDOWN,
         title = "Mobile Number Of",
-        list = listOf(
+        list = arrayOf(
             "Self",
             "Husband",
             "Mother",
@@ -169,7 +169,7 @@ class BenGenRegFormDataset(private val context: Context) {
     )
 
 
-    val relationToHeadListDefault = listOf(
+    val relationToHeadListDefault = arrayOf(
         "Mother",
         "Father",
         "Brother",
@@ -191,7 +191,7 @@ class BenGenRegFormDataset(private val context: Context) {
         "Self",
         "Other"
     )
-    val relationToHeadListMale = listOf(
+    val relationToHeadListMale = arrayOf(
         "Father",
         "Brother",
         "Husband",
@@ -204,7 +204,7 @@ class BenGenRegFormDataset(private val context: Context) {
         "Self",
         "Other",
     )
-    val relationToHeadListFemale = listOf(
+    val relationToHeadListFemale = arrayOf(
         "Mother",
         "Sister",
         "Wife",
@@ -231,7 +231,7 @@ class BenGenRegFormDataset(private val context: Context) {
     private val community = FormInput(
         inputType = DROPDOWN,
         title = "Community",
-        list = listOf(
+        list = arrayOf(
             "General",
             "SC",
             "ST",
@@ -245,7 +245,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val religion = FormInput(
         inputType = DROPDOWN,
         title = "Religion",
-        list = listOf(
+        list = arrayOf(
             "Hindu",
             "Muslim",
             "Christian",
@@ -288,7 +288,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val hasAadharNo = FormInput(
         inputType = RADIO,
         title = "Has Aadhar Number",
-        list = listOf("Yes", "No"),
+        list = arrayOf("Yes", "No"),
         required = false
     )
 
@@ -330,7 +330,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val reproductiveStatus = FormInput(
         inputType = DROPDOWN,
         title = "Reproductive Status",
-        list = listOf(
+        list = arrayOf(
             "Eligible Couple",
             "Antenatal Mother",
             "Delivery Stage",
@@ -351,7 +351,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val nishchayKitDeliveryStatus = FormInput(
         inputType = RADIO,
         title = "Nishchay Kit Delivery Status",
-        list = listOf("Delivered", "Not Delivered"),
+        list = arrayOf("Delivered", "Not Delivered"),
         orientation = LinearLayout.VERTICAL,
         required = true,
 
@@ -360,7 +360,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val pregnancyTestResult = FormInput(
         inputType = RADIO,
         title = "Pregnancy Test Result",
-        list = listOf("Pregnant", "Not Pregnant", "Pending"),
+        list = arrayOf("Pregnant", "Not Pregnant", "Pending"),
         orientation = LinearLayout.VERTICAL,
         required = true,
 
@@ -385,7 +385,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val lastDeliveryConducted = FormInput(
         inputType = DROPDOWN,
         title = "Last Delivery Conducted",
-        list = listOf(
+        list = arrayOf(
             "Home",
             "PHC",
             "HWC",
@@ -409,7 +409,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val whoConductedDelivery = FormInput(
         inputType = DROPDOWN,
         title = "Who Conducted Delivery",
-        list = listOf(
+        list = arrayOf(
             "ANM",
             "LHV",
             "Doctor",
