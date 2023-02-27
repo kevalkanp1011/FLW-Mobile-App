@@ -1,21 +1,18 @@
 package org.piramalswasthya.sakhi.ui.home_activity.mother_care.pregnancy_list
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
-import org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.EligibleCoupleViewModel
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 
 @AndroidEntryPoint
@@ -54,7 +51,7 @@ class PregnancyListFragment : Fragment() {
             ))
         binding.rvAny.adapter = benAdapter
 
-        viewModel.pregnantList.observe(viewLifecycleOwner) {
+        viewModel.benList.observe(viewLifecycleOwner) {
             if (it.isNullOrEmpty())
                 binding.flEmpty.visibility = View.VISIBLE
             else

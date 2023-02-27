@@ -25,6 +25,10 @@ interface HouseholdDao {
     @Query("DELETE  FROM HOUSEHOLD WHERE isDraft=1")
     suspend fun deleteDraftHousehold()
 
-    @Query("UPDATE BENEFICIARY SET processed = \"P\" WHERE householdId =:hhId")
+    @Query("UPDATE HOUSEHOLD SET processed = \"P\" WHERE householdId =:hhId")
     suspend fun householdSyncedWithServer(vararg hhId: Long)
+
+    @Query("UPDATE HOUSEHOLD SET householdId  = :newId WHERE householdId = :oldId ")
+    suspend fun substituteBenId(oldId: Long, newId: Long)
+
 }

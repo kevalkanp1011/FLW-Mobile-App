@@ -12,7 +12,7 @@ class PregnancyListViewModel @Inject constructor(
     private val benRepo: BenRepo
 ) : ViewModel() {
 
-    val pregnantList = benRepo.pregnantList
+    private val pregnantList = benRepo.pregnantList
     private val _benList = MutableLiveData<List<BenBasicDomain>>()
     val benList: LiveData<List<BenBasicDomain>>
         get() = _benList

@@ -1,15 +1,14 @@
 package org.piramalswasthya.sakhi.ui.home_activity.mother_care.delivery_stage_list
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,7 +58,7 @@ class DeliveryStageListFragment : Fragment() {
             ))
         binding.rvAny.adapter = benAdapter
 
-        viewModel.deliveryList.observe(viewLifecycleOwner) {
+        viewModel.benList.observe(viewLifecycleOwner) {
             if (it.isNullOrEmpty())
                 binding.flEmpty.visibility = View.VISIBLE
             else

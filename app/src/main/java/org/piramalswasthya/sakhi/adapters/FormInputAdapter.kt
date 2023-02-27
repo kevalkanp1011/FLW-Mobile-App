@@ -62,12 +62,24 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
                     item.value.value = editable.toString()
                     Timber.d("Item ET : $item")
                     if (item.isMobileNumber) {
-                        if (editable.first().toString().toInt() < 6 || editable.length != 10) {
-                            item.errorText = "Invalid Mobile Number !"
-                            binding.tilEditText.error = item.errorText
-                        } else {
-                            item.errorText = null
-                            binding.tilEditText.error = item.errorText
+                        if (item.etMaxLength == 10) {
+                            if (editable.first().toString()
+                                    .toInt() < 6 || editable.length != item.etMaxLength
+                            ) {
+                                item.errorText = "Invalid Mobile Number !"
+                                binding.tilEditText.error = item.errorText
+                            } else {
+                                item.errorText = null
+                                binding.tilEditText.error = item.errorText
+                            }
+                        } else if (item.etMaxLength == 12) {
+                            if (editable.length != item.etMaxLength) {
+                                item.errorText = "Invalid RCD ID !"
+                                binding.tilEditText.error = item.errorText
+                            } else {
+                                item.errorText = null
+                                binding.tilEditText.error = item.errorText
+                            }
                         }
                     } else if (item.etInputType == (InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL)) {
                         val age = editable.toString().toLong()

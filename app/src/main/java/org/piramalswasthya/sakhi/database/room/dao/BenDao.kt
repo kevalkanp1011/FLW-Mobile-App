@@ -3,10 +3,7 @@ package org.piramalswasthya.sakhi.database.room.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import org.piramalswasthya.sakhi.database.room.SyncState
-import org.piramalswasthya.sakhi.model.AgeUnit
-import org.piramalswasthya.sakhi.model.BenBasicCache
-import org.piramalswasthya.sakhi.model.BenRegCache
-import org.piramalswasthya.sakhi.model.TypeOfList
+import org.piramalswasthya.sakhi.model.*
 
 @Dao
 interface BenDao {
@@ -62,21 +59,25 @@ interface BenDao {
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 3")
     fun getAllDeliveryStageWomenList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE age >= 30")
+    @Query("SELECT * FROM BEN_BASIC_CACHE where age>30")
+    fun getAllNCDList(): LiveData<List<BenBasicCache>>
+
+
+    @Query("SELECT b.* FROM BEN_BASIC_CACHE b LEFT OUTER JOIN CBAC c ON b.benId=c.benId where b.age>30 and c.benId IS NULL")
     fun getAllNCDEligibleList(): LiveData<List<BenBasicCache>>
 
-//    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE age >= 30 and cbacScore > 4")
-//    fun getAllNCDPriorityList(): LiveData<List<BenBasicCache>>
+    @Query("SELECT b.* FROM BEN_BASIC_CACHE b INNER JOIN CBAC c on b.benId==c.benId WHERE c.total_score > 4")
+    fun getAllNCDPriorityList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE age < 30 and isKid = 0")
+    @Query("SELECT b.* FROM BEN_BASIC_CACHE b INNER JOIN CBAC c on b.benId==c.benId WHERE c.total_score <= 4")
     fun getAllNCDNonEligibleList(): LiveData<List<BenBasicCache>>
 
     // have to add those as well who we are adding to menopause list manually from app
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 5")
     fun getAllMenopauseStageList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE gender = \"Female\" and age BETWEEN 15 AND 49")
-    fun getAllReproductiveAgeList(): LiveData<List<BenBasicCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE gender = :female and age BETWEEN 15 AND 49")
+    fun getAllReproductiveAgeList(female: Gender = Gender.FEMALE): LiveData<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 4")
     fun getAllPNCMotherList(): LiveData<List<BenBasicCache>>

@@ -38,10 +38,18 @@ class UserRepo @Inject constructor(
             val loggedInUser = database.userDao.getLoggedInUser()
             loggedInUser?.let {
                 if(it.userName==userName && it.password==password) {
-                    val tokenA= preferenceDao.getD2DApiToken()
+                    val tokenA = preferenceDao.getD2DApiToken()
                     val tokenB = preferenceDao.getPrimaryApiToken()
-                    TokenInsertD2DInterceptor.setToken(tokenA?:throw IllegalStateException("User logging offline without pref saved token A!"))
-                    TokenInsertTmcInterceptor.setToken(tokenB?:throw IllegalStateException("User logging offline without pref saved token B!"))
+                    TokenInsertD2DInterceptor.setToken(
+                        tokenA
+                            ?: throw IllegalStateException("User logging offline without pref saved token A!")
+                    )
+                    TokenInsertTmcInterceptor.setToken(
+                        tokenB
+                            ?: throw IllegalStateException("User logging offline without pref saved token B!")
+                    )
+                    Timber.w("User Logged in!")
+
                     return@withContext State.SUCCESS
                 }
             }
@@ -272,6 +280,43 @@ class UserRepo @Inject constructor(
 /*    private suspend fun saveUserD2D() {
 
     }*/
+
+    suspend fun refreshTokenTmc(userName: String, password: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response =
+                    tmcNetworkApiService.getJwtToken(TmcAuthUserRequest(userName, password))
+                Timber.d("JWT : $response")
+                if (!response.isSuccessful) {
+                    return@withContext false
+                }
+                val responseBody = JSONObject(
+                    response.body()?.string()
+                        ?: throw IllegalStateException("Response success but data missing @ $response")
+                )
+                val responseStatusCode = responseBody.getInt("statusCode")
+                if (responseStatusCode == 200) {
+                    val data = responseBody.getJSONObject("data")
+                    val token = data.getString("key")
+                    TokenInsertTmcInterceptor.setToken(token)
+                    preferenceDao.registerPrimaryApiToken(token)
+                    return@withContext true
+                } else {
+                    val errorMessage = responseBody.getString("errorMessage")
+                    Timber.d("Error Message $errorMessage")
+                }
+                return@withContext false
+            } catch (se: SocketTimeoutException) {
+                return@withContext refreshTokenTmc(userName, password)
+            } catch (e: retrofit2.HttpException) {
+                Timber.d("Auth Failed!")
+                return@withContext false
+            }
+
+
+        }
+
+    }
 
     private suspend fun getTokenTmc(userName: String, password: String) {
         withContext(Dispatchers.IO) {

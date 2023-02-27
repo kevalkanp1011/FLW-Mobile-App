@@ -12,7 +12,7 @@ class ReproductiveAgeListViewModel @Inject constructor(
     private val benRepo: BenRepo
 ) : ViewModel() {
 
-    val reproductiveAgeList = benRepo.reproductiveAgeList
+    private val reproductiveAgeList = benRepo.reproductiveAgeList
     private val _benList = MutableLiveData<List<BenBasicDomain>>()
     val benList: LiveData<List<BenBasicDomain>>
         get() = _benList

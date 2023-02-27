@@ -12,7 +12,7 @@ class PncMotherListViewModel @Inject constructor(
     private val benRepo: BenRepo
 ) : ViewModel() {
 
-    val pncMotherList = benRepo.pncMotherList
+    private val pncMotherList = benRepo.pncMotherList
     private val _benList = MutableLiveData<List<BenBasicDomain>>()
     val benList: LiveData<List<BenBasicDomain>>
         get() = _benList

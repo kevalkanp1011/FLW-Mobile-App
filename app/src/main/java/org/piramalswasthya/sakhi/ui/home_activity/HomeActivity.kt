@@ -1,11 +1,11 @@
 package org.piramalswasthya.sakhi.ui.home_activity
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -28,6 +28,7 @@ import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
 import org.piramalswasthya.sakhi.work.PullFromAmritFullLoadWorker
 import org.piramalswasthya.sakhi.work.PushToAmritWorker
+
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
@@ -125,6 +126,8 @@ class HomeActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
 
         binding.navView.menu.findItem(R.id.menu_logout).setOnMenuItemClickListener {
+            val workManager = WorkManager.getInstance(this)
+            workManager.cancelAllWork()
             viewModel.logout()
             true
 
@@ -137,33 +140,21 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-/*    override fun onSupportNavigateUp(): Boolean {
-        Timber.i( "onSupportNavigateUp() called! ${navController.currentDestination?.displayName}")
-        return when (navController.currentDestination?.id) {
-            R.id.homeFragment -> {
-                return if (viewModel.isLocationSet()) {
-                    NavigationUI.navigateUp(
-                        navController,
-                        binding.drawerLayout
-                    ) || super.onSupportNavigateUp()
-                }
-                else
-                    false
-            }
-            else -> NavigationUI.navigateUp(
-                navController,
-                binding.drawerLayout
-            ) || super.onSupportNavigateUp()
-        }
-    }*/
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        if (item.itemId == android.R.id.home) {
+//            hideKeyboard(this)
+//            Toast.makeText(this, "onOptionsItemSelected called!", Toast.LENGTH_SHORT).show()
+//            onBackPressedDispatcher.onBackPressed()
+//            return true // must return true to consume it here
+//
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            Toast.makeText(this, "onOptionsItemSelected called!", Toast.LENGTH_SHORT).show()
-            onBackPressedDispatcher.onBackPressed()
-            return true // must return true to consume it here
-
+    fun hideKeyboard(activity: Activity) {
+        this.currentFocus?.let { view ->
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(view.windowToken, 0)
         }
-        return super.onOptionsItemSelected(item)
     }
 }
