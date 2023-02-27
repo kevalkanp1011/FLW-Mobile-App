@@ -337,6 +337,10 @@ class BenRepo @Inject constructor(
 
     }
 
+    suspend fun getBeneficiary(benId: Long, hhId: Long): BenRegCache? {
+        return database.benDao.getBen(hhId, benId)
+
+    }
     private suspend fun extractBenId(): BeneficiaryIdsAvail {
         return withContext(Dispatchers.IO) {
             val user =

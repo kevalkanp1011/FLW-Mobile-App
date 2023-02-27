@@ -323,7 +323,7 @@
     <fragment
         android:id="@+id/pmsmaFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.delivery_stage_list.pmsma.PMSMAFragment"
-        android:label="PMSMAFragment">
+        android:label="PMSMA Form">
         <argument
             android:name="hhId"
             app:argType="long" />
@@ -338,11 +338,11 @@
     <fragment
         android:id="@+id/aboutUsFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.AboutUsFragment"
-        android:label="AboutUsFragment" />
+        android:label="About Us" />
     <fragment
         android:id="@+id/helpFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.HelpFragment"
-        android:label="HelpFragment" />
+        android:label="Help" />
     <fragment
         android:id="@+id/immunizationObjectFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.immunization_due.immunization_object.ImmunizationObjectFragment"
@@ -380,10 +380,41 @@
     <fragment
         android:id="@+id/cdrListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.death_reports.cdr.CdrListFragment"
-        android:label="CdrListFragment" />
+        android:label="CDR List" >
+        <action
+            android:id="@+id/action_cdrListFragment_to_cdrObjectFragment"
+            app:destination="@id/cdrObjectFragment" />
+    </fragment>
     <fragment
         android:id="@+id/mdsrListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.death_reports.mdsr.MdsrListFragment"
-        android:label="MdsrListFragment" />
+        android:label="MDSR List" >
+        <action
+            android:id="@+id/action_mdsrListFragment_to_mdsrObjectFragment"
+            app:destination="@id/mdsrObjectFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mdsrObjectFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.death_reports.mdsr.MdsrObjectFragment"
+        android:label="MDSR Form" >
+        <argument
+            android:name="hhId"
+            app:argType="long" />
+        <argument
+            android:name="benId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/cdrObjectFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.death_reports.cdr.CdrObjectFragment"
+        android:label="CDR Form"
+        tools:layout="@layout/fragment_cdr_object" >
+        <argument
+            android:name="hhId"
+            app:argType="long" />
+        <argument
+            android:name="benId"
+            app:argType="long" />
+    </fragment>
 
 </navigation>

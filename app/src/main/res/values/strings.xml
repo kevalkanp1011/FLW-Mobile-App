@@ -272,6 +272,28 @@
     <string name="cbac_nhop">Needing help from others to perform everyday activities such as eating, getting dressed, grooming, bathing, walking, or using the toilet</string>
     <string name="cbac_forget_names">Forgetting the names of your near ones or your own home address </string>
 
+    <!-- 32 33 MDSR-->
+
+    <string name="mdsr_form">MDSR</string>
+    <string name="mdsr_district">District</string>
+    <string name="mdsr_state">State</string>
+    <string name="mdsr_month">Month</string>
+    <string name="mdsr_year">Year</string>
+    <string name="mdsr_name_deceased">Name of deceased</string>
+    <string name="mdsr_age">Age</string>
+    <string name="mdsr_date_of_deceased">Date of death</string>
+    <string name="mdsr_address">Address</string>
+    <string name="mdsr_husband_name">Husband’s name</string>
+    <string name="mdsr_cause">Cause of death</string>
+    <string name="mdsr_maternal">Maternal</string>
+    <string name="mdsr_non_maternal">Non-maternal</string>
+    <string name="mdsr_name_designation">Name/Designation</string>
+    <string name="mdsr_field_investigation">Date of field investigation</string>
+    <string name="mdsr_signature">Signature of MO I/C of the block:</string>
+    <string name="mdsr_ic_date">Date</string>
+    <string name="mdsr_reason_death">specify reasons</string>
+    <string name="mdsr_action">Action taken</string>
+
 
     <string-array name="cbac_age">
         <item>0-29 years</item>

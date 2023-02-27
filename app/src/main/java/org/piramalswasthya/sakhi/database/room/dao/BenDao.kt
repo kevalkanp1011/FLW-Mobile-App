@@ -82,8 +82,8 @@ interface BenDao {
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 4")
     fun getAllPNCMotherList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE typeOfList = :infant")
-    fun getAllInfantList(infant: TypeOfList = TypeOfList.INFANT): LiveData<List<BenBasicCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE (ageUnit = :ageUnit and age < 2) or ageUnit != :ageUnit")
+    fun getAllInfantList(ageUnit: AgeUnit = AgeUnit.YEARS): LiveData<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE ageUnit = :ageUnit and age >= 2 and age < 6")
     fun getAllChildList(ageUnit: AgeUnit = AgeUnit.YEARS): LiveData<List<BenBasicCache>>

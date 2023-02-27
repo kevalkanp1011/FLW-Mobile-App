@@ -27,7 +27,7 @@ interface UserDao {
         "SELECT (SELECT COUNT(*)from HOUSEHOLD where ashaId=:userId and isDraft = 0) AS householdCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0) AS allBenCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and age BETWEEN 15 AND 49 and gen_reproductiveStatusId = 1) AS eligibleCoupleCount, " +
-                "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and registrationType = :infant) AS infantCount, " +
+                "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and (ageUnit = :year and age < 2) or ageUnit != :year)  AS infantCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and ageUnit = :year and age >= 2 and age < 6 ) AS childCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and ageUnit = :year and age between 6 and 14) AS adolescentCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and gen_reproductiveStatusId = 2) AS pregnantCount, " +
