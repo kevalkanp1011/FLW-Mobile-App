@@ -1,75 +1,79 @@
 package org.piramalswasthya.sakhi.model
 
-import androidx.room.ColumnInfo
-import androidx.room.PrimaryKey
-
-data class MDSR (
-    var dateOfDeath: Long = 0,
+data class MDSRCache (
+    val benId: Long,
+    val hhId: Long,
+    var dateOfDeath: Long? = System.currentTimeMillis(),
     var address: String? = null,
     var husbandName: String? = null,
-    var causeOfDeath: String? = null,
-    var investigationDate: String? = null,
-    var actionTaken: Boolean? = null,
+    var causeOfDeath: Int = 0,
+    var reasonOfDeath: String? = null,
+    var investigationDate: Long? = System.currentTimeMillis(),
+    var actionTaken: Int = 0,
     var blockMOSign: String? = null,
     var date: Long = 0
-)
+) {
+    fun asPostModel(): MdsrPost {
+        return MdsrPost(
+            beneficiaryid = benId,
+            houseoldId = hhId.toString()
+        )
+    }
+}
 
-data class MdsrRegistration(
+data class MdsrPost(
 
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0,
+    val id: Int = 0,
 
-    @ColumnInfo(index = true)
-    var benId: Long,
+    val beneficiaryid: Long,
 
-    @ColumnInfo(index = true)
-    var hhId: Long,
+    val houseoldId: String,
 
-    var villageid: Int? = 0,
+    val villageid: Int? = 0,
 
-    var syncstatus: Boolean? = null,
+    val syncstatus: Boolean? = null,
 
-    var latitude: Double? = 0.0,
+    val latitude: Double? = 0.0,
 
-    var longitude: Double? = 0.0,
+    val longitude: Double? = 0.0,
 
-    var mdsr_district: String? = null,
+    val mdsr_district: String? = null,
 
-    var mdsr_state: String? = null,
+    val mdsr_state: String? = null,
 
-    var mdsr_month: String? = null,
+    val mdsr_month: String? = null,
 
-    var mdsr_year: String? = null,
+    val mdsr_year: String? = null,
 
-    var mdsr_name_of_deceased: String? = null,
+    val mdsr_name_of_deceased: String? = null,
 
-    var mdsr_age: String? = null,
+    val mdsr_age: String? = null,
 
-    var mdsr_date_of_deceased: String? = null,
+    val mdsr_date_of_deceased: String? = null,
 
-    var mdsr_address: String? = null,
+    val mdsr_address: String? = null,
 
-    var mdsr_husband_name: String? = null,
+    val mdsr_husband_name: String? = null,
 
-    var mdsr_cause_of_death: Int? = 0,
+    val mdsr_cause_of_death: Int? = 0,
 
-    var mdsr_reason_death: String? = null,
+    val mdsr_reason_death: String? = null,
 
-    var mdsr_field_investigation: String? = null,
+    val mdsr_field_investigation: String? = null,
 
-    var mdsr_action: Int? = 0,
+    val mdsr_action: Int? = 0,
 
-    var mdsr_signature: String? = null,
+    val mdsr_signature: String? = null,
 
-    var mdsr_date_ic: String? = null,
+    val mdsr_date_ic: String? = null,
 
-    var createdBy: String? = null,
+    val createdBy: String? = null,
 
-    var createdDate: String? = null,
+    val createdDate: String? = null,
 
-    var updatedBy: String? = null,
+    val updatedBy: String? = null,
 
-    var updatedDate: String? = null,
+    val updatedDate: String? = null,
 
-    var edit_flag: Boolean? = null,
+    val edit_flag: Boolean? = null,
 )

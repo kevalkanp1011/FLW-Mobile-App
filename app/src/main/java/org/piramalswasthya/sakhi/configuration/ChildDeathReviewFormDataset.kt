@@ -1,33 +1,39 @@
 package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
+import android.widget.LinearLayout
+import org.piramalswasthya.sakhi.model.CDRCache
 import org.piramalswasthya.sakhi.model.FormInput
-import org.piramalswasthya.sakhi.model.childDeathReviewCache
 
-class ChildDeathReviewFormDataset(context: Context, private val childDeathReview: childDeathReviewCache? = null) {
+class ChildDeathReviewFormDataset(context: Context, private val childDeathReview: CDRCache? = null) {
+    fun mapValues(cdrCache: CDRCache) {
+        cdrCache.childName = childName.value.value
+    }
 
-    private val childName = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+    val childName = FormInput(
+        inputType = FormInput.InputType.TEXT_VIEW,
         title = "Name of the Child",
         required = false
     )
-    private val dateOfBirth = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+    val dateOfBirth = FormInput(
+        inputType = FormInput.InputType.TEXT_VIEW,
         title = "Date of Birth",
         required = false
     )
-    private val age = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+    val age = FormInput(
+        inputType = FormInput.InputType.TEXT_VIEW,
         title = "Age",
         required = false
     )
     private val visitDate = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = FormInput.InputType.DATE_PICKER,
+        min = 0L,
+        max = System.currentTimeMillis(),
         title = "Visit Date",
-        required = false
+        required = true
     )
-    private val gender = FormInput(
-        inputType = FormInput.InputType.DROPDOWN,
+    val gender = FormInput(
+        inputType = FormInput.InputType.TEXT_VIEW,
         title = "Gender",
         required = false
     )
@@ -41,8 +47,8 @@ class ChildDeathReviewFormDataset(context: Context, private val childDeathReview
         title = "Father’s Name",
         required = false
     )
-    private val address = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+    val address = FormInput(
+        inputType = FormInput.InputType.TEXT_VIEW,
         title = "Address",
         required = false
     )
@@ -77,8 +83,10 @@ class ChildDeathReviewFormDataset(context: Context, private val childDeathReview
         required = false
     )
     private val dateOfDeath = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = FormInput.InputType.DATE_PICKER,
         title = "Date of death",
+        min = 0L,
+        max = System.currentTimeMillis(),
         required = false
     )
     private val timeOfDeath = FormInput(
@@ -86,13 +94,20 @@ class ChildDeathReviewFormDataset(context: Context, private val childDeathReview
         title = "Time",
         required = false
     )
-    private val placeOfDeath = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+    val placeOfDeath = FormInput(
+        inputType = FormInput.InputType.RADIO,
         title = "Place of Death",
+        required = false,
+        orientation = LinearLayout.VERTICAL,
+        list = listOf("Home", "Hospital", "In transit")
+    )
+    val hospitalName = FormInput(
+        inputType = FormInput.InputType.EDIT_TEXT,
+        title = "Hospital Name",
         required = false
     )
-    private val firstInformant = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+    val firstInformant = FormInput(
+        inputType = FormInput.InputType.TEXT_VIEW,
         title = "Name of First Informant ",
         required = false
     )
@@ -101,9 +116,12 @@ class ChildDeathReviewFormDataset(context: Context, private val childDeathReview
         title = "Signature/Name of ASHA",
         required = false
     )
-    private val dateOfNotification = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+    val dateOfNotification = FormInput(
+        inputType = FormInput.InputType.TEXT_VIEW,
         title = "Date of Notification ",
         required = false
     )
+
+    val firstPage = listOf(childName, dateOfBirth, age, visitDate, gender, motherName, fatherName, address, houseNumber, mohalla, landmarks, pincode,
+        landline, mobileNumber, dateOfDeath, timeOfDeath, placeOfDeath, firstInformant, ashaSign, dateOfNotification)
 }

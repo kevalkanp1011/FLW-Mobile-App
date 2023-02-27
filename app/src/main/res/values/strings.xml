@@ -153,7 +153,7 @@
     <string name="mdsr_field_investigation">Date of field investigation</string>
     <string name="mdsr_signature">Signature of MO I/C of the block:</string>
     <string name="mdsr_ic_date">Date</string>
-    <string name="mdsr_reason_death">if died due to maternal causes, specify reasons</string>
+    <string name="mdsr_reason_death">specify reasons</string>
     <string name="mdsr_action">Action taken</string>
 
 
