@@ -1,16 +1,24 @@
 package org.piramalswasthya.sakhi.ui.home_activity.death_reports.mdsr
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentMdsrObjectBinding
+import org.piramalswasthya.sakhi.work.PushToAmritWorker
+import org.piramalswasthya.sakhi.work.PushToD2DWorker
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MdsrObjectFragment : Fragment() {
@@ -51,6 +59,27 @@ class MdsrObjectFragment : Fragment() {
         }
         binding.btnMdsrSubmit.setOnClickListener{
             viewModel.submitForm()
+        }
+        viewModel.state.observe(viewLifecycleOwner) {
+            when(it) {
+                MdsrObjectViewModel.State.SUCCESS -> triggerMdsrSendingWorker(requireContext())
+                MdsrObjectViewModel.State.FAIL -> Toast.makeText(context, "Saving Mdsr to database Failed!", Toast.LENGTH_LONG).show()
+                else -> {}
+            }
+        }
+    }
+
+    companion object {
+        fun triggerMdsrSendingWorker(context: Context) {
+            val workRequest = OneTimeWorkRequestBuilder<PushToD2DWorker>()
+                .setConstraints(PushToD2DWorker.constraint)
+                .build()
+            WorkManager.getInstance(context)
+                .enqueueUniqueWork(
+                    PushToD2DWorker.name,
+                    ExistingWorkPolicy.APPEND_OR_REPLACE,
+                    workRequest
+                )
         }
     }
 }

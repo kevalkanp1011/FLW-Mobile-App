@@ -7,10 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import org.piramalswasthya.sakhi.database.converters.PrimitiveListConverter
 import org.piramalswasthya.sakhi.database.converters.SyncStateConverter
-import org.piramalswasthya.sakhi.database.room.dao.BenDao
-import org.piramalswasthya.sakhi.database.room.dao.CbacDao
-import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
-import org.piramalswasthya.sakhi.database.room.dao.UserDao
+import org.piramalswasthya.sakhi.database.room.dao.*
 import org.piramalswasthya.sakhi.model.*
 
 @Database(
@@ -19,7 +16,9 @@ import org.piramalswasthya.sakhi.model.*
         HouseholdCache::class,
         BenRegCache::class,
         BeneficiaryIdsAvail::class,
-        CbacCache::class],
+        CbacCache::class,
+        CDRCache::class,
+        MDSRCache::class],
     views = [BenBasicCache::class],
     version = 2, exportSchema = false
 )
@@ -33,6 +32,8 @@ abstract class InAppDb  : RoomDatabase(){
     abstract val householdDao: HouseholdDao
     abstract val benDao: BenDao
     abstract val cbacDao: CbacDao
+    abstract val cdrDao: CdrDao
+    abstract val mdsrDao: MdsrDao
 
     companion object{
         @Volatile
