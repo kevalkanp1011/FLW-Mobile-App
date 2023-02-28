@@ -1,10 +1,9 @@
 package org.piramalswasthya.sakhi.network
 
-import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import org.piramalswasthya.sakhi.model.CDRPost
 import org.piramalswasthya.sakhi.model.MdsrPost
-import retrofit2.Call
+import org.piramalswasthya.sakhi.model.PsmsaPost
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -37,6 +36,12 @@ interface D2DNetworkApiService {
     @Headers("Content-Type: application/json")
     suspend fun postCdrRegister(
         @Body cdrPost: List<CDRPost>
+    ): Response<ResponseBody>
+
+    @POST("pmsmaData")
+    @Headers("Content-Type: application/json")
+    suspend fun postPmsmaRegister(
+        @Body pmsmaPost: PsmsaPost
     ): Response<ResponseBody>
 
 }

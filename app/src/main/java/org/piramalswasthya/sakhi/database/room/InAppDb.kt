@@ -35,6 +35,7 @@ abstract class InAppDb  : RoomDatabase(){
     abstract val cbacDao: CbacDao
     abstract val cdrDao: CdrDao
     abstract val mdsrDao: MdsrDao
+    abstract val pmsmaDao: PmsmaDao
 
     companion object{
         @Volatile
