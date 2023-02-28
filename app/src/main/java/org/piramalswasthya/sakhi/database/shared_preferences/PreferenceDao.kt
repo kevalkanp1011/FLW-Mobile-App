@@ -6,6 +6,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.LocationRecord
+import org.piramalswasthya.sakhi.model.getDateTimeStringFromLong
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -94,16 +95,16 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
         return Gson().fromJson(json, LocationRecord::class.java)
     }
 
-    fun setFullLoadStatus(isDone: Boolean) {
+    fun setLastSyncedTimeStamp(lastSaved: Long) {
         val editor = pref.edit()
         val prefKey = context.getString(R.string.PREF_full_load_pull_progress)
-        editor.putBoolean(prefKey, isDone)
+        editor.putLong(prefKey, lastSaved)
         editor.apply()
     }
 
-    fun isFullLoadCompleted(): Boolean {
+    fun getLastSyncedTimeStamp(): Long {
         val prefKey = context.getString(R.string.PREF_full_load_pull_progress)
-        return pref.getBoolean(prefKey, false)
+        return pref.getLong(prefKey, 1603132200000)
     }
 
     fun saveSetLanguage(language: Languages) {

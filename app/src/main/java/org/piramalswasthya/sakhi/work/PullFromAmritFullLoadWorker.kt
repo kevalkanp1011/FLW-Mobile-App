@@ -61,7 +61,8 @@ class PullFromAmritFullLoadWorker @AssistedInject constructor(
                 Timber.d("Full load took $timeTaken seconds for $numPages pages  $result1")
 
                 if (result1.all { it }) {
-                    preferenceDao.setFullLoadStatus(true)
+                    preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
+
                     return@withContext Result.success()
                 }
                 return@withContext Result.failure()
@@ -77,7 +78,6 @@ class PullFromAmritFullLoadWorker @AssistedInject constructor(
 
         } catch (e: java.lang.Exception) {
             Timber.d("Error occurred in PullFromAmritFullLoadWorker $e")
-            preferenceDao.setFullLoadStatus(false)
             Result.failure()
         }
     }
