@@ -18,7 +18,8 @@ import org.piramalswasthya.sakhi.model.*
         BeneficiaryIdsAvail::class,
         CbacCache::class,
         CDRCache::class,
-        MDSRCache::class],
+        MDSRCache::class,
+        PMSMACache::class],
     views = [BenBasicCache::class],
     version = 2, exportSchema = false
 )

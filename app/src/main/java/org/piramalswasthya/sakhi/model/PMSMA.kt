@@ -1,6 +1,27 @@
 package org.piramalswasthya.sakhi.model
 
-data class PMSMACache (
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+
+
+@Entity(
+    tableName = "PMSMA",
+    foreignKeys = [ForeignKey(
+        entity = BenRegCache::class,
+        parentColumns = arrayOf("beneficiaryId", "householdId"),
+        childColumns = arrayOf("benId", "hhId"),
+        onDelete = ForeignKey.CASCADE
+    )],
+    indices = [Index(name = "pmsmaInd", value = ["benId", "hhId"])]
+)
+
+data class PMSMACache(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val benId: Long,
+    val hhId: Long,
 
     var mctsNumberOrRchNumber: String? = null,
 
@@ -67,4 +88,4 @@ data class PMSMACache (
     var birthPrepAndNutritionAndFamilyPlanning: Boolean? = null,
 
     var medicalOfficerSign: String? = null,
-        )
+)

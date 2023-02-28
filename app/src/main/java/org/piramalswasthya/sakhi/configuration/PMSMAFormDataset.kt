@@ -15,7 +15,8 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
                 SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
             return mdFormat.format(calendar.time)
         }
-        private fun getLongFromDate(dateString : String): Long {
+
+        private fun getLongFromDate(dateString: String): Long {
             val f = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
             val date = f.parse(dateString)
             return date?.time ?: throw IllegalStateException("Invalid date for dateReg")
@@ -30,6 +31,7 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     private val haveMCPCard = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Does the beneficiary have an MCP card",
+        list = arrayOf("Yes", "No"),
         required = false
     )
     private val husbandName = FormInput(
@@ -37,12 +39,12 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
         title = "Husband’s Name",
         required = false
     )
-    private val address = FormInput(
+    val address = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Address",
         required = false
     )
-    private val mobileNumber = FormInput(
+    val mobileNumber = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Mobile number",
         required = false
@@ -80,6 +82,7 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     private val twinPregnancy = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Twins pregnancy",
+        list = arrayOf("Yes", "No"),
         required = false
     )
     private val urineAlbumin = FormInput(
@@ -115,31 +118,37 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     private val hivTestDuringANC = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Was HIV test done during ANC Check up? ",
+        list = arrayOf("Yes", "No"),
         required = false
     )
     private val swollenCondtion = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Swollen condition ",
+        list = arrayOf("Yes", "No"),
         required = false
     )
     private val bloodSugarTest = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Blood sugar test ",
+        list = arrayOf("Yes", "No"),
         required = false
     )
     private val ultraSound = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Ultrasound ",
+        list = arrayOf("Yes", "No"),
         required = false
     )
     private val ironFolicAcid = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Iron Folic Acid ",
+        list = arrayOf("Yes", "No"),
         required = false
     )
     private val calciumSupplementation = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Calcium Supplementation ",
+        list = arrayOf("Yes", "No"),
         required = false
     )
     private val tetanusToxoid = FormInput(
@@ -160,6 +169,7 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     private val highriskSymbols = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Identification of high risk symbols",
+        list = arrayOf("Yes", "No"),
         required = false
     )
     private val highRiskReason = FormInput(
@@ -170,16 +180,19 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     private val highRiskPregnant = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Pregnant in high risk category treated",
+        list = arrayOf("Yes", "No"),
         required = false
     )
     private val highRiskPregnancyReferred = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Pregnant in high risk category was referred",
+        list = arrayOf("Yes", "No"),
         required = false
     )
     private val birthPrepAndNutritionAndFamilyPlanning = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Preparation for birth and complications, nutrition and family planning",
+        list = arrayOf("Yes", "No"),
         required = false
     )
     private val medicalOfficerSign = FormInput(
@@ -187,5 +200,49 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
         title = "Signature of medical officer in charge ",
         required = false
     )
+
+    val firstPage by lazy {
+        listOf(
+            mctsNumberOrRchNumber,
+            haveMCPCard,
+            husbandName,
+            address,
+            mobileNumber,
+            numANC,
+            weight,
+            systolicBloodPressure,
+            bloodPressure,
+            abdominalCheckUp,
+            fetalHRPM,
+            twinPregnancy,
+            urineAlbumin,
+            haemoglobinAndBloodGroup,
+            hiv,
+            vdrl,
+            hbsc,
+            malaria,
+            hivTestDuringANC,
+            swollenCondtion,
+            bloodSugarTest,
+            ultraSound,
+            ironFolicAcid,
+            calciumSupplementation,
+            tetanusToxoid,
+            lastMenstrualPeriod,
+            expectedDateOfDelivery,
+            highriskSymbols,
+            highRiskReason,
+            highRiskPregnant,
+            highRiskPregnancyReferred,
+            birthPrepAndNutritionAndFamilyPlanning,
+            medicalOfficerSign,
+
+            )
+    }
+
+    fun mapValues(pmsmaCache: PMSMACache) {
+
+    }
+
 
 }

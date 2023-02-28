@@ -12,6 +12,7 @@ import org.piramalswasthya.sakhi.network.interceptors.TokenInsertD2DInterceptor
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertTmcInterceptor
 import org.piramalswasthya.sakhi.ui.login_activity.sign_in.SignInViewModel.State
 import timber.log.Timber
+import java.net.ConnectException
 import java.net.SocketTimeoutException
 import javax.inject.Inject
 
@@ -74,8 +75,10 @@ class UserRepo @Inject constructor(
                     return@withContext State.ERROR_SERVER
                 }
                 return@withContext State.ERROR_INPUT
-            }catch (se : SocketTimeoutException){
+            } catch (se: SocketTimeoutException) {
                 return@withContext State.ERROR_SERVER
+            } catch (ce: ConnectException) {
+                return@withContext State.ERROR_NETWORK
             }
         }
     }
