@@ -10,12 +10,10 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
+import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
-import org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_eligible_list.NcdEligibleListFragmentDirections
 
 @AndroidEntryPoint
 class NcdListFragment : Fragment() {
@@ -42,8 +40,8 @@ class NcdListFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.btnNextPage.visibility = View.GONE
 
-        val benAdapter = BenListAdapterForForm(
-            BenListAdapterForForm.ClickListener(
+        val benAdapter = BenListAdapter(
+            BenListAdapter.BenClickListener(
                 {
                     Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
 
@@ -51,24 +49,15 @@ class NcdListFragment : Fragment() {
                 {
                     Toast.makeText(context, "Household : $it clicked", Toast.LENGTH_SHORT).show()
                 },
-                { hhId, benId ->
+                { _, _ ->
                     //viewModel.triggerPushToAmritWorker()
                     Toast.makeText(
                         requireContext(),
-                        "All unsyced records will be uploaded once network is available!",
+                        "All unsynced records will be uploaded once network is available!",
                         Toast.LENGTH_LONG
                     ).show()
                 },
-                { hhId, benId ->
-                    findNavController().navigate(
-                        NcdEligibleListFragmentDirections.actionNcdEligibleListFragmentToCbacFragment(
-                            hhId,
-                            benId,
-                            homeViewModel.currentUser.value!!.userId
-                        )
-                    )
-                }
-            ), "CBAC Form")
+            ))
         binding.rvAny.adapter = benAdapter
 
         viewModel.benList.observe(viewLifecycleOwner) {

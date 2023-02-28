@@ -509,7 +509,7 @@ data class BenRegCache(
             age_unitId = ageUnit!!.ordinal,
             ashaId = ashaId,
             benId = beneficiaryId,
-            registrationDate = getDateTimeStringFromLong(regDate!!)!!,
+            registrationDate = getDateTimeStringFromLong(regDate)!!,
             marriageDate = getDateTimeStringFromLong(genDetails?.marriageDate),
             mobileNoOfRelation = mobileNoOfRelation,
             mobileNoOfRelationId = mobileNoOfRelationId,

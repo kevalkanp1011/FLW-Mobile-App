@@ -48,7 +48,6 @@ interface UserDao {
     fun getRecordCounts(
         userId: Int,
         year: AgeUnit = AgeUnit.YEARS,
-        infant: TypeOfList = TypeOfList.INFANT,
         female: Gender = Gender.FEMALE
     ): LiveData<List<IconCount>>
 

@@ -130,7 +130,7 @@
     </string-array>
     <string name="nhhr_avail_toilet">Availability of Toilet</string>
     <string name="nhhr_avail_toilet_1">Flush toilet with running water</string>
-    <string name="nhhr_avail_toilet_2">Flush toiler without water</string>
+    <string name="nhhr_avail_toilet_2">Flush toilet without water</string>
     <string name="nhhr_avail_toilet_3">Pit toilet with running water supply</string>
     <string name="nhhr_avail_toilet_4">Pit toilet without water supply</string>
     <string name="nhhr_avail_toilet_5">Other</string>

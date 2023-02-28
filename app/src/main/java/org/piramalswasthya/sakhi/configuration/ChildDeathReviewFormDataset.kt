@@ -99,7 +99,7 @@ class ChildDeathReviewFormDataset(context: Context, private val childDeathReview
         title = "Place of Death",
         required = false,
         orientation = LinearLayout.VERTICAL,
-        list = listOf("Home", "Hospital", "In transit")
+        list = arrayOf("Home", "Hospital", "In transit")
     )
     val hospitalName = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,

@@ -73,11 +73,13 @@ class BenKidRegFormDataset(private val context: Context) {
     private val firstName = FormInput(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_nb_first_name),
+        allCaps = true,
         required = true
     )
     private val lastName = FormInput(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_nb_last_name),
+        allCaps = true,
         required = false,
     )
     val ageUnit = FormInput(
@@ -108,11 +110,13 @@ class BenKidRegFormDataset(private val context: Context) {
     private val fatherName = FormInput(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_father_name),
+        allCaps = true,
         required = true
     )
     private val motherName = FormInput(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_mother_name),
+        allCaps = true,
         required = true
     )
 
@@ -428,7 +432,7 @@ class BenKidRegFormDataset(private val context: Context) {
         required = true
     )
     val corticosteroidGivenAtLabor = FormInput(
-        inputType = RADIO,
+        inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_corticosteroid),
         arrayOf(
             "Yes",
@@ -594,7 +598,7 @@ class BenKidRegFormDataset(private val context: Context) {
         return withContext(Dispatchers.IO) {
             val file = File(context.cacheDir, uriString.substringAfterLast("/"))
             val compressedFile = Compressor.compress(context, file) {
-                quality(70)
+                quality(50)
             }
             val iStream = compressedFile.inputStream()
             val byteArray = getBytes(iStream)

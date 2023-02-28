@@ -39,6 +39,7 @@ class NewBenRegG15ObjectFragment : Fragment() {
                     latestImageForm?.value?.value = uri.toString()
                     binding.inputForm.rvInputForm.apply {
                         val adapter = this.adapter as FormInputAdapter
+                        latestImageForm?.errorText = null
                         adapter.notifyItemChanged(0)
                     }
                     Timber.d("Image saved at @ $uri")
@@ -110,9 +111,21 @@ class NewBenRegG15ObjectFragment : Fragment() {
     fun validate(): Boolean {
 //        Timber.d("binding $binding rv ${binding.nhhrForm.rvInputForm} adapter ${binding.nhhrForm.rvInputForm.adapter}")
 //        return false
-
-        return (binding.inputForm.rvInputForm.adapter?.let {
-            (it as FormInputAdapter).validateInput() == 0
-        } ?: false)
+//
+//        return (binding.inputForm.rvInputForm.adapter?.let {
+//            (it as FormInputAdapter).validateInput() == 0
+//        } ?: false)
+        val result = binding.inputForm.rvInputForm.adapter?.let {
+            (it as FormInputAdapter).validateInput()
+        }
+        Timber.d("Validation : $result")
+        return if (result == -1)
+            true
+        else {
+            if (result != null) {
+                binding.inputForm.rvInputForm.scrollToPosition(result)
+            }
+            false
+        }
     }
 }

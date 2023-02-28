@@ -91,7 +91,9 @@ class HouseholdFormDataset(context: Context) {
         title = context.getString(R.string.nhhr_mob_no_hof),
         required = true,
         etMaxLength = 10,
-
+        isMobileNumber = true,
+        min=6000000000,
+        max=9999999999,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
     )
     private val houseNo = FormInput(

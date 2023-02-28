@@ -128,9 +128,9 @@ class NewBenRegG15ViewModel @Inject constructor(
 //                        )
 
                         form.relationToHead.value.value = null
-                        adapter.notifyItemChanged(form.firstPage.indexOf(form.relationToHead))
+                        adapter.notifyItemChanged(adapter.currentList.indexOf(form.relationToHead))
                         form.maritalStatus.value.value = null
-                        adapter.notifyItemChanged(form.firstPage.indexOf(form.maritalStatus))
+                        adapter.notifyItemChanged(adapter.currentList.indexOf(form.maritalStatus))
                         val list = adapter.currentList.toMutableList()
                         list.remove(form.otherRelationToHead)
                         list.remove(form.husbandName)
@@ -259,8 +259,17 @@ class NewBenRegG15ViewModel @Inject constructor(
                                 adapter.currentList.indexOf(form.mobileNoOfRelation) + 1,
                                 form.contactNumber
                             )
-                            adapter.submitList(list)
                         }
+                        if(!adapter.currentList.contains(form.otherMobileNoOfRelation)) {
+                            if (it == "Other")
+                                list.add(
+                                    adapter.currentList.indexOf(form.mobileNoOfRelation) + 1,
+                                    form.otherMobileNoOfRelation
+                                )
+                        }
+                        else
+                            list.remove(form.otherMobileNoOfRelation)
+                        adapter.submitList(list)
                     }
                 }
             }
@@ -618,7 +627,7 @@ class NewBenRegG15ViewModel @Inject constructor(
                         benRepo.persistGenThirdPage(form, locationRecord)
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
-                    Timber.d("saving HH data failed!!")
+                    Timber.d("saving HH data failed!! $e")
                     _state.postValue(State.SAVE_FAILED)
                 }
             }
