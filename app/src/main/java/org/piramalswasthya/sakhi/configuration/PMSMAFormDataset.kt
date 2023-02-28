@@ -154,15 +154,16 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     private val tetanusToxoid = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Tetanus toxoid ",
+        list = arrayOf("Yes", "No"),
         required = false
     )
     private val lastMenstrualPeriod = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = FormInput.InputType.DATE_PICKER,
         title = "Last Menstrual Period ",
         required = false
     )
     private val expectedDateOfDelivery = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = FormInput.InputType.DATE_PICKER,
         title = "Expected Date of Delivery ",
         required = false
     )
@@ -241,7 +242,39 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     }
 
     fun mapValues(pmsmaCache: PMSMACache) {
-
+        pmsmaCache.mctsNumberOrRchNumber = mctsNumberOrRchNumber.value.value
+        pmsmaCache.haveMCPCard = haveMCPCard.value.value == "Yes"
+        pmsmaCache.husbandName = husbandName.value.value
+        pmsmaCache.address = address.value.value
+        pmsmaCache.mobileNumber = mobileNumber.value.value?.let { it.toLong() } ?: 0L
+        pmsmaCache.numANC = numANC.value.value?.let { it.toInt() } ?: 0
+        pmsmaCache.weight = weight.value.value?.let { it.toInt() } ?: 0
+        pmsmaCache.systolicBloodPressure = systolicBloodPressure.value.value
+        pmsmaCache.bloodPressure = bloodPressure.value.value
+        pmsmaCache.abdominalCheckUp = abdominalCheckUp.value.value
+        pmsmaCache.fetalHRPM = fetalHRPM.value.value?.let { it.toInt() } ?: 0
+        pmsmaCache.twinPregnancy = twinPregnancy.value.value == "Yes"
+        pmsmaCache.urineAlbumin = urineAlbumin.value.value
+        pmsmaCache.haemoglobinAndBloodGroup = haemoglobinAndBloodGroup.value.value
+        pmsmaCache.hiv = hiv.value.value
+        pmsmaCache.vdrl = vdrl.value.value
+        pmsmaCache.hbsc = hbsc.value.value
+        pmsmaCache.malaria = malaria.value.value
+        pmsmaCache.hivTestDuringANC = hivTestDuringANC.value.value == "Yes"
+        pmsmaCache.swollenCondtion = swollenCondtion.value.value == "Yes"
+        pmsmaCache.bloodSugarTest = bloodSugarTest.value.value == "Yes"
+        pmsmaCache.ultraSound = ultraSound.value.value == "Yes"
+        pmsmaCache.ironFolicAcid = ironFolicAcid.value.value == "Yes"
+        pmsmaCache.calciumSupplementation = calciumSupplementation.value.value == "Yes"
+        pmsmaCache.tetanusToxoid = tetanusToxoid.value.value == "Yes"
+        pmsmaCache.lastMenstrualPeriod = getLongFromDate(lastMenstrualPeriod.value.value!!)
+        pmsmaCache.expectedDateOfDelivery = getLongFromDate(expectedDateOfDelivery.value.value!!)
+        pmsmaCache.highriskSymbols = highriskSymbols.value.value == "Yes"
+        pmsmaCache.highRiskReason = highRiskReason.value.value
+        pmsmaCache.highRiskPregnant = highRiskPregnant.value.value == "Yes"
+        pmsmaCache.highRiskPregnancyReferred = highRiskPregnancyReferred.value.value == "Yes"
+        pmsmaCache.birthPrepAndNutritionAndFamilyPlanning = birthPrepAndNutritionAndFamilyPlanning.value.value == "Yes"
+        pmsmaCache.medicalOfficerSign = medicalOfficerSign.value.value
     }
 
 

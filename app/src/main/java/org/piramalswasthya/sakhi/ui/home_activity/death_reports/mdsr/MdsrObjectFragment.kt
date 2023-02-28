@@ -58,7 +58,7 @@ class MdsrObjectFragment : Fragment() {
             viewModel.setAddress(it, adapter)
         }
         binding.btnMdsrSubmit.setOnClickListener{
-            viewModel.submitForm()
+            if(validate()) viewModel.submitForm()
         }
         viewModel.state.observe(viewLifecycleOwner) {
             when(it) {
@@ -80,6 +80,25 @@ class MdsrObjectFragment : Fragment() {
                     ExistingWorkPolicy.APPEND_OR_REPLACE,
                     workRequest
                 )
+        }
+    }
+
+
+
+    fun validate(): Boolean {
+//        Timber.d("binding $binding rv ${binding.nhhrForm.rvInputForm} adapter ${binding.nhhrForm.rvInputForm.adapter}")
+//        return false
+        val result = binding.mdsrForm.inputForm.rvInputForm.adapter?.let {
+            (it as FormInputAdapter).validateInput()
+        }
+        Timber.d("Validation : $result")
+        return if (result == -1)
+            true
+        else {
+            if (result != null) {
+                binding.mdsrForm.inputForm.rvInputForm.scrollToPosition(result)
+            }
+            false
         }
     }
 }

@@ -12,6 +12,7 @@ import org.piramalswasthya.sakhi.configuration.BenKidRegFormDataset
 import org.piramalswasthya.sakhi.database.room.BeneficiaryIdsAvail
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.network.GetBenRequest
 import org.piramalswasthya.sakhi.network.NcdNetworkApiService
@@ -26,6 +27,7 @@ import javax.inject.Inject
 class BenRepo @Inject constructor(
     private val context: Application,
     private val database: InAppDb,
+    private val preferenceDao: PreferenceDao,
     private val userRepo: UserRepo,
     private val tmcNetworkApiService: TmcNetworkApiService,
     private val ncdNetworkApiService: NcdNetworkApiService
@@ -150,12 +152,12 @@ class BenRepo @Inject constructor(
     }
 
     companion object {
-        private fun getCurrentDate(): String {
-            val dateLong = System.currentTimeMillis()
+        private fun getCurrentDate(millis: Long = System.currentTimeMillis()): String {
+
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
             val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
-            val dateString = dateFormat.format(dateLong)
-            val timeString = timeFormat.format(dateLong)
+            val dateString = dateFormat.format(millis)
+            val timeString = timeFormat.format(millis)
 
             return "${dateString}T${timeString}.000Z"
         }
@@ -604,12 +606,13 @@ class BenRepo @Inject constructor(
             val user =
                 database.userDao.getLoggedInUser()
                     ?: throw IllegalStateException("No user logged in!!")
+            val lastTimeStamp = preferenceDao.getLastSyncedTimeStamp()
             try {
                 val response =
                     ncdNetworkApiService.getBeneficiaries(
                         GetBenRequest(
                             user.userId.toString(), pageNumber,
-                            "2020-10-20T15:50:45.000Z", getCurrentDate()
+                            getCurrentDate(lastTimeStamp), getCurrentDate()
                         )
                     )
                 val statusCode = response.code()

@@ -88,7 +88,7 @@ class HomeViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             userRepo.logout()
-            pref.setFullLoadStatus(false)
+            pref.setLastSyncedTimeStamp(1603132200000)
             _navigateToLoginPage.value = true
         }
     }
@@ -97,8 +97,8 @@ class HomeViewModel @Inject constructor(
         _navigateToLoginPage.value = false
     }
 
-    fun checkIfFullLoadCompletedBefore(): Boolean {
-        return pref.isFullLoadCompleted()
+    fun checkIfFullLoadCompletedBefore(): Long {
+        return pref.getLastSyncedTimeStamp()
 
     }
 

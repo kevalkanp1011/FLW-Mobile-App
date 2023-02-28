@@ -35,7 +35,7 @@ class CdrRepo @Inject constructor(
 
                 true
             } catch (e: Exception) {
-                Timber.d("Error : $e raised at saveCbacData")
+                Timber.d("Error : $e raised at saveCdrData")
                 false
             }
         }

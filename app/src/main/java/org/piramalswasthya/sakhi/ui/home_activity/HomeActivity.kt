@@ -76,8 +76,6 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setUpFullLoadPullWorker() {
-        if (viewModel.checkIfFullLoadCompletedBefore())
-            return
         val workRequest = OneTimeWorkRequestBuilder<PullFromAmritFullLoadWorker>()
             .setConstraints(PullFromAmritFullLoadWorker.constraint)
             .build()
