@@ -76,11 +76,13 @@ class UserRepo @Inject constructor(
                     return@withContext State.ERROR_SERVER
                 }
                 return@withContext State.ERROR_INPUT
-            }catch (se : SocketTimeoutException){
+            } catch (se: SocketTimeoutException) {
                 return@withContext State.ERROR_SERVER
             } catch (ce: ConnectException) {
                 return@withContext State.ERROR_NETWORK
             } catch (ue: UnknownHostException) {
+                return@withContext State.ERROR_NETWORK
+            } catch (ce: ConnectException) {
                 return@withContext State.ERROR_NETWORK
             }
         }

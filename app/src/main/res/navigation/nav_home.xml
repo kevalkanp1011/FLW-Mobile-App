@@ -251,7 +251,11 @@
         android:id="@+id/pregnancyListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.pregnancy_list.PregnancyListFragment"
         android:label="fragment_pregnancy_list"
-        tools:layout="@layout/fragment_pregnancy_list" />
+        tools:layout="@layout/fragment_pregnancy_list">
+        <action
+            android:id="@+id/action_pregnancyListFragment_to_pmsmaFragment"
+            app:destination="@id/pmsmaFragment" />
+    </fragment>
     <fragment
         android:id="@+id/deliveryStageListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.delivery_stage_list.DeliveryStageListFragment"
@@ -309,21 +313,6 @@
         android:id="@+id/cbacFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_eligible_list.cbac.CbacFragment"
         android:label="CbacFragment">
-        <argument
-            android:name="hhId"
-            app:argType="long" />
-        <argument
-            android:name="benId"
-            app:argType="long" />
-        <argument
-            android:name="userId"
-            app:argType="integer" />
-
-    </fragment>
-    <fragment
-        android:id="@+id/pmsmaFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.delivery_stage_list.pmsma.PMSMAFragment"
-        android:label="PMSMA Form">
         <argument
             android:name="hhId"
             app:argType="long" />
@@ -408,12 +397,24 @@
         android:id="@+id/cdrObjectFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.death_reports.cdr.CdrObjectFragment"
         android:label="CDR Form"
-        tools:layout="@layout/fragment_cdr_object" >
+        tools:layout="@layout/fragment_cdr_object">
         <argument
             android:name="hhId"
             app:argType="long" />
         <argument
             android:name="benId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/pmsmaFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.pmsma.PmsmaFragment"
+        android:label="fragment_pmsma"
+        tools:layout="@layout/fragment_pmsma">
+        <argument
+            android:name="benId"
+            app:argType="long" />
+        <argument
+            android:name="hhId"
             app:argType="long" />
     </fragment>
 
