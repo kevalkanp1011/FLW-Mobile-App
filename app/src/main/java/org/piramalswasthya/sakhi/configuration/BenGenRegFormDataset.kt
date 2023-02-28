@@ -69,11 +69,13 @@ class BenGenRegFormDataset(private val context: Context) {
     private val firstName = FormInput(
         inputType = EDIT_TEXT,
         title = "First Name",
+        allCaps = true,
         required = true
     )
     private val lastName = FormInput(
         inputType = EDIT_TEXT,
         title = "Last Name / Surname",
+        allCaps = true,
         required = false,
     )
     val age = FormInput(
@@ -117,16 +119,19 @@ class BenGenRegFormDataset(private val context: Context) {
     val husbandName = FormInput(
         inputType = EDIT_TEXT,
         title = "Husband's Name",
+        allCaps = true,
         required = true
     )
     val wifeName = FormInput(
         inputType = EDIT_TEXT,
         title = "Wife's Name",
+        allCaps = true,
         required = true
     )
     val spouseName = FormInput(
         inputType = EDIT_TEXT,
         title = "Spouse's Name",
+        allCaps = true,
         required = true
     )
     val ageAtMarriage = FormInput(
@@ -139,11 +144,13 @@ class BenGenRegFormDataset(private val context: Context) {
     private val fatherName = FormInput(
         inputType = EDIT_TEXT,
         title = "Father's Name",
+        allCaps = true,
         required = true
     )
     private val motherName = FormInput(
         inputType = EDIT_TEXT,
         title = "Mother's Name",
+        allCaps = true,
         required = true
     )
 
@@ -160,11 +167,19 @@ class BenGenRegFormDataset(private val context: Context) {
         ),
         required = true,
     )
+    val otherMobileNoOfRelation = FormInput(
+        inputType = EDIT_TEXT,
+        title = "Other - Mobile Number of",
+        required = true
+    )
     val contactNumber = FormInput(
         inputType = EDIT_TEXT,
         title = "Contact Number",
         required = true,
         etMaxLength = 10,
+        isMobileNumber = true,
+        min=6000000000,
+        max=9999999999,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
     )
 
@@ -498,6 +513,7 @@ class BenGenRegFormDataset(private val context: Context) {
             mobileNoOfRelationId =
                 (this@BenGenRegFormDataset.mobileNoOfRelation.list?.indexOf(mobileNoOfRelation!!))?.let { it + 1 }
                     ?: 0
+            mobileOthers = this@BenGenRegFormDataset.otherMobileNoOfRelation.value.value
             contactNumber = stringToLong(this@BenGenRegFormDataset.contactNumber.value.value!!)
             community = this@BenGenRegFormDataset.community.value.value
             communityId =
@@ -575,7 +591,11 @@ class BenGenRegFormDataset(private val context: Context) {
                     (this@BenGenRegFormDataset.reproductiveStatus.list?.indexOf(reproductiveStatus))?.let { it + 1 }
                         ?: 0
                 lastMenstrualPeriod =
-                    getLongFromDate(this@BenGenRegFormDataset.lastMenstrualPeriod.value.value!!)
+                    this@BenGenRegFormDataset.lastMenstrualPeriod.value.value?.let {
+                        getLongFromDate(
+                            it
+                        )
+                    }
                 nishchayDeliveryStatus =
                     this@BenGenRegFormDataset.nishchayKitDeliveryStatus.value.value
                 nishchayDeliveryStatusPosition =

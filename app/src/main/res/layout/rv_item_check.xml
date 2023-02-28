@@ -10,9 +10,11 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_ri"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/padding_wide">
+        checkBoxesForm="@{form}"
+        android:paddingTop="@dimen/padding_normal">
 
         <TextView
             android:id="@+id/tv_title"
@@ -30,7 +32,6 @@
             android:id="@+id/ll_checks"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            checkBoxesForm="@{form}"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
             android:orientation="vertical"/>
 

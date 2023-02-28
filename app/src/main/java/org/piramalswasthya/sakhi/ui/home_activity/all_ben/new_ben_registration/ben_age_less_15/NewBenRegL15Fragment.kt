@@ -1,14 +1,23 @@
 package org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_less_15
 
+import android.Manifest
+import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
@@ -34,6 +43,40 @@ class NewBenRegL15Fragment : Fragment() {
     private val viewModel: NewBenRegL15ViewModel by viewModels()
 
     private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
+
+    private val requestLocationPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()){ b->
+        if(b){
+            requestLocationPermission()
+        }
+        else
+            findNavController().navigateUp()
+    }
+
+    private fun showSettingsAlert() {
+        val alertDialog: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+
+        // Setting Dialog Title
+        alertDialog.setTitle("Enable GPS")
+
+        // Setting Dialog Message
+        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?")
+
+        // On pressing Settings button
+        alertDialog.setPositiveButton("Settings"
+        ) { _, _ ->
+            val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+            startActivity(intent)
+        }
+
+        // on pressing cancel button
+        alertDialog.setNegativeButton("Cancel"
+        ) { dialog, _ ->
+            findNavController().navigateUp()
+            dialog.cancel()
+        }
+        alertDialog.show()
+    }
+
 
     private val errorAlert by lazy {
         MaterialAlertDialogBuilder(requireContext())
@@ -136,6 +179,7 @@ class NewBenRegL15Fragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        requestLocationPermission()
         binding.vp2Nhhr.registerOnPageChangeCallback(pageChangeCallback)
 
     }
@@ -176,6 +220,15 @@ class NewBenRegL15Fragment : Fragment() {
                 binding.btnToBen.visibility = View.VISIBLE
             }
         }
+    }
+    private fun requestLocationPermission(){
+        val locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            requestLocationPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        else
+            if(!isGPSEnabled)
+                showSettingsAlert()
     }
 
     private fun validateFormForPage(i: Int): Boolean {

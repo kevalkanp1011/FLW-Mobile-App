@@ -7,13 +7,13 @@
     <string name="tv_text_welcome">स्वागत</string>
     <string name="tv_text_welcome_user">स्वागत, %s</string>
     <string name="tv_text_sign_in">जारी रखने के लिए लॉग इन करें</string>
-    <string name="tv_text_select_language">कृपया अपनी भाषा चुनें</string>
+    <string name="tv_text_select_language">कृपया अपनी भाषा का चयन कीजिए</string>
     <string name="text_english" translatable="false">English</string>
     <string name="text_hindi" translatable="false">हिंदी</string>
     <string name="text_assamese" translatable="false">অসমীয়া</string>
     <string name="til_username_hint_text">उपयोगकर्ता नाम</string>
     <string name="til_password_hint_text">पासवर्ड</string>
-    <string name="cb_login_remember_me_text">पहचाना की नहीं</string>
+    <string name="cb_login_remember_me_text">मुझे याद रखना</string>
     <string name="btn_login_forgot_password_text">पासवर्ड भूल गए?</string>
     <string name="btn_login_text">लॉग इन करें</string>
 
@@ -130,7 +130,7 @@
     </string-array>
     <string name="nhhr_avail_toilet">Availability of Toilet</string>
     <string name="nhhr_avail_toilet_1">Flush toilet with running water</string>
-    <string name="nhhr_avail_toilet_2">Flush toiler without water</string>
+    <string name="nhhr_avail_toilet_2">Flush toilet without water</string>
     <string name="nhhr_avail_toilet_3">Pit toilet with running water supply</string>
     <string name="nhhr_avail_toilet_4">Pit toilet without water supply</string>
     <string name="nhhr_avail_toilet_5">Other</string>
