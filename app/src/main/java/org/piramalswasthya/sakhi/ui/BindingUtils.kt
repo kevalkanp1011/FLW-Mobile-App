@@ -73,39 +73,48 @@ fun ConstraintLayout.setItems(form: FormInput?) {
 }
 
 @BindingAdapter("checkBoxesForm")
-fun LinearLayout.setItems(form: FormInput?) {
-    if (this.childCount != 0)
-        return
-    form?.list?.let { items ->
-        orientation = form.orientation ?: LinearLayout.VERTICAL
-        weightSum = items.size.toFloat()
-        items.forEach {
-            val cbx = CheckBox(this.context)
-            cbx.layoutParams =
-                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1.0F)
-            cbx.id = View.generateViewId()
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-                cbx.setTextAppearance(context, android.R.style.TextAppearance_Material_Medium)
-            else
-                cbx.setTextAppearance(android.R.style.TextAppearance_Material_Subhead)
-            cbx.text = it
-            addView(cbx)
-            if (form.value.value?.contains(it) == true)
-                cbx.isChecked = true
-            cbx.setOnCheckedChangeListener { _, b ->
-                if (b) {
-                    if (form.value.value != null)
-                        form.value.value = form.value.value + it
-                    else
-                        form.value.value = it
-                } else
-                    if (form.value.value?.contains(it) == true) {
-                        form.value.value = form.value.value?.replace(it, "")
+fun ConstraintLayout.setItemsCheckBox(form: FormInput?) {
+//    if (this.childCount != 0)
+//        return
+    val ll = this.findViewById<LinearLayout>(R.id.ll_checks)
+    ll.removeAllViews()
+    ll.apply{
+        form?.list?.let { items ->
+            orientation = form.orientation ?: LinearLayout.VERTICAL
+            weightSum = items.size.toFloat()
+            items.forEach {
+                val cbx = CheckBox(this.context)
+                cbx.layoutParams =
+                    LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1.0F)
+                cbx.id = View.generateViewId()
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+                    cbx.setTextAppearance(context, android.R.style.TextAppearance_Material_Medium)
+                else
+                    cbx.setTextAppearance(android.R.style.TextAppearance_Material_Subhead)
+                cbx.text = it
+                addView(cbx)
+                if (form.value.value?.contains(it) == true)
+                    cbx.isChecked = true
+                cbx.setOnCheckedChangeListener { _, b ->
+                    if (b) {
+                        if (form.value.value != null)
+                            form.value.value = form.value.value + it
+                        else
+                            form.value.value = it
+                    } else {
+                        if (form.value.value?.contains(it) == true) {
+                            form.value.value = form.value.value?.replace(it, "")
+                        }
                     }
-                if (form.value.value.isNullOrBlank()) {
-                    form.value.value = null
+                    if (form.value.value.isNullOrBlank()) {
+                        form.value.value = null
+                    } else {
+                        Timber.d("Called here!")
+                        form.errorText = null
+                        this@setItemsCheckBox.setBackgroundResource(0)
+                    }
+                    Timber.d("Checkbox values : ${form.value.value}")
                 }
-                Timber.d("Checkbox values : ${form.value.value}")
             }
         }
     }

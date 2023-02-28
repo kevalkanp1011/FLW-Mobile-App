@@ -96,8 +96,10 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
                                 item.errorText = binding.tilEditText.error.toString()
                             }
                         }
-                        if (item.min != null && item.max != null && age >= item.min!! && age <= item.max!!)
+                        if (item.min != null && item.max != null && age >= item.min!! && age <= item.max!!) {
                             binding.tilEditText.error = null
+                            item.errorText = null
+                        }
                     } else {
                         if (item.errorText != null && editable.isNotBlank()) {
                             item.errorText = null
@@ -196,8 +198,10 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
             item: FormInput
         ) {
             binding.form = item
-
-            //item.errorText?.let { binding.rg.error = it }
+            if (item.errorText != null)
+                binding.clRi.setBackgroundResource(R.drawable.state_errored)
+            else
+                binding.clRi.setBackgroundResource(0)
             binding.executePendingBindings()
 
         }
@@ -281,6 +285,10 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
         ) {
             binding.form = item
             binding.clickListener = clickListener
+            if (item.errorText != null)
+                binding.clRi.setBackgroundResource(R.drawable.state_errored)
+            else
+                binding.clRi.setBackgroundResource(0)
             binding.executePendingBindings()
 
         }

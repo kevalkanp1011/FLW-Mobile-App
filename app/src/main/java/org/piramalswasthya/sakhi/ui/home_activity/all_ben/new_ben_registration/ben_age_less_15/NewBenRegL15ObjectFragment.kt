@@ -38,6 +38,7 @@ class NewBenRegL15ObjectFragment  : Fragment() {
                     latestImageForm?.value?.value = uri.toString()
                     binding.inputForm.rvInputForm.apply {
                         val adapter = this.adapter as FormInputAdapter
+                        latestImageForm?.errorText = null
                         adapter.notifyItemChanged(0)
                     }
                     Timber.d("Image saved at @ $uri")

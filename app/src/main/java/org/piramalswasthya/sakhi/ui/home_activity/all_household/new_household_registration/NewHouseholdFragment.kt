@@ -1,12 +1,20 @@
 package org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_registration
 
+import android.Manifest.permission
+import android.app.AlertDialog
+import android.content.Context.LOCATION_SERVICE
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -23,6 +31,7 @@ import org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_re
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import timber.log.Timber
 
+
 @AndroidEntryPoint
 class NewHouseholdFragment : Fragment() {
 
@@ -33,6 +42,39 @@ class NewHouseholdFragment : Fragment() {
 
     private val viewModel: NewHouseholdViewModel by viewModels()
     private val homeViewModel : HomeViewModel by viewModels({requireActivity()})
+
+    private val requestLocationPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()){ b->
+        if(b){
+            requestLocationPermission()
+        }
+        else
+            findNavController().navigateUp()
+    }
+
+    private fun showSettingsAlert() {
+        val alertDialog: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+
+        // Setting Dialog Title
+        alertDialog.setTitle("Enable GPS")
+
+        // Setting Dialog Message
+        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?")
+
+        // On pressing Settings button
+        alertDialog.setPositiveButton("Settings"
+        ) { _, _ ->
+            val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+            startActivity(intent)
+        }
+
+        // on pressing cancel button
+        alertDialog.setNegativeButton("Cancel"
+        ) { dialog, _ ->
+            findNavController().navigateUp()
+            dialog.cancel()
+        }
+        alertDialog.show()
+    }
 
     private val consentAlert by lazy {
         val alertBinding = AlertConsentBinding.inflate(layoutInflater,binding.root,false)
@@ -47,8 +89,10 @@ class NewHouseholdFragment : Fragment() {
             findNavController().navigateUp()
         }
         alertBinding.btnPositive.setOnClickListener {
-            if(alertBinding.checkBox.isChecked)
+            if(alertBinding.checkBox.isChecked) {
+                requestLocationPermission()
                 alertDialog.dismiss()
+            }
             else
                 Toast.makeText(context,"Please tick the checkbox", Toast.LENGTH_SHORT).show()
         }
@@ -130,7 +174,7 @@ class NewHouseholdFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vp2Nhhr.adapter = NewHouseholdPagerAdapter(this)
-        consentAlert.show()
+
         when (viewModel.mTabPosition) {
             0 -> {
                 binding.btnPrev.visibility = View.GONE
@@ -210,7 +254,18 @@ class NewHouseholdFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         binding.vp2Nhhr.registerOnPageChangeCallback(pageChangeCallback)
+        consentAlert.show()
 
+    }
+
+    private fun requestLocationPermission(){
+        val locationManager = requireContext().getSystemService(LOCATION_SERVICE) as LocationManager
+        val isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        if (ActivityCompat.checkSelfPermission(requireContext(), permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            requestLocationPermission.launch(permission.ACCESS_FINE_LOCATION)
+        else
+            if(!isGPSEnabled)
+                showSettingsAlert()
     }
 
     override fun onStop() {

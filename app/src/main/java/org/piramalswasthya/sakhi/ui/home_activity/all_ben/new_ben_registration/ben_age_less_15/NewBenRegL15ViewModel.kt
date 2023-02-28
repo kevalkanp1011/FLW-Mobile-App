@@ -124,13 +124,13 @@ class NewBenRegL15ViewModel @Inject constructor(
                                 emittedFromDobForAgeUnit = true
                                 form.ageUnit.errorText = null
                                 form.ageUnit.value.value = "Year"
-                                adapter.notifyItemChanged(form.firstPage.indexOf(form.ageUnit))
+                                adapter.notifyItemChanged(adapter.currentList.indexOf(form.ageUnit))
                             }
                             if (form.age.value.value == null || form.age.value.value?.toInt() != yearsDiff) {
                                 emittedFromDobForAge = true
                                 form.age.errorText = null
                                 form.age.value.value = yearsDiff.toString()
-                                adapter.notifyItemChanged(form.firstPage.indexOf(form.age))
+                                adapter.notifyItemChanged(adapter.currentList.indexOf(form.age))
                             }
                             toggleChildRegisteredFieldsVisibility(adapter, yearsDiff)
                         } else {
@@ -498,7 +498,7 @@ class NewBenRegL15ViewModel @Inject constructor(
                     it?.let {
                         val list = adapter.currentList.toMutableList()
                         if (it.contains("24") && !adapter.currentList.contains(form.corticosteroidGivenAtLabor)) {
-                            list.add(form.corticosteroidGivenAtLabor)
+                            list.add(list.indexOf(form.termGestationalAge)+1,form.corticosteroidGivenAtLabor)
                         } else {
                             list.remove(form.corticosteroidGivenAtLabor)
                         }

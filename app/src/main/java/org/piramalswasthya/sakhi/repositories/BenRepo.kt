@@ -261,6 +261,9 @@ class BenRepo @Inject constructor(
                     this.processed = "N"
                     this.createdDate = System.currentTimeMillis()
                     this.createdBy = user.userName
+                }            else
+                {
+                    this.processed = "U"
                 }
 
                 this.updatedDate = System.currentTimeMillis()
@@ -310,10 +313,14 @@ class BenRepo @Inject constructor(
             }
             if (this.createdDate == null) {
                 this.processed = "N"
-                this.serverUpdatedStatus = 0
+
                 this.createdDate = System.currentTimeMillis()
                 this.createdBy = user.userName
             }
+            else{
+                this.processed = "U"
+            }
+            this.serverUpdatedStatus = 0
             this.updatedDate = System.currentTimeMillis()
             this.updatedBy = user.userName
             this.locationRecord = locationRecord
