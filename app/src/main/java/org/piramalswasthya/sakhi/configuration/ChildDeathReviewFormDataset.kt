@@ -4,10 +4,45 @@ import android.content.Context
 import android.widget.LinearLayout
 import org.piramalswasthya.sakhi.model.CDRCache
 import org.piramalswasthya.sakhi.model.FormInput
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ChildDeathReviewFormDataset(context: Context, private val childDeathReview: CDRCache? = null) {
+
+    companion object {
+        private fun getCurrentDate(): String {
+            val calendar = Calendar.getInstance()
+            val mdFormat =
+                SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+            return mdFormat.format(calendar.time)
+        }
+
+        private fun getLongFromDate(dateString: String): Long {
+            val f = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+            val date = f.parse(dateString)
+            return date?.time ?: throw IllegalStateException("Invalid date for dateReg")
+        }
+    }
+
+
     fun mapValues(cdrCache: CDRCache) {
         cdrCache.childName = childName.value.value
+        cdrCache.dateOfBirth = getLongFromDate(dateOfBirth.value.value!!)
+        cdrCache.visitDate = getLongFromDate(visitDate.value.value!!)
+        cdrCache.gender = gender.value.value
+        cdrCache.motherName = motherName.value.value
+        cdrCache.fatherName = fatherName.value.value
+        cdrCache.address = address.value.value
+        cdrCache.houseNumber = houseNumber.value.value
+        cdrCache.mohalla = mohalla.value.value
+        cdrCache.landmarks = landmarks.value.value
+        cdrCache.landline = landline.value.value?.let { it.toLong() } ?: 0L
+        cdrCache.mobileNumber = mobileNumber.value.value?.let { it.toLong() } ?: 0L
+        cdrCache.dateOfDeath = getLongFromDate(dateOfDeath.value.value!!)
+        cdrCache.placeOfDeath = placeOfDeath.value.value
+        cdrCache.firstInformant = firstInformant.value.value
+        cdrCache.ashaSign = ashaSign.value.value
+        cdrCache.dateOfNotification = getLongFromDate(dateOfNotification.value.value!!)
     }
 
     val childName = FormInput(
@@ -87,7 +122,7 @@ class ChildDeathReviewFormDataset(context: Context, private val childDeathReview
         title = "Date of death",
         min = 0L,
         max = System.currentTimeMillis(),
-        required = false
+        required = true
     )
     private val timeOfDeath = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
@@ -97,9 +132,9 @@ class ChildDeathReviewFormDataset(context: Context, private val childDeathReview
     val placeOfDeath = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Place of Death",
-        required = false,
+        required = true,
         orientation = LinearLayout.VERTICAL,
-        list = listOf("Home", "Hospital", "In transit")
+        list = arrayOf("Home", "Hospital", "In transit")
     )
     val hospitalName = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,

@@ -1,6 +1,9 @@
 package org.piramalswasthya.sakhi.network
 
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import org.piramalswasthya.sakhi.model.CDRPost
+import org.piramalswasthya.sakhi.model.MdsrPost
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -23,5 +26,17 @@ interface D2DNetworkApiService {
         @Query("ashaId") userId : Int
     ): Response<ResponseBody>
 
+
+    @POST("mdsrRegister")
+    @Headers("Content-Type: application/json")
+    suspend fun postMdsrDataRegister(
+        @Body mdsrPostList: List<MdsrPost>
+    ): Response<ResponseBody>
+
+    @POST("cdrRegister")
+    @Headers("Content-Type: application/json")
+    suspend fun postCdrRegister(
+        @Body cdrPost: List<CDRPost>
+    ): Response<ResponseBody>
 
 }

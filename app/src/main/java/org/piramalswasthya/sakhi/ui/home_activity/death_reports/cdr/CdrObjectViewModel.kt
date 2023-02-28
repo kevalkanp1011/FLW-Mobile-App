@@ -11,6 +11,8 @@ import org.piramalswasthya.sakhi.configuration.ChildDeathReviewFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.repositories.BenRepo
+import org.piramalswasthya.sakhi.repositories.CdrRepo
+import org.piramalswasthya.sakhi.ui.home_activity.death_reports.mdsr.MdsrObjectViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -20,8 +22,16 @@ class CdrObjectViewModel @Inject constructor(
     state: SavedStateHandle,
     context: Application,
     private val database: InAppDb,
+    private val cdrRepo: CdrRepo,
     private val benRepo: BenRepo
 ) : ViewModel() {
+
+    enum class State {
+        IDLE,
+        LOADING,
+        SUCCESS,
+        FAIL
+    }
 
     private val benId = CdrObjectFragmentArgs.fromSavedStateHandle(state).benId
     private val hhId = CdrObjectFragmentArgs.fromSavedStateHandle(state).hhId
@@ -38,6 +48,9 @@ class CdrObjectViewModel @Inject constructor(
     private val _address = MutableLiveData<String>()
     val address: LiveData<String>
         get() = _address
+    private val _state = MutableLiveData(State.IDLE)
+    val state: LiveData<State>
+        get() = _state
 
     private val dataset = ChildDeathReviewFormDataset(context)
 
@@ -68,8 +81,15 @@ class CdrObjectViewModel @Inject constructor(
     }
 
     fun submitForm() {
-        val cdrCache = CDRCache(benId, hhId)
+        val cdrCache = CDRCache(benId = benId, hhId = hhId, processed = "N", createdBy = user.userName, age = ben.age)
         dataset.mapValues(cdrCache)
+        viewModelScope.launch {
+            val saved = cdrRepo.saveCdrData(cdrCache)
+            if (saved)
+                _state.value = State.SUCCESS
+            else
+                _state.value = State.FAIL
+        }
     }
 
     init {

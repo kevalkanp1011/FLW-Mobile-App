@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
+import android.widget.LinearLayout
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.FormInput
 import org.piramalswasthya.sakhi.model.HouseholdCache
@@ -36,6 +37,7 @@ class MDSRFormDataset(context: Context) {
         mdsrCache.investigationDate = getLongFromDate(investigationDate.value.value!!)
         mdsrCache.blockMOSign = blockMOSign.value.value
         mdsrCache.date = getLongFromDate(date.value.value!!)
+        mdsrCache.createdDate = System.currentTimeMillis()
     }
 
     private var mdsr: MDSRCache? = null
@@ -66,7 +68,8 @@ class MDSRFormDataset(context: Context) {
         inputType = FormInput.InputType.RADIO,
         title = "Cause of death",
         required = true,
-        list = listOf("Maternal", "Non-maternal")
+        orientation = LinearLayout.VERTICAL,
+        list = arrayOf("Maternal", "Non-maternal")
     )
     val reasonOfDeath = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
@@ -84,7 +87,8 @@ class MDSRFormDataset(context: Context) {
         inputType = FormInput.InputType.RADIO,
         title = "Action Take",
         required = false,
-        list = listOf("Yes", "No")
+        orientation = LinearLayout.VERTICAL,
+        list = arrayOf("Yes", "No")
     )
     private val blockMOSign = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,

@@ -12,6 +12,7 @@ import org.piramalswasthya.sakhi.configuration.MDSRFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.repositories.BenRepo
+import org.piramalswasthya.sakhi.repositories.MdsrRepo
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -20,13 +21,22 @@ class MdsrObjectViewModel @Inject constructor(
     state: SavedStateHandle,
     context: Application,
     private val database: InAppDb,
-    private val benRepo: BenRepo
+    private val benRepo: BenRepo,
+    private val mdsrRepo: MdsrRepo
 ) : ViewModel() {
+
+    enum class State {
+        IDLE,
+        LOADING,
+        SUCCESS,
+        FAIL
+    }
 
     private val benId = MdsrObjectFragmentArgs.fromSavedStateHandle(state).benId
     private val hhId = MdsrObjectFragmentArgs.fromSavedStateHandle(state).hhId
     private lateinit var ben: BenRegCache
     private lateinit var household: HouseholdCache
+    private lateinit var user: UserCache
 
     private val _benName = MutableLiveData<String>()
     val benName: LiveData<String>
@@ -37,6 +47,9 @@ class MdsrObjectViewModel @Inject constructor(
     private val _address = MutableLiveData<String>()
     val address: LiveData<String>
         get() = _address
+    private val _state = MutableLiveData(State.IDLE)
+    val state: LiveData<State>
+        get() = _state
 
     private val dataset = MDSRFormDataset(context)
 
@@ -67,8 +80,15 @@ class MdsrObjectViewModel @Inject constructor(
     }
 
     fun submitForm() {
-        val mdsrCache = MDSRCache(benId, hhId)
+        val mdsrCache = MDSRCache(benId = benId, hhId = hhId, processed = "N", createdBy = user.userName)
         dataset.mapValues(mdsrCache)
+        viewModelScope.launch {
+            val saved = mdsrRepo.saveMdsrData(mdsrCache)
+            if (saved)
+                _state.value = State.SUCCESS
+            else
+                _state.value = State.FAIL
+        }
     }
 
     init {
@@ -77,6 +97,7 @@ class MdsrObjectViewModel @Inject constructor(
                 ben = benRepo.getBeneficiary(benId, hhId)!!
 
                 household = benRepo.getBenHousehold(hhId)!!
+                user = database.userDao.getLoggedInUser()!!
             }
             _benName.value = ben.firstName + ben.lastName
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
