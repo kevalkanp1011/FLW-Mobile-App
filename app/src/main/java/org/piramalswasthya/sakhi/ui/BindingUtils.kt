@@ -2,6 +2,7 @@ package org.piramalswasthya.sakhi.ui
 
 import android.net.Uri
 import android.os.Build
+import android.view.Gravity
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
@@ -46,8 +47,11 @@ fun ConstraintLayout.setItems(form: FormInput?) {
             items.forEach {
                 val rdBtn = RadioButton(this.context)
                 rdBtn.layoutParams =
-                    LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1.0F)
+                    LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1.0F).apply {
+                        gravity = Gravity.CENTER_HORIZONTAL
+                    }
                 rdBtn.id = View.generateViewId()
+
                 rdBtn.text = it
                 addView(rdBtn)
                 if (form.value.value == it)

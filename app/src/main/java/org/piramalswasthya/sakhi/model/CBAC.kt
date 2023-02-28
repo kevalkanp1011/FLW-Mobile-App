@@ -1,10 +1,7 @@
 package org.piramalswasthya.sakhi.model
 
 import android.content.res.Resources
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room.*
 import org.piramalswasthya.sakhi.R
 
 @Entity(
@@ -21,13 +18,14 @@ import org.piramalswasthya.sakhi.R
             childColumns = arrayOf("ashaId"),
             onDelete = ForeignKey.CASCADE
         )],
-    indices = [Index(name = "ind", value = ["benId", "hhId", "ashaId"])]
+    indices = [Index(name = "ind", value = ["benId", "hhId"])]
 )
 data class CbacCache(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val benId: Long,
     val hhId: Long,
+    @ColumnInfo(index = true)
     val ashaId: Int,
     var cbac_age_posi: Int = 0,
     var cbac_smoke_posi: Int = 0,

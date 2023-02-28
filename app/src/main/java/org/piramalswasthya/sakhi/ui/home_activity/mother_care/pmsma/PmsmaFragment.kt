@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.death_reports.cdr
+package org.piramalswasthya.sakhi.ui.home_activity.mother_care.pmsma
 
 import android.content.Context
 import android.os.Bundle
@@ -15,18 +15,20 @@ import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
-import org.piramalswasthya.sakhi.databinding.FragmentCdrObjectBinding
+import org.piramalswasthya.sakhi.databinding.FragmentPmsmaBinding
+import org.piramalswasthya.sakhi.ui.home_activity.mother_care.pmsma.PmsmaViewModel.State
 import org.piramalswasthya.sakhi.work.PushToD2DWorker
 import timber.log.Timber
 
+
 @AndroidEntryPoint
-class CdrObjectFragment : Fragment() {
+class PmsmaFragment : Fragment() {
 
     private val binding by lazy {
-        FragmentCdrObjectBinding.inflate(layoutInflater)
+        FragmentPmsmaBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: CdrObjectViewModel by viewModels()
+    private val viewModel: PmsmaViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,8 +39,7 @@ class CdrObjectFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.cdrForm.rvInputForm.apply {
+        binding.pmsmaForm.rvInputForm.apply {
             val adapter = FormInputAdapter()
             this.adapter = adapter
             lifecycleScope.launch {
@@ -53,27 +54,30 @@ class CdrObjectFragment : Fragment() {
             binding.tvAgeGender.text = it
         }
         viewModel.address.observe(viewLifecycleOwner) {
-            val adapter = binding.cdrForm.rvInputForm.adapter as FormInputAdapter
+            val adapter = binding.pmsmaForm.rvInputForm.adapter as FormInputAdapter
             viewModel.setAddress(it, adapter)
         }
-        binding.btnCdsrSubmit.setOnClickListener {
+        binding.btnPmsmaSubmit.setOnClickListener {
             if (validate()) viewModel.submitForm()
         }
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
-                CdrObjectViewModel.State.SUCCESS -> triggerCdrSendingWorker(requireContext())
-                CdrObjectViewModel.State.FAIL -> Toast.makeText(
+                State.SUCCESS -> triggerPmsmaSendingWorker(
+                    requireContext()
+                )
+                State.FAIL -> Toast.makeText(
                     context,
-                    "Saving Mdsr to database Failed!",
+                    "Saving pmsma to database Failed!",
                     Toast.LENGTH_LONG
                 ).show()
                 else -> {}
             }
         }
+
     }
 
     companion object {
-        private fun triggerCdrSendingWorker(context: Context) {
+        private fun triggerPmsmaSendingWorker(context: Context) {
             val workRequest = OneTimeWorkRequestBuilder<PushToD2DWorker>()
                 .setConstraints(PushToD2DWorker.constraint)
                 .build()
@@ -87,9 +91,8 @@ class CdrObjectFragment : Fragment() {
     }
 
     fun validate(): Boolean {
-//        Timber.d("binding $binding rv ${binding.nhhrForm.rvInputForm} adapter ${binding.nhhrForm.rvInputForm.adapter}")
-//        return false
-        val result = binding.cdrForm.rvInputForm.adapter?.let {
+
+        val result = binding.pmsmaForm.rvInputForm.adapter?.let {
             (it as FormInputAdapter).validateInput()
         }
         Timber.d("Validation : $result")
@@ -97,7 +100,7 @@ class CdrObjectFragment : Fragment() {
             true
         else {
             if (result != null) {
-                binding.cdrForm.rvInputForm.scrollToPosition(result)
+                binding.pmsmaForm.rvInputForm.scrollToPosition(result)
             }
             false
         }
