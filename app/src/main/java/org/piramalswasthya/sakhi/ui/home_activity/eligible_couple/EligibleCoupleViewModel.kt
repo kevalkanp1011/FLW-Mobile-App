@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.ui.home_activity.eligible_couple
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.helpers.filterBenList
 import org.piramalswasthya.sakhi.model.BenBasicDomain
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import timber.log.Timber
@@ -18,32 +19,19 @@ class EligibleCoupleViewModel @Inject constructor(
     val benList: LiveData<List<BenBasicDomain>>
         get() = _benList
 
+    private var lastFilter = ""
+
     init {
         viewModelScope.launch {
             eligibleCoupleList.asFlow().collect {
-                _benList.value = it
+                _benList.value = it?.let { filterBenList(it, lastFilter) }
             }
         }
     }
 
-    fun filterText(filterText: String) {
-        Timber.d("filter called!!")
-        if (filterText == "")
-            _benList.value = eligibleCoupleList.value
-        else
-            _benList.value = eligibleCoupleList.value?.filter {
-                it.hhId.toString().contains(filterText) ||
-                        it.benId.toString().contains(filterText) ||
-                        it.regDate.contains((filterText)) ||
-                        it.age.contains(filterText) ||
-                        it.benName.lowercase().contains(filterText) ||
-                        it.familyHeadName.contains(filterText) ||
-                        it.benSurname?.contains(filterText) ?: false ||
-                        it.typeOfList.contains(filterText) ||
-                        it.mobileNo.contains(filterText) ||
-                        it.gender.contains(filterText)
-
-            }
+    fun filterText(text: String) {
+        lastFilter = text
+        _benList.value = eligibleCoupleList.value?.let { filterBenList(it, text) }
     }
 
 

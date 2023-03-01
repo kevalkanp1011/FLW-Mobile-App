@@ -1291,6 +1291,35 @@ class BenRepo @Inject constructor(
                                 isDraft = false
                             )
                         )
+                        val registrationType = if (benDataObj.has("registrationType")) {
+                            when (benDataObj.getString("registrationType")) {
+                                "NewBorn" -> {
+                                    if (benDataObj.getString("age_unit") != "Years" || benDataObj.getInt(
+                                            "age"
+                                        ) < 2
+                                    ) TypeOfList.INFANT
+                                    else if (benDataObj.getInt("age") < 6) TypeOfList.CHILD
+                                    else TypeOfList.ADOLESCENT
+                                }
+                                "General Beneficiary", "सामान्य लाभार्थी" -> if (benDataObj.has(
+                                        "reproductiveStatus"
+                                    )
+                                ) {
+                                    when (benDataObj.getString("reproductiveStatus")) {
+                                        "Eligible Couple" -> TypeOfList.ELIGIBLE_COUPLE
+                                        "Antenatal Mother" -> TypeOfList.ANTENATAL_MOTHER
+                                        "Delivery Stage" -> TypeOfList.DELIVERY_STAGE
+                                        "Postnatal Mother" -> TypeOfList.POSTNATAL_MOTHER
+                                        "Menopause" -> TypeOfList.MENOPAUSE
+                                        "Teenager" -> TypeOfList.TEENAGER
+                                        else -> TypeOfList.OTHER
+                                    }
+                                } else TypeOfList.GENERAL
+                                else -> TypeOfList.GENERAL
+                            }
+                        } else TypeOfList.OTHER
+                        Timber.d("Custom Validation: $registrationType, ${benDataObj.getString("age_unit")}, " +
+                                "${benDataObj.getInt("age")}")
                     } catch (e: JSONException) {
                         Timber.i("Beneficiary skipped: ${jsonObject.getLong("benficieryid")} with error $e")
                     }
