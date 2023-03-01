@@ -42,8 +42,8 @@ class ImmunizationDueFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapterForForm(
-            BenListAdapterForForm.ClickListener(
+        val benAdapter = BenListAdapter(
+            BenListAdapter.BenClickListener(
                 {
                     Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
 
@@ -53,18 +53,19 @@ class ImmunizationDueFragment : Fragment() {
                 },
                 { hhId, benId ->
                     viewModel.manualSync()
-                },
-                { hhId, benId  ->
+                }
+    //            { hhId, benId  ->
 //                    findNavController().navigate(
 //                        ImmunizationDueFragmentDirections.actionImmunizationDueFragmentToImmunizationListFragment(
 //                            hhId,
 //                            benId)
 //                    )
-                }
-            ), "Vaccine Form")
+            //    }
+            //), "Vaccine Form"
+        ))
         binding.rvAny.adapter = benAdapter
 
-        viewModel.immunizationList.observe(viewLifecycleOwner) {
+        viewModel.benList.observe(viewLifecycleOwner) {
             if (it.isNullOrEmpty())
                 binding.flEmpty.visibility = View.VISIBLE
             else

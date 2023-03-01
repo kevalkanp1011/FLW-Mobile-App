@@ -5,6 +5,8 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.squareup.moshi.JsonClass
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 @Entity(
@@ -95,10 +97,78 @@ data class PMSMACache(
     var createdDate: Long? = System.currentTimeMillis(),
 
     var processed: String? = null,
-)
+) {
+
+
+    private fun getDateStringFromLong(dateLong: Long?): String? {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+
+        dateLong?.let {
+            return dateFormat.format(dateLong)
+        } ?: run {
+            return null
+        }
+
+    }
+
+    fun asPostModel(user: UserCache , ben : BenRegCache): PmsmaPost {
+        return PmsmaPost(
+            abdominalCheckUp = abdominalCheckUp,
+            address = address,
+            beneficiaryHaveMcpCarc = if (haveMCPCard) "Yes" else "No",
+            beneficiaryid = benId,
+            bloodPressure = bloodPressure,
+            bloodSugarTest = if (bloodSugarTest==true) "Yes" else "No",
+            calciumSupplementation = if (calciumSupplementation==true) "Yes" else "No",
+            createdBy = user.userName,
+            createdDate = System.currentTimeMillis() ,
+            edit_flag = false,
+            fetalRatePerMinutes = fetalHRPM.toString(),
+            fetalTwinsPregnancy = if (twinPregnancy) "Yes" else "No",
+            hbsg = hbsc,
+            himoglobinBloodGroup = haemoglobinAndBloodGroup,
+            hiv = hiv,
+            houseoldId = hhId.toString(),
+            husbandName = husbandName,
+            ironFolicAcid = if (ironFolicAcid==true) "Yes" else "No",
+            latitude = 0.0,
+            loginId = benId,
+            longitude =0.0,
+            systolic = systolicBloodPressure,
+            diastolic = bloodPressure,
+            malaria = malaria,
+            mcpCardIsGiven = if (haveMCPCard) "Yes" else "No",
+            mobileNumber = mobileNumber.toString(),
+            name = ben.firstName,
+            lmpDate = getDateStringFromLong(lastMenstrualPeriod) ,
+            eddDate = getDateStringFromLong(expectedDateOfDelivery),
+            pmsMaMctsRchNumber = mctsNumberOrRchNumber,
+            pregnantHighRiskCategoryReffredEdd = "0",
+            pregnantHighRiskCategoryReffredLmp = if(highRiskPregnancyReferred==true) "1" else "2",
+            pregnantHighRiskCategoryTreatedEdd = "0",
+            pregnantHighRiskCategoryTreatedLmp = if(highRiskPregnant==true) "1" else "2",
+            pregnantOfHighRiskEdd = "0",
+            pregnantOfHighRiskLmp = if(highriskSymbols==true) "1" else "2" ,
+            preparationForBirthComplicationAdvice = if(birthPrepAndNutritionAndFamilyPlanning==true)  "1" else "2",
+            selectTheReasonGivenBelowLmp = highRiskReason,
+            signatureOfMedicalOfficer = medicalOfficerSign,
+            swallonCondition = if(swollenCondtion==true) "1" else "2",
+            teatnousToxoid = if(tetanusToxoid==true) "1" else "2",
+            ultrasound = if(ultraSound==true) "1" else "2",
+            updatedBy = user.userName,
+            updatedDate = System.currentTimeMillis(),
+            urineAlubmin = urineAlbumin,
+            vdrl = vdrl,
+            villageid = ben.locationRecord?.villageId,
+            wasHivTest = if(hivTestDuringANC==true) "1" else "2",
+            weight = weight.toString(),
+            writeTheNumberOfAncs = numANC.toString(),
+            )
+    }
+}
 
 @JsonClass(generateAdapter = true)
-data class PsmsaPost(
+data class PmsmaPost(
 
     val abdominalCheckUp: String? = null,
     val address: String? = null,
@@ -108,7 +178,7 @@ data class PsmsaPost(
     val bloodSugarTest: String? = null,
     val calciumSupplementation: String? = null,
     val createdBy: String? = null,
-    val createdDate: Long? = System.currentTimeMillis()/1000L,
+    val createdDate: Long? = System.currentTimeMillis() / 1000L,
     val edit_flag: Boolean? = false,
     val fetalRatePerMinutes: String? = null,
     val fetalTwinsPregnancy: String? = null,
@@ -143,7 +213,7 @@ data class PsmsaPost(
     val teatnousToxoid: String? = null,
     val ultrasound: String? = null,
     val updatedBy: String? = null,
-    val updatedDate: Long? = System.currentTimeMillis()/1000L,
+    val updatedDate: Long? = System.currentTimeMillis() / 1000L,
     val urineAlubmin: String? = null,
     val vdrl: String? = null,
     val villageid: Int? = 0,

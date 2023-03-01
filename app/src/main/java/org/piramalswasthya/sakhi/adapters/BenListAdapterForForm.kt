@@ -6,21 +6,21 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.piramalswasthya.sakhi.databinding.RvItemBenWithFormBinding
-import org.piramalswasthya.sakhi.model.BenBasicDomain
+import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
 
 class BenListAdapterForForm(private val clickListener: ClickListener? = null,
                             private val formButtonText: String) :
-    ListAdapter<BenBasicDomain, BenListAdapterForForm.BenViewHolder>
+    ListAdapter<BenBasicDomainForForm, BenListAdapterForForm.BenViewHolder>
         (BenDiffUtilCallBack) {
-    private object BenDiffUtilCallBack : DiffUtil.ItemCallback<BenBasicDomain>() {
+    private object BenDiffUtilCallBack : DiffUtil.ItemCallback<BenBasicDomainForForm>() {
         override fun areItemsTheSame(
-            oldItem: BenBasicDomain,
-            newItem: BenBasicDomain
+            oldItem: BenBasicDomainForForm,
+            newItem: BenBasicDomainForForm
         ) = oldItem.benId == newItem.benId
 
         override fun areContentsTheSame(
-            oldItem: BenBasicDomain,
-            newItem: BenBasicDomain
+            oldItem: BenBasicDomainForForm,
+            newItem: BenBasicDomainForForm
         ) = oldItem == newItem
 
     }
@@ -36,7 +36,7 @@ class BenListAdapterForForm(private val clickListener: ClickListener? = null,
         }
 
         fun bind(
-            item: BenBasicDomain,
+            item: BenBasicDomainForForm,
             clickListener: ClickListener?,
             btnText: String,
         ) {
@@ -65,10 +65,10 @@ class BenListAdapterForForm(private val clickListener: ClickListener? = null,
         private val clickedSync: (hhId: Long, benId: Long) -> Unit,
         private val clickedButton: (hhId: Long, benId: Long) -> Unit
     ) {
-        fun onClickedBen(item: BenBasicDomain) = clickedBen(item.benId)
-        fun onClickedHouseHold(item: BenBasicDomain) = clickedHousehold(item.hhId)
-        fun onClickSync(item: BenBasicDomain) = clickedSync(item.hhId, item.benId)
-        fun onClickButton(item: BenBasicDomain) = clickedButton(item.hhId, item.benId)
+        fun onClickedBen(item: BenBasicDomainForForm) = clickedBen(item.benId)
+        fun onClickedHouseHold(item: BenBasicDomainForForm) = clickedHousehold(item.hhId)
+        fun onClickSync(item: BenBasicDomainForForm) = clickedSync(item.hhId, item.benId)
+        fun onClickButton(item: BenBasicDomainForForm) = clickedButton(item.hhId, item.benId)
     }
 
 }

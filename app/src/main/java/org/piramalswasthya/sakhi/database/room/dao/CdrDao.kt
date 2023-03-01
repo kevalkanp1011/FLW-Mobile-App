@@ -1,9 +1,6 @@
 package org.piramalswasthya.sakhi.database.room.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import org.piramalswasthya.sakhi.model.CDRCache
 
 @Dao
@@ -17,4 +14,7 @@ interface CdrDao {
 
     @Query("select count(*) from CDR")
     suspend fun cdrCount(): Int
+
+    @Update
+    suspend fun setSynced(it: CDRCache)
 }

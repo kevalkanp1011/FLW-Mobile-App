@@ -1,9 +1,6 @@
 package org.piramalswasthya.sakhi.database.room.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import org.piramalswasthya.sakhi.model.PMSMACache
 
 @Dao
@@ -14,4 +11,11 @@ interface PmsmaDao {
 
     @Query("SELECT * FROM PMSMA WHERE processed = 'N'")
     suspend fun getAllUnprocessedPmsma(): List<PMSMACache>
+
+    @Query("select count(*) from PMSMA")
+    suspend fun pmsmaCount(): Int
+
+    @Update
+    abstract fun updatePmsmaRecord(it: PMSMACache)
+
 }

@@ -326,6 +326,24 @@ class UserRepo @Inject constructor(
 
     }
 
+    suspend fun refreshTokenD2d(userName: String, password: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response =
+                    d2dNetworkApi.getJwtToken(D2DAuthUserRequest(userName, password))
+                Timber.d("JWT : $response")
+                TokenInsertD2DInterceptor.setToken(response.jwt)
+                preferenceDao.registerD2DApiToken(response.jwt)
+                //saveUserD2D()
+                true
+            } catch (e: java.lang.Exception) {
+                Timber.d("Auth Failed!")
+                false
+            }
+
+        }
+    }
+
     private suspend fun getTokenTmc(userName: String, password: String) {
         withContext(Dispatchers.IO) {
             try {
