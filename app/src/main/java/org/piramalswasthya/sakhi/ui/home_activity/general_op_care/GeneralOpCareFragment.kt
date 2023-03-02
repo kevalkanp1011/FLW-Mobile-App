@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 
 class GeneralOpCareFragment : Fragment() {
 
@@ -27,6 +28,12 @@ class GeneralOpCareFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(GeneralOpCareViewModel::class.java)
         // TODO: Use the ViewModel
+    }
+    override fun onStart() {
+        super.onStart()
+        activity?.let{
+            (it as HomeActivity).setLogo(R.drawable.ic__general_op)
+        }
     }
 
 }

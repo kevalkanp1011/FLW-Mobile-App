@@ -175,7 +175,7 @@ class NewBenRegG15Fragment : Fragment() {
                 State.SAVE_SUCCESS -> {
                     Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
                     NewBenRegTypeFragment.triggerBenDataSendingWorker(requireContext())
-
+                    findNavController().navigate(NewBenRegG15FragmentDirections.actionNewBenRegG15FragmentToHomeFragment())
                 }
                 State.SAVE_FAILED -> Toast.makeText(
                     context,

@@ -13,9 +13,11 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.IconGridAdapter
 import org.piramalswasthya.sakhi.configuration.IconDataset
 import org.piramalswasthya.sakhi.databinding.FragmentHomeBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.work.PullFromAmritFullLoadWorker
 import timber.log.Timber
 
@@ -101,6 +103,13 @@ class HomeFragment : Fragment() {
             }
 
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        activity?.let{
+            (it as HomeActivity).setLogo(R.drawable.ic_home)
+        }
     }
 
     private fun setUpHomeIconRvAdapter() {

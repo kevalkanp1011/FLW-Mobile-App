@@ -5,6 +5,7 @@ import android.text.InputType
 import android.widget.LinearLayout
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.quality
+import id.zelory.compressor.constraint.size
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.*
@@ -533,7 +534,7 @@ class BenGenRegFormDataset(private val context: Context) {
     private suspend fun getByteArrayFromImageUri(uriString: String): ByteArray? {
         val file = File(context.cacheDir, uriString.substringAfterLast("/"))
         val compressedFile = Compressor.compress(context, file) {
-            quality(70)
+            size(50_000)
         }
         val iStream = compressedFile.inputStream()
         val byteArray = getBytes(iStream)

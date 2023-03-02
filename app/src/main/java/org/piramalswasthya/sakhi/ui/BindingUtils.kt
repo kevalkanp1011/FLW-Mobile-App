@@ -136,14 +136,6 @@ fun TextView.setRequired(required: Boolean? = true) {
     }
 }
 
-@SuppressLint("ResourceAsColor")
-@BindingAdapter("setColorForForm")
-fun MaterialButton.setTextColorValue(hasForm : Boolean) {
-    if(hasForm)
-        setTextColor(R.color.green)
-    else
-        setTextColor(R.color.red)
-}
 
 private val rotate = RotateAnimation(
     360F,

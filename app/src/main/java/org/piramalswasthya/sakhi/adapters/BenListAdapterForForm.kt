@@ -1,10 +1,12 @@
 package org.piramalswasthya.sakhi.adapters
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.RvItemBenWithFormBinding
 import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
 
@@ -43,6 +45,17 @@ class BenListAdapterForForm(private val clickListener: ClickListener? = null,
             binding.ben = item
             binding.clickListener = clickListener
             binding.button2.text = btnText
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if(item.hasForm)
+                    binding.button2.setBackgroundColor(binding.root.resources.getColor(R.color.green, binding.root.context.theme))
+                else
+                    binding.button2.setBackgroundColor(binding.root.resources.getColor(R.color.red, binding.root.context.theme))
+            }
+            else
+                if(item.hasForm)
+                    binding.button2.setBackgroundColor(binding.root.resources.getColor(R.color.green))
+                else
+                    binding.button2.setBackgroundColor(binding.root.resources.getColor(R.color.red))
             binding.executePendingBindings()
 
         }

@@ -179,8 +179,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ll_row_3"
                     android:layout_alignParentEnd="true"
-                    app:setColorForForm="@{ben.hasForm}"
-                    android:backgroundTint="?attr/colorSecondary"
+                    android:textColor="?attr/colorSecondary"
                     android:onClick="@{()-> clickListener.onClickButton(ben)}"
                     tools:text="CBAC Form" />
 

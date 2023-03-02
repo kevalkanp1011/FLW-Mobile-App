@@ -16,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.HouseHoldListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 
 @AndroidEntryPoint
 class AllHouseholdFragment : Fragment() {
@@ -53,6 +54,13 @@ class AllHouseholdFragment : Fragment() {
     ): View {
         viewModel.checkDraft()
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        activity?.let{
+            (it as HomeActivity).setLogo(R.drawable.ic__hh)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
