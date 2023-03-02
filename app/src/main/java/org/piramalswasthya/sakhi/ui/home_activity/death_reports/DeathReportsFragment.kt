@@ -9,7 +9,9 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentDeathReportsBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 
 @AndroidEntryPoint
 class DeathReportsFragment : Fragment() {
@@ -58,6 +60,12 @@ class DeathReportsFragment : Fragment() {
                 else -> Toast.makeText(context, "Please select type of beneficiary", Toast.LENGTH_SHORT).show()
             }
 
+        }
+    }
+    override fun onStart() {
+        super.onStart()
+        activity?.let{
+            (it as HomeActivity).setLogo(R.drawable.ic__death)
         }
     }
 

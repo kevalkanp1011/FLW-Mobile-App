@@ -24,6 +24,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.adapters.NewBenKidPagerAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormViewpagerBinding
+import org.piramalswasthya.sakhi.model.TypeOfList
 import org.piramalswasthya.sakhi.services.UploadSyncService
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_less_15.NewBenRegL15ViewModel.State
@@ -158,6 +159,12 @@ class NewBenRegL15Fragment : Fragment() {
                 State.SAVE_SUCCESS -> {
                     Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
                     NewBenRegTypeFragment.triggerBenDataSendingWorker(requireContext())
+                    when(viewModel.getNavPath()){
+                        TypeOfList.INFANT -> findNavController().navigate(NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToInfantListFragment())
+                        TypeOfList.CHILD -> findNavController().navigate(NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToChildListFragment())
+                        TypeOfList.ADOLESCENT -> findNavController().navigate(NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToAdolescentListFragment())
+                        else -> {}
+                    }
                 }
                 State.SAVE_FAILED -> Toast.makeText(
                     context,

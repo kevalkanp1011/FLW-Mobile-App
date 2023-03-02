@@ -7,7 +7,7 @@
 
         <variable
             name="ben"
-            type="org.piramalswasthya.sakhi.model.BenBasicDomain" />
+            type="org.piramalswasthya.sakhi.model.BenBasicDomainForForm" />
 
         <variable
             name="clickListener"
@@ -179,7 +179,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ll_row_3"
                     android:layout_alignParentEnd="true"
-                    android:backgroundTint="?attr/colorSecondary"
+                    android:textColor="?attr/colorSecondary"
                     android:onClick="@{()-> clickListener.onClickButton(ben)}"
                     tools:text="CBAC Form" />
 

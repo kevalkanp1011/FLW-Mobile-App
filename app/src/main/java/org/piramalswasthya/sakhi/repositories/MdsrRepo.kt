@@ -59,35 +59,18 @@ class MdsrRepo @Inject constructor(
                         ?: throw IllegalStateException("No beneficiary exists for benId: ${it.benId}!!")
                 val mdsrCount = database.mdsrDao.mdsrCount()
                 mdsrPostList.add(it.asPostModel(user, household, ben, mdsrCount))
-                    val uploadDone = postDataToD2dServer(mdsrPostList)
-//
-//                    if (!uploadDone)
-//                        database.benDao.benSyncWithServerFailed(*benNetworkPostList.map { ben -> ben.benId }
-//                            .toTypedArray().toLongArray())
-//                }
+                val uploadDone = postDataToD2dServer(mdsrPostList)
+                if(uploadDone) {
+                    it.processed = "P"
+                    database.mdsrDao.updateMdsrRecord(it)
+                }
             }
 
-//            val updateBenList = database.benDao.getAllBenForSyncWithServer()
-//            updateBenList.forEach {
-//                database.benDao.setSyncState(it.householdId, it.beneficiaryId, SyncState.SYNCING)
-//                benNetworkPostList.add(it.asNetworkPostModel(user))
-
-//                val uploadDone = postDataToAmritServer(
-//                    benNetworkPostList,
-//                    householdNetworkPostList,
-//                    kidNetworkPostList,
-//                    cbacPostList
-//                )
-//                if (!uploadDone)
-//                    database.benDao.benSyncWithServerFailed(*benNetworkPostList.map { ben -> ben.benId }
-//                        .toTypedArray().toLongArray())
-
-//            }
             return@withContext true
         }
     }
 
-    suspend fun postDataToD2dServer(mdsrPostList: MutableSet<MdsrPost>): Boolean {
+    private suspend fun postDataToD2dServer(mdsrPostList: MutableSet<MdsrPost>): Boolean {
         if(mdsrPostList.isEmpty())
             return false
 
@@ -96,9 +79,8 @@ class MdsrRepo @Inject constructor(
             val statusCode = response.code()
 
             if (statusCode == 200) {
-                var responseString: String? = null
                 try {
-                    responseString = response.body()!!.string()
+                    val responseString = response.body()?.string()
                     if (responseString != null) {
                         val jsonObj = JSONObject(responseString)
 
@@ -110,14 +92,14 @@ class MdsrRepo @Inject constructor(
 
                         if (responsestatuscode == 200) {
                             Timber.d("Saved Successfully to server")
+                            return true
                         } else if (responsestatuscode == 5002) {
                             val user = userRepo.getLoggedInUser()
                                 ?: throw IllegalStateException("User seems to be logged out!!")
-//                            throw SocketTimeoutException("Refreshed Token!")
-                            //mdialog.AlertDialog(getActivity(), resources.getString(R.string.text_Alert), resources.getString(R.string.session_expired), resources.getString(R.string.text_ok), 5);
+                            if (userRepo.refreshTokenD2d(user.userName, user.password))
+                                throw SocketTimeoutException()
                         } else {
-//                                    lay_recy.setVisibility(View.GONE);
-//                                    lay_no_ben.setVisibility(View.VISIBLE);
+                            throw IOException("Throwing away IO eXcEpTiOn")
                         }
                     }
                 } catch (e: IOException) {
@@ -132,7 +114,7 @@ class MdsrRepo @Inject constructor(
             return false
         } catch (e: SocketTimeoutException) {
             Timber.d("Caught exception $e here")
-            return false
+            return postDataToD2dServer(mdsrPostList)
         } catch (e: JSONException) {
             Timber.d("Caught exception $e here")
             return false

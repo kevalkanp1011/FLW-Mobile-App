@@ -24,6 +24,8 @@
         android:theme="@style/Theme.Sakhi"
         android:usesCleartextTraffic="true"
         android:configChanges="locale|orientation"
+        android:largeHeap="true"
+        android:hardwareAccelerated="false"
         tools:targetApi="31">
         <service
             android:name=".services.UploadSyncService"

@@ -14,7 +14,7 @@ class NcdListViewModel @Inject constructor(
 ) : ViewModel(
 
 ) {
-    private val ncdList = benRepo.ncdEligibleList
+    private val ncdList = benRepo.ncdList
 
     //private lateinit var user: UserDomain
     private val _benList = MutableLiveData<List<BenBasicDomain>>()

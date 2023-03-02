@@ -155,4 +155,8 @@ class HomeActivity : AppCompatActivity() {
             imm?.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
+
+    fun setLogo(resId : Int){
+        binding.toolbar.setLogo(resId)
+    }
 }

@@ -26,180 +26,193 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     private val mctsNumberOrRchNumber = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "MCTS Number/RCH Number",
-        required = false
+        required = true
     )
     private val haveMCPCard = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Does the beneficiary have an MCP card",
         list = arrayOf("Yes", "No"),
-        required = false
+        required = true
     )
     private val husbandName = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Husband’s Name",
-        required = false
+        required = true
     )
     val address = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Address",
-        required = false
+        required = true
     )
     val mobileNumber = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Mobile number",
-        required = false
+        isMobileNumber = true,
+        min = 6000000000,
+        max = 9999999999,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        required = true
     )
     private val numANC = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Number of ANCs done before delivery",
-        required = false
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        required = true
     )
     private val weight = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
-        title = "Weight",
-        required = false
+        title = "Weight (in Kg)",
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        required = true
     )
     private val systolicBloodPressure = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Systolic Blood Pressure",
-        required = false
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        required = true
     )
     private val bloodPressure = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Blood Pressure",
-        required = false
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        required = true
     )
     private val abdominalCheckUp = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Abdominal Check-up",
-        required = false
+        required = true
     )
     private val fetalHRPM = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Fetal Heart Rate per minute",
-        required = false
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        required = true
     )
     private val twinPregnancy = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Twins pregnancy",
         list = arrayOf("Yes", "No"),
-        required = false
+        required = true
     )
     private val urineAlbumin = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Urine albumin",
-        required = false
+        required = true
     )
     private val haemoglobinAndBloodGroup = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
-        title = "Hemoglobin and blood group ",
-        required = false
+        title = "Haemoglobin and blood group",
+        required = true
     )
     private val hiv = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "HIV",
-        required = false
+        required = true
     )
     private val vdrl = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Vdrl",
-        required = false
+        required = true
     )
     private val hbsc = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "HBSC (Hepatitis B) ",
-        required = false
+        required = true
     )
     private val malaria = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Malaria ",
-        required = false
+        required = true
     )
     private val hivTestDuringANC = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Was HIV test done during ANC Check up? ",
         list = arrayOf("Yes", "No"),
-        required = false
+        required = true
     )
     private val swollenCondtion = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Swollen condition ",
         list = arrayOf("Yes", "No"),
-        required = false
+        required = true
     )
     private val bloodSugarTest = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Blood sugar test ",
         list = arrayOf("Yes", "No"),
-        required = false
+        required = true
     )
     private val ultraSound = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Ultrasound ",
         list = arrayOf("Yes", "No"),
-        required = false
+        required = true
     )
     private val ironFolicAcid = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Iron Folic Acid ",
         list = arrayOf("Yes", "No"),
-        required = false
+        required = true
     )
     private val calciumSupplementation = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Calcium Supplementation ",
         list = arrayOf("Yes", "No"),
-        required = false
+        required = true
     )
     private val tetanusToxoid = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Tetanus toxoid ",
         list = arrayOf("Yes", "No"),
-        required = false
+        required = true
     )
     private val lastMenstrualPeriod = FormInput(
         inputType = FormInput.InputType.DATE_PICKER,
         title = "Last Menstrual Period ",
-        required = false
+        min = 0L,
+        max = System.currentTimeMillis(),
+        required = true
     )
     private val expectedDateOfDelivery = FormInput(
         inputType = FormInput.InputType.DATE_PICKER,
         title = "Expected Date of Delivery ",
-        required = false
+        min = 0L,
+        max = System.currentTimeMillis(),
+        required = true
     )
     private val highriskSymbols = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Identification of high risk symbols",
         list = arrayOf("Yes", "No"),
-        required = false
+        required = true
     )
     private val highRiskReason = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "If yes, select the reason give below and write",
-        required = false
+        required = true
     )
     private val highRiskPregnant = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Pregnant in high risk category treated",
         list = arrayOf("Yes", "No"),
-        required = false
+        required = true
     )
     private val highRiskPregnancyReferred = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Pregnant in high risk category was referred",
         list = arrayOf("Yes", "No"),
-        required = false
+        required = true
     )
     private val birthPrepAndNutritionAndFamilyPlanning = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Preparation for birth and complications, nutrition and family planning",
         list = arrayOf("Yes", "No"),
-        required = false
+        required = true
     )
     private val medicalOfficerSign = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Signature of medical officer in charge ",
-        required = false
+        required = true
     )
 
     val firstPage by lazy {
@@ -246,13 +259,13 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
         pmsmaCache.haveMCPCard = haveMCPCard.value.value == "Yes"
         pmsmaCache.husbandName = husbandName.value.value
         pmsmaCache.address = address.value.value
-        pmsmaCache.mobileNumber = mobileNumber.value.value?.let { it.toLong() } ?: 0L
-        pmsmaCache.numANC = numANC.value.value?.let { it.toInt() } ?: 0
-        pmsmaCache.weight = weight.value.value?.let { it.toInt() } ?: 0
+        pmsmaCache.mobileNumber = mobileNumber.value.value?.toLong() ?: 0L
+        pmsmaCache.numANC = numANC.value.value?.toInt() ?: 0
+        pmsmaCache.weight = weight.value.value?.toInt() ?: 0
         pmsmaCache.systolicBloodPressure = systolicBloodPressure.value.value
         pmsmaCache.bloodPressure = bloodPressure.value.value
         pmsmaCache.abdominalCheckUp = abdominalCheckUp.value.value
-        pmsmaCache.fetalHRPM = fetalHRPM.value.value?.let { it.toInt() } ?: 0
+        pmsmaCache.fetalHRPM = fetalHRPM.value.value?.toInt() ?: 0
         pmsmaCache.twinPregnancy = twinPregnancy.value.value == "Yes"
         pmsmaCache.urineAlbumin = urineAlbumin.value.value
         pmsmaCache.haemoglobinAndBloodGroup = haemoglobinAndBloodGroup.value.value

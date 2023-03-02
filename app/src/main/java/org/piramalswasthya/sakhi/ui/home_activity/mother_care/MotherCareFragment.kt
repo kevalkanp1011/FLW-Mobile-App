@@ -9,9 +9,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.IconGridAdapter
 import org.piramalswasthya.sakhi.configuration.IconDataset
 import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 
 @AndroidEntryPoint
@@ -51,6 +53,13 @@ class MotherCareFragment : Fragment() {
             it?.let {
                 rvAdapter.submitList(IconDataset.getMotherCareDataset(it[0]))
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        activity?.let{
+            (it as HomeActivity).setLogo(R.drawable.ic__mother_care)
         }
     }
 

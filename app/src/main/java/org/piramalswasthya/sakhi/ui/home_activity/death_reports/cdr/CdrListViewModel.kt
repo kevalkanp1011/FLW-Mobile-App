@@ -5,6 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.helpers.filterBenList
 import org.piramalswasthya.sakhi.model.BenBasicDomain
+import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import javax.inject.Inject
 
@@ -14,8 +15,8 @@ class CdrListViewModel @Inject constructor(
 ) : ViewModel() {
 
     val cdrList = benRepo.cdrList
-    private val _benList = MutableLiveData<List<BenBasicDomain>>()
-    val benList: LiveData<List<BenBasicDomain>>
+    private val _benList = MutableLiveData<List<BenBasicDomainForForm>>()
+    val benList: LiveData<List<BenBasicDomainForForm>>
         get() = _benList
 
     private var lastFilter = ""

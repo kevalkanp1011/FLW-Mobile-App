@@ -9,8 +9,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.IconGridAdapter
 import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 
 @AndroidEntryPoint
 class VillageLevelFormsFragment : Fragment() {
@@ -43,5 +45,11 @@ class VillageLevelFormsFragment : Fragment() {
             IconGridAdapter.GridIconClickListener {
                 findNavController().navigate(it)
             })
+    }
+    override fun onStart() {
+        super.onStart()
+        activity?.let{
+            (it as HomeActivity).setLogo(R.drawable.ic__village_level_form)
+        }
     }
 }

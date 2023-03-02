@@ -17,6 +17,7 @@ import org.piramalswasthya.sakhi.configuration.BenKidRegFormDataset
 import org.piramalswasthya.sakhi.model.FormInput
 import org.piramalswasthya.sakhi.model.HouseholdCache
 import org.piramalswasthya.sakhi.model.LocationRecord
+import org.piramalswasthya.sakhi.model.TypeOfList
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import timber.log.Timber
 import java.util.*
@@ -537,6 +538,10 @@ class NewBenRegL15ViewModel @Inject constructor(
 
     fun resetErrorMessage() {
         _errorMessage.value = null
+    }
+
+    fun getNavPath(): TypeOfList? {
+        return form.getBenForSecondPage().registrationType
     }
 
 

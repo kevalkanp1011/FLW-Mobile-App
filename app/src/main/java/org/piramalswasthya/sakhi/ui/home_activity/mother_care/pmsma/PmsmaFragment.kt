@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -62,9 +63,12 @@ class PmsmaFragment : Fragment() {
         }
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
-                State.SUCCESS -> triggerPmsmaSendingWorker(
-                    requireContext()
-                )
+                State.SUCCESS -> {
+                    triggerPmsmaSendingWorker(
+                        requireContext()
+                    )
+                    findNavController().navigateUp()
+                }
                 State.FAIL -> Toast.makeText(
                     context,
                     "Saving pmsma to database Failed!",

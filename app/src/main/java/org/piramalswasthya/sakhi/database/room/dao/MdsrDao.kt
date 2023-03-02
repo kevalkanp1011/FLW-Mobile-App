@@ -1,9 +1,6 @@
 package org.piramalswasthya.sakhi.database.room.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import org.piramalswasthya.sakhi.model.MDSRCache
 
 @Dao
@@ -17,4 +14,7 @@ interface MdsrDao {
 
     @Query("select count(*) from MDSR")
     suspend fun mdsrCount(): Int
+
+    @Update
+    suspend fun updateMdsrRecord(it: MDSRCache)
 }

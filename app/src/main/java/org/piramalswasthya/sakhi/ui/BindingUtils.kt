@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.ui
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Build
 import android.view.Gravity
@@ -12,6 +13,7 @@ import android.widget.RadioGroup.LayoutParams
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.databinding.BindingAdapter
+import com.google.android.material.button.MaterialButton
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.FormInput
@@ -133,6 +135,7 @@ fun TextView.setRequired(required: Boolean? = true) {
             View.INVISIBLE
     }
 }
+
 
 private val rotate = RotateAnimation(
     360F,

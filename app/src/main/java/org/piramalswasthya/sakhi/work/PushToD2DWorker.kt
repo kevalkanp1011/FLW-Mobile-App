@@ -13,6 +13,7 @@ import org.piramalswasthya.sakhi.network.interceptors.TokenInsertTmcInterceptor
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.CdrRepo
 import org.piramalswasthya.sakhi.repositories.MdsrRepo
+import org.piramalswasthya.sakhi.repositories.PmsmaRepo
 import timber.log.Timber
 import java.net.SocketTimeoutException
 
@@ -23,6 +24,7 @@ class PushToD2DWorker @AssistedInject constructor(
     private val benRepo: BenRepo,
     private val mdsrRepo: MdsrRepo,
     private val cdrRepo: CdrRepo,
+    private val pmsmaRepo: PmsmaRepo,
     private val preferenceDao: PreferenceDao,
 ) : CoroutineWorker(appContext, params) {
 
@@ -37,14 +39,16 @@ class PushToD2DWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         init()
         try {
-            var workerResult = cdrRepo.processNewCdr()
-            workerResult = mdsrRepo.processNewMdsr()
-            if (workerResult) {
+            val workerResult1 = cdrRepo.processNewCdr()
+            val workerResult2 = mdsrRepo.processNewMdsr()
+            val workerResult3 = pmsmaRepo.processNewPmsma()
+
+            return if (workerResult1 && workerResult2 && workerResult3 ) {
                 Timber.d("Worker completed")
-                return Result.success()
+                Result.success()
             } else {
                 Timber.d("Worker Failed as usual!")
-                return Result.failure()
+                Result.failure()
             }
         } catch (e: SocketTimeoutException) {
             Timber.e("Caught Exception for Gen Ben iD worker $e")

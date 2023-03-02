@@ -45,29 +45,17 @@ class NcdPriorityListFragment : Fragment() {
             BenListAdapterForForm.ClickListener(
                 {
                     Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
-
                 },
                 {
                     Toast.makeText(context, "Household : $it clicked", Toast.LENGTH_SHORT).show()
                 },
-                { hhId, benId ->
-                    viewModel.triggerPushToAmritWorker()
-                    Toast.makeText(
-                        requireContext(),
-                        "All unsyced records will be uploaded once network is available!",
-                        Toast.LENGTH_LONG
-                    ).show()
+                { _, _ ->
+
                 },
-                { hhId, benId ->
-                    findNavController().navigate(
-                        NcdEligibleListFragmentDirections.actionNcdEligibleListFragmentToCbacFragment(
-                            hhId,
-                            benId,
-                            homeViewModel.currentUser.value!!.userId
-                        )
-                    )
+                {
+                        _,_ -> Toast.makeText(context,"Yet to be implemented!", Toast.LENGTH_SHORT).show()
                 }
-            ), "CBAC Form")
+            ),"CBAC FORM")
         binding.rvAny.adapter = benAdapter
 
         viewModel.benList.observe(viewLifecycleOwner) {

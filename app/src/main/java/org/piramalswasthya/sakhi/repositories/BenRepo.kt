@@ -49,13 +49,13 @@ class BenRepo @Inject constructor(
     val pregnantList by lazy {
         //TODO(implement BenDao)
         Transformations.map(database.benDao.getAllPregnancyWomenList()) { list ->
-            list.map { it.asBasicDomainModel() }
+            list.map { it.asBenBasicDomainModelForPmsmaForm() }
         }
     }
     val deliveryList by lazy {
         //TODO(implement BenDao)
         Transformations.map(database.benDao.getAllDeliveryStageWomenList()) { list ->
-            list.map { it.asBasicDomainModel() }
+            list.map { it.asBenBasicDomainModelForPmsmaForm() }
         }
     }
     val ncdList by lazy {
@@ -67,19 +67,19 @@ class BenRepo @Inject constructor(
     val ncdEligibleList by lazy {
         //TODO(implement BenDao)
         Transformations.map(database.benDao.getAllNCDEligibleList()) { list ->
-            list.map { it.asBasicDomainModel() }
+            list.map { it.asBenBasicDomainModelForCbacForm() }
         }
     }
     val ncdPriorityList by lazy {
         //TODO(implement BenDao)
         Transformations.map(database.benDao.getAllNCDPriorityList()) { list ->
-            list.map { it.asBasicDomainModel() }
+            list.map { it.asBenBasicDomainModelForCbacForm() }
         }
     }
     val ncdNonEligibleList by lazy {
         //TODO(implement BenDao)
         Transformations.map(database.benDao.getAllNCDNonEligibleList()) { list ->
-            list.map { it.asBasicDomainModel() }
+            list.map { it.asBenBasicDomainModelForCbacForm() }
         }
     }
     val menopauseList by lazy {
@@ -140,14 +140,14 @@ class BenRepo @Inject constructor(
     val cdrList by lazy {
         //TODO(implement BenDao)
         Transformations.map(database.benDao.getAllCDRList()) { list ->
-            list.map { it.asBasicDomainModel() }
+            list.map { it.asBenBasicDomainModelForCdrForm() }
         }
     }
 
     val mdsrList by lazy {
         //TODO(implement BenDao)
         Transformations.map(database.benDao.getAllMDSRList()) { list ->
-            list.map { it.asBasicDomainModel() }
+            list.map { it.asBenBasicDomainModelForMdsrForm() }
         }
     }
 

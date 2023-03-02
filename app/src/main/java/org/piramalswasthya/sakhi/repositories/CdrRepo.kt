@@ -62,29 +62,11 @@ class CdrRepo @Inject constructor(
                 val cdrCount = database.cdrDao.cdrCount()
                 cdrPostList.add(it.asPostModel(user, household, ben, cdrCount))
                 val uploadDone = postDataToD2dServer(cdrPostList)
-//
-//                    if (!uploadDone)
-//                        database.benDao.benSyncWithServerFailed(*benNetworkPostList.map { ben -> ben.benId }
-//                            .toTypedArray().toLongArray())
-//                }
+                if (uploadDone) {
+                    it.processed = "P"
+                    database.cdrDao.setSynced(it)
+                }
             }
-
-//            val updateBenList = database.benDao.getAllBenForSyncWithServer()
-//            updateBenList.forEach {
-//                database.benDao.setSyncState(it.householdId, it.beneficiaryId, SyncState.SYNCING)
-//                benNetworkPostList.add(it.asNetworkPostModel(user))
-
-//                val uploadDone = postDataToAmritServer(
-//                    benNetworkPostList,
-//                    householdNetworkPostList,
-//                    kidNetworkPostList,
-//                    cbacPostList
-//                )
-//                if (!uploadDone)
-//                    database.benDao.benSyncWithServerFailed(*benNetworkPostList.map { ben -> ben.benId }
-//                        .toTypedArray().toLongArray())
-
-//            }
             return@withContext true
         }
     }
@@ -97,7 +79,6 @@ class CdrRepo @Inject constructor(
             val response = d2DNetworkApiService.postCdrRegister(cdrPostList.toList())
             val statusCode = response.code()
 
-            //Log.d("hgyufhf", "onResponse: "+ statusCode);
             if (statusCode == 200) {
                 var responseString: String? = null
                 try {
@@ -109,7 +90,7 @@ class CdrRepo @Inject constructor(
                         // Log.d("dsfsdfse", "onResponse: "+jsonObj);
                         val errormessage = jsonObj.getString("message")
 
-                        if(jsonObj.isNull("status"))
+                        if (jsonObj.isNull("status"))
                             throw IllegalStateException("D2d server not responding properly, Contact Service Administrator!!")
 
                         val responsestatuscode = jsonObj.getInt("status")

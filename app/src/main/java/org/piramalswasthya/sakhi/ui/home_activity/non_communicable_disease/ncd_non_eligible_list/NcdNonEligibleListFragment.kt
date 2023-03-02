@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
+import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 
 @AndroidEntryPoint
@@ -34,8 +35,8 @@ class NcdNonEligibleListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapter(
-            BenListAdapter.BenClickListener(
+        val benAdapter = BenListAdapterForForm(
+            BenListAdapterForForm.ClickListener(
                 {
                     Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
                 },
@@ -44,8 +45,11 @@ class NcdNonEligibleListFragment : Fragment() {
                 },
                 { _, _ ->
                     viewModel.manualSync()
+                },
+                {
+                    _,_ -> Toast.makeText(context,"Yet to be implemented!", Toast.LENGTH_SHORT).show()
                 }
-            ))
+            ),"CBAC FORM")
         binding.rvAny.adapter = benAdapter
 
         viewModel.benList.observe(viewLifecycleOwner) {
