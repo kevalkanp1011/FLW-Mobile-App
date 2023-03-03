@@ -31,6 +31,7 @@ data class FormInput(
         DATE_PICKER,
         TEXT_VIEW,
         IMAGE_VIEW,
-        CHECKBOXES
+        CHECKBOXES,
+        TIME_PICKER
     }
 }

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.model.FormInput.InputType.*
+import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
@@ -474,6 +475,7 @@ class BenGenRegFormDataset(private val context: Context) {
         }
         ben?.apply {
             userImageBlob = getByteArrayFromImageUri(pic.value.value!!)
+            Timber.d("BenGenReg: $userImageBlob, ${pic.value.value}")
             regDate = getLongFromDate(this@BenGenRegFormDataset.dateOfReg.value.value!!)
             firstName = this@BenGenRegFormDataset.firstName.value.value
             lastName = this@BenGenRegFormDataset.lastName.value.value
@@ -533,9 +535,11 @@ class BenGenRegFormDataset(private val context: Context) {
 
     private suspend fun getByteArrayFromImageUri(uriString: String): ByteArray? {
         val file = File(context.cacheDir, uriString.substringAfterLast("/"))
+        Timber.d("image: ${file.length()}")
         val compressedFile = Compressor.compress(context, file) {
             size(50_000)
         }
+        Timber.d("compressed image: ${compressedFile.length()}")
         val iStream = compressedFile.inputStream()
         val byteArray = getBytes(iStream)
         iStream.close()

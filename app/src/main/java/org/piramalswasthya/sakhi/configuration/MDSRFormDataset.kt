@@ -61,6 +61,8 @@ class MDSRFormDataset(context: Context) {
     )
     private val husbandName = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
+        allCaps = true,
+        etMaxLength = 50,
         title = "Husband’s Name",
         required = false
     )
@@ -73,7 +75,7 @@ class MDSRFormDataset(context: Context) {
     )
     val reasonOfDeath = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
-        title = "specify Reason",
+        title = "Specify Reason",
         required = true
     )
     private val investigationDate = FormInput(

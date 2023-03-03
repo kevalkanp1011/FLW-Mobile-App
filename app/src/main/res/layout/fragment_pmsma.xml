@@ -11,7 +11,7 @@
         android:id="@+id/cv_patient_information"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_normal"
+        android:layout_margin="@dimen/margin_small"
         android:backgroundTint="?attr/colorPrimary"
         android:elevation="@dimen/padding_normal"
         app:cardCornerRadius="@dimen/padding_normal"
@@ -61,7 +61,15 @@
         android:id="@+id/btn_pmsma_submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_normal"
+        android:layout_margin="@dimen/margin_small"
         android:text="SUBMIT"
         android:textColor="@color/white" />
+
+    <ProgressBar
+        android:id="@+id/pb_pmsma"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="?attr/colorPrimary"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 </LinearLayout>

@@ -81,6 +81,7 @@ class PmsmaViewModel @Inject constructor(
     }
 
     fun submitForm() {
+        _state.value = State.LOADING
         val pmsmaCache = PMSMACache(benId = benId, hhId = hhId, processed = "N")
         form.mapValues(pmsmaCache)
         viewModelScope.launch {

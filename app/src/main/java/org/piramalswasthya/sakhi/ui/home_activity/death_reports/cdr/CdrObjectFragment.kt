@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -18,6 +19,7 @@ import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentCdrObjectBinding
 import org.piramalswasthya.sakhi.work.PushToD2DWorker
 import timber.log.Timber
+import kotlin.reflect.jvm.internal.impl.metadata.ProtoBuf.Visibility
 
 @AndroidEntryPoint
 class CdrObjectFragment : Fragment() {
@@ -56,18 +58,38 @@ class CdrObjectFragment : Fragment() {
             val adapter = binding.cdrForm.rvInputForm.adapter as FormInputAdapter
             viewModel.setAddress(it, adapter)
         }
-        binding.btnCdsrSubmit.setOnClickListener {
+        binding.btnCdrSubmit.setOnClickListener {
             if (validate()) viewModel.submitForm()
         }
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
-                CdrObjectViewModel.State.SUCCESS -> triggerCdrSendingWorker(requireContext())
-                CdrObjectViewModel.State.FAIL -> Toast.makeText(
-                    context,
-                    "Saving Mdsr to database Failed!",
-                    Toast.LENGTH_LONG
-                ).show()
-                else -> {}
+                CdrObjectViewModel.State.LOADING -> {
+                    binding.cdrForm.rvInputForm.visibility = View.GONE
+                    binding.btnCdrSubmit.visibility = View.GONE
+                    binding.cvPatientInformation.visibility = View.GONE
+                    binding.pbCdr.visibility = View.VISIBLE
+                }
+                CdrObjectViewModel.State.SUCCESS -> {
+                    findNavController().navigateUp()
+                    triggerCdrSendingWorker(requireContext())
+                }
+                CdrObjectViewModel.State.FAIL -> {
+                    binding.cdrForm.rvInputForm.visibility = View.VISIBLE
+                    binding.btnCdrSubmit.visibility = View.VISIBLE
+                    binding.cvPatientInformation.visibility = View.VISIBLE
+                    binding.pbCdr.visibility = View.GONE
+                    Toast.makeText(
+                        context,
+                        "Saving Mdsr to database Failed!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                else -> {
+                    binding.cdrForm.rvInputForm.visibility = View.VISIBLE
+                    binding.btnCdrSubmit.visibility = View.VISIBLE
+                    binding.cvPatientInformation.visibility = View.VISIBLE
+                    binding.pbCdr.visibility = View.GONE
+                }
             }
         }
     }

@@ -72,13 +72,13 @@ class ChildDeathReviewFormDataset(context: Context, private val childDeathReview
         title = "Gender",
         required = false
     )
-    private val motherName = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+    val motherName = FormInput(
+        inputType = FormInput.InputType.TEXT_VIEW,
         title = "Mother’s Name",
         required = false
     )
-    private val fatherName = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+    val fatherName = FormInput(
+        inputType = FormInput.InputType.TEXT_VIEW,
         title = "Father’s Name",
         required = false
     )
@@ -112,8 +112,8 @@ class ChildDeathReviewFormDataset(context: Context, private val childDeathReview
         title = "Landline",
         required = false
     )
-    private val mobileNumber = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+    val mobileNumber = FormInput(
+        inputType = FormInput.InputType.TEXT_VIEW,
         title = "Mobile number",
         required = false
     )

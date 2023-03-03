@@ -750,7 +750,7 @@ class BenRepo @Inject constructor(
                                 val benCacheList = getBenCacheFromServerResponse(responseString)
                                 database.benDao.upsert(*benCacheList.toTypedArray())
 
-                                Timber.d("GeTBenDataList: $pageSize $benDataList")
+//                                Timber.d("GeTBenDataList: $pageSize $benDataList")
                                 return@withContext Pair(pageSize, benDataList)
                             }
                             throw IllegalStateException("Response code !-100")
@@ -929,9 +929,9 @@ class BenRepo @Inject constructor(
                                 age = benDataObj.getInt("age"),
                                 ageUnit = if (benDataObj.has("gender")) {
                                     when (benDataObj.getString("age_unit")) {
-                                        "Year(s)" -> AgeUnit.YEARS
-                                        "Month(s)" -> AgeUnit.MONTHS
-                                        "Day(s)" -> AgeUnit.DAYS
+                                        "Years" -> AgeUnit.YEARS
+                                        "Months" -> AgeUnit.MONTHS
+                                        "Days" -> AgeUnit.DAYS
                                         else -> AgeUnit.YEARS
                                     }
                                 } else null,
@@ -941,9 +941,9 @@ class BenRepo @Inject constructor(
                                 isAdult = (benDataObj.getString("age_unit") == "Years" && benDataObj.getInt(
                                     "age"
                                 ) > 14),
-                                userImageBlob = if (benDataObj.has("user_image")) benDataObj.getString(
+                                userImageBlob = /*if (benDataObj.has("user_image")) benDataObj.getString(
                                     "user_image"
-                                ).toByteArray() else null,
+                                ).toByteArray() else*/ null,
                                 regDate = if (benDataObj.has("registrationDate")) getLongFromDate(
                                     benDataObj.getString("registrationDate")
                                 ) else 0,
@@ -1007,14 +1007,18 @@ class BenRepo @Inject constructor(
                                                 "reproductiveStatus"
                                             )
                                         ) {
-                                            when (benDataObj.getString("reproductiveStatus")) {
-                                                "Eligible Couple" -> TypeOfList.ELIGIBLE_COUPLE
-                                                "Antenatal Mother" -> TypeOfList.ANTENATAL_MOTHER
-                                                "Delivery Stage" -> TypeOfList.DELIVERY_STAGE
-                                                "Postnatal Mother" -> TypeOfList.POSTNATAL_MOTHER
-                                                "Menopause" -> TypeOfList.MENOPAUSE
-                                                "Teenager" -> TypeOfList.TEENAGER
-                                                else -> TypeOfList.OTHER
+                                            with (benDataObj.getString("reproductiveStatus")) {
+                                                when {
+                                                    contains("Eligible Couple") ||
+                                                            contains("पात्र युगल") -> TypeOfList.ELIGIBLE_COUPLE
+                                                    contains("Antenatal Mother") -> TypeOfList.ANTENATAL_MOTHER
+                                                    contains("Delivery Stage") -> TypeOfList.DELIVERY_STAGE
+                                                    contains("Postnatal Mother") -> TypeOfList.POSTNATAL_MOTHER
+                                                    contains("Menopause Stage") -> TypeOfList.MENOPAUSE
+                                                    contains("Teenager") ||
+                                                            contains("किशोरी") -> TypeOfList.TEENAGER
+                                                    else -> TypeOfList.GENERAL
+                                                }
                                             }
                                         } else TypeOfList.GENERAL
                                         else -> TypeOfList.GENERAL
@@ -1319,7 +1323,7 @@ class BenRepo @Inject constructor(
                             }
                         } else TypeOfList.OTHER
                         Timber.d("Custom Validation: $registrationType, ${benDataObj.getString("age_unit")}, " +
-                                "${benDataObj.getInt("age")}")
+                                "${benDataObj.getInt("age")}, ${benDataObj.getString("reproductiveStatus")}")
                     } catch (e: JSONException) {
                         Timber.i("Beneficiary skipped: ${jsonObject.getLong("benficieryid")} with error $e")
                     }

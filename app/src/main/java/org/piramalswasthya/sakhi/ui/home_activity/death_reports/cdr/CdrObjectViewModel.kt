@@ -80,6 +80,7 @@ class CdrObjectViewModel @Inject constructor(
     }
 
     fun submitForm() {
+        _state.value = State.LOADING
         val cdrCache = CDRCache(benId = benId, hhId = hhId, processed = "N", createdBy = user.userName, age = ben.age)
         dataset.mapValues(cdrCache)
         viewModelScope.launch {
@@ -150,11 +151,18 @@ class CdrObjectViewModel @Inject constructor(
         dataset.age.value.value = "${ben.age} ${ben.ageUnit?.name}"
         dataset.dateOfBirth.value.value = getDateFromLong(ben.dob)
         dataset.firstInformant.value.value = user.userName
+        dataset.motherName.value.value = ben.motherName
+        dataset.fatherName.value.value = ben.fatherName
+        dataset.firstInformant.value.value = user.userName
+        dataset.mobileNumber.value.value = ben.contactNumber.toString()
         dataset.dateOfNotification.value.value = getDateFromLong(System.currentTimeMillis())
         adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.address))
         adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.childName))
         adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.gender))
         adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.age))
+        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.mobileNumber))
+        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.motherName))
+        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.fatherName))
         adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.dateOfBirth))
         adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.firstInformant))
         adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.dateOfNotification))

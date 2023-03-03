@@ -3,541 +3,74 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:card_view="http://schemas.android.com/tools"
-    android:background="@color/white"
-    android:scrollbars="none">
+    android:backgroundTint="?attr/colorOnSecondary"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_normal">
 
-    <LinearLayout
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_patient_information"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_margin="@dimen/margin_small"
+        android:backgroundTint="?attr/colorPrimary"
+        android:elevation="@dimen/padding_normal"
+        app:cardCornerRadius="@dimen/padding_normal"
+        app:cardElevation="@dimen/padding_normal"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <ScrollView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none">
+            android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_ben_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/padding_normal"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tv_age_gender"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_age_gender"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:orientation="vertical"
-                android:layout_marginBottom="10dp">
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cv_patient_information"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_normal"
-                    android:backgroundTint="?attr/colorPrimary"
-                    android:elevation="@dimen/padding_normal"
-                    app:cardCornerRadius="@dimen/padding_normal"
-                    app:cardElevation="@dimen/padding_normal"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/tv_ben_name"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:padding="@dimen/padding_normal"
-                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                            android:textColor="@color/white"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/tv_age_gender"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:id="@+id/tv_age_gender"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:padding="@dimen/padding_normal"
-                            android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
-                            android:textColor="@color/white"
-                            app:layout_constraintEnd_toEndOf="parent" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_margin="5dp"
-                    android:background="#a9a9a9"
-                    app:cardCornerRadius="10dp"
-                    app:cardElevation="4dp"
-                    card_view:cardBackgroundColor="#fff"
-                    card_view:cardCornerRadius="10dp"
-                    card_view:cardElevation="15dp"
-                    card_view:cardMaxElevation="50dp">
-
-                    <include
-                        android:id="@+id/mdsr_form"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        layout="@layout/fragment_input_form_page"
-                        />
-
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_margin="10dp"-->
-<!--                        android:orientation="vertical">-->
-
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginTop="10dp"-->
-<!--                            android:orientation="horizontal"-->
-<!--                            android:weightSum="1">-->
-
-<!--                            <FrameLayout-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_weight="0.95">-->
-
-<!--                                <com.google.android.material.textfield.TextInputLayout-->
-<!--                                    android:id="@+id/et_mdsr_date_of_deceased_layout"-->
-<!--                                    android:layout_width="match_parent"-->
-<!--                                    android:layout_height="match_parent"-->
-<!--                                    style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox">-->
-
-<!--                                    <com.google.android.material.textfield.TextInputEditText-->
-<!--                                        android:id="@+id/et_mdsr_date_of_deceased"-->
-<!--                                        android:layout_width="match_parent"-->
-<!--                                        android:layout_height="match_parent"-->
-<!--                                        android:drawablePadding="10dp"-->
-<!--                                        android:focusable="false"-->
-<!--                                        android:focusableInTouchMode="false"-->
-<!--                                        android:fontFamily="@font/opensans_regular"-->
-<!--                                        android:hint="Date of Death"-->
-<!--                                        android:imeOptions="actionNext"-->
-<!--                                        android:paddingLeft="7dp"-->
-<!--                                        android:textColor="@color/black"-->
-<!--                                        android:textSize="18sp" />-->
-<!--                                </com.google.android.material.textfield.TextInputLayout>-->
-
-<!--                                <TextView-->
-<!--                                    android:layout_width="20dp"-->
-<!--                                    android:layout_height="20dp"-->
-<!--                                    android:layout_gravity="center|end"-->
-<!--                                    android:layout_marginLeft="5dp"-->
-<!--                                    android:layout_marginRight="8dp"-->
-<!--                                    android:background="@drawable/ic_calendar"-->
-<!--                                    android:padding="5dp" />-->
-<!--                            </FrameLayout>-->
-
-<!--                        </LinearLayout>-->
-
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginTop="10dp"-->
-<!--                            android:layout_marginBottom="10dp"-->
-<!--                            android:orientation="horizontal"-->
-<!--                            android:weightSum="1">-->
-
-<!--                            <com.google.android.material.textfield.TextInputLayout-->
-<!--                                android:id="@+id/et_mdsr_address_layout"-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="match_parent"-->
-<!--                                android:layout_weight="0.95">-->
-
-<!--                                <com.google.android.material.textfield.TextInputEditText-->
-<!--                                    android:id="@+id/et_mdsr_address"-->
-<!--                                    android:layout_width="fill_parent"-->
-<!--                                    android:layout_height="wrap_content"-->
-<!--                                    android:drawablePadding="10dp"-->
-<!--                                    android:focusable="false"-->
-<!--                                    android:fontFamily="@font/opensans_regular"-->
-<!--                                    android:hint="Address"-->
-<!--                                    android:inputType="textMultiLine"-->
-<!--                                    android:lineSpacingExtra="5dp"-->
-<!--                                    android:maxLines="2"-->
-<!--                                    android:paddingLeft="7dp"-->
-<!--                                    android:textColor="@color/black"-->
-<!--                                    android:textSize="18sp" />-->
-
-<!--                            </com.google.android.material.textfield.TextInputLayout>-->
-
-<!--                            <TextView-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="match_parent"-->
-<!--                                android:layout_gravity="top"-->
-<!--                                android:layout_weight="0.5"-->
-<!--                                android:gravity="top"-->
-<!--                                android:paddingLeft="5dp"-->
-<!--                                android:text=""-->
-<!--                                android:textSize="24sp" />-->
-<!--                        </LinearLayout>-->
-
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginTop="10dp"-->
-<!--                            android:layout_marginBottom="10dp"-->
-<!--                            android:orientation="horizontal"-->
-<!--                            android:weightSum="1">-->
-
-<!--                            <com.google.android.material.textfield.TextInputLayout-->
-<!--                                android:id="@+id/et_mdsr_husband_name_layout"-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="match_parent"-->
-<!--                                android:layout_weight="0.95">-->
-
-<!--                                <com.google.android.material.textfield.TextInputEditText-->
-<!--                                    android:id="@+id/et_mdsr_husband_name"-->
-<!--                                    android:layout_width="match_parent"-->
-<!--                                    android:layout_height="match_parent"-->
-<!--                                    android:drawablePadding="10dp"-->
-<!--                                    android:fontFamily="@font/opensans_regular"-->
-<!--                                    android:hint="Husband's Name"-->
-<!--                                    android:inputType="text"-->
-<!--                                    android:maxLength="15"-->
-<!--                                    android:paddingLeft="7dp"-->
-<!--                                    android:textColor="@color/black"-->
-<!--                                    android:textSize="18sp" />-->
-
-<!--                            </com.google.android.material.textfield.TextInputLayout>-->
-
-<!--                            <TextView-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="match_parent"-->
-<!--                                android:layout_gravity="top"-->
-<!--                                android:layout_weight="0.5"-->
-<!--                                android:gravity="top"-->
-<!--                                android:paddingLeft="5dp"-->
-<!--                                android:text=""-->
-<!--                                android:textSize="24sp" />-->
-<!--                        </LinearLayout>-->
-
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="58dp"-->
-<!--                            android:orientation="horizontal"-->
-<!--                            android:visibility="visible">-->
-
-<!--                            <LinearLayout-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="match_parent"-->
-<!--                                android:orientation="vertical"-->
-<!--                                android:layout_weight="3.25">-->
-
-<!--                                <TextView-->
-<!--                                    android:layout_width="wrap_content"-->
-<!--                                    android:layout_height="match_parent"-->
-<!--                                    android:gravity="center"-->
-<!--                                    android:paddingLeft="5dp"-->
-<!--                                    android:text="@string/mdsr_cause"-->
-<!--                                    android:textColor="@color/black"-->
-<!--                                    android:fontFamily="@font/opensans_regular"-->
-<!--                                    android:textSize="18sp"-->
-<!--                                    android:textStyle="bold" />-->
-
-<!--                            </LinearLayout>-->
-
-<!--                            <LinearLayout-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="match_parent"-->
-<!--                                android:orientation="horizontal"-->
-<!--                                android:gravity="center|start"-->
-<!--                                android:layout_weight="6.75">-->
-
-<!--                                <RadioGroup-->
-<!--                                    android:id="@+id/rg_death_type"-->
-<!--                                    android:layout_width="wrap_content"-->
-<!--                                    android:layout_height="match_parent"-->
-<!--                                    android:gravity="center|start"-->
-<!--                                    android:orientation="horizontal">-->
-
-<!--                                    <RadioButton-->
-<!--                                        android:layout_width="wrap_content"-->
-<!--                                        android:layout_height="wrap_content"-->
-<!--                                        android:text="@string/mdsr_maternal"-->
-<!--                                        android:gravity="center"-->
-<!--                                        android:textColor="@color/black"-->
-<!--                                        android:fontFamily="@font/opensans_regular"-->
-<!--                                        android:layout_marginRight="5dp"-->
-<!--                                        android:id="@+id/rb_mdsr1"/>-->
-
-<!--                                    <RadioButton-->
-<!--                                        android:layout_width="wrap_content"-->
-<!--                                        android:layout_height="wrap_content"-->
-<!--                                        android:text="@string/mdsr_non_maternal"-->
-<!--                                        android:gravity="center"-->
-<!--                                        android:layout_marginLeft="5dp"-->
-<!--                                        android:textColor="@color/black"-->
-<!--                                        android:fontFamily="@font/opensans_regular"-->
-<!--                                        android:id="@+id/rb_mdsr2"/>-->
-
-<!--                                </RadioGroup>-->
-
-<!--                            </LinearLayout>-->
-
-<!--                        </LinearLayout>-->
-
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginTop="10dp"-->
-<!--                            android:id="@+id/ll_mdsr_reason_maternal"-->
-<!--                            android:layout_marginBottom="10dp"-->
-<!--                            android:orientation="horizontal"-->
-<!--                            android:weightSum="1">-->
-
-<!--                            <com.google.android.material.textfield.TextInputLayout-->
-<!--                                android:id="@+id/et_mdsr_reason_death_layout"-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="match_parent"-->
-<!--                                android:layout_weight="0.95">-->
-
-<!--                                <com.google.android.material.textfield.TextInputEditText-->
-<!--                                    android:id="@+id/et_mdsr_reason_death"-->
-<!--                                    android:layout_width="match_parent"-->
-<!--                                    android:layout_height="match_parent"-->
-<!--                                    android:drawablePadding="10dp"-->
-<!--                                    android:fontFamily="@font/opensans_regular"-->
-
-<!--                                    android:hint="@string/mdsr_reason_death"-->
-<!--                                    android:inputType="text"-->
-<!--                                    android:maxLength="15"-->
-<!--                                    android:paddingLeft="7dp"-->
-<!--                                    android:textColor="@color/black"-->
-<!--                                    android:textSize="18sp" />-->
-
-<!--                            </com.google.android.material.textfield.TextInputLayout>-->
-
-<!--                            <TextView-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="match_parent"-->
-<!--                                android:layout_gravity="top"-->
-<!--                                android:layout_weight="0.5"-->
-<!--                                android:gravity="top"-->
-<!--                                android:paddingLeft="5dp"-->
-<!--                                android:text=""-->
-<!--                                android:textSize="24sp" />-->
-<!--                        </LinearLayout>-->
-
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginTop="10dp"-->
-<!--                            android:layout_marginBottom="10dp"-->
-<!--                            android:orientation="horizontal"-->
-
-<!--                            android:weightSum="1">-->
-
-<!--                            <com.google.android.material.textfield.TextInputLayout-->
-<!--                                android:id="@+id/et_mdsr_field_investigation_layout"-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="match_parent"-->
-<!--                                android:layout_weight="0.95">-->
-
-<!--                                <com.google.android.material.textfield.TextInputEditText-->
-<!--                                    android:id="@+id/et_mdsr_field_investigation"-->
-<!--                                    android:layout_width="match_parent"-->
-<!--                                    android:layout_height="match_parent"-->
-<!--                                    android:drawablePadding="10dp"-->
-<!--                                    android:focusable="false"-->
-
-<!--                                    android:fontFamily="@font/opensans_regular"-->
-<!--                                    android:hint="Date of Field Investigation"-->
-<!--                                    android:inputType="text"-->
-<!--                                    android:maxLength="15"-->
-<!--                                    android:paddingLeft="7dp"-->
-<!--                                    android:textColor="@color/black"-->
-<!--                                    android:textSize="18sp" />-->
-
-<!--                            </com.google.android.material.textfield.TextInputLayout>-->
-
-<!--                            <TextView-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="match_parent"-->
-<!--                                android:layout_gravity="top"-->
-<!--                                android:layout_weight="0.5"-->
-<!--                                android:gravity="top"-->
-<!--                                android:paddingLeft="5dp"-->
-<!--                                android:text=""-->
-<!--                                android:textSize="24sp" />-->
-<!--                        </LinearLayout>-->
-
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="58dp"-->
-<!--                            android:orientation="horizontal"-->
-<!--                            android:visibility="visible">-->
-
-<!--                            <LinearLayout-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="match_parent"-->
-<!--                                android:orientation="vertical"-->
-<!--                                android:layout_weight="3.25">-->
-
-<!--                                <TextView-->
-<!--                                    android:layout_width="wrap_content"-->
-<!--                                    android:layout_height="match_parent"-->
-<!--                                    android:gravity="center"-->
-<!--                                    android:paddingLeft="5dp"-->
-<!--                                    android:text="@string/mdsr_action"-->
-<!--                                    android:textColor="@color/black"-->
-<!--                                    android:fontFamily="@font/opensans_regular"-->
-<!--                                    android:textSize="18sp"-->
-<!--                                    android:textStyle="bold" />-->
-
-<!--                            </LinearLayout>-->
-
-<!--                            <LinearLayout-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="match_parent"-->
-<!--                                android:orientation="horizontal"-->
-<!--                                android:gravity="center|start"-->
-<!--                                android:layout_weight="6.75">-->
-
-<!--                                <RadioGroup-->
-<!--                                    android:id="@+id/rg_action_taken"-->
-<!--                                    android:layout_width="wrap_content"-->
-<!--                                    android:layout_height="match_parent"-->
-<!--                                    android:gravity="center"-->
-<!--                                    android:orientation="horizontal">-->
-
-<!--                                    <RadioButton-->
-<!--                                        android:layout_width="wrap_content"-->
-<!--                                        android:layout_height="wrap_content"-->
-<!--                                        android:text="@string/cbac_yes"-->
-<!--                                        android:gravity="center"-->
-<!--                                        android:textColor="@color/black"-->
-<!--                                        android:fontFamily="@font/opensans_regular"-->
-<!--                                        android:layout_marginRight="5dp"-->
-<!--                                        android:id="@+id/rb_mdsr_yes"/>-->
-
-<!--                                    <RadioButton-->
-<!--                                        android:layout_width="wrap_content"-->
-<!--                                        android:layout_height="wrap_content"-->
-<!--                                        android:text="@string/cbac_no"-->
-<!--                                        android:gravity="center"-->
-<!--                                        android:layout_marginLeft="5dp"-->
-<!--                                        android:textColor="@color/black"-->
-<!--                                        android:fontFamily="@font/opensans_regular"-->
-<!--                                        android:id="@+id/rb_mdsr_no"/>-->
-
-<!--                                </RadioGroup>-->
-<!--                            </LinearLayout>-->
-<!--                        </LinearLayout>-->
-
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginTop="10dp"-->
-<!--                            android:layout_marginBottom="10dp"-->
-<!--                            android:orientation="horizontal"-->
-
-<!--                            android:weightSum="1">-->
-
-<!--                            <com.google.android.material.textfield.TextInputLayout-->
-<!--                                android:id="@+id/et_mdsr_signature_layout"-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="match_parent"-->
-<!--                                android:layout_weight="0.95">-->
-
-<!--                                <com.google.android.material.textfield.TextInputEditText-->
-<!--                                    android:id="@+id/et_mdsr_signature"-->
-<!--                                    android:layout_width="match_parent"-->
-<!--                                    android:layout_height="match_parent"-->
-<!--                                    android:drawablePadding="10dp"-->
-<!--                                    android:fontFamily="@font/opensans_regular"-->
-<!--                                    android:hint="Signature of Mo I/C of the Block"-->
-<!--                                    android:inputType="text"-->
-<!--                                    android:maxLength="15"-->
-<!--                                    android:paddingLeft="7dp"-->
-<!--                                    android:textColor="@color/black"-->
-<!--                                    android:textSize="18sp" />-->
-
-<!--                            </com.google.android.material.textfield.TextInputLayout>-->
-
-<!--                            <TextView-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="match_parent"-->
-<!--                                android:layout_gravity="top"-->
-<!--                                android:layout_weight="0.5"-->
-<!--                                android:gravity="top"-->
-<!--                                android:paddingLeft="5dp"-->
-<!--                                android:text=""-->
-<!--                                android:textSize="24sp" />-->
-<!--                        </LinearLayout>-->
-
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginTop="10dp"-->
-<!--                            android:layout_marginBottom="10dp"-->
-<!--                            android:orientation="horizontal"-->
-
-<!--                            android:weightSum="1">-->
-
-<!--                            <com.google.android.material.textfield.TextInputLayout-->
-<!--                                android:id="@+id/et_mdsr_ic_date_layout"-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="match_parent"-->
-<!--                                android:layout_weight="0.95">-->
-
-<!--                                <com.google.android.material.textfield.TextInputEditText-->
-<!--                                    android:id="@+id/et_mdsr_ic_date"-->
-<!--                                    android:layout_width="match_parent"-->
-<!--                                    android:layout_height="match_parent"-->
-<!--                                    android:drawablePadding="10dp"-->
-<!--                                    android:focusable="false"-->
-<!--                                    android:fontFamily="@font/opensans_regular"-->
-<!--                                    android:hint="Date"-->
-<!--                                    android:inputType="text"-->
-<!--                                    android:maxLength="15"-->
-<!--                                    android:paddingLeft="7dp"-->
-<!--                                    android:textColor="@color/black"-->
-<!--                                    android:textSize="18sp" />-->
-
-<!--                            </com.google.android.material.textfield.TextInputLayout>-->
-
-<!--                            <TextView-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="match_parent"-->
-<!--                                android:layout_gravity="top"-->
-<!--                                android:layout_weight="0.5"-->
-<!--                                android:gravity="top"-->
-<!--                                android:paddingLeft="5dp"-->
-<!--                                android:text=""-->
-<!--                                android:textSize="24sp" />-->
-<!--                        </LinearLayout>-->
-
-<!--                    </LinearLayout>-->
-
-                </androidx.cardview.widget.CardView>
-
-                <Button
-                    android:id="@+id/btn_mdsr_submit"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_margin="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="?attr/colorPrimary"
-                    android:text="SUBMIT"
-                    android:textColor="@color/white"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-        </ScrollView>
-
-    </LinearLayout>
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="@dimen/padding_normal"
+                android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <include
+        android:id="@+id/mdsr_form"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        layout="@layout/fragment_input_form_page" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_mdsr_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_small"
+        android:text="SUBMIT"
+        android:textColor="@color/white" />
+
+    <ProgressBar
+        android:id="@+id/pb_mdsr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="?attr/colorPrimary"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 
 </LinearLayout>
