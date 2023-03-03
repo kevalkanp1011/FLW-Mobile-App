@@ -176,8 +176,8 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     private val expectedDateOfDelivery = FormInput(
         inputType = FormInput.InputType.DATE_PICKER,
         title = "Expected Date of Delivery ",
-        min = 0L,
-        max = System.currentTimeMillis(),
+        max = System.currentTimeMillis() + 270*24*60*600000L,
+        min = System.currentTimeMillis(),
         required = true
     )
     private val highriskSymbols = FormInput(

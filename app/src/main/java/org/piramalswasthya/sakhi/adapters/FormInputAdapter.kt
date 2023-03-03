@@ -284,6 +284,52 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
         }
     }
 
+    class TimePickerInputViewHolder private constructor(private val binding: RvItemTimepickerBinding) :
+        ViewHolder(binding.root) {
+        companion object {
+            fun from(parent: ViewGroup): ViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = RvItemTimepickerBinding.inflate(layoutInflater, parent, false)
+                return TimePickerInputViewHolder(binding)
+            }
+        }
+
+        fun bind(
+            item: FormInput
+        ) {
+            val today = Calendar.getInstance()
+            var thisYear = today.get(Calendar.YEAR)
+            var thisMonth = today.get(Calendar.MONTH)
+            var thisDay = today.get(Calendar.DAY_OF_MONTH)
+            binding.form = item
+            item.errorText?.also { binding.tilEditText.error = it }
+                ?: run { binding.tilEditText.error = null }
+            binding.et.setOnClickListener {
+                item.value.value?.let { value ->
+                    thisYear = value.substring(6).toInt()
+                    thisMonth = value.substring(3, 5).trim().toInt() - 1
+                    thisDay = value.substring(0, 2).trim().toInt()
+                }
+                val datePickerDialog = DatePickerDialog(
+                    it.context,
+                    { _, year, month, day ->
+                        item.value.value =
+                            "${if (day > 9) day else "0$day"}-${if (month > 8) month + 1 else "0${month + 1}"}-$year"
+                        binding.invalidateAll()
+                    }, thisYear, thisMonth, thisDay
+                )
+                item.errorText = null
+                binding.tilEditText.error = null
+                datePickerDialog.datePicker.maxDate = item.max ?: 0
+                datePickerDialog.datePicker.minDate = item.min ?: 0
+                datePickerDialog.datePicker.touchables[0].performClick()
+                datePickerDialog.show()
+            }
+            binding.executePendingBindings()
+
+        }
+    }
+
     class TextViewInputViewHolder private constructor(private val binding: RvItemTextViewBinding) :
         ViewHolder(binding.root) {
         companion object {
@@ -342,6 +388,7 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
             TEXT_VIEW -> TextViewInputViewHolder.from(parent)
             IMAGE_VIEW -> ImageViewInputViewHolder.from(parent)
             CHECKBOXES -> CheckBoxesInputViewHolder.from(parent)
+            TIME_PICKER -> TimePickerInputViewHolder.from(parent)
         }
     }
 
@@ -355,6 +402,7 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
             TEXT_VIEW -> (holder as TextViewInputViewHolder).bind(item)
             IMAGE_VIEW -> (holder as ImageViewInputViewHolder).bind(item, imageClickListener)
             CHECKBOXES -> (holder as CheckBoxesInputViewHolder).bind(item)
+            TIME_PICKER -> (holder as TimePickerInputViewHolder).bind(item)
         }
     }
 

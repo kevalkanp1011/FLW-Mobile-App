@@ -441,6 +441,7 @@ class CbacViewModel @Inject constructor(
             _state.value = State.MISSING_FIELD
             return
         }
+        _state.value = State.SAVING
         cbac.total_score = _raTotalScore.value!!
         var flagForHrp = false
         if (ben.genDetails?.reproductiveStatusId == 1 || ben.genDetails?.reproductiveStatusId == 2 || ben.genDetails?.reproductiveStatusId == 3) {

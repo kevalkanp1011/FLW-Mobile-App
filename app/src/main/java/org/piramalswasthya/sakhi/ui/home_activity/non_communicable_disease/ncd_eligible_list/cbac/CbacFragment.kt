@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentCbacBinding
@@ -61,16 +62,24 @@ class CbacFragment : Fragment() {
 
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
+                CbacViewModel.State.SAVING -> {
+                    binding.llContent.visibility = View.GONE
+                    binding.pbCbac.visibility = View.VISIBLE
+                }
                 CbacViewModel.State.SAVE_FAIL -> {
+                    binding.llContent.visibility = View.VISIBLE
+                    binding.pbCbac.visibility = View.GONE
                     Timber.d("Ran into error! Cbac data not saved!")
                     viewModel.resetState()
                 }
                 CbacViewModel.State.SAVE_SUCCESS -> {
                     Timber.d("CBAC form saved successfully!")
-                    activity?.onBackPressed()
                     viewModel.resetState()
+                    findNavController().navigateUp()
                 }
                 CbacViewModel.State.MISSING_FIELD -> {
+                    binding.llContent.visibility = View.VISIBLE
+                    binding.pbCbac.visibility = View.GONE
                     alertDialog.setMessage(viewModel.missingFieldString)
                     alertDialog.show()
                 }

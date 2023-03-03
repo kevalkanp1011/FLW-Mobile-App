@@ -57,7 +57,7 @@ class MdsrListFragment : Fragment() {
             }, "MDSR Form")
         binding.rvAny.adapter = benAdapter
 
-        viewModel.mdsrList.observe(viewLifecycleOwner) {
+        viewModel.benList.observe(viewLifecycleOwner) {
             if (it.isNullOrEmpty())
                 binding.flEmpty.visibility = View.VISIBLE
             else

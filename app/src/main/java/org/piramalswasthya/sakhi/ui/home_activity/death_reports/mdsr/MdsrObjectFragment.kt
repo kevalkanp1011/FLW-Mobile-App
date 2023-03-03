@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -62,9 +63,29 @@ class MdsrObjectFragment : Fragment() {
         }
         viewModel.state.observe(viewLifecycleOwner) {
             when(it) {
-                MdsrObjectViewModel.State.SUCCESS -> triggerMdsrSendingWorker(requireContext())
-                MdsrObjectViewModel.State.FAIL -> Toast.makeText(context, "Saving Mdsr to database Failed!", Toast.LENGTH_LONG).show()
-                else -> {}
+                MdsrObjectViewModel.State.LOADING -> {
+                    binding.cvPatientInformation.visibility = View.GONE
+                    binding.mdsrForm.inputForm.rvInputForm.visibility = View.GONE
+                    binding.btnMdsrSubmit.visibility = View.GONE
+                    binding.pbMdsr.visibility = View.VISIBLE
+                }
+                MdsrObjectViewModel.State.SUCCESS -> {
+                    findNavController().navigateUp()
+                    triggerMdsrSendingWorker(requireContext())
+                }
+                MdsrObjectViewModel.State.FAIL -> {
+                    binding.cvPatientInformation.visibility = View.VISIBLE
+                    binding.mdsrForm.inputForm.rvInputForm.visibility = View.VISIBLE
+                    binding.btnMdsrSubmit.visibility = View.VISIBLE
+                    binding.pbMdsr.visibility = View.GONE
+                    Toast.makeText(context, "Saving Mdsr to database Failed!", Toast.LENGTH_LONG).show()
+                }
+                else -> {
+                    binding.cvPatientInformation.visibility = View.VISIBLE
+                    binding.mdsrForm.inputForm.rvInputForm.visibility = View.VISIBLE
+                    binding.btnMdsrSubmit.visibility = View.VISIBLE
+                    binding.pbMdsr.visibility = View.GONE
+                }
             }
         }
     }

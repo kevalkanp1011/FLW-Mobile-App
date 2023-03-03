@@ -80,6 +80,7 @@ class MdsrObjectViewModel @Inject constructor(
     }
 
     fun submitForm() {
+        _state.value = State.LOADING
         val mdsrCache = MDSRCache(benId = benId, hhId = hhId, processed = "N", createdBy = user.userName)
         dataset.mapValues(mdsrCache)
         viewModelScope.launch {

@@ -267,7 +267,7 @@
     <fragment
         android:id="@+id/pregnancyListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.pregnancy_list.PregnancyListFragment"
-        android:label="fragment_pregnancy_list"
+        android:label="Pregnancy List"
         tools:layout="@layout/fragment_pregnancy_list">
         <action
             android:id="@+id/action_pregnancyListFragment_to_pmsmaFragment"
@@ -276,7 +276,7 @@
     <fragment
         android:id="@+id/deliveryStageListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.delivery_stage_list.DeliveryStageListFragment"
-        android:label="fragment_delivery_stage_list"
+        android:label="Delivery Stage List"
         tools:layout="@layout/fragment_delivery_stage_list" >
         <action
             android:id="@+id/action_deliveryStageListFragment_to_pmsmaFragment"
@@ -285,17 +285,17 @@
     <fragment
         android:id="@+id/pncMotherListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.pnc_mother_list.PncMotherListFragment"
-        android:label="fragment_pnc_mother_list"
+        android:label="PNC Mother List"
         tools:layout="@layout/fragment_pnc_mother_list" />
     <fragment
         android:id="@+id/reproductiveAgeListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.reproductive_age_list.ReproductiveAgeListFragment"
-        android:label="fragment_reproductive_age_list"
+        android:label="Reproductive Age List"
         tools:layout="@layout/fragment_reproductive_age_list" />
     <fragment
         android:id="@+id/ncdEligibleListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_eligible_list.NcdEligibleListFragment"
-        android:label="fragment_ncd_eligible_list"
+        android:label="NCD Eligible List"
         tools:layout="@layout/fragment_ncd_eligible_list">
         <action
             android:id="@+id/action_ncdEligibleListFragment_to_cbacFragment"
@@ -304,22 +304,22 @@
     <fragment
         android:id="@+id/ncdListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_list.NcdListFragment"
-        android:label="fragment_ncd_list"
+        android:label="NCD List"
         tools:layout="@layout/fragment_ncd_list" />
     <fragment
         android:id="@+id/ncdNonEligibleListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_non_eligible_list.NcdNonEligibleListFragment"
-        android:label="fragment_ncd_non_eligible_list"
+        android:label="NCD Non-Eligible List"
         tools:layout="@layout/fragment_ncd_non_eligible_list" />
     <fragment
         android:id="@+id/ncdPriorityListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_priority_list.NcdPriorityListFragment"
-        android:label="fragment_ncd_priority_list"
+        android:label="NCD Priority List"
         tools:layout="@layout/fragment_ncd_priority_list" />
     <fragment
         android:id="@+id/surveyRegisterFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.village_level_forms.survey_register.SurveyRegisterFragment"
-        android:label="fragment_survey_register"
+        android:label="All Household List"
         tools:layout="@layout/fragment_survey_register" />
     <fragment
         android:id="@+id/getBenFragment"
@@ -329,7 +329,7 @@
     <fragment
         android:id="@+id/cbacFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_eligible_list.cbac.CbacFragment"
-        android:label="CbacFragment">
+        android:label="CBAC Form">
         <argument
             android:name="hhId"
             app:argType="long" />
@@ -402,7 +402,7 @@
     <fragment
         android:id="@+id/mdsrObjectFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.death_reports.mdsr.MdsrObjectFragment"
-        android:label="MDSR Form" >
+        android:label="MDSR" >
         <argument
             android:name="hhId"
             app:argType="long" />
@@ -413,7 +413,7 @@
     <fragment
         android:id="@+id/cdrObjectFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.death_reports.cdr.CdrObjectFragment"
-        android:label="CDR Form"
+        android:label="CDR"
         tools:layout="@layout/fragment_cdr_object">
         <argument
             android:name="hhId"
@@ -425,7 +425,7 @@
     <fragment
         android:id="@+id/pmsmaFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.pmsma.PmsmaFragment"
-        android:label="fragment_pmsma"
+        android:label="PMSMA"
         tools:layout="@layout/fragment_pmsma">
         <argument
             android:name="benId"

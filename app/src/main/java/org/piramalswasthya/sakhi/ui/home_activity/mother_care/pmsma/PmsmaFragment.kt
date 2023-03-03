@@ -63,18 +63,33 @@ class PmsmaFragment : Fragment() {
         }
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
+                State.LOADING -> {
+                    binding.pmsmaForm.rvInputForm.visibility = View.GONE
+                    binding.btnPmsmaSubmit.visibility = View.GONE
+                    binding.cvPatientInformation.visibility = View.GONE
+                    binding.pbPmsma.visibility = View.VISIBLE
+                }
                 State.SUCCESS -> {
-                    triggerPmsmaSendingWorker(
-                        requireContext()
-                    )
+                    triggerPmsmaSendingWorker(requireContext())
                     findNavController().navigateUp()
                 }
-                State.FAIL -> Toast.makeText(
-                    context,
-                    "Saving pmsma to database Failed!",
-                    Toast.LENGTH_LONG
-                ).show()
-                else -> {}
+                State.FAIL -> {
+                    binding.pmsmaForm.rvInputForm.visibility = View.VISIBLE
+                    binding.btnPmsmaSubmit.visibility = View.VISIBLE
+                    binding.cvPatientInformation.visibility = View.VISIBLE
+                    binding.pbPmsma.visibility = View.GONE
+                    Toast.makeText(
+                        context,
+                        "Saving pmsma to database Failed!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                else -> {
+                    binding.pmsmaForm.rvInputForm.visibility = View.VISIBLE
+                    binding.btnPmsmaSubmit.visibility = View.VISIBLE
+                    binding.cvPatientInformation.visibility = View.VISIBLE
+                    binding.pbPmsma.visibility = View.GONE
+                }
             }
         }
 
