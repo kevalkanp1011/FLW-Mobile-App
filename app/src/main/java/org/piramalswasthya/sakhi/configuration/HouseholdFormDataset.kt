@@ -99,21 +99,25 @@ class HouseholdFormDataset(context: Context) {
     private val houseNo = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_house_no),
+        etMaxLength = 100,
         required = false
     )
     private val wardNo = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_ward_no),
+        etMaxLength = 100,
         required = false
     )
     private val wardName = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_ward_name),
+        etMaxLength = 100,
         required = false
     )
     private val mohallaName = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_mohalla_name),
+        etMaxLength = 100,
         required = false
     )
     private val povertyLine = FormInput(
@@ -148,7 +152,8 @@ class HouseholdFormDataset(context: Context) {
     val otherResidentialArea = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_type_residential_area_other),
-        required = false
+        etMaxLength = 100,
+        required = true
     )
 
     private val typeOfHouse = FormInput(
@@ -193,6 +198,7 @@ class HouseholdFormDataset(context: Context) {
     val otherFuelForCooking = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_fuel_cooking_other),
+        etMaxLength = 100,
         required = true
     )
 
@@ -211,6 +217,7 @@ class HouseholdFormDataset(context: Context) {
     val otherSourceOfWater = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_primary_water_other),
+        etMaxLength = 100,
         required = true
     )
 
@@ -227,6 +234,7 @@ class HouseholdFormDataset(context: Context) {
     val otherSourceOfElectricity = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_avail_electricity_other),
+        etMaxLength = 100,
         required = true
     )
 
@@ -244,6 +252,7 @@ class HouseholdFormDataset(context: Context) {
     val otherAvailOfToilet = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_avail_toilet_other),
+        etMaxLength = 100,
         required = true
     )
 

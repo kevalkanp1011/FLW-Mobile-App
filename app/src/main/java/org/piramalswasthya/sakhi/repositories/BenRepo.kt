@@ -941,9 +941,7 @@ class BenRepo @Inject constructor(
                                 isAdult = (benDataObj.getString("age_unit") == "Years" && benDataObj.getInt(
                                     "age"
                                 ) > 14),
-                                userImageBlob = if (benDataObj.has("user_image")) benDataObj.getString(
-                                    "user_image"
-                                ).toByteArray() else null,
+                                userImageBlob = getCompressedByteArray(benDataObj),
                                 regDate = if (benDataObj.has("registrationDate")) getLongFromDate(
                                     benDataObj.getString("registrationDate")
                                 ) else 0,
@@ -1173,12 +1171,12 @@ class BenRepo @Inject constructor(
                                     birthDefectsOthers = if (childDataObj.has("birthDefectsOthers")) childDataObj.getString(
                                         "birthDefectsOthers"
                                     ) else null,
-                                    heightAtBirth = if (childDataObj.has("heightAtBirth")) childDataObj.getInt(
+                                    heightAtBirth = if (childDataObj.has("heightAtBirth")) childDataObj.getDouble(
                                         "heightAtBirth"
-                                    ) else 0,
-                                    weightAtBirth = if (childDataObj.has("weightAtBirth")) childDataObj.getInt(
+                                    ) else 0.0,
+                                    weightAtBirth = if (childDataObj.has("weightAtBirth")) childDataObj.getDouble(
                                         "weightAtBirth"
-                                    ) else 0,
+                                    ) else 0.0,
                                     feedingStarted = if (childDataObj.has("feedingStarted")) childDataObj.getString(
                                         "feedingStarted"
                                     ) else null,
@@ -1323,11 +1321,19 @@ class BenRepo @Inject constructor(
                     } catch (e: JSONException) {
                         Timber.i("Beneficiary skipped: ${jsonObject.getLong("benficieryid")} with error $e")
                     }
+                    catch (e: NumberFormatException) {
+                        Timber.i("Beneficiary skipped: ${jsonObject.getLong("benficieryid")} with error $e")
+                    }
                 }
             }
         }
         return result
     }
+
+    private fun getCompressedByteArray(benDataObj: JSONObject) =
+        if (benDataObj.has("user_image")) benDataObj.getString(
+            "user_image"
+        ).toByteArray() else null
 
     private suspend fun getHouseholdCacheFromServerResponse(response: String): MutableList<HouseholdCache> {
         val jsonObj = JSONObject(response)
@@ -1433,6 +1439,10 @@ class BenRepo @Inject constructor(
             }
         }
         return result
+    }
+
+    suspend fun getPncMothersFromHhId(hhId: Long): List<BenBasicCache> {
+        return database.benDao.getAllPNCMotherListFromHousehold(hhId)
     }
 
 

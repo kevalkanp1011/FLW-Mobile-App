@@ -27,6 +27,28 @@ class CbacFragment : Fragment() {
             .create()
     }
 
+    private val raAlertDialog by lazy {
+        AlertDialog.Builder(requireContext())
+            .setTitle("SUSPECTED NCD CASE!")
+            .setMessage(context?.getString(R.string.ncd_sus_valid))
+            .setPositiveButton("Ok"){dialog,_ -> dialog.dismiss() }
+            .create()
+    }
+    private val ast1AlertDialog by lazy {
+        AlertDialog.Builder(requireContext())
+            .setTitle("SUSPECTED HRP AND NCD CASE!")
+            .setMessage(context?.getString(R.string.hrpncd_sus_valid))
+            .setPositiveButton("Ok"){dialog,_ -> dialog.dismiss() }
+            .create()
+    }
+    private val ast2AlertDialog by lazy {
+        AlertDialog.Builder(requireContext())
+            .setTitle("SUSPECTED HRP CASE!")
+            .setMessage(context?.getString(R.string.hrp_sug_valid))
+            .setPositiveButton("Ok"){dialog,_ -> dialog.dismiss() }
+            .create()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -99,9 +121,10 @@ class CbacFragment : Fragment() {
             binding.ddFhScore.text = it
         }
         viewModel.raTotalScore.observe(viewLifecycleOwner) {
-            if (it.substring(it.lastIndexOf(' ') + 1).toInt() > 4) {
+            if (it.substring(it.lastIndexOf(' ') + 1).toInt() >= 4) {
                 binding.ncdSusValidDisplay.visibility = View.VISIBLE
                 viewModel.setFlagForNcd(true)
+                raAlertDialog.show()
             } else {
                 if (binding.ncdSusValidDisplay.visibility != View.GONE) {
                     binding.ncdSusValidDisplay.visibility = View.GONE
@@ -121,9 +144,11 @@ class CbacFragment : Fragment() {
 
         //ED START
         viewModel.ast1.observe(viewLifecycleOwner) {
+            Timber.d("value of ast1 : $it")
             if (it > 0) {
                 binding.tvTbSputumCollect.visibility = View.VISIBLE
                 viewModel.setCollectSputum(1)
+                ast1AlertDialog.show()
             } else {
                 binding.tvTbSputumCollect.visibility = View.GONE
                 viewModel.setCollectSputum(1)
@@ -133,6 +158,7 @@ class CbacFragment : Fragment() {
             if (it > 0) {
                 binding.tbSusValidDisplay.visibility = View.VISIBLE
                 viewModel.setTraceAllMembers(1)
+                ast2AlertDialog.show()
             } else {
                 binding.tbSusValidDisplay.visibility = View.GONE
                 viewModel.setTraceAllMembers(0)
@@ -238,6 +264,12 @@ class CbacFragment : Fragment() {
             when (id) {
                 R.id.rb_yes -> viewModel.setBreathe(1)
                 R.id.rb_no -> viewModel.setBreathe(2)
+            }
+        }
+        binding.cbacRecurrentTingling.cbacEdRg.setOnCheckedChangeListener { _, id ->
+            when (id) {
+                R.id.rb_yes -> viewModel.setTing(1)
+                R.id.rb_no -> viewModel.setTing(2)
             }
         }
         binding.cbacHifits.cbacEdRg.setOnCheckedChangeListener { _, id ->

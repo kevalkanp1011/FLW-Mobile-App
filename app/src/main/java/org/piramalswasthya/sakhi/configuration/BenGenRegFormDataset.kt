@@ -61,7 +61,7 @@ class BenGenRegFormDataset(private val context: Context) {
         title = "Image",
         required = true
     )
-    private val dateOfReg = FormInput(
+    val dateOfReg = FormInput(
         inputType = TEXT_VIEW,
         title = "Date of Registration",
         value = MutableStateFlow(getCurrentDate()),
@@ -83,7 +83,8 @@ class BenGenRegFormDataset(private val context: Context) {
         inputType = EDIT_TEXT,
         title = "Age (in Years)",
         min = 15,
-        max = 114,
+        max = 99,
+        etMaxLength = 2,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = true,
     )
@@ -104,17 +105,26 @@ class BenGenRegFormDataset(private val context: Context) {
         ),
         required = true,
     )
+
+    val maritalStatusMale = arrayOf(
+        "Unmarried",
+        "Married",
+        "Divorced",
+        "Separated",
+        "Widower",
+    )
+
+    val maritalStatusFemale = arrayOf(
+        "Unmarried",
+        "Married",
+        "Divorced",
+        "Separated",
+        "Widow",
+    )
     val maritalStatus = FormInput(
         inputType = DROPDOWN,
         title = "Marital Status",
-        list = arrayOf(
-            "Unmarried",
-            "Married",
-            "Divorced",
-            "Separated",
-            "Widow",
-            "Widower",
-        ),
+        list = maritalStatusMale ,
         required = true,
     )
     val husbandName = FormInput(
@@ -142,13 +152,20 @@ class BenGenRegFormDataset(private val context: Context) {
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = true,
     )
-    private val fatherName = FormInput(
+    val dateOfMarriage = FormInput(
+        inputType = DATE_PICKER,
+        title = "Date of Marriage",
+        max = System.currentTimeMillis(),
+        min = 0L,
+        required = true,
+    )
+    val fatherName = FormInput(
         inputType = EDIT_TEXT,
         title = "Father's Name",
         allCaps = true,
         required = true
     )
-    private val motherName = FormInput(
+    val motherName = FormInput(
         inputType = EDIT_TEXT,
         title = "Mother's Name",
         allCaps = true,
@@ -253,7 +270,7 @@ class BenGenRegFormDataset(private val context: Context) {
             "ST",
             "BC",
             "OBC",
-            "OC",
+            "EBC",
             "Not given"
         ),
         required = true
@@ -361,6 +378,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val reproductiveStatusOther = FormInput(
         inputType = EDIT_TEXT,
         title = "Reproductive Status Other",
+        etMaxLength = 100,
         required = true
     )
 
@@ -503,7 +521,7 @@ class BenGenRegFormDataset(private val context: Context) {
                         ?: this@BenGenRegFormDataset.spouseName.value.value
             genDetails?.ageAtMarriage =
                 this@BenGenRegFormDataset.ageAtMarriage.value.value?.toInt() ?: 0
-            genDetails?.marriageDate = getDoMFromDoR(genDetails?.ageAtMarriage, regDate!!)
+            genDetails?.marriageDate = this@BenGenRegFormDataset.dateOfMarriage.value.value?.let{getLongFromDate(it)}?:getDoMFromDoR(genDetails?.ageAtMarriage, regDate!!)
             fatherName = this@BenGenRegFormDataset.fatherName.value.value
             motherName = this@BenGenRegFormDataset.motherName.value.value
             familyHeadRelation = this@BenGenRegFormDataset.relationToHead.value.value
