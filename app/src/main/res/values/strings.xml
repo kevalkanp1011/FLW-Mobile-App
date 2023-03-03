@@ -59,7 +59,7 @@
     </string-array>
     <string name="nhhr_type_of_house">Type of house</string>
     <string name="nhhr_type_of_house_1">None</string>
-    <string name="nhhr_type_of_house_2">Kuchcha</string>
+    <string name="nhhr_type_of_house_2">Kuchha</string>
     <string name="nhhr_type_of_house_3">Pucca</string>
     <string name="nhhr_type_of_house_4">Other</string>
     <string-array name="nhhr_type_of_house_array">
@@ -271,6 +271,68 @@
     <string name="cbac_pd_rm">Suffering from any physical disability that restricts movement</string>
     <string name="cbac_nhop">Needing help from others to perform everyday activities such as eating, getting dressed, grooming, bathing, walking, or using the toilet</string>
     <string name="cbac_forget_names">Forgetting the names of your near ones or your own home address </string>
+
+
+                <!--Valdiateion mesages-->
+
+    <string name="cbac_validation_your_age">"Please Select age"</string>
+    <string name="cbac_validation_smoke">"Please select the consumption of smoke and smokeless products"</string>
+    <string name="cbac_validation_consume_alcohol">"Please Select alcohol consumption"</string>
+    <string name="cbac_validation_waist">"Please Select measurement of waist"</string>
+    <string name="cbac_validation_physical_activities">"Please Select physical activities"</string>
+    <string name="cbac_validation_heart_disease">"Please Select family history"</string>
+
+    <string name="cbac_validation_plsst">Please select anyone in family currently suffering from TB</string>
+    <string name="cbac_validation_plsatb">Please select Are you currently taking anti-TB</string>
+    <string name="cbac_validation_plshtb">Please select history of TB</string>
+    <string name="cbac_validation_plscoughh">Please select Coughing more than 2 weeks</string>
+    <string name="cbac_validation_plbls">Please select blood in sputum</string>
+    <string name="cbac_validation_plsfever">Please select fever for >2 weeks</string>
+    <string name="cbac_validation_plslweight">Please select loss of weight</string>
+    <string name="cbac_validation_plsnsw">Please select night sweats</string>
+    <string name="cbac_validation_rul">Please select recurrent ulceration</string>
+    <string name="cbac_validation_rtps">Please select recurrent tingling on palm or sole</string>
+    <string name="cbac_validation_cbv">Please select cloudy or blurred vision</string>
+    <string name="cbac_validation_dr">Please select difficulty in reading</string>
+    <string name="cbac_validation_pie">Please select pain in eyes lasting for more than a week</string>
+    <string name="cbac_validation_rie">Please select redness in eyes lasting for more than a week</string>
+    <string name="cbac_validation_dih">Please select difficulty in hearing</string>
+    <string name="cbac_validation_sob">Please select shortness of breath</string>
+    <string name="cbac_validation_hif">Please select history of fits</string>
+    <string name="cbac_validation_diom">Please select difficulty in opening mouth</string>
+    <string name="cbac_validation_upgm">Please select ulcer/patches/growth in mouth</string>
+    <string name="cbac_validation_tov">Please select change in tone of voice</string>
+    <string name="cbac_validation_gimh">Please select growth in mouth that has not healed in 2 weeks</string>
+    <string name="cbac_validation_wrp">Please select white or red patch in mouth that has not healed in 2 weeks</string>
+    <string name="cbac_validation_pwh">Please select pain while chewing</string>
+    <string name="cbac_validation_hpds">Please select any hyper pigmented patch or discoloration on skin</string>
+    <string name="cbac_validation_ts">Please select any thickened skin</string>
+    <string name="cbac_validation_ns">Please select any nodules on skin</string>
+    <string name="cbac_validation_rnps">Please select recurrent numbness on palm or sole</string>
+    <string name="cbac_validation_cfhf">Please select clawing of fingers in hand or feet</string>
+    <string name="cbac_validation_tnhf">Please select tingling or numbness in hand or feet</string>
+    <string name="cbac_validation_ice">Please select inability to close eyelid</string>
+    <string name="cbac_validation_dhof">Please select difficulty in holding objects with fingers</string>
+    <string name="cbac_validation_wfdw">Please select weakness in feet that causes difficulty in walking</string>
+    <string name="cbac_validation_lb">Please select lump in breast</string>
+    <string name="cbac_validation_bsdfn">Please select blood stained discharge from nipple</string>
+    <string name="cbac_validation_csb">Please select change in breast shape</string>
+    <string name="cbac_validation_bbp">Please select blood between periods</string>
+    <string name="cbac_validation_bam">Please select blood after menopause</string>
+    <string name="cbac_validation_bai">Please select blood after intercourse</string>
+    <string name="cbac_validation_fsvd">Please select foul smelling vaginal discharge</string>
+    <string name="cbac_validation_fuwsw">Please select Feeling unsteady while standing or walking</string>
+    <string name="cbac_validation_sapd">Please select Suffering from any physical disability that restrict movement</string>
+    <string name="cbac_validation_nhpa">Please select Needing help from others to perform every day activities such as eating, getting dressed, grooming, bathing, walking, or using the toilets</string>
+    <string name="cbac_validation_fn">Please select Forgetting names of yours, near ones or your own home address </string>
+    <string name="cbac_validation_fu">Please select fuel used for cooking</string>
+    <string name="cbac_validation_ox">Please select Occupational exposure </string>
+    <string name="cbac_validation_li">Please select Little Interest field! </string>
+    <string name="cbac_validation_fd">Please select Feeling down field! </string>
+
+
+
+
 
     <!-- 32 33 MDSR-->
 
@@ -499,6 +561,7 @@
     <string name="nbr_rch_id">RCH ID</string>
     <string name="nbr_child_pob">Place of birth</string>
     <string name="nbr_child_facility">Facility Selection</string>
+    <string name="nbr_child_pob_other_facility">Other Facility</string>
     <string name="nbr_child_pob_other">Other Place of Birth</string>
     <string name="nbr_child_who_cond_del">Who Conducted Delivery</string>
     <string name="nbr_child_who_cond_del_other">Other - Enter who Conducted Delivery</string>

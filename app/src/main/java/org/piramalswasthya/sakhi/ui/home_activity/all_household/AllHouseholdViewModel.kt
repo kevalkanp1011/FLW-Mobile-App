@@ -57,14 +57,16 @@ class AllHouseholdViewModel @Inject constructor(
         _navigateToNewHouseholdRegistration.value = false
     }
 
-    fun filterText(filterText: String) {
-        if (filterText == "")
+    fun filterText(filter: String) {
+        if (filter == "")
             _householdList.value = allHouseholdList.value
-        else
+        else {
+            val filterText = filter.lowercase()
             _householdList.value = allHouseholdList.value?.filter {
                 it.hhId.toString().contains(filterText) ||
-                        it.headName.contains(filterText) ||
-                        it.headSurname.contains((filterText))
+                        it.headName.lowercase().contains(filterText) ||
+                        it.headSurname.lowercase().contains((filterText))
             }
+        }
     }
 }

@@ -75,14 +75,19 @@ class SignInFragment : Fragment() {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state!!) {
                 State.IDLE -> {
+                    var hasRememberMeUsername = false
+                    var hasRememberMePassword = false
                     viewModel.fetchRememberedUserName()?.let {
                         binding.etUsername.setText(it)
+                        hasRememberMeUsername = true
                     }
                     viewModel.fetchRememberedPassword()?.let {
                         binding.etPassword.setText(it)
                         binding.cbRemember.isChecked = true
+                        hasRememberMePassword = true
                     }
-
+                    if(hasRememberMeUsername && hasRememberMePassword)
+                        validateInput()
                 }
                 State.LOADING -> validateInput()
                 State.ERROR_INPUT -> {

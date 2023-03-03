@@ -6,7 +6,9 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -16,6 +18,7 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
+import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
 import org.piramalswasthya.sakhi.ui.home_activity.all_household.AllHouseholdFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import timber.log.Timber
@@ -43,6 +46,7 @@ class AllBenFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.btnNextPage.visibility = View.GONE
+        val spinner = Spinner(requireContext())
         val benAdapter = BenListAdapter(BenListAdapter.BenClickListener(
             {
                 Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
@@ -55,14 +59,24 @@ class AllBenFragment : Fragment() {
                     )
                 )
             },
-            { hhId, benId ->
-                viewModel.manualSync()
+            {
+                NewBenRegTypeFragment.triggerBenDataSendingWorker(requireContext())
             }
         ))
         binding.rvAny.adapter = benAdapter
 
         viewModel.benList.observe(viewLifecycleOwner) {
-            if (it.isNullOrEmpty())
+            if(it==null) {
+                binding.clContent.visibility = View.GONE
+                binding.flLoading.visibility = View.VISIBLE
+            }
+            else{
+                if(binding.clContent.visibility ==View.GONE){
+                    binding.clContent.visibility = View.VISIBLE
+                    binding.flLoading.visibility = View.GONE
+                }
+            }
+            if (it.isEmpty())
                 binding.flEmpty.visibility = View.VISIBLE
             else
                 binding.flEmpty.visibility = View.GONE

@@ -418,8 +418,7 @@
                 android:backgroundTint="?attr/colorSecondary"
                 android:elevation="@dimen/padding_normal"
                 app:cardCornerRadius="@dimen/padding_normal"
-                app:cardElevation="@dimen/padding_normal"
-                tools:visibility="gone">
+                app:cardElevation="@dimen/padding_normal">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"

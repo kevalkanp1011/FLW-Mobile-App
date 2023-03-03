@@ -6,6 +6,7 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.helpers.filterBenList
 import org.piramalswasthya.sakhi.model.BenBasicDomain
 import org.piramalswasthya.sakhi.repositories.BenRepo
+import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -30,12 +31,6 @@ class AllBenViewModel @Inject constructor(
         }
     }
 
-    fun manualSync(/*hhId: Long, benId: Long, locationRecord: LocationRecord*/) {
-        viewModelScope.launch {
-            Timber.d("manual sync called!")
-            benRepo.processNewBen()
-        }
-    }
 
     fun filterText(text: String) {
         lastFilter = text

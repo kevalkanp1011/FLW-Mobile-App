@@ -68,6 +68,7 @@ data class CbacCache(
     var cbac_nodules_on_skin_posi: Int = 0,
     var cbac_numbness_on_palm_posi: Int = 0,
     var cbac_clawing_of_fingers_posi: Int = 0,
+    var cbac_tingling_palm_posi: Int = 0,
     var cbac_tingling_or_numbness_posi: Int = 0,
     var cbac_inability_close_eyelid_posi: Int = 0,
     var cbac_diff_holding_obj_posi: Int = 0,

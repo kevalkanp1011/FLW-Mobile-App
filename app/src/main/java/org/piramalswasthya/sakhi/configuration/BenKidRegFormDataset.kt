@@ -1,6 +1,8 @@
 package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
+import android.text.InputType
+import android.widget.LinearLayout
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.quality
 import kotlinx.coroutines.Dispatchers
@@ -17,11 +19,11 @@ import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
-class BenKidRegFormDataset(private val context: Context) {
+class BenKidRegFormDataset(private val context: Context, pncMotherList : List<String>) {
 
     private var ben: BenRegCache? = null
 
-    constructor(context: Context, ben: BenRegCache? = null) : this(context) {
+    constructor(context: Context, ben: BenRegCache? = null, pncMotherList: List<String>) : this(context, pncMotherList) {
         this.ben = ben
 
         //TODO(SETUP THE VALUES
@@ -80,6 +82,7 @@ class BenKidRegFormDataset(private val context: Context) {
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_nb_last_name),
         allCaps = true,
+
         required = false,
     )
     val ageUnit = FormInput(
@@ -111,6 +114,7 @@ class BenKidRegFormDataset(private val context: Context) {
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_father_name),
         allCaps = true,
+
         required = true
     )
     private val motherName = FormInput(
@@ -130,6 +134,11 @@ class BenKidRegFormDataset(private val context: Context) {
             "Other"
         ),
         required = true,
+    )
+    val otherMobileNoOfRelation = FormInput(
+        inputType = EDIT_TEXT,
+        title = "Other - Mobile Number of",
+        required = true
     )
     val contactNumber = FormInput(
         inputType = EDIT_TEXT,
@@ -200,6 +209,7 @@ class BenKidRegFormDataset(private val context: Context) {
     val otherRelationToHead = FormInput(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_rel_to_head_other),
+        allCaps = true,
         required = true
     )
     private val community = FormInput(
@@ -211,7 +221,7 @@ class BenKidRegFormDataset(private val context: Context) {
             "ST",
             "BC",
             "OBC",
-            "OC",
+            "EBC",
             "Not given"
         ),
         required = true
@@ -224,7 +234,7 @@ class BenKidRegFormDataset(private val context: Context) {
             "Muslim",
             "Christian",
             "Sikh",
-            "Buddism",
+            "Buddhism",
             "Jainism",
             "Other",
             "Parsi",
@@ -235,6 +245,7 @@ class BenKidRegFormDataset(private val context: Context) {
     val otherReligion = FormInput(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_religion_other),
+        allCaps = true,
         required = true
     )
 
@@ -263,7 +274,7 @@ class BenKidRegFormDataset(private val context: Context) {
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_type_school),
         arrayOf(
-            "Aganwadi",
+            "Anganwadi",
             "Primary",
             "Secondary",
             "Private"
@@ -332,6 +343,11 @@ class BenKidRegFormDataset(private val context: Context) {
         ),
         required = true
     )
+    val otherFacility = FormInput(
+        inputType = EDIT_TEXT,
+        title = context.getString(R.string.nbr_child_pob_other_facility),
+        required = true
+    )
     val otherPlaceOfBirth = FormInput(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_child_pob_other),
@@ -366,7 +382,7 @@ class BenKidRegFormDataset(private val context: Context) {
         ),
         required = true
     )
-    private val complicationsDuringDelivery = FormInput(
+     val complicationsDuringDelivery = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_comp_del),
         arrayOf(
@@ -455,7 +471,6 @@ class BenKidRegFormDataset(private val context: Context) {
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_defect_at_birth),
         arrayOf(
-            "Yes",
             "Cleft Lip-Cleft Palate",
             "Neural Tube defect(Spina Bifida)",
             "Club Foot",
@@ -466,16 +481,52 @@ class BenKidRegFormDataset(private val context: Context) {
         ),
         required = true
     )
+    val motherUnselected  = FormInput(
+        inputType = CHECKBOXES,
+        title = "Mother Unselected",
+        list = arrayOf("Yes"),
+        orientation = LinearLayout.HORIZONTAL,
+        required = false
+    )
+    val motherOfChild = FormInput(
+        inputType = DROPDOWN,
+        title = "Mother of the child",
+        list = pncMotherList.toTypedArray(),
+        required = true
+    )
+
+
     private val babyHeight = FormInput(
         inputType = EDIT_TEXT,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL,
+        minDecimal = 40.0,
+        maxDecimal = 50.0,
+        etMaxLength = 4,
         title = "Height at birth ( cm )",
         required = false
     )
     private val babyWeight = FormInput(
         inputType = EDIT_TEXT,
-        title = "Weight at birth (gram )",
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL,
+        minDecimal = 0.5,
+        maxDecimal = 7.0,
+        etMaxLength = 3,
+        title = "Weight at birth (Kgs )",
         required = false
     )
+
+    val deathRemoveList by lazy{
+        listOf(
+            breastFeedWithin1Hr,
+            birthDose,
+            term,
+            babyCriedImmediatelyAfterBirth,
+            anyDefectAtBirth,
+            babyHeight,
+            babyWeight
+        )
+    }
+
     val secondPage: List<FormInput> by lazy {
         listOf(
             placeOfBirth,
@@ -487,6 +538,7 @@ class BenKidRegFormDataset(private val context: Context) {
             term,
             babyCriedImmediatelyAfterBirth,
             anyDefectAtBirth,
+            motherUnselected,
             babyHeight,
             babyWeight,
 
@@ -677,9 +729,9 @@ class BenKidRegFormDataset(private val context: Context) {
                 this@BenKidRegFormDataset.anyDefectAtBirth.list?.indexOf(kidDetails?.birthDefects)
                     ?.let { it + 1 } ?: 0
             kidDetails?.heightAtBirth =
-                this@BenKidRegFormDataset.babyHeight.value.value?.toInt() ?: 0
+                this@BenKidRegFormDataset.babyHeight.value.value?.toDouble() ?: 0.0
             kidDetails?.weightAtBirth =
-                this@BenKidRegFormDataset.babyWeight.value.value?.toInt() ?: 0
+                this@BenKidRegFormDataset.babyWeight.value.value?.toDouble() ?: 0.0
 
 
         }

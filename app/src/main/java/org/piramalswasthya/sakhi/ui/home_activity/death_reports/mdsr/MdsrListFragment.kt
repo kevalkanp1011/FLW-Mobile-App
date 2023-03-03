@@ -12,9 +12,9 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
+import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
 
 @AndroidEntryPoint
 class MdsrListFragment : Fragment() {
@@ -44,14 +44,17 @@ class MdsrListFragment : Fragment() {
                 {
                     Toast.makeText(context, "Household : $it clicked", Toast.LENGTH_SHORT).show()
                 },
-                { hhId, benId ->
-                    viewModel.manualSync()
-                },
-                { hhId, benId ->
-                    findNavController().navigate(
-                        MdsrListFragmentDirections.actionMdsrListFragmentToMdsrObjectFragment(hhId, benId))
+                {
+                    NewBenRegTypeFragment.triggerBenDataSendingWorker(requireContext())
                 }
-            ), "MDSR Form")
+            ) { hhId, benId ->
+                findNavController().navigate(
+                    MdsrListFragmentDirections.actionMdsrListFragmentToMdsrObjectFragment(
+                        hhId,
+                        benId
+                    )
+                )
+            }, "MDSR Form")
         binding.rvAny.adapter = benAdapter
 
         viewModel.mdsrList.observe(viewLifecycleOwner) {

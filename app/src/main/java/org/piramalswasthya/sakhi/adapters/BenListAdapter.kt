@@ -60,11 +60,11 @@ class BenListAdapter(private val clickListener: BenClickListener? = null) :
     class BenClickListener(
         private val clickedBen: (benId: Long) -> Unit,
         private val clickedHousehold: (hhId: Long) -> Unit,
-        private val clickedSync: (hhId: Long, benId: Long) -> Unit
+        private val clickedSync: () -> Unit
     ) {
         fun onClickedBen(item: BenBasicDomain) = clickedBen(item.benId)
         fun onClickedHouseHold(item: BenBasicDomain) = clickedHousehold(item.hhId)
-        fun onClickSync(item: BenBasicDomain) = clickedSync(item.hhId, item.benId)
+        fun onClickSync(item: BenBasicDomain) = clickedSync()
     }
 
 }
