@@ -2,17 +2,19 @@ package org.piramalswasthya.sakhi.configuration
 
 import android.text.InputFilter
 import android.text.Spanned
+import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-object FormEditTextDefaultInputFilter  : InputFilter{
 
-    private val regex = Pattern.compile("[A-Z ]+")
+object DecimalDigitsInputFilter :
+    InputFilter {
+    var regex: Pattern = Pattern.compile("[0-9]{1,3}\\.[0-9]")
 
     override fun filter(
         source: CharSequence,
         start: Int,
         end: Int,
-        dest: Spanned?,
+        dest: Spanned,
         dstart: Int,
         dend: Int
     ): CharSequence {

@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -64,10 +65,11 @@ class NewBenRegL15ViewModel @Inject constructor(
     suspend fun getFirstPage(adapter: FormInputAdapter): List<FormInput> {
         withContext(Dispatchers.IO) {
             household = benRepo.getBenHousehold(hhId)!!
+            val pncMotherList = benRepo.getPncMothersFromHhId(hhId).map { it.benName }
             form = benRepo.getDraftForm(hhId, true)?.let {
-                BenKidRegFormDataset(context, it)
+                BenKidRegFormDataset(context, it, pncMotherList)
             } ?: run {
-                BenKidRegFormDataset(context)
+                BenKidRegFormDataset(context, pncMotherList)
             }
         }
         viewModelScope.launch {
@@ -197,14 +199,29 @@ class NewBenRegL15ViewModel @Inject constructor(
             launch {
                 form.mobileNoOfRelation.value.collect {
                     it?.let {
+                        if (it == "Family Head") {
+                            household.familyHeadPhoneNo?.let { mobNo ->
+                                form.contactNumber.value.value = mobNo.toString()
+                            }
+                        }
+                        else
+                            form.contactNumber.value.value = null
                         val list = adapter.currentList.toMutableList()
+                        if (!adapter.currentList.contains(form.otherMobileNoOfRelation)) {
+                            if (it == "Other")
+                                list.add(
+                                    adapter.currentList.indexOf(form.mobileNoOfRelation) + 1,
+                                    form.otherMobileNoOfRelation
+                                )
+                        } else
+                            list.remove(form.otherMobileNoOfRelation)
                         if (!adapter.currentList.contains(form.contactNumber)) {
                             list.add(
                                 adapter.currentList.indexOf(form.mobileNoOfRelation) + 1,
                                 form.contactNumber
                             )
-                            adapter.submitList(list)
                         }
+                        adapter.submitList(list)
                     }
                 }
             }
@@ -413,9 +430,8 @@ class NewBenRegL15ViewModel @Inject constructor(
                                 )
                             }
                         } else {
-                            if (adapter.currentList.contains(form.facility)) {
-                                list.remove(form.facility)
-                            }
+                            list.remove(form.facility)
+                            list.remove(form.otherFacility)
                         }
                         if (it == "Any other Place") {
                             if (!list.contains(form.otherPlaceOfBirth)) {
@@ -428,6 +444,25 @@ class NewBenRegL15ViewModel @Inject constructor(
                             if (adapter.currentList.contains(form.otherPlaceOfBirth)) {
                                 list.remove(form.otherPlaceOfBirth)
                             }
+                        }
+                        adapter.submitList(list)
+                    }
+                }
+            }
+            launch {
+                form.facility.value.collect {
+                    it.let {
+                        val list = adapter.currentList.toMutableList()
+                        if (it == "Other") {
+                            if (!list.contains(form.otherFacility)) {
+                                list.add(
+                                    adapter.currentList.indexOf(form.facility) + 1,
+                                    form.otherFacility
+                                )
+                            }
+                        } else {
+                            list.remove(form.otherFacility)
+
                         }
                         adapter.submitList(list)
                     }
@@ -451,6 +486,40 @@ class NewBenRegL15ViewModel @Inject constructor(
                         }
                         adapter.submitList(list)
                     }
+                }
+            }
+            launch {
+                form.complicationsDuringDelivery.value.collect {
+                    it?.let {
+                        val list = adapter.currentList.toMutableList()
+                        if (it == "Death")
+                            list.removeAll(form.deathRemoveList)
+                        else
+                            form.deathRemoveList.forEach { leftForm ->
+                                if (!list.contains(leftForm))
+                                    list.add(leftForm)
+
+                            }
+                        adapter.submitList(list)
+                    }
+
+                }
+            }
+            launch {
+                form.motherUnselected.value.collect {
+                    Timber.d("mother Unselected collect() called for value $it")
+                    val list = adapter.currentList.toMutableList()
+                    it?.let {
+                        if (it == "Yes" && !list.contains(form.motherOfChild)) {
+                            list.add(
+                                list.indexOf(form.motherUnselected) + 1,
+                                form.motherOfChild
+                            )
+                        }
+                    } ?: run {
+                        list.remove(form.motherOfChild)
+                    }
+                    adapter.submitList(list)
                 }
             }
             launch {
@@ -499,7 +568,10 @@ class NewBenRegL15ViewModel @Inject constructor(
                     it?.let {
                         val list = adapter.currentList.toMutableList()
                         if (it.contains("24") && !adapter.currentList.contains(form.corticosteroidGivenAtLabor)) {
-                            list.add(list.indexOf(form.termGestationalAge)+1,form.corticosteroidGivenAtLabor)
+                            list.add(
+                                list.indexOf(form.termGestationalAge) + 1,
+                                form.corticosteroidGivenAtLabor
+                            )
                         } else {
                             list.remove(form.corticosteroidGivenAtLabor)
                         }

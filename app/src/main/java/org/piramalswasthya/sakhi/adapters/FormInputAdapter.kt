@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.adapters
 import android.app.DatePickerDialog
 import android.text.Editable
 import android.text.InputFilter
+import android.text.InputFilter.AllCaps
 import android.text.InputType
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.configuration.DecimalDigitsInputFilter
+import org.piramalswasthya.sakhi.configuration.FormEditTextDefaultInputFilter
 import org.piramalswasthya.sakhi.databinding.*
 import org.piramalswasthya.sakhi.model.FormInput
 import org.piramalswasthya.sakhi.model.FormInput.InputType.*
@@ -55,6 +58,10 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
 
                 override fun afterTextChanged(editable: Editable?) {
                     if (editable == null || editable.toString() == "") {
+                        if(!item.required) {
+                            item.errorText = null
+                            binding.tilEditText.error = null
+                        }
                         item.value.value = null
                         return
                     }
@@ -73,7 +80,7 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
                                 binding.tilEditText.error = item.errorText
                             }
                         } else if (item.etMaxLength == 12) {
-                            if (editable.length != item.etMaxLength) {
+                            if (editable.length != item.etMaxLength ) {
                                 item.errorText = "Invalid RCD ID !"
                                 binding.tilEditText.error = item.errorText
                             } else {
@@ -81,7 +88,29 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
                                 binding.tilEditText.error = item.errorText
                             }
                         }
-                    } else if (item.etInputType == (InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL)) {
+                    }
+                    else if(item.etInputType == InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL){
+                        val entered = editable.toString().toDouble()
+                        item.minDecimal?.let {
+                            if (entered < it) {
+                                binding.tilEditText.error = "Field value has to be at least $it"
+                                item.errorText = binding.tilEditText.error.toString()
+                            }
+                        }
+                        item.maxDecimal?.let {
+                            if (entered > it) {
+                                binding.tilEditText.error =
+                                    "Field value has to be less than $it"
+                                item.errorText = binding.tilEditText.error.toString()
+                            }
+                        }
+                        if (item.minDecimal != null && item.maxDecimal != null && entered >= item.minDecimal!! && entered <= item.maxDecimal!!) {
+                            binding.tilEditText.error = null
+                            item.errorText = null
+                        }
+
+                    }
+                    else if (item.etInputType == (InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL)) {
                         val age = editable.toString().toLong()
                         item.min?.let {
                             if (age < it) {
@@ -121,11 +150,13 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
             val etFilters = mutableListOf<InputFilter>(InputFilter.LengthFilter(item.etMaxLength))
             binding.et.inputType = item.etInputType
             if (item.etInputType == InputType.TYPE_CLASS_TEXT && item.allCaps) {
-                etFilters.add(InputFilter.AllCaps())
-                binding.et.filters = etFilters.toTypedArray()
-            } else {
-                binding.et.filters = etFilters.toTypedArray()
+                etFilters.add(AllCaps())
+                etFilters.add(FormEditTextDefaultInputFilter)
+
             }
+//            else if(item.etInputType == InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL)
+//                etFilters.add(DecimalDigitsInputFilter)
+            binding.et.filters = etFilters.toTypedArray()
             binding.executePendingBindings()
         }
     }

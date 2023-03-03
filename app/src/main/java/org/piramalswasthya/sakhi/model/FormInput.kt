@@ -15,10 +15,12 @@ data class FormInput(
     val allCaps: Boolean = false,
     val etInputType: Int = TYPE_CLASS_TEXT,
     val isMobileNumber: Boolean = false,
-    val etMaxLength: Int = 30,
+    val etMaxLength: Int = 50,
     var errorText: String? = null,
     var max: Long? = null,
     var min: Long? = null,
+    var minDecimal : Double? = null,
+    var maxDecimal : Double? = null,
     val orientation: Int? = null,
     var imageFile: File? = null
 ){

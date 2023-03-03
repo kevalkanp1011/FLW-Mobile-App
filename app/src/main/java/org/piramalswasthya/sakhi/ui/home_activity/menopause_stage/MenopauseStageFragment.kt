@@ -16,6 +16,7 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
+import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
 import org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.EligibleCoupleViewModel
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 
@@ -49,8 +50,8 @@ class MenopauseStageFragment : Fragment() {
                 {
                     Toast.makeText(context, "Household : $it clicked", Toast.LENGTH_SHORT).show()
                 },
-                { hhId, benId ->
-                    viewModel.manualSync()
+                {
+                    NewBenRegTypeFragment.triggerBenDataSendingWorker(requireContext())
                 }
             ))
         binding.rvAny.adapter = benAdapter

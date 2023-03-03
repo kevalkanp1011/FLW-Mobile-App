@@ -11,9 +11,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import org.piramalswasthya.sakhi.adapters.BenListAdapter
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
+import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
 
 @AndroidEntryPoint
 class NcdNonEligibleListFragment : Fragment() {
@@ -43,17 +45,17 @@ class NcdNonEligibleListFragment : Fragment() {
                 {
                     Toast.makeText(context, "Household : $it clicked", Toast.LENGTH_SHORT).show()
                 },
-                { _, _ ->
-                    viewModel.manualSync()
-                },
                 {
-                    _,_ -> Toast.makeText(context,"Yet to be implemented!", Toast.LENGTH_SHORT).show()
+                    NewBenRegTypeFragment.triggerBenDataSendingWorker(requireContext())
                 }
-            ),"CBAC FORM")
+            ) { _, _ ->
+                Toast.makeText(context, "Yet to be implemented!", Toast.LENGTH_SHORT).show()
+            },"CBAC FORM")
         binding.rvAny.adapter = benAdapter
 
         viewModel.benList.observe(viewLifecycleOwner) {
-            if (it.isNullOrEmpty())
+
+            if (it.isEmpty())
                 binding.flEmpty.visibility = View.VISIBLE
             else
                 binding.flEmpty.visibility = View.GONE
@@ -79,6 +81,12 @@ class NcdNonEligibleListFragment : Fragment() {
             else
                 (searchView as EditText).removeTextChangedListener(searchTextWatcher)
 
+        }
+    }
+    override fun onStart() {
+        super.onStart()
+        activity?.let{
+            (it as HomeActivity).setLogo(R.drawable.ic_ncd_noneligible)
         }
     }
 }

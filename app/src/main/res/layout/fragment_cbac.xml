@@ -414,16 +414,15 @@
 
                 </androidx.cardview.widget.CardView>
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cv_ed"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_normal"
-                    android:backgroundTint="?attr/colorSecondary"
-                    android:elevation="@dimen/padding_normal"
-                    app:cardCornerRadius="@dimen/padding_normal"
-                    app:cardElevation="@dimen/padding_normal"
-                    tools:visibility="gone">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_ed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_normal"
+                android:backgroundTint="?attr/colorSecondary"
+                android:elevation="@dimen/padding_normal"
+                app:cardCornerRadius="@dimen/padding_normal"
+                app:cardElevation="@dimen/padding_normal">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"

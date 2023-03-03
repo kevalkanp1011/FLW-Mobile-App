@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -111,15 +112,19 @@ class NewBenRegG15ViewModel @Inject constructor(
             launch {
                 form.gender.value.collect {
                     it?.let {
-                        form.relationToHead.list = when (it) {
+                        when (it) {
                             "Male" -> {
-                                form.relationToHeadListMale
+                                form.relationToHead.list = form.relationToHeadListMale
+                                form.maritalStatus.list = form.maritalStatusMale
+
                             }
                             "Female" -> {
-                                form.relationToHeadListFemale
+                                form.relationToHead.list = form.relationToHeadListFemale
+                                form.maritalStatus.list = form.maritalStatusFemale
                             }
                             else -> {
-                                form.relationToHeadListDefault
+                                form.relationToHead.list = form.relationToHeadListDefault
+                                form.maritalStatus.list = form.maritalStatusMale
                             }
                         }
 //                        val currentValue = form.relationToHead.value.value
@@ -205,10 +210,44 @@ class NewBenRegG15ViewModel @Inject constructor(
                 }
             }
             launch {
+                form.ageAtMarriage.value.combine(form.age.value) { ageAtMarriage, age ->
+                    age == ageAtMarriage
+
+                }.stateIn(viewModelScope, SharingStarted.Eagerly, false).collect {
+                    val list = adapter.currentList.toMutableList()
+                    form.dateOfMarriage.min = System.currentTimeMillis() - 31536000000
+                    if (it) {
+                        if (!adapter.currentList.contains(form.dateOfMarriage)) {
+                            list.add(list.indexOf(form.ageAtMarriage) + 1, form.dateOfMarriage)
+                        }
+                    } else
+                        list.remove(form.dateOfMarriage)
+                    adapter.submitList(list)
+                }
+
+
+            }
+            launch {
                 form.maritalStatus.value.collect {
                     it?.let {
                         val list = adapter.currentList.toMutableList()
                         if (it != "Unmarried") {
+                            if(it=="Divorced") {
+                                form.husbandName.required = false
+                                form.wifeName.required = false
+                            }
+                            else {
+                                form.husbandName.required = true
+                                form.wifeName.required = true
+                            }
+                            if(it=="Married" && form.gender.value.value=="Female"){
+                                form.fatherName.required = false
+                                form.motherName.required = false
+                            }
+                            else {
+                                form.husbandName.required = true
+                                form.wifeName.required = true
+                            }
                             if (!adapter.currentList.contains(form.ageAtMarriage)) {
                                 list.add(
                                     adapter.currentList.indexOf(form.maritalStatus) + 1,
@@ -253,22 +292,28 @@ class NewBenRegG15ViewModel @Inject constructor(
             launch {
                 form.mobileNoOfRelation.value.collect {
                     it?.let {
+                        if (it == "Family Head") {
+                            household.familyHeadPhoneNo?.let { mobNo ->
+                                form.contactNumber.value.value = mobNo.toString()
+                            }
+                        }
+                        else
+                            form.contactNumber.value.value = null
                         val list = adapter.currentList.toMutableList()
+                        if (!adapter.currentList.contains(form.otherMobileNoOfRelation)) {
+                            if (it == "Other")
+                                list.add(
+                                    adapter.currentList.indexOf(form.mobileNoOfRelation) + 1,
+                                    form.otherMobileNoOfRelation
+                                )
+                        } else
+                            list.remove(form.otherMobileNoOfRelation)
                         if (!adapter.currentList.contains(form.contactNumber)) {
                             list.add(
                                 adapter.currentList.indexOf(form.mobileNoOfRelation) + 1,
                                 form.contactNumber
                             )
                         }
-                        if(!adapter.currentList.contains(form.otherMobileNoOfRelation)) {
-                            if (it == "Other")
-                                list.add(
-                                    adapter.currentList.indexOf(form.mobileNoOfRelation) + 1,
-                                    form.otherMobileNoOfRelation
-                                )
-                        }
-                        else
-                            list.remove(form.otherMobileNoOfRelation)
                         adapter.submitList(list)
                     }
                 }
@@ -414,10 +459,6 @@ class NewBenRegG15ViewModel @Inject constructor(
                                 list.add(
                                     list.indexOf(form.reproductiveStatus) + 1,
                                     form.dateOfDelivery
-                                )
-                                list.add(
-                                    list.indexOf(form.dateOfDelivery) + 1,
-                                    form.numPrevLiveBirthOrPregnancy
                                 )
 
                             }

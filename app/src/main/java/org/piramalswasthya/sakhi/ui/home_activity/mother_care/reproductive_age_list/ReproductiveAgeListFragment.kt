@@ -11,8 +11,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
+import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 
 @AndroidEntryPoint
@@ -45,18 +48,17 @@ class ReproductiveAgeListFragment : Fragment() {
                 {
                     Toast.makeText(context, "Household : $it clicked", Toast.LENGTH_SHORT).show()
                 },
-                { hhId, benId ->
-                    viewModel.manualSync()
+                {
+                    NewBenRegTypeFragment.triggerBenDataSendingWorker(requireContext())
                 }
             ))
         binding.rvAny.adapter = benAdapter
 
         viewModel.benList.observe(viewLifecycleOwner) {
-            if (it.isNullOrEmpty())
+            if (it.isEmpty())
                 binding.flEmpty.visibility = View.VISIBLE
             else
                 binding.flEmpty.visibility = View.GONE
-
             benAdapter.submitList(it)
         }
         val searchTextWatcher = object : TextWatcher {
@@ -79,6 +81,12 @@ class ReproductiveAgeListFragment : Fragment() {
             else
                 (searchView as EditText).removeTextChangedListener(searchTextWatcher)
 
+        }
+    }
+    override fun onStart() {
+        super.onStart()
+        activity?.let{
+            (it as HomeActivity).setLogo(R.drawable.ic__reproductive_age)
         }
     }
 

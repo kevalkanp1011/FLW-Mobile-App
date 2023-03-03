@@ -214,50 +214,52 @@ class CbacViewModel @Inject constructor(
     fun setFhTb(i: Int) {
         cbac.cbac_sufferingtb_pos = i
         if (i == 1) _ast2.value = _ast2.value?.plus(1)
-        else if (i == 2) _ast2.value = _ast2.value?.minus(1)
+        else if (i == 2 && ast2.value!! > 0) {
+            _ast2.value = _ast2.value?.minus(1)
+        }
     }
 
     fun setTakingTbDrug(i: Int) {
         cbac.cbac_antitbdrugs_pos = i
         if (i == 1) _ast2.value = _ast2.value?.plus(1)
-        else if (i == 2) _ast2.value = _ast2.value?.minus(1)
+        else if (i == 2 && ast2.value!! > 0) _ast2.value = _ast2.value?.minus(1)
 
     }
 
     fun setHisTb(i: Int) {
         cbac.cbac_tbhistory_pos = i
         if (i == 1) _ast1.value = _ast1.value?.plus(1)
-        else if (i == 2) _ast1.value = _ast1.value?.minus(1)
+        else if (i == 2 && ast1.value!! > 0) _ast1.value = _ast1.value?.minus(1)
     }
 
     fun setCoughing(i: Int) {
         cbac.cbac_coughing_pos = i
         if (i == 1) _ast1.value = _ast1.value?.plus(1)
-        else if (i == 2) _ast1.value = _ast1.value?.minus(1)
+        else if (i == 2 && ast1.value!! > 0) _ast1.value = _ast1.value?.minus(1)
     }
 
     fun setBloodSputum(i: Int) {
         cbac.cbac_bloodsputum_pos = i
         if (i == 1) _ast1.value = _ast1.value?.plus(1)
-        else if (i == 2) _ast1.value = _ast1.value?.minus(1)
+        else if (i == 2 && ast1.value!! > 0) _ast1.value = _ast1.value?.minus(1)
     }
 
     fun setFeverWks(i: Int) {
         cbac.cbac_fivermore_pos = i
         if (i == 1) _ast1.value = _ast1.value?.plus(1)
-        else if (i == 2) _ast1.value = _ast1.value?.minus(1)
+        else if (i == 2 && ast1.value!! > 0) _ast1.value = _ast1.value?.minus(1)
     }
 
     fun setLsWt(i: Int) {
         cbac.cbac_loseofweight_pos = i
         if (i == 1) _ast1.value = _ast1.value?.plus(1)
-        else if (i == 2) _ast1.value = _ast1.value?.minus(1)
+        else if (i == 2 && ast1.value!! > 0) _ast1.value = _ast1.value?.minus(1)
     }
 
     fun setNtSwets(i: Int) {
         cbac.cbac_nightsweats_pos = i
         if (i == 1) _ast1.value = _ast1.value?.plus(1)
-        else if (i == 2) _ast1.value = _ast1.value?.minus(1)
+        else if (i == 2 && ast1.value!! > 0) _ast1.value = _ast1.value?.minus(1)
     }
 
     fun setRecurrentCloudy(i: Int) {
@@ -328,6 +330,11 @@ class CbacViewModel @Inject constructor(
     fun setNoduleSkin(i: Int) {
         cbac.cbac_nodules_on_skin_posi = i
     }
+
+    fun setTing(i: Int) {
+        cbac.cbac_tingling_palm_posi = i
+    }
+
 
     fun setNumb(i: Int) {
         cbac.cbac_numbness_on_palm_posi = i
@@ -536,218 +543,217 @@ class CbacViewModel @Inject constructor(
 
     private fun dataValid(): Boolean {
         if (cbac.cbac_age_posi == 0) {
-            missingFieldString = "age cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_your_age)
             return false
         }
         if (cbac.cbac_smoke_posi == 0) {
-            missingFieldString = "smoke cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_smoke)
             return false
         }
         if (cbac.cbac_alcohol_posi == 0) {
-            missingFieldString = "alcohol cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_consume_alcohol)
             return false
         }
         if (cbac.cbac_waist_posi == 0) {
-            missingFieldString = "waist cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_waist)
             return false
         }
         if (cbac.cbac_pa_posi == 0) {
-            missingFieldString = "pa cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_physical_activities)
             return false
         }
         if (cbac.cbac_familyhistory_posi == 0) {
-            missingFieldString = "familyhistory cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_heart_disease)
+            return false
+        }
+        if (cbac.cbac_sufferingtb_pos == 0) {
+            missingFieldString = context.getString(R.string.cbac_validation_plsst)
+            return false
+        }
+        if (cbac.cbac_antitbdrugs_pos == 0) {
+            missingFieldString = context.getString(R.string.cbac_validation_plsatb)
+            return false
+        }
+        if (cbac.cbac_tbhistory_pos == 0) {
+            missingFieldString = context.getString(R.string.cbac_validation_plshtb)
+            return false
+        }
+        if (cbac.cbac_coughing_pos == 0) {
+            missingFieldString = context.getString(R.string.cbac_validation_plscoughh)
+            return false
+        }
+        if (cbac.cbac_bloodsputum_pos == 0) {
+            missingFieldString = context.getString(R.string.cbac_validation_plbls)
+            return false
+        }
+        if (cbac.cbac_fivermore_pos == 0) {
+            missingFieldString = context.getString(R.string.cbac_validation_plsfever)
+            return false
+        }
+        if (cbac.cbac_loseofweight_pos == 0) {
+            missingFieldString = context.getString(R.string.cbac_validation_plslweight)
+            return false
+        }
+        if (cbac.cbac_nightsweats_pos == 0) {
+            missingFieldString = context.getString(R.string.cbac_validation_plsnsw)
+            return false
+        }
+        if (cbac.cbac_uicers_pos == 0) {
+            missingFieldString = context.getString(R.string.cbac_validation_rul)
+            return false
+        }
+        if (cbac.cbac_tingling_palm_posi == 0) {
+            missingFieldString = context.getString(R.string.cbac_validation_rtps)
             return false
         }
         if (cbac.cbac_cloudy_posi == 0) {
-            missingFieldString = "cloudy cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_cbv)
             return false
         }
         if (cbac.cbac_diffreading_posi == 0) {
-            missingFieldString = "diffreading cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_dr)
             return false
         }
         if (cbac.cbac_pain_ineyes_posi == 0) {
-            missingFieldString = "pain_ineyes cannot be empty!"
-            return false
-        }
-        if (cbac.cbac_diff_inhearing_posi == 0) {
-            missingFieldString = "diff_inhearing cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_pie)
             return false
         }
         if (cbac.cbac_redness_ineyes_posi == 0) {
-            missingFieldString = "redness_ineyes cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_rie)
+            return false
+        }
+        if (cbac.cbac_diff_inhearing_posi == 0) {
+            missingFieldString = context.getString(R.string.cbac_validation_dih)
+            return false
+        }
+        if (cbac.cbac_sortnesofbirth_pos == 0) {
+            missingFieldString = context.getString(R.string.cbac_validation_sob)
+            return false
+        }
+        if (cbac.cbac_historyoffits_pos == 0) {
+            missingFieldString = context.getString(R.string.cbac_validation_hif)
+            return false
+        }
+        if (cbac.cbac_difficultyinmouth_pos == 0) {
+            missingFieldString = context.getString(R.string.cbac_validation_diom)
             return false
         }
         if (cbac.cbac_growth_in_mouth_posi == 0) {
-            missingFieldString = "growth_in_mouth cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_upgm)
+            return false
+        }
+        if (cbac.cbac_toneofvoice_pos == 0) {
+            missingFieldString = context.getString(R.string.cbac_validation_tov)
             return false
         }
         if (cbac.cbac_white_or_red_patch_posi == 0) {
-            missingFieldString = "white_or_red_patch cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_wrp)
             return false
         }
         if (cbac.cbac_Pain_while_chewing_posi == 0) {
-            missingFieldString = "Pain_while_chewing cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_pwh)
             return false
         }
         if (cbac.cbac_hyper_pigmented_patch_posi == 0) {
-            missingFieldString = "hyper_pigmented_patch cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_hpds)
             return false
         }
         if (cbac.cbac_any_thickend_skin_posi == 0) {
-            missingFieldString = "any_thickend_skin cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_ts)
             return false
         }
         if (cbac.cbac_nodules_on_skin_posi == 0) {
-            missingFieldString = "nodules_on_skin cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_ns)
             return false
         }
         if (cbac.cbac_numbness_on_palm_posi == 0) {
-            missingFieldString = "numbness_on_palm cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_rnps)
             return false
         }
         if (cbac.cbac_clawing_of_fingers_posi == 0) {
-            missingFieldString = "clawing_of_fingers cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_cfhf)
             return false
         }
         if (cbac.cbac_tingling_or_numbness_posi == 0) {
-            missingFieldString = "tingling_or_numbness cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_tnhf)
             return false
         }
         if (cbac.cbac_inability_close_eyelid_posi == 0) {
-            missingFieldString = "inability_close_eyelid cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_ice)
             return false
         }
         if (cbac.cbac_diff_holding_obj_posi == 0) {
-            missingFieldString = "diff_holding_obj cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_dhof)
             return false
         }
         if (cbac.cbac_weekness_in_feet_posi == 0) {
-            missingFieldString = "weekness_in_feet cannot be empty!"
-            return false
-        }
-        if (cbac.cbac_fuel_used_posi == 0) {
-            missingFieldString = "fuel_used cannot be empty!"
-            return false
-        }
-        if (cbac.cbac_occupational_exposure_posi == 0) {
-            missingFieldString = "occupational_exposure cannot be empty!"
-            return false
-        }
-        if (cbac.cbac_little_interest_posi == 0) {
-            missingFieldString = "little_interest cannot be empty!"
-            return false
-        }
-        if (cbac.cbac_feeling_down_posi == 0) {
-            missingFieldString = "feeling_down cannot be empty!"
+            missingFieldString = context.getString(R.string.cbac_validation_wfdw)
             return false
         }
         if (ben.gender == Gender.FEMALE) {
-            if (cbac.cbac_sufferingtb_pos == 0) {
-                missingFieldString = "sufferingtb cannot be empty !"
-                return false
-            }
-            if (cbac.cbac_antitbdrugs_pos == 0) {
-                missingFieldString = "antitbdrugs cannot be empty !"
-                return false
-            }
-            if (cbac.cbac_tbhistory_pos == 0) {
-                missingFieldString = "tbhistory cannot be empty !"
-                return false
-            }
-            if (cbac.cbac_sortnesofbirth_pos ==
-                0
-            ) {
-                missingFieldString = "sortnesofbirth cannot be empty !"
-                return false
-            }
-            if (cbac.cbac_coughing_pos == 0) {
-                missingFieldString = "coughing cannot be empty !"
-                return false
-            }
-            if (cbac.cbac_bloodsputum_pos == 0) {
-                missingFieldString = "bloodsputum cannot be empty !"
-                return false
-            }
-            if (cbac.cbac_fivermore_pos == 0) {
-                missingFieldString = "fivermore cannot be empty !"
-                return false
-            }
-            if (cbac.cbac_loseofweight_pos == 0) {
-                missingFieldString = "loseofweight cannot be empty !"
-                return false
-            }
-            if (cbac.cbac_nightsweats_pos == 0) {
-                missingFieldString = "nightsweats cannot be empty !"
-                return false
-            }
-            if (cbac.cbac_historyoffits_pos == 0
-            ) {
-                missingFieldString = "historyoffits cannot be empty !"
-                return false
-            }
-            if (cbac.cbac_difficultyinmouth_pos == 0) {
-                missingFieldString = "difficultyinmouth cannot be empty !"
-                return false
-            }
-            if (cbac.cbac_uicers_pos == 0) {
-                missingFieldString = "uicers cannot be empty !"
-                return false
-            }
-            if (cbac.cbac_toneofvoice_pos == 0) {
-                missingFieldString = "toneofvoice cannot be empty !"
-                return false
-            }
             if (cbac.cbac_lumpinbreast_pos == 0) {
-                missingFieldString = "lumpinbreast cannot be empty !"
+                missingFieldString = context.getString(R.string.cbac_validation_lb)
                 return false
             }
-            if (cbac.cbac_blooddischage_pos == 0
-            ) {
-                missingFieldString = "blooddischage cannot be empty !"
+            if (cbac.cbac_blooddischage_pos == 0) {
+                missingFieldString = context.getString(R.string.cbac_validation_bsdfn)
                 return false
             }
-            if (cbac.cbac_changeinbreast_pos ==
-                0
-            ) {
-                missingFieldString = "changeinbreast cannot be empty !"
+            if (cbac.cbac_changeinbreast_pos == 0) {
+                missingFieldString = context.getString(R.string.cbac_validation_csb)
                 return false
             }
             if (cbac.cbac_bleedingbtwnperiods_pos == 0) {
-                missingFieldString = "bleedingbtwnperiods cannot be empty !"
+                missingFieldString = context.getString(R.string.cbac_validation_bbp)
                 return false
             }
             if (cbac.cbac_bleedingaftermenopause_pos == 0) {
-                missingFieldString = "bleedingaftermenopause cannot be empty !"
+                missingFieldString = context.getString(R.string.cbac_validation_bam)
                 return false
             }
             if (cbac.cbac_bleedingafterintercourse_pos == 0) {
-                missingFieldString = "bleedingafterintercourse cannot be empty !"
+                missingFieldString = context.getString(R.string.cbac_validation_bai)
                 return false
             }
             if (cbac.cbac_foulveginaldischarge_pos == 0) {
-                missingFieldString = "foulveginaldischarge cannot be empty !"
+                missingFieldString = context.getString(R.string.cbac_validation_fsvd)
                 return false
             }
-            if (ben.age >= 60) {
-                if (cbac.cbac_feeling_unsteady_posi == 0) {
-                    missingFieldString = "feeling_unsteady cannot be empty!"
-                    return false
-                }
-                if (cbac.cbac_suffer_physical_disability_posi == 0) {
-                    missingFieldString = "suffer_physical_disability cannot be empty!"
-                    return false
-                }
-                if (cbac.cbac_needing_help_posi == 0) {
-                    missingFieldString = "needing_help cannot be empty!"
-                    return false
-                }
-                if (cbac.cbac_forgetting_names_posi == 0) {
-                    missingFieldString = "forgetting_names cannot be empty!"
-                    return false
-                }
+        }
+
+        if (ben.age >= 60) {
+            if (cbac.cbac_feeling_unsteady_posi == 0) {
+                missingFieldString = context.getString(R.string.cbac_validation_fuwsw)
+                return false
             }
+            if (cbac.cbac_suffer_physical_disability_posi == 0) {
+                missingFieldString = context.getString(R.string.cbac_validation_sapd)
+                return false
+            }
+            if (cbac.cbac_needing_help_posi == 0) {
+                missingFieldString = context.getString(R.string.cbac_validation_nhpa)
+                return false
+            }
+            if (cbac.cbac_forgetting_names_posi == 0) {
+                missingFieldString = context.getString(R.string.cbac_validation_fn)
+                return false
+            }
+        }
+        if (cbac.cbac_fuel_used_posi == 0) {
+            missingFieldString = context.getString(R.string.cbac_validation_fu)
+            return false
+        }
+        if (cbac.cbac_occupational_exposure_posi == 0) {
+            missingFieldString = context.getString(R.string.cbac_validation_ox)
+            return false
+        }
+        if (cbac.cbac_little_interest_posi == 0) {
+            missingFieldString = context.getString(R.string.cbac_validation_li)
+            return false
+        }
+        if (cbac.cbac_feeling_down_posi == 0) {
+            missingFieldString = context.getString(R.string.cbac_validation_fd)
+            return false
         }
         return true
     }
@@ -767,6 +773,10 @@ class CbacViewModel @Inject constructor(
 
     fun setCollectSputum(i: Int) {
         cbac.cbac_sputemcollection = i.toString()
+    }
+
+    fun getCollectSputum() : Int {
+        return cbac.cbac_sputemcollection?.toInt()?:0
     }
 
     fun setTraceAllMembers(i: Int) {
