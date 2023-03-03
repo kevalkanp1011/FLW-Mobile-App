@@ -69,16 +69,7 @@ class ImmunizationDueFragment : Fragment() {
         binding.rvAny.adapter = benAdapter
 
         viewModel.benList.observe(viewLifecycleOwner) {
-            if(it==null) {
-                binding.clContent.visibility = View.GONE
-                binding.flLoading.visibility = View.VISIBLE
-            }
-            else{
-                if(binding.clContent.visibility ==View.GONE){
-                    binding.clContent.visibility = View.VISIBLE
-                    binding.flLoading.visibility = View.GONE
-                }
-            }
+
             if (it.isEmpty())
                 binding.flEmpty.visibility = View.VISIBLE
             else

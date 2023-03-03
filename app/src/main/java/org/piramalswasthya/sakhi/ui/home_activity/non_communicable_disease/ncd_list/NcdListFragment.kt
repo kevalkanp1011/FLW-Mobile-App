@@ -11,8 +11,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 
@@ -57,16 +59,7 @@ class NcdListFragment : Fragment() {
         binding.rvAny.adapter = benAdapter
 
         viewModel.benList.observe(viewLifecycleOwner) {
-            if(it==null) {
-                binding.clContent.visibility = View.GONE
-                binding.flLoading.visibility = View.VISIBLE
-            }
-            else{
-                if(binding.clContent.visibility ==View.GONE){
-                    binding.clContent.visibility = View.VISIBLE
-                    binding.flLoading.visibility = View.GONE
-                }
-            }
+
             if (it.isEmpty())
                 binding.flEmpty.visibility = View.VISIBLE
             else
@@ -94,6 +87,12 @@ class NcdListFragment : Fragment() {
             else
                 (searchView as EditText).removeTextChangedListener(searchTextWatcher)
 
+        }
+    }
+    override fun onStart() {
+        super.onStart()
+        activity?.let{
+            (it as HomeActivity).setLogo(R.drawable.ic__ncd_list)
         }
     }
 

@@ -67,16 +67,7 @@ class PregnancyListFragment : Fragment() {
         binding.rvAny.adapter = benAdapter
 
         viewModel.benList.observe(viewLifecycleOwner) {
-            if(it==null) {
-                binding.clContent.visibility = View.GONE
-                binding.flLoading.visibility = View.VISIBLE
-            }
-            else{
-                if(binding.clContent.visibility ==View.GONE){
-                    binding.clContent.visibility = View.VISIBLE
-                    binding.flLoading.visibility = View.GONE
-                }
-            }
+
             if (it.isEmpty())
                 binding.flEmpty.visibility = View.VISIBLE
             else
@@ -109,7 +100,7 @@ class PregnancyListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let{
-            (it as HomeActivity).setLogo(R.drawable.ic__mother_care)
+            (it as HomeActivity).setLogo(R.drawable.ic__pregnancy)
         }
     }
 
