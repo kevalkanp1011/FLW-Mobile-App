@@ -222,7 +222,7 @@ fun BenRegCache.asNetworkSendingModel(
 ): BeneficiaryDataSending {
 
     return BeneficiaryDataSending(
-        benImage = Base64.encodeToString(userImageBlob, Base64.DEFAULT),
+        benImage = "abc", //Base64.encodeToString(userImageBlob, Base64.DEFAULT),
         firstName = firstName!!,
         lastName = lastName ?: "NA",
         dob = getDateTimeStringFromLong(dob) ?: "",

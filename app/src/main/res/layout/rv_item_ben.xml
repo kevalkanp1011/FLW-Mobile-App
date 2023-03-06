@@ -203,7 +203,7 @@
                         app:fieldTitle="@{@string/tv_age_ph}" />
                 </LinearLayout>
 
-                <!--<LinearLayout
+                <LinearLayout
                     android:id="@+id/ll_row_4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -226,14 +226,14 @@
                         app:field="@{ben.familyHeadName}"
                         app:fieldTitle="@{@string/tv_family_head_name_ph}" />
 
-                    <include
+                    <!--<include
                         android:id="@+id/rl_hrp_status"
                         style="@style/rv_item_ben_fields"
                         layout="@layout/rv_item_ben_element"
                         app:field="@{ben.hrpStatus}"
-                        app:fieldTitle="@{@string/tv_suspected_hrp_ph}" />
+                        app:fieldTitle="@{@string/tv_suspected_hrp_ph}" />-->
 
-                </LinearLayout>-->
+                </LinearLayout>
             </RelativeLayout>
 
 

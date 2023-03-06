@@ -703,7 +703,7 @@ data class BenRegCache(
             nishchayDeliveryStatusPosition = nishchayDeliveryStatusPosition,
             nayiPahalDeliveryStatusPosition = nayiPahalDeliveryStatusPosition,
             isImmunizationStatus = immunizationStatus,
-            userImage = Base64.encodeToString(userImageBlob, Base64.DEFAULT),
+            userImage = "abc"// Base64.encodeToString(userImageBlob, Base64.DEFAULT),
         )
     }
 
