@@ -5,12 +5,16 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -44,8 +48,10 @@ class HomeActivity : AppCompatActivity() {
     interface WrapperEntryPoint {
         val pref: PreferenceDao
     }
+    private var _binding : ActivityHomeBinding? = null
 
-    private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
+    private val binding  : ActivityHomeBinding
+    get() = _binding!!
 
     private val viewModel by lazy { ViewModelProvider(this)[HomeViewModel::class.java] }
 
@@ -81,11 +87,12 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        _binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setUpActionBar()
         setUpNavHeader()
         setUpFullLoadPullWorker()
+        setUpMenu()
 
         viewModel.navigateToLoginPage.observe(this) {
             if (it) {
@@ -94,6 +101,20 @@ class HomeActivity : AppCompatActivity() {
                 finish()
             }
         }
+    }
+
+    private fun setUpMenu() {
+        val menu = object : MenuProvider{
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                TODO("Not yet implemented")
+            }
+
+        }
+
     }
 
     private fun setUpFullLoadPullWorker() {
@@ -195,5 +216,10 @@ class HomeActivity : AppCompatActivity() {
 
     fun setLogo(resId : Int){
         binding.toolbar.setLogo(resId)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

@@ -33,9 +33,11 @@ import timber.log.Timber
 @AndroidEntryPoint
 class NewBenRegG15Fragment : Fragment() {
 
-    private val binding: FragmentNewFormViewpagerBinding by lazy {
-        FragmentNewFormViewpagerBinding.inflate(layoutInflater)
-    }
+    private var _binding : FragmentNewFormViewpagerBinding? = null
+
+    private val binding  : FragmentNewFormViewpagerBinding
+        get() = _binding!!
+
 
     private val hhId: Long by lazy {
         NewBenRegG15FragmentArgs.fromBundle(requireArguments()).hhId
@@ -100,6 +102,7 @@ class NewBenRegG15Fragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentNewFormViewpagerBinding.inflate(layoutInflater,container, false)
         return binding.root
     }
 
@@ -226,14 +229,14 @@ class NewBenRegG15Fragment : Fragment() {
                 validateFormForPage(i)
             if (validated) {
                 viewModel.setMTabPosition(i)
-                when (viewModel.mTabPosition) {
-                    1 -> {
-                        viewModel.persistFirstPage()
-                    }
-                    2 -> {
-                        viewModel.persistSecondPage()
-                    }
-                }
+//                when (viewModel.mTabPosition) {
+//                    1 -> {
+//                        viewModel.persistFirstPage()
+//                    }
+//                    2 -> {
+//                        viewModel.persistSecondPage()
+//                    }
+//                }
             }
         }
         binding.vp2Nhhr.currentItem = viewModel.mTabPosition
@@ -294,4 +297,10 @@ class NewBenRegG15Fragment : Fragment() {
         )
         return (childFragmentManager.findFragmentByTag(currentItem) as NewBenRegG15ObjectFragment).validate()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
 }

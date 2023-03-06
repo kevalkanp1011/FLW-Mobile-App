@@ -45,7 +45,6 @@ class CbacRepo @Inject constructor(
                 }
 
                 database.cbacDao.upsert(cbacCache)
-                database.benDao.upsert()
                 database.benDao.updateBen(ben)
                 true
             } catch (e: java.lang.Exception) {

@@ -14,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
+import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
@@ -21,9 +22,11 @@ import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 @AndroidEntryPoint
 class AdolescentListFragment : Fragment() {
 
-    private val binding: FragmentDisplaySearchRvButtonBinding by lazy {
-        FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater)
-    }
+    private var _binding : FragmentDisplaySearchRvButtonBinding? = null
+
+    private val binding  : FragmentDisplaySearchRvButtonBinding
+        get() = _binding!!
+
 
     private val viewModel: AdolescentListViewModel by viewModels()
 
@@ -33,6 +36,7 @@ class AdolescentListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding  = FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -89,6 +93,10 @@ class AdolescentListFragment : Fragment() {
         activity?.let{
             (it as HomeActivity).setLogo(R.drawable.ic__adolescent)
         }
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }

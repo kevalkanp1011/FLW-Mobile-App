@@ -17,6 +17,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
+import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.databinding.FragmentNewBenRegTypeBinding
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.work.GenerateBenIdsWorker
@@ -25,9 +26,12 @@ import org.piramalswasthya.sakhi.work.PushToAmritWorker
 @AndroidEntryPoint
 class NewBenRegTypeFragment : Fragment() {
 
-    private val binding by lazy {
-        FragmentNewBenRegTypeBinding.inflate(layoutInflater)
-    }
+
+    private var _binding : FragmentNewBenRegTypeBinding? = null
+
+    private val binding  : FragmentNewBenRegTypeBinding
+        get() = _binding!!
+
 
     private val hhId by lazy {
         NewBenRegTypeFragmentArgs.fromBundle(requireArguments()).hhId
@@ -96,6 +100,7 @@ class NewBenRegTypeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentNewBenRegTypeBinding.inflate(layoutInflater)
         viewModel.checkDraft(hhId)
         return binding.root
     }
@@ -201,6 +206,10 @@ class NewBenRegTypeFragment : Fragment() {
                     workRequest
                 )
         }
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }

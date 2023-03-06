@@ -21,9 +21,11 @@ import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 @AndroidEntryPoint
 class ChildListFragment : Fragment() {
 
-    private val binding: FragmentDisplaySearchRvButtonBinding by lazy {
-        FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater)
-    }
+    private var _binding : FragmentDisplaySearchRvButtonBinding? = null
+
+    private val binding  : FragmentDisplaySearchRvButtonBinding
+        get() = _binding!!
+
 
     private val viewModel: ChildListViewModel by viewModels()
 
@@ -33,6 +35,7 @@ class ChildListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 

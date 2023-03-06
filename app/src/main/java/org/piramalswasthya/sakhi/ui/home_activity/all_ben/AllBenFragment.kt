@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
+import org.piramalswasthya.sakhi.databinding.ActivityHomeBinding
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
@@ -26,10 +27,11 @@ import timber.log.Timber
 @AndroidEntryPoint
 class AllBenFragment : Fragment() {
 
+    private var _binding : FragmentDisplaySearchRvButtonBinding? = null
 
-    private val binding: FragmentDisplaySearchRvButtonBinding by lazy {
-        FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater)
-    }
+    private val binding  : FragmentDisplaySearchRvButtonBinding
+        get() = _binding!!
+
 
     private val viewModel: AllBenViewModel by viewModels()
 
@@ -39,6 +41,7 @@ class AllBenFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -46,7 +49,6 @@ class AllBenFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.btnNextPage.visibility = View.GONE
-        val spinner = Spinner(requireContext())
         val benAdapter = BenListAdapter(BenListAdapter.BenClickListener(
             {
                 Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
@@ -105,5 +107,10 @@ class AllBenFragment : Fragment() {
         activity?.let{
             (it as HomeActivity).setLogo(R.drawable.ic__ben)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

@@ -21,9 +21,10 @@ import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 @AndroidEntryPoint
 class AllHouseholdFragment : Fragment() {
 
-    private val binding : FragmentDisplaySearchRvButtonBinding by lazy{
-        FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater)
-    }
+    private var _binding : FragmentDisplaySearchRvButtonBinding? = null
+
+    private val binding  : FragmentDisplaySearchRvButtonBinding
+        get() = _binding!!
 
     private val viewModel: AllHouseholdViewModel by viewModels()
 
@@ -52,6 +53,7 @@ class AllHouseholdFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater,container, false)
         viewModel.checkDraft()
         return binding.root
     }
@@ -120,6 +122,11 @@ class AllHouseholdFragment : Fragment() {
                 (searchView as EditText).removeTextChangedListener(searchTextWatcher)
 
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }
