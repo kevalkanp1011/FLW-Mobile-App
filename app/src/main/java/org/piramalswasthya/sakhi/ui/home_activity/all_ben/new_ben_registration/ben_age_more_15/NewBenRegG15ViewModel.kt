@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -651,7 +650,7 @@ class NewBenRegG15ViewModel @Inject constructor(
         Timber.d("Persist second page called!")
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                benRepo.persistGenSecondPage(form, null)
+                //benRepo.persistGenSecondPage(, form, null)
             }
         }
     }
@@ -663,9 +662,9 @@ class NewBenRegG15ViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 try {
                     if (hasReproductiveStatus.value == false)
-                        benRepo.persistGenSecondPage(form, locationRecord)
+                        benRepo.persistGenSecondPage(hhId, form, locationRecord)
                     else
-                        benRepo.persistGenThirdPage(form, locationRecord)
+                        benRepo.persistGenThirdPage(hhId, form, locationRecord)
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
                     Timber.d("saving HH data failed!! $e")

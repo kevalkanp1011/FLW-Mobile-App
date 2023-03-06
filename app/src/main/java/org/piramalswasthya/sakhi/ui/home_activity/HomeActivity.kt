@@ -77,6 +77,8 @@ class HomeActivity : AppCompatActivity() {
         navHostFragment.navController
     }
 
+    var homeMenu : MenuItem? = null
+
     override fun attachBaseContext(newBase: Context) {
         val pref = EntryPointAccessors.fromApplication(
             newBase,
@@ -104,17 +106,30 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setUpMenu() {
+
         val menu = object : MenuProvider{
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                TODO("Not yet implemented")
+                menuInflater.inflate(R.menu.home_toolbar, menu)
+                homeMenu = menu.findItem(R.id.toolbar_menu_home)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                TODO("Not yet implemented")
+                when(menuItem.itemId){
+                    R.id.toolbar_menu_home -> {
+                        navController.popBackStack(R.id.homeFragment, false)
+                        return true
+                    }
+                }
+                return false
             }
 
         }
+        addMenuProvider(menu)
 
+    }
+
+    fun setHomeMenuItemVisibility(show  : Boolean){
+        homeMenu?.isVisible = show
     }
 
     private fun setUpFullLoadPullWorker() {

@@ -67,6 +67,7 @@ class HomeFragment : Fragment() {
     ): View {
         numViewCopies++
         binding.lifecycleOwner = viewLifecycleOwner
+        (activity as HomeActivity?)?.setHomeMenuItemVisibility(false)
         return binding.root
     }
 
@@ -110,6 +111,11 @@ class HomeFragment : Fragment() {
         activity?.let{
             (it as HomeActivity).setLogo(R.drawable.ic_home)
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as HomeActivity?)?.setHomeMenuItemVisibility(true)
     }
 
     private fun setUpHomeIconRvAdapter() {

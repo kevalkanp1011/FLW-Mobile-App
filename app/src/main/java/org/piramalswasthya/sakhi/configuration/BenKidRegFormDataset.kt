@@ -670,7 +670,12 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         return byteBuffer.toByteArray()
     }
 
-    fun getBenForSecondPage(): BenRegCache {
+    fun getBenRegType(): TypeOfList? {
+        return ben?.registrationType
+    }
+
+    suspend fun getBenForSecondPage(userId: Int, hhId: Long): BenRegCache {
+        getBenForFirstPage(userId, hhId = hhId)
 
         ben?.apply {
             kidDetails?.birthPlace = this@BenKidRegFormDataset.placeOfBirth.value.value

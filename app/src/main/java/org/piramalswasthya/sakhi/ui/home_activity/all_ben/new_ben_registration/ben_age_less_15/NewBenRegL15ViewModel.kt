@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -597,10 +596,10 @@ class NewBenRegL15ViewModel @Inject constructor(
             _state.value = State.SAVING
             withContext(Dispatchers.IO) {
                 try {
-                    benRepo.persistKidSecondPage(form, locationRecord)
+                    benRepo.persistKidSecondPage(form, hhId, locationRecord)
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
-                    Timber.d("saving HH data failed!!")
+                    Timber.d("saving HH data failed!! $e")
                     _state.postValue(State.SAVE_FAILED)
                 }
             }
@@ -613,7 +612,7 @@ class NewBenRegL15ViewModel @Inject constructor(
     }
 
     fun getNavPath(): TypeOfList? {
-        return form.getBenForSecondPage().registrationType
+        return form.getBenRegType()
     }
 
 
