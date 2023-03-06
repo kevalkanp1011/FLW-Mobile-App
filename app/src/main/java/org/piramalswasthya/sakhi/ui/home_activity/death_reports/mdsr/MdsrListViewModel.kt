@@ -34,10 +34,4 @@ class MdsrListViewModel @Inject constructor(
         _benList.value = mdsrList.value?.let { filterBenList(it, text) }
     }
 
-
-    fun manualSync(/*hhId: Long, benId: Long, locationRecord: LocationRecord*/) {
-        viewModelScope.launch {
-            benRepo.processNewBen()
-        }
-    }
 }

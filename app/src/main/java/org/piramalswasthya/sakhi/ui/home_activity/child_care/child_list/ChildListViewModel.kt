@@ -34,9 +34,4 @@ class ChildListViewModel @Inject constructor(
     }
 
 
-    fun manualSync(/*hhId: Long, benId: Long, locationRecord: LocationRecord*/) {
-        viewModelScope.launch {
-            benRepo.processNewBen()
-        }
-    }
 }

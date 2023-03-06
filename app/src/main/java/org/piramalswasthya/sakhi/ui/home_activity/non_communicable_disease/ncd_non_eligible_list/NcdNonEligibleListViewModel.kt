@@ -4,7 +4,6 @@ import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.helpers.filterBenList
-import org.piramalswasthya.sakhi.model.BenBasicDomain
 import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import javax.inject.Inject
@@ -34,9 +33,4 @@ class NcdNonEligibleListViewModel @Inject constructor(
         _benList.value = ncdNonEligibleList.value?.let { filterBenList(it, text) }
     }
 
-    fun manualSync(/*hhId: Long, benId: Long, locationRecord: LocationRecord*/) {
-        viewModelScope.launch {
-            benRepo.processNewBen()
-        }
-    }
 }
