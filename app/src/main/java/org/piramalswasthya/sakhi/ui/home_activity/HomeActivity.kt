@@ -3,9 +3,13 @@ package org.piramalswasthya.sakhi.ui.home_activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -15,6 +19,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.bumptech.glide.Glide
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,12 +42,28 @@ class HomeActivity : AppCompatActivity() {
     @EntryPoint
     @InstallIn(SingletonComponent::class)
     interface WrapperEntryPoint {
-        val preferenceDao: PreferenceDao
+        val pref: PreferenceDao
     }
 
     private val binding by lazy { ActivityHomeBinding.inflate(layoutInflater) }
 
     private val viewModel by lazy { ViewModelProvider(this)[HomeViewModel::class.java] }
+
+    private val imagePickerActivityResult = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) {
+            it?.let {
+                viewModel.saveProfilePicUri(it)
+                Glide
+                    .with(this)
+                    .load(it)
+                    .placeholder(R.drawable.ic_person)
+                    .circleCrop()
+                    .into(binding.navView.getHeaderView(0).findViewById(R.id.iv_profile_pic));
+//                binding.navView.getHeaderView(0).findViewById<ImageView>(R.id.iv_profile_pic).setImageURI(it)
+//                Glide.with(this)
+//                    .load(it)
+//                    .into(binding.navView.getHeaderView(0).findViewById(R.id.iv_profile_pic))
+            }
+    }
 
     private val navController by lazy {
         val navHostFragment: NavHostFragment =
@@ -54,7 +75,7 @@ class HomeActivity : AppCompatActivity() {
         val pref = EntryPointAccessors.fromApplication(
             newBase,
             WrapperEntryPoint::class.java
-        ).preferenceDao
+        ).pref
         super.attachBaseContext(MyContextWrapper.wrap(newBase, pref.getCurrentLanguage().symbol))
     }
 
@@ -101,6 +122,22 @@ class HomeActivity : AppCompatActivity() {
 //                headerView.findViewById<TextView>(R.id.tv_nav_version).text =
 //                    getString(R.string.version)
             }
+        }
+        val dpUri = viewModel.getProfilePicUri()
+        dpUri?.let {
+            Glide
+                .with(this)
+                .load(it)
+                .placeholder(R.drawable.ic_person)
+                .circleCrop()
+                .into(binding.navView.getHeaderView(0).findViewById(R.id.iv_profile_pic));
+        }
+//
+
+        binding.navView.getHeaderView(0).findViewById<ImageView>(R.id.iv_profile_pic).setOnClickListener {
+//            val galleryIntent = Intent(Intent.ACTION_PICK)
+//            galleryIntent.type = "image/*"
+            imagePickerActivityResult.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
     }
 

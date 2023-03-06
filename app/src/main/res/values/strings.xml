@@ -10,6 +10,7 @@
     <string name="PREF_location_record_entry" translatable="false">location-record</string>
     <string name="PREF_full_load_pull_progress" translatable="false">full_load_sync_pull_amrit</string>
     <string name="PREF_current_saved_language" translatable="false">Locale.Helper.Selected.Language</string>
+    <string name="PREF_current_dp_uri" translatable="false">DP_URI_cat</string>
 
     <!--    Login-->
     <string name="tv_text_welcome">Welcome</string>

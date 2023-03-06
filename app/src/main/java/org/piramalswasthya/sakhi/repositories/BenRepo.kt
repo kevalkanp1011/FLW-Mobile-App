@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.repositories
 
 import android.app.Application
+import android.net.SocketKeepalive
 import androidx.lifecycle.Transformations
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -591,9 +592,18 @@ class BenRepo @Inject constructor(
                     ben.beneficiaryId = newBenId
                     return true
                 }
+                if(responseStatusCode==5002){
+                    if(userRepo.refreshTokenTmc(user.userName, user.password))
+                        throw SocketTimeoutException("Refreshed Token")
+                }
             }
             throw IllegalStateException("Response undesired!")
-        } catch (e: java.lang.Exception) {
+        }catch (se : SocketTimeoutException){
+            if(se.message=="Refreshed Token")
+                return createBenIdAtServerByBeneficiarySending(ben,user,locationRecord)
+            return false
+        }
+        catch (e: java.lang.Exception) {
             database.benDao.setSyncState(ben.householdId, ben.beneficiaryId, SyncState.UNSYNCED)
             Timber.d("Caugnt error $e")
             return false

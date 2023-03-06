@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.ui.home_activity.home
 
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
@@ -101,6 +102,14 @@ class HomeViewModel @Inject constructor(
     fun checkIfFullLoadCompletedBefore(): Long {
         return pref.getLastSyncedTimeStamp()
 
+    }
+
+    fun saveProfilePicUri(imageUri: Uri) {
+        pref.saveProfilePicUri(imageUri)
+    }
+
+    fun getProfilePicUri() : Uri?{
+        return pref.getProfilePicUri()
     }
 
 

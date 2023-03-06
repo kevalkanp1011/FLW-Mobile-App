@@ -32,11 +32,4 @@ class InfantListViewModel @Inject constructor(
         lastFilter = text
         _benList.value = infantList.value?.let { filterBenList(it, text) }
     }
-
-
-    fun manualSync(/*hhId: Long, benId: Long, locationRecord: LocationRecord*/) {
-        viewModelScope.launch {
-            benRepo.processNewBen()
-        }
-    }
 }

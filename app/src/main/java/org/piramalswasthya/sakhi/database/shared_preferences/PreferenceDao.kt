@@ -1,12 +1,13 @@
 package org.piramalswasthya.sakhi.database.shared_preferences
 
 import android.content.Context
+import android.net.Uri
 import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.LocationRecord
-import org.piramalswasthya.sakhi.model.getDateTimeStringFromLong
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -122,5 +123,19 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
             Languages.ENGLISH.symbol -> Languages.ENGLISH
             else -> Languages.ENGLISH
         }
+    }
+
+    fun saveProfilePicUri(uri: Uri) {
+        val key = context.getString(R.string.PREF_current_dp_uri)
+
+        val editor = pref.edit()
+        editor.putString(key, uri.toString())
+        editor.apply()
+        Timber.d("Saving profile pic @ $uri")
+    }
+    fun getProfilePicUri(): Uri? {
+        val key = context.getString(R.string.PREF_current_dp_uri)
+        val uriString =  pref.getString(key, null)
+        return uriString?.let { Uri.parse(it) }
     }
 }
