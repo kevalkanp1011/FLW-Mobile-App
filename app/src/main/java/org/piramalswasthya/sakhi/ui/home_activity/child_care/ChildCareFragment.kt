@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.IconGridAdapter
 import org.piramalswasthya.sakhi.configuration.IconDataset
+import org.piramalswasthya.sakhi.databinding.FragmentNewFormViewpagerBinding
 import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
@@ -19,18 +20,20 @@ import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 @AndroidEntryPoint
 class ChildCareFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = ChildCareFragment()
-    }
+    private var _binding : RvIconGridBinding? = null
+
+    private val binding  : RvIconGridBinding
+        get() = _binding!!
+
 
     private val viewModel: ChildCareViewModel by viewModels()
     private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
-    private val binding by lazy { RvIconGridBinding.inflate(layoutInflater) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = RvIconGridBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -60,4 +63,10 @@ class ChildCareFragment : Fragment() {
             (it as HomeActivity).setLogo(R.drawable.ic__child_care)
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
 }

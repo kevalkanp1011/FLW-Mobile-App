@@ -25,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.NewHouseholdPagerAdapter
 import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
+import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormViewpagerBinding
 import org.piramalswasthya.sakhi.services.UploadSyncService
 import org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_registration.NewHouseholdViewModel.State
@@ -35,10 +36,11 @@ import timber.log.Timber
 @AndroidEntryPoint
 class NewHouseholdFragment : Fragment() {
 
-    private val binding by lazy {
-        FragmentNewFormViewpagerBinding.inflate(layoutInflater)
+    private var _binding : FragmentNewFormViewpagerBinding? = null
 
-    }
+    private val binding  : FragmentNewFormViewpagerBinding
+        get() = _binding!!
+
 
     private val viewModel: NewHouseholdViewModel by viewModels()
     private val homeViewModel : HomeViewModel by viewModels({requireActivity()})
@@ -168,6 +170,7 @@ class NewHouseholdFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentNewFormViewpagerBinding.inflate(layoutInflater, container,false)
         return binding.root
     }
 
@@ -271,5 +274,10 @@ class NewHouseholdFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         binding.vp2Nhhr.unregisterOnPageChangeCallback(pageChangeCallback)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

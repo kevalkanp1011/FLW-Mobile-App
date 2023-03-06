@@ -23,6 +23,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.adapters.NewBenKidPagerAdapter
+import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormViewpagerBinding
 import org.piramalswasthya.sakhi.model.TypeOfList
 import org.piramalswasthya.sakhi.services.UploadSyncService
@@ -34,9 +35,11 @@ import timber.log.Timber
 @AndroidEntryPoint
 class NewBenRegL15Fragment : Fragment() {
 
-    private val binding: FragmentNewFormViewpagerBinding by lazy {
-        FragmentNewFormViewpagerBinding.inflate(layoutInflater)
-    }
+    private var _binding : FragmentNewFormViewpagerBinding? = null
+
+    private val binding  : FragmentNewFormViewpagerBinding
+        get() = _binding!!
+
 
     private val hhId: Long by lazy {
         NewBenRegL15FragmentArgs.fromBundle(requireArguments()).hhId
@@ -102,6 +105,7 @@ class NewBenRegL15Fragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentNewFormViewpagerBinding.inflate(layoutInflater,container, false)
         return binding.root
     }
 
@@ -207,11 +211,11 @@ class NewBenRegL15Fragment : Fragment() {
                 validateFormForPage(i)
             if (validated) {
                 viewModel.setMTabPosition(i)
-                when (viewModel.mTabPosition) {
-                    1 -> {
-                        viewModel.persistFirstPage()
-                    }
-                }
+//                when (viewModel.mTabPosition) {
+//                    1 -> {
+//                        viewModel.persistFirstPage()
+//                    }
+//                }
             }
         }
         binding.vp2Nhhr.currentItem = viewModel.mTabPosition
@@ -248,6 +252,10 @@ class NewBenRegL15Fragment : Fragment() {
             }"
         )
         return (childFragmentManager.findFragmentByTag(currentItem) as NewBenRegL15ObjectFragment).validate()
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 
