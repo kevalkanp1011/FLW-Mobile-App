@@ -61,7 +61,6 @@ class MDSRFormDataset(context: Context) {
     )
     val husbandName = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
-        allCaps = true,
         etMaxLength = 50,
         title = "Husband’s Name",
         required = false

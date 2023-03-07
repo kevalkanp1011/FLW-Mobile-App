@@ -112,7 +112,7 @@ class PmsmaViewModel @Inject constructor(
                 ben = benRepo.getBeneficiary(benId, hhId)!!
                 household = benRepo.getBenHousehold(hhId)!!
                 user = database.userDao.getLoggedInUser()!!
-                Timber.d("init beofre assigning pmsma ! ")
+                Timber.d("pmsma ben: $ben")
                 pmsma = database.pmsmaDao.getPmsma(hhId,benId)
                 Timber.d("init after assigning pmsma ! ")
 
@@ -122,10 +122,10 @@ class PmsmaViewModel @Inject constructor(
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
             _address.value = getAddress(household)
             _exists.value = pmsma != null
-           if(pmsma==null){
-               form.lastMenstrualPeriod.value.value = getDateFromLong(ben.genDetails?.lastMenstrualPeriod)
-               form.expectedDateOfDelivery.value.value = getDateFromLong(ben.genDetails?.expectedDateOfDelivery)
-           }
+//           if(pmsma==null){
+//               form.lastMenstrualPeriod.value.value = getDateFromLong(ben.genDetails?.lastMenstrualPeriod)
+//               form.expectedDateOfDelivery.value.value = getDateFromLong(ben.genDetails?.expectedDateOfDelivery)
+//           }
 
             Timber.d("init ended! ")
         }
@@ -154,10 +154,16 @@ class PmsmaViewModel @Inject constructor(
     fun setAddress(it: String?, adapter: FormInputAdapter) {
         form.address.value.value = it
         form.mobileNumber.value.value = ben.contactNumber.toString()
+        form.husbandName.value.value = ben.genDetails?.spouseName
+        form.lastMenstrualPeriod.value.value = getDateFromLong(ben.genDetails?.lastMenstrualPeriod)
+        form.expectedDateOfDelivery.value.value = getDateFromLong(ben.genDetails?.lastMenstrualPeriod?.plus(
+            280 * 24 * 60 * 60 * 1000L))
         adapter.notifyItemChanged(adapter.currentList.indexOf(form.address))
         adapter.notifyItemChanged(adapter.currentList.indexOf(form.mobileNumber))
+        adapter.notifyItemChanged(adapter.currentList.indexOf(form.husbandName))
+        adapter.notifyItemChanged(adapter.currentList.indexOf(form.lastMenstrualPeriod))
+        adapter.notifyItemChanged(adapter.currentList.indexOf(form.expectedDateOfDelivery))
     }
-
 
     suspend fun getFirstPage(adapter: FormInputAdapter): List<FormInput> {
         Timber.d("started getFirstPage")
@@ -202,6 +208,15 @@ class PmsmaViewModel @Inject constructor(
                         _popupString.value = "HRP Case, please visit the nearest HWC or call 104"
                 }
             }
+            launch {
+                form.lastMenstrualPeriod.value.collect{
+                    it?.let {
+                        Timber.d(it)
+                        form.expectedDateOfDelivery.value.value = getDateFromLong((getLongFromDate(it) + 280 * 24 * 60 * 60 * 1000L))
+                        adapter.notifyItemChanged(adapter.currentList.indexOf(form.expectedDateOfDelivery))
+                    }
+                }
+            }
 
         }
         Timber.d("ending getFirstPage")
@@ -210,13 +225,18 @@ class PmsmaViewModel @Inject constructor(
 
 
     private fun getDateFromLong(dateLong: Long?): String? {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
         dateLong?.let {
             return dateFormat.format(dateLong)
         } ?: run {
             return null
         }
+    }
 
+    private fun getLongFromDate(dateString: String): Long {
+        val f = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+        val date = f.parse(dateString)
+        return date?.time ?: throw IllegalStateException("Invalid date for dateReg")
     }
 
     fun setExistingValues() {

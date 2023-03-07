@@ -19,9 +19,8 @@ import java.net.SocketTimeoutException
 
 @HiltWorker
 class PushToD2DWorker @AssistedInject constructor(
-    @Assisted appContext: Context,
+    @Assisted private val appContext: Context,
     @Assisted params: WorkerParameters,
-    private val benRepo: BenRepo,
     private val mdsrRepo: MdsrRepo,
     private val cdrRepo: CdrRepo,
     private val pmsmaRepo: PmsmaRepo,

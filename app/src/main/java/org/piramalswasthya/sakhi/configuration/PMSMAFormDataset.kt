@@ -10,13 +10,6 @@ import java.util.*
 class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) {
 
     companion object {
-        private fun getCurrentDate(): String {
-            val calendar = Calendar.getInstance()
-            val mdFormat =
-                SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
-            return mdFormat.format(calendar.time)
-        }
-
         private fun getLongFromDate(dateString: String): Long {
             val f = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
             val date = f.parse(dateString)
@@ -42,7 +35,7 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
         list = arrayOf("Yes", "No"),
         required = false
     )
-    private val husbandName = FormInput(
+    val husbandName = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Husband’s Name",
         required = false
@@ -182,13 +175,11 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
         title = "Last Menstrual Period ",
         min = 0L,
         max = System.currentTimeMillis(),
-        required = false
+        required = true
     )
     val expectedDateOfDelivery = FormInput(
-        inputType = FormInput.InputType.DATE_PICKER,
+        inputType = FormInput.InputType.TEXT_VIEW,
         title = "Expected Date of Delivery ",
-        max = System.currentTimeMillis() + 270 * 24 * 60 * 600000L,
-        min = System.currentTimeMillis(),
         required = true
     )
     val highriskSymbols = FormInput(

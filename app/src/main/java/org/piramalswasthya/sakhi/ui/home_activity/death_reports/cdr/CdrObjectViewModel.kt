@@ -132,13 +132,15 @@ class CdrObjectViewModel @Inject constructor(
 
     suspend fun getFirstPage(adapter: FormInputAdapter): List<FormInput> {
         viewModelScope.launch {
-            dataset.placeOfDeath.value.collect {
-                toggleFieldOnTrigger(
-                    dataset.placeOfDeath,
-                    dataset.hospitalName,
-                    it,
-                    adapter
-                )
+            launch{
+                dataset.placeOfDeath.value.collect {
+                    toggleFieldOnTrigger(
+                        dataset.placeOfDeath,
+                        dataset.hospitalName,
+                        it,
+                        adapter
+                    )
+                }
             }
         }
         return dataset.firstPage
@@ -159,17 +161,22 @@ class CdrObjectViewModel @Inject constructor(
         dataset.motherName.value.value = ben.motherName
         dataset.fatherName.value.value = ben.fatherName
         dataset.mobileNumber.value.value = ben.contactNumber.toString()
+        dataset.visitDate.value.value = getDateFromLong(System.currentTimeMillis())
+        dataset.visitDate.value.value = getDateFromLong(System.currentTimeMillis())
         dataset.dateOfNotification.value.value = getDateFromLong(System.currentTimeMillis())
-        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.address))
-        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.childName))
-        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.gender))
-        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.age))
-        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.mobileNumber))
-        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.motherName))
-        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.fatherName))
-        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.dateOfBirth))
-        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.firstInformant))
-        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.dateOfNotification))
+        dataset.dateOfDeath.min = ben.dob
+        dataset.dateOfNotification.min = ben.dob
+//        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.address))
+//        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.childName))
+//        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.gender))
+//        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.age))
+//        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.mobileNumber))
+//        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.motherName))
+//        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.fatherName))
+//        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.dateOfBirth))
+//        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.firstInformant))
+//        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.visitDate))
+//        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.dateOfNotification))
     }
 
     private fun getDateFromLong(dateLong: Long?): String? {

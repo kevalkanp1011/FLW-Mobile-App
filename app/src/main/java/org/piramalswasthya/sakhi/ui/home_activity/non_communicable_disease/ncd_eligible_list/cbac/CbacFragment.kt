@@ -143,7 +143,6 @@ class CbacFragment : Fragment() {
             binding.cbacTvRaTotalScore.text = it
         }
 
-
         binding.actvSmokeDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setSmoke(i) }
         binding.actvAlcoholDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setAlcohol(i) }
         binding.actvWaistDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setWaist(i) }

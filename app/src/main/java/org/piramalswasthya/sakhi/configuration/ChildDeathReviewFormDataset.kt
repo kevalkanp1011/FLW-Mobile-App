@@ -45,7 +45,7 @@ class ChildDeathReviewFormDataset(context: Context, private val childDeathReview
         cdrCache.firstInformant = firstInformant.value.value
         cdrCache.ashaSign = ashaSign.value.value
         cdrCache.pincode = pincode.value.value?.toInt()?:0
-        cdrCache.dateOfNotification = getLongFromDate(dateOfNotification.value.value!!)
+        cdrCache.dateOfNotification = dateOfNotification.value.value?.let { getLongFromDate(it) }?: System.currentTimeMillis()
     }
 
     val childName = FormInput(
@@ -161,8 +161,10 @@ class ChildDeathReviewFormDataset(context: Context, private val childDeathReview
         required = false
     )
     val dateOfNotification = FormInput(
-        inputType = FormInput.InputType.TEXT_VIEW,
+        inputType = FormInput.InputType.DATE_PICKER,
         title = "Date of Notification ",
+        min = 0L,
+        max = System.currentTimeMillis(),
         required = false
     )
 

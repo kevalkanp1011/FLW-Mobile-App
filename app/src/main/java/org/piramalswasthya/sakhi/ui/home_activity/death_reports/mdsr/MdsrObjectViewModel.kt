@@ -103,7 +103,6 @@ class MdsrObjectViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 ben = benRepo.getBeneficiary(benId, hhId)!!
-
                 household = benRepo.getBenHousehold(hhId)!!
                 user = database.userDao.getLoggedInUser()!!
                 mdsr = database.mdsrDao.getMDSR(hhId, benId)
@@ -150,7 +149,9 @@ class MdsrObjectViewModel @Inject constructor(
 
     fun setAddress(it: String?, adapter: FormInputAdapter) {
         dataset.address.value.value = it
+        dataset.husbandName.value.value = ben.genDetails?.spouseName
         adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.address))
+        adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.husbandName))
     }
 
     private fun getDateFromLong(dateLong: Long?): String? {
