@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.database.room.dao
 
 import androidx.room.*
+import org.piramalswasthya.sakhi.model.CDRCache
 import org.piramalswasthya.sakhi.model.MDSRCache
 
 @Dao
@@ -14,6 +15,9 @@ interface MdsrDao {
 
     @Query("select count(*) from MDSR")
     suspend fun mdsrCount(): Int
+
+    @Query("SELECT * FROM MDSR WHERE benId =:benId AND hhId = :hhId LIMIT 1")
+    suspend fun getMDSR(hhId: Long, benId: Long): MDSRCache?
 
     @Update
     suspend fun updateMdsrRecord(it: MDSRCache)

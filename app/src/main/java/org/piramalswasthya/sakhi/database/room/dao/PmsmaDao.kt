@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.database.room.dao
 
 import androidx.room.*
+import org.piramalswasthya.sakhi.model.CDRCache
 import org.piramalswasthya.sakhi.model.PMSMACache
 
 @Dao
@@ -14,6 +15,9 @@ interface PmsmaDao {
 
     @Query("select count(*) from PMSMA")
     suspend fun pmsmaCount(): Int
+
+    @Query("SELECT * FROM PMSMA WHERE benId =:benId AND hhId = :hhId LIMIT 1")
+    suspend fun getPmsma(hhId: Long, benId: Long): PMSMACache?
 
     @Update
     abstract fun updatePmsmaRecord(it: PMSMACache)

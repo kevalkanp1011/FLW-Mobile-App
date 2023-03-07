@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
+import android.text.InputType
 import org.piramalswasthya.sakhi.model.FormInput
 import org.piramalswasthya.sakhi.model.PMSMACache
 import java.text.SimpleDateFormat
@@ -28,9 +29,16 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
         title = "MCTS Number/RCH Number",
         required = false
     )
-    private val haveMCPCard = FormInput(
+    val haveMCPCard = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Does the beneficiary have an MCP card",
+        list = arrayOf("Yes", "No"),
+        required = false
+    )
+
+    val givenMCPCard = FormInput(
+        inputType = FormInput.InputType.RADIO,
+        title = ", MCP card is given",
         list = arrayOf("Yes", "No"),
         required = false
     )
@@ -52,25 +60,28 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     private val numANC = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Number of ANCs done before delivery",
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
     private val weight = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Weight (in Kg)",
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        min = 30,
+        max = 200,
+        etMaxLength = 3,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
-    private val systolicBloodPressure = FormInput(
+    val systolicBloodPressure = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Systolic Blood Pressure",
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
-    private val bloodPressure = FormInput(
+    val diastolicBloodPressure = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
-        title = "Blood Pressure",
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        title = "Diastolic Blood Pressure",
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
     private val abdominalCheckUp = FormInput(
@@ -81,7 +92,7 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     private val fetalHRPM = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Fetal Heart Rate per minute",
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
     private val twinPregnancy = FormInput(
@@ -159,30 +170,34 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     private val tetanusToxoid = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Tetanus toxoid ",
-        list = arrayOf("Yes", "No"),
+        list = arrayOf(
+            "First",
+            "Second",
+            "Booster",
+        ),
         required = false
     )
-    private val lastMenstrualPeriod = FormInput(
+    val lastMenstrualPeriod = FormInput(
         inputType = FormInput.InputType.DATE_PICKER,
         title = "Last Menstrual Period ",
         min = 0L,
         max = System.currentTimeMillis(),
         required = false
     )
-    private val expectedDateOfDelivery = FormInput(
+    val expectedDateOfDelivery = FormInput(
         inputType = FormInput.InputType.DATE_PICKER,
         title = "Expected Date of Delivery ",
-        max = System.currentTimeMillis() + 270*24*60*600000L,
+        max = System.currentTimeMillis() + 270 * 24 * 60 * 600000L,
         min = System.currentTimeMillis(),
         required = true
     )
-    private val highriskSymbols = FormInput(
+    val highriskSymbols = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Identification of high risk symbols",
         list = arrayOf("Yes", "No"),
         required = false
     )
-    private val highRiskReason = FormInput(
+    val highRiskReason = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "If yes, select the reason give below and write",
         required = false
@@ -221,7 +236,7 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
             numANC,
             weight,
             systolicBloodPressure,
-            bloodPressure,
+            diastolicBloodPressure,
             abdominalCheckUp,
             fetalHRPM,
             twinPregnancy,
@@ -241,7 +256,6 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
             lastMenstrualPeriod,
             expectedDateOfDelivery,
             highriskSymbols,
-            highRiskReason,
             highRiskPregnant,
             highRiskPregnancyReferred,
             birthPrepAndNutritionAndFamilyPlanning,
@@ -259,7 +273,7 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
         pmsmaCache.numANC = numANC.value.value?.toInt() ?: 0
         pmsmaCache.weight = weight.value.value?.toInt() ?: 0
         pmsmaCache.systolicBloodPressure = systolicBloodPressure.value.value
-        pmsmaCache.bloodPressure = bloodPressure.value.value
+        pmsmaCache.bloodPressure = diastolicBloodPressure.value.value
         pmsmaCache.abdominalCheckUp = abdominalCheckUp.value.value
         pmsmaCache.fetalHRPM = fetalHRPM.value.value?.toInt() ?: 0
         pmsmaCache.twinPregnancy = twinPregnancy.value.value == "Yes"
@@ -275,15 +289,65 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
         pmsmaCache.ultraSound = ultraSound.value.value == "Yes"
         pmsmaCache.ironFolicAcid = ironFolicAcid.value.value == "Yes"
         pmsmaCache.calciumSupplementation = calciumSupplementation.value.value == "Yes"
-        pmsmaCache.tetanusToxoid = tetanusToxoid.value.value == "Yes"
-        pmsmaCache.lastMenstrualPeriod = lastMenstrualPeriod.value.value?.let { getLongFromDate(it) }?: 0L
+        pmsmaCache.tetanusToxoid = tetanusToxoid.value.value
+        pmsmaCache.lastMenstrualPeriod =
+            lastMenstrualPeriod.value.value?.let { getLongFromDate(it) } ?: 0L
         pmsmaCache.expectedDateOfDelivery = getLongFromDate(expectedDateOfDelivery.value.value!!)
         pmsmaCache.highriskSymbols = highriskSymbols.value.value == "Yes"
         pmsmaCache.highRiskReason = highRiskReason.value.value
         pmsmaCache.highRiskPregnant = highRiskPregnant.value.value == "Yes"
         pmsmaCache.highRiskPregnancyReferred = highRiskPregnancyReferred.value.value == "Yes"
-        pmsmaCache.birthPrepAndNutritionAndFamilyPlanning = birthPrepAndNutritionAndFamilyPlanning.value.value == "Yes"
+        pmsmaCache.birthPrepAndNutritionAndFamilyPlanning =
+            birthPrepAndNutritionAndFamilyPlanning.value.value == "Yes"
         pmsmaCache.medicalOfficerSign = medicalOfficerSign.value.value
+    }
+
+    fun setExistingValues(pmsma: PMSMACache?) {
+        mctsNumberOrRchNumber.value.value = pmsma?.mctsNumberOrRchNumber
+        haveMCPCard.value.value = if (pmsma?.haveMCPCard == true) "Yes" else "No"
+        husbandName.value.value = pmsma?.husbandName
+        address.value.value = pmsma?.address
+        mobileNumber.value.value = pmsma?.mobileNumber.toString()
+        numANC.value.value = pmsma?.numANC.toString()
+        weight.value.value = pmsma?.weight.toString()
+        systolicBloodPressure.value.value = pmsma?.systolicBloodPressure
+        diastolicBloodPressure.value.value = pmsma?.bloodPressure
+        abdominalCheckUp.value.value = pmsma?.abdominalCheckUp
+        fetalHRPM.value.value = pmsma?.fetalHRPM.toString()
+        twinPregnancy.value.value = if (pmsma?.twinPregnancy == true) "Yes" else "No"
+        urineAlbumin.value.value = pmsma?.urineAlbumin
+        haemoglobinAndBloodGroup.value.value = pmsma?.haemoglobinAndBloodGroup
+        hiv.value.value = pmsma?.hiv
+        vdrl.value.value = pmsma?.vdrl
+        hbsc.value.value = pmsma?.hbsc
+        malaria.value.value = pmsma?.malaria
+        hivTestDuringANC.value.value = if (pmsma?.hivTestDuringANC == true) "Yes" else "No"
+        swollenCondtion.value.value = if (pmsma?.swollenCondtion == true) "Yes" else "No"
+        bloodSugarTest.value.value = if (pmsma?.bloodSugarTest == true) "Yes" else "No"
+        ultraSound.value.value = if (pmsma?.ultraSound == true) "Yes" else "No"
+        ironFolicAcid.value.value = if (pmsma?.ironFolicAcid == true) "Yes" else "No"
+        calciumSupplementation.value.value =
+            if (pmsma?.calciumSupplementation == true) "Yes" else "No"
+        tetanusToxoid.value.value = pmsma?.tetanusToxoid
+        lastMenstrualPeriod.value.value = getDateFromLong(pmsma?.lastMenstrualPeriod)
+        expectedDateOfDelivery.value.value = getDateFromLong(pmsma?.expectedDateOfDelivery)
+        highriskSymbols.value.value = if (pmsma?.highriskSymbols == true) "Yes" else "No"
+        highRiskReason.value.value = pmsma?.highRiskReason
+        highRiskPregnant.value.value = if (pmsma?.highRiskPregnant == true) "Yes" else "No"
+        highRiskPregnancyReferred.value.value =
+            if (pmsma?.highRiskPregnancyReferred == true) "Yes" else "No"
+        birthPrepAndNutritionAndFamilyPlanning.value.value =
+            if (pmsma?.birthPrepAndNutritionAndFamilyPlanning == true) "Yes" else "No"
+        medicalOfficerSign.value.value = pmsma?.medicalOfficerSign
+    }
+
+    private fun getDateFromLong(dateLong: Long?): String? {
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+        dateLong?.let {
+            return dateFormat.format(dateLong)
+        } ?: run {
+            return null
+        }
     }
 
 

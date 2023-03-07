@@ -37,6 +37,7 @@ class CdrObjectViewModel @Inject constructor(
     private lateinit var ben: BenRegCache
     private lateinit var household: HouseholdCache
     private lateinit var user: UserCache
+    private var cdr: CDRCache? = null
 
     private val _benName = MutableLiveData<String>()
     val benName: LiveData<String>
@@ -50,6 +51,9 @@ class CdrObjectViewModel @Inject constructor(
     private val _state = MutableLiveData(State.IDLE)
     val state: LiveData<State>
         get() = _state
+    private val _exists = MutableLiveData<Boolean>()
+    val exists: LiveData<Boolean>
+        get() = _exists
 
     private val dataset = ChildDeathReviewFormDataset(context)
 
@@ -98,11 +102,12 @@ class CdrObjectViewModel @Inject constructor(
                 ben = benRepo.getBeneficiary(benId, hhId)!!
                 household = benRepo.getBenHousehold(hhId)!!
                 user = database.userDao.getLoggedInUser()!!
+                cdr = database.cdrDao.getCDR(hhId, benId)
             }
-            _benName.value = ben.firstName + ben.lastName
+            _benName.value = "${ben.firstName} ${if(ben.lastName=="NA") "" else ben.lastName}"
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
             _address.value = getAddress(household)
-
+            _exists.value = cdr != null
         }
     }
 
@@ -153,7 +158,6 @@ class CdrObjectViewModel @Inject constructor(
         dataset.firstInformant.value.value = user.userName
         dataset.motherName.value.value = ben.motherName
         dataset.fatherName.value.value = ben.fatherName
-        dataset.firstInformant.value.value = user.userName
         dataset.mobileNumber.value.value = ben.contactNumber.toString()
         dataset.dateOfNotification.value.value = getDateFromLong(System.currentTimeMillis())
         adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.address))
@@ -169,12 +173,35 @@ class CdrObjectViewModel @Inject constructor(
     }
 
     private fun getDateFromLong(dateLong: Long?): String? {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
         dateLong?.let {
             return dateFormat.format(dateLong)
         } ?: run {
             return null
         }
+    }
 
+    fun setExistingValues() {
+        dataset.address.value.value = cdr?.address
+        dataset.childName.value.value = cdr?.childName
+        dataset.gender.value.value = cdr?.gender
+        dataset.age.value.value = "${cdr?.age} ${ben.ageUnit?.name}"
+        dataset.dateOfBirth.value.value = getDateFromLong(cdr?.dateOfBirth)
+        dataset.firstInformant.value.value = cdr?.firstInformant
+        dataset.motherName.value.value = cdr?.motherName
+        dataset.fatherName.value.value = cdr?.fatherName
+        dataset.mobileNumber.value.value = cdr?.mobileNumber.toString()
+        dataset.dateOfNotification.value.value = getDateFromLong(cdr?.dateOfNotification)
+        dataset.childName.value.value = cdr?.childName
+        dataset.visitDate.value.value = getDateFromLong(cdr?.visitDate)
+        dataset.houseNumber.value.value = cdr?.houseNumber
+        dataset.mohalla.value.value = cdr?.mohalla
+        dataset.landmarks.value.value = cdr?.landmarks
+        dataset.pincode.value.value = cdr?.pincode.toString()
+        dataset.landline.value.value = cdr?.landline.toString()
+        dataset.dateOfDeath.value.value = getDateFromLong(cdr?.dateOfDeath)
+        dataset.timeOfDeath.value.value = cdr?.timeOfDeath?.toString()
+        dataset.ashaSign.value.value = cdr?.ashaSign
+        dataset.placeOfDeath.value.value = cdr?.placeOfDeath
     }
 }

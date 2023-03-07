@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.database.room.dao
 
 import androidx.room.*
+import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.CDRCache
 
 @Dao
@@ -14,6 +15,9 @@ interface CdrDao {
 
     @Query("select count(*) from CDR")
     suspend fun cdrCount(): Int
+
+    @Query("SELECT * FROM CDR WHERE benId =:benId AND hhId = :hhId LIMIT 1")
+    suspend fun getCDR(hhId: Long, benId: Long): CDRCache?
 
     @Update
     suspend fun setSynced(it: CDRCache)

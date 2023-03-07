@@ -32,7 +32,7 @@ data class MDSRCache (
     var investigationDate: Long? = System.currentTimeMillis(),
     var actionTaken: Int = 0,
     var blockMOSign: String? = null,
-    var date: Long = 0,
+    var date: Long? = System.currentTimeMillis(),
     var processed: String,
     var createdBy: String? = null,
     var createdDate: Long? = System.currentTimeMillis()
