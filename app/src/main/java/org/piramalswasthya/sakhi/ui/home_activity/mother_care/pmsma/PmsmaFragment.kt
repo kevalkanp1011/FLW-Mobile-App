@@ -13,14 +13,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
 import org.piramalswasthya.sakhi.databinding.FragmentPmsmaBinding
 import org.piramalswasthya.sakhi.ui.home_activity.mother_care.pmsma.PmsmaViewModel.State
 import org.piramalswasthya.sakhi.work.PushToD2DWorker
 import timber.log.Timber
-
 
 @AndroidEntryPoint
 class PmsmaFragment : Fragment() {
@@ -30,24 +32,48 @@ class PmsmaFragment : Fragment() {
     }
 
     private val viewModel: PmsmaViewModel by viewModels()
-
+    private val errorAlert by lazy {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Alert")
+            //.setMessage("Do you want to continue with previous form, or create a new form and discard the previous form?")
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+    }
+    private val consentAlert by lazy {
+        val alertBinding = AlertConsentBinding.inflate(layoutInflater,binding.root,false)
+        alertBinding.textView4.text = getString(R.string.consent_alert_title)
+        alertBinding.checkBox.text = getString(R.string.consent_text)
+        val alertDialog = MaterialAlertDialogBuilder(requireContext())
+            .setView(alertBinding.root)
+            .setCancelable(false)
+            .create()
+        alertBinding.btnNegative.setOnClickListener {
+            alertDialog.dismiss()
+            findNavController().navigateUp()
+        }
+        alertBinding.btnPositive.setOnClickListener {
+            if(alertBinding.checkBox.isChecked) {
+                alertDialog.dismiss()
+                alertBinding.checkBox.isChecked = false
+            }
+            else
+                Toast.makeText(context,"Please tick the checkbox", Toast.LENGTH_SHORT).show()
+        }
+        alertDialog
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Timber.d("onCreateView called!!")
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.pmsmaForm.rvInputForm.apply {
-            val adapter = FormInputAdapter()
-            this.adapter = adapter
-            lifecycleScope.launch {
-                adapter.submitList(viewModel.getFirstPage(adapter))
-            }
-        }
-
+        Timber.d("onViewCreated called!!")
         viewModel.benName.observe(viewLifecycleOwner) {
             binding.tvBenName.text = it
         }
@@ -60,6 +86,34 @@ class PmsmaFragment : Fragment() {
         }
         binding.btnPmsmaSubmit.setOnClickListener {
             if (validate()) viewModel.submitForm()
+        }
+        viewModel.exists.observe(viewLifecycleOwner) {exists ->
+            Timber.d("observing exists : $exists")
+            val adapter = FormInputAdapter(isEnabled = !exists)
+            binding.pmsmaForm.rvInputForm.adapter = adapter
+            if (exists) {
+                binding.btnPmsmaSubmit.visibility = View.GONE
+//                binding.cdrForm.rvInputForm.apply {
+//                    isClickable = false
+//                    isFocusable = false
+//                }
+                viewModel.setExistingValues()
+            }
+            else {
+                consentAlert.show()
+                viewModel.address.observe(viewLifecycleOwner) {
+                    viewModel.setAddress(it, adapter)
+                }
+            }
+            lifecycleScope.launch {
+                adapter.submitList(viewModel.getFirstPage(adapter))
+            }
+        }
+        viewModel.popupString.observe(viewLifecycleOwner){
+            errorAlert.setMessage(it)
+            errorAlert.show()
+            viewModel.resetPopUpString()
+
         }
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
@@ -93,6 +147,7 @@ class PmsmaFragment : Fragment() {
             }
         }
 
+        Timber.d("onViewCreated completed!!")
     }
 
     companion object {

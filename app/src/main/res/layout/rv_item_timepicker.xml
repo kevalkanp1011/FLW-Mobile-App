@@ -28,10 +28,10 @@
                 android:id="@+id/et"
                 android:focusable="false"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/ic_calendar"
+                android:layout_height="match_parent"
                 android:text="@{form.value}"
                 android:singleLine="true"
+                android:drawableEnd="@drawable/ic_clock"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
 
         </com.google.android.material.textfield.TextInputLayout>

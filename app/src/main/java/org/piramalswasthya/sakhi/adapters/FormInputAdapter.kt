@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.adapters
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.text.Editable
 import android.text.InputFilter
 import android.text.InputFilter.AllCaps
@@ -12,7 +13,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.configuration.DecimalDigitsInputFilter
 import org.piramalswasthya.sakhi.configuration.FormEditTextDefaultInputFilter
 import org.piramalswasthya.sakhi.databinding.*
 import org.piramalswasthya.sakhi.model.FormInput
@@ -20,7 +20,7 @@ import org.piramalswasthya.sakhi.model.FormInput.InputType.*
 import timber.log.Timber
 import java.util.*
 
-class FormInputAdapter(private val imageClickListener: ImageClickListener? = null) :
+class FormInputAdapter(private val imageClickListener: ImageClickListener? = null, private val isEnabled: Boolean = true) :
     ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBack) {
     object FormInputDiffCallBack : DiffUtil.ItemCallback<FormInput>() {
         override fun areItemsTheSame(oldItem: FormInput, newItem: FormInput) =
@@ -41,7 +41,9 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
             }
         }
 
-        fun bind(item: FormInput) {
+        fun bind(item: FormInput, isEnabled: Boolean) {
+            binding.et.isEnabled = isEnabled
+
             binding.form = item
             //binding.et.setText(item.value.value)
             val textWatcher = object : TextWatcher {
@@ -200,8 +202,8 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
         }
 
         fun bind(
-            item: FormInput
-        ) {
+            item: FormInput, isEnabled: Boolean) {
+            binding.rg.isEnabled = isEnabled
             binding.invalidateAll()
             binding.form = item
             if (item.errorText != null)
@@ -249,8 +251,8 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
         }
 
         fun bind(
-            item: FormInput
-        ) {
+            item: FormInput, isEnabled: Boolean) {
+            binding.et.isEnabled = isEnabled
             val today = Calendar.getInstance()
             var thisYear = today.get(Calendar.YEAR)
             var thisMonth = today.get(Calendar.MONTH)
@@ -295,36 +297,33 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
         }
 
         fun bind(
-            item: FormInput
+            item: FormInput, isEnabled: Boolean
         ) {
-            val today = Calendar.getInstance()
-            var thisYear = today.get(Calendar.YEAR)
-            var thisMonth = today.get(Calendar.MONTH)
-            var thisDay = today.get(Calendar.DAY_OF_MONTH)
             binding.form = item
-            item.errorText?.also { binding.tilEditText.error = it }
-                ?: run { binding.tilEditText.error = null }
+            binding.et.isEnabled = isEnabled
             binding.et.setOnClickListener {
-                item.value.value?.let { value ->
-                    thisYear = value.substring(6).toInt()
-                    thisMonth = value.substring(3, 5).trim().toInt() - 1
-                    thisDay = value.substring(0, 2).trim().toInt()
+                    // TODO Auto-generated method stub
+                val hour: Int
+                val minute: Int
+                if(item.value.value==null) {
+                    val currentTime = Calendar.getInstance();
+                    hour = currentTime.get(Calendar.HOUR_OF_DAY);
+                    minute = currentTime.get(Calendar.MINUTE);
+                }else{
+                    hour = item.value.value!!.substringBefore(":").toInt()
+                    minute = item.value.value!!.substringAfter(":").toInt()
+                    Timber.d("Time picker hour min : $hour $minute")
                 }
-                val datePickerDialog = DatePickerDialog(
-                    it.context,
-                    { _, year, month, day ->
+                    val mTimePicker = TimePickerDialog(it.context, {
+                            _, hourOfDay, minuteOfHour ->
                         item.value.value =
-                            "${if (day > 9) day else "0$day"}-${if (month > 8) month + 1 else "0${month + 1}"}-$year"
+                            "$hourOfDay:$minuteOfHour"
                         binding.invalidateAll()
-                    }, thisYear, thisMonth, thisDay
-                )
-                item.errorText = null
-                binding.tilEditText.error = null
-                datePickerDialog.datePicker.maxDate = item.max ?: 0
-                datePickerDialog.datePicker.minDate = item.min ?: 0
-                datePickerDialog.datePicker.touchables[0].performClick()
-                datePickerDialog.show()
-            }
+
+                }, hour, minute, false );
+                    mTimePicker.setTitle("Select Time");
+                    mTimePicker.show();
+                }
             binding.executePendingBindings()
 
         }
@@ -395,14 +394,14 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         when (item.inputType) {
-            EDIT_TEXT -> (holder as EditTextInputViewHolder).bind(item)
+            EDIT_TEXT -> (holder as EditTextInputViewHolder).bind(item, isEnabled)
             DROPDOWN -> (holder as DropDownInputViewHolder).bind(item)
-            RADIO -> (holder as RadioInputViewHolder).bind(item)
-            DATE_PICKER -> (holder as DatePickerInputViewHolder).bind(item)
+            RADIO -> (holder as RadioInputViewHolder).bind(item, isEnabled)
+            DATE_PICKER -> (holder as DatePickerInputViewHolder).bind(item, isEnabled)
             TEXT_VIEW -> (holder as TextViewInputViewHolder).bind(item)
             IMAGE_VIEW -> (holder as ImageViewInputViewHolder).bind(item, imageClickListener)
             CHECKBOXES -> (holder as CheckBoxesInputViewHolder).bind(item)
-            TIME_PICKER -> (holder as TimePickerInputViewHolder).bind(item)
+            TIME_PICKER -> (holder as TimePickerInputViewHolder).bind(item, isEnabled)
         }
     }
 

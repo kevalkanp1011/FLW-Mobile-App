@@ -8,12 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentMdsrObjectBinding
@@ -40,26 +42,34 @@ class MdsrObjectFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.mdsrForm.inputForm.rvInputForm.apply {
-            val adapter = FormInputAdapter()
-            this.adapter = adapter
-            lifecycleScope.launch{
-                adapter.submitList(viewModel.getFirstPage(adapter))
-            }
-        }
-
         viewModel.benName.observe(viewLifecycleOwner) {
             binding.tvBenName.text = it
         }
         viewModel.benAgeGender.observe(viewLifecycleOwner) {
             binding.tvAgeGender.text = it
         }
-        viewModel.address.observe(viewLifecycleOwner) {
-            val adapter = binding.mdsrForm.inputForm.rvInputForm.adapter as FormInputAdapter
-            viewModel.setAddress(it, adapter)
-        }
         binding.btnMdsrSubmit.setOnClickListener{
             if(validate()) viewModel.submitForm()
+        }
+        viewModel.exists.observe(viewLifecycleOwner) { exists ->
+            val adapter = FormInputAdapter(isEnabled = !exists)
+            binding.mdsrForm.inputForm.rvInputForm.adapter = adapter
+            if (exists) {
+                binding.btnMdsrSubmit.visibility = View.GONE
+//                binding.mdsrForm.inputForm.rvInputForm.apply {
+//                    isClickable = false
+//                    isFocusable = false
+//                }
+                viewModel.setExistingValues()
+            } else {
+
+                viewModel.address.observe(viewLifecycleOwner) {
+                    viewModel.setAddress(it, adapter)
+                }
+            }
+            lifecycleScope.launch{
+                adapter.submitList(viewModel.getFirstPage(adapter))
+            }
         }
         viewModel.state.observe(viewLifecycleOwner) {
             when(it) {

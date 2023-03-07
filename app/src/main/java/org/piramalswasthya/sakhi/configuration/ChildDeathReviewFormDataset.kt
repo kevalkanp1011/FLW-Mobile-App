@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
+import android.text.InputType
 import android.widget.LinearLayout
 import org.piramalswasthya.sakhi.model.CDRCache
 import org.piramalswasthya.sakhi.model.FormInput
@@ -39,9 +40,11 @@ class ChildDeathReviewFormDataset(context: Context, private val childDeathReview
         cdrCache.landline = landline.value.value?.let { it.toLong() } ?: 0L
         cdrCache.mobileNumber = mobileNumber.value.value?.let { it.toLong() } ?: 0L
         cdrCache.dateOfDeath = getLongFromDate(dateOfDeath.value.value!!)
+        cdrCache.timeOfDeath = timeOfDeath.value.value
         cdrCache.placeOfDeath = placeOfDeath.value.value
         cdrCache.firstInformant = firstInformant.value.value
         cdrCache.ashaSign = ashaSign.value.value
+        cdrCache.pincode = pincode.value.value?.toInt()?:0
         cdrCache.dateOfNotification = getLongFromDate(dateOfNotification.value.value!!)
     }
 
@@ -60,7 +63,7 @@ class ChildDeathReviewFormDataset(context: Context, private val childDeathReview
         title = "Age",
         required = false
     )
-    private val visitDate = FormInput(
+    val visitDate = FormInput(
         inputType = FormInput.InputType.DATE_PICKER,
         min = 0L,
         max = System.currentTimeMillis(),
@@ -87,29 +90,35 @@ class ChildDeathReviewFormDataset(context: Context, private val childDeathReview
         title = "Address",
         required = false
     )
-    private val houseNumber = FormInput(
+    val houseNumber = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "House number",
         required = false
     )
-    private val mohalla = FormInput(
+    val mohalla = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Mohalla/Colony ",
         required = false
     )
-    private val landmarks = FormInput(
+    val landmarks = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Landmarks, if any ",
         required = false
     )
-    private val pincode = FormInput(
+    val pincode = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Pincode",
+        etMaxLength = 6,
+        min=100000,
+        max=999999,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
-    private val landline = FormInput(
+    val landline = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Landline",
+        etMaxLength = 12,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
     val mobileNumber = FormInput(
@@ -117,15 +126,15 @@ class ChildDeathReviewFormDataset(context: Context, private val childDeathReview
         title = "Mobile number",
         required = false
     )
-    private val dateOfDeath = FormInput(
+    val dateOfDeath = FormInput(
         inputType = FormInput.InputType.DATE_PICKER,
         title = "Date of death",
         min = 0L,
         max = System.currentTimeMillis(),
         required = true
     )
-    private val timeOfDeath = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+    val timeOfDeath = FormInput(
+        inputType = FormInput.InputType.TIME_PICKER,
         title = "Time",
         required = false
     )
@@ -146,7 +155,7 @@ class ChildDeathReviewFormDataset(context: Context, private val childDeathReview
         title = "Name of First Informant ",
         required = false
     )
-    private val ashaSign = FormInput(
+    val ashaSign = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Signature/Name of ASHA",
         required = false

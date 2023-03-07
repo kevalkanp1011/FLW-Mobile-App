@@ -30,6 +30,8 @@ data class PMSMACache(
 
     var haveMCPCard: Boolean = false,
 
+    var givenMCPCard : Boolean? = null,
+
     var husbandName: String? = null,
 
     var address: String? = null,
@@ -74,7 +76,7 @@ data class PMSMACache(
 
     var calciumSupplementation: Boolean? = null,
 
-    var tetanusToxoid: Boolean? = null,
+    var tetanusToxoid: String? = null,
 
     var lastMenstrualPeriod: Long = 0,
 
@@ -153,7 +155,7 @@ data class PMSMACache(
             selectTheReasonGivenBelowLmp = highRiskReason,
             signatureOfMedicalOfficer = medicalOfficerSign,
             swallonCondition = if(swollenCondtion==true) "1" else "2",
-            teatnousToxoid = if(tetanusToxoid==true) "1" else "2",
+            teatnousToxoid = tetanusToxoid,
             ultrasound = if(ultraSound==true) "1" else "2",
             updatedBy = user.userName,
             updatedDate = System.currentTimeMillis(),

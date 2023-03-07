@@ -40,27 +40,36 @@ class CdrObjectFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.cdrForm.rvInputForm.apply {
-            val adapter = FormInputAdapter()
-            this.adapter = adapter
-            lifecycleScope.launch {
-                adapter.submitList(viewModel.getFirstPage(adapter))
-            }
-        }
-
         viewModel.benName.observe(viewLifecycleOwner) {
             binding.tvBenName.text = it
         }
         viewModel.benAgeGender.observe(viewLifecycleOwner) {
             binding.tvAgeGender.text = it
         }
-        viewModel.address.observe(viewLifecycleOwner) {
-            val adapter = binding.cdrForm.rvInputForm.adapter as FormInputAdapter
-            viewModel.setAddress(it, adapter)
-        }
         binding.btnCdrSubmit.setOnClickListener {
             if (validate()) viewModel.submitForm()
         }
+        viewModel.exists.observe(viewLifecycleOwner) {exists ->
+            val adapter = FormInputAdapter(isEnabled = !exists)
+            binding.cdrForm.rvInputForm.adapter = adapter
+            if (exists) {
+                binding.btnCdrSubmit.visibility = View.GONE
+//                binding.cdrForm.rvInputForm.apply {
+//                    isClickable = false
+//                    isFocusable = false
+//                }
+                viewModel.setExistingValues()
+            }
+            else {
+                viewModel.address.observe(viewLifecycleOwner) {
+                    viewModel.setAddress(it, adapter)
+                }
+            }
+            lifecycleScope.launch {
+                adapter.submitList(viewModel.getFirstPage(adapter))
+            }
+        }
+
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
                 CdrObjectViewModel.State.LOADING -> {

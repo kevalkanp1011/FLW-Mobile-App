@@ -14,6 +14,8 @@ import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.MdsrRepo
 import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,6 +39,7 @@ class MdsrObjectViewModel @Inject constructor(
     private lateinit var ben: BenRegCache
     private lateinit var household: HouseholdCache
     private lateinit var user: UserCache
+    private var mdsr: MDSRCache? = null
 
     private val _benName = MutableLiveData<String>()
     val benName: LiveData<String>
@@ -50,6 +53,9 @@ class MdsrObjectViewModel @Inject constructor(
     private val _state = MutableLiveData(State.IDLE)
     val state: LiveData<State>
         get() = _state
+    private val _exists = MutableLiveData<Boolean>()
+    val exists: LiveData<Boolean>
+        get() = _exists
 
     private val dataset = MDSRFormDataset(context)
 
@@ -85,6 +91,7 @@ class MdsrObjectViewModel @Inject constructor(
         dataset.mapValues(mdsrCache)
         viewModelScope.launch {
             val saved = mdsrRepo.saveMdsrData(mdsrCache)
+            Timber.d("mdsr saved: $mdsrCache")
             if (saved)
                 _state.value = State.SUCCESS
             else
@@ -99,10 +106,12 @@ class MdsrObjectViewModel @Inject constructor(
 
                 household = benRepo.getBenHousehold(hhId)!!
                 user = database.userDao.getLoggedInUser()!!
+                mdsr = database.mdsrDao.getMDSR(hhId, benId)
             }
             _benName.value = ben.firstName + ben.lastName
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
             _address.value = getAddress(household)
+            _exists.value = mdsr != null
         }
     }
 
@@ -143,4 +152,28 @@ class MdsrObjectViewModel @Inject constructor(
         dataset.address.value.value = it
         adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.address))
     }
+
+    private fun getDateFromLong(dateLong: Long?): String? {
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+        dateLong?.let {
+            return dateFormat.format(dateLong)
+        } ?: run {
+            return null
+        }
+    }
+
+    fun setExistingValues() {
+        Timber.d("saved mdsr: $mdsr")
+        dataset.dateOfDeath.value.value = getDateFromLong(mdsr?.dateOfDeath)
+        dataset.address.value.value = mdsr?.address
+        dataset.husbandName.value.value = mdsr?.husbandName
+        dataset.causeOfDeath.value.value = if(mdsr?.causeOfDeath == 1) "Maternal" else "Non-maternal"
+        dataset.reasonOfDeath.value.value = mdsr?.reasonOfDeath
+        dataset.investigationDate.value.value = getDateFromLong(mdsr?.investigationDate)
+        dataset.actionTaken.value.value = if(mdsr?.actionTaken == 1) "Yes" else "No"
+        dataset.blockMOSign.value.value = mdsr?.blockMOSign
+        dataset.date.value.value = getDateFromLong(mdsr?.date)
+    }
+
+
 }

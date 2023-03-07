@@ -34,9 +34,9 @@ class MDSRFormDataset(context: Context) {
         mdsrCache.causeOfDeath = if(causeOfDeath.value.value == "Maternal") 1 else 2
         mdsrCache.reasonOfDeath = reasonOfDeath.value.value
         mdsrCache.actionTaken = if(actionTaken.value.value == "Yes") 1 else 2
-        mdsrCache.investigationDate = getLongFromDate(investigationDate.value.value!!)
+        mdsrCache.investigationDate = investigationDate.value.value?.let { getLongFromDate(it) }
         mdsrCache.blockMOSign = blockMOSign.value.value
-        mdsrCache.date = getLongFromDate(date.value.value!!)
+        mdsrCache.date = date.value.value?.let { getLongFromDate(it) }
         mdsrCache.createdDate = System.currentTimeMillis()
     }
 
@@ -47,7 +47,7 @@ class MDSRFormDataset(context: Context) {
         //TODO(SETUP THE VALUES)
     }
 
-    private val dateOfDeath = FormInput(
+    val dateOfDeath = FormInput(
         inputType = FormInput.InputType.DATE_PICKER,
         title = "Date of death ",
         min = 0L,
@@ -59,7 +59,7 @@ class MDSRFormDataset(context: Context) {
         title = "Address",
         required = false
     )
-    private val husbandName = FormInput(
+    val husbandName = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         allCaps = true,
         etMaxLength = 50,
@@ -78,26 +78,26 @@ class MDSRFormDataset(context: Context) {
         title = "Specify Reason",
         required = true
     )
-    private val investigationDate = FormInput(
+    val investigationDate = FormInput(
         inputType = FormInput.InputType.DATE_PICKER,
         title = "Date of field investigation",
         min = 0L,
         max = System.currentTimeMillis(),
         required = false
     )
-    private val actionTaken = FormInput(
+    val actionTaken = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Action Take",
         required = false,
         orientation = LinearLayout.VERTICAL,
         list = arrayOf("Yes", "No")
     )
-    private val blockMOSign = FormInput(
+    val blockMOSign = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Signature of MO I/C of the block",
         required = false
     )
-    private val date = FormInput(
+    val date = FormInput(
         inputType = FormInput.InputType.DATE_PICKER,
         min = 0L,
         max = System.currentTimeMillis(),

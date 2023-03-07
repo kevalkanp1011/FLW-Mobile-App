@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
@@ -12,6 +14,7 @@ import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.PmsmaRepo
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -38,6 +41,7 @@ class PmsmaViewModel @Inject constructor(
     private lateinit var ben: BenRegCache
     private lateinit var household: HouseholdCache
     private lateinit var user: UserCache
+    private var pmsma: PMSMACache? = null
 
     private val _benName = MutableLiveData<String>()
     val benName: LiveData<String>
@@ -51,6 +55,13 @@ class PmsmaViewModel @Inject constructor(
     private val _state = MutableLiveData(State.IDLE)
     val state: LiveData<State>
         get() = _state
+    private val _exists = MutableLiveData<Boolean>()
+    val exists: LiveData<Boolean>
+        get() = _exists
+
+    private val _popupString = MutableLiveData<String?>(null)
+    val popupString: LiveData<String?>
+        get() = _popupString
 
     private val form = PMSMAFormDataset(context)
 
@@ -58,10 +69,11 @@ class PmsmaViewModel @Inject constructor(
         causeField: FormInput,
         effectField: FormInput,
         value: String?,
+        triggerValue : String,
         adapter: FormInputAdapter
     ) {
         value?.let {
-            if (it == "Hospital") {
+            if (it == triggerValue) {
                 val list = adapter.currentList.toMutableList()
                 if (!list.contains(effectField)) {
                     list.add(
@@ -94,17 +106,30 @@ class PmsmaViewModel @Inject constructor(
     }
 
     init {
+        Timber.d("init called! ")
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 ben = benRepo.getBeneficiary(benId, hhId)!!
                 household = benRepo.getBenHousehold(hhId)!!
                 user = database.userDao.getLoggedInUser()!!
+                Timber.d("init beofre assigning pmsma ! ")
+                pmsma = database.pmsmaDao.getPmsma(hhId,benId)
+                Timber.d("init after assigning pmsma ! ")
+
             }
+            Timber.d("init after IO! ")
             _benName.value = ben.firstName + ben.lastName
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
             _address.value = getAddress(household)
+            _exists.value = pmsma != null
+           if(pmsma==null){
+               form.lastMenstrualPeriod.value.value = getDateFromLong(ben.genDetails?.lastMenstrualPeriod)
+               form.expectedDateOfDelivery.value.value = getDateFromLong(ben.genDetails?.expectedDateOfDelivery)
+           }
 
+            Timber.d("init ended! ")
         }
+
     }
 
     private fun getAddress(household: HouseholdCache): String {
@@ -135,7 +160,51 @@ class PmsmaViewModel @Inject constructor(
 
 
     suspend fun getFirstPage(adapter: FormInputAdapter): List<FormInput> {
+        Timber.d("started getFirstPage")
+        viewModelScope.launch {
+            launch{
+                form.haveMCPCard.value.collect {
+                    it?.let {
+                        toggleFieldOnTrigger(
+                            form.haveMCPCard,
+                            form.givenMCPCard,
+                            it,
+                            "Yes",
+                            adapter
+                        )
+                    }
+                }
+            }
+            launch {
+                form.highriskSymbols.value.collect{
+                    it?.let {
+                        toggleFieldOnTrigger(
+                            form.highriskSymbols,
+                            form.highRiskReason,
+                            it,
+                            "Yes",
+                            adapter
+                        )
+                    }
+                }
+            }
+            launch {
+                form.systolicBloodPressure.value.combine(form.diastolicBloodPressure.value){
+                    sysString, diaString ->
+                    if(sysString!=null && diaString!=null) {
+                        val sys = sysString.toInt()
+                        val dia = diaString.toInt()
+                        ((sys < 90 || sys > 140) ||(dia <60 || dia >90))
+                    }
+                    else false
+                }.collect{
+                    if(it)
+                        _popupString.value = "HRP Case, please visit the nearest HWC or call 104"
+                }
+            }
 
+        }
+        Timber.d("ending getFirstPage")
         return form.firstPage
     }
 
@@ -148,5 +217,14 @@ class PmsmaViewModel @Inject constructor(
             return null
         }
 
+    }
+
+    fun setExistingValues() {
+        form.setExistingValues(pmsma)
+
+    }
+
+    fun resetPopUpString() {
+        _popupString.value = null
     }
 }
