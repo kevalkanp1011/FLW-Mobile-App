@@ -4,7 +4,6 @@ import android.content.Context
 import android.text.InputType
 import android.widget.LinearLayout
 import id.zelory.compressor.Compressor
-import id.zelory.compressor.constraint.quality
 import id.zelory.compressor.constraint.size
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.piramalswasthya.sakhi.database.room.SyncState
@@ -323,6 +322,7 @@ class BenGenRegFormDataset(private val context: Context) {
         inputType = RADIO,
         title = "Has Aadhar Number",
         list = arrayOf("Yes", "No"),
+
         required = false
     )
 
@@ -331,6 +331,9 @@ class BenGenRegFormDataset(private val context: Context) {
         title = "Enter Aadhar Number",
         required = true,
         etMaxLength = 12,
+        min = 100000000000L,
+        max = 999999999999L,
+        isMobileNumber = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
     )
 
@@ -339,6 +342,7 @@ class BenGenRegFormDataset(private val context: Context) {
         title = "RCH ID",
         required = false,
         etMaxLength = 12,
+        isMobileNumber = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
 
     )
@@ -586,7 +590,8 @@ class BenGenRegFormDataset(private val context: Context) {
     }
 
 
-    fun getBenForSecondPage(): BenRegCache {
+    suspend fun getBenForSecondPage(userId: Int, hhId: Long): BenRegCache {
+        getBenForFirstPage(userId,hhId)
 
         ben?.apply {
             this.hasAadhar = when (this@BenGenRegFormDataset.hasAadharNo.value.value) {
@@ -606,7 +611,8 @@ class BenGenRegFormDataset(private val context: Context) {
 
     }
 
-    fun getBenForThirdPage(): BenRegCache {
+    suspend fun getBenForThirdPage(userId: Int, hhId: Long): BenRegCache {
+        getBenForSecondPage(userId, hhId)
         ben?.apply {
             this.genDetails?.apply {
                 reproductiveStatus = this@BenGenRegFormDataset.reproductiveStatus.value.value

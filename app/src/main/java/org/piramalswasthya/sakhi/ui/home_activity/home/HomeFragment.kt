@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -12,8 +13,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.adapters.HomePagerAdapter
 import org.piramalswasthya.sakhi.adapters.IconGridAdapter
 import org.piramalswasthya.sakhi.configuration.IconDataset
 import org.piramalswasthya.sakhi.databinding.FragmentHomeBinding
@@ -42,7 +45,9 @@ class HomeFragment : Fragment() {
             .create()
     }
 
-    private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
+    private var _binding : FragmentHomeBinding? = null
+    private val binding : FragmentHomeBinding
+    get() = _binding!!
     private val viewModel: HomeViewModel by viewModels({ requireActivity() })
     private val onBackPressedCallback by lazy {
         object : OnBackPressedCallback(true) {
@@ -66,12 +71,15 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         numViewCopies++
+        _binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as HomeActivity?)?.setHomeMenuItemVisibility(false)
         Timber.d("onViewCreated() called! $numViewCopies")
         if (!viewModel.isLocationSet()) {
             findNavController().navigate(HomeFragmentDirections.actionNavHomeToServiceTypeFragment())
@@ -86,8 +94,7 @@ class HomeFragment : Fragment() {
 
         if (viewModel.isLocationSet())
             binding.etSelectVillage.setText(viewModel.getLocationRecord().village)
-        setUpHomeIconRvAdapter()
-
+        setUpViewPager()
         WorkManager.getInstance(requireContext())
             .getWorkInfosForUniqueWorkLiveData(PullFromAmritFullLoadWorker.name)
             .observe(viewLifecycleOwner) {
@@ -105,24 +112,32 @@ class HomeFragment : Fragment() {
 
     }
 
+    private fun setUpViewPager() {
+
+        binding.vp2Home.adapter = HomePagerAdapter(this)
+        TabLayoutMediator(binding.tlHomeViewpager,binding.vp2Home) { tab, position ->
+            tab.text = when (position) {
+                0 -> "Scheduler"
+                1 -> "Home"
+                else -> "NA"
+            }
+        }.attach()
+    }
+
     override fun onStart() {
         super.onStart()
         activity?.let{
             (it as HomeActivity).setLogo(R.drawable.ic_home)
         }
+        binding.vp2Home.setCurrentItem(1,false)
     }
 
-    private fun setUpHomeIconRvAdapter() {
-        val rvLayoutManager = GridLayoutManager(context, 3)
-        binding.rvHomeIcon.rvIconGrid.layoutManager = rvLayoutManager
-        val rvAdapter = IconGridAdapter(IconGridAdapter.GridIconClickListener {
-            findNavController().navigate(it)
-        })
-        binding.rvHomeIcon.rvIconGrid.adapter = rvAdapter
-        viewModel.iconCount.observe(viewLifecycleOwner) {
-            rvAdapter.submitList(IconDataset.getIconDataset(it[0]))
-        }
+    override fun onStop() {
+        super.onStop()
+        (activity as HomeActivity?)?.setHomeMenuItemVisibility(true)
     }
+
+
 
 
     override fun onDestroyView() {
@@ -133,6 +148,7 @@ class HomeFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        _binding  =null
         numCopies--
         Timber.d("onDestroy() called! $numCopies")
 

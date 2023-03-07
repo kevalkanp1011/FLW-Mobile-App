@@ -66,7 +66,7 @@ interface BenDao {
     @Query("SELECT b.* FROM BEN_BASIC_CACHE b LEFT OUTER JOIN CBAC c ON b.benId=c.benId where b.age>30 and c.benId IS NULL")
     fun getAllNCDEligibleList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT b.* FROM BEN_BASIC_CACHE b INNER JOIN CBAC c on b.benId==c.benId WHERE c.total_score > 4")
+    @Query("SELECT b.* FROM BEN_BASIC_CACHE b INNER JOIN CBAC c on b.benId==c.benId WHERE c.total_score >= 4")
     fun getAllNCDPriorityList(): LiveData<List<BenBasicCache>>
 
     @Query("SELECT b.* FROM BEN_BASIC_CACHE b INNER JOIN CBAC c on b.benId==c.benId WHERE c.total_score <= 4")

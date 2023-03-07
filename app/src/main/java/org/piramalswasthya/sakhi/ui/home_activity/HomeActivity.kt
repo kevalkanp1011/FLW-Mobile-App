@@ -37,6 +37,7 @@ import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
 import org.piramalswasthya.sakhi.work.PullFromAmritFullLoadWorker
 import org.piramalswasthya.sakhi.work.PushToAmritWorker
+import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -77,6 +78,8 @@ class HomeActivity : AppCompatActivity() {
         navHostFragment.navController
     }
 
+    var showMenuHome : Boolean = false
+
     override fun attachBaseContext(newBase: Context) {
         val pref = EntryPointAccessors.fromApplication(
             newBase,
@@ -104,17 +107,32 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setUpMenu() {
+
         val menu = object : MenuProvider{
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                TODO("Not yet implemented")
+                menuInflater.inflate(R.menu.home_toolbar, menu)
+                val homeMenu = menu.findItem(R.id.toolbar_menu_home)
+                homeMenu.isVisible = showMenuHome
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                TODO("Not yet implemented")
+                when(menuItem.itemId){
+                    R.id.toolbar_menu_home -> {
+                        navController.popBackStack(R.id.homeFragment, false)
+                        return true
+                    }
+                }
+                return false
             }
 
         }
+        addMenuProvider(menu)
 
+    }
+
+    fun setHomeMenuItemVisibility(show  : Boolean){
+        showMenuHome = show
+        invalidateOptionsMenu()
     }
 
     private fun setUpFullLoadPullWorker() {

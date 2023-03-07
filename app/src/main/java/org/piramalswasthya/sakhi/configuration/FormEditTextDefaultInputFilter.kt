@@ -6,7 +6,7 @@ import java.util.regex.Pattern
 
 object FormEditTextDefaultInputFilter  : InputFilter{
 
-    private val regex = Pattern.compile("[A-Z ]+")
+    private val pattern = Pattern.compile("[A-Z ]+")
 
     override fun filter(
         source: CharSequence,
@@ -15,13 +15,15 @@ object FormEditTextDefaultInputFilter  : InputFilter{
         dest: Spanned?,
         dstart: Int,
         dend: Int
-    ): CharSequence {
-        if (source == "") {
-            return source;
-        }
-        if (source.toString().matches(regex.toRegex())) {
-            return source;
-        }
-        return "";
+    ): CharSequence? {
+
+        return if(source.matches(pattern.toRegex())) null else ""
+//        if (source == "") {
+//            return source;
+//        }
+//        val matcher = pattern.matcher(source)
+//        return if (matcher.matches()) {
+//            source
+//        } else matcher.group(0)
     }
 }
