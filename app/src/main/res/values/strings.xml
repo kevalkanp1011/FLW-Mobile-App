@@ -274,7 +274,7 @@
     <string name="cbac_forget_names">Forgetting the names of your near ones or your own home address </string>
 
 
-                <!--Valdiateion mesages-->
+    <!--Valdiateion mesages-->
 
     <string name="cbac_validation_your_age">"Please Select age"</string>
     <string name="cbac_validation_smoke">"Please select the consumption of smoke and smokeless products"</string>
@@ -330,9 +330,6 @@
     <string name="cbac_validation_ox">Please select Occupational exposure </string>
     <string name="cbac_validation_li">Please select Little Interest field! </string>
     <string name="cbac_validation_fd">Please select Feeling down field! </string>
-
-
-
 
 
     <!-- 32 33 MDSR-->
@@ -396,9 +393,10 @@
     <string-array name="cbac_type_Cooking_fuel">
         <item>Firewood</item>
         <item>Crop Residue</item>
-        <item>Cow dung cake</item>
+        <item>Gobar Gas</item>
         <item>Coal</item>
-        <item>Kerosene</item>
+        <item>Kerosene oil</item>
+        <item>LPG</item>
     </string-array>
     <string-array name="cbac_type_occupational_exposure">
         <item>Crop residue burning</item>
@@ -576,6 +574,8 @@
     <string name="nbr_child_corticosteroid">Corticosteroid given to mother at labor</string>
     <string name="nbr_child_cry_imm_birth">Baby cried immediately at birth</string>
     <string name="nbr_child_defect_at_birth">Any Defect Seen at Birth</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

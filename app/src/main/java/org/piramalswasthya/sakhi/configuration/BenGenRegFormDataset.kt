@@ -322,6 +322,7 @@ class BenGenRegFormDataset(private val context: Context) {
         inputType = RADIO,
         title = "Has Aadhar Number",
         list = arrayOf("Yes", "No"),
+
         required = false
     )
 
@@ -330,6 +331,9 @@ class BenGenRegFormDataset(private val context: Context) {
         title = "Enter Aadhar Number",
         required = true,
         etMaxLength = 12,
+        min = 100000000000L,
+        max = 999999999999L,
+        isMobileNumber = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
     )
 
@@ -338,6 +342,7 @@ class BenGenRegFormDataset(private val context: Context) {
         title = "RCH ID",
         required = false,
         etMaxLength = 12,
+        isMobileNumber = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
 
     )

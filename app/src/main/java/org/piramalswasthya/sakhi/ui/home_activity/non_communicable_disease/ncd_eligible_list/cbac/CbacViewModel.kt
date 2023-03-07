@@ -201,8 +201,8 @@ class CbacViewModel @Inject constructor(
     fun setFh(i: Int) {
         cbac.cbac_familyhistory_posi = i + 1
         _raFhScore.value = when (i) {
-            0 -> 0
-            1 -> 1
+            0 -> 2
+            1 -> 0
             else -> 0
         }
         _raTotalScore.value =

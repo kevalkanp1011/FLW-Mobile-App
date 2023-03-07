@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.home_activity.home.SchedulerFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:id="@+id/newLl">
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:hint="SELECT DATE">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_mainDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:drawablePadding="10dp"
+                        android:focusableInTouchMode="false"
+                        android:imeOptions="actionNext"
+                        android:focusable="false"
+                        android:drawableEnd="@drawable/ic_calendar"
+                        android:paddingLeft="7dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/opensans_regular" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2.5dp"
+                android:orientation="vertical"
+                android:id="@+id/pendingLl"
+                android:background="@drawable/profile_bgm"
+                android:layout_weight="5">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_margin="15dp"
+                        android:id="@+id/pendingIv"
+                        android:background="@drawable/ic_pending_actions">
+
+                    </ImageView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textStyle="bold"
+                        android:id="@+id/countPending"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="15dp"
+                        android:fontFamily="@font/opensans_regular"
+                        android:textColor="@color/white"
+                        android:textSize="40sp" />
+
+                    <TextView
+                        android:id="@+id/taskspendTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/countPending"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="7.5dp"
+                        android:layout_marginBottom="15dp"
+                        android:fontFamily="@font/opensans_regular"
+                        android:text="To do visits"
+                        android:textColor="@color/white" />
+
+
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <RadioGroup
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2.5dp"
+                android:orientation="vertical"
+                android:id="@+id/completedLl"
+                android:layout_weight="5">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/completedIv"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:background="@drawable/ic_completed_tasks">
+
+                    </ImageView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textStyle="bold"
+                        android:id="@+id/countCompleted"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="15dp"
+                        android:fontFamily="@font/opensans_regular"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="40sp" />
+
+                    <TextView
+                        android:id="@+id/taskscompTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/countCompleted"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="7.5dp"
+                        android:layout_marginBottom="15dp"
+                        android:fontFamily="@font/opensans_regular"
+                        android:text="Completed Visits"
+                        android:textColor="?attr/colorPrimary" />
+
+
+                </RelativeLayout>
+
+
+            </RadioGroup>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/pedningListLl">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:id="@+id/activityPendingRv"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:id="@+id/completedListLl">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:id="@+id/activityCompletedRv"/>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/noTasksTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="15dp"
+            android:visibility="gone"
+            android:fontFamily="@font/opensans_regular"
+            android:text="No tasks found"
+            android:textSize="20sp" />
+
+
+
+
+    </LinearLayout>
+
+</FrameLayout>
