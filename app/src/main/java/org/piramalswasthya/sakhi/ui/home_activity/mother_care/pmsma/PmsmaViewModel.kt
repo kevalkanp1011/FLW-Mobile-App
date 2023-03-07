@@ -169,7 +169,7 @@ class PmsmaViewModel @Inject constructor(
                             form.haveMCPCard,
                             form.givenMCPCard,
                             it,
-                            "Yes",
+                            "No",
                             adapter
                         )
                     }

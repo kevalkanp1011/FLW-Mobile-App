@@ -38,7 +38,7 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
 
     val givenMCPCard = FormInput(
         inputType = FormInput.InputType.RADIO,
-        title = ", MCP card is given",
+        title = "MCP card is given",
         list = arrayOf("Yes", "No"),
         required = false
     )
