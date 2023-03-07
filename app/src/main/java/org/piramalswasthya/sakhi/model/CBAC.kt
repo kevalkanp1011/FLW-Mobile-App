@@ -10,13 +10,13 @@ import org.piramalswasthya.sakhi.R
         entity = BenRegCache::class,
         parentColumns = arrayOf("beneficiaryId", "householdId"),
         childColumns = arrayOf("benId", "hhId"),
+        onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     ),
         ForeignKey(
             entity = UserCache::class,
             parentColumns = arrayOf("user_id"),
             childColumns = arrayOf("ashaId"),
-            onDelete = ForeignKey.CASCADE
         )],
     indices = [Index(name = "ind", value = ["benId", "hhId"])]
 )

@@ -193,20 +193,6 @@ class NewBenRegTypeFragment : Fragment() {
         WorkManager.getInstance(requireContext())
             .enqueueUniqueWork(GenerateBenIdsWorker.name, ExistingWorkPolicy.KEEP, workRequest)
     }
-
-    companion object {
-        fun triggerBenDataSendingWorker(context: Context) {
-            val workRequest = OneTimeWorkRequestBuilder<PushToAmritWorker>()
-                .setConstraints(PushToAmritWorker.constraint)
-                .build()
-            WorkManager.getInstance(context)
-                .enqueueUniqueWork(
-                    PushToAmritWorker.name,
-                    ExistingWorkPolicy.APPEND_OR_REPLACE,
-                    workRequest
-                )
-        }
-    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

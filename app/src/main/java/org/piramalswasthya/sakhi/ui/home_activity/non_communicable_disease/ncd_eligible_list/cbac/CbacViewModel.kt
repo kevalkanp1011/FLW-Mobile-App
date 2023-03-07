@@ -201,8 +201,8 @@ class CbacViewModel @Inject constructor(
     fun setFh(i: Int) {
         cbac.cbac_familyhistory_posi = i + 1
         _raFhScore.value = when (i) {
-            0 -> 2
-            1 -> 0
+            0 -> 0
+            1 -> 2
             else -> 0
         }
         _raTotalScore.value =
@@ -390,26 +390,26 @@ class CbacViewModel @Inject constructor(
 
     fun setUnsteady(i: Int) {
         cbac.cbac_feeling_unsteady_posi = i
-        if (i == 1) _astMoic.value = _astMoic.value?.plus(1)
-        else if (i == 2) _astMoic.value = _astMoic.value?.minus(1)
+        if (i == 1 ) _astMoic.value = _astMoic.value?.plus(1)
+        else if (i == 2 && _astMoic.value!! > 0) _astMoic.value = _astMoic.value?.minus(1)
     }
 
     fun setPdRm(i: Int) {
         cbac.cbac_suffer_physical_disability_posi = i
         if (i == 1) _astMoic.value = _astMoic.value?.plus(1)
-        else if (i == 2) _astMoic.value = _astMoic.value?.minus(1)
+        else if (i == 2 && _astMoic.value!! > 0) _astMoic.value = _astMoic.value?.minus(1)
     }
 
     fun setNhop(i: Int) {
         cbac.cbac_needing_help_posi = i
         if (i == 1) _astMoic.value = _astMoic.value?.plus(1)
-        else if (i == 2) _astMoic.value = _astMoic.value?.minus(1)
+        else if (i == 2 && _astMoic.value!! > 0) _astMoic.value = _astMoic.value?.minus(1)
     }
 
     fun setForgetNames(i: Int) {
         cbac.cbac_forgetting_names_posi = i
         if (i == 1) _astMoic.value = _astMoic.value?.plus(1)
-        else if (i == 2) _astMoic.value = _astMoic.value?.minus(1)
+        else if (i == 2 && _astMoic.value!! > 0) _astMoic.value = _astMoic.value?.minus(1)
     }
 
     fun setFuelType(i: Int) {

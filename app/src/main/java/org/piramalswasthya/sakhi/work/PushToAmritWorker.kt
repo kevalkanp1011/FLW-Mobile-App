@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.work
 
 import android.content.Context
+import android.widget.Toast
 import androidx.hilt.work.HiltWorker
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
@@ -23,11 +24,7 @@ class PushToAmritWorker @AssistedInject constructor(
 ) : CoroutineWorker(appContext, params) {
 
     companion object {
-        const val name = "BenDataSendingWorker"
-        val constraint = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
-
+        const val name = "PushToAmritWorker"
     }
 
 
@@ -43,7 +40,10 @@ class PushToAmritWorker @AssistedInject constructor(
                 return Result.failure()
             }
         } catch (e: SocketTimeoutException) {
-            Timber.e("Caught Exception for Gen Ben iD worker $e")
+            Timber.e("Caught Exception for push amrit worker $e")
+            return Result.retry()
+        } catch (e : java.lang.Exception) {
+            Toast.makeText(applicationContext, "Push to server failed! ", Toast.LENGTH_LONG).show()
             return Result.failure()
         }
     }

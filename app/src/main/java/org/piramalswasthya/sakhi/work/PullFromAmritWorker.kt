@@ -17,7 +17,7 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 @HiltWorker
-class PullFromAmritFullLoadWorker @AssistedInject constructor(
+class PullFromAmritWorker @AssistedInject constructor(
     @Assisted private val appContext: Context,
     @Assisted params: WorkerParameters,
     private val benRepo: BenRepo,
@@ -25,10 +25,8 @@ class PullFromAmritFullLoadWorker @AssistedInject constructor(
 ) : CoroutineWorker(appContext, params) {
 
     companion object {
-        const val name = "BenDataSendingWorker"
-        val constraint = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
+        const val name = "PullFromAmritWorker"
+
         const val n = 4 // Number of threads!
     }
 
@@ -85,13 +83,14 @@ class PullFromAmritFullLoadWorker @AssistedInject constructor(
     private fun createForegroundInfo(progress: String): ForegroundInfo {
         // This PendingIntent can be used to cancel the worker
         val intent = WorkManager.getInstance(applicationContext)
-            .createCancelPendingIntent(getId())
+            .createCancelPendingIntent(id)
 
         val notification = NotificationCompat.Builder(appContext, appContext.getString(org.piramalswasthya.sakhi.R.string.notification_sync_channel_id))
             .setContentTitle("Syncing Data")
             .setContentText(progress)
             .setSmallIcon(org.piramalswasthya.sakhi.R.drawable.ic_launcher_foreground)
-            .setProgress(0, 100, true)
+            .setProgress(100, 0, true)
+            .setOngoing(true)
             .build()
 
         return ForegroundInfo(0, notification)

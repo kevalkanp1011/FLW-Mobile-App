@@ -118,7 +118,7 @@ class PmsmaViewModel @Inject constructor(
 
             }
             Timber.d("init after IO! ")
-            _benName.value = ben.firstName + ben.lastName
+            _benName.value = "${ben.firstName} ${if(ben.lastName == null) "" else ben.lastName}"
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
             _address.value = getAddress(household)
             _exists.value = pmsma != null

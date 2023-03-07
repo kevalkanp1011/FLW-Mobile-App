@@ -11,6 +11,7 @@ import androidx.room.PrimaryKey
         entity = BenRegCache::class,
         parentColumns = arrayOf("beneficiaryId", "householdId"),
         childColumns = arrayOf("benId", "hhId"),
+        onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
     indices = [Index(name = "cdrInd", value = ["benId", "hhId"])]

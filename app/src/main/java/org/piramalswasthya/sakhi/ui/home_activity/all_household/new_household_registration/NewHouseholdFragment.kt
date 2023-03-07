@@ -139,17 +139,17 @@ class NewHouseholdFragment : Fragment() {
             0 -> {
                 binding.btnPrev.visibility = View.GONE
                 binding.btnNext.visibility = View.VISIBLE
-                binding.btnToBen.visibility = View.GONE
+                binding.btnSubmitForm.visibility = View.GONE
             }
             1 -> {
                 binding.btnNext.visibility = View.VISIBLE
                 binding.btnPrev.visibility = View.VISIBLE
-                binding.btnToBen.visibility = View.GONE
+                binding.btnSubmitForm.visibility = View.GONE
             }
             2 -> {
                 binding.btnPrev.visibility = View.VISIBLE
                 binding.btnNext.visibility = View.GONE
-                binding.btnToBen.visibility = View.VISIBLE
+                binding.btnSubmitForm.visibility = View.VISIBLE
             }
         }
     }
@@ -224,7 +224,7 @@ class NewHouseholdFragment : Fragment() {
             onPageChange(viewModel.mTabPosition + 1)
 
         }
-        binding.btnToBen.setOnClickListener {
+        binding.btnSubmitForm.setOnClickListener {
             if (validateFormForPage(2)) {
                 viewModel.persistForm(homeViewModel.getLocationRecord())
                 //TODO(Move to Add Ben)

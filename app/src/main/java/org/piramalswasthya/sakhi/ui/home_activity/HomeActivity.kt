@@ -3,7 +3,6 @@ package org.piramalswasthya.sakhi.ui.home_activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -13,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.ViewModelProvider
@@ -35,9 +35,9 @@ import org.piramalswasthya.sakhi.databinding.ActivityHomeBinding
 import org.piramalswasthya.sakhi.helpers.MyContextWrapper
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
-import org.piramalswasthya.sakhi.work.PullFromAmritFullLoadWorker
+import org.piramalswasthya.sakhi.work.PullFromAmritWorker
 import org.piramalswasthya.sakhi.work.PushToAmritWorker
-import timber.log.Timber
+import org.piramalswasthya.sakhi.work.WorkerUtils
 
 
 @AndroidEntryPoint
@@ -54,7 +54,7 @@ class HomeActivity : AppCompatActivity() {
     private val binding  : ActivityHomeBinding
     get() = _binding!!
 
-    private val viewModel by lazy { ViewModelProvider(this)[HomeViewModel::class.java] }
+    private val viewModel : HomeViewModel by viewModels()
 
     private val imagePickerActivityResult = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) {
             it?.let {
@@ -136,15 +136,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setUpFullLoadPullWorker() {
-        val workRequest = OneTimeWorkRequestBuilder<PullFromAmritFullLoadWorker>()
-            .setConstraints(PullFromAmritFullLoadWorker.constraint)
-            .build()
-        val workManager = WorkManager.getInstance(this)
-        workManager.enqueueUniqueWork(
-            PushToAmritWorker.name,
-            ExistingWorkPolicy.KEEP,
-            workRequest
-        )
+        WorkerUtils.triggerSyncWorker(this)
     }
 
     private fun setUpNavHeader() {

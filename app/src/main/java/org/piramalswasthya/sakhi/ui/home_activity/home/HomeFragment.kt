@@ -5,23 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import androidx.work.WorkQuery
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.HomePagerAdapter
-import org.piramalswasthya.sakhi.adapters.IconGridAdapter
-import org.piramalswasthya.sakhi.configuration.IconDataset
 import org.piramalswasthya.sakhi.databinding.FragmentHomeBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
-import org.piramalswasthya.sakhi.work.PullFromAmritFullLoadWorker
+import org.piramalswasthya.sakhi.work.PullFromAmritWorker
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -96,10 +93,10 @@ class HomeFragment : Fragment() {
             binding.etSelectVillage.setText(viewModel.getLocationRecord().village)
         setUpViewPager()
         WorkManager.getInstance(requireContext())
-            .getWorkInfosForUniqueWorkLiveData(PullFromAmritFullLoadWorker.name)
-            .observe(viewLifecycleOwner) {
-                it?.let { list ->
-                    list.first()?.let { workInfo ->
+            .getWorkInfosLiveData(WorkQuery.fromUniqueWorkNames(PullFromAmritWorker.name))
+            .observe(viewLifecycleOwner) { workInfoMutableList ->
+                workInfoMutableList?.let { list ->
+                    list.takeIf { it.isNotEmpty() }?.last()?.let { workInfo ->
                         binding.llFullLoadProgress.visibility =
                             if (workInfo.state == WorkInfo.State.RUNNING)
                                 View.VISIBLE

@@ -15,6 +15,7 @@ import org.piramalswasthya.sakhi.model.UserCache
             entity = UserCache::class,
             parentColumns = arrayOf("user_id"),
             childColumns = arrayOf("userId"),
+            onUpdate = ForeignKey.CASCADE,
             onDelete = ForeignKey.CASCADE
         )
     ]

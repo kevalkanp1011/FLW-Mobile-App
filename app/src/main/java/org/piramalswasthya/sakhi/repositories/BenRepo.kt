@@ -13,6 +13,7 @@ import org.piramalswasthya.sakhi.database.room.BeneficiaryIdsAvail
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.helpers.ImageSizeConverter
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.network.GetBenRequest
 import org.piramalswasthya.sakhi.network.NcdNetworkApiService
@@ -233,7 +234,11 @@ class BenRepo @Inject constructor(
         return
     }
 
-    suspend fun persistGenSecondPage(hhId : Long, form: BenGenRegFormDataset, locationRecord: LocationRecord?) {
+    suspend fun persistGenSecondPage(
+        hhId: Long,
+        form: BenGenRegFormDataset,
+        locationRecord: LocationRecord?
+    ) {
 //        val draftBen = database.benDao.getDraftBenKidForHousehold(hhId)
 //            ?: throw IllegalStateException("no draft saved!!")
         val user =
@@ -267,8 +272,7 @@ class BenRepo @Inject constructor(
                     this.processed = "N"
                     this.createdDate = System.currentTimeMillis()
                     this.createdBy = user.userName
-                }            else
-                {
+                } else {
                     this.processed = "U"
                 }
 
@@ -290,7 +294,11 @@ class BenRepo @Inject constructor(
         return
     }
 
-    suspend fun persistGenThirdPage(hhId : Long,form: BenGenRegFormDataset, locationRecord: LocationRecord) {
+    suspend fun persistGenThirdPage(
+        hhId: Long,
+        form: BenGenRegFormDataset,
+        locationRecord: LocationRecord
+    ) {
 //        val draftBen = database.benDao.getDraftBenKidForHousehold(hhId)
 //            ?: throw IllegalStateException("no draft saved!!")
         val user =
@@ -322,8 +330,7 @@ class BenRepo @Inject constructor(
 
                 this.createdDate = System.currentTimeMillis()
                 this.createdBy = user.userName
-            }
-            else{
+            } else {
                 this.processed = "U"
             }
             this.serverUpdatedStatus = 0
@@ -354,6 +361,7 @@ class BenRepo @Inject constructor(
         return database.benDao.getBen(hhId, benId)
 
     }
+
     private suspend fun extractBenId(): BeneficiaryIdsAvail {
         return withContext(Dispatchers.IO) {
             val user =
@@ -595,18 +603,17 @@ class BenRepo @Inject constructor(
                     ben.beneficiaryId = newBenId
                     return true
                 }
-                if(responseStatusCode==5002){
-                    if(userRepo.refreshTokenTmc(user.userName, user.password))
+                if (responseStatusCode == 5002) {
+                    if (userRepo.refreshTokenTmc(user.userName, user.password))
                         throw SocketTimeoutException("Refreshed Token")
                 }
             }
             throw IllegalStateException("Response undesired!")
-        }catch (se : SocketTimeoutException){
-            if(se.message=="Refreshed Token")
-                return createBenIdAtServerByBeneficiarySending(ben,user,locationRecord)
+        } catch (se: SocketTimeoutException) {
+            if (se.message == "Refreshed Token")
+                return createBenIdAtServerByBeneficiarySending(ben, user, locationRecord)
             return false
-        }
-        catch (e: java.lang.Exception) {
+        } catch (e: java.lang.Exception) {
             database.benDao.setSyncState(ben.householdId, ben.beneficiaryId, SyncState.UNSYNCED)
             Timber.d("Caugnt error $e")
             return false
@@ -636,6 +643,7 @@ class BenRepo @Inject constructor(
 
                         val errorMessage = jsonObj.getString("errorMessage")
                         val responseStatusCode = jsonObj.getInt("statusCode")
+                        Timber.d("Pull from amrit page $pageNumber response status : $responseStatusCode")
                         when (responseStatusCode) {
                             200 -> {
 
@@ -661,11 +669,16 @@ class BenRepo @Inject constructor(
                                 return@withContext pageSize
                             }
                             5002 -> {
-                                 userRepo.refreshTokenTmc(user.userName, user.password)
-                                throw SocketTimeoutException("Refreshed Token!")
+                                if (pageNumber == 0 && userRepo.refreshTokenTmc(
+                                        user.userName,
+                                        user.password
+                                    )
+                                )
+                                    throw SocketTimeoutException("Refreshed Token!")
+                                else throw IllegalStateException("User Logged out!!")
                             }
                             else -> {
-                                throw IllegalStateException("User logged out!")
+                                throw IllegalStateException("$responseStatusCode received, dont know what todo!?")
                             }
                         }
                     }
@@ -675,6 +688,9 @@ class BenRepo @Inject constructor(
                 Timber.d("get_ben error : $e")
                 return@withContext -2
 
+            } catch (e: java.lang.IllegalStateException) {
+                Timber.d("get_ben error : $e")
+                return@withContext -1
             }
             -1
         }
@@ -952,7 +968,7 @@ class BenRepo @Inject constructor(
                                 isAdult = (benDataObj.getString("age_unit") == "Years" && benDataObj.getInt(
                                     "age"
                                 ) > 14),
-                                userImageBlob = getCompressedByteArray(benDataObj),
+                                userImageBlob = getCompressedByteArray(benId, benDataObj),
                                 regDate = if (benDataObj.has("registrationDate")) getLongFromDate(
                                     benDataObj.getString("registrationDate")
                                 ) else 0,
@@ -1016,7 +1032,7 @@ class BenRepo @Inject constructor(
                                                 "reproductiveStatus"
                                             )
                                         ) {
-                                            with (benDataObj.getString("reproductiveStatus")) {
+                                            with(benDataObj.getString("reproductiveStatus")) {
                                                 when {
                                                     contains("Eligible Couple") ||
                                                             contains("पात्र युगल") -> TypeOfList.ELIGIBLE_COUPLE
@@ -1331,12 +1347,13 @@ class BenRepo @Inject constructor(
                                 else -> TypeOfList.GENERAL
                             }
                         } else TypeOfList.OTHER
-                        Timber.d("Custom Validation: $registrationType, ${benDataObj.getString("age_unit")}, " +
-                                "${benDataObj.getInt("age")}, ${benDataObj.getString("reproductiveStatus")}")
+                        Timber.d(
+                            "Custom Validation: $registrationType, ${benDataObj.getString("age_unit")}, " +
+                                    "${benDataObj.getInt("age")}, ${benDataObj.getString("reproductiveStatus")}"
+                        )
                     } catch (e: JSONException) {
                         Timber.i("Beneficiary skipped: ${jsonObject.getLong("benficieryid")} with error $e")
-                    }
-                    catch (e: NumberFormatException) {
+                    } catch (e: NumberFormatException) {
                         Timber.i("Beneficiary skipped: ${jsonObject.getLong("benficieryid")} with error $e")
                     }
                 }
@@ -1345,10 +1362,13 @@ class BenRepo @Inject constructor(
         return result
     }
 
-    private fun getCompressedByteArray(benDataObj: JSONObject) =
-        if (benDataObj.has("user_image")) benDataObj.getString(
-            "user_image"
-        ).toByteArray() else null
+    private suspend fun getCompressedByteArray(benId: Long, benDataObj: JSONObject) =
+        if (benDataObj.has("user_image"))
+            ImageSizeConverter.compressByteArray(
+                context,
+                benId,
+                benDataObj.getString("user_image")
+            ) else null
 
     private suspend fun getHouseholdCacheFromServerResponse(response: String): MutableList<HouseholdCache> {
         val jsonObj = JSONObject(response)

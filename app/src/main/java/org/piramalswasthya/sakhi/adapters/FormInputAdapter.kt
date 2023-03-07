@@ -83,7 +83,7 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
                             }
                         } else if (item.etMaxLength == 12) {
                             if (editable.length != item.etMaxLength ) {
-                                item.errorText = "Invalid RCD ID !"
+                                item.errorText = "Invalid ${item.title} !"
                                 binding.tilEditText.error = item.errorText
                             } else {
                                 item.errorText = null

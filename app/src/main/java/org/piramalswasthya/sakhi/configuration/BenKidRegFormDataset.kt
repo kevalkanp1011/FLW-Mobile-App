@@ -5,11 +5,13 @@ import android.text.InputType
 import android.widget.LinearLayout
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.quality
+import id.zelory.compressor.constraint.size
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.helpers.ImageSizeConverter
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.model.FormInput.InputType.*
 import timber.log.Timber
@@ -573,7 +575,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
             )
         }
         ben?.apply {
-            userImageBlob = getByteArrayFromImageUri(pic.value.value!!)
+            userImageBlob = ImageSizeConverter.getByteArrayFromImageUri(context,pic.value.value!!)
             regDate = getLongFromDate(this@BenKidRegFormDataset.dateOfReg.value.value!!)
             firstName = this@BenKidRegFormDataset.firstName.value.value
             lastName = this@BenKidRegFormDataset.lastName.value.value
@@ -644,30 +646,6 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
             rchId = this@BenKidRegFormDataset.rchId.value.value
         }
         return ben!!
-    }
-
-    private suspend fun getByteArrayFromImageUri(uriString: String): ByteArray? {
-        return withContext(Dispatchers.IO) {
-            val file = File(context.cacheDir, uriString.substringAfterLast("/"))
-            val compressedFile = Compressor.compress(context, file) {
-                quality(50)
-            }
-            val iStream = compressedFile.inputStream()
-            val byteArray = getBytes(iStream)
-            iStream.close()
-            byteArray
-        }
-    }
-
-    private fun getBytes(inputStream: InputStream): ByteArray? {
-        val byteBuffer = ByteArrayOutputStream()
-        val bufferSize = 1024
-        val buffer = ByteArray(bufferSize)
-        var len: Int
-        while (inputStream.read(buffer).also { len = it } != -1) {
-            byteBuffer.write(buffer, 0, len)
-        }
-        return byteBuffer.toByteArray()
     }
 
     fun getBenRegType(): TypeOfList? {

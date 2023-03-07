@@ -4,9 +4,13 @@ import android.content.Context
 import android.text.InputType
 import android.widget.LinearLayout
 import id.zelory.compressor.Compressor
+import id.zelory.compressor.constraint.quality
 import id.zelory.compressor.constraint.size
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.helpers.ImageSizeConverter
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.model.FormInput.InputType.*
 import timber.log.Timber
@@ -496,7 +500,7 @@ class BenGenRegFormDataset(private val context: Context) {
             )
         }
         ben?.apply {
-            userImageBlob = getByteArrayFromImageUri(pic.value.value!!)
+            userImageBlob = ImageSizeConverter.getByteArrayFromImageUri(context,pic.value.value!!)
             Timber.d("BenGenReg: $userImageBlob, ${pic.value.value}")
             regDate = getLongFromDate(this@BenGenRegFormDataset.dateOfReg.value.value!!)
             firstName = this@BenGenRegFormDataset.firstName.value.value
@@ -555,29 +559,6 @@ class BenGenRegFormDataset(private val context: Context) {
 
     }
 
-    private suspend fun getByteArrayFromImageUri(uriString: String): ByteArray? {
-        val file = File(context.cacheDir, uriString.substringAfterLast("/"))
-        Timber.d("image: ${file.length()}")
-        val compressedFile = Compressor.compress(context, file) {
-            size(50_000)
-        }
-        Timber.d("compressed image: ${compressedFile.length()}")
-        val iStream = compressedFile.inputStream()
-        val byteArray = getBytes(iStream)
-        iStream.close()
-        return byteArray
-    }
-
-    private fun getBytes(inputStream: InputStream): ByteArray? {
-        val byteBuffer = ByteArrayOutputStream()
-        val bufferSize = 1024
-        val buffer = ByteArray(bufferSize)
-        var len = 0
-        while (inputStream.read(buffer).also { len = it } != -1) {
-            byteBuffer.write(buffer, 0, len)
-        }
-        return byteBuffer.toByteArray()
-    }
 
     private fun getDoMFromDoR(ageAtMarriage: Int?, regDate: Long): Long? {
         if (ageAtMarriage == null)
