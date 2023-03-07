@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
+import org.piramalswasthya.sakhi.databinding.FragmentCdrObjectBinding
 import org.piramalswasthya.sakhi.databinding.FragmentPmsmaBinding
 import org.piramalswasthya.sakhi.ui.home_activity.mother_care.pmsma.PmsmaViewModel.State
 import org.piramalswasthya.sakhi.work.PushToD2DWorker
@@ -27,9 +28,10 @@ import timber.log.Timber
 @AndroidEntryPoint
 class PmsmaFragment : Fragment() {
 
-    private val binding by lazy {
-        FragmentPmsmaBinding.inflate(layoutInflater)
-    }
+    private var _binding : FragmentPmsmaBinding? = null
+    private val binding : FragmentPmsmaBinding
+        get() = _binding!!
+
 
     private val viewModel: PmsmaViewModel by viewModels()
     private val errorAlert by lazy {
@@ -68,6 +70,7 @@ class PmsmaFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         Timber.d("onCreateView called!!")
+        _binding = FragmentPmsmaBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -79,10 +82,6 @@ class PmsmaFragment : Fragment() {
         }
         viewModel.benAgeGender.observe(viewLifecycleOwner) {
             binding.tvAgeGender.text = it
-        }
-        viewModel.address.observe(viewLifecycleOwner) {
-            val adapter = binding.pmsmaForm.rvInputForm.adapter as FormInputAdapter
-            viewModel.setAddress(it, adapter)
         }
         binding.btnPmsmaSubmit.setOnClickListener {
             if (validate()) viewModel.submitForm()
@@ -110,9 +109,11 @@ class PmsmaFragment : Fragment() {
             }
         }
         viewModel.popupString.observe(viewLifecycleOwner){
-            errorAlert.setMessage(it)
-            errorAlert.show()
-            viewModel.resetPopUpString()
+            it?.let {
+                errorAlert.setMessage(it)
+                errorAlert.show()
+                viewModel.resetPopUpString()
+            }
 
         }
         viewModel.state.observe(viewLifecycleOwner) {
@@ -179,4 +180,10 @@ class PmsmaFragment : Fragment() {
             false
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
 }

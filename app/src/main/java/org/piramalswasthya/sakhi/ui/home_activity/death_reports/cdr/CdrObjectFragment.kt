@@ -24,9 +24,9 @@ import kotlin.reflect.jvm.internal.impl.metadata.ProtoBuf.Visibility
 @AndroidEntryPoint
 class CdrObjectFragment : Fragment() {
 
-    private val binding by lazy {
-        FragmentCdrObjectBinding.inflate(layoutInflater)
-    }
+    private var _binding : FragmentCdrObjectBinding? = null
+    private val binding : FragmentCdrObjectBinding
+        get() = _binding!!
 
     private val viewModel: CdrObjectViewModel by viewModels()
 
@@ -34,6 +34,7 @@ class CdrObjectFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentCdrObjectBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -133,4 +134,11 @@ class CdrObjectFragment : Fragment() {
             false
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
+
 }
