@@ -59,17 +59,17 @@ interface BenDao {
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 3")
     fun getAllDeliveryStageWomenList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE where age>30")
+    @Query("SELECT * FROM BEN_BASIC_CACHE where age>=30")
     fun getAllNCDList(): LiveData<List<BenBasicCache>>
 
 
-    @Query("SELECT b.* FROM BEN_BASIC_CACHE b LEFT OUTER JOIN CBAC c ON b.benId=c.benId where b.age>30 and c.benId IS NULL")
+    @Query("SELECT b.* FROM BEN_BASIC_CACHE b LEFT OUTER JOIN CBAC c ON b.benId=c.benId where b.age>=30 and c.benId IS NULL")
     fun getAllNCDEligibleList(): LiveData<List<BenBasicCache>>
 
     @Query("SELECT b.* FROM BEN_BASIC_CACHE b INNER JOIN CBAC c on b.benId==c.benId WHERE c.total_score >= 4")
     fun getAllNCDPriorityList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT b.* FROM BEN_BASIC_CACHE b INNER JOIN CBAC c on b.benId==c.benId WHERE c.total_score <= 4")
+    @Query("SELECT b.* FROM BEN_BASIC_CACHE b INNER JOIN CBAC c on b.benId==c.benId WHERE c.total_score < 4")
     fun getAllNCDNonEligibleList(): LiveData<List<BenBasicCache>>
 
     // have to add those as well who we are adding to menopause list manually from app

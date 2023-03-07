@@ -15,8 +15,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_login"
-        >
+        android:background="@drawable/bg_login">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,13 +25,13 @@
 
             <ImageView
                 android:id="@+id/iv_nhm_logo"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
                 android:contentDescription="@string/cd_assam_nhm_logo"
                 android:scaleType="centerCrop"
-                android:src="@drawable/img_assam_logo" />
+                android:src="@drawable/ic_piramal_foundation" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_login_item_container"
@@ -52,8 +51,7 @@
                         android:id="@+id/cl_content"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/padding_wide"
-                        >
+                        android:padding="@dimen/padding_wide">
 
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/tv_title"
@@ -166,13 +164,13 @@
                             android:id="@+id/tv_error"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/red"
                             android:textAlignment="center"
-                            tools:visibility="visible"
-                            android:visibility="gone"
-                            tools:text="Hello"
                             android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                            android:textColor="@color/red"
+                            android:visibility="gone"
                             app:layout_constraintTop_toBottomOf="@id/til_password"
+                            tools:text="Hello"
+                            tools:visibility="visible"
 
                             />
 
@@ -218,22 +216,12 @@
                         android:id="@+id/pb_sign_in"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:indeterminateTint="?attr/colorPrimary"
                         android:layout_gravity="center"
-                        android:visibility="gone"/>
+                        android:indeterminateTint="?attr/colorPrimary"
+                        android:visibility="gone" />
                 </FrameLayout>
 
             </androidx.cardview.widget.CardView>
-
-
-            <TextView
-                android:id="@+id/tv_version"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:padding="20dp"
-                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                tools:text="Version 1.0.0" />
 
 
         </LinearLayout>

@@ -52,7 +52,8 @@
     </style>
 
     <style name="cbac_ed_rg">
-        <item name="android:paddingHorizontal">@dimen/padding_normal</item>
+        <item name="android:paddingStart">@dimen/padding_normal</item>
+        <item name="android:paddingEnd">@dimen/padding_normal</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>

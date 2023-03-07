@@ -51,7 +51,7 @@
             android:textColor="?attr/colorSecondary" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_to_ben"
+            android:id="@+id/btn_submit_form"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

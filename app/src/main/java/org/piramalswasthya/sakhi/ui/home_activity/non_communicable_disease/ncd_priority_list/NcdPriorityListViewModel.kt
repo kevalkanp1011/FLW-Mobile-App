@@ -47,8 +47,4 @@ class NcdPriorityListViewModel @Inject constructor(
         lastFilter = text
         _benList.value = ncdPriorityList.value?.let { filterBenList(it, text) }
     }
-
-    fun triggerPushToAmritWorker() {
-        NewBenRegTypeFragment.triggerBenDataSendingWorker(application)
-    }
 }

@@ -19,7 +19,6 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
-import org.piramalswasthya.sakhi.databinding.FragmentCdrObjectBinding
 import org.piramalswasthya.sakhi.databinding.FragmentPmsmaBinding
 import org.piramalswasthya.sakhi.ui.home_activity.mother_care.pmsma.PmsmaViewModel.State
 import org.piramalswasthya.sakhi.work.PushToD2DWorker

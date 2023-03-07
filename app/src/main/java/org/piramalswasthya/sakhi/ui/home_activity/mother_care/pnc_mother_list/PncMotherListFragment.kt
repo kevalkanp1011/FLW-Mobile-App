@@ -17,6 +17,7 @@ import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBindin
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
+import org.piramalswasthya.sakhi.work.WorkerUtils
 
 @AndroidEntryPoint
 class PncMotherListFragment : Fragment() {
@@ -49,7 +50,7 @@ class PncMotherListFragment : Fragment() {
                     Toast.makeText(context, "Household : $it clicked", Toast.LENGTH_SHORT).show()
                 },
                 {
-                    NewBenRegTypeFragment.triggerBenDataSendingWorker(requireContext())
+                    WorkerUtils.triggerSyncWorker(requireContext())
                 }
             ))
         binding.rvAny.adapter = benAdapter

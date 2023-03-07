@@ -206,12 +206,12 @@ data class UserNetwork(
             serviceMapId = serviceMapId,
             servicePointId = servicePointId,
             serviceId = serviceId,
-            servicePointName = servicePointName?:"NA",
+            servicePointName = servicePointName?:"",
             vanId = vanId,
             zoneId = zoneId,
-            zoneName = zoneName?:"NA",
+            zoneName = zoneName?:"",
             parkingPlaceId = parkingPlaceId,
-            parkingPlaceName = parkingPlaceName?:"NA",
+            parkingPlaceName = parkingPlaceName?:"",
 
             countryId = countryId,
 
@@ -229,8 +229,8 @@ data class UserNetwork(
             villageEnglish = villageEnglish,
             villageHindi = villageHindi,
 
-            emergencyContactNo = emergencyContactNo?:"NA",
-            userType = userType?:"NA",
+            emergencyContactNo = emergencyContactNo?:"",
+            userType = userType?:"",
             loggedIn = loggedIn
 
         )

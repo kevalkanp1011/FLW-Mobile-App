@@ -22,6 +22,7 @@ import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
 import org.piramalswasthya.sakhi.ui.home_activity.all_household.AllHouseholdFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
+import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -62,7 +63,7 @@ class AllBenFragment : Fragment() {
                 )
             },
             {
-                NewBenRegTypeFragment.triggerBenDataSendingWorker(requireContext())
+                WorkerUtils.triggerSyncWorker(requireContext())
             }
         ))
         binding.rvAny.adapter = benAdapter

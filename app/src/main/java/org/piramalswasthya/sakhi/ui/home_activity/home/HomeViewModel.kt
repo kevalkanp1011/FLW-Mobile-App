@@ -90,6 +90,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             userRepo.logout()
             pref.setLastSyncedTimeStamp(1603132200000)
+            pref.deleteLoginCred()
             _navigateToLoginPage.value = true
         }
     }

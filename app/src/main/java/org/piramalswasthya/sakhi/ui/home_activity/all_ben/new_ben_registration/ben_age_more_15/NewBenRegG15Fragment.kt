@@ -22,12 +22,14 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.NewBenGenPagerAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormViewpagerBinding
 import org.piramalswasthya.sakhi.services.UploadSyncService
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_more_15.NewBenRegG15ViewModel.State
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
+import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -109,6 +111,7 @@ class NewBenRegG15Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setHHid(hhId)
+        binding.btnSubmitForm.text = context?.getString(R.string.btn_submit_ben)
         binding.vp2Nhhr.adapter = NewBenGenPagerAdapter(
             mutableListOf(
                 "Ben Details",
@@ -130,17 +133,17 @@ class NewBenRegG15Fragment : Fragment() {
             0 -> {
                 binding.btnPrev.visibility = View.GONE
                 binding.btnNext.visibility = View.VISIBLE
-                binding.btnToBen.visibility = View.GONE
+                binding.btnSubmitForm.visibility = View.GONE
             }
             1 -> {
                 binding.btnNext.visibility = View.VISIBLE
                 binding.btnPrev.visibility = View.VISIBLE
-                binding.btnToBen.visibility = View.GONE
+                binding.btnSubmitForm.visibility = View.GONE
             }
             2 -> {
                 binding.btnPrev.visibility = View.VISIBLE
                 binding.btnNext.visibility = View.GONE
-                binding.btnToBen.visibility = View.VISIBLE
+                binding.btnSubmitForm.visibility = View.VISIBLE
             }
         }
         TabLayoutMediator(binding.tlNhhr, binding.vp2Nhhr) { tab, position ->
@@ -155,7 +158,7 @@ class NewBenRegG15Fragment : Fragment() {
             onPageChange(viewModel.mTabPosition + 1)
 
         }
-        binding.btnToBen.setOnClickListener {
+        binding.btnSubmitForm.setOnClickListener {
             if (validateFormForPage(binding.vp2Nhhr.adapter?.itemCount!!)) {
                 viewModel.persistForm(homeViewModel.getLocationRecord())
                 Toast.makeText(context, "Beneficiary saved successfully", Toast.LENGTH_LONG).show()
@@ -177,7 +180,7 @@ class NewBenRegG15Fragment : Fragment() {
                 }
                 State.SAVE_SUCCESS -> {
                     Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
-                    NewBenRegTypeFragment.triggerBenDataSendingWorker(requireContext())
+                    WorkerUtils.triggerSyncWorker(requireContext())
                     findNavController().navigate(NewBenRegG15FragmentDirections.actionNewBenRegG15FragmentToHomeFragment())
                 }
                 State.SAVE_FAILED -> Toast.makeText(
@@ -245,12 +248,12 @@ class NewBenRegG15Fragment : Fragment() {
                 0 -> {
                     binding.btnPrev.visibility = View.GONE
                     binding.btnNext.visibility = View.VISIBLE
-                    binding.btnToBen.visibility = View.GONE
+                    binding.btnSubmitForm.visibility = View.GONE
                 }
                 1 -> {
                     binding.btnPrev.visibility = View.VISIBLE
                     binding.btnNext.visibility = View.GONE
-                    binding.btnToBen.visibility = View.VISIBLE
+                    binding.btnSubmitForm.visibility = View.VISIBLE
                 }
             }
         } else {
@@ -258,19 +261,19 @@ class NewBenRegG15Fragment : Fragment() {
                 0 -> {
                     binding.btnPrev.visibility = View.GONE
                     binding.btnNext.visibility = View.VISIBLE
-                    binding.btnToBen.visibility = View.GONE
+                    binding.btnSubmitForm.visibility = View.GONE
 
                 }
                 1 -> {
                     binding.btnNext.visibility = View.VISIBLE
                     binding.btnPrev.visibility = View.VISIBLE
-                    binding.btnToBen.visibility = View.GONE
+                    binding.btnSubmitForm.visibility = View.GONE
 
                 }
                 2 -> {
                     binding.btnPrev.visibility = View.VISIBLE
                     binding.btnNext.visibility = View.GONE
-                    binding.btnToBen.visibility = View.VISIBLE
+                    binding.btnSubmitForm.visibility = View.VISIBLE
 
                 }
             }

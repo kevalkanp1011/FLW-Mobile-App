@@ -14,6 +14,7 @@ import java.util.*
         entity = BenRegCache::class,
         parentColumns = arrayOf("beneficiaryId", "householdId"),
         childColumns = arrayOf("benId", "hhId"),
+        onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
     indices = [Index(name = "mdsrInd", value = ["benId", "hhId"])]
