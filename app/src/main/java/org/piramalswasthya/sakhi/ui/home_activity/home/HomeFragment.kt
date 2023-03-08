@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -42,9 +43,9 @@ class HomeFragment : Fragment() {
             .create()
     }
 
-    private var _binding : FragmentHomeBinding? = null
-    private val binding : FragmentHomeBinding
-    get() = _binding!!
+    private var _binding: FragmentHomeBinding? = null
+    private val binding: FragmentHomeBinding
+        get() = _binding!!
     private val viewModel: HomeViewModel by viewModels({ requireActivity() })
     private val onBackPressedCallback by lazy {
         object : OnBackPressedCallback(true) {
@@ -92,17 +93,28 @@ class HomeFragment : Fragment() {
         if (viewModel.isLocationSet())
             binding.etSelectVillage.setText(viewModel.getLocationRecord().village)
         setUpViewPager()
+
         WorkManager.getInstance(requireContext())
             .getWorkInfosLiveData(WorkQuery.fromUniqueWorkNames(PullFromAmritWorker.name))
-            .observe(viewLifecycleOwner) { workInfoMutableList ->
-                workInfoMutableList?.let { list ->
-                    list.takeIf { it.isNotEmpty() }?.last()?.let { workInfo ->
-                        binding.llFullLoadProgress.visibility =
-                            if (workInfo.state == WorkInfo.State.RUNNING)
-                                View.VISIBLE
-                            else
-                                View.GONE
+            .observe(viewLifecycleOwner) { workInfos ->
+                var finishedCount = 0
+                if (workInfos != null) {
+                    for (workInfo in workInfos) {
+                        if (workInfo != null) {
+                            if (workInfo.state.isFinished && workInfo.state == WorkInfo.State.SUCCEEDED) {
+                                finishedCount++
+                            }
+                        }
                     }
+                }
+                if (workInfos != null) {
+                    binding.llFullLoadProgress.visibility =
+
+                        if (finishedCount == workInfos.size)
+                            View.GONE
+                        else
+                            View.VISIBLE
+
                 }
             }
 
@@ -112,7 +124,7 @@ class HomeFragment : Fragment() {
     private fun setUpViewPager() {
 
         binding.vp2Home.adapter = HomePagerAdapter(this)
-        TabLayoutMediator(binding.tlHomeViewpager,binding.vp2Home) { tab, position ->
+        TabLayoutMediator(binding.tlHomeViewpager, binding.vp2Home) { tab, position ->
             tab.text = when (position) {
                 0 -> "Scheduler"
                 1 -> "Home"
@@ -123,18 +135,16 @@ class HomeFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        activity?.let{
+        activity?.let {
             (it as HomeActivity).setLogo(R.drawable.ic_home)
         }
-        binding.vp2Home.setCurrentItem(1,false)
+        binding.vp2Home.setCurrentItem(1, false)
     }
 
     override fun onStop() {
         super.onStop()
         (activity as HomeActivity?)?.setHomeMenuItemVisibility(true)
     }
-
-
 
 
     override fun onDestroyView() {
@@ -145,7 +155,7 @@ class HomeFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        _binding  =null
+        _binding = null
         numCopies--
         Timber.d("onDestroy() called! $numCopies")
 

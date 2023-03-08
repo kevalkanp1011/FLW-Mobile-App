@@ -82,7 +82,8 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
                                 binding.tilEditText.error = item.errorText
                             }
                         } else if (item.etMaxLength == 12) {
-                            if (editable.length != item.etMaxLength ) {
+                            if (editable.first().toString()
+                                    .toInt() ==0 ||editable.length != item.etMaxLength ) {
                                 item.errorText = "Invalid ${item.title} !"
                                 binding.tilEditText.error = item.errorText
                             } else {

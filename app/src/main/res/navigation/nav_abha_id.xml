@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_abha_id"
+    app:startDestination="@id/aadharIdFragment">
+
+    <fragment
+        android:id="@+id/aadharIdFragment"
+        android:name="org.piramalswasthya.sakhi.ui.abha_id_activity.aadhar_id.AadharIdFragment"
+        android:label="fragment_aadhar_id"
+        tools:layout="@layout/fragment_aadhar_id" />
+</navigation>

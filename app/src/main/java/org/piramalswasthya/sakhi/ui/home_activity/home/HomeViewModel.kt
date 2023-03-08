@@ -5,12 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.repositories.UserRepo
@@ -89,8 +91,9 @@ class HomeViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             userRepo.logout()
-            pref.setLastSyncedTimeStamp(1603132200000)
+            pref.setLastSyncedTimeStamp(Konstants.defaultTimeStamp)
             pref.deleteLoginCred()
+
             _navigateToLoginPage.value = true
         }
     }
@@ -110,6 +113,10 @@ class HomeViewModel @Inject constructor(
 
     fun getProfilePicUri() : Uri?{
         return pref.getProfilePicUri()
+    }
+
+    fun getUnprocessedRecordsCount(): Int? {
+        return userRepo.unProcessedRecordCount.value
     }
 
 

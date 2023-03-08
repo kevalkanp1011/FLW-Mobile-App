@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.ui
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Build
+import android.text.InputType
 import android.view.Gravity
 import android.view.View
 import android.view.animation.Animation
@@ -14,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.databinding.BindingAdapter
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputEditText
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.FormInput
@@ -34,6 +36,13 @@ fun AutoCompleteTextView.setSpinnerItems(list: Array<String>?) {
     }
 }
 
+@BindingAdapter("allCaps")
+fun TextInputEditText.setAllAlphabetCaps(allCaps : Boolean){
+    if(allCaps) {
+        isAllCaps = true
+        inputType = InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
+    }
+}
 
 @BindingAdapter("radioForm")
 fun ConstraintLayout.setItems(form: FormInput?) {

@@ -38,10 +38,17 @@ class PullFromAmritWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         return try {
-            setForeground(createForegroundInfo("Downloading"))
+            try {
+                // This ensures that you waiting for the Notification update to be done.
+                setForeground(createForegroundInfo("Downloading"))
+            } catch (throwable: Throwable) {
+                // Handle this exception gracefully
+                Timber.d("FgLW", "Something bad happened", throwable)
+            }
             withContext(Dispatchers.IO) {
                 val startTime = System.currentTimeMillis()
                 var numPages: Int
+
                 do {
                     numPages = benRepo.getBeneficiariesFromServerForWorker(0)
                 } while (numPages == -2)
@@ -76,6 +83,7 @@ class PullFromAmritWorker @AssistedInject constructor(
 
         } catch (e: java.lang.Exception) {
             Timber.d("Error occurred in PullFromAmritFullLoadWorker $e")
+
             Result.failure()
         }
     }

@@ -22,4 +22,9 @@ object WorkerUtils {
             .then(pushWorkRequest)
             .enqueue()
     }
+
+    fun cancelAllWork(context: Context) {
+        val workManager = WorkManager.getInstance(context)
+        workManager.cancelAllWork()
+    }
 }

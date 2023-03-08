@@ -24,6 +24,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.bumptech.glide.Glide
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,6 +34,7 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.databinding.ActivityHomeBinding
 import org.piramalswasthya.sakhi.helpers.MyContextWrapper
+import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdActivity
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
 import org.piramalswasthya.sakhi.work.PullFromAmritWorker
@@ -55,6 +57,25 @@ class HomeActivity : AppCompatActivity() {
     get() = _binding!!
 
     private val viewModel : HomeViewModel by viewModels()
+
+    private val logoutAlert by lazy{
+        val unprocessedRecords  = viewModel.getUnprocessedRecordsCount()
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Logout")
+            .setMessage("${if(unprocessedRecords!=null && unprocessedRecords>0) "$unprocessedRecords not Processed." else "All records synced"} Are you sure to logout?")
+            .setPositiveButton("YES"){
+                    dialog,_->
+                viewModel.logout()
+                WorkerUtils.cancelAllWork(this)
+                dialog.dismiss()
+            }
+            .setNegativeButton("NO"){
+                    dialog,_->
+
+                dialog.dismiss()
+            }
+            .create()
+    }
 
     private val imagePickerActivityResult = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) {
             it?.let {
@@ -192,9 +213,8 @@ class HomeActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
 
         binding.navView.menu.findItem(R.id.menu_logout).setOnMenuItemClickListener {
-            val workManager = WorkManager.getInstance(this)
-            workManager.cancelAllWork()
-            viewModel.logout()
+
+            logoutAlert.show()
             true
 
         }
@@ -204,6 +224,14 @@ class HomeActivity : AppCompatActivity() {
             true
 
         }
+        binding.navView.menu.findItem(R.id.abha_id_activity).setOnMenuItemClickListener {
+            navController.popBackStack(R.id.homeFragment, false)
+            startActivity(Intent(this, AbhaIdActivity::class.java))
+            binding.drawerLayout.close()
+            true
+
+        }
+        binding.navView.menu.findItem(R.id.menu_logout).isCheckable = false
     }
 
 //    override fun onOptionsItemSelected(item: MenuItem): Boolean {

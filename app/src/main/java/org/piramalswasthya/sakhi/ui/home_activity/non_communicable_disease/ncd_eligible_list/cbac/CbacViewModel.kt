@@ -138,7 +138,7 @@ class CbacViewModel @Inject constructor(
                 _raAgeScore.value!! + _raSmokeScore.value!! + _raAlcoholScore.value!! + _raWaistScore.value!! + _raPaScore.value!! + _raFhScore.value!!
             ben.gender?.let { _gender.value = it }
             _age.value = ben.age
-            _benName.value = ben.firstName + ben.lastName
+            _benName.value = "${ben.firstName} ${if(ben.lastName== null) "" else ben.lastName}"
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
 
         }

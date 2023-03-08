@@ -27,6 +27,8 @@ class UserRepo @Inject constructor(
 
     private var user : UserNetwork? = null
 
+    val unProcessedRecordCount = database.benDao.getUnProcessedRecordCount()
+
 
     suspend fun getLoggedInUser() : UserDomain? {
         return withContext(Dispatchers.IO){

@@ -502,6 +502,7 @@ class NewBenRegG15ViewModel @Inject constructor(
                         if (list.contains(form.expectedDateOfDelivery)) {
                             form.expectedDateOfDelivery.value.value =
                                 getExpectedDoDFromLmp(year, month, day)
+                            form.expectedDateOfDelivery.errorText = null
                             adapter.notifyItemChanged(list.indexOf(form.expectedDateOfDelivery))
                         }
                         adapter.submitList(list)

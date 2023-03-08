@@ -38,6 +38,9 @@ interface BenDao {
     @Query("SELECT * FROM BENEFICIARY WHERE isDraft = 0 AND processed = 'N' AND syncState =:unsynced ")
     suspend fun getAllUnprocessedBen(unsynced: SyncState = SyncState.UNSYNCED): List<BenRegCache>
 
+    @Query("SELECT COUNT(*) FROM BENEFICIARY WHERE isDraft = 0 AND processed = 'N' AND syncState =:unsynced ")
+    fun getUnProcessedRecordCount(unsynced: SyncState = SyncState.UNSYNCED): LiveData<Int>
+
     @Query("SELECT * FROM BENEFICIARY WHERE isDraft = 0 AND processed = 'U' AND syncState =:unsynced ")
     suspend fun getAllBenForSyncWithServer(unsynced: SyncState = SyncState.UNSYNCED): List<BenRegCache>
 
@@ -105,4 +108,6 @@ interface BenDao {
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId in (2, 3, 4)")
     fun getAllMDSRList(): LiveData<List<BenBasicCache>>
+
+
 }
