@@ -11,6 +11,14 @@
             android:id="@+id/homeFragment"
             android:icon="@drawable/ic_home"
             android:title="Home" />
+
+        <item
+            android:id="@+id/sync_pending_records"
+            android:icon="@drawable/ic_synced"
+            android:checkable="false"
+            android:title="Sync Records" />
+
+
         <item
             android:id="@+id/dashBoardFragment"
             android:icon="@drawable/ic_dashboard"
@@ -19,6 +27,7 @@
         <item
             android:id="@+id/abha_id_activity"
             android:icon="@drawable/ic_completed_tasks"
+            android:checkable="false"
             android:title="Generate ABHA ID" />
 
 
@@ -26,6 +35,8 @@
             android:id="@+id/getBenFragment"
             android:icon="@drawable/ic_synced"
             android:title="Get Data" />
+
+
 
         <item
             android:id="@+id/aboutUsFragment"
@@ -44,6 +55,7 @@
         <item
             android:id="@+id/menu_logout"
             android:icon="@drawable/ic_logout"
+            android:checkable="false"
             android:title="Logout" />
     </group>
 

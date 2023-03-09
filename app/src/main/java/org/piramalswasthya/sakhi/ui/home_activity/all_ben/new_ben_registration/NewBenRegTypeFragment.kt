@@ -22,6 +22,7 @@ import org.piramalswasthya.sakhi.databinding.FragmentNewBenRegTypeBinding
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.work.GenerateBenIdsWorker
 import org.piramalswasthya.sakhi.work.PushToAmritWorker
+import org.piramalswasthya.sakhi.work.WorkerUtils
 
 @AndroidEntryPoint
 class NewBenRegTypeFragment : Fragment() {
@@ -122,19 +123,23 @@ class NewBenRegTypeFragment : Fragment() {
 
         homeViewModel.iconCount.observe(viewLifecycleOwner) { iconList ->
             iconList.first().let {
-                if (it.availBenIdsCount in 1..80) {
-                    binding.errorText.text =
-                        "Warning : ID running low, connect to internet at the earliest"
-                    triggerGenBenIdWorker()
+                when (it.availBenIdsCount) {
+                    in 1..80 -> {
+                        binding.errorText.text =
+                            "Warning : ID running low, connect to internet at the earliest"
+                        WorkerUtils.triggerGenBenIdWorker(requireContext())
 
-                } else if (it.availBenIdsCount == 0) {
-                    binding.btnContinue.visibility = View.GONE
-                    binding.errorText.text =
-                        "Error : No more ben Ids available. Connect to internet to get some."
-                    triggerGenBenIdWorker()
-                } else {
-                    binding.btnContinue.visibility = View.VISIBLE
-                    binding.errorText.text = null
+                    }
+                    0 -> {
+                        binding.btnContinue.visibility = View.GONE
+                        binding.errorText.text =
+                            "Error : No more ben Ids available. Connect to internet to get some."
+                        WorkerUtils.triggerGenBenIdWorker(requireContext())
+                    }
+                    else -> {
+                        binding.btnContinue.visibility = View.VISIBLE
+                        binding.errorText.text = null
+                    }
                 }
             }
         }
@@ -186,13 +191,7 @@ class NewBenRegTypeFragment : Fragment() {
 
     }
 
-    private fun triggerGenBenIdWorker() {
-        val workRequest = OneTimeWorkRequestBuilder<GenerateBenIdsWorker>()
-            .setConstraints(GenerateBenIdsWorker.constraint)
-            .build()
-        WorkManager.getInstance(requireContext())
-            .enqueueUniqueWork(GenerateBenIdsWorker.name, ExistingWorkPolicy.KEEP, workRequest)
-    }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

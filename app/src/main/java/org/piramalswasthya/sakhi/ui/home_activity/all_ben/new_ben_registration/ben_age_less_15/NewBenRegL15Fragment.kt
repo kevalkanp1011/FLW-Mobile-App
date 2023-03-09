@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -24,11 +23,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.NewBenKidPagerAdapter
-import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormViewpagerBinding
 import org.piramalswasthya.sakhi.model.TypeOfList
-import org.piramalswasthya.sakhi.services.UploadSyncService
-import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_less_15.NewBenRegL15ViewModel.State
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.work.WorkerUtils
@@ -145,13 +141,6 @@ class NewBenRegL15Fragment : Fragment() {
         binding.btnSubmitForm.setOnClickListener {
             if (validateFormForPage(2)) {
                 viewModel.persistForm(homeViewModel.getLocationRecord())
-                Toast.makeText(context,"Beneficiary saved successfully", Toast.LENGTH_LONG).show()
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-                    activity?.startForegroundService(Intent(context, UploadSyncService::class.java))
-                } else {
-                    activity?.startService(Intent(context, UploadSyncService::class.java))
-                }
             }
         }
 
@@ -164,7 +153,8 @@ class NewBenRegL15Fragment : Fragment() {
                 }
                 State.SAVE_SUCCESS -> {
                     Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
-                    WorkerUtils.triggerSyncWorker(requireContext())
+                    WorkerUtils.triggerAmritSyncWorker(requireContext())
+                   
                     when(viewModel.getNavPath()){
                         TypeOfList.INFANT -> findNavController().navigate(NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToInfantListFragment())
                         TypeOfList.CHILD -> findNavController().navigate(NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToChildListFragment())

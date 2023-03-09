@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.work.WorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -92,7 +91,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             userRepo.logout()
             pref.setLastSyncedTimeStamp(Konstants.defaultTimeStamp)
-            pref.deleteLoginCred()
+            pref.deleteForLogout()
 
             _navigateToLoginPage.value = true
         }

@@ -40,16 +40,14 @@ class NewBenRegTypeViewModel @Inject constructor(
 
     fun checkDraft(hhId: Long) {
         viewModelScope.launch {
-            _hasDraftForKid.value = benRepo.getDraftForm(hhId, true) != null
-            _hasDraftForGen.value = benRepo.getDraftForm(hhId, false) != null
+            _hasDraftForKid.value = false
+            _hasDraftForGen.value = false
         }
     }
 
 
     fun navigateToNewBenRegistration(hhId: Long, delete: Boolean, isKid: Boolean) {
         viewModelScope.launch {
-            if (delete)
-                benRepo.deleteBenDraft(hhId, isKid)
             if(isKid)
                 _navigateToNewBenKidRegistration.value = true
             else

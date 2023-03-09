@@ -21,6 +21,7 @@ import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentMdsrObjectBinding
 import org.piramalswasthya.sakhi.work.PushToAmritWorker
 import org.piramalswasthya.sakhi.work.PushToD2DWorker
+import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -81,7 +82,7 @@ class MdsrObjectFragment : Fragment() {
                 }
                 MdsrObjectViewModel.State.SUCCESS -> {
                     findNavController().navigateUp()
-                    triggerMdsrSendingWorker(requireContext())
+                    WorkerUtils.triggerD2dSyncWorker(requireContext())
                 }
                 MdsrObjectViewModel.State.FAIL -> {
                     binding.cvPatientInformation.visibility = View.VISIBLE
@@ -97,20 +98,6 @@ class MdsrObjectFragment : Fragment() {
                     binding.pbMdsr.visibility = View.GONE
                 }
             }
-        }
-    }
-
-    companion object {
-        fun triggerMdsrSendingWorker(context: Context) {
-            val workRequest = OneTimeWorkRequestBuilder<PushToD2DWorker>()
-                .setConstraints(PushToD2DWorker.constraint)
-                .build()
-            WorkManager.getInstance(context)
-                .enqueueUniqueWork(
-                    PushToD2DWorker.name,
-                    ExistingWorkPolicy.APPEND_OR_REPLACE,
-                    workRequest
-                )
         }
     }
 

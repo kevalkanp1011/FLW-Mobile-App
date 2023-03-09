@@ -32,12 +32,6 @@
                 android:value="" />
         </activity>
 
-        <service
-            android:name=".services.UploadSyncService"
-            android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="dataSync" />
-
         <activity
             android:name=".ui.home_activity.HomeActivity"
             android:exported="false"

@@ -7,7 +7,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
-import org.piramalswasthya.sakhi.configuration.BenGenRegFormDataset
 import org.piramalswasthya.sakhi.configuration.MDSRFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.model.*
@@ -103,7 +102,7 @@ class MdsrObjectViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 ben = benRepo.getBeneficiary(benId, hhId)!!
-                household = benRepo.getBenHousehold(hhId)!!
+                household = benRepo.getHousehold(hhId)!!
                 user = database.userDao.getLoggedInUser()!!
                 mdsr = database.mdsrDao.getMDSR(hhId, benId)
             }

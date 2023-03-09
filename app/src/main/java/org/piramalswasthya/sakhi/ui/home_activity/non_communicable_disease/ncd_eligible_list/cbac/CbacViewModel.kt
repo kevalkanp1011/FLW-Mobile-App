@@ -75,7 +75,8 @@ class CbacViewModel @Inject constructor(
     private val benId = CbacFragmentArgs.fromSavedStateHandle(state).benId
     private val hhId = CbacFragmentArgs.fromSavedStateHandle(state).hhId
     private val ashaId = CbacFragmentArgs.fromSavedStateHandle(state).userId
-    private val cbac = CbacCache(benId = benId, hhId = hhId, ashaId = ashaId)
+    private val cbac = CbacCache(benId = benId, hhId = hhId, ashaId = ashaId,
+    gender = Gender.MALE)
     private lateinit var ben: BenRegCache
 
     private val _benName = MutableLiveData<String>()
@@ -114,6 +115,7 @@ class CbacViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 ben = database.benDao.getBen(hhId, benId)!!
+                ben.gender?.let { cbac.gender = it }
             }
             if (ben.ageUnit != AgeUnit.YEARS)
                 throw IllegalStateException("Age not in years for CBAC form!!")

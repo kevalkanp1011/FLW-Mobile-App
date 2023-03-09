@@ -20,6 +20,7 @@ import org.piramalswasthya.sakhi.helpers.Languages.*
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
 import org.piramalswasthya.sakhi.ui.login_activity.sign_in.SignInViewModel.State
 import org.piramalswasthya.sakhi.work.GenerateBenIdsWorker
+import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -40,13 +41,15 @@ class SignInFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding.viewModel = this.viewModel
         return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.btnLogin.setOnClickListener {
+            viewModel.loginInClicked()
+        }
 
         when (prefDao.getCurrentLanguage()) {
             ENGLISH -> binding.rgLangSelect.check(binding.rbEng.id)
@@ -126,7 +129,7 @@ class SignInFragment : Fragment() {
                     binding.clContent.visibility = View.INVISIBLE
                     binding.pbSignIn.visibility = View.VISIBLE
                     binding.tvError.visibility = View.GONE
-                    triggerGenBenIdWorker()
+                    WorkerUtils.triggerGenBenIdWorker(requireContext())
                     findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToHomeActivity())
                     activity?.finish()
                 }
@@ -142,13 +145,5 @@ class SignInFragment : Fragment() {
         val password = binding.etPassword.text.toString()
         Timber.d("Username : $username \n Password : $password")
         viewModel.authUser(username, password)
-    }
-
-    private fun triggerGenBenIdWorker() {
-        val workRequest = OneTimeWorkRequestBuilder<GenerateBenIdsWorker>()
-            .setConstraints(GenerateBenIdsWorker.constraint)
-            .build()
-        WorkManager.getInstance(requireContext())
-            .enqueueUniqueWork(GenerateBenIdsWorker.name, ExistingWorkPolicy.KEEP, workRequest)
     }
 }

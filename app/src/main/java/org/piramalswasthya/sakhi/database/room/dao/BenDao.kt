@@ -37,22 +37,16 @@ interface BenDao {
     @Query("UPDATE BENEFICIARY SET beneficiaryId = :newId, benRegId = :benRegId WHERE householdId = :hhId AND beneficiaryId =:oldId")
     suspend fun substituteBenId(hhId: Long, oldId: Long, newId: Long, benRegId: Long)
 
-    @Query("UPDATE BENEFICIARY SET serverUpdatedStatus = 1 , beneficiaryId = :newId , processed = 'U'  WHERE householdId = :hhId AND beneficiaryId =:oldId")
-    suspend fun updateToFinalBenId(hhId: Long, oldId: Long, newId: Long)
-
     @Query("SELECT * FROM BENEFICIARY WHERE isDraft = 0 AND processed = 'N' AND syncState =:unsynced ")
     suspend fun getAllUnprocessedBen(unsynced: SyncState = SyncState.UNSYNCED): List<BenRegCache>
 
     @Query("SELECT COUNT(*) FROM BENEFICIARY WHERE isDraft = 0 AND processed = 'N' AND syncState =:unsynced ")
     fun getUnProcessedRecordCount(unsynced: SyncState = SyncState.UNSYNCED): LiveData<Int>
 
-    @Query("SELECT * FROM BENEFICIARY WHERE isDraft = 0 AND processed = 'U' AND syncState =:unsynced ")
-    suspend fun getAllBenForSyncWithServer(unsynced: SyncState = SyncState.UNSYNCED): List<BenRegCache>
+    @Query("UPDATE BENEFICIARY SET processed = 'P' , syncState = 2 WHERE beneficiaryId =:benId")
+    suspend fun benSyncedWithServer(vararg benId: Long)
 
-    @Query("UPDATE BENEFICIARY SET processed = 'P' , syncState = :synced WHERE beneficiaryId =:benId")
-    suspend fun benSyncedWithServer(benId: Long, synced: SyncState = SyncState.SYNCED)
-
-    @Query("UPDATE BENEFICIARY SET processed = 'U' , syncState = 0 WHERE beneficiaryId =:benId")
+    @Query("UPDATE BENEFICIARY SET processed = 'N' , syncState = 0 WHERE beneficiaryId =:benId")
     suspend fun benSyncWithServerFailed(vararg benId: Long)
 
     @Query("SELECT beneficiaryId FROM BENEFICIARY WHERE beneficiaryId IN (:list)")
@@ -106,7 +100,7 @@ interface BenDao {
     fun getAllHrpCasesList(): LiveData<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 4 and hhId = :hhId")
-    fun getAllPNCMotherListFromHousehold(hhId : Long): List<BenBasicCache>
+    suspend fun getAllPNCMotherListFromHousehold(hhId : Long): List<BenBasicCache>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE typeOfList = :infant or ageUnit = :ageUnit and age < 15")
     fun getAllCDRList(infant: TypeOfList = TypeOfList.INFANT, ageUnit: AgeUnit = AgeUnit.YEARS): LiveData<List<BenBasicCache>>

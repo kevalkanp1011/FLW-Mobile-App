@@ -28,9 +28,9 @@ import timber.log.Timber
 @AndroidEntryPoint
 class AllBenFragment : Fragment() {
 
-    private var _binding : FragmentDisplaySearchRvButtonBinding? = null
+    private var _binding: FragmentDisplaySearchRvButtonBinding? = null
 
-    private val binding  : FragmentDisplaySearchRvButtonBinding
+    private val binding: FragmentDisplaySearchRvButtonBinding
         get() = _binding!!
 
 
@@ -63,7 +63,7 @@ class AllBenFragment : Fragment() {
                 )
             },
             {
-                WorkerUtils.triggerSyncWorker(requireContext())
+
             }
         ))
         binding.rvAny.adapter = benAdapter
@@ -105,7 +105,7 @@ class AllBenFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        activity?.let{
+        activity?.let {
             (it as HomeActivity).setLogo(R.drawable.ic__ben)
         }
     }

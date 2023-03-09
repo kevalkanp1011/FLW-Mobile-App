@@ -15,4 +15,12 @@ interface CbacDao {
     @Query("SELECT * FROM CBAC WHERE benId = :benId LIMIT 1")
     suspend fun getCbacFromBenId(benId: Long): CbacCache?
 
+
+    @Query("SELECT * FROM CBAC WHERE processed = 'N'")
+    suspend fun getAllUnprocessedCbac() : List<CbacCache>
+
+
+    @Query("UPDATE CBAC SET processed = 'P' WHERE benId =:benId")
+    abstract fun cbacSyncedWithServer(vararg benId: Long)
+
 }

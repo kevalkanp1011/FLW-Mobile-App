@@ -15,14 +15,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.EntryPoint
@@ -37,8 +33,6 @@ import org.piramalswasthya.sakhi.helpers.MyContextWrapper
 import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdActivity
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
-import org.piramalswasthya.sakhi.work.PullFromAmritWorker
-import org.piramalswasthya.sakhi.work.PushToAmritWorker
 import org.piramalswasthya.sakhi.work.WorkerUtils
 
 
@@ -115,7 +109,7 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpActionBar()
         setUpNavHeader()
-        setUpFullLoadPullWorker()
+        setUpSyncWorker()
         setUpMenu()
 
         viewModel.navigateToLoginPage.observe(this) {
@@ -156,8 +150,8 @@ class HomeActivity : AppCompatActivity() {
         invalidateOptionsMenu()
     }
 
-    private fun setUpFullLoadPullWorker() {
-        WorkerUtils.triggerSyncWorker(this)
+    private fun setUpSyncWorker() {
+        WorkerUtils.triggerAmritSyncWorker(this)
     }
 
     private fun setUpNavHeader() {
@@ -212,18 +206,24 @@ class HomeActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration)
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
 
-        binding.navView.menu.findItem(R.id.menu_logout).setOnMenuItemClickListener {
-
-            logoutAlert.show()
-            true
-
-        }
         binding.navView.menu.findItem(R.id.homeFragment).setOnMenuItemClickListener {
             navController.popBackStack(R.id.homeFragment, false)
             binding.drawerLayout.close()
             true
 
         }
+        binding.navView.menu.findItem(R.id.sync_pending_records).setOnMenuItemClickListener {
+            setUpSyncWorker()
+            binding.drawerLayout.close()
+            true
+
+        }
+        binding.navView.menu.findItem(R.id.menu_logout).setOnMenuItemClickListener {
+            logoutAlert.show()
+            true
+
+        }
+
         binding.navView.menu.findItem(R.id.abha_id_activity).setOnMenuItemClickListener {
             navController.popBackStack(R.id.homeFragment, false)
             startActivity(Intent(this, AbhaIdActivity::class.java))
@@ -231,7 +231,6 @@ class HomeActivity : AppCompatActivity() {
             true
 
         }
-        binding.navView.menu.findItem(R.id.menu_logout).isCheckable = false
     }
 
 //    override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -20,6 +20,7 @@ import org.piramalswasthya.sakhi.adapters.HomePagerAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentHomeBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.work.PullFromAmritWorker
+import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -93,32 +94,48 @@ class HomeFragment : Fragment() {
         if (viewModel.isLocationSet())
             binding.etSelectVillage.setText(viewModel.getLocationRecord().village)
         setUpViewPager()
+        setUpWorkerProgress()
 
+
+    }
+
+    private fun setUpWorkerProgress() {
         WorkManager.getInstance(requireContext())
-            .getWorkInfosLiveData(WorkQuery.fromUniqueWorkNames(PullFromAmritWorker.name))
-            .observe(viewLifecycleOwner) { workInfos ->
-                var finishedCount = 0
-                if (workInfos != null) {
-                    for (workInfo in workInfos) {
-                        if (workInfo != null) {
-                            if (workInfo.state.isFinished && workInfo.state == WorkInfo.State.SUCCEEDED) {
-                                finishedCount++
+            .getWorkInfosLiveData(WorkQuery.fromUniqueWorkNames(WorkerUtils.syncWorkerUniqueName))
+            .observe(viewLifecycleOwner) { workInfoMutableList ->
+                workInfoMutableList?.let { list ->
+                    list.takeIf { it.isNotEmpty() }?.let { workInfoMutableList1 ->
+
+                        workInfoMutableList1.filter { it.state == WorkInfo.State.RUNNING }.takeIf {
+                            it.isNotEmpty()
+                        }?.first()?.let {
+
+                            val progressData = it.progress
+                            val currentPage = progressData.getInt(PullFromAmritWorker.Progress, 0)
+                            val totalPage = progressData.getInt(PullFromAmritWorker.NumPages, 0)
+                            binding.llFullLoadProgress.visibility = View.VISIBLE
+
+                            if (totalPage > 0) {
+                                if (binding.pbLoadProgress.isIndeterminate) {
+                                    binding.pbLoadProgress.isIndeterminate = false
+                                    binding.tvLoadProgress.visibility = View.VISIBLE
+                                }
+                                val p = (currentPage * 100) / totalPage
+                                Timber.tag("Current Progress").v("$p")
+                                binding.pbLoadProgress.progress = p
+                                binding.tvLoadProgress.text = context?.getString(
+                                    R.string.home_fragment_percent_download_text,
+                                    currentPage,
+                                    totalPage
+                                )
                             }
+
+                        } ?: run {
+                            binding.llFullLoadProgress.visibility = View.GONE
                         }
                     }
                 }
-                if (workInfos != null) {
-                    binding.llFullLoadProgress.visibility =
-
-                        if (finishedCount == workInfos.size)
-                            View.GONE
-                        else
-                            View.VISIBLE
-
-                }
             }
-
-
     }
 
     private fun setUpViewPager() {

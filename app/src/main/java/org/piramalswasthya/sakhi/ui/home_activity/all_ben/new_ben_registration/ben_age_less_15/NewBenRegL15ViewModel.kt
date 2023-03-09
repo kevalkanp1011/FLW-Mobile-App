@@ -63,13 +63,9 @@ class NewBenRegL15ViewModel @Inject constructor(
 
     suspend fun getFirstPage(adapter: FormInputAdapter): List<FormInput> {
         withContext(Dispatchers.IO) {
-            household = benRepo.getBenHousehold(hhId)!!
+            household = benRepo.getHousehold(hhId)!!
             val pncMotherList = benRepo.getPncMothersFromHhId(hhId).map { it.benName }
-            form = benRepo.getDraftForm(hhId, true)?.let {
-                BenKidRegFormDataset(context, it, pncMotherList)
-            } ?: run {
-                BenKidRegFormDataset(context, pncMotherList)
-            }
+            form = BenKidRegFormDataset(context, pncMotherList)
         }
         viewModelScope.launch {
             var emittedFromDobForAge = false
@@ -586,7 +582,7 @@ class NewBenRegL15ViewModel @Inject constructor(
     fun persistFirstPage() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                benRepo.persistKidFirstPage(form, hhId)
+                //benRepo.persistKidFirstPage(form, hhId)
             }
         }
     }
@@ -596,7 +592,7 @@ class NewBenRegL15ViewModel @Inject constructor(
             _state.value = State.SAVING
             withContext(Dispatchers.IO) {
                 try {
-                    benRepo.persistKidSecondPage(form, hhId, locationRecord)
+                    benRepo.persistBenKid(form, hhId, locationRecord)
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
                     Timber.d("saving HH data failed!! $e")
