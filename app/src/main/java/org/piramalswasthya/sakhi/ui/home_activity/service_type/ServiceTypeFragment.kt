@@ -100,14 +100,16 @@ class ServiceTypeFragment : Fragment() {
 
         }
         viewModel.state.observe(viewLifecycleOwner) {
-            when (it) {
-                IDLE -> {}//TODO()
-                LOADING -> {}//TODO()
-                SUCCESS -> {
-                    if (homeViewModel.isLocationSet())
-                        viewModel.loadLocation(homeViewModel.getLocationRecord())
-                    else {
-                        viewModel.loadDefaultLocation()
+            it?.let{
+                when (it) {
+                    IDLE -> {}//TODO()
+                    LOADING -> {}//TODO()
+                    SUCCESS -> {
+                        if (homeViewModel.isLocationSet())
+                            viewModel.loadLocation(homeViewModel.getLocationRecord())
+                        else {
+                            viewModel.loadDefaultLocation()
+                        }
                     }
                 }
             }

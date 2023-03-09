@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -25,8 +24,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.NewBenGenPagerAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormViewpagerBinding
-import org.piramalswasthya.sakhi.services.UploadSyncService
-import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_more_15.NewBenRegG15ViewModel.State
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.work.WorkerUtils
@@ -161,13 +158,6 @@ class NewBenRegG15Fragment : Fragment() {
         binding.btnSubmitForm.setOnClickListener {
             if (validateFormForPage(binding.vp2Nhhr.adapter?.itemCount!!)) {
                 viewModel.persistForm(homeViewModel.getLocationRecord())
-                Toast.makeText(context, "Beneficiary saved successfully", Toast.LENGTH_LONG).show()
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-                    activity?.startForegroundService(Intent(context, UploadSyncService::class.java))
-                } else {
-                    activity?.startService(Intent(context, UploadSyncService::class.java))
-                }
             }
         }
 
@@ -180,7 +170,7 @@ class NewBenRegG15Fragment : Fragment() {
                 }
                 State.SAVE_SUCCESS -> {
                     Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
-                    WorkerUtils.triggerSyncWorker(requireContext())
+                    WorkerUtils.triggerAmritSyncWorker(requireContext())
                     findNavController().navigate(NewBenRegG15FragmentDirections.actionNewBenRegG15FragmentToHomeFragment())
                 }
                 State.SAVE_FAILED -> Toast.makeText(

@@ -46,7 +46,7 @@ class CdrListFragment : Fragment() {
                     Toast.makeText(context, "Household : $it clicked", Toast.LENGTH_SHORT).show()
                 },
                 {
-                    WorkerUtils.triggerSyncWorker(requireContext())
+                   
                 }
             ) { hhId, benId ->
                 findNavController().navigate(

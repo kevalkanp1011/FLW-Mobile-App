@@ -1,6 +1,5 @@
 package org.piramalswasthya.sakhi.work
 
-import android.app.NotificationManager
 import android.content.Context
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
@@ -12,8 +11,10 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import timber.log.Timber
+import java.lang.Integer.min
 import java.util.concurrent.TimeUnit
 
 @HiltWorker
@@ -26,14 +27,19 @@ class PullFromAmritWorker @AssistedInject constructor(
 
     companion object {
         const val name = "PullFromAmritWorker"
-
+        const val Progress = "Progress"
+        const val NumPages = "Total Pages"
         const val n = 4 // Number of threads!
     }
 
-    private val notificationManager =
-        appContext.getSystemService(Context.NOTIFICATION_SERVICE) as
-                NotificationManager
+//    private val notificationManager =
+//        appContext.getSystemService(Context.NOTIFICATION_SERVICE) as
+//                NotificationManager
 
+    private var page1: Int = 0
+    private var page2: Int = 0
+    private var page3: Int = 0
+    private var page4: Int = 0
 
 
     override suspend fun doWork(): Result {
@@ -48,18 +54,21 @@ class PullFromAmritWorker @AssistedInject constructor(
             withContext(Dispatchers.IO) {
                 val startTime = System.currentTimeMillis()
                 var numPages: Int
+                val startPage = if(preferenceDao.getLastSyncedTimeStamp()==Konstants.defaultTimeStamp)
+                    preferenceDao.getFirstSyncLastSyncedPage()
+                else 0
 
                 do {
-                    numPages = benRepo.getBeneficiariesFromServerForWorker(0)
+                    numPages = benRepo.getBeneficiariesFromServerForWorker(startPage)
                 } while (numPages == -2)
 //                for (i in 1 until numPages)
 //                    benRepo.getBeneficiariesFromServerForWorker(i)
                 val result1 =
                     awaitAll(
-                        async { getBenForPage(numPages, 0) },
-                        async { getBenForPage(numPages, 1) },
-                        async { getBenForPage(numPages, 2) },
-                        async { getBenForPage(numPages, 3) },
+                        async { getBenForPage(numPages, 0, startPage) },
+                        async { getBenForPage(numPages, 1, startPage) },
+                        async { getBenForPage(numPages, 2, startPage) },
+                        async { getBenForPage(numPages, 3, startPage) },
                     )
                 val endTime = System.currentTimeMillis()
                 val timeTaken = TimeUnit.MILLISECONDS.toSeconds(endTime - startTime)
@@ -82,7 +91,7 @@ class PullFromAmritWorker @AssistedInject constructor(
             }
 
         } catch (e: java.lang.Exception) {
-            Timber.d("Error occurred in PullFromAmritFullLoadWorker $e")
+            Timber.d("Error occurred in PullFromAmritFullLoadWorker $e ${e.stackTrace}")
 
             Result.failure()
         }
@@ -90,10 +99,13 @@ class PullFromAmritWorker @AssistedInject constructor(
 
     private fun createForegroundInfo(progress: String): ForegroundInfo {
         // This PendingIntent can be used to cancel the worker
-        val intent = WorkManager.getInstance(applicationContext)
-            .createCancelPendingIntent(id)
+//        val intent = WorkManager.getInstance(applicationContext)
+//            .createCancelPendingIntent(id)
 
-        val notification = NotificationCompat.Builder(appContext, appContext.getString(org.piramalswasthya.sakhi.R.string.notification_sync_channel_id))
+        val notification = NotificationCompat.Builder(
+            appContext,
+            appContext.getString(org.piramalswasthya.sakhi.R.string.notification_sync_channel_id)
+        )
             .setContentTitle("Syncing Data")
             .setContentText(progress)
             .setSmallIcon(org.piramalswasthya.sakhi.R.drawable.ic_launcher_foreground)
@@ -105,15 +117,29 @@ class PullFromAmritWorker @AssistedInject constructor(
     }
 
 
-    private suspend fun getBenForPage(numPages: Int, rem: Int): Boolean {
+    private suspend fun getBenForPage(numPages: Int, rem: Int, startPage : Int): Boolean {
         return withContext(Dispatchers.IO) {
-            var page: Int = rem
+            var page: Int = startPage + rem
+
             while (page < numPages) {
                 val ret = benRepo.getBeneficiariesFromServerForWorker(page)
+
                 if (ret == -1)
                     throw IllegalStateException("benRepo.getBeneficiariesFromServerForWorker(page) returned -1 ")
-                if (ret != -2)
+                if (ret != -2) {
+                    val finalPage = (page1+page2+page3+page4)/4
+                    val minPageSynced = min(min(page1,page2), min(page3,page4))
+                    preferenceDao.setFirstSyncLastSyncedPage(minPageSynced)
+                    setProgressAsync(workDataOf(Progress to finalPage, NumPages to numPages ))
                     page += n
+                }
+                when(rem){
+                    0-> page1 = page
+                    1-> page2 = page
+                    2-> page3 = page
+                    3-> page4 = page
+                }
+
             }
             true
         }

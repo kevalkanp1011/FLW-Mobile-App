@@ -63,6 +63,10 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
         editor.apply()
     }
 
+    fun deleteForLogout() {
+        pref.edit().clear().apply()
+    }
+
     fun deleteLoginCred() {
         val editor = pref.edit()
         val prefUserKey = context.getString(R.string.PREF_rem_me_uname)
@@ -107,6 +111,19 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
         val prefKey = context.getString(R.string.PREF_full_load_pull_progress)
         return pref.getLong(prefKey, 1603132200000)
     }
+
+    fun setFirstSyncLastSyncedPage(page: Int){
+        val editor = pref.edit()
+        val prefKey = context.getString(R.string.PREF_first_pull_amrit_last_synced_page)
+        editor.putInt(prefKey, page)
+        editor.apply()
+    }
+
+    fun getFirstSyncLastSyncedPage(): Int {
+        val prefKey = context.getString(R.string.PREF_first_pull_amrit_last_synced_page)
+        return pref.getInt(prefKey, 0)
+    }
+
 
     fun saveSetLanguage(language: Languages) {
         val key = context.getString(R.string.PREF_current_saved_language)

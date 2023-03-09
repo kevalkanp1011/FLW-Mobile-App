@@ -31,4 +31,7 @@ interface HouseholdDao {
     @Query("UPDATE HOUSEHOLD SET householdId  = :newId WHERE householdId = :oldId ")
     suspend fun substituteBenId(oldId: Long, newId: Long)
 
+    @Query("SELECT * FROM household WHERE isDraft = 0 AND processed = 'N'")
+    suspend fun getAllUnprocessedHousehold() : List<HouseholdCache>
+
 }

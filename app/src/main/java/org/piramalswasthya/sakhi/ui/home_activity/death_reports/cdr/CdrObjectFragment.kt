@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentCdrObjectBinding
 import org.piramalswasthya.sakhi.work.PushToD2DWorker
+import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 import kotlin.reflect.jvm.internal.impl.metadata.ProtoBuf.Visibility
 
@@ -81,7 +82,7 @@ class CdrObjectFragment : Fragment() {
                 }
                 CdrObjectViewModel.State.SUCCESS -> {
                     findNavController().navigateUp()
-                    triggerCdrSendingWorker(requireContext())
+                    WorkerUtils.triggerD2dSyncWorker(requireContext())
                 }
                 CdrObjectViewModel.State.FAIL -> {
                     binding.cdrForm.rvInputForm.visibility = View.VISIBLE
@@ -104,19 +105,6 @@ class CdrObjectFragment : Fragment() {
         }
     }
 
-    companion object {
-        private fun triggerCdrSendingWorker(context: Context) {
-            val workRequest = OneTimeWorkRequestBuilder<PushToD2DWorker>()
-                .setConstraints(PushToD2DWorker.constraint)
-                .build()
-            WorkManager.getInstance(context)
-                .enqueueUniqueWork(
-                    PushToD2DWorker.name,
-                    ExistingWorkPolicy.APPEND_OR_REPLACE,
-                    workRequest
-                )
-        }
-    }
 
     fun validate(): Boolean {
 //        Timber.d("binding $binding rv ${binding.nhhrForm.rvInputForm} adapter ${binding.nhhrForm.rvInputForm.adapter}")

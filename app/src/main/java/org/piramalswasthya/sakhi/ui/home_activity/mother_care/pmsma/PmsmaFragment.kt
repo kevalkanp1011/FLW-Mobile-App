@@ -22,6 +22,7 @@ import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
 import org.piramalswasthya.sakhi.databinding.FragmentPmsmaBinding
 import org.piramalswasthya.sakhi.ui.home_activity.mother_care.pmsma.PmsmaViewModel.State
 import org.piramalswasthya.sakhi.work.PushToD2DWorker
+import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -124,7 +125,7 @@ class PmsmaFragment : Fragment() {
                     binding.pbPmsma.visibility = View.VISIBLE
                 }
                 State.SUCCESS -> {
-                    triggerPmsmaSendingWorker(requireContext())
+                    WorkerUtils.triggerD2dSyncWorker(requireContext())
                     findNavController().navigateUp()
                 }
                 State.FAIL -> {
@@ -150,19 +151,7 @@ class PmsmaFragment : Fragment() {
         Timber.d("onViewCreated completed!!")
     }
 
-    companion object {
-        private fun triggerPmsmaSendingWorker(context: Context) {
-            val workRequest = OneTimeWorkRequestBuilder<PushToD2DWorker>()
-                .setConstraints(PushToD2DWorker.constraint)
-                .build()
-            WorkManager.getInstance(context)
-                .enqueueUniqueWork(
-                    PushToD2DWorker.name,
-                    ExistingWorkPolicy.APPEND_OR_REPLACE,
-                    workRequest
-                )
-        }
-    }
+
 
     fun validate(): Boolean {
 

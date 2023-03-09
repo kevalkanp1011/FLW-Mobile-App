@@ -98,12 +98,8 @@ class NewBenRegG15ViewModel @Inject constructor(
 
     suspend fun getFirstPage(adapter: FormInputAdapter): List<FormInput> {
         withContext(Dispatchers.IO) {
-            household = benRepo.getBenHousehold(hhId)!!
-            form = benRepo.getDraftForm(hhId, false)?.let {
-                BenGenRegFormDataset(context, it)
-            } ?: run {
-                BenGenRegFormDataset(context)
-            }
+            household = benRepo.getHousehold(hhId)!!
+            form = BenGenRegFormDataset(context)
         }
         viewModelScope.launch {
             var emittedFromDob = false
@@ -642,7 +638,7 @@ class NewBenRegG15ViewModel @Inject constructor(
         Timber.d("Persist first page called!")
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                benRepo.persistGenFirstPage(form, hhId)
+               // benRepo.persistGenFirstPage(form, hhId)
             }
         }
     }
@@ -651,7 +647,7 @@ class NewBenRegG15ViewModel @Inject constructor(
         Timber.d("Persist second page called!")
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                //benRepo.persistGenSecondPage(, form, null)
+                //benRepo.persistBenGen1(, form, null)
             }
         }
     }
@@ -663,9 +659,9 @@ class NewBenRegG15ViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 try {
                     if (hasReproductiveStatus.value == false)
-                        benRepo.persistGenSecondPage(hhId, form, locationRecord)
+                        benRepo.persistBenGen1(hhId, form, locationRecord)
                     else
-                        benRepo.persistGenThirdPage(hhId, form, locationRecord)
+                        benRepo.persistBenGen2(hhId, form, locationRecord)
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
                     Timber.d("saving HH data failed!! $e")

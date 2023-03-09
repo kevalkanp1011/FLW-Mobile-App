@@ -3,9 +3,7 @@ package org.piramalswasthya.sakhi.work
 import android.content.Context
 import android.widget.Toast
 import androidx.hilt.work.HiltWorker
-import androidx.work.Constraints
 import androidx.work.CoroutineWorker
-import androidx.work.NetworkType
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -31,7 +29,7 @@ class PushToAmritWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         init()
         try {
-            val workerResult = benRepo.processNewBen()
+            val workerResult = benRepo.syncUnprocessedRecords()
             if (workerResult) {
                 Timber.d("Worker completed")
                 return Result.success()

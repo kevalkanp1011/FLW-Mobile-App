@@ -9,6 +9,7 @@
     <string name="PREF_rem_me_pwd" translatable="false">password-local-saved</string>
     <string name="PREF_location_record_entry" translatable="false">location-record</string>
     <string name="PREF_full_load_pull_progress" translatable="false">full_load_sync_pull_amrit</string>
+    <string name="PREF_first_pull_amrit_last_synced_page" translatable="false">full_load_sync_pull_amrit_first_sync_last_saved_page</string>
     <string name="PREF_current_saved_language" translatable="false">Locale.Helper.Selected.Language</string>
     <string name="PREF_current_dp_uri" translatable="false">DP_URI_cat</string>
 
@@ -576,6 +577,7 @@
     <string name="nbr_child_defect_at_birth">Any Defect Seen at Birth</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home_fragment_percent_download_text">%1d/%2d pages downloaded</string>
 
 
 </resources>

@@ -6,7 +6,6 @@ import android.content.Context.LOCATION_SERVICE
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -25,9 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.NewHouseholdPagerAdapter
 import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
-import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormViewpagerBinding
-import org.piramalswasthya.sakhi.services.UploadSyncService
 import org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_registration.NewHouseholdViewModel.State
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import timber.log.Timber
@@ -227,13 +224,6 @@ class NewHouseholdFragment : Fragment() {
         binding.btnSubmitForm.setOnClickListener {
             if (validateFormForPage(2)) {
                 viewModel.persistForm(homeViewModel.getLocationRecord())
-                //TODO(Move to Add Ben)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-                    activity?.startForegroundService(Intent(context, UploadSyncService::class.java))
-                } else {
-                    activity?.startService(Intent(context, UploadSyncService::class.java))
-                }
             }
         }
 
@@ -245,6 +235,7 @@ class NewHouseholdFragment : Fragment() {
 
                 }
                 State.SAVE_SUCCESS -> {
+                    Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
                     findNavController().navigate(NewHouseholdFragmentDirections.actionNewHouseholdFragmentToNewBenRegTypeFragment(viewModel.getHHId()))
                 }
                 State.SAVE_FAILED -> Toast.makeText(context,"Something wend wong! Contact testing!", Toast.LENGTH_LONG).show()

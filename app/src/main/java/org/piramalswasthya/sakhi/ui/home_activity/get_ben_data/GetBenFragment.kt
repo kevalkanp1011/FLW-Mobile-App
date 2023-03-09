@@ -40,25 +40,27 @@ class GetBenFragment : Fragment() {
         binding.rvBenServer.adapter = benAdapter
 
         viewModel.state.observe(viewLifecycleOwner){
-            when(it) {
-                IDLE -> {} //TODO()
-                LOADING -> {
-                    binding.clError.visibility = View.GONE
-                    binding.clContent.visibility = View.GONE
-                    binding.flLoading.visibility = View.VISIBLE
-                }
-                ERROR_SERVER -> {
-                    binding.clError.visibility = View.VISIBLE
-                    binding.clContent.visibility = View.GONE
-                    binding.flLoading.visibility = View.GONE
-                }
-                ERROR_NETWORK -> {} //TODO()
-                SUCCESS -> {
-                    setUpPagesAdapter()
-                    benAdapter.submitList(viewModel.benDataList)
-                    binding.clError.visibility = View.GONE
-                    binding.clContent.visibility = View.VISIBLE
-                    binding.flLoading.visibility = View.GONE
+            it?.let {
+                when (it) {
+                    IDLE -> {} //TODO()
+                    LOADING -> {
+                        binding.clError.visibility = View.GONE
+                        binding.clContent.visibility = View.GONE
+                        binding.flLoading.visibility = View.VISIBLE
+                    }
+                    ERROR_SERVER -> {
+                        binding.clError.visibility = View.VISIBLE
+                        binding.clContent.visibility = View.GONE
+                        binding.flLoading.visibility = View.GONE
+                    }
+                    ERROR_NETWORK -> {} //TODO()
+                    SUCCESS -> {
+                        setUpPagesAdapter()
+                        benAdapter.submitList(viewModel.benDataList)
+                        binding.clError.visibility = View.GONE
+                        binding.clContent.visibility = View.VISIBLE
+                        binding.flLoading.visibility = View.GONE
+                    }
                 }
             }
         }

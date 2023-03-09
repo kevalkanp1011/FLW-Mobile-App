@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -110,7 +109,7 @@ class PmsmaViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 ben = benRepo.getBeneficiary(benId, hhId)!!
-                household = benRepo.getBenHousehold(hhId)!!
+                household = benRepo.getHousehold(hhId)!!
                 user = database.userDao.getLoggedInUser()!!
                 Timber.d("pmsma ben: $ben")
                 pmsma = database.pmsmaDao.getPmsma(hhId,benId)

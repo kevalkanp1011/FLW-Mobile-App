@@ -18,13 +18,24 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="gone"
+            tools:visibility="visible"
             app:layout_constraintTop_toTopOf="parent">
 
             <ProgressBar
+                android:id="@+id/pb_load_progress"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
+                android:indeterminate="true"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_load_progress"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:indeterminate="true" />
+                android:padding="@dimen/padding_small"
+                android:layout_gravity="end"
+                android:visibility="gone"
+                android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+                android:text="@string/home_fragment_percent_download_text"/>
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout

@@ -27,6 +27,7 @@ data class CbacCache(
     val hhId: Long,
     @ColumnInfo(index = true)
     val ashaId: Int,
+    var gender : Gender,
     var cbac_age_posi: Int = 0,
     var cbac_smoke_posi: Int = 0,
     var cbac_alcohol_posi: Int = 0,
@@ -117,7 +118,7 @@ data class CbacCache(
 
 
 ) {
-    fun asPostModel(gender: Gender, resources: Resources): CbacPost {
+    fun asPostModel(resources: Resources): CbacPost {
         return CbacPost(
             houseoldId = hhId,
             benficieryid = benId,

@@ -100,7 +100,7 @@ class CdrObjectViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 ben = benRepo.getBeneficiary(benId, hhId)!!
-                household = benRepo.getBenHousehold(hhId)!!
+                household = benRepo.getHousehold(hhId)!!
                 user = database.userDao.getLoggedInUser()!!
                 cdr = database.cdrDao.getCDR(hhId, benId)
             }
