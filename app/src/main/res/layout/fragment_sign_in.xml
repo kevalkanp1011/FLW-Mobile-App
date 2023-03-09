@@ -132,8 +132,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:drawableEnd="@drawable/ic_person"
-                                android:singleLine="true"
                                 android:drawablePadding="@dimen/padding_normal"
+                                android:singleLine="true"
                                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
 
                         </com.google.android.material.textfield.TextInputLayout>
@@ -155,8 +155,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:drawablePadding="@dimen/padding_normal"
-                                android:singleLine="true"
                                 android:inputType="textPassword"
+                                android:singleLine="true"
                                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
 
                         </com.google.android.material.textfield.TextInputLayout>

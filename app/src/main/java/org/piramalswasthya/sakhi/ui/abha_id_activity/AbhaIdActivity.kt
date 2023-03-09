@@ -31,7 +31,6 @@ class AbhaIdActivity : AppCompatActivity() {
         _binding = ActivityAbhaIdBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         setUpActionBar()
     }
 

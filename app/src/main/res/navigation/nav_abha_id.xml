@@ -3,11 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_abha_id"
-    app:startDestination="@id/aadharIdFragment">
+    app:startDestination="@id/aadhaarIdFragment">
 
     <fragment
-        android:id="@+id/aadharIdFragment"
-        android:name="org.piramalswasthya.sakhi.ui.abha_id_activity.aadhar_id.AadharIdFragment"
-        android:label="fragment_aadhar_id"
-        tools:layout="@layout/fragment_aadhar_id" />
+        android:id="@+id/aadhaarIdFragment"
+        android:name="org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdFragment"
+        android:label="Aadhaar Verification"
+        tools:layout="@layout/fragment_aadhaar_id" >
+        <action
+            android:id="@+id/action_aadhaarIdFragment_to_aadhaarOtpFragment"
+            app:destination="@id/aadhaarOtpFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/aadhaarOtpFragment"
+        android:name="org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_otp.AadhaarOtpFragment"
+        android:label="Verify with OTP"
+        tools:layout="@layout/fragment_aadhaar_otp" >
+        <action
+            android:id="@+id/action_aadhaarOtpFragment_to_createAbhaFragment"
+            app:destination="@id/createAbhaFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createAbhaFragment"
+        android:name="org.piramalswasthya.sakhi.ui.abha_id_activity.create_abha_id.CreateAbhaFragment"
+        android:label="fragment_create_abha"
+        tools:layout="@layout/fragment_create_abha" />
 </navigation>
