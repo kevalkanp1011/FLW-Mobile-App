@@ -9,6 +9,7 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_content_aadhar_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="16dp">
@@ -44,6 +45,7 @@
                     android:layout_height="match_parent"
                     android:inputType="number"
                     android:singleLine="true"
+                    android:maxLength="12"
                     android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
 
 
@@ -69,7 +71,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ProgressBar
-            android:id="@+id/pb_cdr"
+            android:id="@+id/pb_loading_aadhar_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

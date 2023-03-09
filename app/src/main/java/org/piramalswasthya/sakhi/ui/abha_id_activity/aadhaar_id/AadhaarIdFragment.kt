@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.databinding.FragmentAadhaarIdBinding
@@ -20,16 +20,11 @@ class AadhaarIdFragment : Fragment() {
     private val binding: FragmentAadhaarIdBinding
         get() = _binding!!
 
-
-    companion object {
-        fun newInstance() = AadhaarIdFragment()
-    }
-
-    private lateinit var viewModel: AadhaarIdViewModel
+    private val viewModel: AadhaarIdViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentAadhaarIdBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -37,7 +32,8 @@ class AadhaarIdFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnGenerateOtp.setOnClickListener {
-            findNavController().navigate(AadhaarIdFragmentDirections.actionAadhaarIdFragmentToAadhaarOtpFragment())
+            viewModel.generateOtpClicked()
+
         }
         binding.tietAadhaarNumber.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -54,15 +50,26 @@ class AadhaarIdFragment : Fragment() {
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state!!) {
-                State.LOADING -> ""
+                State.LOADING -> {
+                    binding.clContentAadharId.visibility = View.INVISIBLE
+                    binding.pbLoadingAadharId.visibility = View.VISIBLE
+                    viewModel.setStateSuccess()
+                }
+                State.SUCCESS -> {
+                    binding.clContentAadharId.visibility = View.VISIBLE
+                    binding.pbLoadingAadharId.visibility = View.INVISIBLE
+                    findNavController().navigate(AadhaarIdFragmentDirections.actionAadhaarIdFragmentToAadhaarOtpFragment())
+                    viewModel.resetState()
+                }
                 else -> ""
             }
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(AadhaarIdViewModel::class.java)
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
+
 
 }

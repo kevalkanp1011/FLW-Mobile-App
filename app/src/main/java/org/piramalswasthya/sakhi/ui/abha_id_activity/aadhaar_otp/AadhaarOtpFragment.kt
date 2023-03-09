@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,20 +20,15 @@ class AadhaarOtpFragment : Fragment() {
     private val binding: FragmentAadhaarOtpBinding
         get() = _binding!!
 
-    private lateinit var viewModel: AadhaarOtpViewModel
+    private val viewModel: AadhaarOtpViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        _binding = FragmentAadhaarOtpBinding.inflate(layoutInflater)
+    ): View {
+        _binding = FragmentAadhaarOtpBinding.inflate(layoutInflater, container, false)
 
         return binding.root
-    }
-
-    companion object {
-        fun newInstance() = AadhaarOtpViewModel()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -56,8 +52,8 @@ class AadhaarOtpFragment : Fragment() {
         })
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(AadhaarOtpViewModel::class.java)
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

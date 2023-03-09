@@ -11,7 +11,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="16dp">
+            android:padding="@dimen/padding_normal">
 
             <TextView
                 android:id="@+id/textView6"
@@ -37,6 +37,7 @@
                     android:id="@+id/tiet_aadhaar_otp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:maxLength="6"
                     android:inputType="number"
                     android:singleLine="true"
                     android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
@@ -67,14 +68,14 @@
                 android:layout_marginTop="@dimen/margin_normal"
                 android:layout_marginEnd="16dp"
                 android:text="Resend OTP"
-                android:textColor="@color/material_dynamic_primary70"
+                android:textColor="?attr/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btn_verify_OTP" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ProgressBar
-            android:id="@+id/pb_cdr"
+            android:id="@+id/pb_loading_aadhar_otp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
