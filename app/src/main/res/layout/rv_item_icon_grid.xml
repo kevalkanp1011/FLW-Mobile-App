@@ -16,7 +16,7 @@
 
     </data>
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/cv_icon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:labelFor="@id/imageView2"
                 android:text="@{homeIcon.title}"
-                android:textAlignment="center"
+                android:gravity="center"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
 
                 app:autoSizeMaxTextSize="16sp"
@@ -73,7 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{homeIcon.count.toString()}"
-                android:textAlignment="center"
+                android:gravity="center"
                 android:textAppearance="@style/TextAppearance.Material3.BodySmall"
 
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -82,5 +82,5 @@
                 tools:text="2" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </layout>

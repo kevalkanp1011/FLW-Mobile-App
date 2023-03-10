@@ -35,7 +35,7 @@ object AppModule {
     private const val baseTmcUrl = // "http://assamtmc.piramalswasthya.org:8080/"
     "http://uatamrit.piramalswasthya.org:8080/"
 
-    private const val baseAbhaUrl = "https://healthidsbx.abdm.gov.in/api/v1/registration/aadhaar/"
+    private const val baseAbhaUrl = "http://healthidsbx.abdm.gov.in/api/v1/registration/aadhaar/"
 
     private val baseClient =
         OkHttpClient.Builder()

@@ -11,6 +11,7 @@ import androidx.navigation.ui.NavigationUI
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.ActivityAbhaIdBinding
+import org.piramalswasthya.sakhi.network.interceptors.TokenInsertAbhaInterceptor
 import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdViewModel.State
 import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdFragment
 
@@ -35,27 +36,33 @@ class AbhaIdActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpActionBar()
 
-        val progressBar = findViewById<ProgressBar>(R.id.progress_bar_abha_activity)
-        val homeFragmentContainer =
-            findViewById<FragmentContainerView>(R.id.nav_host_activity_abha_id)
-
         mainViewModel.state.observe(this) { state ->
             when (state) {
                 State.LOADING_TOKEN -> {
                     // Show progress bar
-                    progressBar.visibility = View.VISIBLE
+                    binding.progressBarAbhaActivity.visibility = View.VISIBLE
                     // Hide other views (if any)
-                    homeFragmentContainer.visibility = View.GONE
+                    binding.navHostActivityAbhaId.visibility = View.GONE
+                    binding.clError.visibility = View.GONE
                 }
                 State.SUCCESS -> {
-                    progressBar.visibility = View.GONE
-                    homeFragmentContainer.visibility = View.VISIBLE
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.nav_host_activity_abha_id, AadhaarIdFragment())
-                        .commit()
+                    binding.progressBarAbhaActivity.visibility = View.GONE
+                    binding.clError.visibility = View.GONE
+                    binding.navHostActivityAbhaId.visibility = View.VISIBLE
+//                    DO NOT NEED THIS (destination of nav graph is Aadhar Id Fragment --- Our nav graph takes care of transactions
+                //                    supportFragmentManager.beginTransaction()
+//                        .replace(R.id.nav_host_activity_abha_id, AadhaarIdFragment())
+//                        .commit()
                 }
-                else -> {
+                State.ERROR_NETWORK -> {
+
+                    binding.clError.visibility = View.VISIBLE
+                    binding.progressBarAbhaActivity.visibility = View.GONE
+                    binding.navHostActivityAbhaId.visibility = View.GONE
+
+
                 }
+                else -> {}
             }
         }
     }
@@ -65,5 +72,10 @@ class AbhaIdActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         NavigationUI.setupWithNavController(binding.toolbar, navController)
         NavigationUI.setupActionBarWithNavController(this, navController)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        TokenInsertAbhaInterceptor.setToken("")
     }
 }

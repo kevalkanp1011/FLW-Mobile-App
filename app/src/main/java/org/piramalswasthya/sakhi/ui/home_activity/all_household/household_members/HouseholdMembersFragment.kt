@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.databinding.FragmentHouseholdMembersBinding
+import org.piramalswasthya.sakhi.ui.home_activity.all_ben.AllBenFragmentDirections
 
 @AndroidEntryPoint
 class HouseholdMembersFragment : Fragment() {
@@ -40,14 +41,9 @@ class HouseholdMembersFragment : Fragment() {
         binding.btnNextPage.visibility = View.GONE
         val benAdapter = BenListAdapter(
             BenListAdapter.BenClickListener(
-                {
-                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
-                },
-                {
-                    Toast.makeText(context, "Household : $it clicked", Toast.LENGTH_SHORT).show()
-                    findNavController().navigate(
-                        HouseholdMembersFragmentDirections.actionHouseholdMembersFragmentToNewBenRegTypeFragment(it)
-                    )
+                { hhId, benId, isKid ->
+
+
                 },
                 {
 

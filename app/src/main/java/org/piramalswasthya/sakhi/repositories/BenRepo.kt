@@ -13,7 +13,7 @@ import org.piramalswasthya.sakhi.database.room.BeneficiaryIdsAvail
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.helpers.ImageSizeConverter
+import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.network.GetBenRequest
@@ -340,7 +340,9 @@ class BenRepo @Inject constructor(
 
     suspend fun getBenKidForm(benId: Long, hhId: Long): BenKidRegFormDataset {
         return withContext(Dispatchers.IO) {
-            BenKidRegFormDataset(context,getBeneficiary(benId, hhId)!!)
+            BenKidRegFormDataset(context,getBeneficiary(benId, hhId)!!).also {
+                it.setPic()
+            }
         }
     }
 
@@ -1317,7 +1319,7 @@ private suspend fun getBenCacheFromServerResponse(response: String): MutableList
 
 private suspend fun getCompressedByteArray(benId: Long, benDataObj: JSONObject) =
     if (benDataObj.has("user_image"))
-        ImageSizeConverter.compressByteArray(
+        ImageUtils.compressImage(
             context,
             benId,
             benDataObj.getString("user_image")

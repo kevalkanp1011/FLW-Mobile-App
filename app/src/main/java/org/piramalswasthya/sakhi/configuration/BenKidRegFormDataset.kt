@@ -6,7 +6,7 @@ import android.widget.LinearLayout
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.room.SyncState
-import org.piramalswasthya.sakhi.helpers.ImageSizeConverter
+import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.model.FormInput.InputType.*
 import timber.log.Timber
@@ -19,11 +19,38 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
 
     constructor(context: Context, ben: BenRegCache/*, pncMotherList: List<String>*/) : this(context, null) {
         this.ben = ben
+        dateOfReg.value.value = getDateFromLong(ben.regDate)
+        firstName.value.value = ben.firstName
+        lastName.value.value = ben.lastName
+        ageUnit.value.value = context.resources.getStringArray(R.array.nbr_age_unit_array)[ben.age_unitId-1]
+        age.value.value = ben.age.toString()
+        dob.value.value = getDateFromLong(ben.dob)
+        gender.value.value = context.resources.getStringArray(R.array.nbr_gender_array)[ben.genderId-1]
+        fatherName.value.value = ben.fatherName
+        motherName.value.value = ben.motherName
+        mobileNoOfRelation.value.value = mobileNoOfRelation.list?.get(ben.mobileNoOfRelationId)
+        otherMobileNoOfRelation.value.value = ben.mobileOthers
+        contactNumber.value.value = ben.contactNumber.toString()
+        relationToHead.value.value = relationToHeadListDefault[ben.familyHeadRelationPosition]
+        community.value.value = community.list?.get(ben.communityId)
+        religion.value.value = religion.list?.get(ben.religionId)
+        otherReligion.value.value = ben.religionOthers
+        childRegisteredAtAwc.value.value = ben.kidDetails?.childRegisteredAWCId?.let { childRegisteredAtAwc.list?.get(it) }
+        childRegisteredAtSchool.value.value = ben.kidDetails?.childRegisteredSchoolId?.let { childRegisteredAtSchool.list?.get(it) }
+        typeOfSchool.value.value = ben.kidDetails?.typeOfSchoolId?.let { typeOfSchool.list?.get(it) }
+        rchId.value.value = ben.rchId
 
-        //TODO(SETUP THE VALUES
+
     }
 
     companion object {
+        private fun getDateFromLong(long : Long): String {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = long
+            val mdFormat =
+                SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+            return mdFormat.format(calendar.time)
+        }
         private fun getCurrentDate(): String {
             val calendar = Calendar.getInstance()
             val mdFormat =
@@ -567,7 +594,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
             )
         }
         ben?.apply {
-            userImageBlob = ImageSizeConverter.getByteArrayFromImageUri(context,pic.value.value!!)
+            userImageBlob = ImageUtils.getByteArrayFromImageUri(context,pic.value.value!!)
             regDate = getLongFromDate(this@BenKidRegFormDataset.dateOfReg.value.value!!)
             firstName = this@BenKidRegFormDataset.firstName.value.value
             lastName = this@BenKidRegFormDataset.lastName.value.value
@@ -712,5 +739,15 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         }
 
         return ben!!
+    }
+
+    suspend fun setPic() {
+        pic.value.value = ben?.userImageBlob?.let {
+            ImageUtils.getUriFromByteArray(
+                context,
+                ben!!.beneficiaryId,
+                it
+            ).toString()
+        }
     }
 }

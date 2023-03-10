@@ -79,6 +79,12 @@
         <action
             android:id="@+id/action_allBenFragment_to_newBenRegTypeFragment"
             app:destination="@id/newBenRegTypeFragment" />
+        <action
+            android:id="@+id/action_allBenFragment_to_newBenRegG15Fragment"
+            app:destination="@id/newBenRegG15Fragment" />
+        <action
+            android:id="@+id/action_allBenFragment_to_newBenRegL15Fragment"
+            app:destination="@id/newBenRegL15Fragment" />
     </fragment>
     <fragment
         android:id="@+id/eligibleCoupleFragment"
