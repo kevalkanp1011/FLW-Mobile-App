@@ -46,14 +46,12 @@ class AdolescentListFragment : Fragment() {
         binding.btnNextPage.visibility = View.GONE
         val benAdapter = BenListAdapter(
             BenListAdapter.BenClickListener(
-                {
-                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
+                { hhId, benId, isKid ->
+
+
                 },
                 {
-                    Toast.makeText(context, "Household : $it clicked", Toast.LENGTH_SHORT).show()
-                },
-                {
-                   
+
                 }
             ))
         binding.rvAny.adapter = benAdapter

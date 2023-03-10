@@ -88,6 +88,115 @@ data class AbhaTokenResponse(
     val tokenType : String
 )
 
+@JsonClass(generateAdapter = true)
+data class AbhaGenerateAadharOtpRequest(
+    val aadhar : String
+)
+@JsonClass(generateAdapter = true)
+data class AbhaGenerateAadharOtpResponse(
+    val txnId : String
+)
+
+
+@JsonClass(generateAdapter = true)
+data class AbhaVerifyAadharOtpRequest(
+    val otp : String,
+    val txnId : String
+)
+
+
+@JsonClass(generateAdapter = true)
+data class AbhaVerifyAadharOtpResponse(
+    val txnId : String
+)
+
+
+
+
+@JsonClass(generateAdapter = true)
+data class AbhaGenerateMobileOtpRequest(
+    val mobile : String,
+    val txnId: String
+)
+@JsonClass(generateAdapter = true)
+data class AbhaGenerateMobileOtpResponse(
+    val txnId : String
+)
+
+
+@JsonClass(generateAdapter = true)
+data class AbhaVerifyMobileOtpRequest(
+    val otp : String,
+    val txnId : String
+)
+
+
+@JsonClass(generateAdapter = true)
+data class AbhaVerifyMobileOtpResponse(
+    val txnId : String
+)
+
+@JsonClass(generateAdapter = true)
+data class CreateAbhaIdRequest(
+
+    // "email": "kalyan@beehyv.com",
+    //  "firstName": "first",
+    //  "healthId": "kaly.7089",
+    //  "lastName": "last",
+    //  "middleName": "middle",
+    //  "password": "India@143",
+    //  "profilePhoto": "",
+    //  "txnId": "9a6684db-e090-42e9-9781-5a284c7fe8d1"
+
+    val email : String,
+    val firstName : String,
+    val healthId : String,
+    val lastName : String,
+    val middleName : String,
+    val password : String,
+    val profilePhoto : String,
+    val txnId : String
+)
+
+
+@JsonClass(generateAdapter = true)
+data class CreateAbhaIdResponse(
+
+    val token : String,
+    val refreshToken : String,
+    val healthIdNumber : String,
+    val name : String,
+    val gender : String,
+    val yearOfBirth : String,
+    val monthOfBirth : String,
+    val dayOfBirth : String,
+    val firstName : String,
+    val healthId : String,
+    val lastName : String,
+    val middleName : String,
+    val stateCode : String,
+    val districtCode : String,
+    val stateName : String,
+    val districtName : String,
+    val email : String,
+    val kycPhoto : String?,
+    val profilePhoto : String,
+    val mobile : String,
+    val authMethods : List<String>,
+    val pincode : String?,
+    val tags : Map<String, String>,
+    val alreadyExists : String,
+    val new : String,
+)
+
+
+
+
+
+
+
+
+
 
 
 

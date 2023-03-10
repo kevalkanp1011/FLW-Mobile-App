@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.piramalswasthya.sakhi.databinding.RvItemBenBinding
 import org.piramalswasthya.sakhi.model.BenBasicDomain
+import org.piramalswasthya.sakhi.model.TypeOfList
 
 
 class BenListAdapter(private val clickListener: BenClickListener? = null) :
@@ -58,13 +59,11 @@ class BenListAdapter(private val clickListener: BenClickListener? = null) :
 
 
     class BenClickListener(
-        private val clickedBen: (benId: Long) -> Unit,
-        private val clickedHousehold: (hhId: Long) -> Unit,
-        private val clickedSync: () -> Unit
+        private val clickedBen: (hhId: Long, benId : Long, isKid : Boolean) -> Unit,
+        private val clickedHousehold: (hhId: Long) -> Unit
     ) {
-        fun onClickedBen(item: BenBasicDomain) = clickedBen(item.benId)
+        fun onClickedBen(item: BenBasicDomain) = clickedBen(item.hhId, item.benId, item.typeOfList==TypeOfList.CHILD.name || item.typeOfList == TypeOfList.INFANT.name || item.typeOfList==TypeOfList.ADOLESCENT.name)
         fun onClickedHouseHold(item: BenBasicDomain) = clickedHousehold(item.hhId)
-        fun onClickSync(item: BenBasicDomain) = clickedSync()
     }
 
 }

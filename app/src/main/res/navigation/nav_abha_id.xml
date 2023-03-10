@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_aadhaarOtpFragment_to_createAbhaFragment"
             app:destination="@id/createAbhaFragment" />
+        <argument
+            android:name="txnId"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/createAbhaFragment"
