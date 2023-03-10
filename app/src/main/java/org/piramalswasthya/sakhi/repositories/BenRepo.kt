@@ -30,7 +30,7 @@ class BenRepo @Inject constructor(
     private val database: InAppDb,
     private val preferenceDao: PreferenceDao,
     private val userRepo: UserRepo,
-    private val tmcNetworkApiService: TmcNetworkApiService
+    private val tmcNetworkApiService: AmritApiService
 ) {
 
     val benList by lazy {
