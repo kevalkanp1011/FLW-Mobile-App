@@ -1,6 +1,8 @@
 package org.piramalswasthya.sakhi.repositories
 
+import android.content.Context
 import androidx.lifecycle.Transformations
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.HouseholdFormDataset
@@ -10,8 +12,8 @@ import org.piramalswasthya.sakhi.model.LocationRecord
 import javax.inject.Inject
 
 class HouseholdRepo @Inject constructor(
-    private val database: InAppDb,
-//    private val tmcNetworkApiService: TmcNetworkApiService
+    @ApplicationContext private val context: Context,
+    private val database: InAppDb
 ) {
     val householdList by lazy {
         Transformations.map(database.householdDao.getAllHouseholds()) { list ->
@@ -19,36 +21,35 @@ class HouseholdRepo @Inject constructor(
         }
     }
 
-    suspend fun getDraftForm(): HouseholdCache? {
+    suspend fun getDraftForm(): HouseholdFormDataset? {
         return withContext(Dispatchers.IO) {
-            database.householdDao.getDraftHousehold()
+           val it =  database.householdDao.getDraftHousehold()
+            it?.let { HouseholdFormDataset(context, it) }
+        }
+    }
+
+
+    suspend fun getHouseholdForm(hhId: Long): HouseholdFormDataset {
+        return withContext(Dispatchers.IO) {
+            val it = database.householdDao.getHousehold(hhId)
+            HouseholdFormDataset(context, it!!)
         }
     }
 
     suspend fun persistFirstPage(form: HouseholdFormDataset) {
-        //TODO(Delete this dummy after checking)
-        //database.benIdGenDao.insert(BeneficiaryIdsAvail(data = "Entry 1", sync = SyncState.UNSYNCED))
-
         val user =
             database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
-        //val draftHousehold = database.householdDao.getDraftHousehold()
         val household = form.getHouseholdForFirstPage(user.userId)
         database.householdDao.upsert(household)
     }
 
     suspend fun persistSecondPage(form: HouseholdFormDataset) {
-
-//        val draftHousehold = database.householdDao.getDraftHousehold()
-//            ?: throw IllegalStateException("no draft saved!!")
         val household =
             form.getHouseholdForSecondPage()
         database.householdDao.upsert(household)
     }
 
-    suspend fun persistThirdPage(form: HouseholdFormDataset, locationRecord: LocationRecord) : Long {
-
-//        val draftHousehold = database.householdDao.getDraftHousehold()
-//            ?: throw IllegalStateException("no draft saved!!")
+    suspend fun persistThirdPage(form: HouseholdFormDataset, locationRecord: LocationRecord): Long {
         val household =
             form.getHouseholdForThirdPage()
         val user =
@@ -67,10 +68,9 @@ class HouseholdRepo @Inject constructor(
             if (createdTimeStamp == null) {
                 createdTimeStamp = System.currentTimeMillis()
                 createdBy = user.userName
-            } else {
-                updatedTimeStamp = System.currentTimeMillis()
-                updatedBy = user.userName
             }
+            updatedTimeStamp = System.currentTimeMillis()
+            updatedBy = user.userName
             stateId = locationRecord.stateId
             state = locationRecord.state
             districtId = locationRecord.districtId
@@ -90,6 +90,7 @@ class HouseholdRepo @Inject constructor(
             database.householdDao.deleteDraftHousehold()
         }
     }
+
 
 
 }

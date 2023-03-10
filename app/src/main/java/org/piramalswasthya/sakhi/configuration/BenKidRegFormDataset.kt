@@ -3,29 +3,21 @@ package org.piramalswasthya.sakhi.configuration
 import android.content.Context
 import android.text.InputType
 import android.widget.LinearLayout
-import id.zelory.compressor.Compressor
-import id.zelory.compressor.constraint.quality
-import id.zelory.compressor.constraint.size
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.ImageSizeConverter
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.model.FormInput.InputType.*
 import timber.log.Timber
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
-class BenKidRegFormDataset(private val context: Context, pncMotherList : List<String>) {
+class BenKidRegFormDataset(private val context: Context, pncMotherList : List<String>?) {
 
     private var ben: BenRegCache? = null
 
-    constructor(context: Context, ben: BenRegCache? = null, pncMotherList: List<String>) : this(context, pncMotherList) {
+    constructor(context: Context, ben: BenRegCache/*, pncMotherList: List<String>*/) : this(context, null) {
         this.ben = ben
 
         //TODO(SETUP THE VALUES
@@ -96,7 +88,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     val age = FormInput(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_age),
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = true,
     )
     val dob = FormInput(
@@ -150,7 +142,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         isMobileNumber = true,
         min = 6000000000,
         max = 9999999999,
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
     )
 
 
@@ -293,7 +285,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         isMobileNumber = true,
         min = 100000000000,
         max = 999999999999,
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
 
     )
     val firstPage: List<FormInput> by lazy {
@@ -493,7 +485,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     val motherOfChild = FormInput(
         inputType = DROPDOWN,
         title = "Mother of the child",
-        list = pncMotherList.toTypedArray(),
+        list = pncMotherList?.toTypedArray(),
         required = true
     )
 

@@ -19,6 +19,7 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.databinding.FragmentNewBenRegTypeBinding
+import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.work.GenerateBenIdsWorker
 import org.piramalswasthya.sakhi.work.PushToAmritWorker
@@ -124,7 +125,7 @@ class NewBenRegTypeFragment : Fragment() {
         homeViewModel.iconCount.observe(viewLifecycleOwner) { iconList ->
             iconList.first().let {
                 when (it.availBenIdsCount) {
-                    in 1..80 -> {
+                    in 1..Konstants.benIdWorkerTriggerLimit -> {
                         binding.errorText.text =
                             "Warning : ID running low, connect to internet at the earliest"
                         WorkerUtils.triggerGenBenIdWorker(requireContext())

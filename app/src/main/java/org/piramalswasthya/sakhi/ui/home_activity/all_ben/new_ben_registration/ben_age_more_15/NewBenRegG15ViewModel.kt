@@ -1,11 +1,9 @@
 package org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_more_15
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import android.content.Context
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -24,9 +22,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewBenRegG15ViewModel @Inject constructor(
-    private val context: Application,
+    savedStateHandle: SavedStateHandle,
+    @ApplicationContext context: Context,
     private val benRepo: BenRepo
-) : AndroidViewModel(context) {
+) : ViewModel() {
     enum class State {
         IDLE,
         SAVING,
@@ -34,11 +33,11 @@ class NewBenRegG15ViewModel @Inject constructor(
         SAVE_FAILED
     }
 
+    private val hhId = NewBenRegG15FragmentArgs.fromSavedStateHandle(savedStateHandle).hhId
+    private val benIdFromArgs =
+        NewBenRegG15FragmentArgs.fromSavedStateHandle(savedStateHandle).benId
+
     private var _mTabPosition = 0
-    private var hhId = 0L
-    fun setHHid(hhId: Long) {
-        this.hhId = hhId
-    }
 
     val mTabPosition: Int
         get() = _mTabPosition
@@ -59,8 +58,12 @@ class NewBenRegG15ViewModel @Inject constructor(
     val hasReproductiveStatus: LiveData<Boolean>
         get() = _hasReproductiveStatus
 
+    private val _recordExists = MutableLiveData(benIdFromArgs > 0)
+    val recordExists: LiveData<Boolean>
+        get() = _recordExists
 
-    private lateinit var form: BenGenRegFormDataset
+
+    private var form: BenGenRegFormDataset = BenGenRegFormDataset(context)
     private lateinit var household: HouseholdCache
 
     private fun getDiffYears(a: Calendar, b: Calendar): Int {
@@ -99,7 +102,9 @@ class NewBenRegG15ViewModel @Inject constructor(
     suspend fun getFirstPage(adapter: FormInputAdapter): List<FormInput> {
         withContext(Dispatchers.IO) {
             household = benRepo.getHousehold(hhId)!!
-            form = BenGenRegFormDataset(context)
+            if (benIdFromArgs > 0)
+                form = benRepo.getBenGenForm(benIdFromArgs, hhId)
+
         }
         viewModelScope.launch {
             var emittedFromDob = false
@@ -227,19 +232,17 @@ class NewBenRegG15ViewModel @Inject constructor(
                     it?.let {
                         val list = adapter.currentList.toMutableList()
                         if (it != "Unmarried") {
-                            if(it=="Divorced") {
+                            if (it == "Divorced") {
                                 form.husbandName.required = false
                                 form.wifeName.required = false
-                            }
-                            else {
+                            } else {
                                 form.husbandName.required = true
                                 form.wifeName.required = true
                             }
-                            if(it=="Married" && form.gender.value.value=="Female"){
+                            if (it == "Married" && form.gender.value.value == "Female") {
                                 form.fatherName.required = false
                                 form.motherName.required = false
-                            }
-                            else {
+                            } else {
                                 form.husbandName.required = true
                                 form.wifeName.required = true
                             }
@@ -291,8 +294,7 @@ class NewBenRegG15ViewModel @Inject constructor(
                             household.familyHeadPhoneNo?.let { mobNo ->
                                 form.contactNumber.value.value = mobNo.toString()
                             }
-                        }
-                        else
+                        } else
                             form.contactNumber.value.value = null
                         val list = adapter.currentList.toMutableList()
                         if (!adapter.currentList.contains(form.otherMobileNoOfRelation)) {
@@ -638,7 +640,7 @@ class NewBenRegG15ViewModel @Inject constructor(
         Timber.d("Persist first page called!")
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-               // benRepo.persistGenFirstPage(form, hhId)
+                // benRepo.persistGenFirstPage(form, hhId)
             }
         }
     }

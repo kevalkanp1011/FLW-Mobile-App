@@ -30,24 +30,26 @@ class PushToAmritWorker @AssistedInject constructor(
         init()
         try {
             val workerResult = benRepo.syncUnprocessedRecords()
-            if (workerResult) {
+            return if (workerResult) {
                 Timber.d("Worker completed")
-                return Result.success()
+                Result.success()
             } else {
                 Timber.d("Worker Failed as usual!")
-                return Result.failure()
+                Result.failure()
             }
         } catch (e: SocketTimeoutException) {
             Timber.e("Caught Exception for push amrit worker $e")
             return Result.retry()
         } catch (e : java.lang.Exception) {
-            Toast.makeText(applicationContext, "Push to server failed! ", Toast.LENGTH_LONG).show()
+            Timber.e("Caught Exception for push amrit worker $e")
             return Result.failure()
         }
     }
 
     private fun init() {
         if (TokenInsertTmcInterceptor.getToken() == "")
-            TokenInsertTmcInterceptor.setToken(preferenceDao.getPrimaryApiToken()!!)
+            preferenceDao.getPrimaryApiToken()?.let{
+                TokenInsertTmcInterceptor.setToken(it)
+            }
     }
 }

@@ -14,10 +14,11 @@ import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.ImageSizeConverter
+import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.network.GetBenRequest
 import org.piramalswasthya.sakhi.network.TmcGenerateBenIdsRequest
-import org.piramalswasthya.sakhi.network.TmcNetworkApiService
+import org.piramalswasthya.sakhi.network.AmritApiService
 import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
@@ -160,6 +161,11 @@ class BenRepo @Inject constructor(
 
             return "${dateString}T${timeString}.000Z"
         }
+    }
+
+    suspend fun getBenBasicDomainListFromHousehold(hhId: Long): List<BenBasicDomain> {
+        return database.benDao.getAllBenForHousehold(hhId).map { it.asBasicDomainModel() }
+
     }
 
     suspend fun persistBenKid(
@@ -332,6 +338,21 @@ class BenRepo @Inject constructor(
 
     }
 
+    suspend fun getBenKidForm(benId: Long, hhId: Long): BenKidRegFormDataset {
+        return withContext(Dispatchers.IO) {
+            BenKidRegFormDataset(context,getBeneficiary(benId, hhId)!!)
+        }
+    }
+
+
+
+    suspend fun getBenGenForm(benId: Long, hhId: Long): BenGenRegFormDataset {
+        return withContext(Dispatchers.IO) {
+            BenGenRegFormDataset(context,getBeneficiary(benId, hhId)!!)
+        }
+    }
+
+
     private suspend fun extractBenId(): BeneficiaryIdsAvail {
         return withContext(Dispatchers.IO) {
             val user =
@@ -345,11 +366,11 @@ class BenRepo @Inject constructor(
 
     }
 
-    suspend fun getBenIdsGeneratedFromServer(maxCount: Int = 100) {
+    suspend fun getBenIdsGeneratedFromServer(maxCount: Int = Konstants.benIdCapacity) {
         val user =
             database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
         val benIdCount = database.benIdGenDao.count()
-        if (benIdCount > 90)
+        if (benIdCount > Konstants.benIdWorkerTriggerLimit)
             return
         val count = maxCount - benIdCount
         val response =
@@ -425,10 +446,15 @@ class BenRepo @Inject constructor(
                 kidNetworkPostList,
                 cbacPostList
             )
-            if (!uploadDone)
-                database.benDao.benSyncWithServerFailed(*benNetworkPostList.map { ben -> ben.benId }
-                    .toTypedArray().toLongArray())
-//                }
+            if (!uploadDone) {
+                benNetworkPostList
+                    .map { ben -> ben.benId }
+                    .takeIf { it.isNotEmpty() }
+                    ?.toTypedArray()?.toLongArray()
+                    ?.let {
+                    database.benDao.benSyncWithServerFailed(*it)
+                }
+            }
 
 //            val updateBenList = database.benDao.getAllBenForSyncWithServer()
 //            updateBenList.forEach {
@@ -598,6 +624,10 @@ suspend fun getBeneficiariesFromServerForWorker(pageNumber: Int): Int {
                             )
                                 throw SocketTimeoutException("Refreshed Token!")
                             else throw IllegalStateException("User Logged out!!")
+                        }
+                        5000 -> {
+                            if(errorMessage=="No record found")
+                                return@withContext 0
                         }
                         else -> {
                             throw IllegalStateException("$responseStatusCode received, dont know what todo!?")
@@ -897,15 +927,15 @@ private suspend fun getBenCacheFromServerResponse(response: String): MutableList
                             ) else 0,
                             firstName = if (benDataObj.has("firstName")) benDataObj.getString("firstName") else null,
                             lastName = if (benDataObj.has("lastName")) benDataObj.getString("lastName") else null,
+                            genderId = benDataObj.getInt("genderId"),
                             gender = if (benDataObj.has("gender")) {
-                                when (benDataObj.getString("gender")) {
-                                    "Male" -> Gender.MALE
-                                    "Female" -> Gender.FEMALE
-                                    "Transgender" -> Gender.TRANSGENDER
+                                when (benDataObj.getInt("genderId")) {
+                                    1-> Gender.MALE
+                                    2 -> Gender.FEMALE
+                                    3 -> Gender.TRANSGENDER
                                     else -> Gender.MALE
                                 }
                             } else null,
-                            genderId = benDataObj.getInt("genderId"),
                             dob = getLongFromDate(benDataObj.getString("dob")),
                             age_unitId = benDataObj.getInt("age_unitId"),
                             fatherName = if (benDataObj.has("fatherName")) benDataObj.getString(

@@ -41,7 +41,7 @@ class HrpCasesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = viewLifecycleOwner
+
         binding.btnNextPage.visibility = View.GONE
         val benAdapter = BenListAdapter(
             BenListAdapter.BenClickListener(

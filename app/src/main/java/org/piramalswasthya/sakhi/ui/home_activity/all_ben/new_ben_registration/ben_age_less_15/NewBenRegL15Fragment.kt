@@ -38,10 +38,6 @@ class NewBenRegL15Fragment : Fragment() {
     private val binding  : FragmentNewFormViewpagerBinding
         get() = _binding!!
 
-
-    private val hhId: Long by lazy {
-        NewBenRegL15FragmentArgs.fromBundle(requireArguments()).hhId
-    }
     private val viewModel: NewBenRegL15ViewModel by viewModels()
 
     private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
@@ -109,7 +105,6 @@ class NewBenRegL15Fragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.setHHid(hhId)
         binding.btnSubmitForm.text = context?.getString(R.string.btn_submit_ben)
         binding.vp2Nhhr.adapter = NewBenKidPagerAdapter(this)
         when (viewModel.mTabPosition) {
@@ -220,6 +215,7 @@ class NewBenRegL15Fragment : Fragment() {
             1 -> {
                 binding.btnPrev.visibility = View.VISIBLE
                 binding.btnNext.visibility = View.GONE
+                if (viewModel.recordExists.value == false)
                 binding.btnSubmitForm.visibility = View.VISIBLE
             }
         }

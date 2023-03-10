@@ -24,7 +24,7 @@ class BenGenRegFormDataset(private val context: Context) {
 
     private var ben: BenRegCache? = null
 
-    constructor(context: Context, ben: BenRegCache? = null) : this(context) {
+    constructor(context: Context, ben: BenRegCache) : this(context) {
         this.ben = ben
         //TODO(SETUP THE VALUES)
     }

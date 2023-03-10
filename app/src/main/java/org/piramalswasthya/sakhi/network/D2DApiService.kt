@@ -7,7 +7,7 @@ import org.piramalswasthya.sakhi.model.PmsmaPost
 import retrofit2.Response
 import retrofit2.http.*
 
-interface D2DNetworkApiService {
+interface D2DApiService {
 
     @Headers("No-Auth: true")
     @POST("user/authenticate")

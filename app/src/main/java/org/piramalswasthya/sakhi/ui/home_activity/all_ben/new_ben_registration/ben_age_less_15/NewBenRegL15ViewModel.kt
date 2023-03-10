@@ -1,11 +1,10 @@
 package org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_less_15
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import android.content.Context
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -19,6 +18,7 @@ import org.piramalswasthya.sakhi.model.HouseholdCache
 import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.model.TypeOfList
 import org.piramalswasthya.sakhi.repositories.BenRepo
+import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_more_15.NewBenRegG15FragmentArgs
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -26,9 +26,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewBenRegL15ViewModel @Inject constructor(
-    private val context: Application,
+    savedStateHandle: SavedStateHandle,
+    @ApplicationContext context: Context,
     private val benRepo: BenRepo
-) : AndroidViewModel(context) {
+) : ViewModel() {
     enum class State {
         IDLE,
         SAVING,
@@ -36,11 +37,12 @@ class NewBenRegL15ViewModel @Inject constructor(
         SAVE_FAILED
     }
 
+
+    private val hhId = NewBenRegL15FragmentArgs.fromSavedStateHandle(savedStateHandle).hhId
+    private val benIdFromArgs =
+        NewBenRegL15FragmentArgs.fromSavedStateHandle(savedStateHandle).benId
+
     private var _mTabPosition = 0
-    private var hhId = 0L
-    fun setHHid(hhId: Long) {
-        this.hhId = hhId
-    }
 
     val mTabPosition: Int
         get() = _mTabPosition
@@ -57,15 +59,31 @@ class NewBenRegL15ViewModel @Inject constructor(
     val errorMessage: LiveData<String?>
         get() = _errorMessage
 
+    private val _recordExists = MutableLiveData(benIdFromArgs > 0)
+    val recordExists: LiveData<Boolean>
+        get() = _recordExists
+
 
     private lateinit var form: BenKidRegFormDataset
     private lateinit var household: HouseholdCache
 
+    init {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                household = benRepo.getHousehold(hhId)!!
+                val pncMotherList = benRepo.getPncMothersFromHhId(hhId).map { it.benName }
+                form = BenKidRegFormDataset(context, pncMotherList)
+            }
+        }
+
+    }
+
     suspend fun getFirstPage(adapter: FormInputAdapter): List<FormInput> {
         withContext(Dispatchers.IO) {
             household = benRepo.getHousehold(hhId)!!
-            val pncMotherList = benRepo.getPncMothersFromHhId(hhId).map { it.benName }
-            form = BenKidRegFormDataset(context, pncMotherList)
+            if (benIdFromArgs > 0)
+                form = benRepo.getBenKidForm(benIdFromArgs, hhId)
+
         }
         viewModelScope.launch {
             var emittedFromDobForAge = false
@@ -198,8 +216,7 @@ class NewBenRegL15ViewModel @Inject constructor(
                             household.familyHeadPhoneNo?.let { mobNo ->
                                 form.contactNumber.value.value = mobNo.toString()
                             }
-                        }
-                        else
+                        } else
                             form.contactNumber.value.value = null
                         val list = adapter.currentList.toMutableList()
                         if (!adapter.currentList.contains(form.otherMobileNoOfRelation)) {

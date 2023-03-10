@@ -1,10 +1,7 @@
 package org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_registration
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NewHouseholdViewModel
 @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val context: Application,
     private val householdRepo: HouseholdRepo
 ) : AndroidViewModel(context) {
@@ -31,6 +29,8 @@ class NewHouseholdViewModel
         SAVE_SUCCESS,
         SAVE_FAILED
     }
+
+    private val hhIdFromArgs = NewHouseholdFragmentArgs.fromSavedStateHandle(savedStateHandle).hhId
 
     private var _mTabPosition = 0
     private var hhId = 0L
@@ -48,17 +48,20 @@ class NewHouseholdViewModel
     val state: LiveData<State>
         get() = _state
 
+    private val _recordExists = MutableLiveData(hhIdFromArgs>0)
+    val recordExists : LiveData<Boolean>
+    get() = _recordExists
+
 
     private lateinit var form: HouseholdFormDataset
 
     suspend fun getFirstPage(): List<FormInput> {
         return withContext(Dispatchers.IO) {
+            form = if (hhIdFromArgs > 0)
+                householdRepo.getHouseholdForm(hhIdFromArgs)
+            else
+                householdRepo.getDraftForm()?: HouseholdFormDataset(context)
 
-            form = householdRepo.getDraftForm()?.let {
-                HouseholdFormDataset(getApplication(),it)
-            }?:run{
-                HouseholdFormDataset(getApplication())
-            }
             form.firstPage
         }
     }
@@ -76,40 +79,6 @@ class NewHouseholdViewModel
         }
         return form.secondPage
 
-    }
-
-    private fun toggleFieldOnTrigger(
-        causeField: FormInput,
-        effectField: FormInput,
-        value: String?,
-        adapter: FormInputAdapter
-    ) {
-        value?.let {
-            if (it == context.getString(R.string.nhhr_fuel_cooking_7)) {
-                val list = adapter.currentList.toMutableList()
-                if (!list.contains(effectField)) {
-                    list.add(
-                        adapter.currentList.indexOf(causeField) + 1,
-                        effectField
-                    )
-                    adapter.submitList(list)
-                }
-            } else {
-                if (adapter.currentList.contains(effectField)) {
-                    val list = adapter.currentList.toMutableList()
-                    list.remove(effectField)
-                    adapter.submitList(list)
-                }
-            }
-        }
-    }
-
-    fun persistFirstPage() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                householdRepo.persistFirstPage(form)
-            }
-        }
     }
 
     fun getThirdPage(adapter: FormInputAdapter): List<FormInput> {
@@ -159,6 +128,39 @@ class NewHouseholdViewModel
         return form.thirdPage
     }
 
+    private fun toggleFieldOnTrigger(
+        causeField: FormInput,
+        effectField: FormInput,
+        value: String?,
+        adapter: FormInputAdapter
+    ) {
+        value?.let {
+            if (it == context.getString(R.string.nhhr_fuel_cooking_7)) {
+                val list = adapter.currentList.toMutableList()
+                if (!list.contains(effectField)) {
+                    list.add(
+                        adapter.currentList.indexOf(causeField) + 1,
+                        effectField
+                    )
+                    adapter.submitList(list)
+                }
+            } else {
+                if (adapter.currentList.contains(effectField)) {
+                    val list = adapter.currentList.toMutableList()
+                    list.remove(effectField)
+                    adapter.submitList(list)
+                }
+            }
+        }
+    }
+
+    fun persistFirstPage() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                householdRepo.persistFirstPage(form)
+            }
+        }
+    }
     fun persistSecondPage() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -166,6 +168,10 @@ class NewHouseholdViewModel
             }
         }
     }
+
+
+
+
 
     fun persistForm(locationRecord: LocationRecord) {
         viewModelScope.launch {

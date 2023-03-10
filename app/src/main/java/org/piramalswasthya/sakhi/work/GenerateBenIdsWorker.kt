@@ -34,15 +34,15 @@ class GenerateBenIdsWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         init()
-        try {
+        return try {
             benRepo.getBenIdsGeneratedFromServer()
-            return Result.success()
+            Result.success()
         } catch (e: SocketTimeoutException) {
             Timber.e("Caught Exception for Gen Ben iD worker $e")
-            return doWork()
+            doWork()
         } catch (e: Exception) {
             Timber.e("Caught Exception for Gen Ben iD worker $e")
-            return Result.failure()
+            Result.failure()
         }
     }
 

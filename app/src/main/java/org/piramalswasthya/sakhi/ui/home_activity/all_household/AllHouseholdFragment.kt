@@ -67,14 +67,18 @@ class AllHouseholdFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = viewLifecycleOwner
         binding.btnNextPage.text = getString(R.string.btn_text_frag_home_nhhr)
-        val householdAdapter = HouseHoldListAdapter(HouseHoldListAdapter.HouseholdClickListener( {
-            Toast.makeText(context,"Clicked $it",Toast.LENGTH_SHORT).show()
-        },{
-            Toast.makeText(context,"Clicked $it", Toast.LENGTH_SHORT).show()
+        val householdAdapter = HouseHoldListAdapter(HouseHoldListAdapter.HouseholdClickListener(
+            {
+            findNavController().navigate(AllHouseholdFragmentDirections.actionAllHouseholdFragmentToNewHouseholdFragment(it))
+        },
+            {
+            findNavController().navigate(AllHouseholdFragmentDirections.actionAllHouseholdFragmentToHouseholdMembersFragment(it))
+        },
+            {
             findNavController().navigate(AllHouseholdFragmentDirections.actionAllHouseholdFragmentToNewBenRegTypeFragment(it))
-        }))
+        }
+        ))
         binding.rvAny.adapter = householdAdapter
 
         viewModel.householdList.observe(viewLifecycleOwner){

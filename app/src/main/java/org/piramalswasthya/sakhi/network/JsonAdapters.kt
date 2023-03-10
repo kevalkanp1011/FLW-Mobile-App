@@ -70,5 +70,25 @@ data class GetBenRequest(
     val toDate: String
 )
 
+///////////////-------------Abha id-------------/////////////////
+
+@JsonClass(generateAdapter = true)
+data class AbhaTokenRequest(
+    val clientId : String = "SBX_001542",
+    val clientSecret: String = "87b7eb89-b236-43b6-82b0-6eef154a9b90",
+    val grantType :String = "client_credentials"
+)
+
+@JsonClass(generateAdapter = true)
+data class AbhaTokenResponse(
+    val accessToken : String,
+    val expiresIn : Int,
+    val refreshExpiresIn : Int,
+    val refreshToken : String,
+    val tokenType : String
+)
+
+
+
 
 

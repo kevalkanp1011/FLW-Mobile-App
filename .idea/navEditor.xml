@@ -108,18 +108,6 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
-                  <entry key="abhaIdActivity">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="276" />
-                            <option name="y" value="-331" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
                   <entry key="aboutUsFragment">
                     <value>
                       <LayoutPositions>
@@ -176,6 +164,11 @@
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_allHouseholdFragment_to_householdMembersFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_allHouseholdFragment_to_newBenRegTypeFragment">
                               <value>
                                 <LayoutPositions />
@@ -456,6 +449,27 @@
                               </value>
                             </entry>
                             <entry key="action_nav_home_to_villageLevelFormsFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="householdMembersFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="458" />
+                            <option name="y" value="1849" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_householdMembersFragment_to_newBenRegTypeFragment">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -800,8 +814,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="914" />
-                            <option name="y" value="1834" />
+                            <option name="x" value="1122" />
+                            <option name="y" value="1712" />
                           </Point>
                         </option>
                         <option name="myPositions">
