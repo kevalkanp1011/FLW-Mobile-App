@@ -9,7 +9,6 @@ import javax.inject.Inject
 
 class AbhaIdRepo @Inject constructor(
     private val abhaApiService: AbhaApiService
-
 ){
 
     suspend fun getAccessToken() : AbhaTokenResponse?{

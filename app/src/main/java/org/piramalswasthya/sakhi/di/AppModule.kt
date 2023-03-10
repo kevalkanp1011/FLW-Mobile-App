@@ -41,7 +41,6 @@ object AppModule {
         OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .addInterceptor(ContentTypeInterceptor())
-
             .build()
 
     @Singleton
