@@ -33,4 +33,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/nav_abha_id" />
 
+    <ProgressBar
+        android:id="@+id/progress_bar_abha_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminateTint="?attr/colorPrimary"
+        android:visibility="gone" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
