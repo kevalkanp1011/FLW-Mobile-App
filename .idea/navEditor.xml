@@ -108,18 +108,6 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
-                  <entry key="abhaIdActivity">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="276" />
-                            <option name="y" value="-331" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
                   <entry key="aboutUsFragment">
                     <value>
                       <LayoutPositions>
@@ -816,6 +804,18 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="pmjayFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="1713" />
+                            <option name="y" value="2691" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="pmsmaFragment">
                     <value>
                       <LayoutPositions>
@@ -833,8 +833,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="1191" />
-                            <option name="y" value="2313" />
+                            <option name="x" value="1268" />
+                            <option name="y" value="2345" />
                           </Point>
                         </option>
                       </LayoutPositions>
