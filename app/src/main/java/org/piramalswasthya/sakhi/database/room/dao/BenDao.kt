@@ -20,10 +20,8 @@ interface BenDao {
     @Query("SELECT * FROM BEN_BASIC_CACHE")
     fun getAllBen(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE hhId = hhId")
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE hhId = :hhId")
     suspend fun getAllBenForHousehold(hhId : Long): List<BenBasicCache>
-
-
 
     @Query("SELECT * FROM BENEFICIARY WHERE beneficiaryId =:benId AND householdId = :hhId LIMIT 1")
     suspend fun getBen(hhId: Long, benId: Long): BenRegCache?

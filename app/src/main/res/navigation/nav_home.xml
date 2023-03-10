@@ -286,7 +286,11 @@
         android:id="@+id/pncMotherListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.pnc_mother_list.PncMotherListFragment"
         android:label="PNC Mother List"
-        tools:layout="@layout/fragment_pnc_mother_list" />
+        tools:layout="@layout/fragment_pnc_mother_list" >
+        <action
+            android:id="@+id/action_pncMotherListFragment_to_pmjayFragment"
+            app:destination="@id/pmjayFragment" />
+    </fragment>
     <fragment
         android:id="@+id/reproductiveAgeListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.reproductive_age_list.ReproductiveAgeListFragment"
@@ -432,6 +436,18 @@
             app:argType="long" />
         <argument
             android:name="hhId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/pmjayFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.pmjay.PmjayFragment"
+        android:label="PMJAY Form"
+        tools:layout="@layout/fragment_pmjay" >
+        <argument
+            android:name="hhId"
+            app:argType="long" />
+        <argument
+            android:name="benId"
             app:argType="long" />
     </fragment>
 

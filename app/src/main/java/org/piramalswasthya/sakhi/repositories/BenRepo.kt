@@ -16,7 +16,6 @@ import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.ImageSizeConverter
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.network.GetBenRequest
-import org.piramalswasthya.sakhi.network.NcdNetworkApiService
 import org.piramalswasthya.sakhi.network.TmcGenerateBenIdsRequest
 import org.piramalswasthya.sakhi.network.TmcNetworkApiService
 import timber.log.Timber
@@ -30,8 +29,7 @@ class BenRepo @Inject constructor(
     private val database: InAppDb,
     private val preferenceDao: PreferenceDao,
     private val userRepo: UserRepo,
-    private val tmcNetworkApiService: TmcNetworkApiService,
-    private val ncdNetworkApiService: NcdNetworkApiService
+    private val tmcNetworkApiService: TmcNetworkApiService
 ) {
 
     val benList by lazy {
@@ -134,7 +132,7 @@ class BenRepo @Inject constructor(
     val pncMotherList by lazy {
         //TODO(implement BenDao)
         Transformations.map(database.benDao.getAllPNCMotherList()) { list ->
-            list.map { it.asBasicDomainModel() }
+            list.map { it.asBasicDomainModelForPmjayForm() }
         }
     }
 
@@ -553,7 +551,7 @@ suspend fun getBeneficiariesFromServerForWorker(pageNumber: Int): Int {
         val lastTimeStamp = preferenceDao.getLastSyncedTimeStamp()
         try {
             val response =
-                ncdNetworkApiService.getBeneficiaries(
+                tmcNetworkApiService.getBeneficiaries(
                     GetBenRequest(
                         user.userId.toString(), pageNumber,
                         getCurrentDate(lastTimeStamp), getCurrentDate()
@@ -629,7 +627,7 @@ suspend fun getBeneficiariesFromServer(pageNumber: Int): Pair<Int, MutableList<B
                 ?: throw IllegalStateException("No user logged in!!")
         try {
             val response =
-                ncdNetworkApiService.getBeneficiaries(
+                tmcNetworkApiService.getBeneficiaries(
                     GetBenRequest(
                         user.userId.toString(), pageNumber,
                         "2020-10-20T15:50:45.000Z", getCurrentDate()
