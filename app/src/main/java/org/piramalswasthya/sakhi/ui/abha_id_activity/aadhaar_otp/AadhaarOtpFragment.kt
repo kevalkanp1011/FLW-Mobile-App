@@ -8,13 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.databinding.FragmentAadhaarOtpBinding
 import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdViewModel
-import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdFragmentDirections
-import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdViewModel
 import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_otp.AadhaarOtpViewModel.State
 
 @AndroidEntryPoint
@@ -26,7 +23,7 @@ class AadhaarOtpFragment : Fragment() {
 
     private val viewModel: AadhaarOtpViewModel by viewModels()
 
-    private val activityViewModel : AbhaIdViewModel by viewModels({ requireActivity() })
+    private val activityViewModel: AbhaIdViewModel by viewModels({ requireActivity() })
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,7 +65,11 @@ class AadhaarOtpFragment : Fragment() {
                     binding.clContent.visibility = View.VISIBLE
                     binding.pbLoadingAadharOtp.visibility = View.INVISIBLE
                     binding.clError.visibility = View.INVISIBLE
-                    findNavController().navigate(AadhaarOtpFragmentDirections.actionAadhaarOtpFragmentToCreateAbhaFragment())
+                    findNavController().navigate(
+                        AadhaarOtpFragmentDirections.actionAadhaarOtpFragmentToGenerateMobileOtpFragment(
+                            viewModel.txnId
+                        )
+                    )
                     viewModel.resetState()
                 }
                 State.ERROR_NETWORK -> {

@@ -2,13 +2,14 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.abha_id_activity.create_abha_id.CreateAbhaFragment">
+    tools:context=".ui.abha_id_activity.generate_mobile_otp.GenerateMobileOtpFragment">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_generate_mobile_otp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="@dimen/padding_wide">
@@ -18,15 +19,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_normal"
-                android:text="Enter Health ID"
+                android:text="Enter Mobile Number"
                 android:textAppearance="?attr/textAppearanceHeadline6"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.35"/>
+                app:layout_constraintVertical_bias="0.35" />
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/health_id_info"
+                android:id="@+id/mobile_no_info"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginStart="8dp"
@@ -36,29 +37,30 @@
                 app:layout_constraintTop_toTopOf="@+id/textView7" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_health_id"
+                android:id="@+id/til_mobile_number"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
-                android:hint="Health ID"
                 android:layout_marginStart="8dp"
+                android:hint="Mobile Number"
                 android:paddingTop="@dimen/padding_normal"
                 android:paddingBottom="@dimen/padding_normal"
                 app:layout_constraintTop_toBottomOf="@+id/textView7"
                 tools:layout_editor_absoluteX="16dp">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tiet_aadhaar_number"
+                    android:id="@+id/tiet_mobile_number"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="number"
+                    android:maxLength="10"
                     android:singleLine="true"
                     android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_generate_abha"
+                android:id="@+id/btn_generate_mobile_otp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -67,17 +69,17 @@
                 android:clickable="false"
                 android:enabled="false"
                 android:padding="@dimen/padding_normal"
-                android:text="Generate ABHA ID"
+                android:text="Generate OTP"
                 android:textAllCaps="false"
                 android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                 android:textColor="?attr/colorSecondary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/til_health_id" />
+                app:layout_constraintTop_toBottomOf="@+id/til_mobile_number" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ProgressBar
-            android:id="@+id/pb_cai"
+            android:id="@+id/progress_bar_gmotp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

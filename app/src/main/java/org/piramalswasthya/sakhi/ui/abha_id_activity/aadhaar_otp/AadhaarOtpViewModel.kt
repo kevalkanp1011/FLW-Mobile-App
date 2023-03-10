@@ -4,7 +4,6 @@ import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
-import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdViewModel
 import javax.inject.Inject
 
 @HiltViewModel
@@ -14,7 +13,6 @@ class AadhaarOtpViewModel @Inject constructor(
 ) : ViewModel() {
 
     enum class State {
-
         IDLE,
         LOADING,
         ERROR_SERVER,
@@ -33,19 +31,17 @@ class AadhaarOtpViewModel @Inject constructor(
 
     fun verifyOtpClicked(otp: String) {
         _state.value = State.LOADING
-        verifyAadharOtp(otp)
-
-
+        verifyAadhaarOtp(otp)
     }
 
     fun resetState() {
         _state.value = State.IDLE
     }
 
-    private fun verifyAadharOtp(otp: String) {
+    private fun verifyAadhaarOtp(otp: String) {
         viewModelScope.launch {
-            //_txnId = abhaIdRepo.verifyOtpForAadhar(otp, txnIdFromArgs)
-            _txnId = abhaIdRepo.verifyOtpForAadharDummy(otp, txnIdFromArgs)
+//            _txnId = abhaIdRepo.verifyOtpForAadhaar(otp, txnIdFromArgs)
+            _txnId = abhaIdRepo.verifyOtpForAadhaarDummy(otp, txnIdFromArgs)
             _txnId?.also {
                 _state.value = State.SUCCESS
             } ?: run {

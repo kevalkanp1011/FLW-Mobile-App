@@ -2,18 +2,15 @@ package org.piramalswasthya.sakhi.repositories
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.network.AbhaApiService
-import org.piramalswasthya.sakhi.network.AbhaGenerateAadharOtpRequest
-import org.piramalswasthya.sakhi.network.AbhaTokenResponse
-import org.piramalswasthya.sakhi.network.AbhaVerifyAadharOtpRequest
+import org.piramalswasthya.sakhi.network.*
 import javax.inject.Inject
 
 
 class AbhaIdRepo @Inject constructor(
     private val abhaApiService: AbhaApiService
-){
+) {
 
-    suspend fun getAccessToken() : AbhaTokenResponse?{
+    suspend fun getAccessToken(): AbhaTokenResponse? {
         return withContext(Dispatchers.IO) {
             try {
                 abhaApiService.getToken()
@@ -22,62 +19,122 @@ class AbhaIdRepo @Inject constructor(
             }
         }
     }
-    suspend fun getAccessTokenDummy() : AbhaTokenResponse?{
+
+    suspend fun getAccessTokenDummy(): AbhaTokenResponse? {
         return withContext(Dispatchers.IO) {
             try {
                 Thread.sleep(3000)
-                AbhaTokenResponse("ABC",0,0,"RRV","Buller")
+                AbhaTokenResponse("ABC", 0, 0, "RRV", "Buller")
             } catch (e: java.lang.Exception) {
                 null
             }
         }
     }
 
-    suspend fun generateOtpForAadhar(aadharNo: String) : String?{
-        return withContext(Dispatchers.IO){
-            try{
-                abhaApiService.generateAadharOtp(AbhaGenerateAadharOtpRequest(aadharNo)).txnId
-            }catch (e: java.lang.Exception) {
+    suspend fun generateOtpForAadhaar(aadhaarNo: String): String? {
+        return withContext(Dispatchers.IO) {
+            try {
+                abhaApiService.generateAadhaarOtp(AbhaGenerateAadhaarOtpRequest(aadhaarNo)).txnId
+            } catch (e: java.lang.Exception) {
                 null
             }
         }
 
     }
-    suspend fun generateOtpForAadharDummy(aadharNo: String) : String?{
-        return withContext(Dispatchers.IO){
-            try{
+
+    suspend fun generateOtpForAadhaarDummy(aadhaarNo: String): String? {
+        return withContext(Dispatchers.IO) {
+            try {
                 Thread.sleep(3000)
                 "XYZ"
-            }catch (e: java.lang.Exception) {
+            } catch (e: java.lang.Exception) {
                 null
             }
         }
 
     }
 
-    suspend fun verifyOtpForAadhar(otp: String, txnIdFromArgs: String): String? {
-        return withContext(Dispatchers.IO){
-            try{
-                abhaApiService.verifyAadharOtp(AbhaVerifyAadharOtpRequest(otp, txnIdFromArgs)).txnId
-            }
-            catch (e : java.lang.Exception){
+    suspend fun verifyOtpForAadhaar(otp: String, txnIdFromArgs: String): String? {
+        return withContext(Dispatchers.IO) {
+            try {
+                abhaApiService.verifyAadhaarOtp(
+                    AbhaVerifyAadhaarOtpRequest(
+                        otp,
+                        txnIdFromArgs
+                    )
+                ).txnId
+            } catch (e: java.lang.Exception) {
                 null
             }
         }
 
     }
 
-    suspend fun verifyOtpForAadharDummy(otp: String, txnIdFromArgs: String): String? {
-        return withContext(Dispatchers.IO){
-            try{
+    suspend fun verifyOtpForAadhaarDummy(otp: String, txnIdFromArgs: String): String? {
+        return withContext(Dispatchers.IO) {
+            try {
                 Thread.sleep(4000)
-                "JKL"
-            }
-            catch (e : java.lang.Exception){
+                "XYZ"
+            } catch (e: java.lang.Exception) {
                 null
             }
         }
 
+    }
+
+    suspend fun generateOtpForMobileNumber(mobileNumber: String, txnId: String): String? {
+        return withContext(Dispatchers.IO) {
+            try {
+                abhaApiService.generateMobileOtp(
+                    AbhaGenerateMobileOtpRequest(
+                        mobileNumber,
+                        txnId
+                    )
+                ).txnId
+            } catch (e: java.lang.Exception) {
+                null
+            }
+        }
+    }
+
+    suspend fun generateOtpForMobileNumberDummy(
+        mobileNumber: String,
+        txnIdFromArgs: String
+    ): String? {
+        return withContext(Dispatchers.IO) {
+            try {
+                Thread.sleep(4000)
+                "XYZ"
+            } catch (e: java.lang.Exception) {
+                null
+            }
+        }
+    }
+
+    suspend fun verifyOtpForMobileNumber(otp: String, txnId: String): String? {
+        return withContext(Dispatchers.IO) {
+            try {
+                abhaApiService.verifyMobileOtp(
+                    AbhaVerifyMobileOtpRequest(
+                        otp,
+                        txnId
+                    )
+                ).txnId
+            } catch (e: java.lang.Exception) {
+                null
+            }
+        }
+    }
+
+    suspend fun verifyOtpForMobileNumberDummy(otp: String, txnIdFromArgs: String): String? {
+        return withContext(Dispatchers.IO) {
+            try {
+                Thread.sleep(4000)
+                "XYZ"
+            } catch (e: java.lang.Exception) {
+                null
+            }
+        }
     }
 
 }

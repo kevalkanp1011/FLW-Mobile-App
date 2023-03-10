@@ -12,13 +12,13 @@ interface AbhaApiService {
     suspend fun getToken(@Url url : String = "https://dev.abdm.gov.in/gateway/v0.5/sessions", @Body request: AbhaTokenRequest = AbhaTokenRequest()): AbhaTokenResponse
 
     @POST("generateOtp")
-    suspend fun generateAadharOtp(@Body aadhar : AbhaGenerateAadharOtpRequest) : AbhaGenerateAadharOtpResponse
+    suspend fun generateAadhaarOtp(@Body aadhaar : AbhaGenerateAadhaarOtpRequest) : AbhaGenerateAadhaarOtpResponse
 
     @POST("verifyOTP")
-    suspend fun verifyAadharOtp(@Body request : AbhaVerifyAadharOtpRequest) : AbhaVerifyAadharOtpResponse
+    suspend fun verifyAadhaarOtp(@Body request : AbhaVerifyAadhaarOtpRequest) : AbhaVerifyAadhaarOtpResponse
 
     @POST("generateMobileOTP")
-    suspend fun generateMobileOtp(@Body aadhar : AbhaGenerateMobileOtpRequest) : AbhaGenerateMobileOtpResponse
+    suspend fun generateMobileOtp(@Body mobile : AbhaGenerateMobileOtpRequest) : AbhaGenerateMobileOtpResponse
 
     @POST("verifyMobileOTP")
     suspend fun verifyMobileOtp(@Body request : AbhaVerifyMobileOtpRequest) : AbhaVerifyMobileOtpResponse
