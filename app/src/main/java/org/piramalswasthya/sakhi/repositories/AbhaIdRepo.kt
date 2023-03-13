@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.repositories
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.network.*
@@ -31,10 +32,10 @@ class AbhaIdRepo @Inject constructor(
         }
     }
 
-    suspend fun generateOtpForAadhaar(aadhaarNo: String): String? {
+    suspend fun generateOtpForAadhaar(req: AbhaGenerateAadhaarOtpRequest): AbhaGenerateAadhaarOtpResponse? {
         return withContext(Dispatchers.IO) {
             try {
-                abhaApiService.generateAadhaarOtp(AbhaGenerateAadhaarOtpRequest(aadhaarNo)).txnId
+                abhaApiService.generateAadhaarOtp(req)
             } catch (e: java.lang.Exception) {
                 null
             }
@@ -42,11 +43,13 @@ class AbhaIdRepo @Inject constructor(
 
     }
 
-    suspend fun generateOtpForAadhaarDummy(aadhaarNo: String): String? {
+    suspend fun generateOtpForAadhaarDummy(req: AbhaGenerateAadhaarOtpRequest): AbhaGenerateAadhaarOtpResponse? {
+        Log.i("AbhaIdRepo", req.aadhaar)
+
         return withContext(Dispatchers.IO) {
             try {
                 Thread.sleep(3000)
-                "XYZ"
+                AbhaGenerateAadhaarOtpResponse("XYZ")
             } catch (e: java.lang.Exception) {
                 null
             }
@@ -54,15 +57,10 @@ class AbhaIdRepo @Inject constructor(
 
     }
 
-    suspend fun verifyOtpForAadhaar(otp: String, txnIdFromArgs: String): String? {
+    suspend fun verifyOtpForAadhaar(req: AbhaVerifyAadhaarOtpRequest): AbhaVerifyAadhaarOtpResponse? {
         return withContext(Dispatchers.IO) {
             try {
-                abhaApiService.verifyAadhaarOtp(
-                    AbhaVerifyAadhaarOtpRequest(
-                        otp,
-                        txnIdFromArgs
-                    )
-                ).txnId
+                abhaApiService.verifyAadhaarOtp(req)
             } catch (e: java.lang.Exception) {
                 null
             }
@@ -70,11 +68,12 @@ class AbhaIdRepo @Inject constructor(
 
     }
 
-    suspend fun verifyOtpForAadhaarDummy(otp: String, txnIdFromArgs: String): String? {
+    suspend fun verifyOtpForAadhaarDummy(req: AbhaVerifyAadhaarOtpRequest): AbhaVerifyAadhaarOtpResponse? {
+        Log.i("AbhaIdRepo", req.txnId)
         return withContext(Dispatchers.IO) {
             try {
                 Thread.sleep(4000)
-                "XYZ"
+                AbhaVerifyAadhaarOtpResponse("XYZ")
             } catch (e: java.lang.Exception) {
                 null
             }
@@ -82,55 +81,94 @@ class AbhaIdRepo @Inject constructor(
 
     }
 
-    suspend fun generateOtpForMobileNumber(mobileNumber: String, txnId: String): String? {
+    suspend fun generateOtpForMobileNumber(req: AbhaGenerateMobileOtpRequest): AbhaGenerateMobileOtpResponse? {
         return withContext(Dispatchers.IO) {
             try {
-                abhaApiService.generateMobileOtp(
-                    AbhaGenerateMobileOtpRequest(
-                        mobileNumber,
-                        txnId
-                    )
-                ).txnId
+                abhaApiService.generateMobileOtp(req)
             } catch (e: java.lang.Exception) {
                 null
             }
         }
     }
 
-    suspend fun generateOtpForMobileNumberDummy(
-        mobileNumber: String,
-        txnIdFromArgs: String
-    ): String? {
+    suspend fun generateOtpForMobileNumberDummy(req: AbhaGenerateMobileOtpRequest): AbhaGenerateMobileOtpResponse? {
+        Log.i("AbhaIdRepo", req.txnId)
         return withContext(Dispatchers.IO) {
             try {
                 Thread.sleep(4000)
-                "XYZ"
+                AbhaGenerateMobileOtpResponse("XYZ")
             } catch (e: java.lang.Exception) {
                 null
             }
         }
     }
 
-    suspend fun verifyOtpForMobileNumber(otp: String, txnId: String): String? {
+    suspend fun verifyOtpForMobileNumber(req: AbhaVerifyMobileOtpRequest): AbhaVerifyMobileOtpResponse? {
         return withContext(Dispatchers.IO) {
             try {
-                abhaApiService.verifyMobileOtp(
-                    AbhaVerifyMobileOtpRequest(
-                        otp,
-                        txnId
-                    )
-                ).txnId
+                abhaApiService.verifyMobileOtp(req)
             } catch (e: java.lang.Exception) {
                 null
             }
         }
     }
 
-    suspend fun verifyOtpForMobileNumberDummy(otp: String, txnIdFromArgs: String): String? {
+    suspend fun verifyOtpForMobileNumberDummy(req: AbhaVerifyMobileOtpRequest): AbhaVerifyMobileOtpResponse? {
+        Log.i("AbhaIdRepo", req.txnId)
         return withContext(Dispatchers.IO) {
             try {
                 Thread.sleep(4000)
-                "XYZ"
+                AbhaVerifyMobileOtpResponse("XYZ")
+            } catch (e: java.lang.Exception) {
+                null
+            }
+        }
+    }
+
+    suspend fun generateAbhaId(req: CreateAbhaIdRequest): CreateAbhaIdResponse? {
+        return withContext((Dispatchers.IO)) {
+            try {
+                val res = abhaApiService.createAbhaId(req)
+                Log.i("AbhaIdRepo", res.toString())
+                res
+            } catch (e: java.lang.Exception) {
+                null
+            }
+        }
+    }
+
+    suspend fun generateAbhaIdDummy(req: CreateAbhaIdRequest): CreateAbhaIdResponse? {
+        Log.i("AbhaIdRepo", req.txnId)
+        return withContext((Dispatchers.IO)) {
+            try {
+                Thread.sleep(4000)
+                CreateAbhaIdResponse(
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                    "",
+                    "43-4221-5105-6749",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "akash",
+                    "",
+                    "",
+                    "",
+                    "PUNE",
+                    "401",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "AADHAAR_OTP",
+                    "",
+                    mutableMapOf<String, String>(),
+                    "",
+                    ""
+                )
             } catch (e: java.lang.Exception) {
                 null
             }

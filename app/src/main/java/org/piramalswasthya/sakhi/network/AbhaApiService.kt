@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.network
 
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -23,7 +24,7 @@ interface AbhaApiService {
     @POST("verifyMobileOTP")
     suspend fun verifyMobileOtp(@Body request : AbhaVerifyMobileOtpRequest) : AbhaVerifyMobileOtpResponse
 
-    @POST("createAbhaId")
+    @POST("createHealthIdWithPreVerified")
     suspend fun createAbhaId(@Body request : CreateAbhaIdRequest) : CreateAbhaIdResponse
 
 

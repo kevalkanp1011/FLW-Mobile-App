@@ -23,8 +23,6 @@ class AadhaarOtpFragment : Fragment() {
 
     private val viewModel: AadhaarOtpViewModel by viewModels()
 
-    private val activityViewModel: AbhaIdViewModel by viewModels({ requireActivity() })
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,6 +37,10 @@ class AadhaarOtpFragment : Fragment() {
 
         binding.btnVerifyOTP.setOnClickListener {
             viewModel.verifyOtpClicked(binding.tietAadhaarOtp.text.toString())
+        }
+
+        binding.resendOtp.setOnClickListener {
+            viewModel.resendOtp()
         }
 
         binding.tietAadhaarOtp.addTextChangedListener(object : TextWatcher {
@@ -56,15 +58,13 @@ class AadhaarOtpFragment : Fragment() {
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state!!) {
+                State.IDLE -> {}
                 State.LOADING -> {
                     binding.clContent.visibility = View.INVISIBLE
                     binding.pbLoadingAadharOtp.visibility = View.VISIBLE
                     binding.clError.visibility = View.INVISIBLE
                 }
-                State.SUCCESS -> {
-                    binding.clContent.visibility = View.VISIBLE
-                    binding.pbLoadingAadharOtp.visibility = View.INVISIBLE
-                    binding.clError.visibility = View.INVISIBLE
+                State.OTP_VERIFY_SUCCESS -> {
                     findNavController().navigate(
                         AadhaarOtpFragmentDirections.actionAadhaarOtpFragmentToGenerateMobileOtpFragment(
                             viewModel.txnId
@@ -77,7 +77,12 @@ class AadhaarOtpFragment : Fragment() {
                     binding.pbLoadingAadharOtp.visibility = View.INVISIBLE
                     binding.clError.visibility = View.VISIBLE
                 }
-                else -> {}
+                State.OTP_GENERATED_SUCCESS -> {
+                    binding.clContent.visibility = View.VISIBLE
+                    binding.pbLoadingAadharOtp.visibility = View.INVISIBLE
+                    binding.clError.visibility = View.INVISIBLE
+                }
+                State.ERROR_SERVER -> {}
             }
         }
     }

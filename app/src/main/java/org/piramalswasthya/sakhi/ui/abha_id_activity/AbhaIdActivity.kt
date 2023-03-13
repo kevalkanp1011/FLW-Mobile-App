@@ -2,10 +2,8 @@ package org.piramalswasthya.sakhi.ui.abha_id_activity
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ProgressBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentContainerView
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import dagger.hilt.android.AndroidEntryPoint
@@ -13,7 +11,6 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.ActivityAbhaIdBinding
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertAbhaInterceptor
 import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdViewModel.State
-import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdFragment
 
 @AndroidEntryPoint
 class AbhaIdActivity : AppCompatActivity() {
@@ -49,18 +46,11 @@ class AbhaIdActivity : AppCompatActivity() {
                     binding.progressBarAbhaActivity.visibility = View.GONE
                     binding.clError.visibility = View.GONE
                     binding.navHostActivityAbhaId.visibility = View.VISIBLE
-//                    DO NOT NEED THIS (destination of nav graph is Aadhar Id Fragment --- Our nav graph takes care of transactions
-                //                    supportFragmentManager.beginTransaction()
-//                        .replace(R.id.nav_host_activity_abha_id, AadhaarIdFragment())
-//                        .commit()
                 }
                 State.ERROR_NETWORK -> {
-
                     binding.clError.visibility = View.VISIBLE
                     binding.progressBarAbhaActivity.visibility = View.GONE
                     binding.navHostActivityAbhaId.visibility = View.GONE
-
-
                 }
                 else -> {}
             }

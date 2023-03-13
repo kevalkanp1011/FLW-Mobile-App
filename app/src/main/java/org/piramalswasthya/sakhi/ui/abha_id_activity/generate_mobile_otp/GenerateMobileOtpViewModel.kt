@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.ui.abha_id_activity.generate_mobile_otp
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.network.AbhaGenerateMobileOtpRequest
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
 import javax.inject.Inject
 
@@ -40,8 +41,12 @@ class GenerateMobileOtpViewModel @Inject constructor(
 
     private fun generateMobileOtp(phoneNumber: String) {
         viewModelScope.launch {
-//            _txnId = abhaIdRepo.generateOtpForMobileNumber(phoneNumber, txnIdFromArgs)
-            _txnId = abhaIdRepo.generateOtpForMobileNumberDummy(phoneNumber, txnIdFromArgs)
+            _txnId = abhaIdRepo.generateOtpForMobileNumber(
+                AbhaGenerateMobileOtpRequest(
+                    phoneNumber,
+                    txnIdFromArgs
+                )
+            )?.txnId
             _txnId?.also {
                 _state.value = State.SUCCESS
             } ?: run {

@@ -12,7 +12,6 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.databinding.FragmentAadhaarIdBinding
-import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdViewModel
 import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdViewModel.State
 
 @AndroidEntryPoint
@@ -66,7 +65,12 @@ class AadhaarIdFragment : Fragment() {
                     binding.clContentAadharId.visibility = View.VISIBLE
                     binding.pbLoadingAadharId.visibility = View.INVISIBLE
                     binding.clError.visibility = View.INVISIBLE
-                    findNavController().navigate(AadhaarIdFragmentDirections.actionAadhaarIdFragmentToAadhaarOtpFragment(viewModel.txnId))
+                    findNavController().navigate(
+                        AadhaarIdFragmentDirections.actionAadhaarIdFragmentToAadhaarOtpFragment(
+                            viewModel.txnId,
+                            binding.tietAadhaarNumber.text.toString()
+                        )
+                    )
                     viewModel.resetState()
                 }
                 State.ERROR_NETWORK -> {

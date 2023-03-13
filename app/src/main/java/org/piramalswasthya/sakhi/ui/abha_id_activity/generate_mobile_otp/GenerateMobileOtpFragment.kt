@@ -66,7 +66,7 @@ class GenerateMobileOtpFragment : Fragment() {
                 State.SUCCESS -> {
                     navController.navigate(
                         GenerateMobileOtpFragmentDirections.actionGenerateMobileOtpFragmentToVerifyMobileOtpFragment(
-                            viewModel.txnID
+                            viewModel.txnID, binding.tietMobileNumber.text!!.toString()
                         )
                     )
                     viewModel.resetState()

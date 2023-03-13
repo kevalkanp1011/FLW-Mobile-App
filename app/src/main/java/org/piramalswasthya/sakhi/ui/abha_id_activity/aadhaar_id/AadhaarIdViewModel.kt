@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.network.AbhaGenerateAadhaarOtpRequest
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
 import javax.inject.Inject
 
@@ -40,8 +41,8 @@ class AadhaarIdViewModel @Inject constructor(
 
     private fun generateAadhaarOtp(aadhaarNo: String) {
         viewModelScope.launch {
-//            _txnId = abhaIdRepo.generateOtpForAadhaar(aadhaarNo)
-            _txnId = abhaIdRepo.generateOtpForAadhaarDummy(aadhaarNo)
+            _txnId =
+                abhaIdRepo.generateOtpForAadhaar(AbhaGenerateAadhaarOtpRequest(aadhaarNo))?.txnId
             _txnId?.also {
                 _state.value = State.SUCCESS
             } ?: run {

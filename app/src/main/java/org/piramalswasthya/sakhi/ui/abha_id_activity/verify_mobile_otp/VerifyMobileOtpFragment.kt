@@ -42,6 +42,10 @@ class VerifyMobileOtpFragment : Fragment() {
             viewModel.verifyOtpClicked(binding.tietVerifyMobileOtp.text.toString())
         }
 
+        binding.resendOtp.setOnClickListener {
+            viewModel.resendOtp()
+        }
+
         binding.tietVerifyMobileOtp.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -60,12 +64,9 @@ class VerifyMobileOtpFragment : Fragment() {
                 State.LOADING -> {
                     binding.clVerifyMobileOtp.visibility = View.INVISIBLE
                     binding.pbVmotp.visibility = View.VISIBLE
-//                    binding.clError.visibility = View.INVISIBLE
+                    binding.clError.visibility = View.INVISIBLE
                 }
-                State.SUCCESS -> {
-                    binding.clVerifyMobileOtp.visibility = View.VISIBLE
-                    binding.pbVmotp.visibility = View.INVISIBLE
-//                    binding.clError.visibility = View.INVISIBLE
+                State.OTP_VERIFY_SUCCESS -> {
                     findNavController().navigate(
                         VerifyMobileOtpFragmentDirections.actionVerifyMobileOtpFragmentToCreateAbhaFragment(
                             viewModel.txnID
@@ -76,10 +77,15 @@ class VerifyMobileOtpFragment : Fragment() {
                 State.ERROR_NETWORK -> {
                     binding.clVerifyMobileOtp.visibility = View.INVISIBLE
                     binding.pbVmotp.visibility = View.INVISIBLE
-//                    binding.clError.visibility = View.VISIBLE
+                    binding.clError.visibility = View.VISIBLE
                 }
                 State.ERROR_SERVER -> {
 
+                }
+                State.OTP_GENERATED_SUCCESS -> {
+                    binding.clVerifyMobileOtp.visibility = View.VISIBLE
+                    binding.pbVmotp.visibility = View.INVISIBLE
+                    binding.clError.visibility = View.INVISIBLE
                 }
             }
         }
