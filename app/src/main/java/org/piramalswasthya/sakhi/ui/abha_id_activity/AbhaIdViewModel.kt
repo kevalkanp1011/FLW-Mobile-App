@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.network.AbhaTokenResponse
+import org.piramalswasthya.sakhi.network.NetworkResult
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertAbhaInterceptor
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
 import timber.log.Timber
@@ -40,14 +41,19 @@ class AbhaIdViewModel @Inject constructor(
 
     private fun generateAccessToken() {
         viewModelScope.launch {
-            _accessToken = abhaIdRepo.getAccessToken()
-//            _accessToken = abhaIdRepo.getAccessTokenDummy()
-            if (_accessToken == null)
-                _state.value = State.ERROR_NETWORK
-            else {
-                _state.value = State.SUCCESS
-                TokenInsertAbhaInterceptor.setToken(accessToken.accessToken)
-                Timber.i(accessToken.toString())
+            when (val result = abhaIdRepo.getAccessToken()) {
+                is NetworkResult.Success -> {
+                    _accessToken = result.data
+                    _state.value = State.SUCCESS
+                    TokenInsertAbhaInterceptor.setToken(accessToken.accessToken)
+                    Timber.i(accessToken.toString())
+                }
+                is NetworkResult.Error -> {
+                    _state.value = State.ERROR_SERVER
+                }
+                is NetworkResult.NetworkError -> {
+                    _state.value = State.ERROR_NETWORK
+                }
             }
         }
     }

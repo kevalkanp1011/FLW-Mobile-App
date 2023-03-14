@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -72,6 +73,11 @@ class AadhaarOtpFragment : Fragment() {
                     )
                     viewModel.resetState()
                 }
+                State.ERROR_SERVER -> {
+                    binding.pbLoadingAadharOtp.visibility = View.INVISIBLE
+                    binding.clContent.visibility = View.VISIBLE
+                    Toast.makeText(activity, viewModel.errorMessage, Toast.LENGTH_LONG).show()
+                }
                 State.ERROR_NETWORK -> {
                     binding.clContent.visibility = View.INVISIBLE
                     binding.pbLoadingAadharOtp.visibility = View.INVISIBLE
@@ -82,7 +88,6 @@ class AadhaarOtpFragment : Fragment() {
                     binding.pbLoadingAadharOtp.visibility = View.INVISIBLE
                     binding.clError.visibility = View.INVISIBLE
                 }
-                State.ERROR_SERVER -> {}
             }
         }
     }

@@ -6,8 +6,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.network.CreateAbhaIdRequest
 import org.piramalswasthya.sakhi.network.CreateAbhaIdResponse
+import org.piramalswasthya.sakhi.network.NetworkResult
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,6 +32,10 @@ class CreateAbhaViewModel @Inject constructor(
 
     private val txnIdFromArgs = CreateAbhaFragmentArgs.fromSavedStateHandle(savedStateHandle).txnId
 
+    private var _errorMessage: String? = null
+    val errorMessage: String
+        get() = _errorMessage!!
+
     init {
         _state.value = State.LOADING
         generateAbhaCard()
@@ -39,7 +43,7 @@ class CreateAbhaViewModel @Inject constructor(
 
     private fun generateAbhaCard() {
         viewModelScope.launch {
-            abha.value = abhaIdRepo.generateAbhaId(
+            val result = abhaIdRepo.generateAbhaId(
                 CreateAbhaIdRequest(
                     null,
                     null,
@@ -51,12 +55,19 @@ class CreateAbhaViewModel @Inject constructor(
                     txnIdFromArgs
                 )
             )
-            if (abha == null) {
-                _state.value = State.ERROR_SERVER
-            } else {
-                Timber.i(abha.value.toString())
-                abha.value?.healthIdNumber?.let { Log.i("CreateAbhaViewModel", it) }
-                _state.value = State.GENERATE_SUCCESS
+            when (result) {
+                is NetworkResult.Success -> {
+                    abha.value = result.data
+                    abha.value?.healthIdNumber?.let { Log.i("CreateAbhaViewModel", it) }
+                    _state.value = State.GENERATE_SUCCESS
+                }
+                is NetworkResult.Error -> {
+                    _errorMessage = result.message
+                    _state.value = State.ERROR_SERVER
+                }
+                is NetworkResult.NetworkError -> {
+                    _state.value = State.ERROR_NETWORK
+                }
             }
         }
     }

@@ -52,7 +52,7 @@ class AbhaIdActivity : AppCompatActivity() {
                     binding.progressBarAbhaActivity.visibility = View.GONE
                     binding.navHostActivityAbhaId.visibility = View.GONE
                 }
-                else -> {}
+                State.ERROR_SERVER -> {}
             }
         }
     }

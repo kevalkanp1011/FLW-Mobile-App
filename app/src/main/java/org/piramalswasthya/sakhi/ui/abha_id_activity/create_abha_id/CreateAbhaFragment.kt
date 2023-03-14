@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,12 +37,23 @@ class CreateAbhaFragment : Fragment() {
                 State.LOADING -> {
                     binding.pbCai.visibility = View.VISIBLE
                     binding.clCreateAbhaId.visibility = View.INVISIBLE
+                    binding.clError.visibility = View.INVISIBLE
                 }
-                State.ERROR_NETWORK -> {}
-                State.ERROR_SERVER -> {}
+                State.ERROR_NETWORK -> {
+                    binding.pbCai.visibility = View.INVISIBLE
+                    binding.clCreateAbhaId.visibility = View.INVISIBLE
+                    binding.clError.visibility = View.VISIBLE
+                }
+                State.ERROR_SERVER -> {
+                    binding.pbCai.visibility = View.INVISIBLE
+                    binding.clCreateAbhaId.visibility = View.VISIBLE
+                    binding.clError.visibility = View.INVISIBLE
+                    Toast.makeText(activity, viewModel.errorMessage, Toast.LENGTH_LONG).show()
+                }
                 State.GENERATE_SUCCESS -> {
                     binding.pbCai.visibility = View.INVISIBLE
                     binding.clCreateAbhaId.visibility = View.VISIBLE
+                    binding.clError.visibility = View.INVISIBLE
                 }
                 State.DOWNLOAD_SUCCESS -> {}
             }

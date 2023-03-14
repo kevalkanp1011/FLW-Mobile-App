@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.network.AbhaGenerateMobileOtpRequest
+import org.piramalswasthya.sakhi.network.NetworkResult
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
 import javax.inject.Inject
 
@@ -24,6 +25,10 @@ class GenerateMobileOtpViewModel @Inject constructor(
     val state: LiveData<State>
         get() = _state
 
+    private var _errorMessage: String? = null
+    val errorMessage: String
+        get() = _errorMessage!!
+
     private val txnIdFromArgs =
         GenerateMobileOtpFragmentArgs.fromSavedStateHandle(savedStateHandle).txnId
     private var _txnId: String? = null
@@ -41,16 +46,24 @@ class GenerateMobileOtpViewModel @Inject constructor(
 
     private fun generateMobileOtp(phoneNumber: String) {
         viewModelScope.launch {
-            _txnId = abhaIdRepo.generateOtpForMobileNumber(
+            val result = abhaIdRepo.generateOtpForMobileNumber(
                 AbhaGenerateMobileOtpRequest(
                     phoneNumber,
                     txnIdFromArgs
                 )
-            )?.txnId
-            _txnId?.also {
-                _state.value = State.SUCCESS
-            } ?: run {
-                _state.value = State.ERROR_NETWORK
+            )
+            when (result) {
+                is NetworkResult.Success -> {
+                    _txnId = result.data.txnId
+                    _state.value = State.SUCCESS
+                }
+                is NetworkResult.Error -> {
+                    _errorMessage = result.message
+                    _state.value = State.ERROR_SERVER
+                }
+                is NetworkResult.NetworkError -> {
+                    _state.value = State.ERROR_NETWORK
+                }
             }
         }
     }

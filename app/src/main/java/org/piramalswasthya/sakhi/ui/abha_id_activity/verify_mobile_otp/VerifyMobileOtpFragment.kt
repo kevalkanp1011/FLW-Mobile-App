@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
@@ -80,7 +81,10 @@ class VerifyMobileOtpFragment : Fragment() {
                     binding.clError.visibility = View.VISIBLE
                 }
                 State.ERROR_SERVER -> {
-
+                    binding.clVerifyMobileOtp.visibility = View.VISIBLE
+                    binding.pbVmotp.visibility = View.INVISIBLE
+                    binding.clError.visibility = View.INVISIBLE
+                    Toast.makeText(activity, viewModel.errorMessage, Toast.LENGTH_LONG).show()
                 }
                 State.OTP_GENERATED_SUCCESS -> {
                     binding.clVerifyMobileOtp.visibility = View.VISIBLE

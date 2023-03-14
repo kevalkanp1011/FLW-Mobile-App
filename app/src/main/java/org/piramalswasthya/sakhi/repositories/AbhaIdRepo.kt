@@ -1,9 +1,11 @@
 package org.piramalswasthya.sakhi.repositories
 
-import android.util.Log
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import org.piramalswasthya.sakhi.network.*
+import java.io.IOException
 import javax.inject.Inject
 
 
@@ -11,166 +13,140 @@ class AbhaIdRepo @Inject constructor(
     private val abhaApiService: AbhaApiService
 ) {
 
-    suspend fun getAccessToken(): AbhaTokenResponse? {
+    suspend fun getAccessToken(): NetworkResult<AbhaTokenResponse> {
         return withContext(Dispatchers.IO) {
             try {
-                abhaApiService.getToken()
+                val response = abhaApiService.getToken()
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val result =
+                        Gson().fromJson(responseBody, AbhaTokenResponse::class.java)
+                    NetworkResult.Success(result)
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val errorJson = JSONObject(errorBody)
+                    val errorMessage = errorJson.getString("message")
+                    NetworkResult.Error(response.code(), errorMessage)
+                }
+            } catch (e: IOException) {
+                NetworkResult.NetworkError
             } catch (e: java.lang.Exception) {
-                null
+                NetworkResult.Error(-1, e.message ?: "Unknown Error")
             }
         }
     }
 
-    suspend fun getAccessTokenDummy(): AbhaTokenResponse? {
+    suspend fun generateOtpForAadhaar(req: AbhaGenerateAadhaarOtpRequest): NetworkResult<AbhaGenerateAadhaarOtpResponse> {
         return withContext(Dispatchers.IO) {
             try {
-                Thread.sleep(3000)
-                AbhaTokenResponse("ABC", 0, 0, "RRV", "Buller")
+                val response = abhaApiService.generateAadhaarOtp(req)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val result =
+                        Gson().fromJson(responseBody, AbhaGenerateAadhaarOtpResponse::class.java)
+                    NetworkResult.Success(result)
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val errorJson = JSONObject(errorBody)
+                    val errorMessage = errorJson.getString("message")
+                    NetworkResult.Error(response.code(), errorMessage)
+                }
+            } catch (e: IOException) {
+                NetworkResult.NetworkError
             } catch (e: java.lang.Exception) {
-                null
+                NetworkResult.Error(-1, e.message ?: "Unknown Error")
             }
         }
     }
 
-    suspend fun generateOtpForAadhaar(req: AbhaGenerateAadhaarOtpRequest): AbhaGenerateAadhaarOtpResponse? {
+    suspend fun verifyOtpForAadhaar(req: AbhaVerifyAadhaarOtpRequest): NetworkResult<AbhaVerifyAadhaarOtpResponse> {
         return withContext(Dispatchers.IO) {
             try {
-                abhaApiService.generateAadhaarOtp(req)
+                val response = abhaApiService.verifyAadhaarOtp(req)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val result =
+                        Gson().fromJson(responseBody, AbhaVerifyAadhaarOtpResponse::class.java)
+                    NetworkResult.Success(result)
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val errorJson = JSONObject(errorBody)
+                    val errorMessage = errorJson.getString("message")
+                    NetworkResult.Error(response.code(), errorMessage)
+                }
+            } catch (e: IOException) {
+                NetworkResult.NetworkError
             } catch (e: java.lang.Exception) {
-                null
-            }
-        }
-
-    }
-
-    suspend fun generateOtpForAadhaarDummy(req: AbhaGenerateAadhaarOtpRequest): AbhaGenerateAadhaarOtpResponse? {
-        Log.i("AbhaIdRepo", req.aadhaar)
-
-        return withContext(Dispatchers.IO) {
-            try {
-                Thread.sleep(3000)
-                AbhaGenerateAadhaarOtpResponse("XYZ")
-            } catch (e: java.lang.Exception) {
-                null
-            }
-        }
-
-    }
-
-    suspend fun verifyOtpForAadhaar(req: AbhaVerifyAadhaarOtpRequest): AbhaVerifyAadhaarOtpResponse? {
-        return withContext(Dispatchers.IO) {
-            try {
-                abhaApiService.verifyAadhaarOtp(req)
-            } catch (e: java.lang.Exception) {
-                null
-            }
-        }
-
-    }
-
-    suspend fun verifyOtpForAadhaarDummy(req: AbhaVerifyAadhaarOtpRequest): AbhaVerifyAadhaarOtpResponse? {
-        Log.i("AbhaIdRepo", req.txnId)
-        return withContext(Dispatchers.IO) {
-            try {
-                Thread.sleep(4000)
-                AbhaVerifyAadhaarOtpResponse("XYZ")
-            } catch (e: java.lang.Exception) {
-                null
+                NetworkResult.Error(-1, e.message ?: "Unknown Error")
             }
         }
 
     }
 
-    suspend fun generateOtpForMobileNumber(req: AbhaGenerateMobileOtpRequest): AbhaGenerateMobileOtpResponse? {
+    suspend fun generateOtpForMobileNumber(req: AbhaGenerateMobileOtpRequest): NetworkResult<AbhaGenerateMobileOtpResponse> {
         return withContext(Dispatchers.IO) {
             try {
-                abhaApiService.generateMobileOtp(req)
+                val response = abhaApiService.generateMobileOtp(req)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val result =
+                        Gson().fromJson(responseBody, AbhaGenerateMobileOtpResponse::class.java)
+                    NetworkResult.Success(result)
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val errorJson = JSONObject(errorBody)
+                    val errorMessage = errorJson.getString("message")
+                    NetworkResult.Error(response.code(), errorMessage)
+                }
+            } catch (e: IOException) {
+                NetworkResult.NetworkError
             } catch (e: java.lang.Exception) {
-                null
+                NetworkResult.Error(-1, e.message ?: "Unknown Error")
             }
         }
     }
 
-    suspend fun generateOtpForMobileNumberDummy(req: AbhaGenerateMobileOtpRequest): AbhaGenerateMobileOtpResponse? {
-        Log.i("AbhaIdRepo", req.txnId)
+    suspend fun verifyOtpForMobileNumber(req: AbhaVerifyMobileOtpRequest): NetworkResult<AbhaVerifyMobileOtpResponse> {
         return withContext(Dispatchers.IO) {
             try {
-                Thread.sleep(4000)
-                AbhaGenerateMobileOtpResponse("XYZ")
+                val response = abhaApiService.verifyMobileOtp(req)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val result =
+                        Gson().fromJson(responseBody, AbhaVerifyMobileOtpResponse::class.java)
+                    NetworkResult.Success(result)
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val errorJson = JSONObject(errorBody)
+                    val errorMessage = errorJson.getString("message")
+                    NetworkResult.Error(response.code(), errorMessage)
+                }
+            } catch (e: IOException) {
+                NetworkResult.NetworkError
             } catch (e: java.lang.Exception) {
-                null
+                NetworkResult.Error(-1, e.message ?: "Unknown Error")
             }
         }
     }
 
-    suspend fun verifyOtpForMobileNumber(req: AbhaVerifyMobileOtpRequest): AbhaVerifyMobileOtpResponse? {
-        return withContext(Dispatchers.IO) {
-            try {
-                abhaApiService.verifyMobileOtp(req)
-            } catch (e: java.lang.Exception) {
-                null
-            }
-        }
-    }
-
-    suspend fun verifyOtpForMobileNumberDummy(req: AbhaVerifyMobileOtpRequest): AbhaVerifyMobileOtpResponse? {
-        Log.i("AbhaIdRepo", req.txnId)
-        return withContext(Dispatchers.IO) {
-            try {
-                Thread.sleep(4000)
-                AbhaVerifyMobileOtpResponse("XYZ")
-            } catch (e: java.lang.Exception) {
-                null
-            }
-        }
-    }
-
-    suspend fun generateAbhaId(req: CreateAbhaIdRequest): CreateAbhaIdResponse? {
+    suspend fun generateAbhaId(req: CreateAbhaIdRequest): NetworkResult<CreateAbhaIdResponse> {
         return withContext((Dispatchers.IO)) {
             try {
-                val res = abhaApiService.createAbhaId(req)
-                Log.i("AbhaIdRepo", res.toString())
-                res
+                val response = abhaApiService.createAbhaId(req)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val result = Gson().fromJson(responseBody, CreateAbhaIdResponse::class.java)
+                    NetworkResult.Success(result)
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val errorJson = JSONObject(errorBody)
+                    val errorMessage = errorJson.getString("message")
+                    NetworkResult.Error(response.code(), errorMessage)
+                }
+            } catch (e: IOException) {
+                NetworkResult.NetworkError
             } catch (e: java.lang.Exception) {
-                null
-            }
-        }
-    }
-
-    suspend fun generateAbhaIdDummy(req: CreateAbhaIdRequest): CreateAbhaIdResponse? {
-        Log.i("AbhaIdRepo", req.txnId)
-        return withContext((Dispatchers.IO)) {
-            try {
-                Thread.sleep(4000)
-                CreateAbhaIdResponse(
-                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
-                    "",
-                    "43-4221-5105-6749",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "akash",
-                    "",
-                    "",
-                    "",
-                    "PUNE",
-                    "401",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "AADHAAR_OTP",
-                    "",
-                    mutableMapOf<String, String>(),
-                    "",
-                    ""
-                )
-            } catch (e: java.lang.Exception) {
-                null
+                NetworkResult.Error(-1, e.message ?: "Unknown Error")
             }
         }
     }
