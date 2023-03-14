@@ -338,6 +338,18 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="fpotFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="1716" />
+                            <option name="y" value="2997" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="generalOpCareFragment">
                     <value>
                       <LayoutPositions>
@@ -848,6 +860,15 @@
                             <option name="x" value="1191" />
                             <option name="y" value="2313" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_pncMotherListFragment_to_pmjayFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>

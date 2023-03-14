@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.network
 import okhttp3.ResponseBody
 import org.piramalswasthya.sakhi.model.CDRPost
 import org.piramalswasthya.sakhi.model.MdsrPost
+import org.piramalswasthya.sakhi.model.PMJAYPost
 import org.piramalswasthya.sakhi.model.PmsmaPost
 import retrofit2.Response
 import retrofit2.http.*
@@ -44,4 +45,9 @@ interface D2DNetworkApiService {
         @Body pmsmaPost: List<PmsmaPost>
     ): Response<ResponseBody>
 
+    @POST("pmjayData")
+    @Headers("Content-Type: application/json")
+    suspend fun postPmjayDataRegister(
+        @Body pmjayPostList: List<PMJAYPost>
+    ): Response<ResponseBody>
 }

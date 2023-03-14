@@ -295,7 +295,11 @@
         android:id="@+id/reproductiveAgeListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.reproductive_age_list.ReproductiveAgeListFragment"
         android:label="Reproductive Age List"
-        tools:layout="@layout/fragment_reproductive_age_list" />
+        tools:layout="@layout/fragment_reproductive_age_list" >
+        <action
+            android:id="@+id/action_reproductiveAgeListFragment_to_fpotFragment"
+            app:destination="@id/fpotFragment" />
+    </fragment>
     <fragment
         android:id="@+id/ncdEligibleListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_eligible_list.NcdEligibleListFragment"
@@ -443,6 +447,18 @@
         android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.pmjay.PmjayFragment"
         android:label="PMJAY Form"
         tools:layout="@layout/fragment_pmjay" >
+        <argument
+            android:name="hhId"
+            app:argType="long" />
+        <argument
+            android:name="benId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/fpotFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.fpot.FpotFragment"
+        android:label="FP-OT Register"
+        tools:layout="@layout/fragment_fpot" >
         <argument
             android:name="hhId"
             app:argType="long" />

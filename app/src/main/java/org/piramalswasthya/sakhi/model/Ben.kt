@@ -188,6 +188,25 @@ data class BenBasicCache(
             hasForm = false
         )
     }
+    fun asBasicDomainModelForFpotForm() : BenBasicDomainForForm {
+        return BenBasicDomainForForm (
+            benId = benId,
+            hhId = hhId,
+            regDate = dateFormat.format(Date(regDate!!)),
+            benName = benName,
+            benSurname = benSurname ?: "Not Available",
+            gender = gender.name,
+            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            mobileNo = mobileNo.toString(),
+            fatherName = fatherName,
+            familyHeadName = familyHeadName ?: "Not Available",
+            typeOfList = typeOfList.name,
+            rchId = rchId ?: "Not Available",
+            hrpStatus = hrpStatus,
+            syncState = syncState,
+            hasForm = false
+        )
+    }
 
 }
 

@@ -10,10 +10,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertTmcInterceptor
-import org.piramalswasthya.sakhi.repositories.BenRepo
-import org.piramalswasthya.sakhi.repositories.CdrRepo
-import org.piramalswasthya.sakhi.repositories.MdsrRepo
-import org.piramalswasthya.sakhi.repositories.PmsmaRepo
+import org.piramalswasthya.sakhi.repositories.*
 import timber.log.Timber
 import java.net.SocketTimeoutException
 
@@ -24,6 +21,7 @@ class PushToD2DWorker @AssistedInject constructor(
     private val mdsrRepo: MdsrRepo,
     private val cdrRepo: CdrRepo,
     private val pmsmaRepo: PmsmaRepo,
+    private val pmjayRepo: PmjayRepo,
     private val preferenceDao: PreferenceDao,
 ) : CoroutineWorker(appContext, params) {
 
@@ -41,8 +39,9 @@ class PushToD2DWorker @AssistedInject constructor(
             val workerResult1 = cdrRepo.processNewCdr()
             val workerResult2 = mdsrRepo.processNewMdsr()
             val workerResult3 = pmsmaRepo.processNewPmsma()
+            val workerResult4 = pmjayRepo.processNewPmjay()
 
-            return if (workerResult1 && workerResult2 && workerResult3 ) {
+            return if (workerResult1 && workerResult2 && workerResult3 && workerResult4) {
                 Timber.d("Worker completed")
                 Result.success()
             } else {
