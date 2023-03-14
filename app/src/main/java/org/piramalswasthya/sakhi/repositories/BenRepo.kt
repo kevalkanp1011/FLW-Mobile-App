@@ -350,7 +350,9 @@ class BenRepo @Inject constructor(
 
     suspend fun getBenGenForm(benId: Long, hhId: Long): BenGenRegFormDataset {
         return withContext(Dispatchers.IO) {
-            BenGenRegFormDataset(context,getBeneficiary(benId, hhId)!!)
+            BenGenRegFormDataset(context,getBeneficiary(benId, hhId)!!).also {
+                it.setPic()
+            }
         }
     }
 
