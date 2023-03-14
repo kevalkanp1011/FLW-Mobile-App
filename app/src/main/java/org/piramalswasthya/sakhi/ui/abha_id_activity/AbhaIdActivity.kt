@@ -52,8 +52,18 @@ class AbhaIdActivity : AppCompatActivity() {
                     binding.progressBarAbhaActivity.visibility = View.GONE
                     binding.navHostActivityAbhaId.visibility = View.GONE
                 }
-                State.ERROR_SERVER -> {}
+                State.ERROR_SERVER -> {
+                    binding.clError.visibility = View.VISIBLE
+                    binding.progressBarAbhaActivity.visibility = View.GONE
+                    binding.navHostActivityAbhaId.visibility = View.GONE
+                }
             }
+        }
+        mainViewModel.errorMessage.observe(this){
+            binding.textView5.text = it
+        }
+        binding.btnTryAgain.setOnClickListener {
+            mainViewModel.generateAccessToken()
         }
     }
 

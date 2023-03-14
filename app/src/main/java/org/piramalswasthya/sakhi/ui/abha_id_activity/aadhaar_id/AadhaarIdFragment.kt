@@ -75,13 +75,22 @@ class AadhaarIdFragment : Fragment() {
                     binding.pbLoadingAadharId.visibility = View.INVISIBLE
                     binding.clContentAadharId.visibility = View.VISIBLE
                     binding.clError.visibility = View.INVISIBLE
-                    Toast.makeText(activity, viewModel.errorMessage, Toast.LENGTH_LONG).show()
+                    binding.tvErrorText.visibility = View.VISIBLE
+
                 }
                 State.ERROR_NETWORK -> {
                     binding.clContentAadharId.visibility = View.INVISIBLE
                     binding.pbLoadingAadharId.visibility = View.INVISIBLE
                     binding.clError.visibility = View.VISIBLE
+
                 }
+            }
+        }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner){
+            it?.let{
+                binding.tvErrorText.text = it
+                viewModel.resetErrorMessage()
             }
         }
     }

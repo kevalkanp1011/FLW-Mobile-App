@@ -6,6 +6,8 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.piramalswasthya.sakhi.network.*
 import java.io.IOException
+import java.net.ConnectException
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 
@@ -29,9 +31,11 @@ class AbhaIdRepo @Inject constructor(
                     NetworkResult.Error(response.code(), errorMessage)
                 }
             } catch (e: IOException) {
-                NetworkResult.NetworkError
+                NetworkResult.Error(-1,"Unable to connect to Internet!!")
+            }catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3,"Request Timed out! Please try again!")
             } catch (e: java.lang.Exception) {
-                NetworkResult.Error(-1, e.message ?: "Unknown Error")
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
             }
         }
     }

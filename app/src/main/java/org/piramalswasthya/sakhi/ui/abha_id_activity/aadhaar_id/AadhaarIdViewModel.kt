@@ -13,7 +13,8 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class AadhaarIdViewModel @Inject constructor(
+class
+AadhaarIdViewModel @Inject constructor(
     private val abhaIdRepo: AbhaIdRepo
 ) : ViewModel() {
     enum class State {
@@ -32,9 +33,9 @@ class AadhaarIdViewModel @Inject constructor(
     val txnId: String
         get() = _txnId!!
 
-    private var _errorMessage: String? = null
-    val errorMessage: String
-        get() = _errorMessage!!
+    private val _errorMessage =  MutableLiveData<String?>(null)
+    val errorMessage: LiveData<String?>
+        get() = _errorMessage
 
     fun generateOtpClicked(aadharNo: String) {
         _state.value = State.LOADING
@@ -43,6 +44,10 @@ class AadhaarIdViewModel @Inject constructor(
 
     fun resetState() {
         _state.value = State.IDLE
+    }
+
+    fun resetErrorMessage(){
+        _errorMessage.value = null
     }
 
     private fun generateAadhaarOtp(aadhaarNo: String) {
@@ -54,7 +59,7 @@ class AadhaarIdViewModel @Inject constructor(
                     _state.value = State.SUCCESS
                 }
                 is NetworkResult.Error -> {
-                    _errorMessage = result.message
+                    _errorMessage.value = result.message
                     _state.value = State.ERROR_SERVER
                 }
                 is NetworkResult.NetworkError -> {

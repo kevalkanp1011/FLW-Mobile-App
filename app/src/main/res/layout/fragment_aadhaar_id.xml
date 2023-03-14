@@ -53,6 +53,15 @@
                         android:singleLine="true"
                         android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
 
+                    <TextView
+                        android:id="@+id/tv_error_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        android:textColor="@color/red"
+                        android:text="TextView" />
+
 
                 </com.google.android.material.textfield.TextInputLayout>
 

@@ -30,16 +30,21 @@ class AbhaIdViewModel @Inject constructor(
     val state: LiveData<State>
         get() = _state
 
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String>
+        get() = _errorMessage
+
     init {
-        _state.value = State.LOADING_TOKEN
         generateAccessToken()
     }
+
 
     private var _accessToken: AbhaTokenResponse? = null
     private val accessToken: AbhaTokenResponse
         get() = _accessToken!!
 
-    private fun generateAccessToken() {
+    fun generateAccessToken() {
+        _state.value = State.LOADING_TOKEN
         viewModelScope.launch {
             when (val result = abhaIdRepo.getAccessToken()) {
                 is NetworkResult.Success -> {
@@ -50,6 +55,7 @@ class AbhaIdViewModel @Inject constructor(
                 }
                 is NetworkResult.Error -> {
                     _state.value = State.ERROR_SERVER
+                    _errorMessage.value = result.message
                 }
                 is NetworkResult.NetworkError -> {
                     _state.value = State.ERROR_NETWORK
