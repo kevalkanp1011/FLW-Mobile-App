@@ -66,6 +66,15 @@ class NewBenRegG15ViewModel @Inject constructor(
     private var form: BenGenRegFormDataset = BenGenRegFormDataset(context)
     private lateinit var household: HouseholdCache
 
+    init {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                household = benRepo.getHousehold(hhId)!!
+                form = BenGenRegFormDataset(context)
+            }
+        }
+    }
+
     private fun getDiffYears(a: Calendar, b: Calendar): Int {
         var diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR)
         if (a.get(Calendar.YEAR) > b.get(Calendar.YEAR) ||
@@ -99,13 +108,20 @@ class NewBenRegG15ViewModel @Inject constructor(
         return diffM
     }
 
-    suspend fun getFirstPage(adapter: FormInputAdapter): List<FormInput> {
-        withContext(Dispatchers.IO) {
-            household = benRepo.getHousehold(hhId)!!
-            if (benIdFromArgs > 0)
-                form = benRepo.getBenGenForm(benIdFromArgs, hhId)
+    suspend fun getFirstPage(): List<FormInput> {
+        Timber.d("Record Exists ${recordExists.value}")
+        return if (_recordExists.value == false) {
+            form.firstPage
+        } else {
+            form = benRepo.getBenGenForm(benIdFromArgs, hhId)
+            if (form.hasReproductiveStatus())
+                _hasReproductiveStatus.value = true
+            form.loadFirstPageOnViewModel()
 
         }
+    }
+
+    suspend fun observeFirstPage(adapter: FormInputAdapter) {
         viewModelScope.launch {
             var emittedFromDob = false
             var emittedFromAge = false
@@ -211,8 +227,7 @@ class NewBenRegG15ViewModel @Inject constructor(
             }
             launch {
                 form.ageAtMarriage.value.combine(form.age.value) { ageAtMarriage, age ->
-                    age == ageAtMarriage
-
+                    age != null && ageAtMarriage != null && age == ageAtMarriage
                 }.stateIn(viewModelScope, SharingStarted.Eagerly, false).collect {
                     val list = adapter.currentList.toMutableList()
                     form.dateOfMarriage.min = System.currentTimeMillis() - 31536000000
@@ -370,14 +385,18 @@ class NewBenRegG15ViewModel @Inject constructor(
             }
 
         }
-        return withContext(Dispatchers.IO) {
-            form.firstPage
-        }
     }
 
 
-    fun getSecondPage(adapter: FormInputAdapter): List<FormInput> {
+    fun getSecondPage(): List<FormInput> {
+        return if (_recordExists.value == false) {
+            form.secondPage
+        } else
+            form.loadSecondPageOnViewModel()
 
+    }
+
+    fun observeSecondPage(adapter: FormInputAdapter) {
         viewModelScope.launch {
             launch {
                 form.hasAadharNo.value.collect {
@@ -396,12 +415,15 @@ class NewBenRegG15ViewModel @Inject constructor(
                 }
             }
         }
-        return form.secondPage
-
     }
 
-    fun getThirdPage(adapter: FormInputAdapter): List<FormInput> {
-
+    fun getThirdPage(): List<FormInput> {
+            return if (_recordExists.value == false) {
+                form.thirdPage
+            } else
+                form.loadThirdPageOnViewModel()
+    }
+    fun observeThirdPage(adapter: FormInputAdapter){
         viewModelScope.launch {
             launch {
                 form.reproductiveStatus.value.collect {
@@ -619,7 +641,6 @@ class NewBenRegG15ViewModel @Inject constructor(
                 }
             }
         }
-        return form.thirdPage
 
     }
 

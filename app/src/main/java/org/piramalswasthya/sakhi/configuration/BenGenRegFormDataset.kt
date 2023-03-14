@@ -4,10 +4,12 @@ import android.content.Context
 import android.text.InputType
 import android.widget.LinearLayout
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.model.FormInput.InputType.*
+import org.piramalswasthya.sakhi.model.Gender.*
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,6 +24,15 @@ class BenGenRegFormDataset(private val context: Context) {
     }
 
     companion object {
+
+        private fun getDateFromLong(long: Long): String {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = long
+            val mdFormat =
+                SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+            return mdFormat.format(calendar.time)
+        }
+
         private fun getCurrentDate(): String {
             val calendar = Calendar.getInstance()
             val mdFormat =
@@ -120,7 +131,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val maritalStatus = FormInput(
         inputType = DROPDOWN,
         title = "Marital Status",
-        list = maritalStatusMale ,
+        list = maritalStatusMale,
         required = true,
     )
     val husbandName = FormInput(
@@ -192,8 +203,8 @@ class BenGenRegFormDataset(private val context: Context) {
         required = true,
         etMaxLength = 10,
         isMobileNumber = true,
-        min=6000000000,
-        max=9999999999,
+        min = 6000000000,
+        max = 9999999999,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
     )
 
@@ -477,6 +488,189 @@ class BenGenRegFormDataset(private val context: Context) {
 
             )
 
+    fun loadFirstPageOnViewModel(): List<FormInput> {
+        val viewList = mutableListOf(
+            pic,
+            dateOfReg,
+            firstName,
+            lastName,
+            dob,
+            age,
+            gender,
+            maritalStatus,
+            fatherName,
+            motherName,
+            relationToHead,
+            mobileNoOfRelation,
+            contactNumber,
+            community,
+            religion,
+        )
+        ben?.let { benCache ->
+            dateOfReg.value.value = getDateFromLong(benCache.regDate)
+            firstName.value.value = benCache.firstName
+            lastName.value.value = benCache.lastName
+            age.value.value = benCache.age.toString()
+            dob.value.value = getDateFromLong(benCache.dob)
+            gender.value.value =
+                context.resources.getStringArray(R.array.nbr_gender_array)[benCache.genderId - 1]
+            benCache.genDetails?.maritalStatusId?.takeIf { it > 0 }?.let {
+
+                maritalStatus.value.value = when(benCache.genderId){
+                    2-> maritalStatusFemale[it-1]
+                    else -> maritalStatusMale[it - 1]
+                }
+            }
+
+            fatherName.value.value = benCache.fatherName
+            motherName.value.value = benCache.motherName
+            mobileNoOfRelation.value.value =
+                mobileNoOfRelation.list?.get(benCache.mobileNoOfRelationId - 1)
+            otherMobileNoOfRelation.value.value = benCache.mobileOthers
+            contactNumber.value.value = benCache.contactNumber.toString()
+            relationToHead.value.value =
+                relationToHeadListDefault[benCache.familyHeadRelationPosition - 1]
+            community.value.value = community.list?.get(benCache.communityId - 1)
+            religion.value.value = religion.list?.get(benCache.religionId - 1)
+            otherReligion.value.value = benCache.religionOthers
+
+            if(benCache.genDetails?.maritalStatusId!=1) {
+                when (benCache.gender) {
+                    MALE -> {
+                        wifeName.value.value = benCache.genDetails?.spouseName
+                        viewList.add(viewList.indexOf(maritalStatus) + 1, wifeName)
+                    }
+                    FEMALE -> {
+                        husbandName.value.value = benCache.genDetails?.spouseName
+                        viewList.add(viewList.indexOf(maritalStatus) + 1, husbandName)
+                    }
+                    TRANSGENDER -> {
+                        spouseName.value.value = benCache.genDetails?.spouseName
+                        viewList.add(viewList.indexOf(maritalStatus) + 1, spouseName)
+                    }
+                    null -> {}
+                }
+            }
+
+            benCache.genDetails?.ageAtMarriage?.takeIf { it >= 12 }?.let {
+                ageAtMarriage.value.value = it.toString()
+                viewList.add(viewList.indexOf(maritalStatus) + 2, ageAtMarriage)
+            }
+            benCache.genDetails?.dateOfMarriage?.takeIf { it>0L }?.let {
+                dateOfMarriage.value.value = getDateFromLong(it)
+                viewList.add(viewList.indexOf(ageAtMarriage) + 1, dateOfMarriage)
+            }
+            otherRelationToHead.value.value?.let {
+                viewList.add(
+                    viewList.indexOf(relationToHead) + 1,
+                    otherRelationToHead
+                )
+            }
+            otherMobileNoOfRelation.value.value?.let {
+                viewList.add(
+                    viewList.indexOf(
+                        mobileNoOfRelation
+                    ) + 1, otherMobileNoOfRelation
+                )
+            }
+            otherReligion.value.value?.let {
+                viewList.add(
+                    viewList.indexOf(religion) + 1,
+                    otherReligion
+                )
+            }
+
+        }
+
+        return viewList
+    }
+
+    fun loadSecondPageOnViewModel(): List<FormInput> {
+        val viewList = mutableListOf(
+            hasAadharNo,
+            rchId
+        )
+        ben?.let { benCache ->
+
+            hasAadharNo.value.value = if(benCache.hasAadhar==true) "Yes" else "No"
+            rchId.value.value = benCache.rchId
+            benCache.hasAadhar?.takeIf { it }?.run{
+                aadharNo.value.value = benCache.aadharNum
+                viewList.add(1,aadharNo)
+            }
+        }
+
+        return viewList
+    }
+
+    fun loadThirdPageOnViewModel(): List<FormInput> {
+        val viewList = mutableListOf(
+            reproductiveStatus
+        )
+        ben?.let { benCache ->
+            benCache.genDetails?.reproductiveStatusId?.takeIf { it>0 }?.let {
+                reproductiveStatus.value.value = reproductiveStatus.list?.get(it-1)
+            }
+            when(benCache.genDetails?.reproductiveStatusId){
+                1->{
+                    lastMenstrualPeriod.value.value = benCache.genDetails?.lastMenstrualPeriod?.let { getDateFromLong(it) }
+                    benCache.nishchayDeliveryStatusPosition.takeIf { it>0 }?.let {
+                        nishchayKitDeliveryStatus.value.value = nishchayKitDeliveryStatus.list?.get(it)
+                    }
+                    benCache.nishchayPregnancyStatusPosition.takeIf { it>0 }?.let {
+                        pregnancyTestResult.value.value = pregnancyTestResult.list?.get(it)
+                    }
+                    viewList.addAll(listOf(
+                        lastMenstrualPeriod,
+                        nishchayKitDeliveryStatus,
+                        pregnancyTestResult
+                    ))
+                }
+                2,3->{
+                    lastMenstrualPeriod.value.value = benCache.genDetails?.lastMenstrualPeriod?.let { getDateFromLong(it) }
+                    expectedDateOfDelivery.value.value = benCache.genDetails?.expectedDateOfDelivery?.let { getDateFromLong(it) }
+                    numPrevLiveBirthOrPregnancy.value.value = benCache.genDetails?.numPreviousLiveBirth?.toString()
+                    lastDeliveryConducted.value.value = benCache.genDetails?.lastDeliveryConducted
+                    facility.value.value = benCache.genDetails?.facilityName
+                    otherPlaceOfDelivery.value.value = benCache.genDetails?.otherLastDeliveryConducted
+                    whoConductedDelivery.value.value = benCache.genDetails?.whoConductedDelivery
+                    otherWhoConductedDelivery.value.value = benCache.genDetails?.otherWhoConductedDelivery
+                    viewList.addAll(listOf(
+                        lastMenstrualPeriod,
+                        expectedDateOfDelivery,
+                        numPrevLiveBirthOrPregnancy,
+                        lastDeliveryConducted,
+                        facility,
+                        otherPlaceOfDelivery,
+                        whoConductedDelivery,
+                        otherWhoConductedDelivery
+
+                    ))
+                }
+                4->{
+                    dateOfDelivery.value.value = benCache.genDetails?.deliveryDate
+                    viewList.addAll(listOf(
+                        dateOfDelivery
+                    ))
+                }
+                5,6->{
+                    lastMenstrualPeriod.value.value = benCache.genDetails?.lastMenstrualPeriod?.let { getDateFromLong(it) }
+                    viewList.addAll(listOf(
+                       lastMenstrualPeriod
+                    ))
+                }
+                else ->{
+                    reproductiveStatusOther.value.value = benCache.genDetails?.reproductiveStatus
+                    viewList.addAll(listOf(
+                        reproductiveStatusOther
+                    ))
+                }
+            }
+        }
+
+        return viewList
+    }
+
 
     suspend fun getBenForFirstPage(userId: Int, hhId: Long): BenRegCache {
         if (ben == null) {
@@ -492,7 +686,7 @@ class BenGenRegFormDataset(private val context: Context) {
             )
         }
         ben?.apply {
-            userImageBlob = ImageUtils.getByteArrayFromImageUri(context,pic.value.value!!)
+            userImageBlob = ImageUtils.getByteArrayFromImageUri(context, pic.value.value!!)
             Timber.d("BenGenReg: $userImageBlob, ${pic.value.value}")
             regDate = getLongFromDate(this@BenGenRegFormDataset.dateOfReg.value.value!!)
             firstName = this@BenGenRegFormDataset.firstName.value.value
@@ -502,9 +696,9 @@ class BenGenRegFormDataset(private val context: Context) {
             ageUnit = AgeUnit.YEARS
             age_unitId = 3
             gender = when (this@BenGenRegFormDataset.gender.value.value) {
-                "Male" -> Gender.MALE
-                "Female" -> Gender.FEMALE
-                "Transgender" -> Gender.TRANSGENDER
+                "Male" -> MALE
+                "Female" -> FEMALE
+                "Transgender" -> TRANSGENDER
                 else -> null
             }
             genderId = when (this@BenGenRegFormDataset.gender.value.value) {
@@ -523,7 +717,9 @@ class BenGenRegFormDataset(private val context: Context) {
                         ?: this@BenGenRegFormDataset.spouseName.value.value
             genDetails?.ageAtMarriage =
                 this@BenGenRegFormDataset.ageAtMarriage.value.value?.toInt() ?: 0
-            genDetails?.marriageDate = this@BenGenRegFormDataset.dateOfMarriage.value.value?.let{getLongFromDate(it)}?:getDoMFromDoR(genDetails?.ageAtMarriage, regDate!!)
+            genDetails?.marriageDate =
+                this@BenGenRegFormDataset.dateOfMarriage.value.value?.let { getLongFromDate(it) }
+                    ?: getDoMFromDoR(genDetails?.ageAtMarriage, regDate!!)
             fatherName = this@BenGenRegFormDataset.fatherName.value.value
             motherName = this@BenGenRegFormDataset.motherName.value.value
             familyHeadRelation = this@BenGenRegFormDataset.relationToHead.value.value
@@ -564,7 +760,7 @@ class BenGenRegFormDataset(private val context: Context) {
 
 
     suspend fun getBenForSecondPage(userId: Int, hhId: Long): BenRegCache {
-        getBenForFirstPage(userId,hhId)
+        getBenForFirstPage(userId, hhId)
 
         ben?.apply {
             this.hasAadhar = when (this@BenGenRegFormDataset.hasAadharNo.value.value) {
@@ -646,6 +842,21 @@ class BenGenRegFormDataset(private val context: Context) {
             }
         }
         return ben!!
+    }
+
+    suspend fun setPic() {
+        pic.value.value = ben?.userImageBlob?.let {
+            ImageUtils.getUriFromByteArray(
+                context,
+                ben!!.beneficiaryId,
+                it
+            ).toString()
+        }
+    }
+
+    fun hasReproductiveStatus(): Boolean {
+        return ben?.genDetails?.reproductiveStatus!=null
+
     }
 
 

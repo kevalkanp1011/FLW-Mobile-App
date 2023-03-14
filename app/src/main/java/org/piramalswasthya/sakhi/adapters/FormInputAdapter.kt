@@ -441,13 +441,16 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
         fun bind(
             item: FormInput,
             clickListener: ImageClickListener?,
+            isEnabled: Boolean
         ) {
             binding.form = item
-            binding.clickListener = clickListener
-            if (item.errorText != null)
-                binding.clRi.setBackgroundResource(R.drawable.state_errored)
-            else
-                binding.clRi.setBackgroundResource(0)
+            if(isEnabled) {
+                binding.clickListener = clickListener
+                if (item.errorText != null)
+                    binding.clRi.setBackgroundResource(R.drawable.state_errored)
+                else
+                    binding.clRi.setBackgroundResource(0)
+            }
             binding.executePendingBindings()
 
         }
@@ -482,7 +485,7 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
             RADIO -> (holder as RadioInputViewHolder).bind(item, isEnabled)
             DATE_PICKER -> (holder as DatePickerInputViewHolder).bind(item, isEnabled)
             TEXT_VIEW -> (holder as TextViewInputViewHolder).bind(item)
-            IMAGE_VIEW -> (holder as ImageViewInputViewHolder).bind(item, imageClickListener)
+            IMAGE_VIEW -> (holder as ImageViewInputViewHolder).bind(item, imageClickListener, isEnabled)
             CHECKBOXES -> (holder as CheckBoxesInputViewHolder).bind(item)
             TIME_PICKER -> (holder as TimePickerInputViewHolder).bind(item, isEnabled)
         }
@@ -497,6 +500,8 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
      */
     fun validateInput(): Int {
         var retVal = -1
+        if(!isEnabled)
+            return retVal
         currentList.forEach {
             Timber.d("Error text for ${it.title} ${it.errorText}")
             if (it.errorText != null) {
