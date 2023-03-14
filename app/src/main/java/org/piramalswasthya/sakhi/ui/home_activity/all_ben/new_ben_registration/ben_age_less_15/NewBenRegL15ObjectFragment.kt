@@ -23,7 +23,9 @@ import java.io.File
 @AndroidEntryPoint
 class NewBenRegL15ObjectFragment  : Fragment() {
 
-    private lateinit var binding: FragmentInputFormPageBinding
+    private var _binding: FragmentInputFormPageBinding? = null
+    private val binding: FragmentInputFormPageBinding
+        get() = _binding!!
 
     private val viewModel: NewBenRegL15ViewModel by viewModels({ requireParentFragment() })
 
@@ -50,29 +52,37 @@ class NewBenRegL15ObjectFragment  : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentInputFormPageBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentInputFormPageBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val pageNumber = arguments?.getInt(NewBenKidPagerAdapter.ARG_OBJECT_INDEX) ?: throw IllegalStateException("No argument passed to viewpager object!")
-        when(pageNumber){
-            1 -> binding.inputForm.rvInputForm.apply {
-                val adapter = FormInputAdapter(FormInputAdapter.ImageClickListener {
-                    latestImageForm = it
-                    takeImage()
+        viewModel.recordExists.observe(viewLifecycleOwner) {
+            it?.let {
+                when (pageNumber) {
+                    1 -> {
+                        val adapter =
+                            FormInputAdapter(FormInputAdapter.ImageClickListener { form ->
+                                latestImageForm = form
+                                takeImage()
 
-                })
-                this.adapter = adapter
-                lifecycleScope.launch {
-                    adapter.submitList(viewModel.getFirstPage(adapter))
+                            }, isEnabled = !it)
+                        binding.inputForm.rvInputForm.adapter = adapter
+                        lifecycleScope.launch {
+                            adapter.submitList(viewModel.getFirstPage())
+                            if(!it)viewModel.observeFirstPage(adapter)
+                        }
+                    }
+                    2 -> {
+
+                        val adapter = FormInputAdapter(isEnabled = !it)
+                        binding.inputForm.rvInputForm.adapter = adapter
+                        adapter.submitList(viewModel.getSecondPage())
+                        if(!it)viewModel.observeSecondPage(adapter)
+                    }
                 }
-            }
-            2 -> binding.inputForm.rvInputForm.apply {
-                val adapter = FormInputAdapter()
-                this.adapter = adapter
-                adapter.submitList(viewModel.getSecondPage(adapter))
             }
         }
 
@@ -101,8 +111,6 @@ class NewBenRegL15ObjectFragment  : Fragment() {
     }
 
     fun validate(): Boolean {
-//        Timber.d("binding $binding rv ${binding.nhhrForm.rvInputForm} adapter ${binding.nhhrForm.rvInputForm.adapter}")
-//        return false
 
         val result = binding.inputForm.rvInputForm.adapter?.let {
             (it as FormInputAdapter).validateInput()
@@ -116,5 +124,10 @@ class NewBenRegL15ObjectFragment  : Fragment() {
             }
             false
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

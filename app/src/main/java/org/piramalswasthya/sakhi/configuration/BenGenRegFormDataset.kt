@@ -3,20 +3,12 @@ package org.piramalswasthya.sakhi.configuration
 import android.content.Context
 import android.text.InputType
 import android.widget.LinearLayout
-import id.zelory.compressor.Compressor
-import id.zelory.compressor.constraint.quality
-import id.zelory.compressor.constraint.size
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.SyncState
-import org.piramalswasthya.sakhi.helpers.ImageSizeConverter
+import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.model.FormInput.InputType.*
 import timber.log.Timber
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -24,7 +16,7 @@ class BenGenRegFormDataset(private val context: Context) {
 
     private var ben: BenRegCache? = null
 
-    constructor(context: Context, ben: BenRegCache? = null) : this(context) {
+    constructor(context: Context, ben: BenRegCache) : this(context) {
         this.ben = ben
         //TODO(SETUP THE VALUES)
     }
@@ -500,7 +492,7 @@ class BenGenRegFormDataset(private val context: Context) {
             )
         }
         ben?.apply {
-            userImageBlob = ImageSizeConverter.getByteArrayFromImageUri(context,pic.value.value!!)
+            userImageBlob = ImageUtils.getByteArrayFromImageUri(context,pic.value.value!!)
             Timber.d("BenGenReg: $userImageBlob, ${pic.value.value}")
             regDate = getLongFromDate(this@BenGenRegFormDataset.dateOfReg.value.value!!)
             firstName = this@BenGenRegFormDataset.firstName.value.value

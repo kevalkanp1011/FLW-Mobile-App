@@ -5,15 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
 import javax.inject.Inject
 
 @HiltViewModel
-class AadhaarIdViewModel @Inject constructor() : ViewModel() {
+class AadhaarIdViewModel @Inject constructor(
+    private val abhaIdRepo: AbhaIdRepo
+) : ViewModel() {
     enum class State {
-
         IDLE,
         LOADING,
         ERROR_SERVER,
@@ -25,23 +25,28 @@ class AadhaarIdViewModel @Inject constructor() : ViewModel() {
     val state: LiveData<State>
         get() = _state
 
-    fun generateOtpClicked() {
-        _state.value = State.LOADING
+    private var _txnId: String? = null
+    val txnId: String
+        get() = _txnId!!
 
+    fun generateOtpClicked(aadharNo: String) {
+        _state.value = State.LOADING
+        generateAadhaarOtp(aadharNo)
     }
 
     fun resetState() {
         _state.value = State.IDLE
     }
 
-    fun setStateSuccess() {
+    private fun generateAadhaarOtp(aadhaarNo: String) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                Thread.sleep(4000)
+//            _txnId = abhaIdRepo.generateOtpForAadhaar(aadhaarNo)
+            _txnId = abhaIdRepo.generateOtpForAadhaarDummy(aadhaarNo)
+            _txnId?.also {
+                _state.value = State.SUCCESS
+            } ?: run {
+                _state.value = State.ERROR_NETWORK
             }
-            _state.value = State.SUCCESS
         }
-
     }
-
 }

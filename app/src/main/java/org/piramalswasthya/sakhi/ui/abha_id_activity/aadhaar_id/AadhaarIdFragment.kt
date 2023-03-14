@@ -8,9 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.databinding.FragmentAadhaarIdBinding
+import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdViewModel
 import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdViewModel.State
 
 @AndroidEntryPoint
@@ -22,6 +24,8 @@ class AadhaarIdFragment : Fragment() {
 
     private val viewModel: AadhaarIdViewModel by viewModels()
 
+    private lateinit var navController: NavController
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -31,8 +35,10 @@ class AadhaarIdFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = findNavController()
+
         binding.btnGenerateOtp.setOnClickListener {
-            viewModel.generateOtpClicked()
+            viewModel.generateOtpClicked(binding.tietAadhaarNumber.text.toString())
 
         }
         binding.tietAadhaarNumber.addTextChangedListener(object : TextWatcher {
@@ -50,18 +56,27 @@ class AadhaarIdFragment : Fragment() {
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state!!) {
+                State.IDLE -> {}
                 State.LOADING -> {
                     binding.clContentAadharId.visibility = View.INVISIBLE
                     binding.pbLoadingAadharId.visibility = View.VISIBLE
-                    viewModel.setStateSuccess()
+                    binding.clError.visibility = View.INVISIBLE
                 }
                 State.SUCCESS -> {
                     binding.clContentAadharId.visibility = View.VISIBLE
                     binding.pbLoadingAadharId.visibility = View.INVISIBLE
-                    findNavController().navigate(AadhaarIdFragmentDirections.actionAadhaarIdFragmentToAadhaarOtpFragment())
+                    binding.clError.visibility = View.INVISIBLE
+                    findNavController().navigate(AadhaarIdFragmentDirections.actionAadhaarIdFragmentToAadhaarOtpFragment(viewModel.txnId))
                     viewModel.resetState()
                 }
-                else -> ""
+                State.ERROR_NETWORK -> {
+                    binding.clContentAadharId.visibility = View.INVISIBLE
+                    binding.pbLoadingAadharId.visibility = View.INVISIBLE
+                    binding.clError.visibility = View.VISIBLE
+                }
+                State.ERROR_SERVER -> {
+
+                }
             }
         }
     }
@@ -71,5 +86,5 @@ class AadhaarIdFragment : Fragment() {
         _binding = null
     }
 
-
 }
+

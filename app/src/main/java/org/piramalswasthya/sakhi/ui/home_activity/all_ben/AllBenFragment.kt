@@ -48,22 +48,28 @@ class AllBenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = viewLifecycleOwner
         binding.btnNextPage.visibility = View.GONE
         val benAdapter = BenListAdapter(BenListAdapter.BenClickListener(
-            {
-                Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
+            { hhId, benId, isKid ->
+
+                findNavController().navigate(
+                    if (isKid) AllBenFragmentDirections.actionAllBenFragmentToNewBenRegL15Fragment(
+                        hhId,
+                        benId
+                    )
+                    else
+                        AllBenFragmentDirections.actionAllBenFragmentToNewBenRegG15Fragment(
+                            hhId,
+                            benId
+                        )
+                )
             },
             {
-                Toast.makeText(context, "Household : $it clicked", Toast.LENGTH_SHORT).show()
                 findNavController().navigate(
                     AllBenFragmentDirections.actionAllBenFragmentToNewBenRegTypeFragment(
                         it
                     )
                 )
-            },
-            {
-
             }
         ))
         binding.rvAny.adapter = benAdapter

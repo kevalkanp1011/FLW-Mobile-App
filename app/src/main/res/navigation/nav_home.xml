@@ -67,6 +67,9 @@
         <action
             android:id="@+id/action_allHouseholdFragment_to_newBenRegTypeFragment"
             app:destination="@id/newBenRegTypeFragment" />
+        <action
+            android:id="@+id/action_allHouseholdFragment_to_householdMembersFragment"
+            app:destination="@id/householdMembersFragment" />
     </fragment>
     <fragment
         android:id="@+id/allBenFragment"
@@ -76,6 +79,12 @@
         <action
             android:id="@+id/action_allBenFragment_to_newBenRegTypeFragment"
             app:destination="@id/newBenRegTypeFragment" />
+        <action
+            android:id="@+id/action_allBenFragment_to_newBenRegG15Fragment"
+            app:destination="@id/newBenRegG15Fragment" />
+        <action
+            android:id="@+id/action_allBenFragment_to_newBenRegL15Fragment"
+            app:destination="@id/newBenRegL15Fragment" />
     </fragment>
     <fragment
         android:id="@+id/eligibleCoupleFragment"
@@ -198,6 +207,10 @@
             android:id="@+id/action_newHouseholdFragment_to_newBenRegTypeFragment"
             app:destination="@id/newBenRegTypeFragment"
             app:popUpTo="@id/homeFragment" />
+        <argument
+            android:name="hhId"
+            app:argType="long"
+            android:defaultValue="0L" />
     </fragment>
     <fragment
         android:id="@+id/newBenRegTypeFragment"
@@ -235,6 +248,10 @@
             android:id="@+id/action_newBenRegL15Fragment_to_adolescentListFragment"
             app:destination="@id/adolescentListFragment"
             app:popUpTo="@id/homeFragment" />
+        <argument
+            android:name="benId"
+            app:argType="long"
+            android:defaultValue="0L" />
     </fragment>
     <fragment
         android:id="@+id/newBenRegG15Fragment"
@@ -248,6 +265,10 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
+        <argument
+            android:name="benId"
+            app:argType="long"
+            android:defaultValue="0L" />
     </fragment>
     <fragment
         android:id="@+id/infantListFragment"
@@ -453,6 +474,18 @@
         <argument
             android:name="benId"
             app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/householdMembersFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.all_household.household_members.HouseholdMembersFragment"
+        android:label="fragment_household_members"
+        tools:layout="@layout/fragment_display_search_rv_button" >
+        <argument
+            android:name="hhId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_householdMembersFragment_to_newBenRegTypeFragment"
+            app:destination="@id/newBenRegTypeFragment" />
     </fragment>
     <fragment
         android:id="@+id/fpotFragment"

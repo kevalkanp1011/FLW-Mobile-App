@@ -32,26 +32,22 @@ import timber.log.Timber
 @AndroidEntryPoint
 class NewBenRegG15Fragment : Fragment() {
 
-    private var _binding : FragmentNewFormViewpagerBinding? = null
+    private var _binding: FragmentNewFormViewpagerBinding? = null
 
-    private val binding  : FragmentNewFormViewpagerBinding
+    private val binding: FragmentNewFormViewpagerBinding
         get() = _binding!!
 
-
-    private val hhId: Long by lazy {
-        NewBenRegG15FragmentArgs.fromBundle(requireArguments()).hhId
-    }
     private val viewModel: NewBenRegG15ViewModel by viewModels()
 
     private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
 
-    private val requestLocationPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()){ b->
-        if(b){
-            requestLocationPermission()
+    private val requestLocationPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { b ->
+            if (b) {
+                requestLocationPermission()
+            } else
+                findNavController().navigateUp()
         }
-        else
-            findNavController().navigateUp()
-    }
 
     private fun showSettingsAlert() {
         val alertDialog: AlertDialog.Builder = AlertDialog.Builder(requireContext())
@@ -63,14 +59,16 @@ class NewBenRegG15Fragment : Fragment() {
         alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?")
 
         // On pressing Settings button
-        alertDialog.setPositiveButton("Settings"
+        alertDialog.setPositiveButton(
+            "Settings"
         ) { _, _ ->
             val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
             startActivity(intent)
         }
 
         // on pressing cancel button
-        alertDialog.setNegativeButton("Cancel"
+        alertDialog.setNegativeButton(
+            "Cancel"
         ) { dialog, _ ->
             findNavController().navigateUp()
             dialog.cancel()
@@ -101,13 +99,12 @@ class NewBenRegG15Fragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentNewFormViewpagerBinding.inflate(layoutInflater,container, false)
+        _binding = FragmentNewFormViewpagerBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.setHHid(hhId)
         binding.btnSubmitForm.text = context?.getString(R.string.btn_submit_ben)
         binding.vp2Nhhr.adapter = NewBenGenPagerAdapter(
             mutableListOf(
@@ -243,7 +240,8 @@ class NewBenRegG15Fragment : Fragment() {
                 1 -> {
                     binding.btnPrev.visibility = View.VISIBLE
                     binding.btnNext.visibility = View.GONE
-                    binding.btnSubmitForm.visibility = View.VISIBLE
+                    if (viewModel.recordExists.value == false)
+                        binding.btnSubmitForm.visibility = View.VISIBLE
                 }
             }
         } else {
@@ -263,19 +261,26 @@ class NewBenRegG15Fragment : Fragment() {
                 2 -> {
                     binding.btnPrev.visibility = View.VISIBLE
                     binding.btnNext.visibility = View.GONE
-                    binding.btnSubmitForm.visibility = View.VISIBLE
+                    if (viewModel.recordExists.value == false)
+                        binding.btnSubmitForm.visibility = View.VISIBLE
 
                 }
             }
         }
     }
-    private fun requestLocationPermission(){
-        val locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+    private fun requestLocationPermission() {
+        val locationManager =
+            requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        )
             requestLocationPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         else
-            if(!isGPSEnabled)
+            if (!isGPSEnabled)
                 showSettingsAlert()
     }
 

@@ -12,9 +12,11 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.network.D2DNetworkApiService
-import org.piramalswasthya.sakhi.network.TmcNetworkApiService
+import org.piramalswasthya.sakhi.network.AbhaApiService
+import org.piramalswasthya.sakhi.network.D2DApiService
+import org.piramalswasthya.sakhi.network.AmritApiService
 import org.piramalswasthya.sakhi.network.interceptors.ContentTypeInterceptor
+import org.piramalswasthya.sakhi.network.interceptors.TokenInsertAbhaInterceptor
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertD2DInterceptor
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertTmcInterceptor
 import retrofit2.Retrofit
@@ -28,16 +30,17 @@ import javax.inject.Singleton
 object AppModule {
 
     private const val baseD2DUrl = "http://d2dapi.piramalswasthya.org:9090/api/"
-        //"http://117.245.141.41:9090/api/"
+    //"http://117.245.141.41:9090/api/"
 
     private const val baseTmcUrl = // "http://assamtmc.piramalswasthya.org:8080/"
     "http://uatamrit.piramalswasthya.org:8080/"
+
+    private const val baseAbhaUrl = "https://healthidsbx.abdm.gov.in/api/v1/registration/aadhaar/"
 
     private val baseClient =
         OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .addInterceptor(ContentTypeInterceptor())
-
             .build()
 
     @Singleton
@@ -51,7 +54,7 @@ object AppModule {
     @Singleton
     @Provides
     @Named("logInClient")
-    fun provideD2DHttpClient() : OkHttpClient {
+    fun provideD2DHttpClient(): OkHttpClient {
         return baseClient
             .newBuilder()
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -64,7 +67,7 @@ object AppModule {
     @Singleton
     @Provides
     @Named("uatClient")
-    fun provideTmcHttpClient() : OkHttpClient {
+    fun provideTmcHttpClient(): OkHttpClient {
         return baseClient
             .newBuilder()
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -76,38 +79,70 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideD2DApiService(moshi : Moshi,@Named("logInClient") httpClient: OkHttpClient) : D2DNetworkApiService {
+    @Named("abhaClient")
+    fun provideAbhaHttpClient(): OkHttpClient {
+        return baseClient
+            .newBuilder()
+            .connectTimeout(20, TimeUnit.SECONDS)
+            .readTimeout(20, TimeUnit.SECONDS)
+            .writeTimeout(20, TimeUnit.SECONDS)
+            .addInterceptor(TokenInsertAbhaInterceptor())
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideD2DApiService(
+        moshi: Moshi,
+        @Named("logInClient") httpClient: OkHttpClient
+    ): D2DApiService {
         return Retrofit.Builder()
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             //.addConverterFactory(GsonConverterFactory.create())
             .baseUrl(baseD2DUrl)
             .client(httpClient)
             .build()
-            .create(D2DNetworkApiService::class.java)
+            .create(D2DApiService::class.java)
     }
 
     @Singleton
     @Provides
-    fun provideTmcApiService(moshi : Moshi,@Named("uatClient") httpClient: OkHttpClient) : TmcNetworkApiService {
+    fun provideAmritApiService(
+        moshi: Moshi,
+        @Named("uatClient") httpClient: OkHttpClient
+    ): AmritApiService {
         return Retrofit.Builder()
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             //.addConverterFactory(GsonConverterFactory.create())
             .baseUrl(baseTmcUrl)
             .client(httpClient)
             .build()
-            .create(TmcNetworkApiService::class.java)
+            .create(AmritApiService::class.java)
     }
 
     @Singleton
     @Provides
-    fun provideRoomDatabase(@ApplicationContext context : Context) = InAppDb.getInstance(context)
+    fun provideAbhaApiService(
+        moshi: Moshi,
+        @Named("abhaClient") httpClient: OkHttpClient
+    ): AbhaApiService {
+        return Retrofit.Builder()
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            //.addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(baseAbhaUrl)
+            .client(httpClient)
+            .build()
+            .create(AbhaApiService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideRoomDatabase(@ApplicationContext context: Context) = InAppDb.getInstance(context)
 
 
     @Singleton
     @Provides
-    fun providePreference(@ApplicationContext context : Context) = PreferenceDao(context)
-
-
+    fun providePreferenceDao(@ApplicationContext context: Context) = PreferenceDao(context)
 
 
 }

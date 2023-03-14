@@ -1,9 +1,9 @@
 package org.piramalswasthya.sakhi.helpers
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Base64
+import androidx.core.net.toUri
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.size
 import kotlinx.coroutines.Dispatchers
@@ -12,7 +12,7 @@ import timber.log.Timber
 import java.io.*
 
 
-object ImageSizeConverter {
+object ImageUtils {
 
     suspend fun getByteArrayFromImageUri(context: Context, uriString: String): ByteArray? {
         return withContext(Dispatchers.IO) {
@@ -39,7 +39,7 @@ object ImageSizeConverter {
         return byteBuffer.toByteArray()
     }
 
-    suspend fun compressByteArray(context: Context, benId: Long, inputString: String) : ByteArray? {
+    suspend fun compressImage(context: Context, benId: Long, inputString: String) : ByteArray? {
         return withContext(Dispatchers.IO) {
             try {
                 val inputByteArray = Base64.decode(inputString, Base64.DEFAULT)
@@ -48,8 +48,6 @@ object ImageSizeConverter {
                 val os: OutputStream =
                     FileOutputStream(file)
                 Timber.d("File Created $file ${file.length()} ${inputByteArray.size}")
-//                val bitmap = BitmapFactory.decodeByteArray(inputByteArray, 0,inputByteArray.size)
-//                bitmap.compress(Bitmap.CompressFormat.JPEG,50,os)
                 os.write(inputByteArray)
                 os.close()
 
@@ -64,6 +62,23 @@ object ImageSizeConverter {
                 byteArray
             }catch (e : java.lang.Exception){
                 Timber.d("Compress failed with error $e ${e.localizedMessage} ${e.stackTrace}")
+                null
+            }
+        }
+    }
+
+    suspend fun getUriFromByteArray(context: Context,benId : Long, byteArray: ByteArray): Uri? {
+        return withContext(Dispatchers.IO) {
+            try{
+                val file =
+                    File(context.cacheDir, "$benId").also { it.createNewFile() }
+                val os: OutputStream =
+                    FileOutputStream(file)
+                Timber.d("File Created $file ${file.length()} ${byteArray.size}")
+                os.write(byteArray)
+                os.close()
+                file.toUri()
+            }catch (e : java.lang.Exception){
                 null
             }
         }

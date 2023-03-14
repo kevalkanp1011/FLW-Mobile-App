@@ -40,6 +40,7 @@
             app:layout_constraintStart_toEndOf="@id/tv_title"
             app:layout_constraintEnd_toEndOf="parent"
             benImage="@{form.value}"
+            android:background="@drawable/bg_circular"
             android:onClick="@{()->clickListener.onImageClick(form)}" />
 
         <TextView

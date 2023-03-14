@@ -63,6 +63,8 @@ class PullFromAmritWorker @AssistedInject constructor(
                 } while (numPages == -2)
 //                for (i in 1 until numPages)
 //                    benRepo.getBeneficiariesFromServerForWorker(i)
+                if(numPages==0)
+                    return@withContext Result.success()
                 val result1 =
                     awaitAll(
                         async { getBenForPage(numPages, 0, startPage) },

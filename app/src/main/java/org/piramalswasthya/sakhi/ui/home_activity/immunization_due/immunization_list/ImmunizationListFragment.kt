@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.ImmunizationGridAdapter
 import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
@@ -37,7 +38,7 @@ class ImmunizationListFragment : Fragment() {
     }
 
     private fun setUpImmunizationIconRvAdapter() {
-        val rvLayoutManager = GridLayoutManager(context, 3)
+        val rvLayoutManager = GridLayoutManager(context, requireContext().resources.getInteger(R.integer.icon_grid_span))
         binding.rvIconGrid.layoutManager = rvLayoutManager
         val iconAdapter = ImmunizationGridAdapter(
             ImmunizationGridAdapter.ImmunizationIconClickListener {a,b,c,d,e ->

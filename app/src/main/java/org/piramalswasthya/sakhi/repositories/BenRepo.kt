@@ -13,11 +13,12 @@ import org.piramalswasthya.sakhi.database.room.BeneficiaryIdsAvail
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.helpers.ImageSizeConverter
+import org.piramalswasthya.sakhi.helpers.ImageUtils
+import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.network.GetBenRequest
 import org.piramalswasthya.sakhi.network.TmcGenerateBenIdsRequest
-import org.piramalswasthya.sakhi.network.TmcNetworkApiService
+import org.piramalswasthya.sakhi.network.AmritApiService
 import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
@@ -29,7 +30,7 @@ class BenRepo @Inject constructor(
     private val database: InAppDb,
     private val preferenceDao: PreferenceDao,
     private val userRepo: UserRepo,
-    private val tmcNetworkApiService: TmcNetworkApiService
+    private val tmcNetworkApiService: AmritApiService
 ) {
 
     val benList by lazy {
@@ -160,6 +161,11 @@ class BenRepo @Inject constructor(
 
             return "${dateString}T${timeString}.000Z"
         }
+    }
+
+    suspend fun getBenBasicDomainListFromHousehold(hhId: Long): List<BenBasicDomain> {
+        return database.benDao.getAllBenForHousehold(hhId).map { it.asBasicDomainModel() }
+
     }
 
     suspend fun persistBenKid(
@@ -332,6 +338,23 @@ class BenRepo @Inject constructor(
 
     }
 
+    suspend fun getBenKidForm(benId: Long, hhId: Long): BenKidRegFormDataset {
+        return withContext(Dispatchers.IO) {
+            BenKidRegFormDataset(context,getBeneficiary(benId, hhId)!!).also {
+                it.setPic()
+            }
+        }
+    }
+
+
+
+    suspend fun getBenGenForm(benId: Long, hhId: Long): BenGenRegFormDataset {
+        return withContext(Dispatchers.IO) {
+            BenGenRegFormDataset(context,getBeneficiary(benId, hhId)!!)
+        }
+    }
+
+
     private suspend fun extractBenId(): BeneficiaryIdsAvail {
         return withContext(Dispatchers.IO) {
             val user =
@@ -345,11 +368,11 @@ class BenRepo @Inject constructor(
 
     }
 
-    suspend fun getBenIdsGeneratedFromServer(maxCount: Int = 100) {
+    suspend fun getBenIdsGeneratedFromServer(maxCount: Int = Konstants.benIdCapacity) {
         val user =
             database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
         val benIdCount = database.benIdGenDao.count()
-        if (benIdCount > 90)
+        if (benIdCount > Konstants.benIdWorkerTriggerLimit)
             return
         val count = maxCount - benIdCount
         val response =
@@ -425,10 +448,15 @@ class BenRepo @Inject constructor(
                 kidNetworkPostList,
                 cbacPostList
             )
-            if (!uploadDone)
-                database.benDao.benSyncWithServerFailed(*benNetworkPostList.map { ben -> ben.benId }
-                    .toTypedArray().toLongArray())
-//                }
+            if (!uploadDone) {
+                benNetworkPostList
+                    .map { ben -> ben.benId }
+                    .takeIf { it.isNotEmpty() }
+                    ?.toTypedArray()?.toLongArray()
+                    ?.let {
+                    database.benDao.benSyncWithServerFailed(*it)
+                }
+            }
 
 //            val updateBenList = database.benDao.getAllBenForSyncWithServer()
 //            updateBenList.forEach {
@@ -598,6 +626,10 @@ suspend fun getBeneficiariesFromServerForWorker(pageNumber: Int): Int {
                             )
                                 throw SocketTimeoutException("Refreshed Token!")
                             else throw IllegalStateException("User Logged out!!")
+                        }
+                        5000 -> {
+                            if(errorMessage=="No record found")
+                                return@withContext 0
                         }
                         else -> {
                             throw IllegalStateException("$responseStatusCode received, dont know what todo!?")
@@ -885,6 +917,12 @@ private suspend fun getBenCacheFromServerResponse(response: String): MutableList
                                     else -> AgeUnit.YEARS
                                 }
                             } else null,
+                            age_unitId =  when (benDataObj.getString("age_unit")) {
+                                "Years" -> 3
+                                "Months" -> 2
+                                "Days" -> 1
+                                else -> 3
+                            },
                             isKid = !(benDataObj.getString("age_unit") == "Years" && benDataObj.getInt(
                                 "age"
                             ) > 14),
@@ -897,17 +935,17 @@ private suspend fun getBenCacheFromServerResponse(response: String): MutableList
                             ) else 0,
                             firstName = if (benDataObj.has("firstName")) benDataObj.getString("firstName") else null,
                             lastName = if (benDataObj.has("lastName")) benDataObj.getString("lastName") else null,
+                            genderId = benDataObj.getInt("genderId"),
                             gender = if (benDataObj.has("gender")) {
-                                when (benDataObj.getString("gender")) {
-                                    "Male" -> Gender.MALE
-                                    "Female" -> Gender.FEMALE
-                                    "Transgender" -> Gender.TRANSGENDER
+                                when (benDataObj.getInt("genderId")) {
+                                    1-> Gender.MALE
+                                    2 -> Gender.FEMALE
+                                    3 -> Gender.TRANSGENDER
                                     else -> Gender.MALE
                                 }
                             } else null,
-                            genderId = benDataObj.getInt("genderId"),
                             dob = getLongFromDate(benDataObj.getString("dob")),
-                            age_unitId = benDataObj.getInt("age_unitId"),
+
                             fatherName = if (benDataObj.has("fatherName")) benDataObj.getString(
                                 "fatherName"
                             ) else null,
@@ -925,7 +963,7 @@ private suspend fun getBenCacheFromServerResponse(response: String): MutableList
                             mobileNoOfRelationId = if (benDataObj.has("mobilenoofRelationId")) benDataObj.getInt(
                                 "mobilenoofRelationId"
                             ) else 0,
-                            mobileOthers = if (benDataObj.has("mobileOthers")) benDataObj.getString(
+                            mobileOthers = if (benDataObj.has("mobileOthers") && benDataObj.getString("mobileOthers").isNotEmpty()) benDataObj.getString(
                                 "mobileOthers"
                             ) else null,
                             contactNumber = if (benDataObj.has("contact_number")) benDataObj.getString(
@@ -937,7 +975,7 @@ private suspend fun getBenCacheFromServerResponse(response: String): MutableList
                             communityId = if (benDataObj.has("communityId")) benDataObj.getInt("communityId") else 0,
                             religion = if (benDataObj.has("religion")) benDataObj.getString("religion") else null,
                             religionId = if (benDataObj.has("religionID")) benDataObj.getInt("religionID") else 0,
-                            religionOthers = if (benDataObj.has("religionOthers")) benDataObj.getString(
+                            religionOthers = if (benDataObj.has("religionOthers")&& benDataObj.getString("religionOthers").isNotEmpty()) benDataObj.getString(
                                 "religionOthers"
                             ) else null,
                             rchId = if (benDataObj.has("rchid")) benDataObj.getString("rchid") else null,
@@ -1180,7 +1218,7 @@ private suspend fun getBenCacheFromServerResponse(response: String): MutableList
                                     "birthOPV"
                                 ) else false,
                             ),
-                            genDetails = BenRegGen(
+                            genDetails = if (childDataObj.length() != 0) null else BenRegGen(
                                 maritalStatus = if (benDataObj.has("maritalstatus")) benDataObj.getString(
                                     "maritalstatus"
                                 ) else null,
@@ -1287,7 +1325,7 @@ private suspend fun getBenCacheFromServerResponse(response: String): MutableList
 
 private suspend fun getCompressedByteArray(benId: Long, benDataObj: JSONObject) =
     if (benDataObj.has("user_image"))
-        ImageSizeConverter.compressByteArray(
+        ImageUtils.compressImage(
             context,
             benId,
             benDataObj.getString("user_image")

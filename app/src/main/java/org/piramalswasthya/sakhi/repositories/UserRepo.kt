@@ -20,8 +20,8 @@ import javax.inject.Inject
 class UserRepo @Inject constructor(
     private val database: InAppDb,
     private val preferenceDao: PreferenceDao,
-    private val d2dNetworkApi: D2DNetworkApiService,
-    private val tmcNetworkApiService: TmcNetworkApiService
+    private val d2dNetworkApi: D2DApiService,
+    private val tmcNetworkApiService: AmritApiService
 ) {
 
 

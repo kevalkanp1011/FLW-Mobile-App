@@ -120,12 +120,14 @@ class NewHouseholdFragment : Fragment() {
                 validateFormForPage(i)
             if (validated) {
                 viewModel.setMTabPosition(i)
-                when (viewModel.mTabPosition) {
-                    1 -> {
-                        viewModel.persistFirstPage()
-                    }
-                    2 -> {
-                        viewModel.persistSecondPage()
+                if(viewModel.recordExists.value==false){
+                    when (viewModel.mTabPosition) {
+                        1 -> {
+                            viewModel.persistFirstPage()
+                        }
+                        2 -> {
+                            viewModel.persistSecondPage()
+                        }
                     }
                 }
             }
@@ -146,7 +148,8 @@ class NewHouseholdFragment : Fragment() {
             2 -> {
                 binding.btnPrev.visibility = View.VISIBLE
                 binding.btnNext.visibility = View.GONE
-                binding.btnSubmitForm.visibility = View.VISIBLE
+                if(viewModel.recordExists.value==false)
+                    binding.btnSubmitForm.visibility = View.VISIBLE
             }
         }
     }
@@ -174,7 +177,9 @@ class NewHouseholdFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vp2Nhhr.adapter = NewHouseholdPagerAdapter(this)
-
+        viewModel.recordExists.observe(viewLifecycleOwner){
+            if(!it)consentAlert.show()
+        }
         when (viewModel.mTabPosition) {
             0 -> {
                 binding.btnPrev.visibility = View.GONE
@@ -248,7 +253,7 @@ class NewHouseholdFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         binding.vp2Nhhr.registerOnPageChangeCallback(pageChangeCallback)
-        consentAlert.show()
+
 
     }
 

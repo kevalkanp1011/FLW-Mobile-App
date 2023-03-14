@@ -36,7 +36,7 @@ class NcdNonEligibleListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = viewLifecycleOwner
+
         binding.btnNextPage.visibility = View.GONE
         val benAdapter = BenListAdapterForForm(
             BenListAdapterForForm.ClickListener(

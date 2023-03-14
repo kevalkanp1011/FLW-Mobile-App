@@ -7,7 +7,7 @@ import org.json.JSONObject
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.model.PMSMACache
 import org.piramalswasthya.sakhi.model.PmsmaPost
-import org.piramalswasthya.sakhi.network.D2DNetworkApiService
+import org.piramalswasthya.sakhi.network.D2DApiService
 import timber.log.Timber
 import java.io.IOException
 import java.net.SocketTimeoutException
@@ -16,7 +16,7 @@ import javax.inject.Inject
 class PmsmaRepo @Inject constructor(
     private val database: InAppDb,
     private val userRepo: UserRepo,
-    private val d2DNetworkApiService: D2DNetworkApiService
+    private val d2DNetworkApiService: D2DApiService
 ) {
     suspend fun savePmsmaData(pmsmaCache: PMSMACache): Boolean {
         return withContext(Dispatchers.IO) {

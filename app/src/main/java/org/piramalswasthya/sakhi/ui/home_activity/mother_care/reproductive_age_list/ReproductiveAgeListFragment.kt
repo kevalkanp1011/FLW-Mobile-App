@@ -53,7 +53,7 @@ class ReproductiveAgeListFragment : Fragment() {
                     Toast.makeText(context, "Household : $it clicked", Toast.LENGTH_SHORT).show()
                 },
                 {
-
+                   
                 }
             ) { hhId, benId ->
 //                findNavController().navigate(

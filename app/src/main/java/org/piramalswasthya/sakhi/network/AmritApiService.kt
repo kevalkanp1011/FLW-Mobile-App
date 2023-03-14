@@ -8,7 +8,7 @@ import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
-interface TmcNetworkApiService {
+interface AmritApiService {
 
     @Headers("No-Auth: true")
     @POST("commonapi-v1.0/user/userAuthenticate/")
