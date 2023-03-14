@@ -90,6 +90,7 @@ class VerifyMobileOtpFragment : Fragment() {
                     binding.clVerifyMobileOtp.visibility = View.VISIBLE
                     binding.pbVmotp.visibility = View.INVISIBLE
                     binding.clError.visibility = View.INVISIBLE
+                    Toast.makeText(activity, "OTP was resent successfully", Toast.LENGTH_LONG).show()
                 }
             }
         }

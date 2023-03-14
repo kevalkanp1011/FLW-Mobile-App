@@ -3,8 +3,10 @@ package org.piramalswasthya.sakhi.repositories
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.ResponseBody
 import org.json.JSONObject
 import org.piramalswasthya.sakhi.network.*
+import retrofit2.Response
 import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -25,10 +27,7 @@ class AbhaIdRepo @Inject constructor(
                         Gson().fromJson(responseBody, AbhaTokenResponse::class.java)
                     NetworkResult.Success(result)
                 } else {
-                    val errorBody = response.errorBody()?.string()
-                    val errorJson = JSONObject(errorBody)
-                    val errorMessage = errorJson.getString("message")
-                    NetworkResult.Error(response.code(), errorMessage)
+                    sendErrorResponse(response)
                 }
             } catch (e: IOException) {
                 NetworkResult.Error(-1,"Unable to connect to Internet!!")
@@ -50,10 +49,7 @@ class AbhaIdRepo @Inject constructor(
                         Gson().fromJson(responseBody, AbhaGenerateAadhaarOtpResponse::class.java)
                     NetworkResult.Success(result)
                 } else {
-                    val errorBody = response.errorBody()?.string()
-                    val errorJson = JSONObject(errorBody)
-                    val errorMessage = errorJson.getString("message")
-                    NetworkResult.Error(response.code(), errorMessage)
+                    sendErrorResponse(response)
                 }
             } catch (e: IOException) {
                 NetworkResult.NetworkError
@@ -73,10 +69,7 @@ class AbhaIdRepo @Inject constructor(
                         Gson().fromJson(responseBody, AbhaVerifyAadhaarOtpResponse::class.java)
                     NetworkResult.Success(result)
                 } else {
-                    val errorBody = response.errorBody()?.string()
-                    val errorJson = JSONObject(errorBody)
-                    val errorMessage = errorJson.getString("message")
-                    NetworkResult.Error(response.code(), errorMessage)
+                    sendErrorResponse(response)
                 }
             } catch (e: IOException) {
                 NetworkResult.NetworkError
@@ -97,10 +90,7 @@ class AbhaIdRepo @Inject constructor(
                         Gson().fromJson(responseBody, AbhaGenerateMobileOtpResponse::class.java)
                     NetworkResult.Success(result)
                 } else {
-                    val errorBody = response.errorBody()?.string()
-                    val errorJson = JSONObject(errorBody)
-                    val errorMessage = errorJson.getString("message")
-                    NetworkResult.Error(response.code(), errorMessage)
+                    sendErrorResponse(response)
                 }
             } catch (e: IOException) {
                 NetworkResult.NetworkError
@@ -120,10 +110,7 @@ class AbhaIdRepo @Inject constructor(
                         Gson().fromJson(responseBody, AbhaVerifyMobileOtpResponse::class.java)
                     NetworkResult.Success(result)
                 } else {
-                    val errorBody = response.errorBody()?.string()
-                    val errorJson = JSONObject(errorBody)
-                    val errorMessage = errorJson.getString("message")
-                    NetworkResult.Error(response.code(), errorMessage)
+                    sendErrorResponse(response)
                 }
             } catch (e: IOException) {
                 NetworkResult.NetworkError
@@ -142,10 +129,7 @@ class AbhaIdRepo @Inject constructor(
                     val result = Gson().fromJson(responseBody, CreateAbhaIdResponse::class.java)
                     NetworkResult.Success(result)
                 } else {
-                    val errorBody = response.errorBody()?.string()
-                    val errorJson = JSONObject(errorBody)
-                    val errorMessage = errorJson.getString("message")
-                    NetworkResult.Error(response.code(), errorMessage)
+                    sendErrorResponse(response)
                 }
             } catch (e: IOException) {
                 NetworkResult.NetworkError
@@ -153,6 +137,15 @@ class AbhaIdRepo @Inject constructor(
                 NetworkResult.Error(-1, e.message ?: "Unknown Error")
             }
         }
+    }
+
+    private fun sendErrorResponse(response: Response<ResponseBody>): NetworkResult.Error {
+        val errorBody = response.errorBody()?.string()
+        val errorJson = JSONObject(errorBody)
+        val detailsArray = errorJson.getJSONArray("details")
+        val detailsObject = detailsArray.getJSONObject(0)
+        val errorMessage = detailsObject.getString("message")
+        return NetworkResult.Error(response.code(), errorMessage)
     }
 
 }
