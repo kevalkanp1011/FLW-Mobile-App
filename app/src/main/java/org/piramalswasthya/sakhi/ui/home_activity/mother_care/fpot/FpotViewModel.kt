@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.mother_care.pmjay
+package org.piramalswasthya.sakhi.ui.home_activity.mother_care.fpot
 
 import android.app.Application
 import androidx.lifecycle.*
@@ -7,22 +7,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.configuration.FPOTFormDataset
 import org.piramalswasthya.sakhi.configuration.PMJAYFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.repositories.BenRepo
-import org.piramalswasthya.sakhi.repositories.PmjayRepo
+import org.piramalswasthya.sakhi.repositories.FpotRepo
+import org.piramalswasthya.sakhi.ui.home_activity.mother_care.pmjay.PmjayFragmentArgs
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class PmjayViewModel @Inject constructor(
+class FpotViewModel @Inject constructor(
     state: SavedStateHandle,
     context: Application,
     private val database: InAppDb,
-    private val pmjayRepo: PmjayRepo,
+    private val fpotRepo: FpotRepo,
     private val benRepo: BenRepo
 ) : ViewModel() {
 
@@ -38,7 +40,7 @@ class PmjayViewModel @Inject constructor(
     private lateinit var ben: BenRegCache
     private lateinit var household: HouseholdCache
     private lateinit var user: UserCache
-    private var pmjay: PMJAYCache? = null
+    private var fpot: FPOTCache? = null
 
     private val _benName = MutableLiveData<String>()
     val benName: LiveData<String>
@@ -56,21 +58,21 @@ class PmjayViewModel @Inject constructor(
     val exists: LiveData<Boolean>
         get() = _exists
 
-    private val dataset = PMJAYFormDataset(context)
+    private val dataset = FPOTFormDataset(context)
 
     fun submitForm() {
         _state.value = State.LOADING
-        val pmjayCache = PMJAYCache(benId = benId, hhId = hhId, processed = "N")
-        dataset.mapValues(pmjayCache)
-        Timber.d("saving pmjay: $pmjayCache")
+        val fpotCache = FPOTCache(benId = benId, hhId = hhId, processed = "N")
+//        dataset.mapValues(fpotCache)
+        Timber.d("saving fpot: $fpotCache")
         viewModelScope.launch {
-            val saved = pmjayRepo.savePmjayData(pmjayCache)
+            val saved = fpotRepo.saveFpotData(fpotCache)
             if (saved) {
-                Timber.d("saved pmjay: $pmjayCache")
+                Timber.d("saved fpot: $fpotCache")
                 _state.value = State.SUCCESS
             }
             else {
-                Timber.d("saving pmjay to local db failed!!")
+                Timber.d("saving fpot to local db failed!!")
                 _state.value = State.FAIL
             }
         }
@@ -82,12 +84,12 @@ class PmjayViewModel @Inject constructor(
                 ben = benRepo.getBeneficiary(benId, hhId)!!
                 household = benRepo.getHousehold(hhId)!!
                 user = database.userDao.getLoggedInUser()!!
-                pmjay = database.pmjayDao.getPmjay(hhId, benId)
+                fpot = database.fpotDao.getFpot(hhId, benId)
             }
             _benName.value = "${ben.firstName} ${if(ben.lastName== null) "" else ben.lastName}"
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
             _address.value = getAddress(household)
-            _exists.value = pmjay != null
+            _exists.value = fpot != null
         }
     }
 
@@ -115,12 +117,8 @@ class PmjayViewModel @Inject constructor(
     }
 
     fun setAddress(it: String?, adapter: FormInputAdapter) {
-        dataset.patientAddress.value.value = it
         dataset.contactNumber.value.value = ben.contactNumber.toString()
-        dataset.familyId.value.value = hhId.toString()
-        dataset.patientType.value.value = "General OP"
-        dataset.scheme.value.value = "AB-PMJAY(S)"
-        dataset.registrationDate.value.value = getDateFromLong(System.currentTimeMillis())
+        dataset.spouseName.value.value = ben.genDetails?.spouseName
     }
 
     private fun getDateFromLong(dateLong: Long?): String? {

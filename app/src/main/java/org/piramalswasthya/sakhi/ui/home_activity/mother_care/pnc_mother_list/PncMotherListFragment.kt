@@ -56,12 +56,12 @@ class PncMotherListFragment : Fragment() {
 
                 }
             ) { hhId, benId ->
-                findNavController().navigate(
-                    PncMotherListFragmentDirections.actionPncMotherListFragmentToPmjayFragment(
-                        hhId,
-                        benId
-                    )
-                )
+//                findNavController().navigate(
+//                    PncMotherListFragmentDirections.actionPncMotherListFragmentToPmjayFragment(
+//                        hhId,
+//                        benId
+//                    )
+//                )
             }, "PMJAY Form")
         binding.rvAny.adapter = benAdapter
 

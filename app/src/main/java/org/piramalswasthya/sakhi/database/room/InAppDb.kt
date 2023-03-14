@@ -20,7 +20,8 @@ import org.piramalswasthya.sakhi.model.*
         CDRCache::class,
         MDSRCache::class,
         PMSMACache::class,
-        PMJAYCache::class],
+        PMJAYCache::class,
+        FPOTCache::class],
     views = [BenBasicCache::class],
     version = 2, exportSchema = false
 )
@@ -38,6 +39,7 @@ abstract class InAppDb  : RoomDatabase(){
     abstract val mdsrDao: MdsrDao
     abstract val pmsmaDao: PmsmaDao
     abstract val pmjayDao: PmjayDao
+    abstract val fpotDao: FpotDao
 
     companion object{
         @Volatile

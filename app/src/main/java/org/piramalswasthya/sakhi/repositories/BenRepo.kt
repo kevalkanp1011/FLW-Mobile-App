@@ -91,7 +91,7 @@ class BenRepo @Inject constructor(
     val reproductiveAgeList by lazy {
         //TODO(implement BenDao)
         Transformations.map(database.benDao.getAllReproductiveAgeList()) { list ->
-            list.map { it.asBasicDomainModel() }
+            list.map { it.asBasicDomainModelForFpotForm() }
         }
     }
 

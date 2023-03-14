@@ -2,6 +2,7 @@ package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
 import org.piramalswasthya.sakhi.model.FormInput
+import org.piramalswasthya.sakhi.model.PMJAYCache
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -15,19 +16,34 @@ class PMJAYFormDataset(context: Context) {
         }
     }
 
+    fun mapValues(pmjayCache: PMJAYCache) {
+        pmjayCache.registrationDate = registrationDate.value.value?.let { getLongFromDate(it) }
+        pmjayCache.registeredHospital = registeredHospital.value.value
+        pmjayCache.contactNumber = contactNumber.value.value?.let { it.toLong() } ?: 0L
+        pmjayCache.communicationContactNumber = communicationContactNumber.value.value?.let { it.toLong() } ?: 0L
+        pmjayCache.patientAddress = patientAddress.value.value
+        pmjayCache.communicationAddress = communicationAddress.value.value
+        pmjayCache.hospitalAddress = hospitalAddress.value.value
+        pmjayCache.familyId = familyId.value.value?.let { it.toLong() } ?: 0L
+        pmjayCache.isAadhaarBeneficiary = isAadhaarBeneficiary.value.value?.let { it.toLong() } ?: 0L
+        pmjayCache.memberType = memberType.value.value
+        pmjayCache.patientType = patientType.value.value
+        pmjayCache.scheme = scheme.value.value
+    }
+
     val id = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Id Number",
         required = false
     )
-    private val registrationDate = FormInput(
+    val registrationDate = FormInput(
         inputType = FormInput.InputType.DATE_PICKER,
         title = "Registration Date",
         min = 0L,
         max = System.currentTimeMillis(),
         required = false
     )
-    val registeredHospital = FormInput(
+    private val registeredHospital = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Registered Hospital",
         required = false
@@ -62,11 +78,10 @@ class PMJAYFormDataset(context: Context) {
         title = "Family Id",
         required = false
     )
-    val hasAadhaar = FormInput(
-        inputType = FormInput.InputType.RADIO,
-        title = "Registered Hospital",
+    val isAadhaarBeneficiary = FormInput(
+        inputType = FormInput.InputType.EDIT_TEXT,
+        title = "Is Aadhaar Beneficiary",
         required = false,
-        list = arrayOf("Yes", " No")
     )
     val memberType = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
@@ -88,6 +103,6 @@ class PMJAYFormDataset(context: Context) {
 
     val firstPage by lazy {
         listOf(id, registrationDate, registeredHospital, contactNumber, communicationContactNumber, patientAddress,
-            communicationAddress, hospitalAddress, familyId, hasAadhaar, memberType, patientType, scheme)
+            communicationAddress, hospitalAddress, familyId, isAadhaarBeneficiary, memberType, patientType, scheme)
     }
 }
