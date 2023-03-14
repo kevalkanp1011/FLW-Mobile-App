@@ -12,7 +12,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.databinding.FragmentAadhaarOtpBinding
-import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdViewModel
 import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_otp.AadhaarOtpViewModel.State
 
 @AndroidEntryPoint
@@ -87,6 +86,7 @@ class AadhaarOtpFragment : Fragment() {
                     binding.clContent.visibility = View.VISIBLE
                     binding.pbLoadingAadharOtp.visibility = View.INVISIBLE
                     binding.clError.visibility = View.INVISIBLE
+                    Toast.makeText(activity, "OTP was resent successfully", Toast.LENGTH_LONG).show()
                 }
             }
         }

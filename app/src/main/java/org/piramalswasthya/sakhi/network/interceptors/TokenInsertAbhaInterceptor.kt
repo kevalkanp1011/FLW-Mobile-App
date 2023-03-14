@@ -2,7 +2,6 @@ package org.piramalswasthya.sakhi.network.interceptors
 
 import okhttp3.Interceptor
 import okhttp3.Response
-import okhttp3.ResponseBody.Companion.toResponseBody
 import timber.log.Timber
 
 class TokenInsertAbhaInterceptor : Interceptor {
@@ -29,18 +28,6 @@ class TokenInsertAbhaInterceptor : Interceptor {
                 .build()
         }
         Timber.d("Request : $request")
-        val response = chain.proceed(request)
-        val httpStatus = response.code
-        if (httpStatus >= 400) {
-            val responseBody = response.body
-            if (responseBody != null) {
-                val errorMessage = responseBody.string()
-                val newResponseBody = errorMessage.toResponseBody(responseBody.contentType())
-                return response.newBuilder()
-                    .body(newResponseBody)
-                    .build()
-            }
-        }
-        return response
+        return chain.proceed(request)
     }
 }
