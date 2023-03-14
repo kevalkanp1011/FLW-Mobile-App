@@ -10,6 +10,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/padding_normal">
@@ -35,8 +36,31 @@
                 app:listItems="@{form.list}"
                 tools:ignore="SpeakableTextPresentCheck" />
 
+
         </com.google.android.material.textfield.TextInputLayout>
 
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_edit_text"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:paddingBottom="@dimen/padding_normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_nullable"
+            android:hint="@{form.title}">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{form.value}"
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+
+        </com.google.android.material.textfield.TextInputLayout>
         <TextView
             android:id="@+id/tv_nullable"
             android:layout_width="wrap_content"

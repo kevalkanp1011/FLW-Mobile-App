@@ -13,7 +13,6 @@ class CreateAbhaFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         return inflater.inflate(R.layout.fragment_create_abha, container, false)
     }
 

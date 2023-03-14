@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AbhaIdViewModel @Inject constructor(
     private val abhaIdRepo: AbhaIdRepo
-    ) :
+) :
     ViewModel() {
 
     enum class State {
@@ -40,11 +40,11 @@ class AbhaIdViewModel @Inject constructor(
 
     private fun generateAccessToken() {
         viewModelScope.launch {
-            //_accessToken = abhaIdRepo.getAccessToken()
+//            _accessToken = abhaIdRepo.getAccessToken()
             _accessToken = abhaIdRepo.getAccessTokenDummy()
-            if(_accessToken==null)
+            if (_accessToken == null)
                 _state.value = State.ERROR_NETWORK
-            else{
+            else {
                 _state.value = State.SUCCESS
                 TokenInsertAbhaInterceptor.setToken(accessToken.accessToken)
                 Timber.i(accessToken.toString())

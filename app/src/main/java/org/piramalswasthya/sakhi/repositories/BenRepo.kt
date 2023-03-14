@@ -917,6 +917,12 @@ private suspend fun getBenCacheFromServerResponse(response: String): MutableList
                                     else -> AgeUnit.YEARS
                                 }
                             } else null,
+                            age_unitId =  when (benDataObj.getString("age_unit")) {
+                                "Years" -> 3
+                                "Months" -> 2
+                                "Days" -> 1
+                                else -> 3
+                            },
                             isKid = !(benDataObj.getString("age_unit") == "Years" && benDataObj.getInt(
                                 "age"
                             ) > 14),
@@ -939,7 +945,7 @@ private suspend fun getBenCacheFromServerResponse(response: String): MutableList
                                 }
                             } else null,
                             dob = getLongFromDate(benDataObj.getString("dob")),
-                            age_unitId = benDataObj.getInt("age_unitId"),
+
                             fatherName = if (benDataObj.has("fatherName")) benDataObj.getString(
                                 "fatherName"
                             ) else null,
@@ -957,7 +963,7 @@ private suspend fun getBenCacheFromServerResponse(response: String): MutableList
                             mobileNoOfRelationId = if (benDataObj.has("mobilenoofRelationId")) benDataObj.getInt(
                                 "mobilenoofRelationId"
                             ) else 0,
-                            mobileOthers = if (benDataObj.has("mobileOthers")) benDataObj.getString(
+                            mobileOthers = if (benDataObj.has("mobileOthers") && benDataObj.getString("mobileOthers").isNotEmpty()) benDataObj.getString(
                                 "mobileOthers"
                             ) else null,
                             contactNumber = if (benDataObj.has("contact_number")) benDataObj.getString(
@@ -969,7 +975,7 @@ private suspend fun getBenCacheFromServerResponse(response: String): MutableList
                             communityId = if (benDataObj.has("communityId")) benDataObj.getInt("communityId") else 0,
                             religion = if (benDataObj.has("religion")) benDataObj.getString("religion") else null,
                             religionId = if (benDataObj.has("religionID")) benDataObj.getInt("religionID") else 0,
-                            religionOthers = if (benDataObj.has("religionOthers")) benDataObj.getString(
+                            religionOthers = if (benDataObj.has("religionOthers")&& benDataObj.getString("religionOthers").isNotEmpty()) benDataObj.getString(
                                 "religionOthers"
                             ) else null,
                             rchId = if (benDataObj.has("rchid")) benDataObj.getString("rchid") else null,
@@ -1212,7 +1218,7 @@ private suspend fun getBenCacheFromServerResponse(response: String): MutableList
                                     "birthOPV"
                                 ) else false,
                             ),
-                            genDetails = BenRegGen(
+                            genDetails = if (childDataObj.length() != 0) null else BenRegGen(
                                 maritalStatus = if (benDataObj.has("maritalstatus")) benDataObj.getString(
                                     "maritalstatus"
                                 ) else null,

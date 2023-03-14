@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.databinding.FragmentAadhaarIdBinding
@@ -23,7 +24,7 @@ class AadhaarIdFragment : Fragment() {
 
     private val viewModel: AadhaarIdViewModel by viewModels()
 
-    private val activityViewModel : AbhaIdViewModel by viewModels({ requireActivity() })
+    private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -34,6 +35,8 @@ class AadhaarIdFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = findNavController()
+
         binding.btnGenerateOtp.setOnClickListener {
             viewModel.generateOtpClicked(binding.tietAadhaarNumber.text.toString())
 
@@ -53,6 +56,7 @@ class AadhaarIdFragment : Fragment() {
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state!!) {
+                State.IDLE -> {}
                 State.LOADING -> {
                     binding.clContentAadharId.visibility = View.INVISIBLE
                     binding.pbLoadingAadharId.visibility = View.VISIBLE
@@ -70,7 +74,9 @@ class AadhaarIdFragment : Fragment() {
                     binding.pbLoadingAadharId.visibility = View.INVISIBLE
                     binding.clError.visibility = View.VISIBLE
                 }
-                else -> {}
+                State.ERROR_SERVER -> {
+
+                }
             }
         }
     }
@@ -80,5 +86,5 @@ class AadhaarIdFragment : Fragment() {
         _binding = null
     }
 
-
 }
+

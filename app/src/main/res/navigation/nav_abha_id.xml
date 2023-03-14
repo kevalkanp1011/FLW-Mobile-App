@@ -8,8 +8,8 @@
     <fragment
         android:id="@+id/aadhaarIdFragment"
         android:name="org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdFragment"
-        android:label="Aadhaar Verification"
-        tools:layout="@layout/fragment_aadhaar_id" >
+        android:label="@string/generate_abha_id"
+        tools:layout="@layout/fragment_aadhaar_id">
         <action
             android:id="@+id/action_aadhaarIdFragment_to_aadhaarOtpFragment"
             app:destination="@id/aadhaarOtpFragment" />
@@ -17,10 +17,34 @@
     <fragment
         android:id="@+id/aadhaarOtpFragment"
         android:name="org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_otp.AadhaarOtpFragment"
-        android:label="Verify with OTP"
-        tools:layout="@layout/fragment_aadhaar_otp" >
+        android:label="@string/generate_abha_id"
+        tools:layout="@layout/fragment_aadhaar_otp">
+        <argument
+            android:name="txnId"
+            app:argType="string" />
         <action
-            android:id="@+id/action_aadhaarOtpFragment_to_createAbhaFragment"
+            android:id="@+id/action_aadhaarOtpFragment_to_generateMobileOtpFragment"
+            app:destination="@id/generateMobileOtpFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/generateMobileOtpFragment"
+        android:name="org.piramalswasthya.sakhi.ui.abha_id_activity.generate_mobile_otp.GenerateMobileOtpFragment"
+        android:label="@string/generate_abha_id"
+        tools:layout="@layout/fragment_generate_mobile_otp">
+        <action
+            android:id="@+id/action_generateMobileOtpFragment_to_verifyMobileOtpFragment"
+            app:destination="@id/verifyMobileOtpFragment" />
+        <argument
+            android:name="txnId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/verifyMobileOtpFragment"
+        android:name="org.piramalswasthya.sakhi.ui.abha_id_activity.verify_mobile_otp.VerifyMobileOtpFragment"
+        android:label="@string/generate_abha_id"
+        tools:layout="@layout/fragment_verify_mobile_otp">
+        <action
+            android:id="@+id/action_verifyMobileOtpFragment_to_createAbhaFragment"
             app:destination="@id/createAbhaFragment" />
         <argument
             android:name="txnId"
@@ -29,6 +53,10 @@
     <fragment
         android:id="@+id/createAbhaFragment"
         android:name="org.piramalswasthya.sakhi.ui.abha_id_activity.create_abha_id.CreateAbhaFragment"
-        android:label="fragment_create_abha"
-        tools:layout="@layout/fragment_create_abha" />
+        android:label="@string/generate_abha_id"
+        tools:layout="@layout/fragment_create_abha">
+        <argument
+            android:name="txnId"
+            app:argType="string" />
+    </fragment>
 </navigation>

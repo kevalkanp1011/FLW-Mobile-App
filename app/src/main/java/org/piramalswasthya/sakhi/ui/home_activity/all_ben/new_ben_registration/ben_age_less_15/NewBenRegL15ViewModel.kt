@@ -1,6 +1,5 @@
 package org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_less_15
 
-import android.app.Application
 import android.content.Context
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +17,6 @@ import org.piramalswasthya.sakhi.model.HouseholdCache
 import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.model.TypeOfList
 import org.piramalswasthya.sakhi.repositories.BenRepo
-import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_more_15.NewBenRegG15FragmentArgs
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -31,10 +29,7 @@ class NewBenRegL15ViewModel @Inject constructor(
     private val benRepo: BenRepo
 ) : ViewModel() {
     enum class State {
-        IDLE,
-        SAVING,
-        SAVE_SUCCESS,
-        SAVE_FAILED
+        IDLE, SAVING, SAVE_SUCCESS, SAVE_FAILED
     }
 
 
@@ -78,13 +73,20 @@ class NewBenRegL15ViewModel @Inject constructor(
 
     }
 
-    suspend fun getFirstPage(adapter: FormInputAdapter): List<FormInput> {
-        withContext(Dispatchers.IO) {
-            household = benRepo.getHousehold(hhId)!!
-            if (benIdFromArgs > 0)
-                form = benRepo.getBenKidForm(benIdFromArgs, hhId)
+    suspend fun getFirstPage(): List<FormInput> {
+        return if (_recordExists.value == false) {
+
+            form.firstPage
+        } else {
+            form = benRepo.getBenKidForm(benIdFromArgs, hhId)
+            form.loadFirstPageOnViewMode()
 
         }
+
+
+    }
+
+    suspend fun observeFirstPage(adapter: FormInputAdapter) {
         viewModelScope.launch {
             var emittedFromDobForAge = false
             var emittedFromDobForAgeUnit = false
@@ -181,8 +183,7 @@ class NewBenRegL15ViewModel @Inject constructor(
                             }
                         }
                     } ?: run {
-                        if (emittedFromAge)
-                            emittedFromAge = false
+                        if (emittedFromAge) emittedFromAge = false
                         form.age.value.value = null
                         adapter.notifyItemChanged(adapter.currentList.indexOf(form.age))
                     }
@@ -190,23 +191,24 @@ class NewBenRegL15ViewModel @Inject constructor(
             }
             launch {
                 form.childRegisteredAtSchool.value.collect {
-                    if (it == "Yes") {
-                        val list = adapter.currentList.toMutableList()
-                        if (!adapter.currentList.contains(form.typeOfSchool)) {
-                            list.add(
-                                adapter.currentList.indexOf(form.rchId),
-                                form.typeOfSchool
-                            )
-                            adapter.submitList(list)
+                    it?.let {
+                        if (it == "Yes") {
+                            val list = adapter.currentList.toMutableList()
+                            if (!adapter.currentList.contains(form.typeOfSchool)) {
+                                list.add(
+                                    adapter.currentList.indexOf(form.rchId), form.typeOfSchool
+                                )
+                                adapter.submitList(list)
+                            }
+                        } else {
+                            val list = adapter.currentList.toMutableList()
+                            if (adapter.currentList.contains(form.typeOfSchool)) {
+                                list.remove(form.typeOfSchool)
+                                adapter.submitList(list)
+                            }
                         }
-                    } else {
-                        val list = adapter.currentList.toMutableList()
-                        if (adapter.currentList.contains(form.typeOfSchool)) {
-                            list.remove(form.typeOfSchool)
-                            adapter.submitList(list)
-                        }
-                    }
 
+                    }
                 }
             }
             launch {
@@ -216,17 +218,14 @@ class NewBenRegL15ViewModel @Inject constructor(
                             household.familyHeadPhoneNo?.let { mobNo ->
                                 form.contactNumber.value.value = mobNo.toString()
                             }
-                        } else
-                            form.contactNumber.value.value = null
+                        } else form.contactNumber.value.value = null
                         val list = adapter.currentList.toMutableList()
                         if (!adapter.currentList.contains(form.otherMobileNoOfRelation)) {
-                            if (it == "Other")
-                                list.add(
-                                    adapter.currentList.indexOf(form.mobileNoOfRelation) + 1,
-                                    form.otherMobileNoOfRelation
-                                )
-                        } else
-                            list.remove(form.otherMobileNoOfRelation)
+                            if (it == "Other") list.add(
+                                adapter.currentList.indexOf(form.mobileNoOfRelation) + 1,
+                                form.otherMobileNoOfRelation
+                            )
+                        } else list.remove(form.otherMobileNoOfRelation)
                         if (!adapter.currentList.contains(form.contactNumber)) {
                             list.add(
                                 adapter.currentList.indexOf(form.mobileNoOfRelation) + 1,
@@ -263,8 +262,7 @@ class NewBenRegL15ViewModel @Inject constructor(
                         if (it == "Other") {
                             val list = adapter.currentList.toMutableList()
                             list.add(
-                                adapter.currentList.indexOf(form.religion) + 1,
-                                form.otherReligion
+                                adapter.currentList.indexOf(form.religion) + 1, form.otherReligion
                             )
                             adapter.submitList(list)
                         } else {
@@ -313,20 +311,17 @@ class NewBenRegL15ViewModel @Inject constructor(
                         when (ageUnit) {
                             "Year" -> {
                                 cal.add(
-                                    Calendar.YEAR,
-                                    -1 * age.toInt()
+                                    Calendar.YEAR, -1 * age.toInt()
                                 )
                             }
                             "Month" -> {
                                 cal.add(
-                                    Calendar.MONTH,
-                                    -1 * age.toInt()
+                                    Calendar.MONTH, -1 * age.toInt()
                                 )
                             }
                             "Day" -> {
                                 cal.add(
-                                    Calendar.DAY_OF_YEAR,
-                                    -1 * age.toInt()
+                                    Calendar.DAY_OF_YEAR, -1 * age.toInt()
                                 )
                             }
                         }
@@ -347,15 +342,13 @@ class NewBenRegL15ViewModel @Inject constructor(
                 }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
             }
         }
-        return withContext(Dispatchers.IO) {
-            form.firstPage
-        }
     }
 
     private fun getDiffYears(a: Calendar, b: Calendar): Int {
         var diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR)
-        if (a.get(Calendar.MONTH) > b.get(Calendar.MONTH) ||
-            a.get(Calendar.MONTH) == b.get(Calendar.MONTH) && a.get(Calendar.DAY_OF_MONTH) > b.get(
+        if (a.get(Calendar.MONTH) > b.get(Calendar.MONTH) || a.get(Calendar.MONTH) == b.get(Calendar.MONTH) && a.get(
+                Calendar.DAY_OF_MONTH
+            ) > b.get(
                 Calendar.DAY_OF_MONTH
             )
         ) {
@@ -366,21 +359,20 @@ class NewBenRegL15ViewModel @Inject constructor(
 
     private fun getDiffMonths(a: Calendar, b: Calendar): Int {
         var diffY = b.get(Calendar.YEAR) - a.get(Calendar.YEAR)
-        if (a.get(Calendar.MONTH) > b.get(Calendar.MONTH) ||
-            a.get(Calendar.MONTH) == b.get(Calendar.MONTH) && a.get(Calendar.DAY_OF_MONTH) > b.get(
+        if (a.get(Calendar.MONTH) > b.get(Calendar.MONTH) || a.get(Calendar.MONTH) == b.get(Calendar.MONTH) && a.get(
+                Calendar.DAY_OF_MONTH
+            ) > b.get(
                 Calendar.DAY_OF_MONTH
             )
         ) {
             diffY--
         }
-        if (diffY != 0)
-            return -1
+        if (diffY != 0) return -1
         var diffM = b.get(Calendar.MONTH) - a.get(Calendar.MONTH)
         if (a.get(Calendar.DAY_OF_MONTH) > b.get(Calendar.DAY_OF_MONTH)) {
             diffM--
         }
-        if (diffM < 0)
-            diffM += 12
+        if (diffM < 0) diffM += 12
 
         return diffM
     }
@@ -391,15 +383,13 @@ class NewBenRegL15ViewModel @Inject constructor(
     }
 
     private fun toggleChildRegisteredFieldsVisibility(
-        adapter: FormInputAdapter,
-        yearDiff: Int
+        adapter: FormInputAdapter, yearDiff: Int
     ) {
         val list = adapter.currentList.toMutableList()
         if (yearDiff in 3..14) {
             if (!adapter.currentList.contains(form.childRegisteredAtSchool)) {
                 list.add(
-                    adapter.currentList.indexOf(form.rchId),
-                    form.childRegisteredAtSchool
+                    adapter.currentList.indexOf(form.rchId), form.childRegisteredAtSchool
                 )
             }
         } else {
@@ -414,8 +404,7 @@ class NewBenRegL15ViewModel @Inject constructor(
         if (yearDiff in 3..5) {
             if (!adapter.currentList.contains(form.childRegisteredAtAwc)) {
                 list.add(
-                    adapter.currentList.indexOf(form.rchId),
-                    form.childRegisteredAtAwc
+                    adapter.currentList.indexOf(form.rchId), form.childRegisteredAtAwc
                 )
             }
         } else {
@@ -427,8 +416,14 @@ class NewBenRegL15ViewModel @Inject constructor(
     }
 
 
-    fun getSecondPage(adapter: FormInputAdapter): List<FormInput> {
+    fun getSecondPage(): List<FormInput> {
 
+        return if (recordExists.value==false) {
+            form.secondPage
+        } else form.loadSecondPageOnViewMode()
+    }
+
+    fun observeSecondPage(adapter: FormInputAdapter) {
         viewModelScope.launch {
             launch {
                 form.placeOfBirth.value.collect {
@@ -504,14 +499,11 @@ class NewBenRegL15ViewModel @Inject constructor(
                 form.complicationsDuringDelivery.value.collect {
                     it?.let {
                         val list = adapter.currentList.toMutableList()
-                        if (it == "Death")
-                            list.removeAll(form.deathRemoveList)
-                        else
-                            form.deathRemoveList.forEach { leftForm ->
-                                if (!list.contains(leftForm))
-                                    list.add(leftForm)
+                        if (it == "Death") list.removeAll(form.deathRemoveList)
+                        else form.deathRemoveList.forEach { leftForm ->
+                            if (!list.contains(leftForm)) list.add(leftForm)
 
-                            }
+                        }
                         adapter.submitList(list)
                     }
 
@@ -524,8 +516,7 @@ class NewBenRegL15ViewModel @Inject constructor(
                     it?.let {
                         if (it == "Yes" && !list.contains(form.motherOfChild)) {
                             list.add(
-                                list.indexOf(form.motherUnselected) + 1,
-                                form.motherOfChild
+                                list.indexOf(form.motherUnselected) + 1, form.motherOfChild
                             )
                         }
                     } ?: run {
@@ -541,8 +532,7 @@ class NewBenRegL15ViewModel @Inject constructor(
                         if (it == "Given") {
                             if (!list.contains(form.birthDoseGiven)) {
                                 list.add(
-                                    list.indexOf(form.birthDose) + 1,
-                                    form.birthDoseGiven
+                                    list.indexOf(form.birthDose) + 1, form.birthDoseGiven
                                 )
                             }
                         } else {
@@ -562,8 +552,7 @@ class NewBenRegL15ViewModel @Inject constructor(
                         if (it == "Pre-Term") {
                             if (!list.contains(form.termGestationalAge)) {
                                 list.add(
-                                    list.indexOf(form.term) + 1,
-                                    form.termGestationalAge
+                                    list.indexOf(form.term) + 1, form.termGestationalAge
                                 )
                             }
                         } else {
@@ -592,8 +581,6 @@ class NewBenRegL15ViewModel @Inject constructor(
                 }
             }
         }
-        return form.secondPage
-
     }
 
     fun persistFirstPage() {

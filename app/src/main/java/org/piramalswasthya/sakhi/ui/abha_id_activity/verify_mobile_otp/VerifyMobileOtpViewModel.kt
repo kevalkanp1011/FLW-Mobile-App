@@ -1,17 +1,15 @@
-package org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id
+package org.piramalswasthya.sakhi.ui.abha_id_activity.verify_mobile_otp
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
 import javax.inject.Inject
 
 @HiltViewModel
-class AadhaarIdViewModel @Inject constructor(
-    private val abhaIdRepo: AbhaIdRepo
+class VerifyMobileOtpViewModel @Inject constructor(
+    private val abhaIdRepo: AbhaIdRepo,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     enum class State {
         IDLE,
@@ -21,27 +19,30 @@ class AadhaarIdViewModel @Inject constructor(
         SUCCESS
     }
 
-    private val _state = MutableLiveData(State.IDLE)
+    private val _state = MutableLiveData<State>()
     val state: LiveData<State>
         get() = _state
 
+
+    private val txnIdFromArgs =
+        VerifyMobileOtpFragmentArgs.fromSavedStateHandle(savedStateHandle).txnId
     private var _txnId: String? = null
-    val txnId: String
+    val txnID: String
         get() = _txnId!!
 
-    fun generateOtpClicked(aadharNo: String) {
+    fun verifyOtpClicked(otp: String) {
         _state.value = State.LOADING
-        generateAadhaarOtp(aadharNo)
+        verifyMobileOtp(otp)
     }
 
     fun resetState() {
         _state.value = State.IDLE
     }
 
-    private fun generateAadhaarOtp(aadhaarNo: String) {
+    private fun verifyMobileOtp(otp: String) {
         viewModelScope.launch {
-//            _txnId = abhaIdRepo.generateOtpForAadhaar(aadhaarNo)
-            _txnId = abhaIdRepo.generateOtpForAadhaarDummy(aadhaarNo)
+//            _txnId = abhaIdRepo.verifyOtpForMobileNumber(otp, txnIdFromArgs)
+            _txnId = abhaIdRepo.verifyOtpForMobileNumberDummy(otp, txnIdFromArgs)
             _txnId?.also {
                 _state.value = State.SUCCESS
             } ?: run {
