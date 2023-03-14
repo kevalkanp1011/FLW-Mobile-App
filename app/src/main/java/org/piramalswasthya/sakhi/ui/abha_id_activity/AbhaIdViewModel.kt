@@ -40,8 +40,8 @@ class AbhaIdViewModel @Inject constructor(
 
     private fun generateAccessToken() {
         viewModelScope.launch {
-            _accessToken = abhaIdRepo.getAccessToken()
-//            _accessToken = abhaIdRepo.getAccessTokenDummy()
+//            _accessToken = abhaIdRepo.getAccessToken()
+            _accessToken = abhaIdRepo.getAccessTokenDummy()
             if (_accessToken == null)
                 _state.value = State.ERROR_NETWORK
             else {

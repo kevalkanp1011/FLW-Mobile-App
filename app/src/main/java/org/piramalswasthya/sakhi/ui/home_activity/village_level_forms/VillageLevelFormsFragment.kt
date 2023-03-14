@@ -38,7 +38,7 @@ class VillageLevelFormsFragment : Fragment() {
     }
 
     private fun setUpVillageLevelFormsIconRvAdapter() {
-        val rvLayoutManager = GridLayoutManager(context, 3)
+        val rvLayoutManager = GridLayoutManager(context, requireContext().resources.getInteger(R.integer.icon_grid_span))
         binding.rvIconGrid.layoutManager = rvLayoutManager
         binding.rvIconGrid.adapter = IconGridAdapter(
             //IconDataset.getVillageLevelFormsDataset(),

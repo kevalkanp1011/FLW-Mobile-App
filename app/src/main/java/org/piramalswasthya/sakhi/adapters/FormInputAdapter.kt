@@ -7,8 +7,14 @@ import android.text.InputFilter
 import android.text.InputFilter.AllCaps
 import android.text.InputType
 import android.text.TextWatcher
+import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import androidx.core.view.children
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -17,6 +23,7 @@ import org.piramalswasthya.sakhi.configuration.FormEditTextDefaultInputFilter
 import org.piramalswasthya.sakhi.databinding.*
 import org.piramalswasthya.sakhi.model.FormInput
 import org.piramalswasthya.sakhi.model.FormInput.InputType.*
+import org.piramalswasthya.sakhi.ui.setItems
 import timber.log.Timber
 import java.util.*
 
@@ -42,9 +49,14 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
         }
 
         fun bind(item: FormInput, isEnabled: Boolean) {
-            binding.et.isEnabled = isEnabled
 
+            binding.et.isClickable = isEnabled
+            binding.et.isFocusable = isEnabled
             binding.form = item
+            if(!isEnabled){
+                binding.executePendingBindings()
+                return
+            }
             //binding.et.setText(item.value.value)
             val textWatcher = object : TextWatcher {
                 override fun beforeTextChanged(
@@ -174,11 +186,23 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
             }
         }
 
-        fun bind(item: FormInput) {
+        fun bind(item: FormInput, isEnabled : Boolean) {
+            if(!isEnabled){
+                binding.form = item
+                binding.tilRvDropdown.visibility = View.GONE
+                binding.tilEditText.visibility = View.VISIBLE
+                binding.et.isFocusable = false
+                binding.et.isClickable = false
+//                binding.clContent.isClickable = false
+
+                binding.executePendingBindings()
+                return
+            }
             val savedValue = item.value.value
             item.value.value = null
             item.value.value = savedValue
             binding.form = item
+
             binding.actvRvDropdown.setOnItemClickListener { _, _, index, _ ->
                 item.value.value = item.list?.get(index)
                 Timber.d("Item DD : $item")
@@ -204,9 +228,61 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
 
         fun bind(
             item: FormInput, isEnabled: Boolean) {
-            binding.rg.isEnabled = isEnabled
+            if(!isEnabled){
+                binding.rg.isClickable = false
+                binding.rg.isFocusable = false
+            }
+//            binding.rg.isEnabled = isEnabled
             binding.invalidateAll()
             binding.form = item
+
+            binding.rg.removeAllViews()
+            binding.rg.apply {
+                item.list?.let { items ->
+                    orientation = item.orientation ?: LinearLayout.HORIZONTAL
+                    weightSum = items.size.toFloat()
+                    items.forEach {
+                        val rdBtn = RadioButton(this.context)
+                        rdBtn.layoutParams =
+                            RadioGroup.LayoutParams(
+                                RadioGroup.LayoutParams.WRAP_CONTENT,
+                                RadioGroup.LayoutParams.WRAP_CONTENT,
+                                1.0F
+                            ).apply {
+                                gravity = Gravity.CENTER_HORIZONTAL
+                            }
+                        rdBtn.id = View.generateViewId()
+
+                        rdBtn.text = it
+                        addView(rdBtn)
+                        if (item.value.value == it)
+                            rdBtn.isChecked = true
+                        rdBtn.setOnCheckedChangeListener { _, b ->
+                            if (b) {
+                                item.value.value = it
+                            }
+                            item.errorText = null
+                            binding.clRi.setBackgroundResource(0)
+                        }
+                    }
+                    item.value.value?.let { value ->
+                        children.forEach {
+                            if ((it as RadioButton).text == value) {
+                                clearCheck()
+                                check(it.id)
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
+            if(!isEnabled){
+                binding.rg.children.forEach {
+                    it.isClickable = false
+                }
+            }
             if (item.errorText != null)
                 binding.clRi.setBackgroundResource(R.drawable.state_errored)
             else
@@ -253,12 +329,18 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
 
         fun bind(
             item: FormInput, isEnabled: Boolean) {
-            binding.et.isEnabled = isEnabled
+            binding.form = item
+            if(!isEnabled){
+                binding.et.isFocusable = false
+                binding.et.isClickable = false
+                binding.executePendingBindings()
+                return
+            }
             val today = Calendar.getInstance()
             var thisYear = today.get(Calendar.YEAR)
             var thisMonth = today.get(Calendar.MONTH)
             var thisDay = today.get(Calendar.DAY_OF_MONTH)
-            binding.form = item
+
             item.errorText?.also { binding.tilEditText.error = it }
                 ?: run { binding.tilEditText.error = null }
             binding.et.setOnClickListener {
@@ -396,7 +478,7 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
         val item = getItem(position)
         when (item.inputType) {
             EDIT_TEXT -> (holder as EditTextInputViewHolder).bind(item, isEnabled)
-            DROPDOWN -> (holder as DropDownInputViewHolder).bind(item)
+            DROPDOWN -> (holder as DropDownInputViewHolder).bind(item, isEnabled)
             RADIO -> (holder as RadioInputViewHolder).bind(item, isEnabled)
             DATE_PICKER -> (holder as DatePickerInputViewHolder).bind(item, isEnabled)
             TEXT_VIEW -> (holder as TextViewInputViewHolder).bind(item)

@@ -41,8 +41,8 @@ class VerifyMobileOtpViewModel @Inject constructor(
 
     private fun verifyMobileOtp(otp: String) {
         viewModelScope.launch {
-//            _txnId = abhaIdRepo.generateOtpForMobileNumber(phoneNumber, txnIdFromArgs)
-            _txnId = abhaIdRepo.generateOtpForMobileNumberDummy(otp, txnIdFromArgs)
+//            _txnId = abhaIdRepo.verifyOtpForMobileNumber(otp, txnIdFromArgs)
+            _txnId = abhaIdRepo.verifyOtpForMobileNumberDummy(otp, txnIdFromArgs)
             _txnId?.also {
                 _state.value = State.SUCCESS
             } ?: run {

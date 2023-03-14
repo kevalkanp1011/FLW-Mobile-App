@@ -71,14 +71,16 @@ class NewBenRegL15ObjectFragment  : Fragment() {
                             }, isEnabled = !it)
                         binding.inputForm.rvInputForm.adapter = adapter
                         lifecycleScope.launch {
-                            adapter.submitList(viewModel.getFirstPage(adapter))
+                            adapter.submitList(viewModel.getFirstPage())
+                            if(!it)viewModel.observeFirstPage(adapter)
                         }
                     }
                     2 -> {
 
                         val adapter = FormInputAdapter(isEnabled = !it)
                         binding.inputForm.rvInputForm.adapter = adapter
-                        adapter.submitList(viewModel.getSecondPage(adapter))
+                        adapter.submitList(viewModel.getSecondPage())
+                        if(!it)viewModel.observeSecondPage(adapter)
                     }
                 }
             }

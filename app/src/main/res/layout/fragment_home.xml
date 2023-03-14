@@ -68,6 +68,8 @@
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tl_home_viewpager"
                 android:layout_width="match_parent"
+                app:tabMaxWidth="0dp"
+                app:tabGravity="fill"
                 android:layout_height="wrap_content" />
 
             <androidx.viewpager2.widget.ViewPager2

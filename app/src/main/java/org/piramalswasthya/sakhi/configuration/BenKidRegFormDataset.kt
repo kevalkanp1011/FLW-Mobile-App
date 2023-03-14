@@ -19,27 +19,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
 
     constructor(context: Context, ben: BenRegCache/*, pncMotherList: List<String>*/) : this(context, null) {
         this.ben = ben
-        dateOfReg.value.value = getDateFromLong(ben.regDate)
-        firstName.value.value = ben.firstName
-        lastName.value.value = ben.lastName
-        ageUnit.value.value = context.resources.getStringArray(R.array.nbr_age_unit_array)[ben.age_unitId-1]
-        age.value.value = ben.age.toString()
-        dob.value.value = getDateFromLong(ben.dob)
-        gender.value.value = context.resources.getStringArray(R.array.nbr_gender_array)[ben.genderId-1]
-        fatherName.value.value = ben.fatherName
-        motherName.value.value = ben.motherName
-        mobileNoOfRelation.value.value = mobileNoOfRelation.list?.get(ben.mobileNoOfRelationId)
-        otherMobileNoOfRelation.value.value = ben.mobileOthers
-        contactNumber.value.value = ben.contactNumber.toString()
-        relationToHead.value.value = relationToHeadListDefault[ben.familyHeadRelationPosition]
-        community.value.value = community.list?.get(ben.communityId)
-        religion.value.value = religion.list?.get(ben.religionId)
-        otherReligion.value.value = ben.religionOthers
-        childRegisteredAtAwc.value.value = ben.kidDetails?.childRegisteredAWCId?.let { childRegisteredAtAwc.list?.get(it) }
-        childRegisteredAtSchool.value.value = ben.kidDetails?.childRegisteredSchoolId?.let { childRegisteredAtSchool.list?.get(it) }
-        typeOfSchool.value.value = ben.kidDetails?.typeOfSchoolId?.let { typeOfSchool.list?.get(it) }
-        rchId.value.value = ben.rchId
-
+       
 
     }
 
@@ -334,6 +314,69 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
             rchId,
         )
     }
+    
+    fun loadFirstPageOnViewMode(): List<FormInput> {
+        val viewList = mutableListOf(
+            pic,
+            dateOfReg,
+            firstName,
+            lastName,
+            dob,
+            age,
+            ageUnit,
+            gender,
+            fatherName,
+            motherName,
+            relationToHead,
+            mobileNoOfRelation,
+            contactNumber,
+            community,
+            religion,
+            rchId,
+        )
+
+        ben?.let{ benCache ->
+            dateOfReg.value.value = getDateFromLong(benCache.regDate)
+            firstName.value.value = benCache.firstName
+            lastName.value.value = benCache.lastName
+            ageUnit.value.value =
+                context.resources.getStringArray(R.array.nbr_age_unit_array)[benCache.age_unitId - 1]
+            age.value.value = benCache.age.toString()
+            dob.value.value = getDateFromLong(benCache.dob)
+            gender.value.value =
+                context.resources.getStringArray(R.array.nbr_gender_array)[benCache.genderId - 1]
+            fatherName.value.value = benCache.fatherName
+            motherName.value.value = benCache.motherName
+            mobileNoOfRelation.value.value = mobileNoOfRelation.list?.get(benCache.mobileNoOfRelationId-1)
+            otherMobileNoOfRelation.value.value = benCache.mobileOthers
+            contactNumber.value.value = benCache.contactNumber.toString()
+            relationToHead.value.value = relationToHeadListDefault[benCache.familyHeadRelationPosition-1]
+            community.value.value = community.list?.get(benCache.communityId -1)
+            religion.value.value = religion.list?.get(benCache.religionId -1)
+            otherReligion.value.value = benCache.religionOthers
+            childRegisteredAtAwc.value.value =
+                benCache.kidDetails?.childRegisteredAWCId?.takeIf{it>0}?.let{ childRegisteredAtAwc.list?.get(it-1) }
+            childRegisteredAtSchool.value.value =
+                benCache.kidDetails?.childRegisteredSchoolId?.takeIf{it>0}?.let { childRegisteredAtSchool.list?.get(it-1) }
+            typeOfSchool.value.value =
+                benCache.kidDetails?.typeOfSchoolId?.takeIf{it>0}?.let { typeOfSchool.list?.get(it-1) }
+            rchId.value.value = benCache.rchId
+        }
+        otherRelationToHead.value.value?.let {  viewList.add(viewList.indexOf(relationToHead)+1,otherRelationToHead) }
+        otherMobileNoOfRelation.value.value?.let {  viewList.add(viewList.indexOf(mobileNoOfRelation)+1,otherMobileNoOfRelation) }
+        otherReligion.value.value?.let {  viewList.add(viewList.indexOf(religion)+1,otherReligion) }
+
+        childRegisteredAtAwc.value.value?.let {  viewList.add(viewList.indexOf(rchId),childRegisteredAtAwc) }
+        childRegisteredAtSchool.value.value?.let {  viewList.add(viewList.indexOf(rchId),childRegisteredAtSchool) }
+        typeOfSchool.value.value?.let {  viewList.add(viewList.indexOf(rchId),typeOfSchool) }
+
+
+
+        return viewList
+
+    }
+    
+    
 
     //////////////////////////////////////////Second Page///////////////////////////////////////////
 
@@ -566,6 +609,56 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
 
             )
     }
+    fun loadSecondPageOnViewMode(): List<FormInput> {
+        val viewList = mutableListOf(
+            placeOfBirth,
+            whoConductedDelivery,
+            typeOfDelivery,
+            complicationsDuringDelivery,
+            breastFeedWithin1Hr,
+            birthDose,
+            term,
+            babyCriedImmediatelyAfterBirth,
+            anyDefectAtBirth,
+            motherOfChild,
+            babyHeight,
+            babyWeight,
+        )
+
+        ben?.let{ benCache->
+            placeOfBirth.value.value =
+                benCache.kidDetails?.birthPlaceId?.takeIf{it>0}?.let { placeOfBirth.list?.get(it-1) }
+            facility.value.value = benCache.kidDetails?.facilityId?.takeIf{it>0}?.let { facility.list?.get(it-1) }
+            otherFacility.value.value = benCache.kidDetails?.facilityOther
+            otherPlaceOfBirth.value.value = benCache.kidDetails?.placeName
+            whoConductedDelivery.value.value = benCache.kidDetails?.conductedDeliveryId?.takeIf { it>0 }?.let { whoConductedDelivery.list?.get(it-1) }
+            otherWhoConductedDelivery.value.value = benCache.kidDetails?.conductedDeliveryOther
+            typeOfDelivery.value.value = benCache.kidDetails?.deliveryTypeId?.takeIf { it>0 }?.let { typeOfDelivery.list?.get(it-1) }
+            complicationsDuringDelivery.value.value = benCache.kidDetails?.complicationsId?.takeIf { it>0 }?.let { complicationsDuringDelivery.list?.get(it-1) }
+            breastFeedWithin1Hr.value.value = benCache.kidDetails?.feedingStartedId?.takeIf { it>0 }?.let { breastFeedWithin1Hr.list?.get(it-1) }
+            birthDose.value.value = benCache.kidDetails?.birthDosageId?.takeIf { it>0 }?.let { birthDose.list?.get(it-1) }
+            birthDoseGiven.value.value = "${if(benCache.kidDetails?.birthBCG==true) "BCG" else ""}${if(benCache.kidDetails?.birthHepB==true) "Hepatitis" else ""}${if(benCache.kidDetails?.birthOPV==true) "OPV" else ""}"
+            term.value.value = benCache.kidDetails?.termId?.takeIf { it>0 }?.let { term.list?.get(it-1) }
+            termGestationalAge.value.value = benCache.kidDetails?.gestationalAgeId?.takeIf { it>0 }?.let { termGestationalAge.list?.get(it-1) }
+            corticosteroidGivenAtLabor.value.value = benCache.kidDetails?.corticosteroidGivenMotherId?.takeIf { it>0 }?.let { corticosteroidGivenAtLabor.list?.get(it-1) }
+            babyCriedImmediatelyAfterBirth.value.value = benCache.kidDetails?.criedImmediatelyId?.takeIf { it>0 }?.let { babyCriedImmediatelyAfterBirth.list?.get(it-1) }
+            anyDefectAtBirth.value.value = benCache.kidDetails?.birthDefectsId?.takeIf { it>0 }?.let { anyDefectAtBirth.list?.get(it-1) }
+            motherOfChild.value.value = benCache.kidDetails?.childMotherName
+            babyHeight.value.value = benCache.kidDetails?.heightAtBirth?.toString()
+            babyWeight.value.value = benCache.kidDetails?.weightAtBirth?.toString()
+
+        }
+        otherPlaceOfBirth.value.value?.let {  viewList.add(viewList.indexOf(placeOfBirth)+1,otherPlaceOfBirth) }
+        otherFacility.value.value?.let {  viewList.add(viewList.indexOf(facility)+1,otherFacility) }
+        otherWhoConductedDelivery.value.value?.let {  viewList.add(viewList.indexOf(whoConductedDelivery)+1,otherWhoConductedDelivery) }
+        birthDoseGiven.value.value?.let { viewList.add(viewList.indexOf(birthDose)+1,birthDoseGiven) }
+        termGestationalAge.value.value?.let { viewList.add(viewList.indexOf(term)+1,termGestationalAge) }
+        corticosteroidGivenAtLabor.value.value?.let { viewList.add(viewList.indexOf(termGestationalAge)+1,corticosteroidGivenAtLabor) }
+
+
+        return viewList
+
+    }
 
     private fun getTypeFromAge(age: Int, ageUnit: AgeUnit?): TypeOfList? {
         Timber.d("Values Here $age $ageUnit")
@@ -708,7 +801,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
             kidDetails?.birthHepB =
                 this@BenKidRegFormDataset.birthDoseGiven.value.value?.contains("Hepatitis") ?: false
             kidDetails?.birthOPV =
-                this@BenKidRegFormDataset.birthDoseGiven.value.value?.contains("BCG") ?: false
+                this@BenKidRegFormDataset.birthDoseGiven.value.value?.contains("OPV") ?: false
             kidDetails?.term = this@BenKidRegFormDataset.term.value.value
             kidDetails?.termId = this@BenKidRegFormDataset.term.list?.indexOf(kidDetails?.term)
                 ?.let { it + 1 } ?: 0

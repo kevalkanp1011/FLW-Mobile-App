@@ -14,6 +14,7 @@ import android.widget.RadioGroup.LayoutParams
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.databinding.BindingAdapter
+import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import org.piramalswasthya.sakhi.R
@@ -49,42 +50,42 @@ fun ConstraintLayout.setItems(form: FormInput?) {
 //    if(this.childCount!=0)
 //        return
 
-    val rg = this.findViewById<RadioGroup>(R.id.rg)
-    rg.removeAllViews()
-    rg.apply {
-        form?.list?.let { items ->
-            orientation = form.orientation ?: LinearLayout.HORIZONTAL
-            weightSum = items.size.toFloat()
-            items.forEach {
-                val rdBtn = RadioButton(this.context)
-                rdBtn.layoutParams =
-                    LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1.0F).apply {
-                        gravity = Gravity.CENTER_HORIZONTAL
-                    }
-                rdBtn.id = View.generateViewId()
-
-                rdBtn.text = it
-                addView(rdBtn)
-                if (form.value.value == it)
-                    rdBtn.isChecked = true
-                rdBtn.setOnCheckedChangeListener { _, b ->
-                    if (b) {
-                        form.value.value = it
-                    }
-                    form.errorText = null
-                    this@setItems.setBackgroundResource(0)
-                }
-            }
-            form.value.value?.let { value ->
-                children.forEach {
-                    if ((it as RadioButton).text == value) {
-                        clearCheck()
-                        check(it.id)
-                    }
-                }
-            }
-        }
-    }
+//    val rg = this.findViewById<RadioGroup>(R.id.rg)
+//    rg.removeAllViews()
+//    rg.apply {
+//        form?.list?.let { items ->
+//            orientation = form.orientation ?: LinearLayout.HORIZONTAL
+//            weightSum = items.size.toFloat()
+//            items.forEach {
+//                val rdBtn = RadioButton(this.context)
+//                rdBtn.layoutParams =
+//                    LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1.0F).apply {
+//                        gravity = Gravity.CENTER_HORIZONTAL
+//                    }
+//                rdBtn.id = View.generateViewId()
+//
+//                rdBtn.text = it
+//                addView(rdBtn)
+//                if (form.value.value == it)
+//                    rdBtn.isChecked = true
+//                rdBtn.setOnCheckedChangeListener { _, b ->
+//                    if (b) {
+//                        form.value.value = it
+//                    }
+//                    form.errorText = null
+//                    this@setItems.setBackgroundResource(0)
+//                }
+//            }
+//            form.value.value?.let { value ->
+//                children.forEach {
+//                    if ((it as RadioButton).text == value) {
+//                        clearCheck()
+//                        check(it.id)
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
 
 @BindingAdapter("checkBoxesForm")
@@ -175,9 +176,16 @@ fun ImageView.setSyncState(syncState: SyncState?) {
 @BindingAdapter("benImage")
 fun ImageView.setBenImage(uriString: String?) {
     if (uriString == null)
-        setImageResource(R.drawable.ic_menu_camera)
+        setImageResource(R.drawable.ic_person)
     else
-        setImageURI(Uri.parse(uriString))
+    {
+        Glide
+            .with(this)
+            .load(Uri.parse(uriString))
+            .placeholder(R.drawable.ic_person)
+            .circleCrop()
+            .into(this)
+    }
 }
 
 //fun EditText.afterTextChanged(afterTextChanged: (String?) -> Unit) {
