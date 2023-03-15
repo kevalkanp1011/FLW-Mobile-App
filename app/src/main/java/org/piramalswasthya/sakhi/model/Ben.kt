@@ -223,7 +223,7 @@ data class BenBasicCache(
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             syncState = syncState,
-            hasForm = false
+            hasForm1 = false
         )
     }
 

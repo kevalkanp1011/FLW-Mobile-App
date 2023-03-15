@@ -48,20 +48,14 @@ class ReproductiveAgeListFragment : Fragment() {
                 {
                     Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
                 },
-                {
-                    Toast.makeText(context, "Household : $it clicked", Toast.LENGTH_SHORT).show()
-                },
-                {
-                   
-                }
-            ) { hhId, benId ->
+               { hhId, benId ->
 //                findNavController().navigate(
 //                    ReproductiveAgeListFragmentDirections.actionReproductiveAgeListFragmentToFpotFragment(
 //                        hhId,
 //                        benId
 //                    )
 //                )
-            }, "FPOT Form")
+            }), "FPOT Form")
         binding.rvAny.adapter = benAdapter
 
         viewModel.benList.observe(viewLifecycleOwner) {
