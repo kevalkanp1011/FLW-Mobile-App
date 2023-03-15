@@ -8,7 +8,7 @@ import org.piramalswasthya.sakhi.model.FormInput
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ChildDeathReviewFormDataset(context: Context, private val childDeathReview: CDRCache? = null) {
+class CDRFormDataset(context: Context, private val childDeathReview: CDRCache? = null) {
 
     companion object {
         private fun getCurrentDate(): String {
@@ -143,7 +143,7 @@ class ChildDeathReviewFormDataset(context: Context, private val childDeathReview
         title = "Place of Death",
         required = true,
         orientation = LinearLayout.VERTICAL,
-        list = arrayOf("Home", "Hospital", "In transit")
+        entries = arrayOf("Home", "Hospital", "In transit")
     )
     val hospitalName = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,

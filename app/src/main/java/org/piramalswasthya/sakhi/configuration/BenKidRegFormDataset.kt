@@ -89,7 +89,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     val ageUnit = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_nb_age_unit),
-        list = context.resources.getStringArray(R.array.nbr_age_unit_array),
+        entries = context.resources.getStringArray(R.array.nbr_age_unit_array),
         required = true,
     )
     val age = FormInput(
@@ -108,7 +108,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     val gender = FormInput(
         inputType = RADIO,
         title = context.getString(R.string.nbr_gender),
-        list = context.resources.getStringArray(R.array.nbr_gender_array),
+        entries = context.resources.getStringArray(R.array.nbr_gender_array),
         required = true,
     )
     private val fatherName = FormInput(
@@ -128,7 +128,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     val mobileNoOfRelation = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_mobile_number_of),
-        list = arrayOf(
+        entries = arrayOf(
             "Mother",
             "Father",
             "Family Head",
@@ -204,7 +204,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     val relationToHead = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_rel_to_head),
-        list = relationToHeadListDefault,
+        entries = relationToHeadListDefault,
         required = true,
     )
     val otherRelationToHead = FormInput(
@@ -216,7 +216,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     private val community = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_community),
-        list = arrayOf(
+        entries = arrayOf(
             "General",
             "SC",
             "ST",
@@ -230,7 +230,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     val religion = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_religion),
-        list = arrayOf(
+        entries = arrayOf(
             "Hindu",
             "Muslim",
             "Christian",
@@ -347,19 +347,19 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
                 context.resources.getStringArray(R.array.nbr_gender_array)[benCache.genderId - 1]
             fatherName.value.value = benCache.fatherName
             motherName.value.value = benCache.motherName
-            mobileNoOfRelation.value.value = mobileNoOfRelation.list?.get(benCache.mobileNoOfRelationId-1)
+            mobileNoOfRelation.value.value = mobileNoOfRelation.entries?.get(benCache.mobileNoOfRelationId-1)
             otherMobileNoOfRelation.value.value = benCache.mobileOthers
             contactNumber.value.value = benCache.contactNumber.toString()
             relationToHead.value.value = relationToHeadListDefault[benCache.familyHeadRelationPosition-1]
-            community.value.value = community.list?.get(benCache.communityId -1)
-            religion.value.value = religion.list?.get(benCache.religionId -1)
+            community.value.value = community.entries?.get(benCache.communityId -1)
+            religion.value.value = religion.entries?.get(benCache.religionId -1)
             otherReligion.value.value = benCache.religionOthers
             childRegisteredAtAwc.value.value =
-                benCache.kidDetails?.childRegisteredAWCId?.takeIf{it>0}?.let{ childRegisteredAtAwc.list?.get(it-1) }
+                benCache.kidDetails?.childRegisteredAWCId?.takeIf{it>0}?.let{ childRegisteredAtAwc.entries?.get(it-1) }
             childRegisteredAtSchool.value.value =
-                benCache.kidDetails?.childRegisteredSchoolId?.takeIf{it>0}?.let { childRegisteredAtSchool.list?.get(it-1) }
+                benCache.kidDetails?.childRegisteredSchoolId?.takeIf{it>0}?.let { childRegisteredAtSchool.entries?.get(it-1) }
             typeOfSchool.value.value =
-                benCache.kidDetails?.typeOfSchoolId?.takeIf{it>0}?.let { typeOfSchool.list?.get(it-1) }
+                benCache.kidDetails?.typeOfSchoolId?.takeIf{it>0}?.let { typeOfSchool.entries?.get(it-1) }
             rchId.value.value = benCache.rchId
         }
         otherRelationToHead.value.value?.let {  viewList.add(viewList.indexOf(relationToHead)+1,otherRelationToHead) }
@@ -383,7 +383,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     val placeOfBirth = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_pob),
-        list = arrayOf(
+        entries = arrayOf(
             "Home",
             "Health Facility",
             "Any other Place"
@@ -393,7 +393,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     val facility = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_facility),
-        list = arrayOf(
+        entries = arrayOf(
             "Sub Centre",
             "PHC",
             "CHC",
@@ -420,7 +420,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     val whoConductedDelivery = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_who_cond_del),
-        list = arrayOf(
+        entries = arrayOf(
             "ANM",
             "LHV",
             "Doctor",
@@ -548,14 +548,14 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     val motherUnselected  = FormInput(
         inputType = CHECKBOXES,
         title = "Mother Unselected",
-        list = arrayOf("Yes"),
+        entries = arrayOf("Yes"),
         orientation = LinearLayout.HORIZONTAL,
         required = false
     )
     val motherOfChild = FormInput(
         inputType = DROPDOWN,
         title = "Mother of the child",
-        list = pncMotherList?.toTypedArray(),
+        entries = pncMotherList?.toTypedArray(),
         required = true
     )
 
@@ -627,22 +627,22 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
 
         ben?.let{ benCache->
             placeOfBirth.value.value =
-                benCache.kidDetails?.birthPlaceId?.takeIf{it>0}?.let { placeOfBirth.list?.get(it-1) }
-            facility.value.value = benCache.kidDetails?.facilityId?.takeIf{it>0}?.let { facility.list?.get(it-1) }
+                benCache.kidDetails?.birthPlaceId?.takeIf{it>0}?.let { placeOfBirth.entries?.get(it-1) }
+            facility.value.value = benCache.kidDetails?.facilityId?.takeIf{it>0}?.let { facility.entries?.get(it-1) }
             otherFacility.value.value = benCache.kidDetails?.facilityOther
             otherPlaceOfBirth.value.value = benCache.kidDetails?.placeName
-            whoConductedDelivery.value.value = benCache.kidDetails?.conductedDeliveryId?.takeIf { it>0 }?.let { whoConductedDelivery.list?.get(it-1) }
+            whoConductedDelivery.value.value = benCache.kidDetails?.conductedDeliveryId?.takeIf { it>0 }?.let { whoConductedDelivery.entries?.get(it-1) }
             otherWhoConductedDelivery.value.value = benCache.kidDetails?.conductedDeliveryOther
-            typeOfDelivery.value.value = benCache.kidDetails?.deliveryTypeId?.takeIf { it>0 }?.let { typeOfDelivery.list?.get(it-1) }
-            complicationsDuringDelivery.value.value = benCache.kidDetails?.complicationsId?.takeIf { it>0 }?.let { complicationsDuringDelivery.list?.get(it-1) }
-            breastFeedWithin1Hr.value.value = benCache.kidDetails?.feedingStartedId?.takeIf { it>0 }?.let { breastFeedWithin1Hr.list?.get(it-1) }
-            birthDose.value.value = benCache.kidDetails?.birthDosageId?.takeIf { it>0 }?.let { birthDose.list?.get(it-1) }
+            typeOfDelivery.value.value = benCache.kidDetails?.deliveryTypeId?.takeIf { it>0 }?.let { typeOfDelivery.entries?.get(it-1) }
+            complicationsDuringDelivery.value.value = benCache.kidDetails?.complicationsId?.takeIf { it>0 }?.let { complicationsDuringDelivery.entries?.get(it-1) }
+            breastFeedWithin1Hr.value.value = benCache.kidDetails?.feedingStartedId?.takeIf { it>0 }?.let { breastFeedWithin1Hr.entries?.get(it-1) }
+            birthDose.value.value = benCache.kidDetails?.birthDosageId?.takeIf { it>0 }?.let { birthDose.entries?.get(it-1) }
             birthDoseGiven.value.value = "${if(benCache.kidDetails?.birthBCG==true) "BCG" else ""}${if(benCache.kidDetails?.birthHepB==true) "Hepatitis" else ""}${if(benCache.kidDetails?.birthOPV==true) "OPV" else ""}"
-            term.value.value = benCache.kidDetails?.termId?.takeIf { it>0 }?.let { term.list?.get(it-1) }
-            termGestationalAge.value.value = benCache.kidDetails?.gestationalAgeId?.takeIf { it>0 }?.let { termGestationalAge.list?.get(it-1) }
-            corticosteroidGivenAtLabor.value.value = benCache.kidDetails?.corticosteroidGivenMotherId?.takeIf { it>0 }?.let { corticosteroidGivenAtLabor.list?.get(it-1) }
-            babyCriedImmediatelyAfterBirth.value.value = benCache.kidDetails?.criedImmediatelyId?.takeIf { it>0 }?.let { babyCriedImmediatelyAfterBirth.list?.get(it-1) }
-            anyDefectAtBirth.value.value = benCache.kidDetails?.birthDefectsId?.takeIf { it>0 }?.let { anyDefectAtBirth.list?.get(it-1) }
+            term.value.value = benCache.kidDetails?.termId?.takeIf { it>0 }?.let { term.entries?.get(it-1) }
+            termGestationalAge.value.value = benCache.kidDetails?.gestationalAgeId?.takeIf { it>0 }?.let { termGestationalAge.entries?.get(it-1) }
+            corticosteroidGivenAtLabor.value.value = benCache.kidDetails?.corticosteroidGivenMotherId?.takeIf { it>0 }?.let { corticosteroidGivenAtLabor.entries?.get(it-1) }
+            babyCriedImmediatelyAfterBirth.value.value = benCache.kidDetails?.criedImmediatelyId?.takeIf { it>0 }?.let { babyCriedImmediatelyAfterBirth.entries?.get(it-1) }
+            anyDefectAtBirth.value.value = benCache.kidDetails?.birthDefectsId?.takeIf { it>0 }?.let { anyDefectAtBirth.entries?.get(it-1) }
             motherOfChild.value.value = benCache.kidDetails?.childMotherName
             babyHeight.value.value = benCache.kidDetails?.heightAtBirth?.toString()
             babyWeight.value.value = benCache.kidDetails?.weightAtBirth?.toString()
@@ -728,32 +728,32 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
             familyHeadRelationOther = this@BenKidRegFormDataset.otherRelationToHead.value.value
             mobileNoOfRelation = this@BenKidRegFormDataset.mobileNoOfRelation.value.value
             mobileNoOfRelationId =
-                (this@BenKidRegFormDataset.mobileNoOfRelation.list?.indexOf(mobileNoOfRelation!!))?.let { it + 1 }
+                (this@BenKidRegFormDataset.mobileNoOfRelation.entries?.indexOf(mobileNoOfRelation!!))?.let { it + 1 }
                     ?: 0
             contactNumber = stringToLong(this@BenKidRegFormDataset.contactNumber.value.value!!)
             community = this@BenKidRegFormDataset.community.value.value
             communityId =
-                (this@BenKidRegFormDataset.community.list?.indexOf(community!!))?.let { it + 1 }
+                (this@BenKidRegFormDataset.community.entries?.indexOf(community!!))?.let { it + 1 }
                     ?: 0
 
             religion = this@BenKidRegFormDataset.religion.value.value
             religionId =
-                (this@BenKidRegFormDataset.religion.list?.indexOf(religion!!))?.let { it + 1 } ?: 0
+                (this@BenKidRegFormDataset.religion.entries?.indexOf(religion!!))?.let { it + 1 } ?: 0
 
             religionOthers = this@BenKidRegFormDataset.otherReligion.value.value
             kidDetails?.childRegisteredAWC =
                 this@BenKidRegFormDataset.childRegisteredAtAwc.value.value
             kidDetails?.childRegisteredAWCId =
-                this@BenKidRegFormDataset.childRegisteredAtAwc.list?.indexOf(kidDetails?.childRegisteredAWC)
+                this@BenKidRegFormDataset.childRegisteredAtAwc.entries?.indexOf(kidDetails?.childRegisteredAWC)
                     ?.let { it + 1 } ?: 0
             kidDetails?.childRegisteredSchool =
                 this@BenKidRegFormDataset.childRegisteredAtSchool.value.value
             kidDetails?.childRegisteredSchoolId =
-                this@BenKidRegFormDataset.childRegisteredAtSchool.list?.indexOf(kidDetails?.childRegisteredSchool)
+                this@BenKidRegFormDataset.childRegisteredAtSchool.entries?.indexOf(kidDetails?.childRegisteredSchool)
                     ?.let { it + 1 } ?: 0
             kidDetails?.typeOfSchool = this@BenKidRegFormDataset.typeOfSchool.value.value
             kidDetails?.typeOfSchoolId =
-                this@BenKidRegFormDataset.typeOfSchool.list?.indexOf(kidDetails?.typeOfSchool)
+                this@BenKidRegFormDataset.typeOfSchool.entries?.indexOf(kidDetails?.typeOfSchool)
                     ?.let { it + 1 } ?: 0
             rchId = this@BenKidRegFormDataset.rchId.value.value
         }
@@ -770,31 +770,31 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         ben?.apply {
             kidDetails?.birthPlace = this@BenKidRegFormDataset.placeOfBirth.value.value
             kidDetails?.birthPlaceId =
-                this@BenKidRegFormDataset.placeOfBirth.list?.indexOf(kidDetails?.birthPlace)
+                this@BenKidRegFormDataset.placeOfBirth.entries?.indexOf(kidDetails?.birthPlace)
                     ?.let { it + 1 } ?: 0
             kidDetails?.conductedDelivery =
                 this@BenKidRegFormDataset.whoConductedDelivery.value.value
             kidDetails?.conductedDeliveryId =
-                this@BenKidRegFormDataset.whoConductedDelivery.list?.indexOf(kidDetails?.conductedDelivery)
+                this@BenKidRegFormDataset.whoConductedDelivery.entries?.indexOf(kidDetails?.conductedDelivery)
                     ?.let { it + 1 } ?: 0
             kidDetails?.conductedDeliveryOther =
                 this@BenKidRegFormDataset.otherWhoConductedDelivery.value.value
             kidDetails?.deliveryType = this@BenKidRegFormDataset.typeOfDelivery.value.value
             kidDetails?.deliveryTypeId =
-                this@BenKidRegFormDataset.typeOfDelivery.list?.indexOf(kidDetails?.deliveryType)
+                this@BenKidRegFormDataset.typeOfDelivery.entries?.indexOf(kidDetails?.deliveryType)
                     ?.let { it + 1 } ?: 0
             kidDetails?.complications =
                 this@BenKidRegFormDataset.complicationsDuringDelivery.value.value
             kidDetails?.complicationsId =
-                this@BenKidRegFormDataset.complicationsDuringDelivery.list?.indexOf(kidDetails?.complications)
+                this@BenKidRegFormDataset.complicationsDuringDelivery.entries?.indexOf(kidDetails?.complications)
                     ?.let { it + 1 } ?: 0
             kidDetails?.feedingStarted = this@BenKidRegFormDataset.breastFeedWithin1Hr.value.value
             kidDetails?.feedingStartedId =
-                this@BenKidRegFormDataset.breastFeedWithin1Hr.list?.indexOf(kidDetails?.feedingStarted)
+                this@BenKidRegFormDataset.breastFeedWithin1Hr.entries?.indexOf(kidDetails?.feedingStarted)
                     ?.let { it + 1 } ?: 0
             kidDetails?.birthDosage = this@BenKidRegFormDataset.birthDose.value.value
             kidDetails?.birthDosageId =
-                this@BenKidRegFormDataset.birthDose.list?.indexOf(kidDetails?.birthDosage)
+                this@BenKidRegFormDataset.birthDose.entries?.indexOf(kidDetails?.birthDosage)
                     ?.let { it + 1 } ?: 0
             kidDetails?.birthBCG =
                 this@BenKidRegFormDataset.birthDoseGiven.value.value?.contains("BCG") ?: false
@@ -803,25 +803,25 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
             kidDetails?.birthOPV =
                 this@BenKidRegFormDataset.birthDoseGiven.value.value?.contains("OPV") ?: false
             kidDetails?.term = this@BenKidRegFormDataset.term.value.value
-            kidDetails?.termId = this@BenKidRegFormDataset.term.list?.indexOf(kidDetails?.term)
+            kidDetails?.termId = this@BenKidRegFormDataset.term.entries?.indexOf(kidDetails?.term)
                 ?.let { it + 1 } ?: 0
             kidDetails?.gestationalAge = this@BenKidRegFormDataset.termGestationalAge.value.value
             kidDetails?.gestationalAgeId =
-                this@BenKidRegFormDataset.termGestationalAge.list?.indexOf(kidDetails?.gestationalAge)
+                this@BenKidRegFormDataset.termGestationalAge.entries?.indexOf(kidDetails?.gestationalAge)
                     ?.let { it + 1 } ?: 0
             kidDetails?.corticosteroidGivenMother =
                 this@BenKidRegFormDataset.corticosteroidGivenAtLabor.value.value
             kidDetails?.corticosteroidGivenMotherId =
-                this@BenKidRegFormDataset.corticosteroidGivenAtLabor.list?.indexOf(kidDetails?.corticosteroidGivenMother)
+                this@BenKidRegFormDataset.corticosteroidGivenAtLabor.entries?.indexOf(kidDetails?.corticosteroidGivenMother)
                     ?.let { it + 1 } ?: 0
             kidDetails?.criedImmediately =
                 this@BenKidRegFormDataset.babyCriedImmediatelyAfterBirth.value.value
             kidDetails?.criedImmediatelyId =
-                this@BenKidRegFormDataset.babyCriedImmediatelyAfterBirth.list?.indexOf(kidDetails?.criedImmediately)
+                this@BenKidRegFormDataset.babyCriedImmediatelyAfterBirth.entries?.indexOf(kidDetails?.criedImmediately)
                     ?.let { it + 1 } ?: 0
             kidDetails?.birthDefects = this@BenKidRegFormDataset.anyDefectAtBirth.value.value
             kidDetails?.birthDefectsId =
-                this@BenKidRegFormDataset.anyDefectAtBirth.list?.indexOf(kidDetails?.birthDefects)
+                this@BenKidRegFormDataset.anyDefectAtBirth.entries?.indexOf(kidDetails?.birthDefects)
                     ?.let { it + 1 } ?: 0
             kidDetails?.heightAtBirth =
                 this@BenKidRegFormDataset.babyHeight.value.value?.toDouble() ?: 0.0

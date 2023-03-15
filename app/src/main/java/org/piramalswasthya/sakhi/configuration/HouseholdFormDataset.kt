@@ -123,7 +123,7 @@ class HouseholdFormDataset(context: Context) {
     private val povertyLine = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = context.getString(R.string.nhhr_poverty_line),
-        list = context.resources.getStringArray(R.array.nhhr_poverty_line_array),
+        entries = context.resources.getStringArray(R.array.nhhr_poverty_line_array),
         required = true
     )
     val firstPage by lazy {
@@ -144,7 +144,7 @@ class HouseholdFormDataset(context: Context) {
     val residentialArea = FormInput(
         inputType = FormInput.InputType.DROPDOWN,
         title = context.getString(R.string.nhhr_type_residential_area),
-        list = context.resources.getStringArray(R.array.nhhr_type_residential_area_array),
+        entries = context.resources.getStringArray(R.array.nhhr_type_residential_area_array),
         required = false
     )
 
@@ -159,13 +159,13 @@ class HouseholdFormDataset(context: Context) {
     private val typeOfHouse = FormInput(
         inputType = FormInput.InputType.DROPDOWN,
         title = context.getString(R.string.nhhr_type_of_house),
-        list = context.resources.getStringArray(R.array.nhhr_type_of_house_array),
+        entries = context.resources.getStringArray(R.array.nhhr_type_of_house_array),
         required = true
     )
     private val houseOwnership = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = context.getString(R.string.nhhr_house_own),
-        list = context.resources.getStringArray(R.array.nhhr_house_own_array),
+        entries = context.resources.getStringArray(R.array.nhhr_house_own_array),
         required = true
     )
     val secondPage by lazy {
@@ -181,14 +181,14 @@ class HouseholdFormDataset(context: Context) {
     private val separateKitchen = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = context.getString(R.string.nhhr_separate_kitchen),
-        list = context.resources.getStringArray(R.array.nhhr_separate_kitchen_array),
+        entries = context.resources.getStringArray(R.array.nhhr_separate_kitchen_array),
         required = true
     )
 
     private val fuelForCooking = FormInput(
         inputType = FormInput.InputType.DROPDOWN,
         title = context.getString(R.string.nhhr_fuel_cooking),
-        list = context.resources.getStringArray(R.array.nhhr_fuel_cooking_array),
+        entries = context.resources.getStringArray(R.array.nhhr_fuel_cooking_array),
         required = true,
     )
     val fuelForCookingTrigger: FormInput
@@ -206,7 +206,7 @@ class HouseholdFormDataset(context: Context) {
     private val sourceOfWater = FormInput(
         inputType = FormInput.InputType.DROPDOWN,
         title = context.getString(R.string.nhhr_primary_water),
-        list = context.resources.getStringArray(R.array.nhhr_primary_water_array),
+        entries = context.resources.getStringArray(R.array.nhhr_primary_water_array),
         required = true,
     )
 
@@ -225,7 +225,7 @@ class HouseholdFormDataset(context: Context) {
     private val sourceOfElectricity = FormInput(
         inputType = FormInput.InputType.DROPDOWN,
         title = context.getString(R.string.nhhr_avail_electricity),
-        list = context.resources.getStringArray(R.array.nhhr_avail_electricity_array),
+        entries = context.resources.getStringArray(R.array.nhhr_avail_electricity_array),
         required = true
     )
     val sourceOfElectricityTrigger: FormInput
@@ -242,7 +242,7 @@ class HouseholdFormDataset(context: Context) {
     private val availOfToilet = FormInput(
         inputType = FormInput.InputType.DROPDOWN,
         title = context.getString(R.string.nhhr_avail_toilet),
-        list = context.resources.getStringArray(R.array.nhhr_avail_toilet_array),
+        entries = context.resources.getStringArray(R.array.nhhr_avail_toilet_array),
         required = true,
     )
 
@@ -286,7 +286,7 @@ class HouseholdFormDataset(context: Context) {
             mohallaName = this@HouseholdFormDataset.mohallaName.value.value
             val povertyLineLocal = this@HouseholdFormDataset.povertyLine.value.value
             povertyLineId =
-                this@HouseholdFormDataset.povertyLine.list?.indexOf(povertyLineLocal)
+                this@HouseholdFormDataset.povertyLine.entries?.indexOf(povertyLineLocal)
                     ?.let { it + 1 }
                     ?: 0
             povertyLine =
@@ -300,15 +300,15 @@ class HouseholdFormDataset(context: Context) {
         household?.apply {
             residentialArea = this@HouseholdFormDataset.residentialArea.value.value
             residentialAreaId =
-                this@HouseholdFormDataset.residentialArea.list?.indexOf(residentialArea)
+                this@HouseholdFormDataset.residentialArea.entries?.indexOf(residentialArea)
                     ?.let { it + 1 } ?: 0
             otherResidentialArea = this@HouseholdFormDataset.otherResidentialArea.value.value
             houseType = this@HouseholdFormDataset.typeOfHouse.value.value
             houseTypeId =
-                this@HouseholdFormDataset.typeOfHouse.list?.indexOf(houseType)?.let { it + 1 } ?: 0
+                this@HouseholdFormDataset.typeOfHouse.entries?.indexOf(houseType)?.let { it + 1 } ?: 0
             isHouseOwned = this@HouseholdFormDataset.houseOwnership.value.value
             isHouseOwnedId =
-                this@HouseholdFormDataset.houseOwnership.list?.indexOf(isHouseOwned)?.let { it + 1 }
+                this@HouseholdFormDataset.houseOwnership.entries?.indexOf(isHouseOwned)?.let { it + 1 }
                     ?: 0
         }
 
@@ -319,28 +319,28 @@ class HouseholdFormDataset(context: Context) {
         household?.apply {
             separateKitchen = this@HouseholdFormDataset.separateKitchen.value.value
             separateKitchenId =
-                this@HouseholdFormDataset.separateKitchen.list?.indexOf(separateKitchen)
+                this@HouseholdFormDataset.separateKitchen.entries?.indexOf(separateKitchen)
                     ?.let { it + 1 } ?: 0
             fuelUsed = this@HouseholdFormDataset.fuelForCooking.value.value
             fuelUsedId =
-                this@HouseholdFormDataset.fuelForCooking.list?.indexOf(fuelUsed)?.let { it + 1 }
+                this@HouseholdFormDataset.fuelForCooking.entries?.indexOf(fuelUsed)?.let { it + 1 }
                     ?: 0
             otherFuelUsed = this@HouseholdFormDataset.otherFuelForCooking.value.value
             sourceOfDrinkingWater = this@HouseholdFormDataset.sourceOfWater.value.value
             sourceOfDrinkingWaterId =
-                this@HouseholdFormDataset.sourceOfWater.list?.indexOf(sourceOfDrinkingWater)
+                this@HouseholdFormDataset.sourceOfWater.entries?.indexOf(sourceOfDrinkingWater)
                     ?.let { it + 1 } ?: 0
             otherSourceOfDrinkingWater = this@HouseholdFormDataset.otherSourceOfWater.value.value
             availabilityOfElectricity = this@HouseholdFormDataset.sourceOfElectricity.value.value
             availabilityOfElectricityId =
-                this@HouseholdFormDataset.sourceOfElectricity.list?.indexOf(
+                this@HouseholdFormDataset.sourceOfElectricity.entries?.indexOf(
                     availabilityOfElectricity
                 )?.let { it + 1 } ?: 0
             otherAvailabilityOfElectricity =
                 this@HouseholdFormDataset.otherSourceOfElectricity.value.value
             availabilityOfToilet = this@HouseholdFormDataset.availOfToilet.value.value
             availabilityOfToiletId =
-                this@HouseholdFormDataset.availOfToilet.list?.indexOf(availabilityOfToilet)
+                this@HouseholdFormDataset.availOfToilet.entries?.indexOf(availabilityOfToilet)
                     ?.let { it + 1 } ?: 0
             otherAvailabilityOfToilet = this@HouseholdFormDataset.otherAvailOfToilet.value.value
 

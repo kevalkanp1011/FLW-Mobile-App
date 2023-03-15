@@ -130,22 +130,22 @@ class NewBenRegG15ViewModel @Inject constructor(
                     it?.let {
                         when (it) {
                             "Male" -> {
-                                form.relationToHead.list = form.relationToHeadListMale
-                                form.maritalStatus.list = form.maritalStatusMale
+                                form.relationToHead.entries = form.relationToHeadListMale
+                                form.maritalStatus.entries = form.maritalStatusMale
 
                             }
                             "Female" -> {
-                                form.relationToHead.list = form.relationToHeadListFemale
-                                form.maritalStatus.list = form.maritalStatusFemale
+                                form.relationToHead.entries = form.relationToHeadListFemale
+                                form.maritalStatus.entries = form.maritalStatusFemale
                             }
                             else -> {
-                                form.relationToHead.list = form.relationToHeadListDefault
-                                form.maritalStatus.list = form.maritalStatusMale
+                                form.relationToHead.entries = form.relationToHeadListDefault
+                                form.maritalStatus.entries = form.maritalStatusMale
                             }
                         }
 //                        val currentValue = form.relationToHead.value.value
 //                        if(currentValue!=null
-//                            && form.relationToHead.list?.contains(currentValue) == false
+//                            && form.relationToHead.entries?.contains(currentValue) == false
 //                        )
 
                         form.relationToHead.value.value = null
@@ -444,7 +444,7 @@ class NewBenRegG15ViewModel @Inject constructor(
                                 form.lastMenstrualPeriod.required = false
                                 if (adapter.currentList.contains(form.lastMenstrualPeriod))
                                     adapter.notifyItemChanged(adapter.currentList.indexOf(form.lastMenstrualPeriod))
-                                Timber.d("list : ${form.thirdPage}")
+                                Timber.d("entries : ${form.thirdPage}")
                             }
                             "Antenatal Mother",
                             "Delivery Stage" -> {

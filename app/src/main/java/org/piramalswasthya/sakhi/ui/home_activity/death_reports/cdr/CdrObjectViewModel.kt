@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
-import org.piramalswasthya.sakhi.configuration.ChildDeathReviewFormDataset
+import org.piramalswasthya.sakhi.configuration.CDRFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.repositories.BenRepo
@@ -55,7 +55,7 @@ class CdrObjectViewModel @Inject constructor(
     val exists: LiveData<Boolean>
         get() = _exists
 
-    private val dataset = ChildDeathReviewFormDataset(context)
+    private val dataset = CDRFormDataset(context)
 
     private fun toggleFieldOnTrigger(
         causeField: FormInput,

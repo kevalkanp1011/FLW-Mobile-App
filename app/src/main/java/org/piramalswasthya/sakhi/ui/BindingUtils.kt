@@ -1,10 +1,8 @@
 package org.piramalswasthya.sakhi.ui
 
-import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Build
 import android.text.InputType
-import android.view.Gravity
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
@@ -12,10 +10,8 @@ import android.view.animation.RotateAnimation
 import android.widget.*
 import android.widget.RadioGroup.LayoutParams
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.children
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.room.SyncState
@@ -24,8 +20,8 @@ import timber.log.Timber
 
 
 //@BindingAdapter("listItems")
-//fun AutoCompleteTextView.setSpinnerItems(list: List<String>?) {
-//    list?.let {
+//fun AutoCompleteTextView.setSpinnerItems(entries: List<String>?) {
+//    entries?.let {
 //        this.setAdapter(ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, it))
 //    }
 //}
@@ -53,7 +49,7 @@ fun ConstraintLayout.setItems(form: FormInput?) {
 //    val rg = this.findViewById<RadioGroup>(R.id.rg)
 //    rg.removeAllViews()
 //    rg.apply {
-//        form?.list?.let { items ->
+//        form?.entries?.let { items ->
 //            orientation = form.orientation ?: LinearLayout.HORIZONTAL
 //            weightSum = items.size.toFloat()
 //            items.forEach {
@@ -95,7 +91,7 @@ fun ConstraintLayout.setItemsCheckBox(form: FormInput?) {
     val ll = this.findViewById<LinearLayout>(R.id.ll_checks)
     ll.removeAllViews()
     ll.apply{
-        form?.list?.let { items ->
+        form?.entries?.let { items ->
             orientation = form.orientation ?: LinearLayout.VERTICAL
             weightSum = items.size.toFloat()
             items.forEach {

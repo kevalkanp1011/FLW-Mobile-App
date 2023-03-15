@@ -23,7 +23,6 @@ import org.piramalswasthya.sakhi.configuration.FormEditTextDefaultInputFilter
 import org.piramalswasthya.sakhi.databinding.*
 import org.piramalswasthya.sakhi.model.FormInput
 import org.piramalswasthya.sakhi.model.FormInput.InputType.*
-import org.piramalswasthya.sakhi.ui.setItems
 import timber.log.Timber
 import java.util.*
 
@@ -204,7 +203,7 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
             binding.form = item
 
             binding.actvRvDropdown.setOnItemClickListener { _, _, index, _ ->
-                item.value.value = item.list?.get(index)
+                item.value.value = item.entries?.get(index)
                 Timber.d("Item DD : $item")
                 item.errorText = null
                 binding.tilRvDropdown.error = null
@@ -238,7 +237,7 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
 
             binding.rg.removeAllViews()
             binding.rg.apply {
-                item.list?.let { items ->
+                item.entries?.let { items ->
                     orientation = item.orientation ?: LinearLayout.HORIZONTAL
                     weightSum = items.size.toFloat()
                     items.forEach {
@@ -385,7 +384,6 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
             binding.form = item
             binding.et.isEnabled = isEnabled
             binding.et.setOnClickListener {
-                    // TODO Auto-generated method stub
                 val hour: Int
                 val minute: Int
                 if(item.value.value==null) {
@@ -456,6 +454,26 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
         }
     }
 
+
+    class HeadlineViewHolder private constructor(private val binding: RvItemHeadlineBinding) :
+        ViewHolder(binding.root) {
+        companion object {
+            fun from(parent: ViewGroup): ViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = RvItemHeadlineBinding.inflate(layoutInflater, parent, false)
+                return HeadlineViewHolder(binding)
+            }
+        }
+
+        fun bind(
+            item: FormInput,
+        ) {
+            binding.form = item
+            binding.executePendingBindings()
+
+        }
+    }
+
     class ImageClickListener(private val imageClick: (form: FormInput) -> Unit) {
 
         fun onImageClick(form: FormInput) = imageClick(form)
@@ -474,6 +492,7 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
             IMAGE_VIEW -> ImageViewInputViewHolder.from(parent)
             CHECKBOXES -> CheckBoxesInputViewHolder.from(parent)
             TIME_PICKER -> TimePickerInputViewHolder.from(parent)
+            HEADLINE -> HeadlineViewHolder.from(parent)
         }
     }
 
@@ -488,6 +507,7 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
             IMAGE_VIEW -> (holder as ImageViewInputViewHolder).bind(item, imageClickListener, isEnabled)
             CHECKBOXES -> (holder as CheckBoxesInputViewHolder).bind(item)
             TIME_PICKER -> (holder as TimePickerInputViewHolder).bind(item, isEnabled)
+            HEADLINE -> (holder as HeadlineViewHolder).bind(item)
         }
     }
 

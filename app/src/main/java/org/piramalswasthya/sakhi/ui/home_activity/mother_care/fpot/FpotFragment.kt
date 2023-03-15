@@ -43,14 +43,14 @@ class FpotFragment : Fragment() {
         viewModel.benAgeGender.observe(viewLifecycleOwner) {
             binding.tvAgeGender.text = it
         }
-        binding.btnFpotSubmit.setOnClickListener {
+        binding.btnHbncSubmit.setOnClickListener {
             if (validate()) viewModel.submitForm()
         }
         viewModel.exists.observe(viewLifecycleOwner) {exists ->
             val adapter = FormInputAdapter(isEnabled = !exists)
-            binding.fpotForm.rvInputForm.adapter = adapter
+            binding.hbncForm.rvInputForm.adapter = adapter
             if (exists) {
-                binding.btnFpotSubmit.visibility = View.GONE
+                binding.btnHbncSubmit.visibility = View.GONE
                 viewModel.setExistingValues()
             }
             else {
@@ -66,20 +66,20 @@ class FpotFragment : Fragment() {
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
                 FpotViewModel.State.LOADING -> {
-                    binding.fpotForm.rvInputForm.visibility = View.GONE
-                    binding.btnFpotSubmit.visibility = View.GONE
+                    binding.hbncForm.rvInputForm.visibility = View.GONE
+                    binding.btnHbncSubmit.visibility = View.GONE
                     binding.cvPatientInformation.visibility = View.GONE
-                    binding.pbFpot.visibility = View.VISIBLE
+                    binding.pbHbnc.visibility = View.VISIBLE
                 }
                 FpotViewModel.State.SUCCESS -> {
                     findNavController().navigateUp()
                     WorkerUtils.triggerD2dSyncWorker(requireContext())
                 }
                 FpotViewModel.State.FAIL -> {
-                    binding.fpotForm.rvInputForm.visibility = View.VISIBLE
-                    binding.btnFpotSubmit.visibility = View.VISIBLE
+                    binding.hbncForm.rvInputForm.visibility = View.VISIBLE
+                    binding.btnHbncSubmit.visibility = View.VISIBLE
                     binding.cvPatientInformation.visibility = View.VISIBLE
-                    binding.pbFpot.visibility = View.GONE
+                    binding.pbHbnc.visibility = View.GONE
                     Toast.makeText(
                         context,
                         "Saving Mdsr to database Failed!",
@@ -87,11 +87,12 @@ class FpotFragment : Fragment() {
                     ).show()
                 }
                 else -> {
-                    binding.fpotForm.rvInputForm.visibility = View.VISIBLE
-                    binding.btnFpotSubmit.visibility = View.VISIBLE
+                    binding.hbncForm.rvInputForm.visibility = View.VISIBLE
+                    binding.btnHbncSubmit.visibility = View.VISIBLE
                     binding.cvPatientInformation.visibility = View.VISIBLE
-                    binding.pbFpot.visibility = View.GONE
+                    binding.pbHbnc.visibility = View.GONE
                 }
+
             }
         }
     }
