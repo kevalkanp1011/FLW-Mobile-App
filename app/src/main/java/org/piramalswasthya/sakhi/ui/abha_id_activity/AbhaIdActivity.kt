@@ -1,13 +1,12 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity
 
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.ActivityAbhaIdBinding
@@ -22,8 +21,6 @@ class AbhaIdActivity : AppCompatActivity() {
     private val binding: ActivityAbhaIdBinding
         get() = _binding!!
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
-
     private val mainViewModel: AbhaIdViewModel by viewModels()
     private val navController by lazy {
         val navHostFragment: NavHostFragment =
@@ -33,6 +30,7 @@ class AbhaIdActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Timber.d("onCreate Called")
         _binding = ActivityAbhaIdBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setUpActionBar()
@@ -72,27 +70,34 @@ class AbhaIdActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        Timber.d("On up pressed")
-        return navController.navigateUp() || super.onSupportNavigateUp()
+        return when (navController.currentDestination?.id) {
+            R.id.generateMobileOtpFragment, R.id.createAbhaFragment -> {
+                exitAlert.show()
+                true
+            }
+            else -> navController.navigateUp() || super.onSupportNavigateUp()
+        }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Timber.d("On up pressed")
-//        when (item.itemId) {
-//            android.R.id.home -> {
-//                onBackPressed()
-//                return true
-//            }
-//        }
-        return super.onOptionsItemSelected(item)
+    private val exitAlert by lazy {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Exit")
+            .setMessage("Do you want to go back?")
+            .setPositiveButton("Yes") { _, _ ->
+                navController.popBackStack(R.id.aadhaarIdFragment, true)
+                navController.navigate(R.id.aadhaarIdFragment)
+            }
+            .setNegativeButton("No") { d, _ ->
+                d.dismiss()
+            }
+            .create()
     }
-
 
     private fun setUpActionBar() {
-        appBarConfiguration = AppBarConfiguration(navController.graph)
         setSupportActionBar(binding.toolbar)
-        NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration)
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+//        NavigationUI.setupWithNavController(binding.toolbar, navController)
+        NavigationUI.setupActionBarWithNavController(this, navController)
     }
 
     override fun onDestroy() {

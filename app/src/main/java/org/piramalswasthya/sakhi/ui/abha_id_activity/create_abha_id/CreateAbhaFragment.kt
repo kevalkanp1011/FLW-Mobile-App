@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentCreateAbhaBinding
@@ -21,11 +22,34 @@ class CreateAbhaFragment : Fragment() {
     private lateinit var navController: NavController
 
     private var _binding: FragmentCreateAbhaBinding? = null
-    private lateinit var callback: OnBackPressedCallback
 
     private val binding: FragmentCreateAbhaBinding
         get() = _binding!!
     private val viewModel: CreateAbhaViewModel by viewModels()
+
+    private val onBackPressedCallback by lazy {
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Handle back button press here
+                Timber.d("handleOnBackPressed")
+                exitAlert.show()
+            }
+        }
+    }
+
+    private val exitAlert by lazy {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Exit")
+            .setMessage("Do you want to go back?")
+            .setPositiveButton("Yes") { _, _ ->
+                navController.navigate(R.id.aadhaarIdFragment)
+            }
+            .setNegativeButton("No") { d, _ ->
+                d.dismiss()
+            }
+            .create()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,6 +58,7 @@ class CreateAbhaFragment : Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
@@ -41,14 +66,10 @@ class CreateAbhaFragment : Fragment() {
 
         navController = findNavController()
 
-        callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                // Handle back button press here
-                Timber.d("handleOnBackPressed")
-                navController.navigate(R.id.aadhaarIdFragment)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
@@ -88,6 +109,7 @@ class CreateAbhaFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        onBackPressedCallback.remove()
         _binding = null
     }
 }

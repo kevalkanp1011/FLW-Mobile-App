@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentGenerateMobileOtpBinding
@@ -24,9 +25,30 @@ class GenerateMobileOtpFragment : Fragment() {
     private val binding: FragmentGenerateMobileOtpBinding
         get() = _binding!!
 
-    private lateinit var callback: OnBackPressedCallback
-    private val viewModel: GenerateMobileOtpViewModel by viewModels()
+    private val onBackPressedCallback by lazy {
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Handle back button press here
+                Timber.d("handleOnBackPressed")
+                exitAlert.show()
+            }
+        }
+    }
 
+    private val exitAlert by lazy {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Exit")
+            .setMessage("Do you want to go back?")
+            .setPositiveButton("Yes") { _, _ ->
+                navController.navigate(R.id.aadhaarIdFragment)
+            }
+            .setNegativeButton("No") { d, _ ->
+                d.dismiss()
+            }
+            .create()
+    }
+
+    private val viewModel: GenerateMobileOtpViewModel by viewModels()
     private lateinit var navController: NavController
 
     override fun onCreateView(
@@ -42,17 +64,17 @@ class GenerateMobileOtpFragment : Fragment() {
         navController = findNavController()
         binding.lifecycleOwner = viewLifecycleOwner
 
-        callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                // Handle back button press here
-                Timber.d("handleOnBackPressed")
-                navController.navigate(R.id.aadhaarIdFragment)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
 
         binding.btnGenerateMobileOtp.setOnClickListener {
             viewModel.generateOtpClicked(binding.tietMobileNumber.text!!.toString())
+        }
+
+        binding.mobileNoInfo.setOnClickListener {
+            it.performLongClick()
         }
 
         binding.tietMobileNumber.addTextChangedListener(object : TextWatcher {
@@ -108,6 +130,7 @@ class GenerateMobileOtpFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        onBackPressedCallback.remove()
         _binding = null
     }
 }
