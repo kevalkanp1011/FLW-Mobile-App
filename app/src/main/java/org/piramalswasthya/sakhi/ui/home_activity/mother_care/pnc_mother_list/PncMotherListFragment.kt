@@ -45,13 +45,13 @@ class PncMotherListFragment : Fragment() {
                 {
                     Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
                 },
-                { hhId, benId ->
-                findNavController().navigate(
-                    PncMotherListFragmentDirections.actionPncMotherListFragmentToPmjayFragment(
-                        hhId,
-                        benId
-                    )
-                )
+                { _, _ ->
+//                findNavController().navigate(
+//                    PncMotherListFragmentDirections.actionPncMotherListFragmentToPmjayFragment(
+//                        hhId,
+//                        benId
+//                    )
+//                )
             }), "PMJAY Form")
         binding.rvAny.adapter = benAdapter
 
