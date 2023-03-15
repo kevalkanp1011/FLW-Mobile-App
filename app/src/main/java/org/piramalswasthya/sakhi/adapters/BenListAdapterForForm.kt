@@ -2,6 +2,7 @@ package org.piramalswasthya.sakhi.adapters
 
 import android.os.Build
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -11,7 +12,7 @@ import org.piramalswasthya.sakhi.databinding.RvItemBenWithFormBinding
 import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
 
 class BenListAdapterForForm(private val clickListener: ClickListener? = null,
-                            private val formButtonText: String) :
+                            private vararg val formButtonText: String) :
     ListAdapter<BenBasicDomainForForm, BenListAdapterForForm.BenViewHolder>
         (BenDiffUtilCallBack) {
     private object BenDiffUtilCallBack : DiffUtil.ItemCallback<BenBasicDomainForForm>() {
@@ -40,24 +41,48 @@ class BenListAdapterForForm(private val clickListener: ClickListener? = null,
         fun bind(
             item: BenBasicDomainForForm,
             clickListener: ClickListener?,
-            btnText: String,
+            vararg btnText: String,
         ) {
             binding.ben = item
             binding.clickListener = clickListener
-            binding.button2.text = btnText
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if(item.hasForm)
-                    binding.button2.setBackgroundColor(binding.root.resources.getColor(R.color.green, binding.root.context.theme))
-                else
-                    binding.button2.setBackgroundColor(binding.root.resources.getColor(R.color.red, binding.root.context.theme))
+            binding.btnForm1.text = btnText[0]
+            for(i in btnText.indices){
+                setFormButtonColor(i+1,item)
             }
-            else
-                if(item.hasForm)
-                    binding.button2.setBackgroundColor(binding.root.resources.getColor(R.color.green))
-                else
-                    binding.button2.setBackgroundColor(binding.root.resources.getColor(R.color.red))
             binding.executePendingBindings()
 
+        }
+
+        private fun setFormButtonColor(formNumber : Int,item: BenBasicDomainForForm) {
+            var hasForm: Boolean
+            val formButton = when(formNumber){
+                1-> binding.btnForm1.also { hasForm = item.hasForm1 }
+                2-> binding.btnForm2.also { hasForm = item.hasForm2 }
+                3 -> binding.btnForm3.also { hasForm = item.hasForm3 }
+                else -> throw IllegalStateException("FormNumber>3")
+            }
+            formButton.visibility = View.VISIBLE
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (hasForm)
+                    formButton.setBackgroundColor(
+                        binding.root.resources.getColor(
+                            R.color.green,
+                            binding.root.context.theme
+                        )
+                    )
+                else
+                    formButton.setBackgroundColor(
+                        binding.root.resources.getColor(
+                            R.color.red,
+                            binding.root.context.theme
+                        )
+                    )
+            } else
+                if (hasForm)
+                    formButton.setBackgroundColor(binding.root.resources.getColor(R.color.green))
+                else
+                    formButton.setBackgroundColor(binding.root.resources.getColor(R.color.red))
         }
     }
 
@@ -74,14 +99,15 @@ class BenListAdapterForForm(private val clickListener: ClickListener? = null,
 
     class ClickListener(
         private val clickedBen: (benId: Long) -> Unit,
-        private val clickedHousehold: (hhId: Long) -> Unit,
-        private val clickedSync: () -> Unit,
-        private val clickedButton: (hhId: Long, benId: Long) -> Unit
+        private val clickedForm1: (hhId: Long, benId: Long) -> Unit,
+        private val clickedForm2: ((hhId: Long, benId: Long) -> Unit)? = null,
+        private val clickedForm3: ((hhId: Long, benId: Long) -> Unit)? = null
+
     ) {
         fun onClickedBen(item: BenBasicDomainForForm) = clickedBen(item.benId)
-        fun onClickedHouseHold(item: BenBasicDomainForForm) = clickedHousehold(item.hhId)
-        fun onClickSync(item: BenBasicDomainForForm) = clickedSync()
-        fun onClickButton(item: BenBasicDomainForForm) = clickedButton(item.hhId, item.benId)
+        fun onClickForm1(item: BenBasicDomainForForm) = clickedForm1(item.hhId, item.benId)
+        fun onClickForm2(item: BenBasicDomainForForm) = clickedForm2?.let { it(item.hhId, item.benId) }
+        fun onClickForm3(item: BenBasicDomainForForm) = clickedForm3?.let { it(item.hhId, item.benId) }
     }
 
 }

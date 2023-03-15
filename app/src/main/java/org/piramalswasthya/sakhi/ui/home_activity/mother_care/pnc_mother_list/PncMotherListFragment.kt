@@ -13,14 +13,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
-import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
-import org.piramalswasthya.sakhi.ui.home_activity.death_reports.mdsr.MdsrListFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
-import org.piramalswasthya.sakhi.work.WorkerUtils
 
 @AndroidEntryPoint
 class PncMotherListFragment : Fragment() {
@@ -49,20 +45,14 @@ class PncMotherListFragment : Fragment() {
                 {
                     Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
                 },
-                {
-                    Toast.makeText(context, "Household : $it clicked", Toast.LENGTH_SHORT).show()
-                },
-                {
-
-                }
-            ) { hhId, benId ->
-//                findNavController().navigate(
-//                    PncMotherListFragmentDirections.actionPncMotherListFragmentToPmjayFragment(
-//                        hhId,
-//                        benId
-//                    )
-//                )
-            }, "PMJAY Form")
+                { hhId, benId ->
+                findNavController().navigate(
+                    PncMotherListFragmentDirections.actionPncMotherListFragmentToPmjayFragment(
+                        hhId,
+                        benId
+                    )
+                )
+            }), "PMJAY Form")
         binding.rvAny.adapter = benAdapter
 
         viewModel.benList.observe(viewLifecycleOwner) {

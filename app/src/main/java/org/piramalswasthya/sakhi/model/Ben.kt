@@ -1,6 +1,5 @@
 package org.piramalswasthya.sakhi.model
 
-import android.util.Base64
 import androidx.room.*
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -109,7 +108,7 @@ data class BenBasicCache(
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             syncState = syncState,
-            hasForm = hasCbac
+            hasForm1 = hasCbac
         )
     }
     fun asBenBasicDomainModelForCdrForm() : BenBasicDomainForForm {
@@ -128,7 +127,7 @@ data class BenBasicCache(
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             syncState = syncState,
-            hasForm = hasCdr
+            hasForm1 = hasCdr
         )
     }
     fun asBenBasicDomainModelForMdsrForm() : BenBasicDomainForForm {
@@ -147,7 +146,7 @@ data class BenBasicCache(
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             syncState = syncState,
-            hasForm = hasMdsr
+            hasForm1 = hasMdsr
         )
     }
     fun asBenBasicDomainModelForPmsmaForm() : BenBasicDomainForForm {
@@ -166,14 +165,14 @@ data class BenBasicCache(
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             syncState = syncState,
-            hasForm = hasPmsma
+            hasForm1 = hasPmsma
         )
     }
     fun asBasicDomainModelForPmjayForm() : BenBasicDomainForForm {
         return BenBasicDomainForForm (
             benId = benId,
             hhId = hhId,
-            regDate = dateFormat.format(Date(regDate!!)),
+            regDate = dateFormat.format(Date(regDate)),
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
@@ -185,7 +184,27 @@ data class BenBasicCache(
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             syncState = syncState,
-            hasForm = false
+            hasForm1 = false
+        )
+    }
+
+    fun asBenBasicDomainModelForHbncForm(): BenBasicDomainForForm {
+        return BenBasicDomainForForm (
+            benId = benId,
+            hhId = hhId,
+            regDate = dateFormat.format(Date(regDate)),
+            benName = benName,
+            benSurname = benSurname ?: "Not Available",
+            gender = gender.name,
+            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            mobileNo = mobileNo.toString(),
+            fatherName = fatherName,
+            familyHeadName = familyHeadName ?: "Not Available",
+            typeOfList = typeOfList.name,
+            rchId = rchId ?: "Not Available",
+            hrpStatus = hrpStatus,
+            syncState = syncState,
+            hasForm1 = false
         )
     }
     fun asBasicDomainModelForFpotForm() : BenBasicDomainForForm {
@@ -240,7 +259,9 @@ data class BenBasicDomainForForm(
     val typeOfList: String,
     val rchId: String,
     val hrpStatus: Boolean = false,
-    val hasForm : Boolean,
+    val hasForm1 : Boolean,
+    val hasForm2 : Boolean = false,
+    val hasForm3 : Boolean = false,
     var syncState: SyncState
 )
 

@@ -11,7 +11,7 @@ class HBYCFormDataset(context: Context, private val hbyc: HBYCCache? = null) {
         title = "Month",
         required = false
     )
-    private val subcenterName = FormInput(
+    private val subCenterName = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Subcenter name ",
         required = false
@@ -36,7 +36,7 @@ class HBYCFormDataset(context: Context, private val hbyc: HBYCCache? = null) {
         title = "Total number of children aged 3 to 15 months in village",
         required = false
     )
-    private val visitdate = FormInput(
+    private val visitDate = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
         title = "Visit Date",
         required = false
