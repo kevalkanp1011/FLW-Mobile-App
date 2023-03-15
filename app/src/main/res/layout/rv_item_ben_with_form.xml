@@ -67,13 +67,15 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="0104185765164225" />
 
+
+                <!--                android:onClick="@{()-> clickListener.onClickSync(ben)}"-->
                 <ImageView
                     android:id="@+id/iv_sync_state"
                     android:layout_width="24dp"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/tv_hh_id"
                     android:contentDescription="@string/iv_sync_state_tv"
-                    android:onClick="@{()-> clickListener.onClickSync(ben)}"
+
                     app:layout_constraintBottom_toBottomOf="@+id/tv_hh_id"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -183,17 +185,55 @@
                         app:fieldTitle="@{@string/tv_age_ph}" />
                 </LinearLayout>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button2"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/ll_btn_row"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ll_row_3"
-                    android:layout_alignParentEnd="true"
-                    android:textColor="?attr/colorSecondary"
-                    android:onClick="@{()-> clickListener.onClickButton(ben)}"
-                    tools:text="CBAC Form" />
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_form3"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_small"
+                        android:visibility="invisible"
+                        android:onClick="@{()-> clickListener.onClickForm3(ben)}"
+                        android:textColor="?attr/colorSecondary"
+                        tools:text="CBAC Form" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_form2"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_margin="@dimen/margin_small"
+                        android:visibility="invisible"
+                        android:onClick="@{()-> clickListener.onClickForm2(ben)}"
+                        android:textColor="?attr/colorSecondary"
+                        tools:text="CBAC Form" />
+
+
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_form1"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:onClick="@{()-> clickListener.onClickForm1(ben)}"
+                        android:layout_margin="@dimen/margin_small"
+                        android:visibility="invisible"
+                        android:textColor="?attr/colorSecondary"
+                        tools:text="CBAC Form" />
+
+
+                </LinearLayout>
             </RelativeLayout>
 
 

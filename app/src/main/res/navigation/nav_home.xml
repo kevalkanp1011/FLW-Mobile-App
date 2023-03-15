@@ -274,7 +274,11 @@
         android:id="@+id/infantListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.InfantListFragment"
         android:label="@string/child_care_icon_title_infant_list"
-        tools:layout="@layout/fragment_infant_list" />
+        tools:layout="@layout/fragment_infant_list" >
+        <action
+            android:id="@+id/action_infantListFragment_to_hbncFragment"
+            app:destination="@id/hbncFragment" />
+    </fragment>
     <fragment
         android:id="@+id/adolescentListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.child_care.adolescent_list.AdolescentListFragment"
@@ -482,6 +486,17 @@
         <action
             android:id="@+id/action_householdMembersFragment_to_newBenRegTypeFragment"
             app:destination="@id/newBenRegTypeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/hbncFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.HbncFragment"
+        android:label="HbncFragment" >
+        <argument
+            android:name="hhId"
+            app:argType="long" />
+        <argument
+            android:name="benId"
+            app:argType="long" />
     </fragment>
 
 </navigation>

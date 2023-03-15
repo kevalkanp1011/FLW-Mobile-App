@@ -10,12 +10,15 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
+import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
+import org.piramalswasthya.sakhi.ui.home_activity.death_reports.cdr.CdrListFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.work.WorkerUtils
 
@@ -40,21 +43,20 @@ class InfantListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapter(
-            BenListAdapter.BenClickListener(
-                { hhId, benId, isKid ->
-
-
-                },
+        val benAdapter = BenListAdapterForForm(
+            BenListAdapterForForm.ClickListener(
                 {
-
-                }
-            ))
+                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
+                },
+                { hhId, benId ->
+                    findNavController().navigate(
+                        InfantListFragmentDirections.actionInfantListFragmentToHbncFragment(hhId, benId)
+                    )
+                }), "HBNC Form")
         binding.rvAny.adapter = benAdapter
 
         viewModel.benList.observe(viewLifecycleOwner) {
-
-            if (it.isEmpty())
+            if (it.isNullOrEmpty())
                 binding.flEmpty.visibility = View.VISIBLE
             else
                 binding.flEmpty.visibility = View.GONE

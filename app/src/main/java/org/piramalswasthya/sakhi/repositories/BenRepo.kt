@@ -98,7 +98,7 @@ class BenRepo @Inject constructor(
     val infantList by lazy {
         //TODO(implement BenDao)
         Transformations.map(database.benDao.getAllInfantList()) { list ->
-            list.map { it.asBasicDomainModel() }
+            list.map { it.asBenBasicDomainModelForHbncForm() }
         }
     }
 

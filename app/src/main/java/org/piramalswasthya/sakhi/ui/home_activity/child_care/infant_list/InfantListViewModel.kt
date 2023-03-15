@@ -3,8 +3,10 @@ package org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.helpers.filterBenList
 import org.piramalswasthya.sakhi.model.BenBasicDomain
+import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import javax.inject.Inject
 
@@ -14,8 +16,8 @@ class InfantListViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val infantList = benRepo.infantList
-    private val _benList = MutableLiveData<List<BenBasicDomain>>()
-    val benList: LiveData<List<BenBasicDomain>>
+    private val _benList = MutableLiveData<List<BenBasicDomainForForm>>()
+    val benList: LiveData<List<BenBasicDomainForForm>>
         get() = _benList
 
     private var lastFilter = ""
