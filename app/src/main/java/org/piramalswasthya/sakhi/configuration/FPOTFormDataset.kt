@@ -3,10 +3,8 @@ package org.piramalswasthya.sakhi.configuration
 import android.content.Context
 import org.piramalswasthya.sakhi.model.FPOTCache
 import org.piramalswasthya.sakhi.model.FormInput
-import org.piramalswasthya.sakhi.model.PMJAYCache
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.min
 
 class FPOTFormDataset(context: Context, private val fpot: FPOTCache? = null) {
 
@@ -39,7 +37,7 @@ class FPOTFormDataset(context: Context, private val fpot: FPOTCache? = null) {
     private val category = FormInput(
         inputType = FormInput.InputType.DROPDOWN,
         title = "Category",
-        list = arrayOf(
+        entries = arrayOf(
             "Above Poverty Line (APL)",
             "Below Poverty Line (BPL)",
             "Anu Shuchit Jati (SC)",
@@ -76,13 +74,13 @@ class FPOTFormDataset(context: Context, private val fpot: FPOTCache? = null) {
         inputType = FormInput.InputType.RADIO,
         title = "Sterilization/ Sterilization Consent Form Filled",
         required = false,
-        list = arrayOf("Yes", "No")
+        entries = arrayOf("Yes", "No")
     )
     private val mrCheckListFilled = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Medical Record Checklist Filled ",
         required = false,
-        list = arrayOf("Yes", "No")
+        entries = arrayOf("Yes", "No")
     )
     private val dateOfOperation = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
@@ -129,13 +127,13 @@ class FPOTFormDataset(context: Context, private val fpot: FPOTCache? = null) {
         inputType = FormInput.InputType.RADIO,
         title = "Menstruation stared after female sterilization",
         required = false,
-        list = arrayOf("Yes","No")
+        entries = arrayOf("Yes","No")
     )
     private val spermatozoaFoundInSemen = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Spermatozoa found in semen",
         required = false,
-        list = arrayOf("Yes", "No")
+        entries = arrayOf("Yes", "No")
     )
     private val thirdPostFollowUpCounselling = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,
@@ -156,7 +154,7 @@ class FPOTFormDataset(context: Context, private val fpot: FPOTCache? = null) {
         inputType = FormInput.InputType.RADIO,
         title = "Photocopy of female sterilization / vasectomy certificate kept in Health Facility",
         required = false,
-        list = arrayOf("Yes", "No")
+        entries = arrayOf("Yes", "No")
     )
     private val remarks = FormInput(
         inputType = FormInput.InputType.EDIT_TEXT,

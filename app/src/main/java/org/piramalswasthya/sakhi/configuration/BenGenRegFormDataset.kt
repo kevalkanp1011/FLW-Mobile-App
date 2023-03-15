@@ -105,7 +105,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val gender = FormInput(
         inputType = RADIO,
         title = "Gender",
-        list = arrayOf(
+        entries = arrayOf(
             "Male",
             "Female",
             "Transgender"
@@ -131,7 +131,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val maritalStatus = FormInput(
         inputType = DROPDOWN,
         title = "Marital Status",
-        list = maritalStatusMale,
+        entries = maritalStatusMale,
         required = true,
     )
     val husbandName = FormInput(
@@ -182,7 +182,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val mobileNoOfRelation = FormInput(
         inputType = DROPDOWN,
         title = "Mobile Number Of",
-        list = arrayOf(
+        entries = arrayOf(
             "Self",
             "Husband",
             "Mother",
@@ -260,7 +260,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val relationToHead = FormInput(
         inputType = DROPDOWN,
         title = "Relation with family head",
-        list = relationToHeadListDefault,
+        entries = relationToHeadListDefault,
         required = true,
     )
     val otherRelationToHead = FormInput(
@@ -271,7 +271,7 @@ class BenGenRegFormDataset(private val context: Context) {
     private val community = FormInput(
         inputType = DROPDOWN,
         title = "Community",
-        list = arrayOf(
+        entries = arrayOf(
             "General",
             "SC",
             "ST",
@@ -285,7 +285,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val religion = FormInput(
         inputType = DROPDOWN,
         title = "Religion",
-        list = arrayOf(
+        entries = arrayOf(
             "Hindu",
             "Muslim",
             "Christian",
@@ -328,7 +328,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val hasAadharNo = FormInput(
         inputType = RADIO,
         title = "Has Aadhar Number",
-        list = arrayOf("Yes", "No"),
+        entries = arrayOf("Yes", "No"),
 
         required = false
     )
@@ -375,7 +375,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val reproductiveStatus = FormInput(
         inputType = DROPDOWN,
         title = "Reproductive Status",
-        list = arrayOf(
+        entries = arrayOf(
             "Eligible Couple",
             "Antenatal Mother",
             "Delivery Stage",
@@ -397,7 +397,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val nishchayKitDeliveryStatus = FormInput(
         inputType = RADIO,
         title = "Nishchay Kit Delivery Status",
-        list = arrayOf("Delivered", "Not Delivered"),
+        entries = arrayOf("Delivered", "Not Delivered"),
         orientation = LinearLayout.VERTICAL,
         required = true,
 
@@ -406,7 +406,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val pregnancyTestResult = FormInput(
         inputType = RADIO,
         title = "Pregnancy Test Result",
-        list = arrayOf("Pregnant", "Not Pregnant", "Pending"),
+        entries = arrayOf("Pregnant", "Not Pregnant", "Pending"),
         orientation = LinearLayout.VERTICAL,
         required = true,
 
@@ -431,7 +431,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val lastDeliveryConducted = FormInput(
         inputType = DROPDOWN,
         title = "Last Delivery Conducted",
-        list = arrayOf(
+        entries = arrayOf(
             "Home",
             "PHC",
             "HWC",
@@ -455,7 +455,7 @@ class BenGenRegFormDataset(private val context: Context) {
     val whoConductedDelivery = FormInput(
         inputType = DROPDOWN,
         title = "Who Conducted Delivery",
-        list = arrayOf(
+        entries = arrayOf(
             "ANM",
             "LHV",
             "Doctor",
@@ -525,13 +525,13 @@ class BenGenRegFormDataset(private val context: Context) {
             fatherName.value.value = benCache.fatherName
             motherName.value.value = benCache.motherName
             mobileNoOfRelation.value.value =
-                mobileNoOfRelation.list?.get(benCache.mobileNoOfRelationId - 1)
+                mobileNoOfRelation.entries?.get(benCache.mobileNoOfRelationId - 1)
             otherMobileNoOfRelation.value.value = benCache.mobileOthers
             contactNumber.value.value = benCache.contactNumber.toString()
             relationToHead.value.value =
                 relationToHeadListDefault[benCache.familyHeadRelationPosition - 1]
-            community.value.value = community.list?.get(benCache.communityId - 1)
-            religion.value.value = religion.list?.get(benCache.religionId - 1)
+            community.value.value = community.entries?.get(benCache.communityId - 1)
+            religion.value.value = religion.entries?.get(benCache.religionId - 1)
             otherReligion.value.value = benCache.religionOthers
 
             if(benCache.genDetails?.maritalStatusId!=1) {
@@ -609,16 +609,16 @@ class BenGenRegFormDataset(private val context: Context) {
         )
         ben?.let { benCache ->
             benCache.genDetails?.reproductiveStatusId?.takeIf { it>0 }?.let {
-                reproductiveStatus.value.value = reproductiveStatus.list?.get(it-1)
+                reproductiveStatus.value.value = reproductiveStatus.entries?.get(it-1)
             }
             when(benCache.genDetails?.reproductiveStatusId){
                 1->{
                     lastMenstrualPeriod.value.value = benCache.genDetails?.lastMenstrualPeriod?.let { getDateFromLong(it) }
                     benCache.nishchayDeliveryStatusPosition.takeIf { it>0 }?.let {
-                        nishchayKitDeliveryStatus.value.value = nishchayKitDeliveryStatus.list?.get(it)
+                        nishchayKitDeliveryStatus.value.value = nishchayKitDeliveryStatus.entries?.get(it)
                     }
                     benCache.nishchayPregnancyStatusPosition.takeIf { it>0 }?.let {
-                        pregnancyTestResult.value.value = pregnancyTestResult.list?.get(it)
+                        pregnancyTestResult.value.value = pregnancyTestResult.entries?.get(it)
                     }
                     viewList.addAll(listOf(
                         lastMenstrualPeriod,
@@ -710,7 +710,7 @@ class BenGenRegFormDataset(private val context: Context) {
             this.registrationType = TypeOfList.GENERAL
             genDetails?.maritalStatus = this@BenGenRegFormDataset.maritalStatus.value.value
             genDetails?.maritalStatusId =
-                (this@BenGenRegFormDataset.maritalStatus.list?.indexOf(genDetails?.maritalStatus!!))?.let { it + 1 }
+                (this@BenGenRegFormDataset.maritalStatus.entries?.indexOf(genDetails?.maritalStatus!!))?.let { it + 1 }
                     ?: 0
             genDetails?.spouseName = this@BenGenRegFormDataset.husbandName.value.value
                 ?: this@BenGenRegFormDataset.wifeName.value.value
@@ -728,17 +728,17 @@ class BenGenRegFormDataset(private val context: Context) {
             familyHeadRelationOther = this@BenGenRegFormDataset.otherRelationToHead.value.value
             mobileNoOfRelation = this@BenGenRegFormDataset.mobileNoOfRelation.value.value
             mobileNoOfRelationId =
-                (this@BenGenRegFormDataset.mobileNoOfRelation.list?.indexOf(mobileNoOfRelation!!))?.let { it + 1 }
+                (this@BenGenRegFormDataset.mobileNoOfRelation.entries?.indexOf(mobileNoOfRelation!!))?.let { it + 1 }
                     ?: 0
             mobileOthers = this@BenGenRegFormDataset.otherMobileNoOfRelation.value.value
             contactNumber = stringToLong(this@BenGenRegFormDataset.contactNumber.value.value!!)
             community = this@BenGenRegFormDataset.community.value.value
             communityId =
-                (this@BenGenRegFormDataset.community.list?.indexOf(community!!))?.let { it + 1 }
+                (this@BenGenRegFormDataset.community.entries?.indexOf(community!!))?.let { it + 1 }
                     ?: 0
             religion = this@BenGenRegFormDataset.religion.value.value
             religionId =
-                (this@BenGenRegFormDataset.religion.list?.indexOf(religion!!))?.let { it + 1 } ?: 0
+                (this@BenGenRegFormDataset.religion.entries?.indexOf(religion!!))?.let { it + 1 } ?: 0
             religionOthers = this@BenGenRegFormDataset.otherReligion.value.value
 
             rchId = this@BenGenRegFormDataset.rchId.value.value
@@ -786,7 +786,7 @@ class BenGenRegFormDataset(private val context: Context) {
             this.genDetails?.apply {
                 reproductiveStatus = this@BenGenRegFormDataset.reproductiveStatus.value.value
                 reproductiveStatusId =
-                    (this@BenGenRegFormDataset.reproductiveStatus.list?.indexOf(reproductiveStatus))?.let { it + 1 }
+                    (this@BenGenRegFormDataset.reproductiveStatus.entries?.indexOf(reproductiveStatus))?.let { it + 1 }
                         ?: 0
                 lastMenstrualPeriod =
                     this@BenGenRegFormDataset.lastMenstrualPeriod.value.value?.let {
@@ -797,12 +797,12 @@ class BenGenRegFormDataset(private val context: Context) {
                 nishchayDeliveryStatus =
                     this@BenGenRegFormDataset.nishchayKitDeliveryStatus.value.value
                 nishchayDeliveryStatusPosition =
-                    (this@BenGenRegFormDataset.nishchayKitDeliveryStatus.list?.indexOf(
+                    (this@BenGenRegFormDataset.nishchayKitDeliveryStatus.entries?.indexOf(
                         nishchayDeliveryStatus
                     ))?.let { it + 1 } ?: 0
                 nishchayPregnancyStatus = this@BenGenRegFormDataset.pregnancyTestResult.value.value
                 nishchayPregnancyStatusPosition =
-                    (this@BenGenRegFormDataset.pregnancyTestResult.list?.indexOf(
+                    (this@BenGenRegFormDataset.pregnancyTestResult.entries?.indexOf(
                         nishchayPregnancyStatus
                     ))?.let { it + 1 } ?: 0
                 expectedDateOfDelivery =
@@ -815,7 +815,7 @@ class BenGenRegFormDataset(private val context: Context) {
                     this@BenGenRegFormDataset.numPrevLiveBirthOrPregnancy.value.value?.toInt() ?: 0
                 lastDeliveryConducted = this@BenGenRegFormDataset.lastDeliveryConducted.value.value
                 lastDeliveryConductedId =
-                    (this@BenGenRegFormDataset.lastDeliveryConducted.list?.indexOf(
+                    (this@BenGenRegFormDataset.lastDeliveryConducted.entries?.indexOf(
                         lastDeliveryConducted
                     )) ?: 0
                 otherLastDeliveryConducted =
@@ -823,7 +823,7 @@ class BenGenRegFormDataset(private val context: Context) {
                 facilityName = this@BenGenRegFormDataset.facility.value.value
                 whoConductedDelivery = this@BenGenRegFormDataset.whoConductedDelivery.value.value
                 whoConductedDeliveryId =
-                    (this@BenGenRegFormDataset.whoConductedDelivery.list?.indexOf(
+                    (this@BenGenRegFormDataset.whoConductedDelivery.entries?.indexOf(
                         whoConductedDelivery
                     ))?.let { it + 1 } ?: 0
                 otherWhoConductedDelivery =

@@ -72,7 +72,7 @@ interface BenDao {
     @Query("SELECT b.* FROM BEN_BASIC_CACHE b INNER JOIN CBAC c on b.benId==c.benId WHERE c.total_score < 4")
     fun getAllNCDNonEligibleList(): LiveData<List<BenBasicCache>>
 
-    // have to add those as well who we are adding to menopause list manually from app
+    // have to add those as well who we are adding to menopause entries manually from app
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 5")
     fun getAllMenopauseStageList(): LiveData<List<BenBasicCache>>
 

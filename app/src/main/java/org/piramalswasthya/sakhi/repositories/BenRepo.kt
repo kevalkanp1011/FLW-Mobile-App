@@ -609,7 +609,7 @@ suspend fun getBeneficiariesFromServerForWorker(pageNumber: Int): Int {
                                     ).toTypedArray()
                                 )
                             } catch (e: Exception) {
-                                Timber.d("HouseHold list not synced $e")
+                                Timber.d("HouseHold entries not synced $e")
                                 return@withContext 0
                             }
                             val benCacheList = getBenCacheFromServerResponse(responseString)
@@ -727,7 +727,7 @@ suspend fun getBeneficiariesFromServer(pageNumber: Int): Pair<Int, MutableList<B
                                     ).toTypedArray()
                                 )
                             } catch (e: Exception) {
-                                Timber.d("HouseHold list not synced $e")
+                                Timber.d("HouseHold entries not synced $e")
                                 return@withContext Pair(0, benDataList)
                             }
                             val benCacheList = getBenCacheFromServerResponse(responseString)

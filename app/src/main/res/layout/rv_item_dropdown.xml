@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="none"
                 android:text="@{form.value}"
-                app:listItems="@{form.list}"
+                app:listItems="@{form.entries}"
                 tools:ignore="SpeakableTextPresentCheck" />
 
 

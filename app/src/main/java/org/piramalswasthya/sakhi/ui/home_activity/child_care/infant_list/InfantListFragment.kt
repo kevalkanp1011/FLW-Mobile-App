@@ -25,18 +25,18 @@ import org.piramalswasthya.sakhi.work.WorkerUtils
 @AndroidEntryPoint
 class InfantListFragment : Fragment() {
 
-    private val binding: FragmentDisplaySearchRvButtonBinding by lazy {
-        FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater)
-    }
+    private var _binding: FragmentDisplaySearchRvButtonBinding? = null
+    private val binding : FragmentDisplaySearchRvButtonBinding
+        get() = _binding!!
 
     private val viewModel: InfantListViewModel by viewModels()
 
-    private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding  = FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -89,6 +89,12 @@ class InfantListFragment : Fragment() {
         activity?.let{
             (it as HomeActivity).setLogo(R.drawable.ic_infant)
         }
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }

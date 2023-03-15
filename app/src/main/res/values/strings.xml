@@ -160,9 +160,9 @@
     <string name="nbr_nb_last_name">Last Name / Surname</string>
     <string name="nbr_nb_age_unit">Age Unit</string>
     <string-array name="nbr_age_unit_array">
-        <item name="nbr_age_unit_1">Year</item>
+        <item name="nbr_age_unit_1">Day</item>
         <item name="nbr_age_unit_2">Month</item>
-        <item name="nbr_age_unit_3">Day</item>
+        <item name="nbr_age_unit_3">Year</item>
     </string-array>
     <string-array name="nbr_gender_array">
         <item name="nbr_gender_1">Male</item>

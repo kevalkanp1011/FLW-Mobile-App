@@ -92,13 +92,13 @@ class PMJAYFormDataset(context: Context) {
         inputType = FormInput.InputType.DROPDOWN,
         title = "Patient Type",
         required = false,
-        list = arrayOf("Select Type", "General OP", "IP")
+        entries = arrayOf("Select Type", "General OP", "IP")
     )
     val scheme = FormInput(
         inputType = FormInput.InputType.DROPDOWN,
         title = "Scheme",
         required = false,
-        list = arrayOf("Select Scheme", "AB-PMJAY(S)")
+        entries = arrayOf("Select Scheme", "AB-PMJAY(S)")
     )
 
     val firstPage by lazy {

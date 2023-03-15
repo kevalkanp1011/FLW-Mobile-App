@@ -70,7 +70,7 @@ class ImmunizationListViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val ben = database.benDao.getBen(hhId, benId)!!
-            Timber.d("immunization list: $hhId, $benId: ${ben.beneficiaryId}")
+            Timber.d("immunization entries: $hhId, $benId: ${ben.beneficiaryId}")
 
             val typeOfList = ben.registrationType
             vaccineList = if(typeOfList == TypeOfList.INFANT) {
@@ -82,7 +82,7 @@ class ImmunizationListViewModel @Inject constructor(
             } else if (typeOfList == TypeOfList.ANTENATAL_MOTHER) {
                 pregnantWomenVaccines
             } else {
-                throw IllegalStateException("type of list is null")
+                throw IllegalStateException("type of entries is null")
             }
         }
     }

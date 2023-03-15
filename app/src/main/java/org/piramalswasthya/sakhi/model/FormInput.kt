@@ -8,7 +8,7 @@ import java.io.File
 data class FormInput(
     val inputType: InputType,
     var title: String,
-    var list: Array<String>? = null,
+    var entries: Array<String>? = null,
     var required: Boolean,
     var value: MutableStateFlow<String?> = MutableStateFlow(null),
     val regex: String? = null,
@@ -25,7 +25,7 @@ data class FormInput(
     var imageFile: File? = null
 ){
 
-
+//-----------------Do NOT mess with order of enum values ----------------------//
     enum class InputType{
         EDIT_TEXT,
         DROPDOWN,
@@ -34,6 +34,7 @@ data class FormInput(
         TEXT_VIEW,
         IMAGE_VIEW,
         CHECKBOXES,
-        TIME_PICKER
+        TIME_PICKER,
+        HEADLINE
     }
 }

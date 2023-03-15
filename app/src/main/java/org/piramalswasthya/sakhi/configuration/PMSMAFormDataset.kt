@@ -25,14 +25,14 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     val haveMCPCard = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Does the beneficiary have an MCP card",
-        list = arrayOf("Yes", "No"),
+        entries = arrayOf("Yes", "No"),
         required = false
     )
 
     val givenMCPCard = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "MCP card is given",
-        list = arrayOf("Yes", "No"),
+        entries = arrayOf("Yes", "No"),
         required = false
     )
     val husbandName = FormInput(
@@ -91,7 +91,7 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     private val twinPregnancy = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Twins pregnancy",
-        list = arrayOf("Yes", "No"),
+        entries = arrayOf("Yes", "No"),
         required = false
     )
     private val urineAlbumin = FormInput(
@@ -127,43 +127,43 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     private val hivTestDuringANC = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Was HIV test done during ANC Check up? ",
-        list = arrayOf("Yes", "No"),
+        entries = arrayOf("Yes", "No"),
         required = false
     )
     private val swollenCondtion = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Swollen condition ",
-        list = arrayOf("Yes", "No"),
+        entries = arrayOf("Yes", "No"),
         required = false
     )
     private val bloodSugarTest = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Blood sugar test ",
-        list = arrayOf("Yes", "No"),
+        entries = arrayOf("Yes", "No"),
         required = false
     )
     private val ultraSound = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Ultrasound ",
-        list = arrayOf("Yes", "No"),
+        entries = arrayOf("Yes", "No"),
         required = false
     )
     private val ironFolicAcid = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Iron Folic Acid ",
-        list = arrayOf("Yes", "No"),
+        entries = arrayOf("Yes", "No"),
         required = false
     )
     private val calciumSupplementation = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Calcium Supplementation ",
-        list = arrayOf("Yes", "No"),
+        entries = arrayOf("Yes", "No"),
         required = false
     )
     private val tetanusToxoid = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Tetanus toxoid ",
-        list = arrayOf(
+        entries = arrayOf(
             "First",
             "Second",
             "Booster",
@@ -185,7 +185,7 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     val highriskSymbols = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Identification of high risk symbols",
-        list = arrayOf("Yes", "No"),
+        entries = arrayOf("Yes", "No"),
         required = false
     )
     val highRiskReason = FormInput(
@@ -196,19 +196,19 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     private val highRiskPregnant = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Pregnant in high risk category treated",
-        list = arrayOf("Yes", "No"),
+        entries = arrayOf("Yes", "No"),
         required = false
     )
     private val highRiskPregnancyReferred = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Pregnant in high risk category was referred",
-        list = arrayOf("Yes", "No"),
+        entries = arrayOf("Yes", "No"),
         required = false
     )
     private val birthPrepAndNutritionAndFamilyPlanning = FormInput(
         inputType = FormInput.InputType.RADIO,
         title = "Preparation for birth and complications, nutrition and family planning",
-        list = arrayOf("Yes", "No"),
+        entries = arrayOf("Yes", "No"),
         required = false
     )
     private val medicalOfficerSign = FormInput(

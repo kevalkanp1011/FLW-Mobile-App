@@ -96,18 +96,18 @@ class NewBenRegL15ViewModel @Inject constructor(
                     it?.let {
                         when (it) {
                             "Male" -> {
-                                form.relationToHead.list = form.relationToHeadListMale
+                                form.relationToHead.entries = form.relationToHeadListMale
                             }
                             "Female" -> {
-                                form.relationToHead.list = form.relationToHeadListFemale
+                                form.relationToHead.entries = form.relationToHeadListFemale
                             }
                             else -> {
-                                form.relationToHead.list = form.relationToHeadListDefault
+                                form.relationToHead.entries = form.relationToHeadListDefault
                             }
                         }
 //                        val currentValue = form.relationToHead.value.value
 //                        if(currentValue!=null
-//                            && form.relationToHead.list?.contains(currentValue) == false
+//                            && form.relationToHead.entries?.contains(currentValue) == false
 //                        )
                         form.relationToHead.value.value = null
                         adapter.notifyItemChanged(form.firstPage.indexOf(form.relationToHead))
