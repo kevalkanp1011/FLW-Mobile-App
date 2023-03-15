@@ -6,11 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.network.AbhaGenerateAadhaarOtpRequest
+import org.piramalswasthya.sakhi.network.NetworkResult
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class AadhaarIdViewModel @Inject constructor(
+class
+AadhaarIdViewModel @Inject constructor(
     private val abhaIdRepo: AbhaIdRepo
 ) : ViewModel() {
     enum class State {
@@ -29,23 +33,39 @@ class AadhaarIdViewModel @Inject constructor(
     val txnId: String
         get() = _txnId!!
 
-    fun generateOtpClicked(aadharNo: String) {
+    private val _errorMessage = MutableLiveData<String?>(null)
+    val errorMessage: LiveData<String?>
+        get() = _errorMessage
+
+    fun generateOtpClicked(aadhaarNo: String) {
         _state.value = State.LOADING
-        generateAadhaarOtp(aadharNo)
+        generateAadhaarOtp(aadhaarNo)
     }
 
     fun resetState() {
         _state.value = State.IDLE
     }
 
+    fun resetErrorMessage() {
+        _errorMessage.value = null
+    }
+
     private fun generateAadhaarOtp(aadhaarNo: String) {
         viewModelScope.launch {
-//            _txnId = abhaIdRepo.generateOtpForAadhaar(aadhaarNo)
-            _txnId = abhaIdRepo.generateOtpForAadhaarDummy(aadhaarNo)
-            _txnId?.also {
-                _state.value = State.SUCCESS
-            } ?: run {
-                _state.value = State.ERROR_NETWORK
+            when (val result =
+                abhaIdRepo.generateOtpForAadhaarDummy(AbhaGenerateAadhaarOtpRequest(aadhaarNo))) {
+                is NetworkResult.Success -> {
+                    _txnId = result.data.txnId
+                    _state.value = State.SUCCESS
+                }
+                is NetworkResult.Error -> {
+                    _errorMessage.value = result.message
+                    _state.value = State.ERROR_SERVER
+                }
+                is NetworkResult.NetworkError -> {
+                    Timber.i(result.toString())
+                    _state.value = State.ERROR_NETWORK
+                }
             }
         }
     }

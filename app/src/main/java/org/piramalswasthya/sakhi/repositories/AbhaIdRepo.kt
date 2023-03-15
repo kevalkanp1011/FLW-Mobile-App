@@ -1,138 +1,267 @@
 package org.piramalswasthya.sakhi.repositories
 
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.ResponseBody
+import org.json.JSONException
+import org.json.JSONObject
 import org.piramalswasthya.sakhi.network.*
+import retrofit2.Response
+import java.io.IOException
+import java.net.SocketTimeoutException
 import javax.inject.Inject
-
 
 class AbhaIdRepo @Inject constructor(
     private val abhaApiService: AbhaApiService
 ) {
-
-    suspend fun getAccessToken(): AbhaTokenResponse? {
+    suspend fun getAccessToken(): NetworkResult<AbhaTokenResponse> {
         return withContext(Dispatchers.IO) {
             try {
-                abhaApiService.getToken()
+                val response = abhaApiService.getToken()
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val result = Gson().fromJson(responseBody, AbhaTokenResponse::class.java)
+                    NetworkResult.Success(result)
+                } else {
+                    sendErrorResponse(response)
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
             } catch (e: java.lang.Exception) {
-                null
+                e.printStackTrace()
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
             }
         }
     }
 
-    suspend fun getAccessTokenDummy(): AbhaTokenResponse? {
+    suspend fun generateOtpForAadhaar(req: AbhaGenerateAadhaarOtpRequest): NetworkResult<AbhaGenerateAadhaarOtpResponse> {
         return withContext(Dispatchers.IO) {
             try {
-                Thread.sleep(3000)
-                AbhaTokenResponse("ABC", 0, 0, "RRV", "Buller")
+                val response = abhaApiService.generateAadhaarOtp(req)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val result =
+                        Gson().fromJson(responseBody, AbhaGenerateAadhaarOtpResponse::class.java)
+                    NetworkResult.Success(result)
+                } else {
+                    sendErrorResponse(response)
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
             } catch (e: java.lang.Exception) {
-                null
+                e.printStackTrace()
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
             }
         }
     }
 
-    suspend fun generateOtpForAadhaar(aadhaarNo: String): String? {
+    suspend fun generateOtpForAadhaarDummy(req: AbhaGenerateAadhaarOtpRequest): NetworkResult<AbhaGenerateAadhaarOtpResponse> {
+        return withContext(Dispatchers.IO) {
+            Thread.sleep(2000)
+            NetworkResult.Success(AbhaGenerateAadhaarOtpResponse("XYZ"))
+        }
+    }
+
+    suspend fun resendOtpForAadhaar(req: AbhaResendAadhaarOtpRequest): NetworkResult<AbhaGenerateAadhaarOtpResponse> {
         return withContext(Dispatchers.IO) {
             try {
-                abhaApiService.generateAadhaarOtp(AbhaGenerateAadhaarOtpRequest(aadhaarNo)).txnId
+                val response = abhaApiService.resendAadhaarOtp(req)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val result =
+                        Gson().fromJson(responseBody, AbhaGenerateAadhaarOtpResponse::class.java)
+                    NetworkResult.Success(result)
+                } else {
+                    sendErrorResponse(response)
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
             } catch (e: java.lang.Exception) {
-                null
+                e.printStackTrace()
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
+            }
+        }
+    }
+
+    suspend fun verifyOtpForAadhaar(req: AbhaVerifyAadhaarOtpRequest): NetworkResult<AbhaVerifyAadhaarOtpResponse> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = abhaApiService.verifyAadhaarOtp(req)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val result =
+                        Gson().fromJson(responseBody, AbhaVerifyAadhaarOtpResponse::class.java)
+                    NetworkResult.Success(result)
+                } else {
+                    sendErrorResponse(response)
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
             }
         }
 
     }
 
-    suspend fun generateOtpForAadhaarDummy(aadhaarNo: String): String? {
+    suspend fun verifyOtpForAadhaarDummy(req: AbhaVerifyAadhaarOtpRequest): NetworkResult<AbhaVerifyAadhaarOtpResponse> {
         return withContext(Dispatchers.IO) {
-            try {
-                Thread.sleep(3000)
-                "XYZ"
-            } catch (e: java.lang.Exception) {
-                null
-            }
+            Thread.sleep(2000)
+            NetworkResult.Success(AbhaVerifyAadhaarOtpResponse("XYZ"))
         }
 
     }
 
-    suspend fun verifyOtpForAadhaar(otp: String, txnIdFromArgs: String): String? {
+    suspend fun generateOtpForMobileNumber(req: AbhaGenerateMobileOtpRequest): NetworkResult<AbhaGenerateMobileOtpResponse> {
         return withContext(Dispatchers.IO) {
             try {
-                abhaApiService.verifyAadhaarOtp(
-                    AbhaVerifyAadhaarOtpRequest(
-                        otp,
-                        txnIdFromArgs
-                    )
-                ).txnId
+                val response = abhaApiService.generateMobileOtp(req)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val result =
+                        Gson().fromJson(responseBody, AbhaGenerateMobileOtpResponse::class.java)
+                    NetworkResult.Success(result)
+                } else {
+                    sendErrorResponse(response)
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
             } catch (e: java.lang.Exception) {
-                null
-            }
-        }
-
-    }
-
-    suspend fun verifyOtpForAadhaarDummy(otp: String, txnIdFromArgs: String): String? {
-        return withContext(Dispatchers.IO) {
-            try {
-                Thread.sleep(4000)
-                "XYZ"
-            } catch (e: java.lang.Exception) {
-                null
-            }
-        }
-
-    }
-
-    suspend fun generateOtpForMobileNumber(mobileNumber: String, txnId: String): String? {
-        return withContext(Dispatchers.IO) {
-            try {
-                abhaApiService.generateMobileOtp(
-                    AbhaGenerateMobileOtpRequest(
-                        mobileNumber,
-                        txnId
-                    )
-                ).txnId
-            } catch (e: java.lang.Exception) {
-                null
+                e.printStackTrace()
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
             }
         }
     }
 
-    suspend fun generateOtpForMobileNumberDummy(
-        mobileNumber: String,
-        txnIdFromArgs: String
-    ): String? {
+    suspend fun generateOtpForMobileNumberDummy(req: AbhaGenerateMobileOtpRequest): NetworkResult<AbhaGenerateMobileOtpResponse> {
+        return withContext(Dispatchers.IO) {
+            Thread.sleep(2000)
+            NetworkResult.Success(AbhaGenerateMobileOtpResponse("XYZ"))
+        }
+    }
+
+    suspend fun verifyOtpForMobileNumber(req: AbhaVerifyMobileOtpRequest): NetworkResult<AbhaVerifyMobileOtpResponse> {
         return withContext(Dispatchers.IO) {
             try {
-                Thread.sleep(4000)
-                "XYZ"
+                val response = abhaApiService.verifyMobileOtp(req)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val result =
+                        Gson().fromJson(responseBody, AbhaVerifyMobileOtpResponse::class.java)
+                    NetworkResult.Success(result)
+                } else {
+                    sendErrorResponse(response)
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
             } catch (e: java.lang.Exception) {
-                null
+                e.printStackTrace()
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
             }
         }
     }
 
-    suspend fun verifyOtpForMobileNumber(otp: String, txnId: String): String? {
+    suspend fun verifyOtpForMobileNumberDummy(req: AbhaVerifyMobileOtpRequest): NetworkResult<AbhaVerifyMobileOtpResponse> {
         return withContext(Dispatchers.IO) {
+            Thread.sleep(2000)
+            NetworkResult.Success(AbhaVerifyMobileOtpResponse("XYZ"))
+        }
+    }
+
+    suspend fun generateAbhaId(req: CreateAbhaIdRequest): NetworkResult<CreateAbhaIdResponse> {
+        return withContext((Dispatchers.IO)) {
             try {
-                abhaApiService.verifyMobileOtp(
-                    AbhaVerifyMobileOtpRequest(
-                        otp,
-                        txnId
-                    )
-                ).txnId
+                val response = abhaApiService.createAbhaId(req)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val result = Gson().fromJson(responseBody, CreateAbhaIdResponse::class.java)
+                    NetworkResult.Success(result)
+                } else {
+                    sendErrorResponse(response)
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
             } catch (e: java.lang.Exception) {
-                null
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
             }
         }
     }
 
-    suspend fun verifyOtpForMobileNumberDummy(otp: String, txnIdFromArgs: String): String? {
-        return withContext(Dispatchers.IO) {
-            try {
-                Thread.sleep(4000)
-                "XYZ"
-            } catch (e: java.lang.Exception) {
-                null
+    suspend fun generateAbhaIdDummy(req: CreateAbhaIdRequest): NetworkResult<CreateAbhaIdResponse> {
+        return withContext((Dispatchers.IO)) {
+            Thread.sleep(2000)
+            NetworkResult.Success(
+                CreateAbhaIdResponse(
+                    "",
+                    "",
+                    "87-457-7451-784-784",
+                    "Dummy Name",
+                    "",
+                    "",
+                    "",
+                    ", ",
+                    "",
+                    "",
+                    ", ",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    arrayOf(),
+                    "",
+                    mapOf(),
+                    "",
+                    true
+                )
+            )
+        }
+    }
+
+    private fun sendErrorResponse(response: Response<ResponseBody>): NetworkResult.Error {
+        return when (response.code()) {
+            503 -> NetworkResult.Error(503, "Service Unavailable! Please try later!")
+            else -> {
+                val errorBody = response.errorBody()?.string()
+                val errorJson = JSONObject(errorBody)
+                val detailsArray = errorJson.getJSONArray("details")
+                val detailsObject = detailsArray.getJSONObject(0)
+                val errorMessage = detailsObject.getString("message")
+                NetworkResult.Error(response.code(), errorMessage)
             }
         }
     }

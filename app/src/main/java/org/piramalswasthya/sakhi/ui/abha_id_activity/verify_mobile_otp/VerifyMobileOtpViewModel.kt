@@ -3,6 +3,9 @@ package org.piramalswasthya.sakhi.ui.abha_id_activity.verify_mobile_otp
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.network.AbhaGenerateMobileOtpRequest
+import org.piramalswasthya.sakhi.network.AbhaVerifyMobileOtpRequest
+import org.piramalswasthya.sakhi.network.NetworkResult
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
 import javax.inject.Inject
 
@@ -16,19 +19,27 @@ class VerifyMobileOtpViewModel @Inject constructor(
         LOADING,
         ERROR_SERVER,
         ERROR_NETWORK,
-        SUCCESS
+        OTP_VERIFY_SUCCESS,
+        OTP_GENERATED_SUCCESS
     }
 
-    private val _state = MutableLiveData<State>()
+    private val _state = MutableLiveData<State>(State.IDLE)
     val state: LiveData<State>
         get() = _state
 
 
-    private val txnIdFromArgs =
+    private var txnIdFromArgs =
         VerifyMobileOtpFragmentArgs.fromSavedStateHandle(savedStateHandle).txnId
+    private val phoneNumberFromArgs =
+        VerifyMobileOtpFragmentArgs.fromSavedStateHandle(savedStateHandle).phoneNum
+
     private var _txnId: String? = null
     val txnID: String
         get() = _txnId!!
+
+    private val _errorMessage = MutableLiveData<String?>(null)
+    val errorMessage: LiveData<String?>
+        get() = _errorMessage
 
     fun verifyOtpClicked(otp: String) {
         _state.value = State.LOADING
@@ -39,14 +50,55 @@ class VerifyMobileOtpViewModel @Inject constructor(
         _state.value = State.IDLE
     }
 
+    fun resetErrorMessage() {
+        _errorMessage.value = null
+    }
+
     private fun verifyMobileOtp(otp: String) {
         viewModelScope.launch {
-//            _txnId = abhaIdRepo.verifyOtpForMobileNumber(otp, txnIdFromArgs)
-            _txnId = abhaIdRepo.verifyOtpForMobileNumberDummy(otp, txnIdFromArgs)
-            _txnId?.also {
-                _state.value = State.SUCCESS
-            } ?: run {
-                _state.value = State.ERROR_NETWORK
+            val result = abhaIdRepo.verifyOtpForMobileNumberDummy(
+                AbhaVerifyMobileOtpRequest(
+                    otp,
+                    txnIdFromArgs
+                )
+            )
+            when (result) {
+                is NetworkResult.Success -> {
+                    _txnId = result.data.txnId
+                    _state.value = State.OTP_VERIFY_SUCCESS
+                }
+                is NetworkResult.Error -> {
+                    _errorMessage.value = result.message
+                    _state.value = State.ERROR_SERVER
+                }
+                is NetworkResult.NetworkError -> {
+                    _state.value = State.ERROR_NETWORK
+                }
+            }
+        }
+    }
+
+    fun resendOtp() {
+        _state.value = State.LOADING
+        viewModelScope.launch {
+            val result = abhaIdRepo.generateOtpForMobileNumberDummy(
+                AbhaGenerateMobileOtpRequest(
+                    phoneNumberFromArgs,
+                    txnIdFromArgs
+                )
+            )
+            when (result) {
+                is NetworkResult.Success -> {
+                    txnIdFromArgs = result.data.txnId
+                    _state.value = State.OTP_GENERATED_SUCCESS
+                }
+                is NetworkResult.Error -> {
+                    _errorMessage.value = result.message
+                    _state.value = State.ERROR_SERVER
+                }
+                is NetworkResult.NetworkError -> {
+                    _state.value = State.ERROR_NETWORK
+                }
             }
         }
     }

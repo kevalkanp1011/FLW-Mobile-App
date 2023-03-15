@@ -96,6 +96,11 @@ data class AbhaGenerateAadhaarOtpResponse(
     val txnId: String
 )
 
+@JsonClass(generateAdapter = true)
+data class AbhaResendAadhaarOtpRequest(
+    val txnId: String
+)
+
 
 @JsonClass(generateAdapter = true)
 data class AbhaVerifyAadhaarOtpRequest(
@@ -137,22 +142,13 @@ data class AbhaVerifyMobileOtpResponse(
 @JsonClass(generateAdapter = true)
 data class CreateAbhaIdRequest(
 
-    // "email": "kalyan@beehyv.com",
-    //  "firstName": "first",
-    //  "healthId": "kaly.7089",
-    //  "lastName": "last",
-    //  "middleName": "middle",
-    //  "password": "India@143",
-    //  "profilePhoto": "",
-    //  "txnId": "9a6684db-e090-42e9-9781-5a284c7fe8d1"
-
-    val email: String,
-    val firstName: String,
-    val healthId: String,
-    val lastName: String,
-    val middleName: String,
-    val password: String,
-    val profilePhoto: String,
+    val email: String?,
+    val firstName: String?,
+    val healthId: String?,
+    val lastName: String?,
+    val middleName: String?,
+    val password: String?,
+    val profilePhoto: String?,
     val txnId: String
 )
 
@@ -169,22 +165,22 @@ data class CreateAbhaIdResponse(
     val monthOfBirth: String,
     val dayOfBirth: String,
     val firstName: String,
-    val healthId: String,
+    val healthId: String?,
     val lastName: String,
     val middleName: String,
     val stateCode: String,
     val districtCode: String,
     val stateName: String,
     val districtName: String,
-    val email: String,
+    val email: String?,
     val kycPhoto: String?,
     val profilePhoto: String,
     val mobile: String,
-    val authMethods: List<String>,
+    val authMethods: Array<String>,
     val pincode: String?,
-    val tags: Map<String, String>,
+    val tags: Map<String, String>?,
     val alreadyExists: String,
-    val new: String,
+    val new: Boolean,
 )
 
 

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.network.AbhaTokenResponse
+import org.piramalswasthya.sakhi.network.NetworkResult
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertAbhaInterceptor
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
 import timber.log.Timber
@@ -29,25 +30,36 @@ class AbhaIdViewModel @Inject constructor(
     val state: LiveData<State>
         get() = _state
 
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String>
+        get() = _errorMessage
+
     init {
-        _state.value = State.LOADING_TOKEN
         generateAccessToken()
     }
+
 
     private var _accessToken: AbhaTokenResponse? = null
     private val accessToken: AbhaTokenResponse
         get() = _accessToken!!
 
-    private fun generateAccessToken() {
+    fun generateAccessToken() {
+        _state.value = State.LOADING_TOKEN
         viewModelScope.launch {
-//            _accessToken = abhaIdRepo.getAccessToken()
-            _accessToken = abhaIdRepo.getAccessTokenDummy()
-            if (_accessToken == null)
-                _state.value = State.ERROR_NETWORK
-            else {
-                _state.value = State.SUCCESS
-                TokenInsertAbhaInterceptor.setToken(accessToken.accessToken)
-                Timber.i(accessToken.toString())
+            when (val result = abhaIdRepo.getAccessToken()) {
+                is NetworkResult.Success -> {
+                    _accessToken = result.data
+                    _state.value = State.SUCCESS
+                    TokenInsertAbhaInterceptor.setToken(accessToken.accessToken)
+                    Timber.i(accessToken.toString())
+                }
+                is NetworkResult.Error -> {
+                    _state.value = State.ERROR_SERVER
+                    _errorMessage.value = result.message
+                }
+                is NetworkResult.NetworkError -> {
+                    _state.value = State.ERROR_NETWORK
+                }
             }
         }
     }

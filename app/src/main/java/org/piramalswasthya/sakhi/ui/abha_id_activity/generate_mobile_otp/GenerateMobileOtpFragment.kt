@@ -6,14 +6,17 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentGenerateMobileOtpBinding
-import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdViewModel
 import org.piramalswasthya.sakhi.ui.abha_id_activity.generate_mobile_otp.GenerateMobileOtpViewModel.State
+import timber.log.Timber
 
 @AndroidEntryPoint
 class GenerateMobileOtpFragment : Fragment() {
@@ -22,10 +25,30 @@ class GenerateMobileOtpFragment : Fragment() {
     private val binding: FragmentGenerateMobileOtpBinding
         get() = _binding!!
 
+    private val onBackPressedCallback by lazy {
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Handle back button press here
+                Timber.d("handleOnBackPressed")
+                exitAlert.show()
+            }
+        }
+    }
+
+    private val exitAlert by lazy {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Exit")
+            .setMessage("Do you want to go back?")
+            .setPositiveButton("Yes") { _, _ ->
+                navController.navigate(R.id.aadhaarIdFragment)
+            }
+            .setNegativeButton("No") { d, _ ->
+                d.dismiss()
+            }
+            .create()
+    }
+
     private val viewModel: GenerateMobileOtpViewModel by viewModels()
-
-    private val activityViewModel: AbhaIdViewModel by viewModels({ requireActivity() })
-
     private lateinit var navController: NavController
 
     override fun onCreateView(
@@ -39,9 +62,19 @@ class GenerateMobileOtpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = findNavController()
+        binding.lifecycleOwner = viewLifecycleOwner
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
 
         binding.btnGenerateMobileOtp.setOnClickListener {
             viewModel.generateOtpClicked(binding.tietMobileNumber.text!!.toString())
+        }
+
+        binding.mobileNoInfo.setOnClickListener {
+            it.performLongClick()
         }
 
         binding.tietMobileNumber.addTextChangedListener(object : TextWatcher {
@@ -62,23 +95,42 @@ class GenerateMobileOtpFragment : Fragment() {
                 State.LOADING -> {
                     binding.clGenerateMobileOtp.visibility = View.INVISIBLE
                     binding.progressBarGmotp.visibility = View.VISIBLE
+                    binding.clError.visibility = View.INVISIBLE
                 }
                 State.SUCCESS -> {
                     navController.navigate(
                         GenerateMobileOtpFragmentDirections.actionGenerateMobileOtpFragmentToVerifyMobileOtpFragment(
-                            viewModel.txnID
+                            viewModel.txnID, binding.tietMobileNumber.text!!.toString()
                         )
                     )
                     viewModel.resetState()
                 }
-                State.ERROR_SERVER -> {}
-                State.ERROR_NETWORK -> {}
+                State.ERROR_SERVER -> {
+                    binding.progressBarGmotp.visibility = View.INVISIBLE
+                    binding.clGenerateMobileOtp.visibility = View.VISIBLE
+                    binding.clError.visibility = View.INVISIBLE
+                    binding.tvErrorText.visibility = View.VISIBLE
+                }
+                State.ERROR_NETWORK -> {
+                    binding.progressBarGmotp.visibility = View.INVISIBLE
+                    binding.clGenerateMobileOtp.visibility = View.INVISIBLE
+                    binding.clError.visibility = View.VISIBLE
+                }
             }
         }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                binding.tvErrorText.text = it
+                viewModel.resetErrorMessage()
+            }
+        }
+
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        onBackPressedCallback.remove()
         _binding = null
     }
 }

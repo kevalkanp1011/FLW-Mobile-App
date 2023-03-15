@@ -6,14 +6,15 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.databinding.FragmentAadhaarIdBinding
-import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdViewModel
 import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdViewModel.State
+
 
 @AndroidEntryPoint
 class AadhaarIdFragment : Fragment() {
@@ -63,20 +64,31 @@ class AadhaarIdFragment : Fragment() {
                     binding.clError.visibility = View.INVISIBLE
                 }
                 State.SUCCESS -> {
-                    binding.clContentAadharId.visibility = View.VISIBLE
-                    binding.pbLoadingAadharId.visibility = View.INVISIBLE
-                    binding.clError.visibility = View.INVISIBLE
-                    findNavController().navigate(AadhaarIdFragmentDirections.actionAadhaarIdFragmentToAadhaarOtpFragment(viewModel.txnId))
                     viewModel.resetState()
+                    findNavController().navigate(
+                        AadhaarIdFragmentDirections.actionAadhaarIdFragmentToAadhaarOtpFragment(
+                            viewModel.txnId
+                        )
+                    )
+                }
+                State.ERROR_SERVER -> {
+                    binding.pbLoadingAadharId.visibility = View.INVISIBLE
+                    binding.clContentAadharId.visibility = View.VISIBLE
+                    binding.clError.visibility = View.INVISIBLE
+                    binding.tvErrorText.visibility = View.VISIBLE
                 }
                 State.ERROR_NETWORK -> {
                     binding.clContentAadharId.visibility = View.INVISIBLE
                     binding.pbLoadingAadharId.visibility = View.INVISIBLE
                     binding.clError.visibility = View.VISIBLE
                 }
-                State.ERROR_SERVER -> {
+            }
+        }
 
-                }
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                binding.tvErrorText.text = it
+                viewModel.resetErrorMessage()
             }
         }
     }

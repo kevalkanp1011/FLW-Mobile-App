@@ -1,5 +1,7 @@
 package org.piramalswasthya.sakhi.network
 
+import okhttp3.ResponseBody
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -9,30 +11,28 @@ interface AbhaApiService {
 
     @Headers("No-Auth: true")
     @POST
-    suspend fun getToken(@Url url : String = "https://dev.abdm.gov.in/gateway/v0.5/sessions", @Body request: AbhaTokenRequest = AbhaTokenRequest()): AbhaTokenResponse
+    suspend fun getToken(
+        @Url url: String = "https://dev.abdm.gov.in/gateway/v0.5/sessions",
+        @Body request: AbhaTokenRequest = AbhaTokenRequest()
+    ): Response<ResponseBody>
 
     @POST("generateOtp")
-    suspend fun generateAadhaarOtp(@Body aadhaar : AbhaGenerateAadhaarOtpRequest) : AbhaGenerateAadhaarOtpResponse
+    suspend fun generateAadhaarOtp(@Body aadhaar: AbhaGenerateAadhaarOtpRequest): Response<ResponseBody>
+
+    @POST("resendAadhaarOtp")
+    suspend fun resendAadhaarOtp(@Body aadhaar: AbhaResendAadhaarOtpRequest): Response<ResponseBody>
 
     @POST("verifyOTP")
-    suspend fun verifyAadhaarOtp(@Body request : AbhaVerifyAadhaarOtpRequest) : AbhaVerifyAadhaarOtpResponse
+    suspend fun verifyAadhaarOtp(@Body request: AbhaVerifyAadhaarOtpRequest): Response<ResponseBody>
 
     @POST("generateMobileOTP")
-    suspend fun generateMobileOtp(@Body mobile : AbhaGenerateMobileOtpRequest) : AbhaGenerateMobileOtpResponse
+    suspend fun generateMobileOtp(@Body mobile: AbhaGenerateMobileOtpRequest): Response<ResponseBody>
 
     @POST("verifyMobileOTP")
-    suspend fun verifyMobileOtp(@Body request : AbhaVerifyMobileOtpRequest) : AbhaVerifyMobileOtpResponse
+    suspend fun verifyMobileOtp(@Body request: AbhaVerifyMobileOtpRequest): Response<ResponseBody>
 
-    @POST("createAbhaId")
-    suspend fun createAbhaId(@Body request : CreateAbhaIdRequest) : CreateAbhaIdResponse
-
-
-
-
-
-
-
-
+    @POST("createHealthIdWithPreVerified")
+    suspend fun createAbhaId(@Body request: CreateAbhaIdRequest): Response<ResponseBody>
 
 
 }

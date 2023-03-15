@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/aadhaarIdFragment"
         android:name="org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdFragment"
-        android:label="@string/generate_abha_id"
+        android:label="Verify Aadhaar Number"
         tools:layout="@layout/fragment_aadhaar_id">
         <action
             android:id="@+id/action_aadhaarIdFragment_to_aadhaarOtpFragment"
@@ -17,19 +17,21 @@
     <fragment
         android:id="@+id/aadhaarOtpFragment"
         android:name="org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_otp.AadhaarOtpFragment"
-        android:label="@string/generate_abha_id"
+        android:label="Verify Aadhaar Number"
         tools:layout="@layout/fragment_aadhaar_otp">
         <argument
             android:name="txnId"
             app:argType="string" />
         <action
             android:id="@+id/action_aadhaarOtpFragment_to_generateMobileOtpFragment"
-            app:destination="@id/generateMobileOtpFragment" />
+            app:destination="@id/generateMobileOtpFragment"
+            app:popUpTo="@id/aadhaarOtpFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/generateMobileOtpFragment"
         android:name="org.piramalswasthya.sakhi.ui.abha_id_activity.generate_mobile_otp.GenerateMobileOtpFragment"
-        android:label="@string/generate_abha_id"
+        android:label="Verify Mobile Number"
         tools:layout="@layout/fragment_generate_mobile_otp">
         <action
             android:id="@+id/action_generateMobileOtpFragment_to_verifyMobileOtpFragment"
@@ -41,13 +43,18 @@
     <fragment
         android:id="@+id/verifyMobileOtpFragment"
         android:name="org.piramalswasthya.sakhi.ui.abha_id_activity.verify_mobile_otp.VerifyMobileOtpFragment"
-        android:label="@string/generate_abha_id"
+        android:label="Verify Mobile Number"
         tools:layout="@layout/fragment_verify_mobile_otp">
         <action
             android:id="@+id/action_verifyMobileOtpFragment_to_createAbhaFragment"
-            app:destination="@id/createAbhaFragment" />
+            app:destination="@id/createAbhaFragment"
+            app:popUpTo="@id/verifyMobileOtpFragment"
+            app:popUpToInclusive="true" />
         <argument
             android:name="txnId"
+            app:argType="string" />
+        <argument
+            android:name="phoneNum"
             app:argType="string" />
     </fragment>
     <fragment

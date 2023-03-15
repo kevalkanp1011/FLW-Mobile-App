@@ -3,6 +3,8 @@ package org.piramalswasthya.sakhi.ui.abha_id_activity.generate_mobile_otp
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.network.AbhaGenerateMobileOtpRequest
+import org.piramalswasthya.sakhi.network.NetworkResult
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
 import javax.inject.Inject
 
@@ -23,6 +25,10 @@ class GenerateMobileOtpViewModel @Inject constructor(
     val state: LiveData<State>
         get() = _state
 
+    private val _errorMessage = MutableLiveData<String?>(null)
+    val errorMessage: LiveData<String?>
+        get() = _errorMessage
+
     private val txnIdFromArgs =
         GenerateMobileOtpFragmentArgs.fromSavedStateHandle(savedStateHandle).txnId
     private var _txnId: String? = null
@@ -38,14 +44,30 @@ class GenerateMobileOtpViewModel @Inject constructor(
         _state.value = State.IDLE
     }
 
+    fun resetErrorMessage() {
+        _errorMessage.value = null
+    }
+
     private fun generateMobileOtp(phoneNumber: String) {
         viewModelScope.launch {
-//            _txnId = abhaIdRepo.generateOtpForMobileNumber(phoneNumber, txnIdFromArgs)
-            _txnId = abhaIdRepo.generateOtpForMobileNumberDummy(phoneNumber, txnIdFromArgs)
-            _txnId?.also {
-                _state.value = State.SUCCESS
-            } ?: run {
-                _state.value = State.ERROR_NETWORK
+            val result = abhaIdRepo.generateOtpForMobileNumberDummy(
+                AbhaGenerateMobileOtpRequest(
+                    phoneNumber,
+                    txnIdFromArgs
+                )
+            )
+            when (result) {
+                is NetworkResult.Success -> {
+                    _txnId = result.data.txnId
+                    _state.value = State.SUCCESS
+                }
+                is NetworkResult.Error -> {
+                    _errorMessage.value = result.message
+                    _state.value = State.ERROR_SERVER
+                }
+                is NetworkResult.NetworkError -> {
+                    _state.value = State.ERROR_NETWORK
+                }
             }
         }
     }
