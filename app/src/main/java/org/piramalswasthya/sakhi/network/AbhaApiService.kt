@@ -19,6 +19,9 @@ interface AbhaApiService {
     @POST("generateOtp")
     suspend fun generateAadhaarOtp(@Body aadhaar: AbhaGenerateAadhaarOtpRequest): Response<ResponseBody>
 
+    @POST("resendAadhaarOtp")
+    suspend fun resendAadhaarOtp(@Body aadhaar: AbhaResendAadhaarOtpRequest): Response<ResponseBody>
+
     @POST("verifyOTP")
     suspend fun verifyAadhaarOtp(@Body request: AbhaVerifyAadhaarOtpRequest): Response<ResponseBody>
 

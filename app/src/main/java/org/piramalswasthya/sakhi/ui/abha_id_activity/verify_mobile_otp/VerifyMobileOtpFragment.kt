@@ -84,14 +84,22 @@ class VerifyMobileOtpFragment : Fragment() {
                     binding.clVerifyMobileOtp.visibility = View.VISIBLE
                     binding.pbVmotp.visibility = View.INVISIBLE
                     binding.clError.visibility = View.INVISIBLE
-                    Toast.makeText(activity, viewModel.errorMessage, Toast.LENGTH_LONG).show()
+                    binding.tvErrorText.visibility = View.VISIBLE
                 }
                 State.OTP_GENERATED_SUCCESS -> {
                     binding.clVerifyMobileOtp.visibility = View.VISIBLE
                     binding.pbVmotp.visibility = View.INVISIBLE
                     binding.clError.visibility = View.INVISIBLE
-                    Toast.makeText(activity, "OTP was resent successfully", Toast.LENGTH_LONG).show()
+                    Toast.makeText(activity, "OTP was resent.", Toast.LENGTH_LONG)
+                        .show()
                 }
+            }
+        }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                binding.tvErrorText.text = it
+                viewModel.resetErrorMessage()
             }
         }
     }

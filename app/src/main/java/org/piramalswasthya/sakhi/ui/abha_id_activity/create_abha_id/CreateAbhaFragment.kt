@@ -4,17 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentCreateAbhaBinding
 import org.piramalswasthya.sakhi.ui.abha_id_activity.create_abha_id.CreateAbhaViewModel.State
+import timber.log.Timber
 
 @AndroidEntryPoint
 class CreateAbhaFragment : Fragment() {
 
+    private lateinit var navController: NavController
+
     private var _binding: FragmentCreateAbhaBinding? = null
+    private lateinit var callback: OnBackPressedCallback
+
     private val binding: FragmentCreateAbhaBinding
         get() = _binding!!
     private val viewModel: CreateAbhaViewModel by viewModels()
@@ -31,6 +39,17 @@ class CreateAbhaFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
+        navController = findNavController()
+
+        callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Handle back button press here
+                Timber.d("handleOnBackPressed")
+                navController.navigate(R.id.aadhaarIdFragment)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
                 State.IDLE -> {}
@@ -46,9 +65,9 @@ class CreateAbhaFragment : Fragment() {
                 }
                 State.ERROR_SERVER -> {
                     binding.pbCai.visibility = View.INVISIBLE
-                    binding.clCreateAbhaId.visibility = View.VISIBLE
+                    binding.clCreateAbhaId.visibility = View.INVISIBLE
                     binding.clError.visibility = View.INVISIBLE
-                    Toast.makeText(activity, viewModel.errorMessage, Toast.LENGTH_LONG).show()
+                    binding.tvErrorText.visibility = View.VISIBLE
                 }
                 State.GENERATE_SUCCESS -> {
                     binding.pbCai.visibility = View.INVISIBLE
@@ -56,6 +75,13 @@ class CreateAbhaFragment : Fragment() {
                     binding.clError.visibility = View.INVISIBLE
                 }
                 State.DOWNLOAD_SUCCESS -> {}
+            }
+        }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                binding.tvErrorText.text = it
+                viewModel.resetErrorMessage()
             }
         }
     }

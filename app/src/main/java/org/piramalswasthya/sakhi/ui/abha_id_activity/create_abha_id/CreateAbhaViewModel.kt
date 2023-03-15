@@ -1,6 +1,5 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity.create_abha_id
 
-import android.util.Log
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -12,16 +11,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateAbhaViewModel @Inject constructor(
-    private val abhaIdRepo: AbhaIdRepo,
-    savedStateHandle: SavedStateHandle
+    private val abhaIdRepo: AbhaIdRepo, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     enum class State {
-        IDLE,
-        LOADING,
-        ERROR_NETWORK,
-        ERROR_SERVER,
-        GENERATE_SUCCESS,
-        DOWNLOAD_SUCCESS
+        IDLE, LOADING, ERROR_NETWORK, ERROR_SERVER, GENERATE_SUCCESS, DOWNLOAD_SUCCESS
     }
 
     private val _state = MutableLiveData<State>()
@@ -32,9 +25,9 @@ class CreateAbhaViewModel @Inject constructor(
 
     private val txnIdFromArgs = CreateAbhaFragmentArgs.fromSavedStateHandle(savedStateHandle).txnId
 
-    private var _errorMessage: String? = null
-    val errorMessage: String
-        get() = _errorMessage!!
+    private val _errorMessage = MutableLiveData<String?>(null)
+    val errorMessage: LiveData<String?>
+        get() = _errorMessage
 
     init {
         _state.value = State.LOADING
@@ -43,26 +36,18 @@ class CreateAbhaViewModel @Inject constructor(
 
     private fun generateAbhaCard() {
         viewModelScope.launch {
-            val result = abhaIdRepo.generateAbhaId(
+            val result = abhaIdRepo.generateAbhaIdDummy(
                 CreateAbhaIdRequest(
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    txnIdFromArgs
+                    null, null, null, null, null, null, null, txnIdFromArgs
                 )
             )
             when (result) {
                 is NetworkResult.Success -> {
                     abha.value = result.data
-                    abha.value?.healthIdNumber?.let { Log.i("CreateAbhaViewModel", it) }
                     _state.value = State.GENERATE_SUCCESS
                 }
                 is NetworkResult.Error -> {
-                    _errorMessage = result.message
+                    _errorMessage.value = result.message
                     _state.value = State.ERROR_SERVER
                 }
                 is NetworkResult.NetworkError -> {
@@ -76,5 +61,9 @@ class CreateAbhaViewModel @Inject constructor(
 
     fun resetState() {
         _state.value = State.IDLE
+    }
+
+    fun resetErrorMessage() {
+        _errorMessage.value = null
     }
 }

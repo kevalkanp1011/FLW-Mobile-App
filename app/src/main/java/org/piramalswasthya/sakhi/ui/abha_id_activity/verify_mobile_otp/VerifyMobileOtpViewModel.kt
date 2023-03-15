@@ -37,9 +37,9 @@ class VerifyMobileOtpViewModel @Inject constructor(
     val txnID: String
         get() = _txnId!!
 
-    private var _errorMessage: String? = null
-    val errorMessage: String
-        get() = _errorMessage!!
+    private val _errorMessage = MutableLiveData<String?>(null)
+    val errorMessage: LiveData<String?>
+        get() = _errorMessage
 
     fun verifyOtpClicked(otp: String) {
         _state.value = State.LOADING
@@ -50,9 +50,13 @@ class VerifyMobileOtpViewModel @Inject constructor(
         _state.value = State.IDLE
     }
 
+    fun resetErrorMessage() {
+        _errorMessage.value = null
+    }
+
     private fun verifyMobileOtp(otp: String) {
         viewModelScope.launch {
-            val result = abhaIdRepo.verifyOtpForMobileNumber(
+            val result = abhaIdRepo.verifyOtpForMobileNumberDummy(
                 AbhaVerifyMobileOtpRequest(
                     otp,
                     txnIdFromArgs
@@ -64,7 +68,7 @@ class VerifyMobileOtpViewModel @Inject constructor(
                     _state.value = State.OTP_VERIFY_SUCCESS
                 }
                 is NetworkResult.Error -> {
-                    _errorMessage = result.message
+                    _errorMessage.value = result.message
                     _state.value = State.ERROR_SERVER
                 }
                 is NetworkResult.NetworkError -> {
@@ -77,7 +81,7 @@ class VerifyMobileOtpViewModel @Inject constructor(
     fun resendOtp() {
         _state.value = State.LOADING
         viewModelScope.launch {
-            val result = abhaIdRepo.generateOtpForMobileNumber(
+            val result = abhaIdRepo.generateOtpForMobileNumberDummy(
                 AbhaGenerateMobileOtpRequest(
                     phoneNumberFromArgs,
                     txnIdFromArgs
@@ -89,7 +93,7 @@ class VerifyMobileOtpViewModel @Inject constructor(
                     _state.value = State.OTP_GENERATED_SUCCESS
                 }
                 is NetworkResult.Error -> {
-                    _errorMessage = result.message
+                    _errorMessage.value = result.message
                     _state.value = State.ERROR_SERVER
                 }
                 is NetworkResult.NetworkError -> {

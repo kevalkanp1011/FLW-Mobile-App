@@ -96,6 +96,11 @@ data class AbhaGenerateAadhaarOtpResponse(
     val txnId: String
 )
 
+@JsonClass(generateAdapter = true)
+data class AbhaResendAadhaarOtpRequest(
+    val txnId: String
+)
+
 
 @JsonClass(generateAdapter = true)
 data class AbhaVerifyAadhaarOtpRequest(

@@ -25,9 +25,9 @@ class GenerateMobileOtpViewModel @Inject constructor(
     val state: LiveData<State>
         get() = _state
 
-    private var _errorMessage: String? = null
-    val errorMessage: String
-        get() = _errorMessage!!
+    private val _errorMessage = MutableLiveData<String?>(null)
+    val errorMessage: LiveData<String?>
+        get() = _errorMessage
 
     private val txnIdFromArgs =
         GenerateMobileOtpFragmentArgs.fromSavedStateHandle(savedStateHandle).txnId
@@ -44,9 +44,13 @@ class GenerateMobileOtpViewModel @Inject constructor(
         _state.value = State.IDLE
     }
 
+    fun resetErrorMessage() {
+        _errorMessage.value = null
+    }
+
     private fun generateMobileOtp(phoneNumber: String) {
         viewModelScope.launch {
-            val result = abhaIdRepo.generateOtpForMobileNumber(
+            val result = abhaIdRepo.generateOtpForMobileNumberDummy(
                 AbhaGenerateMobileOtpRequest(
                     phoneNumber,
                     txnIdFromArgs
@@ -58,7 +62,7 @@ class GenerateMobileOtpViewModel @Inject constructor(
                     _state.value = State.SUCCESS
                 }
                 is NetworkResult.Error -> {
-                    _errorMessage = result.message
+                    _errorMessage.value = result.message
                     _state.value = State.ERROR_SERVER
                 }
                 is NetworkResult.NetworkError -> {

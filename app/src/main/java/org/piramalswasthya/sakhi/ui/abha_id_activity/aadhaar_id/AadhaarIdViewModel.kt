@@ -33,27 +33,27 @@ AadhaarIdViewModel @Inject constructor(
     val txnId: String
         get() = _txnId!!
 
-    private val _errorMessage =  MutableLiveData<String?>(null)
+    private val _errorMessage = MutableLiveData<String?>(null)
     val errorMessage: LiveData<String?>
         get() = _errorMessage
 
-    fun generateOtpClicked(aadharNo: String) {
+    fun generateOtpClicked(aadhaarNo: String) {
         _state.value = State.LOADING
-        generateAadhaarOtp(aadharNo)
+        generateAadhaarOtp(aadhaarNo)
     }
 
     fun resetState() {
         _state.value = State.IDLE
     }
 
-    fun resetErrorMessage(){
+    fun resetErrorMessage() {
         _errorMessage.value = null
     }
 
     private fun generateAadhaarOtp(aadhaarNo: String) {
         viewModelScope.launch {
             when (val result =
-                abhaIdRepo.generateOtpForAadhaar(AbhaGenerateAadhaarOtpRequest(aadhaarNo))) {
+                abhaIdRepo.generateOtpForAadhaarDummy(AbhaGenerateAadhaarOtpRequest(aadhaarNo))) {
                 is NetworkResult.Success -> {
                     _txnId = result.data.txnId
                     _state.value = State.SUCCESS

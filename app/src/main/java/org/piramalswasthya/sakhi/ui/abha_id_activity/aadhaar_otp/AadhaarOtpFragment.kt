@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -75,7 +76,8 @@ class AadhaarOtpFragment : Fragment() {
                 State.ERROR_SERVER -> {
                     binding.pbLoadingAadharOtp.visibility = View.INVISIBLE
                     binding.clContent.visibility = View.VISIBLE
-                    Toast.makeText(activity, viewModel.errorMessage, Toast.LENGTH_LONG).show()
+                    binding.tvErrorText.visibility = View.VISIBLE
+                    binding.clError.visibility = View.INVISIBLE
                 }
                 State.ERROR_NETWORK -> {
                     binding.clContent.visibility = View.INVISIBLE
@@ -86,8 +88,17 @@ class AadhaarOtpFragment : Fragment() {
                     binding.clContent.visibility = View.VISIBLE
                     binding.pbLoadingAadharOtp.visibility = View.INVISIBLE
                     binding.clError.visibility = View.INVISIBLE
-                    Toast.makeText(activity, "OTP was resent successfully", Toast.LENGTH_LONG).show()
+                    binding.tvErrorText.visibility = View.INVISIBLE
+                    Toast.makeText(activity, "OTP was resent.", Toast.LENGTH_LONG)
+                        .show()
                 }
+            }
+        }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                binding.tvErrorText.text = it
+                viewModel.resetErrorMessage()
             }
         }
     }

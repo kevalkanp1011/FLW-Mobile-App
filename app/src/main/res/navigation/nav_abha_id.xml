@@ -25,11 +25,8 @@
         <action
             android:id="@+id/action_aadhaarOtpFragment_to_generateMobileOtpFragment"
             app:destination="@id/generateMobileOtpFragment"
-            app:popUpTo="@id/nav_abha_id"
+            app:popUpTo="@id/aadhaarOtpFragment"
             app:popUpToInclusive="true" />
-        <argument
-            android:name="aadhaarNum"
-            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/generateMobileOtpFragment"
@@ -51,7 +48,7 @@
         <action
             android:id="@+id/action_verifyMobileOtpFragment_to_createAbhaFragment"
             app:destination="@id/createAbhaFragment"
-            app:popUpTo="@id/nav_abha_id"
+            app:popUpTo="@id/verifyMobileOtpFragment"
             app:popUpToInclusive="true" />
         <argument
             android:name="txnId"

@@ -3,7 +3,7 @@ package org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_otp
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.network.AbhaGenerateAadhaarOtpRequest
+import org.piramalswasthya.sakhi.network.AbhaResendAadhaarOtpRequest
 import org.piramalswasthya.sakhi.network.AbhaVerifyAadhaarOtpRequest
 import org.piramalswasthya.sakhi.network.NetworkResult
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
@@ -25,15 +25,13 @@ class AadhaarOtpViewModel @Inject constructor(
     }
 
     private var txnIdFromArgs = AadhaarOtpFragmentArgs.fromSavedStateHandle(savedStateHandle).txnId
-    private val aadhaarNumber =
-        AadhaarOtpFragmentArgs.fromSavedStateHandle(savedStateHandle).aadhaarNum
     private val _state = MutableLiveData(State.IDLE)
     val state: LiveData<State>
         get() = _state
 
-    private var _errorMessage: String? = null
-    val errorMessage: String
-        get() = _errorMessage!!
+    private val _errorMessage = MutableLiveData<String?>(null)
+    val errorMessage: LiveData<String?>
+        get() = _errorMessage
 
     private var _txnId: String? = null
     val txnId: String
@@ -48,9 +46,13 @@ class AadhaarOtpViewModel @Inject constructor(
         _state.value = State.IDLE
     }
 
+    fun resetErrorMessage() {
+        _errorMessage.value = null
+    }
+
     private fun verifyAadhaarOtp(otp: String) {
         viewModelScope.launch {
-            val result = abhaIdRepo.verifyOtpForAadhaar(
+            val result = abhaIdRepo.verifyOtpForAadhaarDummy(
                 AbhaVerifyAadhaarOtpRequest(
                     otp,
                     txnIdFromArgs
@@ -62,7 +64,7 @@ class AadhaarOtpViewModel @Inject constructor(
                     _state.value = State.OTP_VERIFY_SUCCESS
                 }
                 is NetworkResult.Error -> {
-                    _errorMessage = result.message
+                    _errorMessage.value = result.message
                     _state.value = State.ERROR_SERVER
                 }
                 is NetworkResult.NetworkError -> {
@@ -76,13 +78,13 @@ class AadhaarOtpViewModel @Inject constructor(
         _state.value = State.LOADING
         viewModelScope.launch {
             when (val result =
-                abhaIdRepo.generateOtpForAadhaar(AbhaGenerateAadhaarOtpRequest(aadhaarNumber))) {
+                abhaIdRepo.resendOtpForAadhaar(AbhaResendAadhaarOtpRequest(txnIdFromArgs))) {
                 is NetworkResult.Success -> {
                     txnIdFromArgs = result.data.txnId
                     _state.value = State.OTP_GENERATED_SUCCESS
                 }
                 is NetworkResult.Error -> {
-                    _errorMessage = result.message
+                    _errorMessage.value = result.message
                     _state.value = State.ERROR_SERVER
                 }
                 is NetworkResult.NetworkError -> {

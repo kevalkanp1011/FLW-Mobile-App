@@ -6,15 +6,16 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentGenerateMobileOtpBinding
-import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdViewModel
 import org.piramalswasthya.sakhi.ui.abha_id_activity.generate_mobile_otp.GenerateMobileOtpViewModel.State
+import timber.log.Timber
 
 @AndroidEntryPoint
 class GenerateMobileOtpFragment : Fragment() {
@@ -23,9 +24,8 @@ class GenerateMobileOtpFragment : Fragment() {
     private val binding: FragmentGenerateMobileOtpBinding
         get() = _binding!!
 
+    private lateinit var callback: OnBackPressedCallback
     private val viewModel: GenerateMobileOtpViewModel by viewModels()
-
-    private val activityViewModel: AbhaIdViewModel by viewModels({ requireActivity() })
 
     private lateinit var navController: NavController
 
@@ -40,6 +40,16 @@ class GenerateMobileOtpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = findNavController()
+        binding.lifecycleOwner = viewLifecycleOwner
+
+        callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Handle back button press here
+                Timber.d("handleOnBackPressed")
+                navController.navigate(R.id.aadhaarIdFragment)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         binding.btnGenerateMobileOtp.setOnClickListener {
             viewModel.generateOtpClicked(binding.tietMobileNumber.text!!.toString())
@@ -77,7 +87,7 @@ class GenerateMobileOtpFragment : Fragment() {
                     binding.progressBarGmotp.visibility = View.INVISIBLE
                     binding.clGenerateMobileOtp.visibility = View.VISIBLE
                     binding.clError.visibility = View.INVISIBLE
-                    Toast.makeText(activity, viewModel.errorMessage, Toast.LENGTH_LONG).show()
+                    binding.tvErrorText.visibility = View.VISIBLE
                 }
                 State.ERROR_NETWORK -> {
                     binding.progressBarGmotp.visibility = View.INVISIBLE
@@ -86,6 +96,14 @@ class GenerateMobileOtpFragment : Fragment() {
                 }
             }
         }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                binding.tvErrorText.text = it
+                viewModel.resetErrorMessage()
+            }
+        }
+
     }
 
     override fun onDestroy() {
