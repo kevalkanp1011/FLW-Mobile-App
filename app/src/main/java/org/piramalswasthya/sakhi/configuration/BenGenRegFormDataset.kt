@@ -68,7 +68,7 @@ class BenGenRegFormDataset(private val context: Context) {
         title = "Image",
         required = true
     )
-    val dateOfReg = FormInput(
+    private val dateOfReg = FormInput(
         inputType = TEXT_VIEW,
         title = "Date of Registration",
         value = MutableStateFlow(getCurrentDate()),
