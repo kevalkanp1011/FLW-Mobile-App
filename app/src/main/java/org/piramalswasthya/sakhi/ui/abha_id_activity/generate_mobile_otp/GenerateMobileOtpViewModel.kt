@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.ui.abha_id_activity.generate_mobile_otp
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.network.AbhaCheckAndGenerateMobileOtpResponse
 import org.piramalswasthya.sakhi.network.AbhaGenerateMobileOtpRequest
 import org.piramalswasthya.sakhi.network.NetworkResult
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
@@ -31,9 +32,10 @@ class GenerateMobileOtpViewModel @Inject constructor(
 
     private val txnIdFromArgs =
         GenerateMobileOtpFragmentArgs.fromSavedStateHandle(savedStateHandle).txnId
-    private var _txnId: String? = null
-    val txnID: String
-        get() = _txnId!!
+
+    private var _apiResponse: AbhaCheckAndGenerateMobileOtpResponse? = null
+    val apiResponse: AbhaCheckAndGenerateMobileOtpResponse
+        get() = _apiResponse!!
 
     fun generateOtpClicked(phoneNumber: String) {
         _state.value = State.LOADING
@@ -50,7 +52,7 @@ class GenerateMobileOtpViewModel @Inject constructor(
 
     private fun generateMobileOtp(phoneNumber: String) {
         viewModelScope.launch {
-            val result = abhaIdRepo.generateOtpForMobileNumberDummy(
+            val result = abhaIdRepo.checkAndGenerateOtpForMobileNumber(
                 AbhaGenerateMobileOtpRequest(
                     phoneNumber,
                     txnIdFromArgs
@@ -58,7 +60,7 @@ class GenerateMobileOtpViewModel @Inject constructor(
             )
             when (result) {
                 is NetworkResult.Success -> {
-                    _txnId = result.data.txnId
+                    _apiResponse = result.data
                     _state.value = State.SUCCESS
                 }
                 is NetworkResult.Error -> {

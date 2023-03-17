@@ -126,6 +126,11 @@ data class AbhaGenerateMobileOtpResponse(
     val txnId: String
 )
 
+data class AbhaCheckAndGenerateMobileOtpResponse(
+    val mobileLinked: Boolean,
+    val txnId: String
+)
+
 
 @JsonClass(generateAdapter = true)
 data class AbhaVerifyMobileOtpRequest(

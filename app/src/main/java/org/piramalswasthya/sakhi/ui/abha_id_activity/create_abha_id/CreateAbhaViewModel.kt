@@ -36,7 +36,7 @@ class CreateAbhaViewModel @Inject constructor(
 
     private fun generateAbhaCard() {
         viewModelScope.launch {
-            val result = abhaIdRepo.generateAbhaIdDummy(
+            val result = abhaIdRepo.generateAbhaId(
                 CreateAbhaIdRequest(
                     null, null, null, null, null, null, null, txnIdFromArgs
                 )

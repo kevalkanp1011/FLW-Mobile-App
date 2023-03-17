@@ -98,11 +98,20 @@ class GenerateMobileOtpFragment : Fragment() {
                     binding.clError.visibility = View.INVISIBLE
                 }
                 State.SUCCESS -> {
-                    navController.navigate(
-                        GenerateMobileOtpFragmentDirections.actionGenerateMobileOtpFragmentToVerifyMobileOtpFragment(
-                            viewModel.txnID, binding.tietMobileNumber.text!!.toString()
+                    if (viewModel.apiResponse.mobileLinked) {
+                        navController.navigate(
+                            GenerateMobileOtpFragmentDirections.actionGenerateMobileOtpFragmentToCreateAbhaFragment(
+                                viewModel.apiResponse.txnId
+                            )
                         )
-                    )
+                    } else {
+                        navController.navigate(
+                            GenerateMobileOtpFragmentDirections.actionGenerateMobileOtpFragmentToVerifyMobileOtpFragment(
+                                viewModel.apiResponse.txnId,
+                                binding.tietMobileNumber.text!!.toString()
+                            )
+                        )
+                    }
                     viewModel.resetState()
                 }
                 State.ERROR_SERVER -> {

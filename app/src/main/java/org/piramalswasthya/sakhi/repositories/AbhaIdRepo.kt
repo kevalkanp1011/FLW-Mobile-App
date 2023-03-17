@@ -162,6 +162,34 @@ class AbhaIdRepo @Inject constructor(
         }
     }
 
+    suspend fun checkAndGenerateOtpForMobileNumber(req: AbhaGenerateMobileOtpRequest): NetworkResult<AbhaCheckAndGenerateMobileOtpResponse> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = abhaApiService.checkAndGenerateMobileOtp(request = req)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val result =
+                        Gson().fromJson(
+                            responseBody,
+                            AbhaCheckAndGenerateMobileOtpResponse::class.java
+                        )
+                    NetworkResult.Success(result)
+                } else {
+                    sendErrorResponse(response)
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
+            }
+        }
+    }
+
     suspend fun verifyOtpForMobileNumber(req: AbhaVerifyMobileOtpRequest): NetworkResult<AbhaVerifyMobileOtpResponse> {
         return withContext(Dispatchers.IO) {
             try {

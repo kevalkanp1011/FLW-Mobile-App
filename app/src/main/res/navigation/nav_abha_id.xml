@@ -39,6 +39,9 @@
         <argument
             android:name="txnId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_generateMobileOtpFragment_to_createAbhaFragment"
+            app:destination="@id/createAbhaFragment" />
     </fragment>
     <fragment
         android:id="@+id/verifyMobileOtpFragment"

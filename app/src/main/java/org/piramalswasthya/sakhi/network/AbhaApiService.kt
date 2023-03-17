@@ -28,6 +28,12 @@ interface AbhaApiService {
     @POST("generateMobileOTP")
     suspend fun generateMobileOtp(@Body mobile: AbhaGenerateMobileOtpRequest): Response<ResponseBody>
 
+    @POST
+    suspend fun checkAndGenerateMobileOtp(
+        @Url url: String = "https://healthidsbx.abdm.gov.in/api/v2/registration/aadhaar/checkAndGenerateMobileOTP",
+        @Body request: AbhaGenerateMobileOtpRequest
+    ): Response<ResponseBody>
+
     @POST("verifyMobileOTP")
     suspend fun verifyMobileOtp(@Body request: AbhaVerifyMobileOtpRequest): Response<ResponseBody>
 
