@@ -7,7 +7,7 @@ import org.piramalswasthya.sakhi.model.HBNCCache
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HBNCFormDataset(context: Context, private val hbnc: HBNCCache? = null) {
+class HBNCFormDataset(context: Context, private val nthDay : Int, private val hbnc: HBNCCache? = null) {
 
     companion object {
         private fun getLongFromDate(dateString: String): Long {
@@ -472,7 +472,7 @@ class HBNCFormDataset(context: Context, private val hbnc: HBNCCache? = null) {
     )
     private val babyWeight = FormInput(
         inputType = InputType.EDIT_TEXT,
-        title = "Weight on the first, third, 7th, 14th, 21st and 42nd days (Write weight)",
+        title = "Weight on Day $nthDay",
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false,
     )
@@ -592,20 +592,7 @@ class HBNCFormDataset(context: Context, private val hbnc: HBNCCache? = null) {
     )
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    val firstPage by lazy {
+    private val oneTimeFormElements by lazy{
         listOf(
             titleHomeVisit,
             healthSubCenterName,
@@ -658,6 +645,11 @@ class HBNCFormDataset(context: Context, private val hbnc: HBNCCache? = null) {
             onlyBreastMilk,
             unusualWithBaby,
 
+            )
+    }
+
+    private val commonFormElements by lazy{
+        listOf(
             titleAskMother_A,
             timesMotherFed24hr,
             timesPadChanged,
@@ -696,10 +688,14 @@ class HBNCFormDataset(context: Context, private val hbnc: HBNCCache? = null) {
             supervisorComment,
             dateOfSupSig
 
+        )
+    }
 
-
-
-
-            )
+    val firstPage by lazy {
+        if(nthDay==1) {
+            oneTimeFormElements.toMutableList().also { it.addAll(commonFormElements) }
+        }
+        else
+            commonFormElements
     }
 }

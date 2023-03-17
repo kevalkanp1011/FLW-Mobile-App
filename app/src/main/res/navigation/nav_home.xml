@@ -276,8 +276,8 @@
         android:label="@string/child_care_icon_title_infant_list"
         tools:layout="@layout/fragment_infant_list" >
         <action
-            android:id="@+id/action_infantListFragment_to_hbncFragment"
-            app:destination="@id/hbncFragment" />
+            android:id="@+id/action_infantListFragment_to_hbncDayListFragment"
+            app:destination="@id/hbncDayListFragment" />
     </fragment>
     <fragment
         android:id="@+id/adolescentListFragment"
@@ -503,6 +503,22 @@
             android:name="benId"
             app:argType="long" />
     </fragment>
+
+    <fragment
+        android:id="@+id/hbncDayListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.HbncDayListFragment"
+        android:label="HbncDayListFragment" >
+        <action
+            android:id="@+id/action_hbncDayListFragment_to_hbncFragment"
+            app:destination="@id/hbncFragment" />
+        <argument
+            android:name="hhId"
+            app:argType="long" />
+        <argument
+            android:name="benId"
+            app:argType="long" />
+
+    </fragment>
     <fragment
         android:id="@+id/hbncFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.HbncFragment"
@@ -513,6 +529,9 @@
         <argument
             android:name="benId"
             app:argType="long" />
+        <argument
+            android:name="nthDay"
+            app:argType="integer" />
     </fragment>
 
 </navigation>

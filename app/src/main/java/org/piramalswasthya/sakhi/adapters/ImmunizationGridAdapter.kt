@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.piramalswasthya.sakhi.databinding.RvIconImmunizationBinding
+import org.piramalswasthya.sakhi.databinding.RvItemIconImmunizationBinding
 import org.piramalswasthya.sakhi.model.ImmunizationIcon
 
 class ImmunizationGridAdapter (private val clickListener: ImmunizationIconClickListener) :
@@ -20,13 +20,13 @@ class ImmunizationGridAdapter (private val clickListener: ImmunizationIconClickL
     }
 
 
-    class IconViewHolder private constructor(private val binding: RvIconImmunizationBinding) :
+    class IconViewHolder private constructor(private val binding: RvItemIconImmunizationBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         companion object {
             fun from(parent: ViewGroup) : IconViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RvIconImmunizationBinding.inflate(layoutInflater,parent,false)
+                val binding = RvItemIconImmunizationBinding.inflate(layoutInflater,parent,false)
                 return IconViewHolder(binding)
             }
         }
