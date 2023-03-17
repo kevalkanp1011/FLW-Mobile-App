@@ -2,6 +2,7 @@ package org.piramalswasthya.sakhi.helpers
 
 object Konstants {
 
+    const val editTextHintLimit: Byte = 50
     const val benIdCapacity: Int = 100
     const val benIdWorkerTriggerLimit = 90
 

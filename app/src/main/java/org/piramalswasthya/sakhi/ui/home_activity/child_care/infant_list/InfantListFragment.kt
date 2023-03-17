@@ -21,6 +21,7 @@ import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.N
 import org.piramalswasthya.sakhi.ui.home_activity.death_reports.cdr.CdrListFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.work.WorkerUtils
+import timber.log.Timber
 
 @AndroidEntryPoint
 class InfantListFragment : Fragment() {
@@ -49,8 +50,12 @@ class InfantListFragment : Fragment() {
                     Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
                 },
                 { hhId, benId ->
+                    Timber.d("benId : $benId hhId : $hhId")
                     findNavController().navigate(
-                        InfantListFragmentDirections.actionInfantListFragmentToHbncFragment(hhId, benId)
+                        InfantListFragmentDirections.actionInfantListFragmentToHbncDayListFragment(
+                            hhId = hhId,
+                            benId = benId
+                        )
                     )
                 }), "HBNC Form")
         binding.rvAny.adapter = benAdapter

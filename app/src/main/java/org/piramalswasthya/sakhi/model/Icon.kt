@@ -43,3 +43,9 @@ data class ImmunizationIcon(
     val maxCount: Int = 5,
     val typeOfList: TypeOfList
 )
+
+data class HbncIcon(
+    val hhId: Long,
+    val benId: Long,
+    val count: Int,
+)

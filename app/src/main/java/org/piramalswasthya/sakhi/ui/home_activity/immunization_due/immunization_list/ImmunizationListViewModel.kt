@@ -17,7 +17,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ImmunizationListViewModel @Inject constructor(
-    private val context: Application,
     state: SavedStateHandle,
     private val database: InAppDb
 ) : ViewModel() {
@@ -25,7 +24,10 @@ class ImmunizationListViewModel @Inject constructor(
     private val benId = ImmunizationListFragmentArgs.fromSavedStateHandle(state).benId
     private val hhId = ImmunizationListFragmentArgs.fromSavedStateHandle(state).hhId
 
-    var vaccineList: List<ImmunizationIcon>? = null
+    private var _vaccineList : List<ImmunizationIcon>? = null
+    val vaccineList: List<ImmunizationIcon>?
+        get() = _vaccineList
+
     private val adolescentVaccines = listOf(ImmunizationIcon(benId, hhId, "Td",0, typeOfList = TypeOfList.ADOLESCENT))
     private val pregnantWomenVaccines = listOf(
     ImmunizationIcon(benId, hhId, "Tetanus & Adult Diphtheria (Td)-1",0, typeOfList = TypeOfList.ANTENATAL_MOTHER),
@@ -73,16 +75,12 @@ class ImmunizationListViewModel @Inject constructor(
             Timber.d("immunization entries: $hhId, $benId: ${ben.beneficiaryId}")
 
             val typeOfList = ben.registrationType
-            vaccineList = if(typeOfList == TypeOfList.INFANT) {
-                infantVaccines
-            } else if (typeOfList == TypeOfList.CHILD) {
-                childVaccines
-            } else if (typeOfList == TypeOfList.ADOLESCENT) {
-                adolescentVaccines
-            } else if (typeOfList == TypeOfList.ANTENATAL_MOTHER) {
-                pregnantWomenVaccines
-            } else {
-                throw IllegalStateException("type of entries is null")
+            _vaccineList = when (typeOfList) {
+                TypeOfList.INFANT -> infantVaccines
+                TypeOfList.CHILD -> childVaccines
+                TypeOfList.ADOLESCENT -> adolescentVaccines
+                TypeOfList.ANTENATAL_MOTHER -> pregnantWomenVaccines
+                else -> throw IllegalStateException("type of entries is null")
             }
         }
     }

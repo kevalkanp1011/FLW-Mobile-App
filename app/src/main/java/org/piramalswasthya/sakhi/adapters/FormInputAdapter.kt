@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.configuration.FormEditTextDefaultInputFilter
 import org.piramalswasthya.sakhi.databinding.*
+import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.FormInput
 import org.piramalswasthya.sakhi.model.FormInput.InputType.*
 import timber.log.Timber
@@ -52,6 +53,16 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
             binding.et.isClickable = isEnabled
             binding.et.isFocusable = isEnabled
             binding.form = item
+            if(item.title.length>Konstants.editTextHintLimit) {
+                binding.tvHint.visibility = View.VISIBLE
+                binding.et.hint = null
+                binding.tilEditText.hint = null
+                binding.tilEditText.isHintEnabled = false
+            }
+            else {
+                binding.tvHint.visibility = View.GONE
+                binding.tilEditText.isHintEnabled = true
+            }
             if(!isEnabled){
                 binding.executePendingBindings()
                 return

@@ -1,8 +1,10 @@
 package org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -22,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HbncViewModel @Inject constructor(
     state: SavedStateHandle,
-    context: Application,
+    @ApplicationContext context : Context,
     private val database: InAppDb,
     private val hbncRepo: HbncRepo,
     private val benRepo: BenRepo
@@ -37,6 +39,7 @@ class HbncViewModel @Inject constructor(
 
     private val benId = HbncFragmentArgs.fromSavedStateHandle(state).benId
     private val hhId = HbncFragmentArgs.fromSavedStateHandle(state).hhId
+    private val nthDay = HbncFragmentArgs.fromSavedStateHandle(state).nthDay
     private lateinit var ben: BenRegCache
     private lateinit var household: HouseholdCache
     private lateinit var user: UserCache
@@ -58,7 +61,7 @@ class HbncViewModel @Inject constructor(
     val exists: LiveData<Boolean>
         get() = _exists
 
-    private val dataset = HBNCFormDataset(context)
+    private val dataset = HBNCFormDataset(context, nthDay)
 
     fun submitForm() {
         _state.value = State.LOADING
@@ -81,6 +84,7 @@ class HbncViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
+                Timber.d("benId : $benId hhId : $hhId")
                 ben = benRepo.getBeneficiary(benId, hhId)!!
                 household = benRepo.getHousehold(hhId)!!
                 user = database.userDao.getLoggedInUser()!!
