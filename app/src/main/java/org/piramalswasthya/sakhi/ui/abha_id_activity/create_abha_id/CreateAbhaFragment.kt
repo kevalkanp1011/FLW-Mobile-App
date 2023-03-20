@@ -42,7 +42,7 @@ class CreateAbhaFragment : Fragment() {
             .setTitle("Exit")
             .setMessage("Do you want to go back?")
             .setPositiveButton("Yes") { _, _ ->
-                navController.navigate(R.id.aadhaarIdFragment)
+                activity?.finish()
             }
             .setNegativeButton("No") { d, _ ->
                 d.dismiss()
@@ -65,6 +65,10 @@ class CreateAbhaFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         navController = findNavController()
+
+        binding.btnDownloadAbha.setOnClickListener {
+            viewModel.downloadAbhaClicked(requireActivity())
+        }
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
@@ -95,7 +99,11 @@ class CreateAbhaFragment : Fragment() {
                     binding.clCreateAbhaId.visibility = View.VISIBLE
                     binding.clError.visibility = View.INVISIBLE
                 }
-                State.DOWNLOAD_SUCCESS -> {}
+                State.DOWNLOAD_SUCCESS -> {
+                    binding.pbCai.visibility = View.INVISIBLE
+                    binding.clCreateAbhaId.visibility = View.VISIBLE
+                    binding.clError.visibility = View.INVISIBLE
+                }
             }
         }
 

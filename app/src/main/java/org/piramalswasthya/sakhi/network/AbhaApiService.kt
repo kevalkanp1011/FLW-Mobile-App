@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.network
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Url
@@ -39,6 +40,13 @@ interface AbhaApiService {
 
     @POST("createHealthIdWithPreVerified")
     suspend fun createAbhaId(@Body request: CreateAbhaIdRequest): Response<ResponseBody>
+    @GET
+    suspend fun getPdfCard(
+        @Url url: String = "https://healthidsbx.abdm.gov.in/api/v1/account/getCard"
+    ): Response<ResponseBody>
+
+    @GET("getPngCard")
+    suspend fun getPngCard(): Response<ResponseBody>
 
 
 }

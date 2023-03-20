@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.repositories
 
+import android.content.Context
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -8,6 +9,9 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.piramalswasthya.sakhi.network.*
 import retrofit2.Response
+import timber.log.Timber
+import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.net.SocketTimeoutException
 import javax.inject.Inject
@@ -190,6 +194,13 @@ class AbhaIdRepo @Inject constructor(
         }
     }
 
+    suspend fun checkAndGenerateOtpForMobileNumberDummy(req: AbhaGenerateMobileOtpRequest): NetworkResult<AbhaCheckAndGenerateMobileOtpResponse> {
+        return withContext(Dispatchers.IO) {
+            Thread.sleep(2000)
+            NetworkResult.Success(AbhaCheckAndGenerateMobileOtpResponse(true, "XYZ"))
+        }
+    }
+
     suspend fun verifyOtpForMobileNumber(req: AbhaVerifyMobileOtpRequest): NetworkResult<AbhaVerifyMobileOtpResponse> {
         return withContext(Dispatchers.IO) {
             try {
@@ -277,6 +288,41 @@ class AbhaIdRepo @Inject constructor(
                     true
                 )
             )
+        }
+    }
+
+    suspend fun getPdfCard(context: Context) {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = abhaApiService.getPdfCard()
+                val fileName = "myPdf.pdf"
+                val directory = context.applicationContext.getExternalFilesDir(null)
+                val file = File(directory, fileName)
+                val responseBody = response.body()!!
+                val inputStream = responseBody.byteStream()
+                val outputStream = FileOutputStream(file)
+
+                val buffer = ByteArray(1024)
+                var bytesRead = inputStream?.read(buffer)
+                while (bytesRead != -1) {
+                    outputStream.write(buffer, 0, bytesRead!!)
+                    bytesRead = inputStream?.read(buffer)
+                }
+                outputStream.close()
+                inputStream.close()
+                Timber.d("PDF Download Completed")
+            } catch (e: java.lang.Exception) {
+                Timber.d("Get Pdf Card download failed")
+            }
+        }
+    }
+
+    suspend fun getPngCard() {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = abhaApiService.getPngCard()
+            } catch (e: java.lang.Exception) {
+            }
         }
     }
 
