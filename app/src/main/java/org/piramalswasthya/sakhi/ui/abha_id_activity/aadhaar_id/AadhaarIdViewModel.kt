@@ -53,7 +53,7 @@ AadhaarIdViewModel @Inject constructor(
     private fun generateAadhaarOtp(aadhaarNo: String) {
         viewModelScope.launch {
             when (val result =
-                abhaIdRepo.generateOtpForAadhaar(AbhaGenerateAadhaarOtpRequest(aadhaarNo))) {
+                abhaIdRepo.generateOtpForAadhaarV2(AbhaGenerateAadhaarOtpRequest(aadhaarNo))) {
                 is NetworkResult.Success -> {
                     _txnId = result.data.txnId
                     _state.value = State.SUCCESS

@@ -88,12 +88,18 @@ data class AbhaTokenResponse(
 
 @JsonClass(generateAdapter = true)
 data class AbhaGenerateAadhaarOtpRequest(
-    val aadhaar: String
+    var aadhaar: String
 )
 
 @JsonClass(generateAdapter = true)
 data class AbhaGenerateAadhaarOtpResponse(
     val txnId: String
+)
+
+@JsonClass(generateAdapter = true)
+data class AbhaGenerateAadhaarOtpResponseV2(
+    val txnId: String,
+    val mobileNumber: String
 )
 
 @JsonClass(generateAdapter = true)

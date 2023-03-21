@@ -63,8 +63,7 @@ class CreateAbhaViewModel @Inject constructor(
 
     private fun downloadAbhaCard(context: Context) {
         viewModelScope.launch {
-            Timber.d("Download Abha Card")
-            val result = abhaIdRepo.getPdfCard(context)
+            abha.value?.name?.let { abhaIdRepo.getPdfCard(context, "$it.pdf") }
             _state.value = State.DOWNLOAD_SUCCESS
         }
     }
@@ -78,7 +77,6 @@ class CreateAbhaViewModel @Inject constructor(
     }
 
     fun downloadAbhaClicked(context: Context) {
-        Timber.d("Download Abha clicked")
         _state.value = State.LOADING
         downloadAbhaCard(context)
     }

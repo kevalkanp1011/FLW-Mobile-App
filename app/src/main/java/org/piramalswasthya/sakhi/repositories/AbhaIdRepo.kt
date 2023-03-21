@@ -1,12 +1,16 @@
 package org.piramalswasthya.sakhi.repositories
 
 import android.content.Context
+import android.media.MediaScannerConnection
+import android.os.Environment
+import android.util.Base64
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import org.json.JSONException
 import org.json.JSONObject
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.network.*
 import retrofit2.Response
 import timber.log.Timber
@@ -14,10 +18,14 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.net.SocketTimeoutException
+import java.security.KeyFactory
+import java.security.spec.X509EncodedKeySpec
+import javax.crypto.Cipher
 import javax.inject.Inject
 
 class AbhaIdRepo @Inject constructor(
-    private val abhaApiService: AbhaApiService
+    private val abhaApiService: AbhaApiService,
+    private val prefDao: PreferenceDao
 ) {
     suspend fun getAccessToken(): NetworkResult<AbhaTokenResponse> {
         return withContext(Dispatchers.IO) {
@@ -27,6 +35,33 @@ class AbhaIdRepo @Inject constructor(
                     val responseBody = response.body()?.string()
                     val result = Gson().fromJson(responseBody, AbhaTokenResponse::class.java)
                     NetworkResult.Success(result)
+                } else {
+                    sendErrorResponse(response)
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
+            }
+        }
+    }
+
+    suspend fun getAuthCert(): NetworkResult<String> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = abhaApiService.getAuthCert()
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    var key = responseBody!!
+                    key = key.replace("-----BEGIN PUBLIC KEY-----\n", "")
+                    key = key.replace("-----END PUBLIC KEY-----", "")
+                    key = key.trim()
+                    NetworkResult.Success(key)
                 } else {
                     sendErrorResponse(response)
                 }
@@ -73,6 +108,52 @@ class AbhaIdRepo @Inject constructor(
             Thread.sleep(2000)
             NetworkResult.Success(AbhaGenerateAadhaarOtpResponse("XYZ"))
         }
+    }
+
+    suspend fun generateOtpForAadhaarV2(req: AbhaGenerateAadhaarOtpRequest): NetworkResult<AbhaGenerateAadhaarOtpResponseV2> {
+        return withContext(Dispatchers.IO) {
+            try {
+                req.aadhaar = encryptData(req.aadhaar)
+                val response = abhaApiService.generateAadhaarOtpV2(req)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val result =
+                        Gson().fromJson(responseBody, AbhaGenerateAadhaarOtpResponseV2::class.java)
+                    NetworkResult.Success(result)
+                } else {
+                    sendErrorResponse(response)
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
+            }
+        }
+    }
+
+    private fun encryptData(txt: String): String {
+        var encryptedTextBase64 = ""
+        val publicKeyString = prefDao.getPublicKeyForAbha()!!
+        Timber.d(publicKeyString)
+        try {
+            val publicKeyBytes = Base64.decode(publicKeyString, Base64.DEFAULT)
+            val keyFactory = KeyFactory.getInstance("RSA")
+            val publicKeySpec = X509EncodedKeySpec(publicKeyBytes)
+            val publicKey = keyFactory.generatePublic(publicKeySpec)
+
+            val cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding")
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey)
+            val encryptedText = cipher.doFinal(txt.toByteArray())
+            encryptedTextBase64 = Base64.encodeToString(encryptedText, Base64.DEFAULT).replace("\n", "")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return encryptedTextBase64
     }
 
     suspend fun resendOtpForAadhaar(req: AbhaResendAadhaarOtpRequest): NetworkResult<AbhaGenerateAadhaarOtpResponse> {
@@ -291,28 +372,32 @@ class AbhaIdRepo @Inject constructor(
         }
     }
 
-    suspend fun getPdfCard(context: Context) {
+    suspend fun getPdfCard(context: Context, fileName: String) {
         return withContext(Dispatchers.IO) {
             try {
                 val response = abhaApiService.getPdfCard()
-                val fileName = "myPdf.pdf"
-                val directory = context.applicationContext.getExternalFilesDir(null)
+                val directory =
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                 val file = File(directory, fileName)
                 val responseBody = response.body()!!
                 val inputStream = responseBody.byteStream()
                 val outputStream = FileOutputStream(file)
 
                 val buffer = ByteArray(1024)
-                var bytesRead = inputStream?.read(buffer)
+                var bytesRead = inputStream.read(buffer)
                 while (bytesRead != -1) {
-                    outputStream.write(buffer, 0, bytesRead!!)
-                    bytesRead = inputStream?.read(buffer)
+                    outputStream.write(buffer, 0, bytesRead)
+                    bytesRead = inputStream.read(buffer)
                 }
                 outputStream.close()
                 inputStream.close()
-                Timber.d("PDF Download Completed")
+                MediaScannerConnection.scanFile(
+                    context,
+                    arrayOf(file.toString()),
+                    null,
+                    null
+                )
             } catch (e: java.lang.Exception) {
-                Timber.d("Get Pdf Card download failed")
             }
         }
     }

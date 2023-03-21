@@ -112,7 +112,7 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
         return pref.getLong(prefKey, 1603132200000)
     }
 
-    fun setFirstSyncLastSyncedPage(page: Int){
+    fun setFirstSyncLastSyncedPage(page: Int) {
         val editor = pref.edit()
         val prefKey = context.getString(R.string.PREF_first_pull_amrit_last_synced_page)
         editor.putInt(prefKey, page)
@@ -150,9 +150,22 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
         editor.apply()
         Timber.d("Saving profile pic @ $uri")
     }
+
     fun getProfilePicUri(): Uri? {
         val key = context.getString(R.string.PREF_current_dp_uri)
-        val uriString =  pref.getString(key, null)
+        val uriString = pref.getString(key, null)
         return uriString?.let { Uri.parse(it) }
+    }
+
+    fun savePublicKeyForAbha(publicKey: String) {
+        val key = "AUTH_CERT"
+        val editor = pref.edit()
+        editor.putString(key, publicKey)
+        editor.apply()
+    }
+
+    fun getPublicKeyForAbha(): String? {
+        val key = "AUTH_CERT"
+        return pref.getString(key, null)
     }
 }
