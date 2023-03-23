@@ -195,6 +195,16 @@
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_allBenFragment_to_newBenRegG15Fragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_allBenFragment_to_newBenRegL15Fragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_allBenFragment_to_newBenRegTypeFragment">
                               <value>
                                 <LayoutPositions />
@@ -419,6 +429,51 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="hbncDayListFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_hbncDayListFragment_to_hbncFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="hbncFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="256" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="hbycFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="1523" />
+                            <option name="y" value="809" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="helpFragment">
                     <value>
                       <LayoutPositions>
@@ -617,6 +672,15 @@
                             <option name="x" value="1161" />
                             <option name="y" value="518" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_infantListFragment_to_hbncDayListFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -968,6 +1032,15 @@
                             <option name="x" value="1068" />
                             <option name="y" value="2558" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_reproductiveAgeListFragment_to_fpotFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
