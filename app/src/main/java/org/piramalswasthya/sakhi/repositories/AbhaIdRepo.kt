@@ -1,15 +1,22 @@
 package org.piramalswasthya.sakhi.repositories
 
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.media.MediaScannerConnection
 import android.os.Environment
 import android.util.Base64
+import androidx.core.app.NotificationCompat
+import androidx.core.content.FileProvider
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import org.json.JSONException
 import org.json.JSONObject
+import org.piramalswasthya.sakhi.BuildConfig
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.network.*
 import retrofit2.Response
@@ -149,7 +156,8 @@ class AbhaIdRepo @Inject constructor(
             val cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding")
             cipher.init(Cipher.ENCRYPT_MODE, publicKey)
             val encryptedText = cipher.doFinal(txt.toByteArray())
-            encryptedTextBase64 = Base64.encodeToString(encryptedText, Base64.DEFAULT).replace("\n", "")
+            encryptedTextBase64 =
+                Base64.encodeToString(encryptedText, Base64.DEFAULT).replace("\n", "")
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -375,6 +383,19 @@ class AbhaIdRepo @Inject constructor(
     suspend fun getPdfCard(context: Context, fileName: String) {
         return withContext(Dispatchers.IO) {
             try {
+                val notificationManager =
+                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                val notificationId = 1
+                val notificationBuilder = NotificationCompat.Builder(
+                    context,
+                    "channel1_id"
+                )
+                    .setSmallIcon(R.drawable.ic_download)
+                    .setContentTitle("Downloading PDF")
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setOngoing(true)
+                    .setProgress(0, 0, true)
+                notificationManager.notify(notificationId, notificationBuilder.build())
                 val response = abhaApiService.getPdfCard()
                 val directory =
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
@@ -385,12 +406,38 @@ class AbhaIdRepo @Inject constructor(
 
                 val buffer = ByteArray(1024)
                 var bytesRead = inputStream.read(buffer)
+                var totalBytesRead = bytesRead.toLong()
                 while (bytesRead != -1) {
                     outputStream.write(buffer, 0, bytesRead)
                     bytesRead = inputStream.read(buffer)
+                    totalBytesRead += bytesRead
+                    val progress =
+                        ((totalBytesRead.toDouble() / responseBody.contentLength()) * 100).toInt()
+                    notificationBuilder.setProgress(100, progress, false)
+                    notificationManager.notify(notificationId, notificationBuilder.build())
                 }
                 outputStream.close()
                 inputStream.close()
+                notificationBuilder.setContentTitle("Download Complete")
+                    .setOngoing(false)
+                    .setProgress(0, 0, false)
+                val uri = FileProvider.getUriForFile(
+                    context,
+                    BuildConfig.APPLICATION_ID + ".provider",
+                    file
+                )
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.setDataAndType(uri, "application/pdf")
+                intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                val pendingIntent = PendingIntent.getActivity(
+                    context,
+                    0,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+                notificationBuilder.setContentIntent(pendingIntent)
+                notificationManager.notify(notificationId, notificationBuilder.build())
+
                 MediaScannerConnection.scanFile(
                     context,
                     arrayOf(file.toString()),
