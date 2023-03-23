@@ -1,10 +1,12 @@
 package org.piramalswasthya.sakhi.repositories
 
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.MediaScannerConnection
+import android.os.Build
 import android.os.Environment
 import android.util.Base64
 import androidx.core.app.NotificationCompat
@@ -385,17 +387,30 @@ class AbhaIdRepo @Inject constructor(
             try {
                 val notificationManager =
                     context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                val channelId = "pdf_download_channel"
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    val channelName = "PDF Download"
+                    val channel = NotificationChannel(
+                        channelId,
+                        channelName,
+                        NotificationManager.IMPORTANCE_HIGH
+                    )
+                    notificationManager.createNotificationChannel(channel)
+                }
+
                 val notificationId = 1
                 val notificationBuilder = NotificationCompat.Builder(
                     context,
-                    "channel1_id"
+                    channelId
                 )
                     .setSmallIcon(R.drawable.ic_download)
-                    .setContentTitle("Downloading PDF")
+                    .setContentTitle(fileName)
+                    .setContentText("Downloading in progess")
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setOngoing(true)
                     .setProgress(0, 0, true)
                 notificationManager.notify(notificationId, notificationBuilder.build())
+
                 val response = abhaApiService.getPdfCard()
                 val directory =
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
@@ -407,20 +422,25 @@ class AbhaIdRepo @Inject constructor(
                 val buffer = ByteArray(1024)
                 var bytesRead = inputStream.read(buffer)
                 var totalBytesRead = bytesRead.toLong()
+                var progress = 0
                 while (bytesRead != -1) {
                     outputStream.write(buffer, 0, bytesRead)
-                    bytesRead = inputStream.read(buffer)
                     totalBytesRead += bytesRead
-                    val progress =
+                    progress =
                         ((totalBytesRead.toDouble() / responseBody.contentLength()) * 100).toInt()
                     notificationBuilder.setProgress(100, progress, false)
                     notificationManager.notify(notificationId, notificationBuilder.build())
+                    bytesRead = inputStream.read(buffer)
                 }
+                Timber.d("$progress")
                 outputStream.close()
                 inputStream.close()
-                notificationBuilder.setContentTitle("Download Complete")
-                    .setOngoing(false)
+
+                notificationBuilder
+                    .setContentTitle(fileName)
+                    .setContentText("Download Completed")
                     .setProgress(0, 0, false)
+                    .setOngoing(false)
                 val uri = FileProvider.getUriForFile(
                     context,
                     BuildConfig.APPLICATION_ID + ".provider",
@@ -428,14 +448,16 @@ class AbhaIdRepo @Inject constructor(
                 )
                 val intent = Intent(Intent.ACTION_VIEW)
                 intent.setDataAndType(uri, "application/pdf")
-                intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 val pendingIntent = PendingIntent.getActivity(
                     context,
                     0,
                     intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                 )
-                notificationBuilder.setContentIntent(pendingIntent)
+                notificationBuilder
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
                 notificationManager.notify(notificationId, notificationBuilder.build())
 
                 MediaScannerConnection.scanFile(
@@ -444,7 +466,8 @@ class AbhaIdRepo @Inject constructor(
                     null,
                     null
                 )
-            } catch (e: java.lang.Exception) {
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
