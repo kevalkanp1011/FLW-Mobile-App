@@ -66,9 +66,9 @@ class CreateAbhaFragment : Fragment() {
 
         navController = findNavController()
 
-//        binding.btnDownloadAbha.setOnClickListener {
-//            viewModel.downloadAbhaClicked(requireActivity())
-//        }
+        binding.btnDownloadAbha.setOnClickListener {
+            viewModel.downloadAbhaClicked(requireActivity())
+        }
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
