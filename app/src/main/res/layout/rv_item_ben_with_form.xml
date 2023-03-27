@@ -186,10 +186,44 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_row_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_below="@id/ll_row_3">
+
+                    <include
+                        android:id="@+id/rl_rch_id"
+                        style="@style/rv_item_ben_fields"
+                        layout="@layout/rv_item_ben_element"
+                        app:field="@{ben.rchId}"
+                        app:fieldTitle="@{@string/tv_rch_id}" />
+
+                    <include
+                        android:id="@+id/rl_family_head_name"
+                        style="@style/rv_item_ben_fields"
+                        android:layout_weight="2"
+                        layout="@layout/rv_item_ben_element"
+                        app:field="@{ben.familyHeadName}"
+                        app:fieldTitle="@{@string/tv_family_head_name_ph}"
+                        tools:ignore="IncludeLayoutParam" />
+
+                    <!--<include
+                        android:id="@+id/rl_hrp_status"
+                        style="@style/rv_item_ben_fields"
+                        layout="@layout/rv_item_ben_element"
+                        app:field="@{ben.hrpStatus}"
+                        app:fieldTitle="@{@string/tv_suspected_hrp_ph}" />-->
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/ll_btn_row"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/ll_row_3"
+                    android:layout_below="@id/ll_row_4"
                     android:baselineAligned="false"
                     android:orientation="horizontal"
                     android:weightSum="3">

@@ -26,6 +26,11 @@ interface D2DApiService {
         @Query("ashaId") userId : Int
     ): Response<ResponseBody>
 
+//    @GET("AssamVillageData/getAssamVillageDetailsByAshaId")
+//    suspend fun getVillageData(
+//        @Query("ashaId") userId : Int
+//    ): Response<ResponseBody>
+
 
     @POST("mdsrRegister")
     @Headers("Content-Type: application/json")

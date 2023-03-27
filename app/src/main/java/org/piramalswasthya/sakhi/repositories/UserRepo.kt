@@ -121,6 +121,7 @@ class UserRepo @Inject constructor(
                 val blockName = block.getString("blockName")
                 val countryId = state.getInt("countryID")
                 this@UserRepo.user?.apply{
+                    //For ASSAM comment upto countryId excluding it
                     this.stateIds.add(stateId)
                     this.stateEnglish.add(stateName)
                     this.districtIds.add(districtId)
@@ -155,6 +156,7 @@ class UserRepo @Inject constructor(
                 val responseString = response.body()?.string() ?: return@withContext false
                 val responseJson = JSONObject(responseString)
                 val data = responseJson.getJSONArray("data")
+                //Uncomment all commented lines for ASSAM within for loop
 //                for (i in 0 until data.length()) {
 //                    val dataEntry = data.getJSONObject(i)
 //                    val state = dataEntry.getJSONObject("state")

@@ -21,6 +21,6 @@ interface CbacDao {
 
 
     @Query("UPDATE CBAC SET processed = 'P' WHERE benId =:benId")
-    abstract fun cbacSyncedWithServer(vararg benId: Long)
+    suspend fun cbacSyncedWithServer(vararg benId: Long)
 
 }

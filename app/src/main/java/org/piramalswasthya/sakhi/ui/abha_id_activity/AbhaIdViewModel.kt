@@ -6,16 +6,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.network.AbhaTokenResponse
 import org.piramalswasthya.sakhi.network.NetworkResult
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertAbhaInterceptor
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class AbhaIdViewModel @Inject constructor(
-    private val abhaIdRepo: AbhaIdRepo
+    private val abhaIdRepo: AbhaIdRepo,
+    private val prefDao: PreferenceDao
 ) :
     ViewModel() {
 
@@ -36,12 +37,16 @@ class AbhaIdViewModel @Inject constructor(
 
     init {
         generateAccessToken()
+        generatePublicKey()
     }
-
 
     private var _accessToken: AbhaTokenResponse? = null
     private val accessToken: AbhaTokenResponse
         get() = _accessToken!!
+
+    private var _authCert: String? = null
+    private val authCert: String
+        get() = _authCert!!
 
     fun generateAccessToken() {
         _state.value = State.LOADING_TOKEN
@@ -51,7 +56,6 @@ class AbhaIdViewModel @Inject constructor(
                     _accessToken = result.data
                     _state.value = State.SUCCESS
                     TokenInsertAbhaInterceptor.setToken(accessToken.accessToken)
-                    Timber.i(accessToken.toString())
                 }
                 is NetworkResult.Error -> {
                     _state.value = State.ERROR_SERVER
@@ -59,6 +63,21 @@ class AbhaIdViewModel @Inject constructor(
                 }
                 is NetworkResult.NetworkError -> {
                     _state.value = State.ERROR_NETWORK
+                }
+            }
+        }
+    }
+
+    private fun generatePublicKey() {
+        var publicKey = prefDao.getPublicKeyForAbha()
+        if (publicKey == null) {
+            viewModelScope.launch {
+                when (val result = abhaIdRepo.getAuthCert()) {
+                    is NetworkResult.Success -> {
+                        prefDao.savePublicKeyForAbha(result.data)
+                    }
+                    is NetworkResult.Error -> {}
+                    is NetworkResult.NetworkError -> {}
                 }
             }
         }

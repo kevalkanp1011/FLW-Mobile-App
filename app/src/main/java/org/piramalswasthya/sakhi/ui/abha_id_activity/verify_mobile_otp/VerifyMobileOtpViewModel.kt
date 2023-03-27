@@ -56,7 +56,7 @@ class VerifyMobileOtpViewModel @Inject constructor(
 
     private fun verifyMobileOtp(otp: String) {
         viewModelScope.launch {
-            val result = abhaIdRepo.verifyOtpForMobileNumberDummy(
+            val result = abhaIdRepo.verifyOtpForMobileNumber(
                 AbhaVerifyMobileOtpRequest(
                     otp,
                     txnIdFromArgs
@@ -81,7 +81,7 @@ class VerifyMobileOtpViewModel @Inject constructor(
     fun resendOtp() {
         _state.value = State.LOADING
         viewModelScope.launch {
-            val result = abhaIdRepo.generateOtpForMobileNumberDummy(
+            val result = abhaIdRepo.checkAndGenerateOtpForMobileNumber(
                 AbhaGenerateMobileOtpRequest(
                     phoneNumberFromArgs,
                     txnIdFromArgs
