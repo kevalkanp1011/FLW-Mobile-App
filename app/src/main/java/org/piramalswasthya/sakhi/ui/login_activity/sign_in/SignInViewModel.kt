@@ -36,9 +36,9 @@ class SignInViewModel @Inject constructor(
 
     }
 
-    fun authUser(username: String, password: String) {
+    fun authUser(username: String, password: String, state : String) {
         viewModelScope.launch {
-            _state.value = userRepo.authenticateUser(username, password)
+            _state.value = userRepo.authenticateUser(username, password, state)
         }
     }
 

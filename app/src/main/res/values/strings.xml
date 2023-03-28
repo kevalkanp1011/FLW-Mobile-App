@@ -14,7 +14,7 @@
     <string name="PREF_current_dp_uri" translatable="false">DP_URI_cat</string>
 
     <!--    Login-->
-    <string name="tv_text_welcome">Welcome</string>
+    <string name="tv_text_welcome">Welcome, please login</string>
     <string name="tv_text_welcome_user">Welcome, %s</string>
     <string name="tv_text_sign_in">Log in to continue</string>
     <string name="tv_text_select_language">Please Select Your language</string>

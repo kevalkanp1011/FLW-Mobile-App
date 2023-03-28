@@ -22,14 +22,14 @@ interface D2DApiService {
     ): D2DSaveUserResponse
 
     @GET("VillageData/getVillageDetailsByAshaId")
-    suspend fun getVillageData(
+    suspend fun getVillageDataForBihar(
         @Query("ashaId") userId : Int
     ): Response<ResponseBody>
 
-//    @GET("AssamVillageData/getAssamVillageDetailsByAshaId")
-//    suspend fun getVillageData(
-//        @Query("ashaId") userId : Int
-//    ): Response<ResponseBody>
+    @GET("AssamVillageData/getAssamVillageDetailsByAshaId")
+    suspend fun getVillageDataForAssam(
+        @Query("ashaId") userId : Int
+    ): Response<ResponseBody>
 
 
     @POST("mdsrRegister")
