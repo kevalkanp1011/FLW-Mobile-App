@@ -403,7 +403,7 @@ class AbhaIdRepo @Inject constructor(
                 )
                     .setSmallIcon(R.drawable.ic_download)
                     .setContentTitle(fileName)
-                    .setContentText("Downloading in progess")
+                    .setContentText("Downloading in progress")
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setOngoing(true)
                     .setProgress(0, 0, true)
