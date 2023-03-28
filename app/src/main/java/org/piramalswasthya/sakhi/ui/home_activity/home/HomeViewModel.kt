@@ -83,7 +83,7 @@ class HomeViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             _user = getUserFromRepo()
-            runBlocking {
+            launch {
                 userRepo.unProcessedRecordCount.collect { value ->
                     _unprocessedRecords = value
                 }

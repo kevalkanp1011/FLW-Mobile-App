@@ -11,18 +11,15 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.logEvent
 import dagger.hilt.android.AndroidEntryPoint
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.databinding.FragmentSignInBinding
 import org.piramalswasthya.sakhi.helpers.Languages.*
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
 import org.piramalswasthya.sakhi.ui.login_activity.sign_in.SignInViewModel.State
-import org.piramalswasthya.sakhi.work.GenerateBenIdsWorker
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 import javax.inject.Inject
@@ -97,6 +94,7 @@ class SignInFragment : Fragment() {
                 State.IDLE -> {
                     var hasRememberMeUsername = false
                     var hasRememberMePassword = false
+                    var hasRememberMeState = false
                     viewModel.fetchRememberedUserName()?.let {
                         binding.etUsername.setText(it)
                         hasRememberMeUsername = true
@@ -106,26 +104,34 @@ class SignInFragment : Fragment() {
                         binding.cbRemember.isChecked = true
                         hasRememberMePassword = true
                     }
-                    if (hasRememberMeUsername && hasRememberMePassword)
+                    viewModel.fetchRememberedState()?.let{
+                        binding.toggleStates.check(when(it){
+                            "Bihar" -> binding.tbtnBihar.id
+                            "Assam" -> binding.tbtnAssam.id
+                            else -> throw IllegalStateException("State unknown $it")
+                        })
+                        hasRememberMeState = true
+                    }
+                    if (hasRememberMeUsername && hasRememberMePassword && hasRememberMeState)
                         validateInput()
                 }
                 State.LOADING -> validateInput()
                 State.ERROR_INPUT -> {
                     binding.pbSignIn.visibility = View.GONE
                     binding.clContent.visibility = View.VISIBLE
-                    binding.tvError.text = "Invalid Username / password !"
+                    binding.tvError.text = getString(R.string.error_sign_in_invalid_u_p)
                     binding.tvError.visibility = View.VISIBLE
                 }
                 State.ERROR_SERVER -> {
                     binding.pbSignIn.visibility = View.GONE
                     binding.clContent.visibility = View.VISIBLE
-                    binding.tvError.text = "Server timed out, try again!"
+                    binding.tvError.text = getString(R.string.error_sign_in_timeout)
                     binding.tvError.visibility = View.VISIBLE
                 }
                 State.ERROR_NETWORK -> {
                     binding.pbSignIn.visibility = View.GONE
                     binding.clContent.visibility = View.VISIBLE
-                    binding.tvError.text = "Unable to connect to network!"
+                    binding.tvError.text = getString(R.string.error_sign_in_disconnected_network)
                     binding.tvError.visibility = View.VISIBLE
                 }
                 State.SUCCESS -> {
@@ -139,7 +145,11 @@ class SignInFragment : Fragment() {
                     if (binding.cbRemember.isChecked) {
                         val username = binding.etUsername.text.toString()
                         val password = binding.etPassword.text.toString()
-                        viewModel.rememberUser(username, password)
+                        viewModel.rememberUser(username, password, when(binding.toggleStates.checkedButtonId){
+                            binding.tbtnBihar.id -> "Bihar"
+                            binding.tbtnAssam.id -> "Assam"
+                            else -> throw IllegalStateException("Unknown State!! !! !!")
+                        })
                     } else {
                         viewModel.forgetUser()
                     }
