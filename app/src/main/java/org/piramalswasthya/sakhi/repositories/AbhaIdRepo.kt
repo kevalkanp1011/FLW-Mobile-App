@@ -464,7 +464,7 @@ class AbhaIdRepo @Inject constructor(
                     }
                 }
 
-//                notificationManager.cancel(notificationId)
+                notificationManager.cancel(notificationId)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
