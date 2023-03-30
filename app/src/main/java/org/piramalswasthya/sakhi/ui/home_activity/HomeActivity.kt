@@ -156,6 +156,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setUpSyncWorker() {
         WorkerUtils.triggerAmritSyncWorker(this)
+        WorkerUtils.triggerD2dSyncWorker(this)
     }
 
     private fun setUpNavHeader() {

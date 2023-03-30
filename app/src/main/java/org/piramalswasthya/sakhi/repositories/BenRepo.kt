@@ -580,7 +580,6 @@ class BenRepo @Inject constructor(
 //                            .toTypedArray().toLongArray())
 //                }
             }
-            Timber.d("Fine till 583")
 
             val updateBenList = database.benDao.getAllBenForSyncWithServer()
             updateBenList.forEach {
@@ -593,18 +592,13 @@ class BenRepo @Inject constructor(
                     kidNetworkPostList.add(it.asKidNetworkModel(user))
 
             }
-            Timber.d("Fine till 596")
             val cbac = database.cbacDao.getAllUnprocessedCbac()
-            Timber.d("Fine till 598")
             cbac.forEach {
                 cbacPostList.add(it.asPostModel(context.resources))
-                Timber.d("Fine till 601")
                 val ben = database.benDao.getBen(it.hhId, it.benId)
-                Timber.d("Fine till 603")
                 benNetworkPostList.add(ben!!.asNetworkPostModel(user))
-                Timber.d("Fine till 605")
             }
-            Timber.d("Fine till 607")
+            database.cbacDao.setCbacSyncing(*cbac.map {it.benId }.toLongArray())
 
             val uploadDone = postDataToAmritServer(
                 benNetworkPostList,
@@ -612,11 +606,10 @@ class BenRepo @Inject constructor(
                 kidNetworkPostList,
                 cbacPostList
             )
-            Timber.d("Fine till 615")
-            if (!uploadDone)
-                database.benDao.benSyncWithServerFailed(*benNetworkPostList.map { ben -> ben.benId }
-                    .toTypedArray().toLongArray())
-
+            if (!uploadDone) {
+                database.benDao.benSyncWithServerFailed(*benNetworkPostList.map { ben -> ben.benId }.toLongArray())
+                database.cbacDao.cbacSyncWithServerFailed(*cbacPostList.map { cbacElement -> cbacElement.benficieryid}.toLongArray())
+            }
             return@withContext true
         }
 
@@ -977,7 +970,6 @@ class BenRepo @Inject constructor(
                                 createdDate = getLongFromDate(cbacDataObj.getString("createdDate")),
                                 ProviderServiceMapID = cbacDataObj.getInt("ProviderServiceMapID"),
                                 VanID = if (cbacDataObj.has("vanID")) cbacDataObj.getInt("vanID") else user.vanId,
-                                Processed = "P",//cbacDataObj.getString("Processed"),
                                 Countyid = cbacDataObj.getInt("Countyid"),
                                 stateid = cbacDataObj.getInt("stateid"),
                                 districtid = cbacDataObj.getInt("districtid"),
@@ -991,6 +983,8 @@ class BenRepo @Inject constructor(
                                 confirmed_tb = cbacDataObj.getString("confirmed_tb"),
                                 suspected_ncd_diseases = cbacDataObj.getString("suspected_ncd_diseases"),
                                 diagnosis_status = cbacDataObj.getString("confirmed_tb"),
+                                Processed = "P",//cbacDataObj.getString("Processed"),
+                                syncState = SyncState.SYNCED,
                             )
                         )
                     } catch (e: JSONException) {

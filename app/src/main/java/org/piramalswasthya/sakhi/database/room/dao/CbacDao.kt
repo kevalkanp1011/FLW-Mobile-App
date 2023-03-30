@@ -19,8 +19,14 @@ interface CbacDao {
     @Query("SELECT * FROM CBAC WHERE processed = 'N'")
     suspend fun getAllUnprocessedCbac() : List<CbacCache>
 
+    @Query("UPDATE CBAC SET syncState = 1 WHERE benId =:benId")
+    suspend fun setCbacSyncing(vararg benId: Long)
 
-    @Query("UPDATE CBAC SET processed = 'P' WHERE benId =:benId")
+
+    @Query("UPDATE CBAC SET processed = 'P', syncState = 2 WHERE benId =:benId")
     suspend fun cbacSyncedWithServer(vararg benId: Long)
+
+    @Query("UPDATE CBAC SET processed = 'N', syncState = 0 WHERE benId =:benId")
+    suspend fun cbacSyncWithServerFailed(vararg benId : Long)
 
 }

@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.model
 import android.content.res.Resources
 import androidx.room.*
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.database.room.SyncState
 
 @Entity(
     tableName = "CBAC",
@@ -114,7 +115,9 @@ data class CbacCache(
     var confirmed_tb: String? = null,
     var suspected_ncd_diseases: String? = null,
     var confirmed_ncd_diseases: String? = null,
-    var diagnosis_status: String? = null
+    var diagnosis_status: String? = null,
+
+    val syncState: SyncState
 
 
 ) {

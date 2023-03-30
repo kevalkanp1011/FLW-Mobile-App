@@ -20,5 +20,5 @@ interface CdrDao {
     suspend fun getCDR(hhId: Long, benId: Long): CDRCache?
 
     @Update
-    suspend fun setSynced(it: CDRCache)
+    suspend fun update(cdr: CDRCache)
 }
