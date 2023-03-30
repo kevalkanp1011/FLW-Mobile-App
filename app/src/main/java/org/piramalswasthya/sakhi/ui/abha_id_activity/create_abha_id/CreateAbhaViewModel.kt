@@ -1,12 +1,15 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity.create_abha_id
 
+import android.content.Context
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.network.CreateAbhaIdRequest
 import org.piramalswasthya.sakhi.network.CreateAbhaIdResponse
 import org.piramalswasthya.sakhi.network.NetworkResult
+import org.piramalswasthya.sakhi.network.interceptors.TokenInsertAbhaInterceptor
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,13 +39,14 @@ class CreateAbhaViewModel @Inject constructor(
 
     private fun generateAbhaCard() {
         viewModelScope.launch {
-            val result = abhaIdRepo.generateAbhaIdDummy(
+            val result = abhaIdRepo.generateAbhaId(
                 CreateAbhaIdRequest(
                     null, null, null, null, null, null, null, txnIdFromArgs
                 )
             )
             when (result) {
                 is NetworkResult.Success -> {
+                    TokenInsertAbhaInterceptor.setXToken(result.data.token)
                     abha.value = result.data
                     _state.value = State.GENERATE_SUCCESS
                 }
@@ -57,7 +61,12 @@ class CreateAbhaViewModel @Inject constructor(
         }
     }
 
-    fun downloadAbhaCard() {}
+    private fun downloadAbhaCard(context: Context) {
+        viewModelScope.launch {
+            abha.value?.name?.let { abhaIdRepo.getPdfCard(context, "$it.pdf") }
+            _state.value = State.DOWNLOAD_SUCCESS
+        }
+    }
 
     fun resetState() {
         _state.value = State.IDLE
@@ -65,5 +74,10 @@ class CreateAbhaViewModel @Inject constructor(
 
     fun resetErrorMessage() {
         _errorMessage.value = null
+    }
+
+    fun downloadAbhaClicked(context: Context) {
+        _state.value = State.LOADING
+        downloadAbhaCard(context)
     }
 }

@@ -114,19 +114,18 @@ class HomeFragment : Fragment() {
                             val currentPage = progressData.getInt(PullFromAmritWorker.Progress, 0)
                             val totalPage = progressData.getInt(PullFromAmritWorker.NumPages, 0)
                             binding.llFullLoadProgress.visibility = View.VISIBLE
+                            binding.tvLoadProgress.text = "Starting Download ..."
 
                             if (totalPage > 0) {
                                 if (binding.pbLoadProgress.isIndeterminate) {
                                     binding.pbLoadProgress.isIndeterminate = false
-                                    binding.tvLoadProgress.visibility = View.VISIBLE
                                 }
                                 val p = (currentPage * 100) / totalPage
                                 Timber.tag("Current Progress").v("$p")
                                 binding.pbLoadProgress.progress = p
                                 binding.tvLoadProgress.text = context?.getString(
                                     R.string.home_fragment_percent_download_text,
-                                    currentPage,
-                                    totalPage
+                                    p
                                 )
                             }
 

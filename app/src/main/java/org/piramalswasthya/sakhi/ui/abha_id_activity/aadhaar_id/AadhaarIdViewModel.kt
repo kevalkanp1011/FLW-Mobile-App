@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.network.AbhaGenerateAadhaarOtpRequest
+import org.piramalswasthya.sakhi.network.AbhaGenerateAadhaarOtpResponseV2
 import org.piramalswasthya.sakhi.network.NetworkResult
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
 import timber.log.Timber
@@ -33,6 +34,10 @@ AadhaarIdViewModel @Inject constructor(
     val txnId: String
         get() = _txnId!!
 
+    private var _mobileNumber: String? = null
+    val mobileNumber: String
+        get() = _mobileNumber!!
+
     private val _errorMessage = MutableLiveData<String?>(null)
     val errorMessage: LiveData<String?>
         get() = _errorMessage
@@ -53,9 +58,10 @@ AadhaarIdViewModel @Inject constructor(
     private fun generateAadhaarOtp(aadhaarNo: String) {
         viewModelScope.launch {
             when (val result =
-                abhaIdRepo.generateOtpForAadhaarDummy(AbhaGenerateAadhaarOtpRequest(aadhaarNo))) {
+                abhaIdRepo.generateOtpForAadhaarV2(AbhaGenerateAadhaarOtpRequest(aadhaarNo))) {
                 is NetworkResult.Success -> {
                     _txnId = result.data.txnId
+                    _mobileNumber = result.data.mobileNumber
                     _state.value = State.SUCCESS
                 }
                 is NetworkResult.Error -> {

@@ -22,32 +22,37 @@ interface D2DApiService {
     ): D2DSaveUserResponse
 
     @GET("VillageData/getVillageDetailsByAshaId")
-    suspend fun getVillageData(
+    suspend fun getVillageDataForBihar(
+        @Query("ashaId") userId : Int
+    ): Response<ResponseBody>
+
+    @GET("AssamVillageData/getAssamVillageDetailsByAshaId")
+    suspend fun getVillageDataForAssam(
         @Query("ashaId") userId : Int
     ): Response<ResponseBody>
 
 
     @POST("mdsrRegister")
     @Headers("Content-Type: application/json")
-    suspend fun postMdsrDataRegister(
+    suspend fun postMdsrForm(
         @Body mdsrPostList: List<MdsrPost>
     ): Response<ResponseBody>
 
     @POST("cdrRegister")
     @Headers("Content-Type: application/json")
-    suspend fun postCdrRegister(
+    suspend fun postCdrForm(
         @Body cdrPost: List<CDRPost>
     ): Response<ResponseBody>
 
     @POST("pmsmaData")
     @Headers("Content-Type: application/json")
-    suspend fun postPmsmaRegister(
+    suspend fun postPmsmaForm(
         @Body pmsmaPost: List<PmsmaPost>
     ): Response<ResponseBody>
 
     @POST("pmjayData")
     @Headers("Content-Type: application/json")
-    suspend fun postPmjayDataRegister(
+    suspend fun postPmjayForm(
         @Body pmjayPostList: List<PMJAYPost>
     ): Response<ResponseBody>
 }

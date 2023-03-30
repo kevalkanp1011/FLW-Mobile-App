@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import org.piramalswasthya.sakhi.database.room.SyncState
 
 @Entity(
     tableName = "CDR",
@@ -45,6 +46,7 @@ data class CDRCache (
     var createdBy: String? = null,
     var createdDate: Long? = System.currentTimeMillis(),
     var processed: String? = null,
+    var syncState : SyncState
 ) {
     fun asPostModel(user: UserCache, household: HouseholdCache, ben: BenRegCache, cdrCount: Int): CDRPost {
         return CDRPost(

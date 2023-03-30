@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentCbacBinding
 import org.piramalswasthya.sakhi.model.Gender
+import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -75,6 +76,7 @@ class CbacFragment : Fragment() {
                 CbacViewModel.State.SAVE_SUCCESS -> {
                     Timber.d("CBAC form saved successfully!")
                     viewModel.resetState()
+                    WorkerUtils.triggerAmritSyncWorker(requireContext())
                     findNavController().navigateUp()
                 }
                 CbacViewModel.State.MISSING_FIELD -> {

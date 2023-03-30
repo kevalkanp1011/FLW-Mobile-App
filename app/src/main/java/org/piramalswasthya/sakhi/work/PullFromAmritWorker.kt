@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.work
 
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
@@ -58,30 +59,35 @@ class PullFromAmritWorker @AssistedInject constructor(
                     preferenceDao.getFirstSyncLastSyncedPage()
                 else 0
 
-                do {
-                    numPages = benRepo.getBeneficiariesFromServerForWorker(startPage)
-                } while (numPages == -2)
+                try {
+                    do {
+                        numPages = benRepo.getBeneficiariesFromServerForWorker(startPage)
+                    } while (numPages == -2)
 //                for (i in 1 until numPages)
 //                    benRepo.getBeneficiariesFromServerForWorker(i)
-                if(numPages==0)
-                    return@withContext Result.success()
-                val result1 =
-                    awaitAll(
-                        async { getBenForPage(numPages, 0, startPage) },
-                        async { getBenForPage(numPages, 1, startPage) },
-                        async { getBenForPage(numPages, 2, startPage) },
-                        async { getBenForPage(numPages, 3, startPage) },
-                    )
-                val endTime = System.currentTimeMillis()
-                val timeTaken = TimeUnit.MILLISECONDS.toSeconds(endTime - startTime)
-                Timber.d("Full load took $timeTaken seconds for $numPages pages  $result1")
+                    if (numPages == 0)
+                        return@withContext Result.success()
+                    val result1 =
+                        awaitAll(
+                            async { getBenForPage(numPages, 0, startPage) },
+                            async { getBenForPage(numPages, 1, startPage) },
+                            async { getBenForPage(numPages, 2, startPage) },
+                            async { getBenForPage(numPages, 3, startPage) },
+                        )
+                    val endTime = System.currentTimeMillis()
+                    val timeTaken = TimeUnit.MILLISECONDS.toSeconds(endTime - startTime)
+                    Timber.d("Full load took $timeTaken seconds for $numPages pages  $result1")
 
-                if (result1.all { it }) {
-                    preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
+                    if (result1.all { it }) {
+                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
 
-                    return@withContext Result.success()
-                }
-                return@withContext Result.failure()
+                        return@withContext Result.success()
+                    }
+                    return@withContext Result.failure()
+                }catch (e : SQLiteConstraintException){
+                        Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
+                    return@withContext Result.failure()
+                    }
 
 
 //                for (j in 0 until n) {
@@ -123,7 +129,7 @@ class PullFromAmritWorker @AssistedInject constructor(
         return withContext(Dispatchers.IO) {
             var page: Int = startPage + rem
 
-            while (page < numPages) {
+            try{while (page < numPages) {
                 val ret = benRepo.getBeneficiariesFromServerForWorker(page)
 
                 if (ret == -1)
@@ -142,6 +148,8 @@ class PullFromAmritWorker @AssistedInject constructor(
                     3-> page4 = page
                 }
 
+            }}catch (e : SQLiteConstraintException){
+                Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
             }
             true
         }

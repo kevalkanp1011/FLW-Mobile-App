@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
@@ -24,6 +25,7 @@ class HomeViewModel @Inject constructor(
     private val userRepo: UserRepo
 ) : ViewModel() {
 
+
     val currentUser = database.userDao.getLoggedInUserLiveData()
 
     val iconCount = Transformations.switchMap(currentUser) {
@@ -31,6 +33,10 @@ class HomeViewModel @Inject constructor(
             database.userDao.getRecordCounts(it.userId)
         }
     }
+    private var _unprocessedRecords : Int = 0
+    val unprocessedRecords: Int
+        get() = _unprocessedRecords
+
 
 
     private var locationRecord: LocationRecord? = null
@@ -77,6 +83,11 @@ class HomeViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             _user = getUserFromRepo()
+            launch {
+                userRepo.unProcessedRecordCount.collect { value ->
+                    _unprocessedRecords = value
+                }
+            }
         }
     }
 
@@ -110,12 +121,8 @@ class HomeViewModel @Inject constructor(
         pref.saveProfilePicUri(imageUri)
     }
 
-    fun getProfilePicUri() : Uri?{
+    fun getProfilePicUri(): Uri? {
         return pref.getProfilePicUri()
-    }
-
-    fun getUnprocessedRecordsCount(): Int? {
-        return userRepo.unProcessedRecordCount.value
     }
 
 

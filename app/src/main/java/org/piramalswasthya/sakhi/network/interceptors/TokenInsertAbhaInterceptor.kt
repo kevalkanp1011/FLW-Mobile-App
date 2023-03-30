@@ -7,12 +7,21 @@ import timber.log.Timber
 class TokenInsertAbhaInterceptor : Interceptor {
     companion object {
         private var TOKEN: String = ""
+        private var XToken: String = ""
         fun setToken(iToken: String) {
             TOKEN = iToken
         }
 
         fun getToken(): String {
             return TOKEN
+        }
+
+        fun setXToken(xToken: String) {
+            XToken = xToken
+        }
+
+        fun getXToken(): String {
+            return XToken
         }
     }
 
@@ -24,6 +33,16 @@ class TokenInsertAbhaInterceptor : Interceptor {
                 .addHeader(
                     "Authorization",
                     "Bearer $TOKEN"
+                )
+                .build()
+        }
+        val url = request.url.toString()
+        if (url.contains("getCard") || url.contains("getPngCard")) {
+            request = request
+                .newBuilder()
+                .addHeader(
+                    "x-token",
+                    "Bearer $XToken"
                 )
                 .build()
         }

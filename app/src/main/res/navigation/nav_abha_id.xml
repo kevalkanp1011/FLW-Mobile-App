@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/aadhaarIdFragment"
         android:name="org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdFragment"
-        android:label="Verify Aadhaar Number"
+        android:label="Enter Aadhaar Number"
         tools:layout="@layout/fragment_aadhaar_id">
         <action
             android:id="@+id/action_aadhaarIdFragment_to_aadhaarOtpFragment"
@@ -27,6 +27,8 @@
             app:destination="@id/generateMobileOtpFragment"
             app:popUpTo="@id/aadhaarOtpFragment"
             app:popUpToInclusive="true" />
+        <argument android:name="mobileNumber"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/generateMobileOtpFragment"
@@ -39,6 +41,9 @@
         <argument
             android:name="txnId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_generateMobileOtpFragment_to_createAbhaFragment"
+            app:destination="@id/createAbhaFragment" />
     </fragment>
     <fragment
         android:id="@+id/verifyMobileOtpFragment"

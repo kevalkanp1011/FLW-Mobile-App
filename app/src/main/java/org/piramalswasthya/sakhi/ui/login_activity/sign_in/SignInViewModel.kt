@@ -36,9 +36,9 @@ class SignInViewModel @Inject constructor(
 
     }
 
-    fun authUser(username: String, password: String) {
+    fun authUser(username: String, password: String, state : String) {
         viewModelScope.launch {
-            _state.value = userRepo.authenticateUser(username, password)
+            _state.value = userRepo.authenticateUser(username, password, state)
         }
     }
 
@@ -48,11 +48,14 @@ class SignInViewModel @Inject constructor(
     fun fetchRememberedPassword(): String? =
         pref.getRememberedPassword()
 
+    fun fetchRememberedState() : String? =
+        pref.getRememberedState()
 
-    fun rememberUser(username: String, password: String) {
+
+    fun rememberUser(username: String, password: String, state : String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                pref.registerLoginCred(username, password)
+                pref.registerLoginCred(username, password, state)
             }
         }
     }

@@ -29,7 +29,8 @@ class PushToAmritWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         init()
         try {
-            val workerResult = benRepo.syncUnprocessedRecords()
+//            val workerResult = benRepo.syncUnprocessedRecords()
+            val workerResult = benRepo.processNewBen()
             return if (workerResult) {
                 Timber.d("Worker completed")
                 Result.success()
