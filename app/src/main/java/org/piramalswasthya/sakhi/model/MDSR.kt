@@ -36,7 +36,7 @@ data class MDSRCache (
     var blockMOSign: String? = null,
     var date: Long? = System.currentTimeMillis(),
     var processed: String,
-    val syncState : SyncState,
+    var syncState : SyncState,
     var createdBy: String? = null,
     var createdDate: Long? = System.currentTimeMillis()
 ) {

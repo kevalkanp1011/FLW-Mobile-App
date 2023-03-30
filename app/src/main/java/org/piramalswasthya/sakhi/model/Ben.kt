@@ -148,7 +148,7 @@ data class BenBasicCache(
             typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
-            syncState = mdsrSyncState?:throw IllegalStateException("Sync state for cbac is null!!"),
+            syncState = mdsrSyncState?:throw IllegalStateException("Sync state for mdsr is null!!"),
             hasForm1 = hasMdsr
         )
     }

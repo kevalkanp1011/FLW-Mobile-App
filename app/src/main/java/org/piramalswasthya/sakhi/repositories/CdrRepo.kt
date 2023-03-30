@@ -23,15 +23,13 @@ class CdrRepo @Inject constructor(
     suspend fun saveCdrData(cdrCache: CDRCache): Boolean {
         return withContext(Dispatchers.IO) {
 
-            val user =
-                database.userDao.getLoggedInUser()
-                    ?: throw IllegalStateException("No user logged in!!")
+            val user = database.userDao.getLoggedInUser()
+                ?: throw IllegalStateException("No user logged in!!")
             try {
                 cdrCache.apply {
                     createdBy = user.userName
                     createdDate = System.currentTimeMillis()
                 }
-
                 database.cdrDao.upsert(cdrCache)
 
                 true
@@ -44,9 +42,8 @@ class CdrRepo @Inject constructor(
 
     suspend fun processNewCdr(): Boolean {
         return withContext(Dispatchers.IO) {
-            val user =
-                database.userDao.getLoggedInUser()
-                    ?: throw IllegalStateException("No user logged in!!")
+            val user = database.userDao.getLoggedInUser()
+                ?: throw IllegalStateException("No user logged in!!")
 
             val cdrList = database.cdrDao.getAllUnprocessedCdr()
 
@@ -54,12 +51,10 @@ class CdrRepo @Inject constructor(
 
             cdrList.forEach {
                 cdrPostList.clear()
-                val household =
-                    database.householdDao.getHousehold(it.hhId)
-                        ?: throw IllegalStateException("No household exists for hhId: ${it.hhId}!!")
-                val ben =
-                    database.benDao.getBen(it.hhId, it.benId)
-                        ?: throw IllegalStateException("No beneficiary exists for benId: ${it.benId}!!")
+                val household = database.householdDao.getHousehold(it.hhId)
+                    ?: throw IllegalStateException("No household exists for hhId: ${it.hhId}!!")
+                val ben = database.benDao.getBen(it.hhId, it.benId)
+                    ?: throw IllegalStateException("No beneficiary exists for benId: ${it.benId}!!")
                 val cdrCount = database.cdrDao.cdrCount()
                 cdrPostList.add(it.asPostModel(user, household, ben, cdrCount))
                 it.syncState = SyncState.SYNCING
@@ -68,8 +63,7 @@ class CdrRepo @Inject constructor(
                 if (uploadDone) {
                     it.processed = "P"
                     it.syncState = SyncState.SYNCED
-                }
-                else{
+                } else {
                     it.syncState = SyncState.UNSYNCED
                 }
                 database.cdrDao.update(it)
@@ -79,8 +73,7 @@ class CdrRepo @Inject constructor(
     }
 
     private suspend fun postDataToD2dServer(cdrPostList: MutableSet<CDRPost>): Boolean {
-        if (cdrPostList.isEmpty())
-            return false
+        if (cdrPostList.isEmpty()) return false
 
         try {
 
@@ -98,8 +91,7 @@ class CdrRepo @Inject constructor(
                         // Log.d("dsfsdfse", "onResponse: "+jsonObj);
                         val errormessage = jsonObj.getString("message")
 
-                        if (jsonObj.isNull("status"))
-                            throw IllegalStateException("D2d server not responding properly, Contact Service Administrator!!")
+                        if (jsonObj.isNull("status")) throw IllegalStateException("D2d server not responding properly, Contact Service Administrator!!")
 
                         val responsestatuscode = jsonObj.getInt("status")
                         when (responsestatuscode) {
@@ -111,12 +103,15 @@ class CdrRepo @Inject constructor(
                             5002 -> {
                                 val user = userRepo.getLoggedInUser()
                                     ?: throw IllegalStateException("User seems to be logged out!!")
-                    //                            pDialog.dismiss()
-                                //mdialog.AlertDialog(getActivity(), resources.getString(R.string.text_Alert), resources.getString(R.string.session_expired), resources.getString(R.string.text_ok), 5);
+                                if (userRepo.refreshTokenD2d(
+                                        user.userName,
+                                        user.password
+                                    )
+                                ) throw SocketTimeoutException()
                             }
                             else -> {
-                    //                                    lay_recy.setVisibility(View.GONE);
-                    //                                    lay_no_ben.setVisibility(View.VISIBLE);
+                                //                                    lay_recy.setVisibility(View.GONE);
+                                //                                    lay_no_ben.setVisibility(View.VISIBLE);
                             }
                         }
                     }
@@ -130,7 +125,7 @@ class CdrRepo @Inject constructor(
             }
         } catch (e: SocketTimeoutException) {
             Timber.d("Caught exception $e here")
-            return false
+            return postDataToD2dServer(cdrPostList)
         } catch (e: JSONException) {
             Timber.d("Caught exception $e here")
             return false

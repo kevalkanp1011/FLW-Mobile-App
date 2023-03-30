@@ -5,6 +5,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
 import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.network.D2DApiService
 import timber.log.Timber
@@ -21,9 +22,8 @@ class MdsrRepo @Inject constructor(
     suspend fun saveMdsrData(mdsrCache: MDSRCache): Boolean {
         return withContext(Dispatchers.IO) {
 
-            val user =
-                database.userDao.getLoggedInUser()
-                    ?: throw IllegalStateException("No user logged in!!")
+            val user = database.userDao.getLoggedInUser()
+                ?: throw IllegalStateException("No user logged in!!")
             try {
                 mdsrCache.apply {
                     createdBy = user.userName
@@ -41,9 +41,8 @@ class MdsrRepo @Inject constructor(
 
     suspend fun processNewMdsr(): Boolean {
         return withContext(Dispatchers.IO) {
-            val user =
-                database.userDao.getLoggedInUser()
-                    ?: throw IllegalStateException("No user logged in!!")
+            val user = database.userDao.getLoggedInUser()
+                ?: throw IllegalStateException("No user logged in!!")
 
             val mdsrList = database.mdsrDao.getAllUnprocessedMdsr()
 
@@ -51,20 +50,22 @@ class MdsrRepo @Inject constructor(
 
             mdsrList.forEach {
                 mdsrPostList.clear()
-                val household =
-                    database.householdDao.getHousehold(it.hhId)
-                        ?: throw IllegalStateException("No household exists for hhId: ${it.hhId}!!")
-                val ben =
-                    database.benDao.getBen(it.hhId, it.benId)
-                        ?: throw IllegalStateException("No beneficiary exists for benId: ${it.benId}!!")
+                val household = database.householdDao.getHousehold(it.hhId)
+                    ?: throw IllegalStateException("No household exists for hhId: ${it.hhId}!!")
+                val ben = database.benDao.getBen(it.hhId, it.benId)
+                    ?: throw IllegalStateException("No beneficiary exists for benId: ${it.benId}!!")
                 val mdsrCount = database.mdsrDao.mdsrCount()
-
                 mdsrPostList.add(it.asPostModel(user, household, ben, mdsrCount))
+                it.syncState = SyncState.SYNCING
+                database.mdsrDao.updateMdsrRecord(it)
                 val uploadDone = postDataToD2dServer(mdsrPostList)
-                if(uploadDone) {
+                if (uploadDone) {
                     it.processed = "P"
-                    database.mdsrDao.updateMdsrRecord(it)
+                    it.syncState = SyncState.SYNCED
+                } else {
+                    it.syncState = SyncState.UNSYNCED
                 }
+                database.mdsrDao.updateMdsrRecord(it)
             }
 
             return@withContext true
@@ -72,8 +73,7 @@ class MdsrRepo @Inject constructor(
     }
 
     private suspend fun postDataToD2dServer(mdsrPostList: MutableSet<MdsrPost>): Boolean {
-        if(mdsrPostList.isEmpty())
-            return false
+        if (mdsrPostList.isEmpty()) return false
 
         try {
 
@@ -88,20 +88,26 @@ class MdsrRepo @Inject constructor(
 
                         // Log.d("dsfsdfse", "onResponse: "+jsonObj);
                         val errormessage = jsonObj.getString("message")
-                        if(jsonObj.isNull("status"))
-                            throw IllegalStateException("D2d server not responding properly, Contact Service Administrator!!")
+                        if (jsonObj.isNull("status")) throw IllegalStateException("D2d server not responding properly, Contact Service Administrator!!")
                         val responsestatuscode = jsonObj.getInt("status")
 
-                        if (responsestatuscode == 200) {
-                            Timber.d("Saved Successfully to server")
-                            return true
-                        } else if (responsestatuscode == 5002) {
-                            val user = userRepo.getLoggedInUser()
-                                ?: throw IllegalStateException("User seems to be logged out!!")
-                            if (userRepo.refreshTokenD2d(user.userName, user.password))
-                                throw SocketTimeoutException()
-                        } else {
-                            throw IOException("Throwing away IO eXcEpTiOn")
+                        when (responsestatuscode) {
+                            200 -> {
+                                Timber.d("Saved Successfully to server")
+                                return true
+                            }
+                            5002 -> {
+                                val user = userRepo.getLoggedInUser()
+                                    ?: throw IllegalStateException("User seems to be logged out!!")
+                                if (userRepo.refreshTokenD2d(
+                                        user.userName,
+                                        user.password
+                                    )
+                                ) throw SocketTimeoutException()
+                            }
+                            else -> {
+                                throw IOException("Throwing away IO eXcEpTiOn")
+                            }
                         }
                     }
                 } catch (e: IOException) {
