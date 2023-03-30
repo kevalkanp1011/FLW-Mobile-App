@@ -9,6 +9,7 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.configuration.MDSRFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.MdsrRepo
@@ -86,7 +87,7 @@ class MdsrObjectViewModel @Inject constructor(
 
     fun submitForm() {
         _state.value = State.LOADING
-        val mdsrCache = MDSRCache(benId = benId, hhId = hhId, processed = "N", createdBy = user.userName)
+        val mdsrCache = MDSRCache(benId = benId, hhId = hhId, processed = "N", createdBy = user.userName , syncState = SyncState.UNSYNCED)
         dataset.mapValues(mdsrCache)
         viewModelScope.launch {
             val saved = mdsrRepo.saveMdsrData(mdsrCache)
@@ -106,7 +107,7 @@ class MdsrObjectViewModel @Inject constructor(
                 user = database.userDao.getLoggedInUser()!!
                 mdsr = database.mdsrDao.getMDSR(hhId, benId)
             }
-            _benName.value = ben.firstName + ben.lastName
+            _benName.value = "${ben.firstName} ${if(ben.lastName== null) "" else ben.lastName}"
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
             _address.value = getAddress(household)
             _exists.value = mdsr != null
@@ -149,6 +150,8 @@ class MdsrObjectViewModel @Inject constructor(
     fun setAddress(it: String?, adapter: FormInputAdapter) {
         dataset.address.value.value = it
         dataset.husbandName.value.value = ben.genDetails?.spouseName
+        dataset.date.min = ben.dob
+        dataset.dateOfDeath.min = ben.dob
         adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.address))
         adapter.notifyItemChanged(adapter.currentList.indexOf(dataset.husbandName))
     }

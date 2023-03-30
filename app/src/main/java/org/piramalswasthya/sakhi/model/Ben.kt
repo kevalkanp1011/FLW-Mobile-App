@@ -36,9 +36,9 @@ enum class Gender{
 @DatabaseView(viewName = "BEN_BASIC_CACHE", value="SELECT b.beneficiaryId as benId, b.householdId as hhId, b.regDate, b.firstName as benName, b.lastName as benSurname, b.gender, b.age" +
         ", b.ageUnit, b.contactNumber as mobileNo, b.fatherName, h.familyHeadName, b.registrationType as typeOfList, b.rchId" +
         ", b.isHrpStatus as hrpStatus, b.syncState, b.gen_reproductiveStatusId as reproductiveStatusId, b.isKid, b.immunizationStatus," +
-        " cbac.benId is not null as hasCbac, " +
-        " cdr.benId is not null as hasCdr, " +
-        " mdsr.benId is not null as hasMdsr, " +
+        " cbac.benId is not null as hasCbac, cbac.syncState as cbacSyncState," +
+        " cdr.benId is not null as hasCdr, cdr.syncState as cdrSyncState, " +
+        " mdsr.benId is not null as hasMdsr, mdsr.syncState as mdsrSyncState," +
         " pmsma.benId is not null as hasPmsma " +
         "from BENEFICIARY b " +
         "JOIN HOUSEHOLD h ON b.householdId = h.householdId " +
@@ -67,8 +67,11 @@ data class BenBasicCache(
     val isKid: Boolean,
     val immunizationStatus: Boolean,
     val hasCbac : Boolean,
+    val cbacSyncState : SyncState?,
     val hasCdr : Boolean,
+    val cdrSyncState : SyncState?,
     val hasMdsr :Boolean,
+    val mdsrSyncState : SyncState?,
     val hasPmsma : Boolean
 ) {
     companion object{
@@ -78,7 +81,7 @@ data class BenBasicCache(
         return BenBasicDomain (
             benId = benId,
             hhId = hhId,
-            regDate = dateFormat.format(Date(regDate!!)),
+            regDate = dateFormat.format(Date(regDate)),
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
@@ -96,7 +99,7 @@ data class BenBasicCache(
         return BenBasicDomainForForm (
             benId = benId,
             hhId = hhId,
-            regDate = dateFormat.format(Date(regDate!!)),
+            regDate = dateFormat.format(Date(regDate)),
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
@@ -107,7 +110,7 @@ data class BenBasicCache(
             typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
-            syncState = syncState,
+            syncState = cbacSyncState?:throw IllegalStateException("Sync state for cbac is null!!"),
             hasForm1 = hasCbac
         )
     }
@@ -115,7 +118,7 @@ data class BenBasicCache(
         return BenBasicDomainForForm (
             benId = benId,
             hhId = hhId,
-            regDate = dateFormat.format(Date(regDate!!)),
+            regDate = dateFormat.format(Date(regDate)),
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
@@ -126,7 +129,7 @@ data class BenBasicCache(
             typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
-            syncState = syncState,
+            syncState = cdrSyncState?:throw IllegalStateException("Sync state for cbac is null!!"),
             hasForm1 = hasCdr
         )
     }
@@ -134,7 +137,7 @@ data class BenBasicCache(
         return BenBasicDomainForForm (
             benId = benId,
             hhId = hhId,
-            regDate = dateFormat.format(Date(regDate!!)),
+            regDate = dateFormat.format(Date(regDate)),
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
@@ -145,7 +148,7 @@ data class BenBasicCache(
             typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
-            syncState = syncState,
+            syncState = mdsrSyncState?:throw IllegalStateException("Sync state for cbac is null!!"),
             hasForm1 = hasMdsr
         )
     }
@@ -153,7 +156,7 @@ data class BenBasicCache(
         return BenBasicDomainForForm (
             benId = benId,
             hhId = hhId,
-            regDate = dateFormat.format(Date(regDate!!)),
+            regDate = dateFormat.format(Date(regDate)),
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
@@ -211,7 +214,7 @@ data class BenBasicCache(
         return BenBasicDomainForForm (
             benId = benId,
             hhId = hhId,
-            regDate = dateFormat.format(Date(regDate!!)),
+            regDate = dateFormat.format(Date(regDate)),
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,

@@ -75,8 +75,11 @@ class CbacViewModel @Inject constructor(
     private val benId = CbacFragmentArgs.fromSavedStateHandle(state).benId
     private val hhId = CbacFragmentArgs.fromSavedStateHandle(state).hhId
     private val ashaId = CbacFragmentArgs.fromSavedStateHandle(state).userId
-    private val cbac = CbacCache(benId = benId, hhId = hhId, ashaId = ashaId,
-    gender = Gender.MALE)
+    private val cbac = CbacCache(
+        benId = benId, hhId = hhId, ashaId = ashaId,
+        gender = Gender.MALE,
+        syncState = SyncState.UNSYNCED
+    )
     private lateinit var ben: BenRegCache
 
     private val _benName = MutableLiveData<String>()
@@ -521,7 +524,7 @@ class CbacViewModel @Inject constructor(
         }
         ben.cbacAvailable = true
         ben.processed = "U"
-        ben.syncState = SyncState.UNSYNCED
+//        ben.syncState = SyncState.UNSYNCED
 
 
         //locationReocrd:
@@ -741,22 +744,22 @@ class CbacViewModel @Inject constructor(
                 return false
             }
         }
-        if (cbac.cbac_fuel_used_posi == 0) {
-            missingFieldString = context.getString(R.string.cbac_validation_fu)
-            return false
-        }
-        if (cbac.cbac_occupational_exposure_posi == 0) {
-            missingFieldString = context.getString(R.string.cbac_validation_ox)
-            return false
-        }
-        if (cbac.cbac_little_interest_posi == 0) {
-            missingFieldString = context.getString(R.string.cbac_validation_li)
-            return false
-        }
-        if (cbac.cbac_feeling_down_posi == 0) {
-            missingFieldString = context.getString(R.string.cbac_validation_fd)
-            return false
-        }
+//        if (cbac.cbac_fuel_used_posi == 0) {
+//            missingFieldString = context.getString(R.string.cbac_validation_fu)
+//            return false
+//        }
+//        if (cbac.cbac_occupational_exposure_posi == 0) {
+//            missingFieldString = context.getString(R.string.cbac_validation_ox)
+//            return false
+//        }
+//        if (cbac.cbac_little_interest_posi == 0) {
+//            missingFieldString = context.getString(R.string.cbac_validation_li)
+//            return false
+//        }
+//        if (cbac.cbac_feeling_down_posi == 0) {
+//            missingFieldString = context.getString(R.string.cbac_validation_fd)
+//            return false
+//        }
         return true
     }
 

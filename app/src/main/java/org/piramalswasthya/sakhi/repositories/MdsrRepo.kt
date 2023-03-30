@@ -58,6 +58,7 @@ class MdsrRepo @Inject constructor(
                     database.benDao.getBen(it.hhId, it.benId)
                         ?: throw IllegalStateException("No beneficiary exists for benId: ${it.benId}!!")
                 val mdsrCount = database.mdsrDao.mdsrCount()
+
                 mdsrPostList.add(it.asPostModel(user, household, ben, mdsrCount))
                 val uploadDone = postDataToD2dServer(mdsrPostList)
                 if(uploadDone) {
@@ -75,7 +76,8 @@ class MdsrRepo @Inject constructor(
             return false
 
         try {
-            val response = d2DNetworkApiService.postMdsrDataRegister(mdsrPostList.toList())
+
+            val response = d2DNetworkApiService.postMdsrForm(mdsrPostList.toList())
             val statusCode = response.code()
 
             if (statusCode == 200) {

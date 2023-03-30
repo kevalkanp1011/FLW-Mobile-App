@@ -2,10 +2,7 @@ package org.piramalswasthya.sakhi.network
 
 import okhttp3.ResponseBody
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.Headers
-import retrofit2.http.POST
-import retrofit2.http.Url
+import retrofit2.http.*
 
 interface AbhaApiService {
 
@@ -16,23 +13,40 @@ interface AbhaApiService {
         @Body request: AbhaTokenRequest = AbhaTokenRequest()
     ): Response<ResponseBody>
 
-    @POST("generateOtp")
+    @POST("v1/registration/aadhaar/generateOtp")
     suspend fun generateAadhaarOtp(@Body aadhaar: AbhaGenerateAadhaarOtpRequest): Response<ResponseBody>
 
-    @POST("resendAadhaarOtp")
+    @POST("v2/registration/aadhaar/generateOtp")
+    suspend fun generateAadhaarOtpV2(@Body aadhaar: AbhaGenerateAadhaarOtpRequest): Response<ResponseBody>
+
+    @POST("v1/registration/aadhaar/resendAadhaarOtp")
     suspend fun resendAadhaarOtp(@Body aadhaar: AbhaResendAadhaarOtpRequest): Response<ResponseBody>
 
-    @POST("verifyOTP")
+    @POST("v1/registration/aadhaar/verifyOTP")
     suspend fun verifyAadhaarOtp(@Body request: AbhaVerifyAadhaarOtpRequest): Response<ResponseBody>
 
-    @POST("generateMobileOTP")
+    @POST("v1/registration/aadhaar/generateMobileOTP")
     suspend fun generateMobileOtp(@Body mobile: AbhaGenerateMobileOtpRequest): Response<ResponseBody>
 
-    @POST("verifyMobileOTP")
+    @POST("v2/registration/aadhaar/checkAndGenerateMobileOTP")
+    suspend fun checkAndGenerateMobileOtp(@Body request: AbhaGenerateMobileOtpRequest): Response<ResponseBody>
+
+    @POST("v1/registration/aadhaar/verifyMobileOTP")
     suspend fun verifyMobileOtp(@Body request: AbhaVerifyMobileOtpRequest): Response<ResponseBody>
 
-    @POST("createHealthIdWithPreVerified")
+    @POST("v1/registration/aadhaar/createHealthIdWithPreVerified")
     suspend fun createAbhaId(@Body request: CreateAbhaIdRequest): Response<ResponseBody>
+
+    @GET("v1/account/getCard")
+    suspend fun getPdfCard(): Response<ResponseBody>
+
+    @GET("v1/account/getPngCard")
+    suspend fun getPngCard(): Response<ResponseBody>
+
+    @GET
+    suspend fun getAuthCert(
+        @Url url: String = "https://healthidsbx.abdm.gov.in/api/v2/auth/cert"
+    ): Response<ResponseBody>
 
 
 }

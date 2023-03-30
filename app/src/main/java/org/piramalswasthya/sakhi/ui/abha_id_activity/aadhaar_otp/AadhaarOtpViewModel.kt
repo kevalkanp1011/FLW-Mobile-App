@@ -52,7 +52,7 @@ class AadhaarOtpViewModel @Inject constructor(
 
     private fun verifyAadhaarOtp(otp: String) {
         viewModelScope.launch {
-            val result = abhaIdRepo.verifyOtpForAadhaarDummy(
+            val result = abhaIdRepo.verifyOtpForAadhaar(
                 AbhaVerifyAadhaarOtpRequest(
                     otp,
                     txnIdFromArgs

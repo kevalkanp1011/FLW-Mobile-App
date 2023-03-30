@@ -1,13 +1,11 @@
 package org.piramalswasthya.sakhi.ui.home_activity
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.PickVisualMediaRequest
@@ -15,6 +13,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
+import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -26,6 +26,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.databinding.ActivityHomeBinding
@@ -52,11 +54,11 @@ class HomeActivity : AppCompatActivity() {
 
     private val viewModel : HomeViewModel by viewModels()
 
+
     private val logoutAlert by lazy{
-        val unprocessedRecords  = viewModel.getUnprocessedRecordsCount()
         MaterialAlertDialogBuilder(this)
             .setTitle("Logout")
-            .setMessage("${if(unprocessedRecords!=null && unprocessedRecords>0) "$unprocessedRecords not Processed." else "All records synced"} Are you sure to logout?")
+            .setMessage("${if(viewModel.unprocessedRecords>0) "${viewModel.unprocessedRecords} not Processed." else "All records synced"} Are you sure to logout?")
             .setPositiveButton("YES"){
                     dialog,_->
                 viewModel.logout()
@@ -79,7 +81,7 @@ class HomeActivity : AppCompatActivity() {
                     .load(it)
                     .placeholder(R.drawable.ic_person)
                     .circleCrop()
-                    .into(binding.navView.getHeaderView(0).findViewById(R.id.iv_profile_pic));
+                    .into(binding.navView.getHeaderView(0).findViewById(R.id.iv_profile_pic))
 //                binding.navView.getHeaderView(0).findViewById<ImageView>(R.id.iv_profile_pic).setImageURI(it)
 //                Glide.with(this)
 //                    .load(it)
@@ -111,6 +113,8 @@ class HomeActivity : AppCompatActivity() {
         setUpNavHeader()
         setUpSyncWorker()
         setUpMenu()
+
+
 
         viewModel.navigateToLoginPage.observe(this) {
             if (it) {
@@ -152,6 +156,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setUpSyncWorker() {
         WorkerUtils.triggerAmritSyncWorker(this)
+        WorkerUtils.triggerD2dSyncWorker(this)
     }
 
     private fun setUpNavHeader() {
@@ -176,7 +181,7 @@ class HomeActivity : AppCompatActivity() {
                 .load(it)
                 .placeholder(R.drawable.ic_person)
                 .circleCrop()
-                .into(binding.navView.getHeaderView(0).findViewById(R.id.iv_profile_pic));
+                .into(binding.navView.getHeaderView(0).findViewById(R.id.iv_profile_pic))
         }
 //
 
@@ -244,12 +249,12 @@ class HomeActivity : AppCompatActivity() {
 //        return super.onOptionsItemSelected(item)
 //    }
 
-    fun hideKeyboard(activity: Activity) {
-        this.currentFocus?.let { view ->
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            imm?.hideSoftInputFromWindow(view.windowToken, 0)
-        }
-    }
+//    fun hideKeyboard(activity: Activity) {
+//        this.currentFocus?.let { view ->
+//            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+//            imm?.hideSoftInputFromWindow(view.windowToken, 0)
+//        }
+//    }
 
     fun setLogo(resId : Int){
         binding.toolbar.setLogo(resId)

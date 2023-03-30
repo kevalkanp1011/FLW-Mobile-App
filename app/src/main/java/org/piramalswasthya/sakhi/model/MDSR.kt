@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.squareup.moshi.JsonClass
+import org.piramalswasthya.sakhi.database.room.SyncState
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -35,6 +36,7 @@ data class MDSRCache (
     var blockMOSign: String? = null,
     var date: Long? = System.currentTimeMillis(),
     var processed: String,
+    val syncState : SyncState,
     var createdBy: String? = null,
     var createdDate: Long? = System.currentTimeMillis()
 ) {

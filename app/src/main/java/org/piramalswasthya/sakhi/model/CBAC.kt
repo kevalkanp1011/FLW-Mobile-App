@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.model
 import android.content.res.Resources
 import androidx.room.*
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.database.room.SyncState
 
 @Entity(
     tableName = "CBAC",
@@ -114,7 +115,9 @@ data class CbacCache(
     var confirmed_tb: String? = null,
     var suspected_ncd_diseases: String? = null,
     var confirmed_ncd_diseases: String? = null,
-    var diagnosis_status: String? = null
+    var diagnosis_status: String? = null,
+
+    val syncState: SyncState
 
 
 ) {
@@ -410,13 +413,13 @@ data class CbacCache(
                 2 -> "No"
                 else -> resources.getString(R.string.cbac_nhop)
             },
-            cbac_fuel_used = resources.getStringArray(R.array.cbac_type_Cooking_fuel)[cbac_fuel_used_posi - 1],
+            cbac_fuel_used = if(cbac_fuel_used_posi>0) resources.getStringArray(R.array.cbac_type_Cooking_fuel)[cbac_fuel_used_posi - 1] else "",
             cbac_fuel_used_posi = cbac_fuel_used_posi,
-            cbac_occupational_exposure = resources.getStringArray(R.array.cbac_type_occupational_exposure)[cbac_occupational_exposure_posi - 1],
+            cbac_occupational_exposure = if(cbac_occupational_exposure_posi>0)resources.getStringArray(R.array.cbac_type_occupational_exposure)[cbac_occupational_exposure_posi - 1] else "",
             cbac_occupational_exposure_posi = cbac_occupational_exposure_posi,
-            cbac_little_interest = resources.getStringArray(R.array.cbac_li)[cbac_little_interest_posi - 1],
+            cbac_little_interest = if(cbac_little_interest_posi>0)resources.getStringArray(R.array.cbac_li)[cbac_little_interest_posi - 1] else "",
             cbac_little_interest_posi = cbac_little_interest_posi,
-            cbac_feeling_down = resources.getStringArray(R.array.cbac_fd)[cbac_feeling_down_posi - 1],
+            cbac_feeling_down = if(cbac_feeling_down_posi>0) resources.getStringArray(R.array.cbac_fd)[cbac_feeling_down_posi - 1]else "",
             cbac_feeling_down_posi = cbac_feeling_down_posi,
             cbac_little_interest_score = cbac_little_interest_score,
             cbac_feeling_down_score = cbac_feeling_down_score,

@@ -7,6 +7,7 @@
     <string name="PREF_primary_API_KEY" translatable="false">JWT-Token_B</string>
     <string name="PREF_rem_me_uname" translatable="false">user-name-local-saved</string>
     <string name="PREF_rem_me_pwd" translatable="false">password-local-saved</string>
+    <string name="PREF_rem_me_state" translatable="false">state_user-local-saved</string>
     <string name="PREF_location_record_entry" translatable="false">location-record</string>
     <string name="PREF_full_load_pull_progress" translatable="false">full_load_sync_pull_amrit</string>
     <string name="PREF_first_pull_amrit_last_synced_page" translatable="false">full_load_sync_pull_amrit_first_sync_last_saved_page</string>
@@ -14,7 +15,7 @@
     <string name="PREF_current_dp_uri" translatable="false">DP_URI_cat</string>
 
     <!--    Login-->
-    <string name="tv_text_welcome">Welcome</string>
+    <string name="tv_text_welcome">Welcome, please login</string>
     <string name="tv_text_welcome_user">Welcome, %s</string>
     <string name="tv_text_sign_in">Log in to continue</string>
     <string name="tv_text_select_language">Please Select Your language</string>
@@ -586,8 +587,11 @@
     <string name="hbnc_day_text">Day %1d</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="home_fragment_percent_download_text">%1d%% downloaded</string>
-    <string name="generate_abha_id">Generate ABHA Id</string>
+    <string name="home_fragment_percent_download_text">%1d/%2d pages downloaded</string>
+    <string name="generate_abha_id">Create ABHA Number</string>
+    <string name="error_sign_in_invalid_u_p">Invalid Username / password !</string>
+    <string name="error_sign_in_timeout">Server timed out, try again!</string>
+    <string name="error_sign_in_disconnected_network">Unable to connect to network!</string>
 
 
 </resources>

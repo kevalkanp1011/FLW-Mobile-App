@@ -71,8 +71,12 @@ class AbhaIdActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return when (navController.currentDestination?.id) {
-            R.id.generateMobileOtpFragment, R.id.createAbhaFragment -> {
+            R.id.generateMobileOtpFragment -> {
                 exitAlert.show()
+                true
+            }
+            R.id.createAbhaFragment -> {
+                exitActivityAlert.show()
                 true
             }
             else -> navController.navigateUp() || super.onSupportNavigateUp()
@@ -86,6 +90,19 @@ class AbhaIdActivity : AppCompatActivity() {
             .setPositiveButton("Yes") { _, _ ->
                 navController.popBackStack(R.id.aadhaarIdFragment, true)
                 navController.navigate(R.id.aadhaarIdFragment)
+            }
+            .setNegativeButton("No") { d, _ ->
+                d.dismiss()
+            }
+            .create()
+    }
+
+    private val exitActivityAlert by lazy {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Exit")
+            .setMessage("Do you want to go back?")
+            .setPositiveButton("Yes") { _, _ ->
+                finish()
             }
             .setNegativeButton("No") { d, _ ->
                 d.dismiss()

@@ -54,12 +54,14 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
         editor.apply()
     }
 
-    fun registerLoginCred(userName: String, password: String) {
+    fun registerLoginCred(userName: String, password: String, state : String) {
         val editor = pref.edit()
         val prefUserKey = context.getString(R.string.PREF_rem_me_uname)
         val prefUserPwdKey = context.getString(R.string.PREF_rem_me_pwd)
+        val prefUserStateKey = context.getString(R.string.PREF_rem_me_state)
         editor.putString(prefUserKey, userName)
         editor.putString(prefUserPwdKey, password)
+        editor.putString(prefUserStateKey, state)
         editor.apply()
     }
 
@@ -83,6 +85,10 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
 
     fun getRememberedPassword(): String? {
         val key = context.getString(R.string.PREF_rem_me_pwd)
+        return pref.getString(key, null)
+    }
+    fun getRememberedState(): String? {
+        val key = context.getString(R.string.PREF_rem_me_state)
         return pref.getString(key, null)
     }
 
@@ -150,9 +156,22 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
         editor.apply()
         Timber.d("Saving profile pic @ $uri")
     }
+
     fun getProfilePicUri(): Uri? {
         val key = context.getString(R.string.PREF_current_dp_uri)
-        val uriString =  pref.getString(key, null)
+        val uriString = pref.getString(key, null)
         return uriString?.let { Uri.parse(it) }
+    }
+
+    fun savePublicKeyForAbha(publicKey: String) {
+        val key = "AUTH_CERT"
+        val editor = pref.edit()
+        editor.putString(key, publicKey)
+        editor.apply()
+    }
+
+    fun getPublicKeyForAbha(): String? {
+        val key = "AUTH_CERT"
+        return pref.getString(key, null)
     }
 }

@@ -77,7 +77,7 @@ class PmjayRepo @Inject constructor(
             return false
 
         try {
-            val response = d2DNetworkApiService.postPmjayDataRegister(pmjayPostList.toList())
+            val response = d2DNetworkApiService.postPmjayForm(pmjayPostList.toList())
             val statusCode = response.code()
 
             if (statusCode == 200) {
