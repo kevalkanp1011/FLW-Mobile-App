@@ -9,6 +9,7 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.configuration.MDSRFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.MdsrRepo
@@ -86,7 +87,7 @@ class MdsrObjectViewModel @Inject constructor(
 
     fun submitForm() {
         _state.value = State.LOADING
-        val mdsrCache = MDSRCache(benId = benId, hhId = hhId, processed = "N", createdBy = user.userName)
+        val mdsrCache = MDSRCache(benId = benId, hhId = hhId, processed = "N", createdBy = user.userName , syncState = SyncState.UNSYNCED)
         dataset.mapValues(mdsrCache)
         viewModelScope.launch {
             val saved = mdsrRepo.saveMdsrData(mdsrCache)

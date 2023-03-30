@@ -75,7 +75,7 @@ class PmsmaRepo @Inject constructor(
             return false
 
         try {
-            val response = d2DNetworkApiService.postPmsmaRegister(pmsmaPostList.toList())
+            val response = d2DNetworkApiService.postPmsmaForm(pmsmaPostList.toList())
             val statusCode = response.code()
 
             if (statusCode == 200) {

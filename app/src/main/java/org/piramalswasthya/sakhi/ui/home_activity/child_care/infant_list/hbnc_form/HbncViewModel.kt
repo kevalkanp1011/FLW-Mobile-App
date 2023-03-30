@@ -1,6 +1,5 @@
 package org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form
 
-import android.app.Application
 import android.content.Context
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,12 +8,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
-import org.piramalswasthya.sakhi.configuration.FPOTFormDataset
 import org.piramalswasthya.sakhi.configuration.HBNCFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.repositories.BenRepo
-import org.piramalswasthya.sakhi.repositories.FpotRepo
 import org.piramalswasthya.sakhi.repositories.HbncRepo
 import timber.log.Timber
 import java.text.SimpleDateFormat
@@ -65,7 +63,7 @@ class HbncViewModel @Inject constructor(
 
     fun submitForm() {
         _state.value = State.LOADING
-        val hbncCache = HBNCCache(benId = benId, hhId = hhId, processed = "N")
+        val hbncCache = HBNCCache(benId = benId, hhId = hhId, processed = "N", syncState = SyncState.UNSYNCED)
 //        dataset.mapValues(fpotCache)
         Timber.d("saving fpot: $hbncCache")
         viewModelScope.launch {

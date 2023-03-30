@@ -75,8 +75,11 @@ class CbacViewModel @Inject constructor(
     private val benId = CbacFragmentArgs.fromSavedStateHandle(state).benId
     private val hhId = CbacFragmentArgs.fromSavedStateHandle(state).hhId
     private val ashaId = CbacFragmentArgs.fromSavedStateHandle(state).userId
-    private val cbac = CbacCache(benId = benId, hhId = hhId, ashaId = ashaId,
-    gender = Gender.MALE)
+    private val cbac = CbacCache(
+        benId = benId, hhId = hhId, ashaId = ashaId,
+        gender = Gender.MALE,
+        syncState = SyncState.UNSYNCED
+    )
     private lateinit var ben: BenRegCache
 
     private val _benName = MutableLiveData<String>()

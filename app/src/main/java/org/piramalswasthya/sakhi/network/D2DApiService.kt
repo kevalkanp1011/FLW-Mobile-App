@@ -34,25 +34,25 @@ interface D2DApiService {
 
     @POST("mdsrRegister")
     @Headers("Content-Type: application/json")
-    suspend fun postMdsrDataRegister(
+    suspend fun postMdsrForm(
         @Body mdsrPostList: List<MdsrPost>
     ): Response<ResponseBody>
 
     @POST("cdrRegister")
     @Headers("Content-Type: application/json")
-    suspend fun postCdrRegister(
+    suspend fun postCdrForm(
         @Body cdrPost: List<CDRPost>
     ): Response<ResponseBody>
 
     @POST("pmsmaData")
     @Headers("Content-Type: application/json")
-    suspend fun postPmsmaRegister(
+    suspend fun postPmsmaForm(
         @Body pmsmaPost: List<PmsmaPost>
     ): Response<ResponseBody>
 
     @POST("pmjayData")
     @Headers("Content-Type: application/json")
-    suspend fun postPmjayDataRegister(
+    suspend fun postPmjayForm(
         @Body pmjayPostList: List<PMJAYPost>
     ): Response<ResponseBody>
 }

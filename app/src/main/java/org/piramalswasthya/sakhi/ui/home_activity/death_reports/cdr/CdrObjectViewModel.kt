@@ -9,6 +9,7 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.configuration.CDRFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.CdrRepo
@@ -85,7 +86,7 @@ class CdrObjectViewModel @Inject constructor(
 
     fun submitForm() {
         _state.value = State.LOADING
-        val cdrCache = CDRCache(benId = benId, hhId = hhId, processed = "N", createdBy = user.userName, age = ben.age)
+        val cdrCache = CDRCache(benId = benId, hhId = hhId, processed = "N", createdBy = user.userName, age = ben.age, syncState = SyncState.UNSYNCED)
         dataset.mapValues(cdrCache)
         viewModelScope.launch {
             val saved = cdrRepo.saveCdrData(cdrCache)
