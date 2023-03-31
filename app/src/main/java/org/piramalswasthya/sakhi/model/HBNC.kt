@@ -64,10 +64,10 @@ data class HBNCCache(
 }
 
 data class HBNCPart0(
-    val healthSubCenterName: String,
-    val phcName: String,
-    val motherName: String,
-    val fatherName: String,
+    val healthSubCenterName: String?,
+    val phcName: String?,
+    val motherName: String?,
+    val fatherName: String?,
     val dateOfDelivery: Long,
     val placeOfDelivery: Int,
     val babyGender: Int,
@@ -85,13 +85,14 @@ data class HBNCPart0(
     val childImmunizedHepB: Boolean,
     val birthWeightRecordedInMCP: Int,
 
-    val deliveryTime: Long,
+    val deliveryTime: String?,
     val dateOfCompletionOfPregnancy: Long,
     val numWeeksWhenBorn: Int,
     val dateOfFirstTraining: Long,
     val doesMotherHaveProblem: Int,
     val babyFedAfterBirth: Int,
-    val whenBabyFirstBreastFed: Int,
+    val whenBabyFirstBreastFed: String?,
+    val howBabyFirstFed : Int,
     val breastFeedProblem: String?,
     val breastFeedProblem2: String?,
     val measureRecordBabyTemperature: String?,
@@ -101,6 +102,7 @@ data class HBNCPart0(
 
     val babyAllOrganLethargic: Int,
     val babyLessMilkDrinking: Int,
+    val babyNoDrinkMilk : Int,
     val babyCrySlow: Int,
     val babyNoCry: Int,
     val babyBornLookedAfter: Int,
@@ -123,7 +125,7 @@ data class HbncPartA(
 )
 
 data class HbncPartB(
-    val temperature : String,
+    val temperature : String?,
     val waterDischargeFoulSmell : Int,
     val motherGrumbleSeizure : Int,
     val motherNoOrLessMilk : Int,
@@ -134,22 +136,22 @@ data class HbncPartB(
 data class HbncPartC(
     val eyesSwollenPusComing : Int,
     val weightOnDay1 : Int,
-    val temperature : String,
+    val temperature : String?,
     val pusPimpleOnSkin : Int,
-    val crackedRednessOfTwistedSkin : String,
+    val crackedRednessOfTwistedSkin : String?,
     val yellowEyePalmSoleSkin : Int,
     val seizure : Int,
     val breathGoingFast : Int,
-    val referredWhere : String
+    val referredWhere : String?
 )
 
 data class HbncPartD(
-    val organsLethargic : String,
-    val lessNoMilkDrinking : String,
-    val slowOrStoppedCrying : String,
-    val bloatedStomachOrVomit : String,
-    val coldOrHotOnTouch : String,
-    val pusInNavel : String,
+    val organsLethargic : String?,
+    val lessNoMilkDrinking : String?,
+    val slowOrStoppedCrying : String?,
+    val bloatedStomachOrVomit : String?,
+    val coldOrHotOnTouch : String?,
+    val pusInNavel : String?,
 )
 
 

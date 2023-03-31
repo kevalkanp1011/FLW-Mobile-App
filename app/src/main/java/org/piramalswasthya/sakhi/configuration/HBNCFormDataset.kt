@@ -1,23 +1,117 @@
 package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
-import org.piramalswasthya.sakhi.model.FormInput
+import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.model.FormInput.InputType
-import org.piramalswasthya.sakhi.model.HBNCCache
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HBNCFormDataset(context: Context, private val nthDay : Int, private val hbnc: HBNCCache? = null) {
+class HBNCFormDataset(
+    context: Context,
+    private val nthDay: Int,
+    private val hbnc: HBNCCache? = null
+) {
 
     companion object {
-        private fun getLongFromDate(dateString: String): Long {
+        private fun getLongFromDate(dateString: String?): Long {
             val f = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
-            val date = f.parse(dateString)
-            return date?.time ?: throw IllegalStateException("Invalid date for dateReg")
+            val date = dateString?.let { f.parse(it) }
+            return date?.time ?: 0L
         }
     }
 
-    fun mapValues(hbnc: HBNCCache) {
+    private fun FormInput.getPosition(): Int {
+        return value.value?.let { entries?.indexOf(it)?.plus(1) } ?: 0
+    }
+
+    fun mapValues(hbnc: HBNCCache, user: UserCache) {
+        hbnc.part0 = HBNCPart0(
+            healthSubCenterName = healthSubCenterName.value.value,
+            phcName = phcName.value.value,
+            motherName = motherName.value.value,
+            fatherName = fatherName.value.value,
+            dateOfDelivery = getLongFromDate(dateOfDelivery.value.value),
+            placeOfDelivery = placeOfDelivery.getPosition(),
+            babyGender = gender.getPosition(),
+            typeOfDelivery = typeOfDelivery.getPosition(),
+            startedBreastFeed = startedBreastFeeding.getPosition(),
+            weightAtBirth = weightAtBirth.value.value?.toInt() ?: 0,
+            dischargeDateFromHospital = getLongFromDate(dateOfDischargeFromHospital.value.value),
+            motherStatus = motherStatus.getPosition(),
+            registeredAtBirth = registrationOfBirth.getPosition(),
+            childStatus = childStatus.getPosition(),
+            homeVisitDate = homeVisitDate.getPosition(),
+            childImmunizedBCG = childImmunizationStatus.value.value?.contains("BCG") ?: false,
+            childImmunizedPolio = childImmunizationStatus.value.value?.contains("Polio") ?: false,
+            childImmunizedDpt = childImmunizationStatus.value.value?.contains("DPT 1") ?: false,
+            childImmunizedHepB = childImmunizationStatus.value.value?.contains("Hepatitis-B")
+                ?: false,
+            birthWeightRecordedInMCP = birthWeightRecordedInCard.getPosition(),
+            deliveryTime = timeOfDelivery.value.value,
+            dateOfCompletionOfPregnancy = getLongFromDate(dateOfCompletionOfPregnancy.value.value),
+            numWeeksWhenBorn = weeksSinceBabyBorn.value.value?.toInt() ?: 0,
+            dateOfFirstTraining = getLongFromDate(dateOfFirstTraining.value.value),
+            doesMotherHaveProblem = motherAnyProblem.getPosition(),
+            babyFedAfterBirth = babyFedAfterBirth.getPosition(),
+            whenBabyFirstBreastFed = whenBabyFirstFed.value.value,
+            howBabyFirstFed = howBabyFirstFed.getPosition(),
+            breastFeedProblem = actionBreastFeedProblem.value.value,
+            breastFeedProblem2 = anyBreastFeedProblem.value.value,
+            measureRecordBabyTemperature = babyBodyTemperature.value.value,
+            babyEyeCondition = babyEyeCondition.getPosition(),
+            babyBleedUmbilical = babyBleedUmbilicalCord.getPosition(),
+            babyWeighingScaleColor = babyWeightColor.getPosition(),
+            babyAllOrganLethargic = allOrganLethargic.getPosition(),
+            babyLessMilkDrinking = lessMilkDrink.getPosition(),
+            babyNoDrinkMilk = notDrinkMilk.getPosition(),
+            babyCrySlow = crySlow.getPosition(),
+            babyNoCry = notCry.getPosition(),
+            babyBornLookedAfter = lookedAfterRegularly.getPosition(),
+            babyWipedCleanCloth = wipedWithCleanCloth.getPosition(),
+            babyKeptWarm = keptWarm.getPosition(),
+            babyGivenBath = givenBath.getPosition(),
+            babyWrappedInClothKeptWithMother = wrapClothKeptMother.getPosition(),
+            startedBreastFeedOnlyGivenBreastMilk = onlyBreastMilk.getPosition(),
+            babyAnythingUnusual = unusualWithBaby.getPosition(),
+        )
+        hbnc.partA = HbncPartA(
+            numTimesEats = timesMotherFed24hr.value.value?.toInt()?:0,
+            numPadsChanged = timesPadChanged.value.value?.toInt()?:0,
+            winterBabyKeptWarm = babyKeptWarmWinter.getPosition(),
+            breastFeedProper = babyBreastFedProperly.getPosition(),
+            babyCryContinuouslyOrUrinateLess6 = babyCryContinuously.getPosition(),
+        )
+        hbnc.partB = HbncPartB(
+            temperature = motherBodyTemperature.value.value,
+            waterDischargeFoulSmell = motherWaterDischarge.getPosition(),
+            motherGrumbleSeizure = motherGrumbleSeizure.getPosition(),
+            motherNoOrLessMilk = motherNoOrLessMilk.getPosition(),
+            crackedNipplePainHardBreast = motherBreastProblem.getPosition(),
+        )
+        hbnc.partC = HbncPartC(
+            eyesSwollenPusComing= babyEyesSwollen.getPosition(),
+            weightOnDay1= babyWeight.value.value?.toInt()?:0,
+            temperature= babyBodyTemperature2.value.value,
+            pusPimpleOnSkin= pusPimples.getPosition(),
+            crackedRednessOfTwistedSkin= crackRedTwistSkin.value.value,
+            yellowEyePalmSoleSkin= yellowJaundice.getPosition(),
+            seizure= seizures.getPosition(),
+            breathGoingFast= breathFast.getPosition(),
+            referredWhere= referredByAsha.value.value,
+        )
+        hbnc.partD = HbncPartD(
+            organsLethargic = organLethargic.value.value,
+            lessNoMilkDrinking = drinkLessNoMilk.value.value,
+            slowOrStoppedCrying = slowNoCry.value.value,
+            bloatedStomachOrVomit = bloatedStomach.value.value,
+            coldOrHotOnTouch = childColdOnTouch.value.value,
+            pusInNavel = pusNavel.value.value,
+        )
+        hbnc.ashaName = user.userName
+        hbnc.supervisorRemark = supRemark.value.value
+        hbnc.supervisorName = supName.value.value
+        hbnc.supervisorComments = supervisorComment.value.value
+        hbnc.dateSupervisorVisit = getLongFromDate(dateOfSupSig.value.value)
 
     }
 
@@ -376,7 +470,7 @@ class HBNCFormDataset(context: Context, private val nthDay : Int, private val hb
 
     ////////////////////// Newborn first training (A) ask mother
 
-    private val titleAskMother_A = FormInput(
+    private val titleAskMotherA = FormInput(
         inputType = InputType.HEADLINE,
         title = "Newborn first training (A) Ask mother",
         required = false
@@ -420,7 +514,7 @@ class HBNCFormDataset(context: Context, private val nthDay : Int, private val hb
 
     //////////////////// Part - B //////////////////
 
-    private val titleHealthCheckUpMother_B = FormInput(
+    private val titleHealthCheckUpMotherB = FormInput(
         inputType = InputType.HEADLINE,
         title = "(B) Health Checkup of mother",
         required = false
@@ -459,7 +553,7 @@ class HBNCFormDataset(context: Context, private val nthDay : Int, private val hb
 
     //////////////////// Part - C //////////////////
 
-    private val titleHealthCheckUpBaby_C = FormInput(
+    private val titleHealthCheckUpBabyC = FormInput(
         inputType = InputType.HEADLINE,
         title = "(c) Health check-up of newborn baby ",
         required = false
@@ -523,9 +617,10 @@ class HBNCFormDataset(context: Context, private val nthDay : Int, private val hb
 
     ////////////////////////// Part D ////////////////////
 
-    private val titleSepsis_D = FormInput(
+    private val titleSepsisD = FormInput(
         inputType = InputType.HEADLINE,
-        title = "(D) Examine the following symptoms of sepsis. If symptoms are present, then write, Yes, if symptoms are not present, then do not write. Enter the symptoms seen from the health check-up on the first day of the newborns birth.",
+        title = "(D) Sepsis",
+        subtitle = "Examine the following symptoms of sepsis. If symptoms are present, then write, Yes, if symptoms are not present, then do not write. Enter the symptoms seen from the health check-up on the first day of the newborns birth.",
         required = false
     )
     private val organLethargic = FormInput(
@@ -592,7 +687,7 @@ class HBNCFormDataset(context: Context, private val nthDay : Int, private val hb
     )
 
 
-    private val oneTimeFormElements by lazy{
+    private val oneTimeFormElements by lazy {
         listOf(
             titleHomeVisit,
             healthSubCenterName,
@@ -648,22 +743,22 @@ class HBNCFormDataset(context: Context, private val nthDay : Int, private val hb
             )
     }
 
-    private val commonFormElements by lazy{
+    private val commonFormElements by lazy {
         listOf(
-            titleAskMother_A,
+            titleAskMotherA,
             timesMotherFed24hr,
             timesPadChanged,
             babyKeptWarmWinter,
             babyBreastFedProperly,
             babyCryContinuously,
 
-            titleHealthCheckUpMother_B,
+            titleHealthCheckUpMotherB,
             motherBodyTemperature,
             motherWaterDischarge,
             motherGrumbleSeizure,
             motherNoOrLessMilk,
             motherBreastProblem,
-            titleHealthCheckUpBaby_C,
+            titleHealthCheckUpBabyC,
 
             babyEyesSwollen,
             babyWeight,
@@ -675,7 +770,7 @@ class HBNCFormDataset(context: Context, private val nthDay : Int, private val hb
             breathFast,
             referredByAsha,
 
-            titleSepsis_D,
+            titleSepsisD,
             organLethargic,
             drinkLessNoMilk,
             slowNoCry,
@@ -692,10 +787,9 @@ class HBNCFormDataset(context: Context, private val nthDay : Int, private val hb
     }
 
     val firstPage by lazy {
-        if(nthDay==1) {
+        if (nthDay == 1) {
             oneTimeFormElements.toMutableList().also { it.addAll(commonFormElements) }
-        }
-        else
+        } else
             commonFormElements
     }
 }

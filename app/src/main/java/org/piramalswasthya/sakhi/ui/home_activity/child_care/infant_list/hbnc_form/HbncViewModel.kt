@@ -64,16 +64,16 @@ class HbncViewModel @Inject constructor(
     fun submitForm() {
         _state.value = State.LOADING
         val hbncCache = HBNCCache(benId = benId, hhId = hhId, processed = "N", syncState = SyncState.UNSYNCED)
-//        dataset.mapValues(fpotCache)
-        Timber.d("saving fpot: $hbncCache")
+        dataset.mapValues(hbncCache, user)
+        Timber.d("saving hbnc: $hbncCache")
         viewModelScope.launch {
             val saved = hbncRepo.saveHbncData(hbncCache)
             if (saved) {
-                Timber.d("saved fpot: $hbncCache")
+                Timber.d("saved hbnc: $hbncCache")
                 _state.value = State.SUCCESS
             }
             else {
-                Timber.d("saving fpot to local db failed!!")
+                Timber.d("saving hbnc to local db failed!!")
                 _state.value = State.FAIL
             }
         }

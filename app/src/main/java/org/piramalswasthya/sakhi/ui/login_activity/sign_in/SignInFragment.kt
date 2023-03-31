@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -63,6 +64,14 @@ class SignInFragment : Fragment() {
                 imm?.hideSoftInputFromWindow(view.windowToken, 0)
             }
             viewModel.loginInClicked()
+        }
+        var ee=0
+        binding.ivNhmLogo.setOnLongClickListener {
+            if(ee==0) {
+                Toast.makeText(context, "Madhav Rocks!#?/!", Toast.LENGTH_SHORT/4).show()
+                ee++
+            }
+            true
         }
 
         when (prefDao.getCurrentLanguage()) {

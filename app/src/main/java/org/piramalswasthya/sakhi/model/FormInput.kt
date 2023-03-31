@@ -8,6 +8,7 @@ import java.io.File
 data class FormInput(
     val inputType: InputType,
     var title: String,
+    val subtitle : String? = null,
     var entries: Array<String>? = null,
     var required: Boolean,
     var value: MutableStateFlow<String?> = MutableStateFlow(null),

@@ -253,7 +253,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     val childRegisteredAtAwc = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_awc),
-        arrayOf(
+        entries = arrayOf(
             "Yes",
             "No"
         ),
@@ -263,7 +263,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     val childRegisteredAtSchool = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_reg_school),
-        arrayOf(
+        entries = arrayOf(
             "Yes",
             "No"
         ),
@@ -274,7 +274,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     val typeOfSchool = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_type_school),
-        arrayOf(
+        entries = arrayOf(
             "Anganwadi",
             "Primary",
             "Secondary",
@@ -439,7 +439,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     private val typeOfDelivery = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_type_del),
-        arrayOf(
+        entries = arrayOf(
             "Normal Delivery",
             "C - Section",
             "Assisted"
@@ -449,7 +449,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
      val complicationsDuringDelivery = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_comp_del),
-        arrayOf(
+        entries = arrayOf(
             "PPH",
             "Retained Placenta",
             "Obstructed Delivery",
@@ -462,7 +462,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     private val breastFeedWithin1Hr = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_feed_1_hr),
-        arrayOf(
+        entries = arrayOf(
             "Yes",
             "No",
             "Don't Know"
@@ -472,7 +472,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     val birthDose = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_birth_dose),
-        arrayOf(
+        entries = arrayOf(
             "Given",
             "Not Given",
             "Don't Know"
@@ -482,7 +482,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     val birthDoseGiven = FormInput(
         inputType = CHECKBOXES,
         title = context.getString(R.string.nbr_child_birth_dose_details),
-        arrayOf(
+        entries = arrayOf(
             "BCG",
             "Hepatitis",
             "OPV"
@@ -493,7 +493,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     val term = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_term),
-        arrayOf(
+        entries = arrayOf(
             "Full-Term",
             "Pre-Term",
             "Don't Know"
@@ -504,7 +504,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     val termGestationalAge = FormInput(
         inputType = RADIO,
         title = context.getString(R.string.nbr_child_gest_age),
-        arrayOf(
+        entries = arrayOf(
             "24-34 Weeks",
             "34-36 Weeks",
             "36-38 Weeks",
@@ -514,7 +514,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     val corticosteroidGivenAtLabor = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_corticosteroid),
-        arrayOf(
+        entries = arrayOf(
             "Yes",
             "No",
             "Don't know",
@@ -524,7 +524,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     private val babyCriedImmediatelyAfterBirth = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_cry_imm_birth),
-        arrayOf(
+        entries = arrayOf(
             "Yes",
             "No",
             "Don't Know"
@@ -534,7 +534,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     private val anyDefectAtBirth = FormInput(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_defect_at_birth),
-        arrayOf(
+        entries = arrayOf(
             "Cleft Lip-Cleft Palate",
             "Neural Tube defect(Spina Bifida)",
             "Club Foot",
