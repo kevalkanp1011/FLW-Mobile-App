@@ -144,9 +144,12 @@ class NewBenRegL15Fragment : Fragment() {
                 State.IDLE -> {
                 }
                 State.SAVING -> {
-
+                    binding.llContent.visibility = View.GONE
+                    binding.rlSaving.visibility = View.VISIBLE
                 }
                 State.SAVE_SUCCESS -> {
+                    binding.llContent.visibility = View.VISIBLE
+                    binding.rlSaving.visibility = View.GONE
                     Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
                     WorkerUtils.triggerAmritSyncWorker(requireContext())
                    
@@ -157,11 +160,15 @@ class NewBenRegL15Fragment : Fragment() {
                         else -> {}
                     }
                 }
-                State.SAVE_FAILED -> Toast.makeText(
-                    context,
-                    "Something wend wong! Contact testing!",
-                    Toast.LENGTH_LONG
-                ).show()
+                State.SAVE_FAILED -> {
+                    Toast.makeText(
+                        context,
+                        "Something wend wong! Contact testing!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    binding.llContent.visibility = View.VISIBLE
+                    binding.rlSaving.visibility = View.GONE
+                }
             }
         }
 
