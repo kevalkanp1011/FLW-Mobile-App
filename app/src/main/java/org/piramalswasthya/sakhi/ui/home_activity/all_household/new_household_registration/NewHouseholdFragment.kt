@@ -60,8 +60,7 @@ class NewHouseholdFragment : Fragment() {
         alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?")
 
         // On pressing Settings button
-        alertDialog.setPositiveButton("Settings"
-        ) { _, _ ->
+        alertDialog.setPositiveButton("Settings") { _, _ ->
             val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
             startActivity(intent)
         }
@@ -177,9 +176,6 @@ class NewHouseholdFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vp2Nhhr.adapter = NewHouseholdPagerAdapter(this)
-        viewModel.recordExists.observe(viewLifecycleOwner){
-            if(!it)consentAlert.show()
-        }
         when (viewModel.mTabPosition) {
             0 -> {
                 binding.btnPrev.visibility = View.GONE
@@ -237,13 +233,24 @@ class NewHouseholdFragment : Fragment() {
                 State.IDLE -> {
                 }
                 State.SAVING -> {
-
+                    binding.llContent.visibility = View.GONE
+                    binding.rlSaving.visibility = View.VISIBLE
                 }
                 State.SAVE_SUCCESS -> {
+                    binding.llContent.visibility = View.VISIBLE
+                    binding.rlSaving.visibility = View.GONE
                     Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
                     findNavController().navigate(NewHouseholdFragmentDirections.actionNewHouseholdFragmentToNewBenRegTypeFragment(viewModel.getHHId()))
                 }
-                State.SAVE_FAILED -> Toast.makeText(context,"Something wend wong! Contact testing!", Toast.LENGTH_LONG).show()
+                State.SAVE_FAILED -> {
+                    Toast.makeText(
+                        context,
+                        "Something wend wong! Contact testing!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    binding.llContent.visibility = View.VISIBLE
+                    binding.rlSaving.visibility = View.GONE
+                }
             }
         }
 
@@ -253,6 +260,9 @@ class NewHouseholdFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         binding.vp2Nhhr.registerOnPageChangeCallback(pageChangeCallback)
+        viewModel.recordExists.observe(viewLifecycleOwner){
+            if(!it)consentAlert.show()
+        }
 
 
     }
