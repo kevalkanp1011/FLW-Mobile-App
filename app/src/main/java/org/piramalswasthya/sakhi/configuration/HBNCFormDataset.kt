@@ -90,7 +90,7 @@ class HBNCFormDataset(
         )
         hbnc.partC = HbncPartC(
             eyesSwollenPusComing= babyEyesSwollen.getPosition(),
-            weightOnDay1= babyWeight.value.value?.toInt()?:0,
+            weightOnDayN= babyWeight.value.value?.toInt()?:0,
             temperature= babyBodyTemperature2.value.value,
             pusPimpleOnSkin= pusPimples.getPosition(),
             crackedRednessOfTwistedSkin= crackRedTwistSkin.value.value,
