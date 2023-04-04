@@ -6,9 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.HBNCDayGridAdapter
 import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
@@ -50,9 +53,12 @@ class HbncDayListFragment : Fragment() {
 
         binding.rvIconGrid.adapter = iconAdapter
 
-        iconAdapter.submitList(viewModel.dayList)
+        lifecycleScope.launch{
+            viewModel.dayList.collect{
+                iconAdapter.submitList(it)
+            }
+        }
     }
-
 
     override fun onDestroy() {
         super.onDestroy()

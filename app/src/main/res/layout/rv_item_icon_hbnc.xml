@@ -22,7 +22,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padding_small"
         android:background="?attr/selectableItemBackground"
-        android:backgroundTint="?attr/colorPrimary"
         android:clickable="true"
         android:elevation="@dimen/padding_normal"
         android:focusable="true"

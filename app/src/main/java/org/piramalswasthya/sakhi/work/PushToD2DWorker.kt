@@ -22,6 +22,7 @@ class PushToD2DWorker @AssistedInject constructor(
     private val cdrRepo: CdrRepo,
     private val pmsmaRepo: PmsmaRepo,
     private val pmjayRepo: PmjayRepo,
+    private val hbncRepo: HbncRepo,
     private val preferenceDao: PreferenceDao,
 ) : CoroutineWorker(appContext, params) {
 
@@ -40,8 +41,9 @@ class PushToD2DWorker @AssistedInject constructor(
             val workerResult2 = mdsrRepo.processNewMdsr()
             val workerResult3 = pmsmaRepo.processNewPmsma()
             val workerResult4 = pmjayRepo.processNewPmjay()
+            val workerResult5 = hbncRepo.processNewHbnc()
 
-            return if (workerResult1 && workerResult2 && workerResult3 && workerResult4) {
+            return if (workerResult1 && workerResult2 && workerResult3 && workerResult4 && workerResult5) {
                 Timber.d("Worker completed")
                 Result.success()
             } else {

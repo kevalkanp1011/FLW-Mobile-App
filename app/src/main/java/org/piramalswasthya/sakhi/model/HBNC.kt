@@ -24,6 +24,7 @@ data class HBNCCache(
     val id: Int = 0,
     val benId: Long,
     val hhId: Long,
+    val homeVisitDate: Int,
 
 
     @Embedded(prefix = "day_1")
@@ -47,7 +48,7 @@ data class HBNCCache(
     var supervisorComments: String? = null,
     var dateSupervisorVisit: Long = 0,
     var processed: String? = null,
-    val syncState: SyncState
+    var syncState: SyncState
 
 ) {
 
@@ -62,7 +63,7 @@ data class HBNCCache(
     fun asPostModel(
         user: UserCache,
         household: HouseholdCache,
-        ben: BenRegCache,
+//        ben: BenRegCache,
         hbncCount: Int
     ): HBNCPost {
         return HBNCPost(
@@ -88,7 +89,7 @@ data class HBNCCache(
             motherStatus = part0?.motherStatus ?: 0,
             registrationOfBirth = part0?.registeredAtBirth ?: 0,
             childStatus = part0?.childStatus ?: 0,
-            homeVisitDate = part0?.homeVisitDate ?: 0,
+            homeVisitDate = homeVisitDate,
             chileImmunizationStatus = part0?.let { "${if (it.childImmunizedBCG) "1" else "0"}${if (it.childImmunizedPolio) "1" else "0"}${if (it.childImmunizedDpt) "1" else "0"}${if (it.childImmunizedHepB) "1" else "0"}".toInt() }
                 ?: 0,
             newbornWeightRecorded = part0?.birthWeightRecordedInMCP ?: 0,
@@ -186,7 +187,6 @@ data class HBNCPart0(
     val motherStatus: Int,
     val registeredAtBirth: Int,
     val childStatus: Int,
-    val homeVisitDate: Int,
     val childImmunizedBCG: Boolean,
     val childImmunizedPolio: Boolean,
     val childImmunizedDpt: Boolean,

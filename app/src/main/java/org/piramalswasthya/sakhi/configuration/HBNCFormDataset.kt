@@ -40,7 +40,6 @@ class HBNCFormDataset(
             motherStatus = motherStatus.getPosition(),
             registeredAtBirth = registrationOfBirth.getPosition(),
             childStatus = childStatus.getPosition(),
-            homeVisitDate = homeVisitDate.getPosition(),
             childImmunizedBCG = childImmunizationStatus.value.value?.contains("BCG") ?: false,
             childImmunizedPolio = childImmunizationStatus.value.value?.contains("Polio") ?: false,
             childImmunizedDpt = childImmunizationStatus.value.value?.contains("DPT 1") ?: false,
