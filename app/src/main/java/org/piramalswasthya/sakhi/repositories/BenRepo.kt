@@ -598,7 +598,10 @@ class BenRepo @Inject constructor(
                 val ben = database.benDao.getBen(it.hhId, it.benId)
                 benNetworkPostList.add(ben!!.asNetworkPostModel(user))
             }
-            database.cbacDao.setCbacSyncing(*cbac.map {it.benId }.toLongArray())
+            cbac.takeIf { it.isNotEmpty() }?.map { it.benId }?.let {
+                database.cbacDao.setCbacSyncing(*it.toLongArray())
+            }
+//            database.cbacDao.setCbacSyncing(*cbac.map {it.benId }.toLongArray())
 
             val uploadDone = postDataToAmritServer(
                 benNetworkPostList,
@@ -607,8 +610,14 @@ class BenRepo @Inject constructor(
                 cbacPostList
             )
             if (!uploadDone) {
-                database.benDao.benSyncWithServerFailed(*benNetworkPostList.map { ben -> ben.benId }.toLongArray())
-                database.cbacDao.cbacSyncWithServerFailed(*cbacPostList.map { cbacElement -> cbacElement.benficieryid}.toLongArray())
+                benNetworkPostList.takeIf { it.isNotEmpty() }?.map { it.benId }?.let {
+                    database.benDao.benSyncWithServerFailed(*it.toLongArray())
+                }
+                cbacPostList.takeIf { it.isNotEmpty() }?.map { it.benficieryid }?.let {
+                    database.cbacDao.cbacSyncWithServerFailed(*it.toLongArray())
+                }
+//                database.benDao.benSyncWithServerFailed(*benNetworkPostList.map { ben -> ben.benId }.toLongArray())
+//                database.cbacDao.cbacSyncWithServerFailed(*cbacPostList.map { cbacElement -> cbacElement.benficieryid}.toLongArray())
             }
             return@withContext true
         }

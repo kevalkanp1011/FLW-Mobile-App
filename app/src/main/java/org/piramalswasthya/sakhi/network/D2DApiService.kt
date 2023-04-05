@@ -32,7 +32,6 @@ interface D2DApiService {
 
 
     @POST("mdsrRegister")
-    @Headers("Content-Type: application/json")
     suspend fun postMdsrForm(
         @Body mdsrPostList: List<MdsrPost>
     ): Response<ResponseBody>
@@ -44,20 +43,22 @@ interface D2DApiService {
     ): Response<ResponseBody>
 
     @POST("cdrRegister")
-    @Headers("Content-Type: application/json")
     suspend fun postCdrForm(
         @Body cdrPost: List<CDRPost>
     ): Response<ResponseBody>
 
     @POST("pmsmaData")
-    @Headers("Content-Type: application/json")
     suspend fun postPmsmaForm(
         @Body pmsmaPost: List<PmsmaPost>
     ): Response<ResponseBody>
 
     @POST("pmjayData")
-    @Headers("Content-Type: application/json")
     suspend fun postPmjayForm(
         @Body pmjayPostList: List<PMJAYPost>
+    ): Response<ResponseBody>
+
+    @POST("hbncRegister")
+    suspend fun postHbncForm(
+        @Body json: List<HBNCPost>
     ): Response<ResponseBody>
 }

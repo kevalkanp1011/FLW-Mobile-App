@@ -63,17 +63,17 @@ class HbncViewModel @Inject constructor(
 
     fun submitForm() {
         _state.value = State.LOADING
-        val hbncCache = HBNCCache(benId = benId, hhId = hhId, processed = "N", syncState = SyncState.UNSYNCED)
-//        dataset.mapValues(fpotCache)
-        Timber.d("saving fpot: $hbncCache")
+        val hbncCache = HBNCCache(benId = benId, hhId = hhId, homeVisitDate = nthDay, processed = "N", syncState = SyncState.UNSYNCED)
+        dataset.mapValues(hbncCache, user)
+        Timber.d("saving hbnc: $hbncCache")
         viewModelScope.launch {
             val saved = hbncRepo.saveHbncData(hbncCache)
             if (saved) {
-                Timber.d("saved fpot: $hbncCache")
+                Timber.d("saved hbnc: $hbncCache")
                 _state.value = State.SUCCESS
             }
             else {
-                Timber.d("saving fpot to local db failed!!")
+                Timber.d("saving hbnc to local db failed!!")
                 _state.value = State.FAIL
             }
         }
@@ -86,7 +86,7 @@ class HbncViewModel @Inject constructor(
                 ben = benRepo.getBeneficiary(benId, hhId)!!
                 household = benRepo.getHousehold(hhId)!!
                 user = database.userDao.getLoggedInUser()!!
-                hbnc = database.hbncDao.getFpot(hhId, benId)
+                hbnc = database.hbncDao.getHbnc(hhId, benId, nthDay)
             }
             _benName.value = "${ben.firstName} ${if(ben.lastName== null) "" else ben.lastName}"
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"

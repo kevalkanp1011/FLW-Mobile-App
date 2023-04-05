@@ -16,6 +16,7 @@ import org.piramalswasthya.sakhi.databinding.FragmentHbncBinding
 import org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.HbncViewModel.*
 import org.piramalswasthya.sakhi.ui.home_activity.mother_care.fpot.FpotViewModel
 import org.piramalswasthya.sakhi.work.WorkerUtils
+import timber.log.Timber
 
 @AndroidEntryPoint
 class HbncFragment : Fragment() {
@@ -98,19 +99,18 @@ class HbncFragment : Fragment() {
     }
 
     fun validate(): Boolean {
-//        val result = binding.pmjayForm.rvInputForm.adapter?.let {
-//            (it as FormInputAdapter).validateInput()
-//        }
-//        Timber.d("Validation : $result")
-//        return if (result == -1)
-//            true
-//        else {
-//            if (result != null) {
-//                binding.pmjayForm.rvInputForm.scrollToPosition(result)
-//            }
-//            false
-//        }
-        return false
+        val result = binding.hbncForm.rvInputForm.adapter?.let {
+            (it as FormInputAdapter).validateInput()
+        }
+        Timber.d("Validation : $result")
+        return if (result == -1)
+            true
+        else {
+            if (result != null) {
+                binding.hbncForm.rvInputForm.scrollToPosition(result)
+            }
+            false
+        }
     }
 
     override fun onDestroy() {
