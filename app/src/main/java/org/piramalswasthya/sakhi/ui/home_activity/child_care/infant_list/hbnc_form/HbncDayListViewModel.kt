@@ -3,28 +3,28 @@ package org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_f
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.transform
 import org.piramalswasthya.sakhi.model.HbncIcon
+import org.piramalswasthya.sakhi.repositories.HbncRepo
 import org.piramalswasthya.sakhi.ui.home_activity.immunization_due.immunization_list.ImmunizationListFragmentArgs
 import javax.inject.Inject
 
 
 @HiltViewModel
 class HbncDayListViewModel @Inject constructor(
-    state : SavedStateHandle,
+    hbncRepo: HbncRepo,
+    state: SavedStateHandle,
 
-) : ViewModel(){
+    ) : ViewModel() {
 
     private val benId = ImmunizationListFragmentArgs.fromSavedStateHandle(state).benId
     private val hhId = ImmunizationListFragmentArgs.fromSavedStateHandle(state).hhId
 
-    val dayList = listOf(
-        HbncIcon(hhId, benId, 1),
-        HbncIcon(hhId, benId, 3),
-        HbncIcon(hhId, benId, 7),
-        HbncIcon(hhId, benId, 14),
-        HbncIcon(hhId, benId, 21),
-        HbncIcon(hhId, benId, 28),
-        HbncIcon(hhId, benId, 42),
-    )
+    val dayList = hbncRepo.hbncList(benId, hhId).transform { dateList ->
+        val list = listOf(1, 3, 7, 14, 21, 28, 42).map {
+            HbncIcon(hhId, benId, it, dateList.contains(it))
+        }
+        emit(list)
+    }
 
 }

@@ -40,7 +40,6 @@ class HBNCFormDataset(
             motherStatus = motherStatus.getPosition(),
             registeredAtBirth = registrationOfBirth.getPosition(),
             childStatus = childStatus.getPosition(),
-            homeVisitDate = homeVisitDate.getPosition(),
             childImmunizedBCG = childImmunizationStatus.value.value?.contains("BCG") ?: false,
             childImmunizedPolio = childImmunizationStatus.value.value?.contains("Polio") ?: false,
             childImmunizedDpt = childImmunizationStatus.value.value?.contains("DPT 1") ?: false,
@@ -90,7 +89,7 @@ class HBNCFormDataset(
         )
         hbnc.partC = HbncPartC(
             eyesSwollenPusComing= babyEyesSwollen.getPosition(),
-            weightOnDay1= babyWeight.value.value?.toInt()?:0,
+            weightOnDayN= babyWeight.value.value?.toInt()?:0,
             temperature= babyBodyTemperature2.value.value,
             pusPimpleOnSkin= pusPimples.getPosition(),
             crackedRednessOfTwistedSkin= crackRedTwistSkin.value.value,

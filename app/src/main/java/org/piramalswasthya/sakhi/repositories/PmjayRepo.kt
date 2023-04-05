@@ -72,7 +72,7 @@ class PmjayRepo @Inject constructor(
         }
     }
 
-    private suspend fun postDataToD2dServer(pmjayPostList: MutableSet<PMJAYPost>): Boolean {
+    private suspend fun postDataToD2dServer(pmjayPostList: Set<PMJAYPost>): Boolean {
         if(pmjayPostList.isEmpty())
             return false
 

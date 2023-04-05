@@ -48,4 +48,5 @@ data class HbncIcon(
     val hhId: Long,
     val benId: Long,
     val count: Int,
+    val isFilled: Boolean
 )
