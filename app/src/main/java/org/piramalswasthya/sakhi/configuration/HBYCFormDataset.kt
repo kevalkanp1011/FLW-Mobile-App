@@ -25,25 +25,25 @@ class HBYCFormDataset(context: Context, private val hbyc: HBYCCache? = null) {
         hbycCache.infantPopulation = infantPopulation.value.value
         hbycCache.visitdate = visitDate.value.value?.let { getLongFromDate(it) }
         hbycCache.hbycAgeCategory = hbycAgeCategory.value.value
-        hbycCache.orsPacketDelivered = orsPacketDelivered.value.value == "Yes"
-        hbycCache.ironFolicAcidGiven = ironFolicAcidGiven.value.value == "Yes"
-        hbycCache.isVaccinatedByAge = isVaccinatedByAge.value.value == "Yes"
-        hbycCache.wasIll = wasIll.value.value == "Yes"
-        hbycCache.referred = referred.value.value == "Yes"
-        hbycCache.supplementsGiven = supplementsGiven.value.value == "Yes"
-        hbycCache.byHeightLength = byHeightLength.value.value == "Yes"
-        hbycCache.childrenWeighingLessReferred = childrenWeighingLessReferred.value.value == "Yes"
-        hbycCache.weightAccordingToAge = weightAccordingToAge.value.value == "Yes"
-        hbycCache.delayInDevelopment = delayInDevelopment.value.value == "Yes"
-        hbycCache.referredToHealthInstitite = referredToHealthInstitite.value.value == "Yes"
-        hbycCache.vitaminASupplementsGiven = vitaminASupplementsGiven.value.value == "Yes"
+        hbycCache.orsPacketDelivered = orsPacketDelivered.getPosition()
+        hbycCache.ironFolicAcidGiven = ironFolicAcidGiven.getPosition()
+        hbycCache.isVaccinatedByAge = isVaccinatedByAge.getPosition()
+        hbycCache.wasIll = wasIll.getPosition()
+        hbycCache.referred = referred.getPosition()
+        hbycCache.supplementsGiven = supplementsGiven.getPosition()
+        hbycCache.byHeightLength = byHeightLength.getPosition()
+        hbycCache.childrenWeighingLessReferred = childrenWeighingLessReferred.getPosition()
+        hbycCache.weightAccordingToAge = weightAccordingToAge.getPosition()
+        hbycCache.delayInDevelopment = delayInDevelopment.getPosition()
+        hbycCache.referredToHealthInstitite = referredToHealthInstitite.getPosition()
+        hbycCache.vitaminASupplementsGiven = vitaminASupplementsGiven.getPosition()
         hbycCache.deathAge = deathAge.value.value
         hbycCache.deathCause = deathCause.value.value
-        hbycCache.qmOrAnmInformed = qmOrAnmInformed.value.value == "Yes"
-        hbycCache.deathPlace = deathPlace.value.value
-        hbycCache.superVisorOn = superVisorOn.value.value == "Yes"
-        hbycCache.orsShortage = orsShortage.value.value == "Yes"
-        hbycCache.ifaDecreased = ifaDecreased.value.value == "Yes"
+        hbycCache.qmOrAnmInformed = qmOrAnmInformed.getPosition()
+        hbycCache.deathPlace = deathPlace.getPosition()
+        hbycCache.superVisorOn = superVisorOn.getPosition()
+        hbycCache.orsShortage = orsShortage.getPosition()
+        hbycCache.ifaDecreased = ifaDecreased.getPosition()
     }
 
     private val month = FormInput(
@@ -209,5 +209,9 @@ class HBYCFormDataset(context: Context, private val hbyc: HBYCCache? = null) {
         orsPacketDelivered, ironFolicAcidGiven, isVaccinatedByAge, wasIll, referred, supplementsGiven, byHeightLength,
         childrenWeighingLessReferred, weightAccordingToAge, delayInDevelopment, referredToHealthInstitite, vitaminASupplementsGiven,
         deathAge, deathCause, qmOrAnmInformed, deathPlace, superVisorOn, orsShortage, ifaDecreased)
+    }
+
+    private fun FormInput.getPosition(): Int {
+        return value.value?.let { entries?.indexOf(it)?.plus(1) } ?: 0
     }
 }

@@ -1,10 +1,9 @@
 package org.piramalswasthya.sakhi.network
 
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import org.piramalswasthya.sakhi.model.CDRPost
-import org.piramalswasthya.sakhi.model.MdsrPost
-import org.piramalswasthya.sakhi.model.PMJAYPost
-import org.piramalswasthya.sakhi.model.PmsmaPost
+import org.piramalswasthya.sakhi.model.*
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -36,6 +35,12 @@ interface D2DApiService {
     @Headers("Content-Type: application/json")
     suspend fun postMdsrForm(
         @Body mdsrPostList: List<MdsrPost>
+    ): Response<ResponseBody>
+
+    @POST("hbyncRegister")
+    @Headers("Content-Type: application/json")
+    suspend fun postHbycForm(
+        @Body hbycPostList: List<HbycPost>
     ): Response<ResponseBody>
 
     @POST("cdrRegister")

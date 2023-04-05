@@ -10,6 +10,7 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.configuration.HBYCFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.HbycRepo
@@ -61,7 +62,7 @@ class HbycViewModel @Inject constructor(
 
     fun submitForm() {
         _state.value = State.LOADING
-        val hbycCache = HBYCCache(benId = benId, hhId = hhId, processed = "N")
+        val hbycCache = HBYCCache(benId = benId, hhId = hhId, processed = "N", syncState = SyncState.UNSYNCED)
         dataset.mapValues(hbycCache)
         Timber.d("saving hbyc: $hbycCache")
         viewModelScope.launch {
