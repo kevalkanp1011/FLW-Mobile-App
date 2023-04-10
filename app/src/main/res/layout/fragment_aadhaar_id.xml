@@ -66,6 +66,17 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <CheckBox
+                    android:id="@+id/aadharConsentCheckBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_normal"
+                    android:buttonTint="?attr/colorPrimary"
+                    android:gravity="start|top"
+                    android:text="@string/aadhar_consent_text"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                    app:layout_constraintTop_toBottomOf="@+id/til_aadhaar_number" />
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_generate_otp"
                     android:layout_width="match_parent"
@@ -81,7 +92,7 @@
                     android:textColor="?attr/colorSecondary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/til_aadhaar_number" />
+                    app:layout_constraintTop_toBottomOf="@+id/aadharConsentCheckBox" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

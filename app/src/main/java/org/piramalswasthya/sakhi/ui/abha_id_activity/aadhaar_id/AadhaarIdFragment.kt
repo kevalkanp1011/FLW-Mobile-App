@@ -37,9 +37,13 @@ class AadhaarIdFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navController = findNavController()
 
+        var isValidAadhar = false
         binding.btnGenerateOtp.setOnClickListener {
             viewModel.generateOtpClicked(binding.tietAadhaarNumber.text.toString())
 
+        }
+        binding.aadharConsentCheckBox.setOnCheckedChangeListener{ _, ischecked ->
+            binding.btnGenerateOtp.isEnabled = isValidAadhar && ischecked
         }
         binding.tietAadhaarNumber.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -49,7 +53,9 @@ class AadhaarIdFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                binding.btnGenerateOtp.isEnabled = s != null && s.length == 12
+                isValidAadhar = s != null && s.length == 12
+                binding.btnGenerateOtp.isEnabled = isValidAadhar
+                        && binding.aadharConsentCheckBox.isChecked
             }
 
         })

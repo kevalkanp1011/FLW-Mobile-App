@@ -89,16 +89,29 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
-            <TextView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/resend_otp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_normal"
                 android:layout_marginEnd="16dp"
                 android:text="Resend OTP"
-                android:textColor="?attr/colorPrimary"
+                android:textAllCaps="false"
+                android:textColor="@color/secondaryColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btn_verify_OTP" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/timer_resend_otp"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="30"
+                android:padding="0dp"
+                app:cornerRadius="40dp"
+                android:textColor="@color/secondaryColor"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toStartOf="@+id/resend_otp"
+                app:layout_constraintTop_toBottomOf="@+id/btn_verify_OTP"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -66,7 +66,7 @@ class CreateAbhaFragment : Fragment() {
 
         navController = findNavController()
 
-        binding.btnDownloadAbha.setOnClickListener {
+        binding.btnDownloadAbhaYes.setOnClickListener {
             viewModel.downloadAbhaClicked(requireActivity())
         }
 
@@ -103,6 +103,8 @@ class CreateAbhaFragment : Fragment() {
                     binding.pbCai.visibility = View.INVISIBLE
                     binding.clCreateAbhaId.visibility = View.VISIBLE
                     binding.clError.visibility = View.INVISIBLE
+                    binding.txtDownloadAbha.visibility = View.INVISIBLE
+                    binding.downloadAbha.visibility = View.INVISIBLE
                 }
             }
         }
