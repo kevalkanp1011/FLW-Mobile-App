@@ -29,6 +29,18 @@ class AadhaarOtpFragment : Fragment() {
         AadhaarOtpFragmentArgs.fromBundle(requireArguments())
     }
 
+    private var timer = object : CountDownTimer(30000, 1000) {
+        override fun onTick(millisUntilFinished: Long) {
+            val sec = millisUntilFinished / 1000 % 60
+            binding.timerResendOtp.text = sec.toString()
+        }
+
+        // When the task is over it will print 00:00:00 there
+        override fun onFinish() {
+            binding.resendOtp.isEnabled = true
+            binding.timerResendOtp.visibility = View.INVISIBLE
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,41 +52,13 @@ class AadhaarOtpFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.resendOtp.isEnabled = false
-        binding.timerResendOtp.visibility = View.VISIBLE
+        startResendTimer()
         binding.btnVerifyOTP.setOnClickListener {
             viewModel.verifyOtpClicked(binding.tietAadhaarOtp.text.toString())
         }
-        object : CountDownTimer(30000, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                val sec = millisUntilFinished / 1000 % 60
-                binding.timerResendOtp.text = sec.toString()
-            }
-
-            // When the task is over it will print 00:00:00 there
-            override fun onFinish() {
-                binding.resendOtp.isEnabled = true
-                binding.timerResendOtp.visibility = View.INVISIBLE
-            }
-        }.start()
         binding.resendOtp.setOnClickListener {
             viewModel.resendOtp()
-            binding.resendOtp.isEnabled = false
-            binding.timerResendOtp.visibility = View.VISIBLE
-            binding.btnVerifyOTP.setOnClickListener {
-                viewModel.verifyOtpClicked(binding.tietAadhaarOtp.text.toString())
-            }
-            object : CountDownTimer(30000, 1000) {
-                override fun onTick(millisUntilFinished: Long) {
-                    val sec = millisUntilFinished / 1000 % 60
-                    binding.timerResendOtp.text = sec.toString()
-                }
-
-                override fun onFinish() {
-                    binding.resendOtp.isEnabled = true
-                    binding.timerResendOtp.visibility = View.INVISIBLE
-                }
-            }.start()
+            startResendTimer()
         }
 
         binding.tietAadhaarOtp.addTextChangedListener(object : TextWatcher {
@@ -139,8 +123,14 @@ class AadhaarOtpFragment : Fragment() {
         }
     }
 
+    private fun startResendTimer() {
+        binding.resendOtp.isEnabled = false
+        binding.timerResendOtp.visibility = View.VISIBLE
+        timer.start()
+    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+        timer.cancel()
     }
 }

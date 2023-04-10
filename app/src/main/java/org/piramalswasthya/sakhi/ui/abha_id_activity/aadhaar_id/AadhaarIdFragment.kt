@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentAadhaarIdBinding
 import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdViewModel.State
 
@@ -26,10 +28,18 @@ class AadhaarIdFragment : Fragment() {
 
     private lateinit var navController: NavController
 
+    private val aadharDisclaimer by lazy {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Individual’s consent for creation of ABHA Number.")
+            .setMessage(context?.getString(R.string.aadhar_disclaimer_consent_text))
+            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
+            .create()
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAadhaarIdBinding.inflate(layoutInflater)
+
         return binding.root
     }
 
@@ -44,6 +54,9 @@ class AadhaarIdFragment : Fragment() {
         }
         binding.aadharConsentCheckBox.setOnCheckedChangeListener{ _, ischecked ->
             binding.btnGenerateOtp.isEnabled = isValidAadhar && ischecked
+        }
+        binding.aadharDisclaimer.setOnClickListener{
+            aadharDisclaimer.show()
         }
         binding.tietAadhaarNumber.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
