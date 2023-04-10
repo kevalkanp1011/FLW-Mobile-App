@@ -25,7 +25,9 @@ class AadhaarOtpFragment : Fragment() {
 
     private val viewModel: AadhaarOtpViewModel by viewModels()
 
-    val args: AadhaarOtpFragmentArgs by navArgs()
+    val args: AadhaarOtpFragmentArgs by lazy {
+        AadhaarOtpFragmentArgs.fromBundle(requireArguments())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
