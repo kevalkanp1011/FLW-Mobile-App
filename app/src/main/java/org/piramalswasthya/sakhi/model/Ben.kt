@@ -4,6 +4,8 @@ import androidx.room.*
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.model.BenBasicCache.Companion.getAgeFromDob
+import org.piramalswasthya.sakhi.model.BenBasicCache.Companion.getAgeUnitFromDob
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -33,7 +35,7 @@ enum class Gender{
     TRANSGENDER
 }
 
-@DatabaseView(viewName = "BEN_BASIC_CACHE", value="SELECT b.beneficiaryId as benId, b.householdId as hhId, b.regDate, b.firstName as benName, b.lastName as benSurname, b.gender, b.age" +
+@DatabaseView(viewName = "BEN_BASIC_CACHE", value="SELECT b.beneficiaryId as benId, b.householdId as hhId, b.regDate, b.firstName as benName, b.lastName as benSurname, b.gender, b.dob as dob" +
         ", b.ageUnit, b.contactNumber as mobileNo, b.fatherName, h.familyHeadName, b.registrationType as typeOfList, b.rchId" +
         ", b.isHrpStatus as hrpStatus, b.syncState, b.gen_reproductiveStatusId as reproductiveStatusId, b.isKid, b.immunizationStatus," +
         " cbac.benId is not null as hasCbac, cbac.syncState as cbacSyncState," +
@@ -54,8 +56,7 @@ data class BenBasicCache(
     val benName: String,
     val benSurname: String? = null,
     val gender: Gender,
-    val age: Int,
-    val ageUnit: AgeUnit,
+    val dob : Long,
     val mobileNo: Long,
     val fatherName: String? = null,
     val familyHeadName: String? = null,
@@ -76,7 +77,36 @@ data class BenBasicCache(
 ) {
     companion object{
         private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+        fun getAgeFromDob(dob: Long): Int {
+            val diffLong = System.currentTimeMillis() - dob
+            val diffDays = TimeUnit.MILLISECONDS.toDays(diffLong).toInt()
+            if (diffDays < 31)
+                return diffDays
+            val yearDiff = (diffDays / 365)
+            if (yearDiff > 0)
+                return yearDiff
+            val calDob = Calendar.getInstance()
+            calDob.timeInMillis = dob
+            val calNow = Calendar.getInstance()
+            return calNow.get(Calendar.YEAR) * 12 + calNow.get(Calendar.MONTH) - calDob.get(Calendar.YEAR) * 12 + calDob.get(
+                Calendar.MONTH
+            )
+
+
+        }
+        fun getAgeUnitFromDob(dob: Long): AgeUnit {
+            val diffLong = System.currentTimeMillis() - dob
+            return when(TimeUnit.MILLISECONDS.toDays(diffLong).toInt()){
+                in 0..31 -> AgeUnit.DAYS
+                in 366 ..Int.MAX_VALUE -> AgeUnit.YEARS
+                else -> AgeUnit.MONTHS
+            }
+
+        }
+
     }
+
+
     fun asBasicDomainModel(): BenBasicDomain {
         return BenBasicDomain (
             benId = benId,
@@ -85,7 +115,7 @@ data class BenBasicCache(
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
-            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            dob = dob,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
@@ -103,7 +133,7 @@ data class BenBasicCache(
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
-            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            dob = dob,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
@@ -122,7 +152,7 @@ data class BenBasicCache(
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
-            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            dob = dob,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
@@ -141,7 +171,7 @@ data class BenBasicCache(
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
-            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            dob = dob,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
@@ -160,7 +190,7 @@ data class BenBasicCache(
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
-            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            dob = dob,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
@@ -179,7 +209,7 @@ data class BenBasicCache(
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
-            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            dob = dob,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
@@ -199,7 +229,7 @@ data class BenBasicCache(
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
-            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            dob = dob,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
@@ -218,7 +248,7 @@ data class BenBasicCache(
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
-            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            dob = dob,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
@@ -232,6 +262,8 @@ data class BenBasicCache(
 
 }
 
+
+
 data class BenBasicDomain(
     val benId: Long,
     val hhId: Long,
@@ -239,7 +271,10 @@ data class BenBasicDomain(
     val benName: String,
     val benSurname: String? = null,
     val gender: String,
-    val age: String,
+    val dob : Long,
+    val ageInt: Int = getAgeFromDob(dob),
+    val ageUnit: AgeUnit = getAgeUnitFromDob(dob),
+    val age : String = "$ageInt $ageUnit",
     val mobileNo: String,
     val fatherName: String? = null,
     val familyHeadName: String,
@@ -255,7 +290,10 @@ data class BenBasicDomainForForm(
     val benName: String,
     val benSurname: String? = null,
     val gender: String,
-    val age: String,
+    val dob : Long,
+    val ageInt: Int = getAgeFromDob(dob),
+    val ageUnit: AgeUnit = getAgeUnitFromDob(dob),
+    val age : String = "$ageInt $ageUnit",
     val mobileNo: String,
     val fatherName: String? = null,
     val familyHeadName: String,
@@ -266,7 +304,11 @@ data class BenBasicDomainForForm(
     val hasForm2 : Boolean = false,
     val hasForm3 : Boolean = false,
     var syncState: SyncState
-)
+){
+    companion object{
+
+    }
+}
 
 data class BenRegKid(
     var childName: String? = null,

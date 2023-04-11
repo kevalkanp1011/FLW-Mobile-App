@@ -39,10 +39,10 @@ interface UserDao {
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0 and isHrpStatus = 1)  AS hrpCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0)  AS generalOpCareCount, " +
                 "(SELECT COUNT(*) from BENEFICIARY where ashaId=:userId and isDraft = 0) AS deathReportCount, " +
-                "(SELECT COUNT(*) FROM BEN_BASIC_CACHE where age>=30) AS ncdCount, " +
-                "(SELECT COUNT(*) FROM BEN_BASIC_CACHE b LEFT OUTER JOIN CBAC c ON b.benId=c.benId where b.age>=30 and b.ageUnit=:year  and c.benId IS NULL) AS ncdEligibleCount, " +
-                "(SELECT COUNT(*) FROM BEN_BASIC_CACHE b INNER JOIN CBAC c on b.benId==c.benId WHERE c.total_score >= 4) AS ncdPriorityCount, " +
-                "(SELECT COUNT(*) FROM BEN_BASIC_CACHE b INNER JOIN CBAC c on b.benId==c.benId WHERE c.total_score < 4) AS ncdNonEligibleCount, " +
+                "(SELECT COUNT(*) FROM BENEFICIARY where age>=30) AS ncdCount, " +
+                "(SELECT COUNT(*) FROM BENEFICIARY b LEFT OUTER JOIN CBAC c ON b.beneficiaryId =c.benId where b.age>=30 and b.ageUnit=:year  and c.benId IS NULL) AS ncdEligibleCount, " +
+                "(SELECT COUNT(*) FROM BENEFICIARY b INNER JOIN CBAC c on b.beneficiaryId==c.benId WHERE c.total_score >= 4) AS ncdPriorityCount, " +
+                "(SELECT COUNT(*) FROM BENEFICIARY b INNER JOIN CBAC c on b.beneficiaryId==c.benId WHERE c.total_score < 4) AS ncdNonEligibleCount, " +
                 "(SELECT COUNT(*) from BEN_ID_LIST where userId=:userId) AS availBenIdsCount "
     )
     fun getRecordCounts(

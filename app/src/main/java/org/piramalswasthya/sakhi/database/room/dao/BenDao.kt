@@ -22,7 +22,7 @@ interface BenDao {
     fun getAllBen(): LiveData<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE hhId = :hhId")
-    suspend fun getAllBenForHousehold(hhId : Long): List<BenBasicCache>
+    suspend fun getAllBenForHousehold(hhId: Long): List<BenBasicCache>
 
     @Query("SELECT * FROM BENEFICIARY WHERE beneficiaryId =:benId AND householdId = :hhId LIMIT 1")
     suspend fun getBen(hhId: Long, benId: Long): BenRegCache?
@@ -60,7 +60,7 @@ interface BenDao {
     @Query("SELECT beneficiaryId FROM BENEFICIARY WHERE beneficiaryId IN (:list)")
     fun getAllBeneficiaryFromList(list: List<Long>): LiveData<List<Long>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE age BETWEEN 15 AND 49 and reproductiveStatusId = 1")
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE /*age BETWEEN 15 AND 49 and*/ reproductiveStatusId = 1")
     fun getAllEligibleCoupleList(): LiveData<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 2")
@@ -69,12 +69,12 @@ interface BenDao {
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 3")
     fun getAllDeliveryStageWomenList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE where age>=30")
-    fun getAllNCDList(): LiveData<List<BenBasicCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE where dob<=:ncdTimestamp")
+    fun getAllNCDList(ncdTimestamp: Long): LiveData<List<BenBasicCache>>
 
 
-    @Query("SELECT b.* FROM BEN_BASIC_CACHE b LEFT OUTER JOIN CBAC c ON b.benId=c.benId where b.age>=30 and c.benId IS NULL")
-    fun getAllNCDEligibleList(): LiveData<List<BenBasicCache>>
+    @Query("SELECT b.* FROM BEN_BASIC_CACHE b LEFT OUTER JOIN CBAC c ON b.benId=c.benId where b.dob<=:ncdTimestamp and c.benId IS NULL")
+    fun getAllNCDEligibleList(ncdTimestamp: Long): LiveData<List<BenBasicCache>>
 
     @Query("SELECT b.* FROM BEN_BASIC_CACHE b INNER JOIN CBAC c on b.benId==c.benId WHERE c.total_score >= 4")
     fun getAllNCDPriorityList(): LiveData<List<BenBasicCache>>
@@ -86,20 +86,26 @@ interface BenDao {
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 5")
     fun getAllMenopauseStageList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE gender = :female and age BETWEEN 15 AND 49")
-    fun getAllReproductiveAgeList(female: Gender = Gender.FEMALE): LiveData<List<BenBasicCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE gender = :female and dob BETWEEN :minReproductiveAge AND :maxReproductiveAge")
+    fun getAllReproductiveAgeList(
+        minReproductiveAge: Long,
+        maxReproductiveAge: Long,
+        female: Gender = Gender.FEMALE
+    ): LiveData<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 4")
     fun getAllPNCMotherList(): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE ageUnit != :ageUnit or (ageUnit = :ageUnit and age < 2)")
-    fun getAllInfantList(ageUnit: AgeUnit = AgeUnit.YEARS): LiveData<List<BenBasicCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE dob>=:infantTimestamp")
+    fun getAllInfantList(infantTimestamp : Long): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE ageUnit = :ageUnit and age >= 2 and age < 6")
-    fun getAllChildList(ageUnit: AgeUnit = AgeUnit.YEARS): LiveData<List<BenBasicCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE dob between :minChildTimestamp AND :maxChildTimestamp")
+    fun getAllChildList( minChildTimestamp: Long,
+                         maxChildTimestamp: Long,): LiveData<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE ageUnit = :ageUnit and age between 6 and 14")
-    fun getAllAdolescentList(ageUnit: AgeUnit = AgeUnit.YEARS): LiveData<List<BenBasicCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE dob between :minAdolescentTimestamp AND :maxAdolescentTimestamp")
+    fun getAllAdolescentList(minAdolescentTimestamp: Long,
+                             maxAdolescentTimestamp: Long,): LiveData<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE isKid = 1 or reproductiveStatusId in (2, 3) ")
     fun getAllImmunizationDueList(): LiveData<List<BenBasicCache>>
@@ -108,10 +114,12 @@ interface BenDao {
     fun getAllHrpCasesList(): LiveData<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 4 and hhId = :hhId")
-    suspend fun getAllPNCMotherListFromHousehold(hhId : Long): List<BenBasicCache>
+    suspend fun getAllPNCMotherListFromHousehold(hhId: Long): List<BenBasicCache>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE typeOfList = :infant or ageUnit = :ageUnit and age < 15")
-    fun getAllCDRList(infant: TypeOfList = TypeOfList.INFANT, ageUnit: AgeUnit = AgeUnit.YEARS): LiveData<List<BenBasicCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE dob>= :cdrTimestamp")
+    fun getAllCDRList(
+       cdrTimestamp : Long
+    ): LiveData<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId in (2, 3, 4)")
     fun getAllMDSRList(): LiveData<List<BenBasicCache>>

@@ -59,14 +59,20 @@ class BenRepo @Inject constructor(
         }
     }
     val ncdList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllNCDList()) { list ->
+        val ncdTimestamp = Calendar.getInstance().run {
+            add(Calendar.YEAR, -30)
+            timeInMillis
+        }
+        Transformations.map(database.benDao.getAllNCDList(ncdTimestamp)) { list ->
             list.map { it.asBasicDomainModel() }
         }
     }
     val ncdEligibleList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllNCDEligibleList()) { list ->
+        val ncdTimestamp = Calendar.getInstance().run {
+            add(Calendar.YEAR, -30)
+            timeInMillis
+        }
+        Transformations.map(database.benDao.getAllNCDEligibleList(ncdTimestamp)) { list ->
             list.map { it.asBenBasicDomainModelForCbacForm() }
         }
     }
@@ -89,29 +95,53 @@ class BenRepo @Inject constructor(
         }
     }
     val reproductiveAgeList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllReproductiveAgeList()) { list ->
+        val minReproductiveAge = Calendar.getInstance().run {
+            add(Calendar.YEAR, -60)
+            timeInMillis
+        }
+        val maxReproductiveAge = Calendar.getInstance().run {
+            add(Calendar.YEAR, -15)
+            timeInMillis
+        }
+        Transformations.map(database.benDao.getAllReproductiveAgeList(minReproductiveAge,maxReproductiveAge)) { list ->
             list.map { it.asBasicDomainModelForFpotForm() }
         }
     }
 
     val infantList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllInfantList()) { list ->
+        val infantTimestamp = Calendar.getInstance().run {
+            add(Calendar.YEAR, -2)
+            timeInMillis
+        }
+        Transformations.map(database.benDao.getAllInfantList(infantTimestamp)) { list ->
             list.map { it.asBenBasicDomainModelForHbncForm() }
         }
     }
 
     val childList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllChildList()) { list ->
+        val minChildAge = Calendar.getInstance().run {
+            add(Calendar.YEAR, -2)
+            timeInMillis
+        }
+        val maxChildAge = Calendar.getInstance().run {
+            add(Calendar.YEAR, -6)
+            timeInMillis
+        }
+        Transformations.map(database.benDao.getAllChildList(minChildAge,maxChildAge)) { list ->
             list.map { it.asBasicDomainModel() }
         }
     }
 
     val adolescentList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllAdolescentList()) { list ->
+        val minAdolescentAge = Calendar.getInstance().run {
+            add(Calendar.YEAR, -6)
+            timeInMillis
+        }
+        val maxAdolescentAge = Calendar.getInstance().run {
+            add(Calendar.YEAR, -14)
+            timeInMillis
+        }
+        Transformations.map(database.benDao.getAllAdolescentList(minAdolescentAge,maxAdolescentAge)) { list ->
             list.map { it.asBasicDomainModel() }
         }
     }
@@ -138,8 +168,11 @@ class BenRepo @Inject constructor(
     }
 
     val cdrList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllCDRList()) { list ->
+        val cdrTimestamp = Calendar.getInstance().run {
+            add(Calendar.YEAR, -15)
+            timeInMillis
+        }
+        Transformations.map(database.benDao.getAllCDRList(cdrTimestamp)) { list ->
             list.map { it.asBenBasicDomainModelForCdrForm() }
         }
     }
@@ -850,7 +883,8 @@ class BenRepo @Inject constructor(
                                             rchId = benDataObj.getString("rchid"),
                                             hrpStatus = benDataObj.getBoolean("hrpStatus"),
                                             typeOfList = benDataObj.getString("registrationType"),
-                                            syncState = if (benExists) SyncState.SYNCED else SyncState.SYNCING
+                                            syncState = if (benExists) SyncState.SYNCED else SyncState.SYNCING,
+                                            dob = 0L,
                                         )
                                     )
                                 }
