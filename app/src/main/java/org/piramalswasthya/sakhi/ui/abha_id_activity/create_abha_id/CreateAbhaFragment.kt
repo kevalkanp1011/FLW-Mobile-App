@@ -66,10 +66,14 @@ class CreateAbhaFragment : Fragment() {
 
         navController = findNavController()
 
-//        binding.btnDownloadAbha.setOnClickListener {
-//            viewModel.downloadAbhaClicked(requireActivity())
-//        }
+        binding.btnDownloadAbhaYes.setOnClickListener {
+            viewModel.downloadAbhaClicked(requireActivity())
+        }
 
+        binding.btnDownloadAbhaNo.setOnClickListener{
+            binding.txtDownloadAbha.visibility = View.INVISIBLE
+            binding.downloadAbha.visibility = View.INVISIBLE
+        }
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             onBackPressedCallback
@@ -103,6 +107,8 @@ class CreateAbhaFragment : Fragment() {
                     binding.pbCai.visibility = View.INVISIBLE
                     binding.clCreateAbhaId.visibility = View.VISIBLE
                     binding.clError.visibility = View.INVISIBLE
+                    binding.txtDownloadAbha.visibility = View.INVISIBLE
+                    binding.downloadAbha.visibility = View.INVISIBLE
                 }
             }
         }

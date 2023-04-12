@@ -10,14 +10,12 @@ import android.os.Build
 import android.os.Environment
 import android.util.Base64
 import androidx.core.app.NotificationCompat
-import androidx.core.content.FileProvider
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
 import org.json.JSONException
 import org.json.JSONObject
-import org.piramalswasthya.sakhi.BuildConfig
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.network.*
@@ -405,7 +403,7 @@ class AbhaIdRepo @Inject constructor(
                 )
                     .setSmallIcon(R.drawable.ic_download)
                     .setContentTitle(fileName)
-                    .setContentText("Downloading in progess")
+                    .setContentText("Downloading in progress")
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setOngoing(true)
                     .setProgress(0, 0, true)
@@ -428,7 +426,9 @@ class AbhaIdRepo @Inject constructor(
                     totalBytesRead += bytesRead
                     progress =
                         ((totalBytesRead.toDouble() / responseBody.contentLength()) * 100).toInt()
-                    notificationBuilder.setProgress(100, progress, false)
+                    notificationBuilder
+                        .setProgress(100, progress, false)
+                        .setContentText("$progress")
                     notificationManager.notify(notificationId, notificationBuilder.build())
                     bytesRead = inputStream.read(buffer)
                 }
@@ -436,36 +436,35 @@ class AbhaIdRepo @Inject constructor(
                 outputStream.close()
                 inputStream.close()
 
-                notificationBuilder
-                    .setContentTitle(fileName)
-                    .setContentText("Download Completed")
-                    .setProgress(0, 0, false)
-                    .setOngoing(false)
-                val uri = FileProvider.getUriForFile(
-                    context,
-                    BuildConfig.APPLICATION_ID + ".provider",
-                    file
-                )
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.setDataAndType(uri, "application/pdf")
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                val pendingIntent = PendingIntent.getActivity(
-                    context,
-                    0,
-                    intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-                notificationBuilder
-                    .setContentIntent(pendingIntent)
-                    .setAutoCancel(true)
-                notificationManager.notify(notificationId, notificationBuilder.build())
-
                 MediaScannerConnection.scanFile(
                     context,
                     arrayOf(file.toString()),
                     null,
-                    null
-                )
+                ) { _, uri ->
+                    run {
+                        // Update the notification after the file has been scanned
+                        notificationBuilder.setContentTitle(fileName)
+                            .setContentText("Download Completed")
+                            .setProgress(0, 0, false)
+                            .setOngoing(false)
+                            .setAutoCancel(true)
+                            .setContentIntent(
+                                PendingIntent.getActivity(
+                                    context,
+                                    0,
+                                    Intent(Intent.ACTION_VIEW).apply {
+                                        setDataAndType(uri, "application/pdf")
+                                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                    },
+                                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                                )
+                            )
+                        notificationManager.notify(notificationId, notificationBuilder.build())
+
+                    }
+                }
+
+                notificationManager.cancel(notificationId)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
