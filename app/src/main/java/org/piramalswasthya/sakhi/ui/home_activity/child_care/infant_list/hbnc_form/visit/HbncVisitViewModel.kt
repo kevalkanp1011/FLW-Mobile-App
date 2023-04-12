@@ -70,7 +70,7 @@ class HbncVisitViewModel @Inject constructor(
             processed = "N",
             syncState = SyncState.UNSYNCED
         )
-//        dataset.mapValues(hbncCache, user)
+        dataset.mapVisitValues(hbncCache)
         Timber.d("saving hbnc: $hbncCache")
         viewModelScope.launch {
             val saved = hbncRepo.saveHbncData(hbncCache)

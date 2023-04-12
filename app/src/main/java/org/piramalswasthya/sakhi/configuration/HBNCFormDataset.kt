@@ -44,95 +44,94 @@ class HBNCFormDataset(
         )
     }
 
-//    fun mapValues(hbnc: HBNCCache, user: UserCache) {
-//        hbnc.visitCard = HbncVisitCard(
-//            healthSubCenterName = healthSubCenterName.value.value,
-//            phcName = phcName.value.value,
-//            motherName = motherName.value.value,
-//            fatherName = fatherName.value.value,
-//            dateOfDelivery = getLongFromDate(dateOfDelivery.value.value),
-//            placeOfDelivery = placeOfDelivery.getPosition(),
-//            babyGender = gender.getPosition(),
-//            typeOfDelivery = typeOfDelivery.getPosition(),
-//            startedBreastFeed = startedBreastFeeding.getPosition(),
-//            weightAtBirth = weightAtBirth.value.value?.toInt() ?: 0,
-//            dischargeDateFromHospital = getLongFromDate(dateOfDischargeFromHospitalMother.value.value),
-//            motherStatus = motherStatus.getPosition(),
-//            registeredAtBirth = registrationOfBirth.getPosition(),
-//            childStatus = childStatus.getPosition(),
-//            childImmunizedBCG = childImmunizationStatus.value.value?.contains("BCG") ?: false,
-//            childImmunizedPolio = childImmunizationStatus.value.value?.contains("Polio") ?: false,
-//            childImmunizedDpt = childImmunizationStatus.value.value?.contains("DPT 1") ?: false,
-//            childImmunizedHepB = childImmunizationStatus.value.value?.contains("Hepatitis-B")
-//                ?: false,
-//            birthWeightRecordedInMCP = birthWeightRecordedInCard.getPosition(),
-//            deliveryTime = timeOfDelivery.value.value,
-//            dateOfCompletionOfPregnancy = getLongFromDate(dateOfCompletionOfPregnancy.value.value),
-//            numWeeksWhenBorn = weeksSinceBabyBorn.value.value?.toInt() ?: 0,
-//            dateOfFirstTraining = getLongFromDate(dateOfFirstTraining.value.value),
-//            doesMotherHaveProblem = motherAnyProblem.getPosition(),
-//            babyFedAfterBirth = babyFedAfterBirth.getPosition(),
-//            whenBabyFirstBreastFed = whenBabyFirstFed.value.value,
-//            howBabyTookFirstFeed = howBabyTookFirstFeed.getPosition(),
-//            breastFeedProblem = actionBreastFeedProblem.value.value,
-//            breastFeedProblem2 = anyBreastFeedProblem.value.value,
-//            measureRecordBabyTemperature = babyBodyTemperature.value.value,
-//            babyEyeCondition = babyEyeCondition.getPosition(),
-//            babyBleedUmbilical = babyBleedUmbilicalCord.getPosition(),
-//            babyWeighingScaleColor = babyWeightColor.getPosition(),
-//            babyAllOrganLethargic = allLimbsLimp.getPosition(),
-//            babyLessMilkDrinking = feedingLessStop.getPosition(),
-//            babyNoDrinkMilk = notDrinkMilk.getPosition(),
-//            babyCrySlow = crySlow.getPosition(),
-//            babyNoCry = notCry.getPosition(),
-//            babyBornLookedAfter = lookedAfterRegularly.getPosition(),
-//            babyWipedCleanCloth = wipedWithCleanCloth.getPosition(),
-//            babyKeptWarm = keptWarm.getPosition(),
-//            babyGivenBath = givenBath.getPosition(),
-//            babyWrappedInClothKeptWithMother = wrapClothKeptMother.getPosition(),
-//            startedBreastFeedOnlyGivenBreastMilk = onlyBreastMilk.getPosition(),
-//            babyAnythingUnusual = unusualWithBaby.getPosition(),
-//        )
-//        hbnc.part1 = HbncPartI(
-//            numTimesEats = timesMotherFed24hr.value.value?.toInt() ?: 0,
-//            numPadsChanged = timesPadChanged.value.value?.toInt() ?: 0,
-//            winterBabyKeptWarm = babyKeptWarmWinter.getPosition(),
-//            breastFeedProper = babyBreastFedProperly.getPosition(),
-//            babyCryContinuouslyOrUrinateLess6 = babyCryContinuously.getPosition(),
-//        )
-//        hbnc.part2 = HbncPartII(
-//            temperature = motherBodyTemperature.value.value,
-//            waterDischargeFoulSmell = motherWaterDischarge.getPosition(),
-//            motherSpeakAbnormalFits = motherSpeakAbnormalFits.getPosition(),
-//            motherNoOrLessMilk = motherNoOrLessMilk.getPosition(),
-//            crackedNipplePainHardBreast = motherBreastProblem.getPosition(),
-//        )
-//        hbnc.homeVisitForm = HbncHomeVisit(
-//            eyesSwollenPusComing = babyEyesSwollen.getPosition(),
-//            weightOnDayN = babyWeight.value.value?.toInt() ?: 0,
-//            temperature = babyBodyTemperature2.value.value,
-//            pusPimpleOnSkin = pusPimples.getPosition(),
-//            crackedRednessOfTwistedSkin = crackRedTwistSkin.value.value,
-//            yellowEyePalmSoleSkin = yellowJaundice.getPosition(),
-//            seizure = seizures.getPosition(),
-//            breathGoingFast = breathFast.getPosition(),
-//            referredWhere = referredByAsha.value.value,
-//        )
-//        hbnc.partD = HbncPartD(
-//            organsLethargic = organLethargic.value.value,
-//            lessNoMilkDrinking = drinkLessNoMilk.value.value,
-//            slowOrStoppedCrying = slowNoCry.value.value,
-//            bloatedStomachOrVomit = bloatedStomach.value.value,
-//            coldOrHotOnTouch = childColdOnTouch.value.value,
-//            pusInNavel = pusNavel.value.value,
-//        )
-//        hbnc.ashaName = user.userName
-//        hbnc.supervisorRemark = supRemark.value.value
-//        hbnc.supervisorName = supName.value.value
-//        hbnc.supervisorComments = supervisorComment.value.value
-//        hbnc.dateSupervisorVisit = getLongFromDate(dateOfSupSig.value.value)
-//
-//    }
+    fun mapPartIValues(hbnc: HBNCCache) {
+        hbnc.part1 = HbncPartI(
+            babyAlive = babyAlive.getPosition(),
+            dateOfBabyDeath = getLongFromDate(dateOfBabyDeath.value.value),
+            timeOfBabyDeath = timeOfBabyDeath.value.value,
+            placeOfBabyDeath = placeOfBabyDeath.getPosition(),
+            otherPlaceOfBabyDeath = otherPlaceOfBabyDeath.value.value,
+            isBabyPreterm = babyPreterm.getPosition(),
+            gestationalAge = gestationalAge.getPosition(),
+            dateOfFirstExamination = getLongFromDate(dateOfBabyFirstExamination.value.value),
+            timeOfFirstExamination = timeOfBabyFirstExamination.value.value,
+            motherAlive = motherAlive.getPosition(),
+            dateOfMotherDeath = getLongFromDate(dateOfMotherDeath.value.value),
+            timeOfMotherDeath = timeOfMotherDeath.value.value,
+            placeOfMotherDeath = placeOfBabyDeath.getPosition(),
+            otherPlaceOfMotherDeath = otherPlaceOfMotherDeath.value.value,
+            motherAnyProblem = motherAnyProblem.value.value,
+            babyFirstFed = babyFedAfterBirth.getPosition(),
+            otherBabyFirstFed = otherBabyFedAfterBirth.value.value,
+            timeBabyFirstFed = whenBabyFirstFed.value.value,
+            howBabyTookFirstFeed = howBabyTookFirstFeed.getPosition(),
+            motherHasBreastFeedProblem = motherHasBreastFeedProblem.getPosition(),
+            motherBreastFeedProblem = motherBreastFeedProblem.value.value,
+        )
+    }
+
+    fun mapPartIIValues(hbnc: HBNCCache) {
+        hbnc.part2 = HbncPartII(
+            babyTemperature = babyTemperature.value.value,
+            babyEyeCondition = babyEyeCondition.getPosition(),
+            babyUmbilicalBleed = babyBleedUmbilicalCord.getPosition(),
+            actionBabyUmbilicalBleed = actionUmbilicalBleed.getPosition(),
+            babyWeight = babyWeight.value.value ?: "0",
+            babyWeightMatchesColor = babyWeigntMatchesColor.getPosition(),
+            babyWeightColorOnScale = babyWeightColor.getPosition(),
+            allLimbsLimp = allLimbsLimp.getPosition(),
+            feedLessStop = feedingLessStop.getPosition(),
+            cryWeakStop = cryWeakStopped.getPosition(),
+            dryBaby = babyDry.getPosition(),
+            keepWarmWinter = babyKeptWarmWinter.getPosition(),
+            exclusiveBreastFeeding = onlyBreastMilk.getPosition(),
+            cordCleanDry = cordCleanDry.getPosition(),
+            unusualInBaby = unusualWithBaby.getPosition(),
+            otherUnusualInBaby = otherUnusualWithBaby.value.value,
+        )
+    }
+
+    fun mapVisitValues(hbnc: HBNCCache) {
+        hbnc.homeVisitForm = HbncHomeVisit(
+            dateOfAshaVisit = getLongFromDate(dateOfMotherDeath.value.value),
+            babyAlive = babyAlive.getPosition(),
+            numTimesFullMeal24hr = timesMotherFed24hr.value.value?.toInt()?:0,
+            numPadChanged24hr = timesPadChanged.value.value?.toInt()?:0,
+            babyKeptWarmWinter = babyKeptWarmWinter.getPosition(),
+            babyFedProperly = babyBreastFedProperly.getPosition(),
+            babyCryContinuously = babyCryContinuously.getPosition(),
+            motherTemperature = motherBodyTemperature.value.value,
+            foulDischargeFever = motherWaterDischarge.getPosition(),
+            motherSpeakAbnormallyFits = motherSpeakAbnormalFits.getPosition(),
+            motherLessNoMilk = motherNoOrLessMilk.getPosition(),
+            motherBreastProblem = motherBreastProblem.getPosition(),
+            babyEyesSwollen = babyEyesSwollen.getPosition(),
+            babyWeight = babyWeight.value.value,
+            babyTemperature = babyTemperature.value.value,
+            babyYellow = yellowJaundice.getPosition(),
+            babyImmunizationStatus = childImmunizationStatus.value.value,
+            babyReferred = babyReferred.getPosition(),
+            dateOfBabyReferral = getLongFromDate(dateOfBabyReferral.value.value),
+            placeOfBabyReferral = placeOfBabyReferral.getPosition(),
+            otherPlaceOfBabyReferral = otherPlaceOfBabyReferral.value.value,
+            motherReferred = motherReferred.getPosition(),
+            dateOfMotherReferral = getLongFromDate(dateOfMotherReferral.value.value),
+            placeOfMotherReferral = placeOfMotherReferral.getPosition(),
+            otherPlaceOfMotherReferral = otherPlaceOfMotherReferral.value.value,
+            allLimbsLimp = allLimbsLimp.getPosition(),
+            feedingLessStopped = feedingLessStop.getPosition(),
+            cryWeakStopped = cryWeakStopped.getPosition(),
+            bloatedStomach = bloatedStomach.getPosition(),
+            coldOnTouch = childColdOnTouch.getPosition(),
+            chestDrawing = childChestDrawing.getPosition(),
+            breathFast = breathFast.getPosition(),
+            pusNavel = pusNavel.getPosition(),
+            sup = sup.getPosition(),
+            supName = supName.value.value,
+            supComment = supRemark.value.value,
+            supSignDate = getLongFromDate(dateOfSupSig.value.value),
+        )
+    }
 
     fun setVillageName(village: String) {
         villageName.value.value = village
@@ -1204,7 +1203,7 @@ class HBNCFormDataset(
             pusNavel,
             sup,
             supName,
-            supervisorComment,
+            supRemark,
             dateOfSupSig
         )
     }
