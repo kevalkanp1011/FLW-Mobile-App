@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.adapters
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.NavDirections
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -35,7 +36,7 @@ class HBNCDayGridAdapter(private val clickListener: HbncIconClickListener) :
         }
 
         fun bind(item: HbncIcon, clickListener: HbncIconClickListener) {
-            binding.homeIcon = item
+            binding.hbncIcon = item
             binding.clickListener = clickListener
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (item.isFilled)
@@ -69,8 +70,8 @@ class HBNCDayGridAdapter(private val clickListener: HbncIconClickListener) :
         holder.bind(getItem(position), clickListener)
     }
 
-    class HbncIconClickListener(val selectedListener: (hhId: Long, benId: Long, count: Int) -> Unit) {
-        fun onClicked(icon: HbncIcon) = selectedListener(icon.hhId, icon.benId, icon.count)
+    class HbncIconClickListener(val selectedListener: (NavDirections) -> Unit) {
+        fun onClicked(item: HbncIcon) = selectedListener(item.destination)
 
     }
 }

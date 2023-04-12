@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.transform
+import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.HbncIcon
 import org.piramalswasthya.sakhi.repositories.HbncRepo
 import org.piramalswasthya.sakhi.ui.home_activity.immunization_due.immunization_list.ImmunizationListFragmentArgs
@@ -21,10 +22,55 @@ class HbncDayListViewModel @Inject constructor(
     private val hhId = ImmunizationListFragmentArgs.fromSavedStateHandle(state).hhId
 
     val dayList = hbncRepo.hbncList(benId, hhId).transform { dateList ->
-        val list = listOf(1, 3, 7, 14, 21, 28, 42).map {
-            HbncIcon(hhId, benId, it, dateList.contains(it))
-        }
-        emit(list)
+        val daysList = dateList.map { it.homeVisitDate }
+        val headerList = mutableListOf(
+            HbncIcon(
+                hhId,
+                benId,
+                Konstants.hbncCardDay,
+                daysList.contains(Konstants.hbncCardDay),
+                dateList.firstOrNull { it.homeVisitDate == Konstants.hbncCardDay }?.syncState,
+                "Visit Card",
+                HbncDayListFragmentDirections.actionHbncDayListFragmentToVisitCardFragment(
+                    hhId = hhId, benId = benId,
+                )
+            ),
+            HbncIcon(
+                hhId,
+                benId,
+                Konstants.hbncPart1Day,
+                daysList.contains(Konstants.hbncPart1Day),
+                dateList.firstOrNull { it.homeVisitDate == Konstants.hbncPart1Day }?.syncState,
+                "Part I",
+                HbncDayListFragmentDirections.actionHbncDayListFragmentToHbncPartIFragment(
+                    hhId, benId,
+                )
+            ),
+            HbncIcon(
+                hhId,
+                benId,
+                Konstants.hbncPart2Day,
+                daysList.contains(Konstants.hbncPart2Day),
+                dateList.firstOrNull { it.homeVisitDate == Konstants.hbncPart2Day }?.syncState,
+                "Part II",
+                HbncDayListFragmentDirections.actionHbncDayListFragmentToHbncPartIIFragment(
+                    hhId, benId
+                )
+            ),
+        )
+        headerList.addAll(listOf(1, 3, 7, 14, 21, 28, 42).map { day ->
+            HbncIcon(
+                hhId = hhId,
+                benId = benId,
+                count = day,
+                isFilled = daysList.contains(day),
+                syncState = dateList.firstOrNull { it.homeVisitDate == day }?.syncState,
+                destination = HbncDayListFragmentDirections.actionHbncDayListFragmentToHbncFragment(
+                    hhId, benId, day
+                )
+            )
+        })
+        emit(headerList)
     }
 
 }

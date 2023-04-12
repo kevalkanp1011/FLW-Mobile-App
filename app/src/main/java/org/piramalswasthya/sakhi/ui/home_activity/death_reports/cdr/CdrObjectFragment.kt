@@ -1,6 +1,5 @@
 package org.piramalswasthya.sakhi.ui.home_activity.death_reports.cdr
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,23 +9,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
-import org.piramalswasthya.sakhi.databinding.FragmentCdrObjectBinding
-import org.piramalswasthya.sakhi.work.PushToD2DWorker
+import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
-import kotlin.reflect.jvm.internal.impl.metadata.ProtoBuf.Visibility
 
 @AndroidEntryPoint
 class CdrObjectFragment : Fragment() {
 
-    private var _binding : FragmentCdrObjectBinding? = null
-    private val binding : FragmentCdrObjectBinding
+    private var _binding : FragmentNewFormBinding? = null
+    private val binding : FragmentNewFormBinding
         get() = _binding!!
 
     private val viewModel: CdrObjectViewModel by viewModels()
@@ -35,7 +29,7 @@ class CdrObjectFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentCdrObjectBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentNewFormBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -48,14 +42,14 @@ class CdrObjectFragment : Fragment() {
         viewModel.benAgeGender.observe(viewLifecycleOwner) {
             binding.tvAgeGender.text = it
         }
-        binding.btnCdrSubmit.setOnClickListener {
+        binding.btnSubmit.setOnClickListener {
             if (validate()) viewModel.submitForm()
         }
         viewModel.exists.observe(viewLifecycleOwner) {exists ->
             val adapter = FormInputAdapter(isEnabled = !exists)
-            binding.cdrForm.rvInputForm.adapter = adapter
+            binding.form.rvInputForm.adapter = adapter
             if (exists) {
-                binding.btnCdrSubmit.visibility = View.GONE
+                binding.btnSubmit.visibility = View.GONE
 //                binding.cdrForm.rvInputForm.apply {
 //                    isClickable = false
 //                    isFocusable = false
@@ -75,20 +69,20 @@ class CdrObjectFragment : Fragment() {
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
                 CdrObjectViewModel.State.LOADING -> {
-                    binding.cdrForm.rvInputForm.visibility = View.GONE
-                    binding.btnCdrSubmit.visibility = View.GONE
+                    binding.form.rvInputForm.visibility = View.GONE
+                    binding.btnSubmit.visibility = View.GONE
                     binding.cvPatientInformation.visibility = View.GONE
-                    binding.pbCdr.visibility = View.VISIBLE
+                    binding.pbForm.visibility = View.VISIBLE
                 }
                 CdrObjectViewModel.State.SUCCESS -> {
                     findNavController().navigateUp()
                     WorkerUtils.triggerD2dSyncWorker(requireContext())
                 }
                 CdrObjectViewModel.State.FAIL -> {
-                    binding.cdrForm.rvInputForm.visibility = View.VISIBLE
-                    binding.btnCdrSubmit.visibility = View.VISIBLE
+                    binding.form.rvInputForm.visibility = View.VISIBLE
+                    binding.btnSubmit.visibility = View.VISIBLE
                     binding.cvPatientInformation.visibility = View.VISIBLE
-                    binding.pbCdr.visibility = View.GONE
+                    binding.pbForm.visibility = View.GONE
                     Toast.makeText(
                         context,
                         "Saving Mdsr to database Failed!",
@@ -96,10 +90,10 @@ class CdrObjectFragment : Fragment() {
                     ).show()
                 }
                 else -> {
-                    binding.cdrForm.rvInputForm.visibility = View.VISIBLE
-                    binding.btnCdrSubmit.visibility = View.VISIBLE
+                    binding.form.rvInputForm.visibility = View.VISIBLE
+                    binding.btnSubmit.visibility = View.VISIBLE
                     binding.cvPatientInformation.visibility = View.VISIBLE
-                    binding.pbCdr.visibility = View.GONE
+                    binding.pbForm.visibility = View.GONE
                 }
             }
         }
@@ -107,9 +101,7 @@ class CdrObjectFragment : Fragment() {
 
 
     fun validate(): Boolean {
-//        Timber.d("binding $binding rv ${binding.nhhrForm.rvInputForm} adapter ${binding.nhhrForm.rvInputForm.adapter}")
-//        return false
-        val result = binding.cdrForm.rvInputForm.adapter?.let {
+        val result = binding.form.rvInputForm.adapter?.let {
             (it as FormInputAdapter).validateInput()
         }
         Timber.d("Validation : $result")
@@ -117,7 +109,7 @@ class CdrObjectFragment : Fragment() {
             true
         else {
             if (result != null) {
-                binding.cdrForm.rvInputForm.scrollToPosition(result)
+                binding.form.rvInputForm.scrollToPosition(result)
             }
             false
         }
