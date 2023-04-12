@@ -173,62 +173,111 @@ data class HBNCCache(
 }
 
 data class HbncVisitCard(
-    val ashaName : String?,
-    val villageName : String?,
-    val subCenterName : String?,
-    val blockName : String?,
-    val motherName : String?,
-    val fatherName : String?,
-    val dateOfDelivery : Long,
-    val placeOfDelivery : Int,
-    val babyGender : Int,
+    val ashaName: String?,
+    val villageName: String?,
+    val subCenterName: String?,
+    val blockName: String?,
+    val motherName: String?,
+    val fatherName: String?,
+    val dateOfDelivery: Long,
+    val placeOfDelivery: Int,
+    val babyGender: Int,
     val typeOfDelivery: Int,
-    val stillBirth : Int,
+    val stillBirth: Int,
     val startedBreastFeeding: Int,
-    val dischargeDateMother : Long,
-    val dischargeDateBaby : Long,
-    val weightInGrams : Int,
+    val dischargeDateMother: Long,
+    val dischargeDateBaby: Long,
+    val weightInGrams: Int,
     val registrationOfBirth: Int
-    )
+)
 
 data class HbncPartI(
-    val numTimesEats: Int,
-    val numPadsChanged: Int,
-    val winterBabyKeptWarm: Int,
-    val breastFeedProper: Int,
-    val babyCryContinuouslyOrUrinateLess6: Int
+    val babyAlive: Int,
+    val dateOfBabyDeath: Long,
+    val timeOfBabyDeath: String?,
+    val placeOfBabyDeath: Int,
+    val otherPlaceOfBabyDeath: String?,
+    val isBabyPreterm: Int,
+    val gestationalAge: Int,
+    val dateOfFirstExamination: Long,
+    val timeOfFirstExamination: String?,
+    val motherAlive: Int,
+    val dateOfMotherDeath: Long,
+    val timeOfMotherDeath: String?,
+    val placeOfMotherDeath: Int,
+    val otherPlaceOfMotherDeath: String?,
+    val motherAnyProblem: String?,
+    val babyFirstFed: Int,
+    val otherBabyFirstFed: String?,
+    val timeBabyFirstFed: String?,
+    val howBabyTookFirstFeed: Int,
+    val motherHasBreastFeedProblem: Int,
+    val motherBreastFeedProblem: String?,
 )
 
 data class HbncPartII(
-    val temperature: String?,
-    val waterDischargeFoulSmell: Int,
-    val motherGrumbleSeizure: Int,
-    val motherNoOrLessMilk: Int,
-    val crackedNipplePainHardBreast: Int
+    val babyTemperature: String?,
+    val babyEyeCondition: Int,
+    val babyUmbilicalBleed : Int,
+    val actionBabyUmbilicalBleed : Int,
+    val babyWeight : String,
+    val babyWeightMatchesColor : Int,
+    val babyWeightColorOnScale : Int,
+
+    val allLimbsLimp : Int,
+    val feedLessStop : Int,
+    val cryWeakStop : Int,
+    val dryBaby : Int,
+    val keepWarmWinter : Int,
+    val exclusiveBreastFeeding : Int,
+    val cordCleanDry : Int,
+    val unusualInBaby : Int,
+    val otherUnusualInBaby : String?,
 
 )
 
 data class HbncHomeVisit(
-    val eyesSwollenPusComing: Int,
-    val weightOnDayN: Int,
-    val temperature: String?,
-    val pusPimpleOnSkin: Int,
-    val crackedRednessOfTwistedSkin: String?,
-    val yellowEyePalmSoleSkin: Int,
-    val seizure: Int,
-    val breathGoingFast: Int,
-    val referredWhere: String?
-)
+    val dateOfAshaVisit : Long,
+    val babyAlive: Int,
+    val numTimesFullMeal24hr : Int,
+    val numPadChanged24hr : Int,
+    val babyKeptWarmWinter : Int,
+    val babyFedProperly : Int,
+    val babyCryContinuously : Int,
 
-data class HbncPartD(
-    val organsLethargic: String?,
-    val lessNoMilkDrinking: String?,
-    val slowOrStoppedCrying: String?,
-    val bloatedStomachOrVomit: String?,
-    val coldOrHotOnTouch: String?,
-    val pusInNavel: String?,
-)
+    val motherTemperature : String?,
+    val foulDischargeFever : Int,
+    val motherSpeakAbnormallyFits : Int,
+    val motherLessNoMilk : Int,
+    val motherBreastProblem : Int,
 
+    val babyEyesSwollen : Int,
+    val babyWeight : String?,
+    val babyTemperature : String?,
+    val babyYellow : Int,
+    val babyImmunizationStatus : String?,
+
+    val babyReferred : Int,
+    val dateOfBabyReferral : Long,
+    val placeOfBabyReferral : Int,
+    val otherPlaceOfBabyReferral : String?,
+    val motherReferred : Int,
+    val dateOfMotherReferral : Long,
+    val placeOfMotherReferral : Int,
+    val otherPlaceOfMotherReferral : String?,
+    val allLimbsLimp : Int,
+    val feedingLessStopped : Int,
+    val cryWeakStopped : Int,
+    val bloatedStomach : Int,
+    val coldOnTouch : Int,
+    val chestDrawing : Int,
+    val breathFast : Int,
+    val pusNavel : Int,
+    val sup : Int,
+    val supName : String?,
+    val supComment : String?,
+    val supSignDate : Long,
+)
 
 @JsonClass(generateAdapter = true)
 data class HBNCPost(

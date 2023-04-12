@@ -506,6 +506,12 @@ class HBNCFormDataset(
 
     ////////////////////// Newborn first training (A) ask mother
 
+    private val dateOfAshaVisit = FormInput(
+        inputType = InputType.TEXT_VIEW,
+        title = "Date of ASHA's visit",
+        required = false
+    )
+
     private val titleAskMotherA = FormInput(
         inputType = InputType.HEADLINE,
         title = "Newborn first training (A) Ask mother",
@@ -1158,6 +1164,7 @@ class HBNCFormDataset(
 
     val visitPage by lazy {
         listOf(
+            dateOfAshaVisit,
             titleAskMotherA,
             babyAlive,
             timesMotherFed24hr,
