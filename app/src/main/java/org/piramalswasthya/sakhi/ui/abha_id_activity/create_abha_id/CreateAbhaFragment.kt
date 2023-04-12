@@ -70,6 +70,10 @@ class CreateAbhaFragment : Fragment() {
             viewModel.downloadAbhaClicked(requireActivity())
         }
 
+        binding.btnDownloadAbhaNo.setOnClickListener{
+            binding.txtDownloadAbha.visibility = View.INVISIBLE
+            binding.downloadAbha.visibility = View.INVISIBLE
+        }
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             onBackPressedCallback
