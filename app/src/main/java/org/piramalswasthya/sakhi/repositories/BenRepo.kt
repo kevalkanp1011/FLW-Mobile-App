@@ -103,7 +103,12 @@ class BenRepo @Inject constructor(
             add(Calendar.YEAR, -15)
             timeInMillis
         }
-        Transformations.map(database.benDao.getAllReproductiveAgeList(minReproductiveAge,maxReproductiveAge)) { list ->
+        Transformations.map(
+            database.benDao.getAllReproductiveAgeList(
+                minReproductiveAge,
+                maxReproductiveAge
+            )
+        ) { list ->
             list.map { it.asBasicDomainModelForFpotForm() }
         }
     }
@@ -120,28 +125,33 @@ class BenRepo @Inject constructor(
 
     val childList by lazy {
         val minChildAge = Calendar.getInstance().run {
-            add(Calendar.YEAR, -2)
-            timeInMillis
-        }
-        val maxChildAge = Calendar.getInstance().run {
             add(Calendar.YEAR, -6)
             timeInMillis
         }
-        Transformations.map(database.benDao.getAllChildList(minChildAge,maxChildAge)) { list ->
+        val maxChildAge = Calendar.getInstance().run {
+            add(Calendar.YEAR, -2)
+            timeInMillis
+        }
+        Transformations.map(database.benDao.getAllChildList(minChildAge, maxChildAge)) { list ->
             list.map { it.asBasicDomainModel() }
         }
     }
 
     val adolescentList by lazy {
         val minAdolescentAge = Calendar.getInstance().run {
-            add(Calendar.YEAR, -6)
+            add(Calendar.YEAR, -15)
             timeInMillis
         }
         val maxAdolescentAge = Calendar.getInstance().run {
-            add(Calendar.YEAR, -14)
+            add(Calendar.YEAR, -6)
             timeInMillis
         }
-        Transformations.map(database.benDao.getAllAdolescentList(minAdolescentAge,maxAdolescentAge)) { list ->
+        Transformations.map(
+            database.benDao.getAllAdolescentList(
+                minAdolescentAge,
+                maxAdolescentAge
+            )
+        ) { list ->
             list.map { it.asBasicDomainModel() }
         }
     }
@@ -560,7 +570,7 @@ class BenRepo @Inject constructor(
             throw IllegalStateException("Response undesired!")
         } catch (se: SocketTimeoutException) {
             if (se.message == "Refreshed Token") {
-                    return createBenIdAtServerByBeneficiarySending(ben, user, locationRecord)
+                return createBenIdAtServerByBeneficiarySending(ben, user, locationRecord)
             }
             return false
         } catch (e: java.lang.Exception) {
@@ -700,10 +710,14 @@ class BenRepo @Inject constructor(
 //                            return false
 //                        }
                         val benToUpdateList =
-                            benNetworkPostSet.takeIf { it.isNotEmpty() }?.map { it.benId }?.toTypedArray()?.toLongArray()
+                            benNetworkPostSet.takeIf { it.isNotEmpty() }?.map { it.benId }
+                                ?.toTypedArray()?.toLongArray()
                         val hhToUpdateList =
-                            householdNetworkPostSet.takeIf { it.isNotEmpty() }?.map { it.householdId.toLong() }?.toTypedArray()?.toLongArray()
-                        val cbacToUpdateList = cbacPostList.takeIf { it.isNotEmpty() }?.map { it.benficieryid }?.toTypedArray()?.toLongArray()
+                            householdNetworkPostSet.takeIf { it.isNotEmpty() }
+                                ?.map { it.householdId.toLong() }?.toTypedArray()?.toLongArray()
+                        val cbacToUpdateList =
+                            cbacPostList.takeIf { it.isNotEmpty() }?.map { it.benficieryid }
+                                ?.toTypedArray()?.toLongArray()
                         Timber.d("ben : ${benNetworkPostSet.size}, hh: ${householdNetworkPostSet.size}, cbac : ${cbacPostList.size}")
 //                        Timber.d("Yuuhooo  -- ---${benNetworkPostSet.first().benId}  ${householdNetworkPostSet.first().householdId}")
                         benToUpdateList?.let { database.benDao.benSyncedWithServer(*it) }
@@ -1262,7 +1276,13 @@ class BenRepo @Inject constructor(
                                 processed = "P",
                                 serverUpdatedStatus = 1,
                                 createdBy = benDataObj.getString("createdBy"),
+                                updatedBy = if (benDataObj.has("updatedBy")) benDataObj.getString("updatedBy") else benDataObj.getString(
+                                    "createdBy"
+                                ),
                                 createdDate = getLongFromDate(benDataObj.getString("createdDate")),
+                                updatedDate =getLongFromDate(if (benDataObj.has("updatedDate")) benDataObj.getString("updatedDate") else benDataObj.getString(
+                                    "createdDate"
+                                )),
                                 kidDetails = if (childDataObj.length() == 0) null else BenRegKid(
                                     childRegisteredAWCId = if (benDataObj.has("childRegisteredAWCID")) benDataObj.getInt(
                                         "childRegisteredAWCID"

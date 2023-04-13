@@ -2,6 +2,8 @@ package org.piramalswasthya.sakhi.model
 
 import androidx.navigation.NavDirections
 import androidx.room.ColumnInfo
+import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.HbncDayListFragmentDirections
 
 data class Icon(
     val icon: Int,
@@ -48,5 +50,8 @@ data class HbncIcon(
     val hhId: Long,
     val benId: Long,
     val count: Int,
-    val isFilled: Boolean
-)
+    val isFilled: Boolean,
+    val syncState : SyncState?,
+    val title : String = "Day $count",
+    val destination: NavDirections
+    )

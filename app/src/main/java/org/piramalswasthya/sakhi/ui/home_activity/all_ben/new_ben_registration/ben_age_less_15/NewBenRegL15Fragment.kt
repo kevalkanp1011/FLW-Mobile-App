@@ -105,7 +105,7 @@ class NewBenRegL15Fragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.btnSubmitForm.text = context?.getString(R.string.btn_submit_ben)
+        binding.btnSubmitForm.text = context?.getString(R.string.btn_submit)
         binding.vp2Nhhr.adapter = NewBenKidPagerAdapter(this)
         when (viewModel.mTabPosition) {
             0 -> {

@@ -12,15 +12,15 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
-import org.piramalswasthya.sakhi.databinding.FragmentPmjayBinding
+import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
 @AndroidEntryPoint
 class PmjayFragment : Fragment() {
 
-    private var _binding : FragmentPmjayBinding? = null
-    private val binding : FragmentPmjayBinding
+    private var _binding : FragmentNewFormBinding? = null
+    private val binding : FragmentNewFormBinding
         get() = _binding!!
 
     private val viewModel: PmjayViewModel by viewModels()
@@ -29,7 +29,7 @@ class PmjayFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentPmjayBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentNewFormBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -42,14 +42,14 @@ class PmjayFragment : Fragment() {
         viewModel.benAgeGender.observe(viewLifecycleOwner) {
             binding.tvAgeGender.text = it
         }
-        binding.btnPmjaySubmit.setOnClickListener {
+        binding.btnSubmit.setOnClickListener {
             if (validate()) viewModel.submitForm()
         }
         viewModel.exists.observe(viewLifecycleOwner) {exists ->
             val adapter = FormInputAdapter(isEnabled = !exists)
-            binding.pmjayForm.rvInputForm.adapter = adapter
+            binding.form.rvInputForm.adapter = adapter
             if (exists) {
-                binding.btnPmjaySubmit.visibility = View.GONE
+                binding.btnSubmit.visibility = View.GONE
                 viewModel.setExistingValues()
             }
             else {
@@ -65,20 +65,20 @@ class PmjayFragment : Fragment() {
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
                 PmjayViewModel.State.LOADING -> {
-                    binding.pmjayForm.rvInputForm.visibility = View.GONE
-                    binding.btnPmjaySubmit.visibility = View.GONE
+                    binding.form.rvInputForm.visibility = View.GONE
+                    binding.btnSubmit.visibility = View.GONE
                     binding.cvPatientInformation.visibility = View.GONE
-                    binding.pbPmjay.visibility = View.VISIBLE
+                    binding.pbForm.visibility = View.VISIBLE
                 }
                 PmjayViewModel.State.SUCCESS -> {
                     findNavController().navigateUp()
                     WorkerUtils.triggerD2dSyncWorker(requireContext())
                 }
                 PmjayViewModel.State.FAIL -> {
-                    binding.pmjayForm.rvInputForm.visibility = View.VISIBLE
-                    binding.btnPmjaySubmit.visibility = View.VISIBLE
+                    binding.form.rvInputForm.visibility = View.VISIBLE
+                    binding.btnSubmit.visibility = View.VISIBLE
                     binding.cvPatientInformation.visibility = View.VISIBLE
-                    binding.pbPmjay.visibility = View.GONE
+                    binding.pbForm.visibility = View.GONE
                     Toast.makeText(
                         context,
                         "Saving Mdsr to database Failed!",
@@ -86,10 +86,10 @@ class PmjayFragment : Fragment() {
                     ).show()
                 }
                 else -> {
-                    binding.pmjayForm.rvInputForm.visibility = View.VISIBLE
-                    binding.btnPmjaySubmit.visibility = View.VISIBLE
+                    binding.form.rvInputForm.visibility = View.VISIBLE
+                    binding.btnSubmit.visibility = View.VISIBLE
                     binding.cvPatientInformation.visibility = View.VISIBLE
-                    binding.pbPmjay.visibility = View.GONE
+                    binding.pbForm.visibility = View.GONE
                 }
             }
         }
@@ -97,7 +97,7 @@ class PmjayFragment : Fragment() {
 
 
     fun validate(): Boolean {
-        val result = binding.pmjayForm.rvInputForm.adapter?.let {
+        val result = binding.form.rvInputForm.adapter?.let {
             (it as FormInputAdapter).validateInput()
         }
         Timber.d("Validation : $result")
@@ -105,7 +105,7 @@ class PmjayFragment : Fragment() {
             true
         else {
             if (result != null) {
-                binding.pmjayForm.rvInputForm.scrollToPosition(result)
+                binding.form.rvInputForm.scrollToPosition(result)
             }
             false
         }

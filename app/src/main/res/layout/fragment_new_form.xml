@@ -50,7 +50,7 @@
     </androidx.cardview.widget.CardView>
 
     <include
-        android:id="@+id/pmjay_form"
+        android:id="@+id/form"
         layout="@layout/rv_input_form"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -58,15 +58,16 @@
 
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_pmjay_submit"
-        android:layout_width="match_parent"
+        android:id="@+id/btn_submit"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/margin_small"
-        android:text="SUBMIT"
+        android:text="@string/btn_submit"
         android:textColor="@color/white" />
 
     <ProgressBar
-        android:id="@+id/pb_pmjay"
+        android:id="@+id/pb_form"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminateTint="?attr/colorPrimary"

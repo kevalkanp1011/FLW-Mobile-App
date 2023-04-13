@@ -61,7 +61,7 @@ class HbncRepo @Inject constructor(
                 val ben = database.benDao.getBen(it.hhId, it.benId)
                     ?: throw IllegalStateException("No beneficiary exists for benId: ${it.benId}!!")
                 val hbncCount = database.hbncDao.hbncCount()
-                hbncPostSet.add(it.asPostModel(user, household, hbncCount))
+//                hbncPostSet.add(it.asPostModel(user, household, hbncCount))
                 it.syncState = SyncState.SYNCING
                 database.hbncDao.update(it)
                 val uploadDone = postDataToD2dServer(hbncPostSet)
