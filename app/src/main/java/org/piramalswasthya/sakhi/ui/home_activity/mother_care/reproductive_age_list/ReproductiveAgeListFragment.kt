@@ -22,9 +22,10 @@ import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 @AndroidEntryPoint
 class ReproductiveAgeListFragment : Fragment() {
 
-    private val binding: FragmentDisplaySearchRvButtonBinding by lazy {
-        FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater)
-    }
+    private var _binding : FragmentDisplaySearchRvButtonBinding? = null
+    private val binding : FragmentDisplaySearchRvButtonBinding
+        get() = _binding!!
+
 
     private val viewModel: ReproductiveAgeListViewModel by viewModels()
 
@@ -34,6 +35,7 @@ class ReproductiveAgeListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -91,6 +93,11 @@ class ReproductiveAgeListFragment : Fragment() {
         activity?.let{
             (it as HomeActivity).setLogo(R.drawable.ic__reproductive_age)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }

@@ -18,9 +18,10 @@ import timber.log.Timber
 @AndroidEntryPoint
 class ServiceTypeFragment : Fragment() {
 
-    private val binding : FragmentServiceTypeBinding by lazy{
-        FragmentServiceTypeBinding.inflate(layoutInflater)
-    }
+    private var _binding : FragmentServiceTypeBinding? = null
+    private val binding : FragmentServiceTypeBinding
+        get() = _binding!!
+
     private val viewModel: ServiceTypeViewModel by viewModels()
     private val homeViewModel : HomeViewModel by viewModels({requireActivity()})
     private val onBackPressedCallback by lazy {
@@ -61,6 +62,7 @@ class ServiceTypeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentServiceTypeBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -142,6 +144,11 @@ class ServiceTypeFragment : Fragment() {
                 binding.actvBlockDropdown.text.isNullOrBlank() ||
                 binding.actvVillageDropdown.text.isNullOrBlank())
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 

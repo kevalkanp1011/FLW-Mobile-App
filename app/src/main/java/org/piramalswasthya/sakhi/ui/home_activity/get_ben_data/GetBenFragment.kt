@@ -17,13 +17,10 @@ import timber.log.Timber
 @AndroidEntryPoint
 class GetBenFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = GetBenFragment()
-    }
+    private var _binding : FragmentGetBenBinding? = null
+    private val binding : FragmentGetBenBinding
+        get() = _binding!!
 
-    private val binding: FragmentGetBenBinding by lazy{
-        FragmentGetBenBinding.inflate(layoutInflater)
-    }
 
     private val viewModel: GetBenViewModel by viewModels()
 
@@ -31,6 +28,7 @@ class GetBenFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentGetBenBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -79,5 +77,10 @@ class GetBenFragment : Fragment() {
                     })
             binding.rvPage.adapter = pageAdapter
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

@@ -1,9 +1,7 @@
 package org.piramalswasthya.sakhi.repositories
 
 import android.app.Application
-import androidx.lifecycle.Transformations
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONException
@@ -17,9 +15,9 @@ import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.network.AmritApiService
 import org.piramalswasthya.sakhi.network.GetBenRequest
 import org.piramalswasthya.sakhi.network.TmcGenerateBenIdsRequest
-import org.piramalswasthya.sakhi.network.AmritApiService
 import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
@@ -35,13 +33,11 @@ class BenRepo @Inject constructor(
 ) {
 
     companion object {
+        private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        private val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
         private fun getCurrentDate(millis: Long = System.currentTimeMillis()): String {
-
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-            val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
             val dateString = dateFormat.format(millis)
             val timeString = timeFormat.format(millis)
-
             return "${dateString}T${timeString}.000Z"
         }
     }
