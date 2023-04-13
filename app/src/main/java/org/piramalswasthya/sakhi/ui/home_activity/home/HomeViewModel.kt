@@ -6,15 +6,13 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.model.UserDomain
+import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import org.piramalswasthya.sakhi.repositories.UserRepo
 import javax.inject.Inject
 
@@ -22,17 +20,16 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     database: InAppDb,
     private val pref: PreferenceDao,
-    private val userRepo: UserRepo
+    private val userRepo: UserRepo,
 ) : ViewModel() {
 
 
     val currentUser = database.userDao.getLoggedInUserLiveData()
 
-    val iconCount = Transformations.switchMap(currentUser) {
-        it?.let {
-            database.userDao.getRecordCounts(it.userId)
-        }
-    }
+    val numBenIdsAvail = database.benIdGenDao.liveCount()
+
+    val scope: CoroutineScope
+        get() = viewModelScope
     private var _unprocessedRecords : Int = 0
     val unprocessedRecords: Int
         get() = _unprocessedRecords

@@ -1,6 +1,5 @@
 package org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,20 +8,16 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
-import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.databinding.FragmentNewBenRegTypeBinding
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
-import org.piramalswasthya.sakhi.work.GenerateBenIdsWorker
-import org.piramalswasthya.sakhi.work.PushToAmritWorker
 import org.piramalswasthya.sakhi.work.WorkerUtils
 
 @AndroidEntryPoint
@@ -122,9 +117,9 @@ class NewBenRegTypeFragment : Fragment() {
             this.hasDraftGen = it
         }
 
-        homeViewModel.iconCount.observe(viewLifecycleOwner) { iconList ->
-            iconList.first().let {
-                when (it.availBenIdsCount) {
+        lifecycleScope.launch {
+            homeViewModel.numBenIdsAvail.collect {
+                when (it) {
                     in 1..Konstants.benIdWorkerTriggerLimit -> {
                         binding.errorText.text =
                             "Warning : ID running low, connect to internet at the earliest"
@@ -142,6 +137,7 @@ class NewBenRegTypeFragment : Fragment() {
                         binding.errorText.text = null
                     }
                 }
+
             }
         }
 

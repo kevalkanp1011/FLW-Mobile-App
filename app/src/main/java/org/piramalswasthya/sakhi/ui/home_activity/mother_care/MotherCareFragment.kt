@@ -15,9 +15,13 @@ import org.piramalswasthya.sakhi.configuration.IconDataset
 import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MotherCareFragment : Fragment() {
+
+    @Inject
+    lateinit var iconDataset: IconDataset
 
     companion object {
         fun newInstance() = MotherCareFragment()
@@ -41,24 +45,26 @@ class MotherCareFragment : Fragment() {
     }
 
     private fun setUpMotherCareIconRvAdapter() {
-        val rvLayoutManager = GridLayoutManager(context, requireContext().resources.getInteger(R.integer.icon_grid_span))
+        val rvLayoutManager = GridLayoutManager(
+            context,
+            requireContext().resources.getInteger(R.integer.icon_grid_span)
+        )
         binding.rvIconGrid.layoutManager = rvLayoutManager
         val rvAdapter = IconGridAdapter(
             //IconDataset.getMotherCareDataset(),
             IconGridAdapter.GridIconClickListener {
                 findNavController().navigate(it)
-            })
+            },
+            viewModel.scope
+        )
         binding.rvIconGrid.adapter = rvAdapter
-        homeViewModel.iconCount.observe(viewLifecycleOwner) {
-            it?.let {
-                rvAdapter.submitList(IconDataset.getMotherCareDataset(it[0]))
-            }
-        }
+        rvAdapter.submitList(iconDataset.getMotherCareDataset())
+
     }
 
     override fun onStart() {
         super.onStart()
-        activity?.let{
+        activity?.let {
             (it as HomeActivity).setLogo(R.drawable.ic__mother_care)
         }
     }

@@ -44,7 +44,9 @@ class VillageLevelFormsFragment : Fragment() {
             //IconDataset.getVillageLevelFormsDataset(),
             IconGridAdapter.GridIconClickListener {
                 findNavController().navigate(it)
-            })
+            },
+            viewModel.scope
+        )
     }
     override fun onStart() {
         super.onStart()
