@@ -6,10 +6,11 @@ import androidx.navigation.NavDirections
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
 import org.piramalswasthya.sakhi.databinding.RvItemIconGridBinding
 import org.piramalswasthya.sakhi.model.Icon
 
-class IconGridAdapter(private val clickListener: GridIconClickListener) :
+class IconGridAdapter(private val clickListener: GridIconClickListener,private val scope: CoroutineScope) :
     ListAdapter<Icon, IconGridAdapter.IconViewHolder>(IconDiffCallback) {
     object IconDiffCallback : DiffUtil.ItemCallback<Icon>() {
         override fun areItemsTheSame(oldItem: Icon, newItem: Icon) =
@@ -32,9 +33,10 @@ class IconGridAdapter(private val clickListener: GridIconClickListener) :
             }
         }
 
-        fun bind(item: Icon, clickListener: GridIconClickListener){
+        fun bind(item: Icon, clickListener: GridIconClickListener, scope: CoroutineScope){
             binding.homeIcon = item
             binding.clickListener = clickListener
+            binding.scope = scope
             binding.executePendingBindings()
         }
 
@@ -44,7 +46,7 @@ class IconGridAdapter(private val clickListener: GridIconClickListener) :
         IconViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: IconViewHolder, position: Int) {
-        holder.bind(getItem(position), clickListener)
+        holder.bind(getItem(position), clickListener, scope )
     }
 
     class GridIconClickListener(val selectedListener: (dest : NavDirections) -> Unit) {

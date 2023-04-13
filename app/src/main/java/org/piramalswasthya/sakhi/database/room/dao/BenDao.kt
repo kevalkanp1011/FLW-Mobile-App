@@ -19,7 +19,7 @@ interface BenDao {
     suspend fun getDraftBenKidForHousehold(hhId: Long): BenRegCache?
 
     @Query("SELECT * FROM BEN_BASIC_CACHE")
-    fun getAllBen(): LiveData<List<BenBasicCache>>
+    fun getAllBen(): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE hhId = :hhId")
     suspend fun getAllBenForHousehold(hhId: Long): List<BenBasicCache>
@@ -61,57 +61,57 @@ interface BenDao {
     fun getAllBeneficiaryFromList(list: List<Long>): LiveData<List<Long>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE /*age BETWEEN 15 AND 49 and*/ reproductiveStatusId = 1")
-    fun getAllEligibleCoupleList(): LiveData<List<BenBasicCache>>
+    fun getAllEligibleCoupleList(): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 2")
-    fun getAllPregnancyWomenList(): LiveData<List<BenBasicCache>>
+    fun getAllPregnancyWomenList(): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 3")
-    fun getAllDeliveryStageWomenList(): LiveData<List<BenBasicCache>>
+    fun getAllDeliveryStageWomenList(): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE where dob<=:ncdTimestamp")
-    fun getAllNCDList(ncdTimestamp: Long): LiveData<List<BenBasicCache>>
+    fun getAllNCDList(ncdTimestamp: Long): Flow<List<BenBasicCache>>
 
 
     @Query("SELECT b.* FROM BEN_BASIC_CACHE b LEFT OUTER JOIN CBAC c ON b.benId=c.benId where b.dob<=:ncdTimestamp and c.benId IS NULL")
-    fun getAllNCDEligibleList(ncdTimestamp: Long): LiveData<List<BenBasicCache>>
+    fun getAllNCDEligibleList(ncdTimestamp: Long): Flow<List<BenBasicCache>>
 
     @Query("SELECT b.* FROM BEN_BASIC_CACHE b INNER JOIN CBAC c on b.benId==c.benId WHERE c.total_score >= 4")
-    fun getAllNCDPriorityList(): LiveData<List<BenBasicCache>>
+    fun getAllNCDPriorityList(): Flow<List<BenBasicCache>>
 
     @Query("SELECT b.* FROM BEN_BASIC_CACHE b INNER JOIN CBAC c on b.benId==c.benId WHERE c.total_score < 4")
-    fun getAllNCDNonEligibleList(): LiveData<List<BenBasicCache>>
+    fun getAllNCDNonEligibleList(): Flow<List<BenBasicCache>>
 
     // have to add those as well who we are adding to menopause entries manually from app
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 5")
-    fun getAllMenopauseStageList(): LiveData<List<BenBasicCache>>
+    fun getAllMenopauseStageList(): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE gender = :female and dob BETWEEN :minReproductiveAge AND :maxReproductiveAge")
     fun getAllReproductiveAgeList(
         minReproductiveAge: Long,
         maxReproductiveAge: Long,
         female: Gender = Gender.FEMALE
-    ): LiveData<List<BenBasicCache>>
+    ): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 4")
-    fun getAllPNCMotherList(): LiveData<List<BenBasicCache>>
+    fun getAllPNCMotherList(): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE dob>=:infantTimestamp")
-    fun getAllInfantList(infantTimestamp : Long): LiveData<List<BenBasicCache>>
+    fun getAllInfantList(infantTimestamp : Long): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE dob between :minChildTimestamp AND :maxChildTimestamp")
     fun getAllChildList( minChildTimestamp: Long,
-                         maxChildTimestamp: Long,): LiveData<List<BenBasicCache>>
+                         maxChildTimestamp: Long,): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE dob between :minAdolescentTimestamp AND :maxAdolescentTimestamp")
     fun getAllAdolescentList(minAdolescentTimestamp: Long,
-                             maxAdolescentTimestamp: Long,): LiveData<List<BenBasicCache>>
+                             maxAdolescentTimestamp: Long,): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE isKid = 1 or reproductiveStatusId in (2, 3) ")
-    fun getAllImmunizationDueList(): LiveData<List<BenBasicCache>>
+    fun getAllImmunizationDueList(): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE hrpStatus = 1")
-    fun getAllHrpCasesList(): LiveData<List<BenBasicCache>>
+    fun getAllHrpCasesList(): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 4 and hhId = :hhId")
     suspend fun getAllPNCMotherListFromHousehold(hhId: Long): List<BenBasicCache>
@@ -119,10 +119,10 @@ interface BenDao {
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE dob>= :cdrTimestamp")
     fun getAllCDRList(
        cdrTimestamp : Long
-    ): LiveData<List<BenBasicCache>>
+    ): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId in (2, 3, 4)")
-    fun getAllMDSRList(): LiveData<List<BenBasicCache>>
+    fun getAllMDSRList(): Flow<List<BenBasicCache>>
 
 
 }

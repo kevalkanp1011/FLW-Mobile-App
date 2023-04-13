@@ -10,9 +10,11 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.HouseHoldListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
@@ -81,14 +83,17 @@ class AllHouseholdFragment : Fragment() {
         ))
         binding.rvAny.adapter = householdAdapter
 
-        viewModel.householdList.observe(viewLifecycleOwner){
-
-            if (it.isEmpty())
-                binding.flEmpty.visibility = View.VISIBLE
-            else
-                binding.flEmpty.visibility = View.GONE
-            householdAdapter.submitList(it)
+        lifecycleScope.launch {
+            viewModel.householdList.collect{
+                if (it.isEmpty())
+                    binding.flEmpty.visibility = View.VISIBLE
+                else
+                    binding.flEmpty.visibility = View.GONE
+                householdAdapter.submitList(it)
+            }
         }
+
+
         viewModel.hasDraft.observe(viewLifecycleOwner){
             hasDraft = it
         }

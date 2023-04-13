@@ -15,9 +15,13 @@ import org.piramalswasthya.sakhi.configuration.IconDataset
 import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class NcdFragment : Fragment() {
+
+    @Inject
+    lateinit var iconDataset: IconDataset
 
     companion object {
         fun newInstance() = NcdFragment()
@@ -41,24 +45,26 @@ class NcdFragment : Fragment() {
     }
 
     private fun setUpNcdCasesRvAdapter() {
-        val rvLayoutManager = GridLayoutManager(context, requireContext().resources.getInteger(R.integer.icon_grid_span))
+        val rvLayoutManager = GridLayoutManager(
+            context,
+            requireContext().resources.getInteger(R.integer.icon_grid_span)
+        )
         binding.rvIconGrid.layoutManager = rvLayoutManager
         val iconAdapter = IconGridAdapter(
             IconGridAdapter.GridIconClickListener {
                 findNavController().navigate(it)
-            })
+            },
+            viewModel.scope
+        )
         binding.rvIconGrid.adapter = iconAdapter
-        homeViewModel.iconCount.observe(viewLifecycleOwner) {
-            it?.let {
-                iconAdapter.submitList(IconDataset.getNCDDataset(it[0]))
-            }
-        }
+        iconAdapter.submitList(iconDataset.getNCDDataset())
     }
-    override fun onStart() {
-        super.onStart()
-        activity?.let{
-            (it as HomeActivity).setLogo(R.drawable.ic__ncd)
-        }
+
+override fun onStart() {
+    super.onStart()
+    activity?.let {
+        (it as HomeActivity).setLogo(R.drawable.ic__ncd)
     }
+}
 
 }

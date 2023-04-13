@@ -2,36 +2,30 @@ package org.piramalswasthya.sakhi.ui.home_activity.child_care.child_list
 
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.helpers.filterBenList
 import org.piramalswasthya.sakhi.model.BenBasicDomain
 import org.piramalswasthya.sakhi.repositories.BenRepo
+import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import javax.inject.Inject
 
 @HiltViewModel
 class ChildListViewModel @Inject constructor(
-    private val benRepo: BenRepo
+    recordsRepo: RecordsRepo
 ) : ViewModel() {
 
-    private val childList = benRepo.childList
-    private val _benList = MutableLiveData<List<BenBasicDomain>>()
-    val benList: LiveData<List<BenBasicDomain>>
-        get() = _benList
-
-    private var lastFilter = ""
-
-    init {
-        viewModelScope.launch {
-            childList.asFlow().collect {
-                _benList.value = it?.let { filterBenList(it, lastFilter) }
-            }
-        }
+    private val allBenList = recordsRepo.childList
+    private val filter = MutableStateFlow("")
+    val benList = allBenList.combine(filter){
+            list, filter -> filterBenList(list, filter)
     }
 
     fun filterText(text: String) {
-        lastFilter = text
-        _benList.value = childList.value?.let { filterBenList(it, text) }
+        viewModelScope.launch {
+            filter.emit(text)
+        }
+
     }
-
-
 }

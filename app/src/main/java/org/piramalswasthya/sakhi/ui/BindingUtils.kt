@@ -13,18 +13,26 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.FormInput
 import timber.log.Timber
 
 
-//@BindingAdapter("listItems")
-//fun AutoCompleteTextView.setSpinnerItems(entries: List<String>?) {
-//    entries?.let {
-//        this.setAdapter(ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, it))
-//    }
-//}
+@BindingAdapter("scope","recordCount")
+fun TextView.setRecordCount(scope : CoroutineScope, count : Flow<Int>?) {
+   count?.let {
+       scope.launch {
+           it.collect{
+               text = it.toString()
+           }
+       }
+   }
+}
 
 @BindingAdapter("listItems")
 fun AutoCompleteTextView.setSpinnerItems(list: Array<String>?) {

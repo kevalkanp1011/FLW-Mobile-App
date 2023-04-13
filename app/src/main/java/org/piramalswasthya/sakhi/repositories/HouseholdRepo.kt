@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.Transformations
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.HouseholdFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
@@ -15,12 +16,6 @@ class HouseholdRepo @Inject constructor(
     @ApplicationContext private val context: Context,
     private val database: InAppDb
 ) {
-    val householdList by lazy {
-        Transformations.map(database.householdDao.getAllHouseholds()) { list ->
-            list.map { it.asBasicDomainModel() }
-        }
-    }
-
     suspend fun getDraftForm(): HouseholdFormDataset? {
         return withContext(Dispatchers.IO) {
            val it =  database.householdDao.getDraftHousehold()

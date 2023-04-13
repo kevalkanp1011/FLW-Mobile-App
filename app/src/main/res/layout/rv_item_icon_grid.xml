@@ -14,6 +14,10 @@
             name="clickListener"
             type="org.piramalswasthya.sakhi.adapters.IconGridAdapter.GridIconClickListener" />
 
+        <variable
+            name="scope"
+            type="kotlinx.coroutines.CoroutineScope" />
+
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -72,7 +76,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@{homeIcon.count.toString()}"
+                scope="@{scope}"
+                recordCount="@{homeIcon.count}"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 android:padding="@dimen/padding_normal"
                 app:layout_constraintEnd_toEndOf="parent"
