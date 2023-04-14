@@ -98,8 +98,77 @@ class HbncVisitViewModel @Inject constructor(
             _exists.value = hbnc != null
         }
     }
-    fun getFirstPage(): List<FormInput> {
-        return dataset.visitPage
+    suspend fun getFirstPage(): List<FormInput> {
+        val firstDay = hbncRepo.getFirstHomeVisit(hhId, benId)
+        return dataset.getVisitPage(firstDay)
+    }
+
+    fun observerForm(adapter: FormInputAdapter){
+        viewModelScope.launch {
+            launch {
+                dataset.babyReferred.value.collect {
+                    it?.let{
+                        val list = adapter.currentList.toMutableList()
+                        val entriesToAdd = listOf(
+                            dataset.dateOfBabyReferral,
+                            dataset.placeOfBabyReferral,
+                        )
+                        if (it == dataset.babyReferred.entries?.first()) {
+                            if (!list.containsAll(entriesToAdd))
+                                list.addAll(list.indexOf(dataset.babyReferred) + 1, entriesToAdd)
+                        } else
+                            list.removeAll(entriesToAdd)
+                        adapter.submitList(list)
+                    }
+                }
+            }
+            launch {
+                dataset.placeOfBabyReferral.value.collect { nullablePlaceOfDeath ->
+                    nullablePlaceOfDeath?.let{ placeOfDeath ->
+                        val list = adapter.currentList.toMutableList()
+                        val entriesToAdd = dataset.otherPlaceOfBabyReferral
+                        if (placeOfDeath == dataset.placeOfBabyReferral.entries?.let { it[it.size-1] }) {
+                            if (!list.contains(entriesToAdd))
+                                list.add(list.indexOf(dataset.placeOfBabyReferral) + 1, entriesToAdd)
+                        } else
+                            list.remove(entriesToAdd)
+                        adapter.submitList(list)
+                    }
+                }
+            }
+            launch {
+                dataset.motherReferred.value.collect {
+                    it?.let{
+                        val list = adapter.currentList.toMutableList()
+                        val entriesToAdd = listOf(
+                            dataset.dateOfMotherReferral,
+                            dataset.placeOfMotherReferral,
+                        )
+                        if (it == dataset.motherReferred.entries?.first()) {
+                            if (!list.containsAll(entriesToAdd))
+                                list.addAll(list.indexOf(dataset.motherReferred) + 1, entriesToAdd)
+                        } else
+                            list.removeAll(entriesToAdd)
+                        adapter.submitList(list)
+                    }
+                }
+            }
+            launch {
+                dataset.placeOfMotherReferral.value.collect { nullablePlaceOfDeath ->
+                    nullablePlaceOfDeath?.let{ placeOfDeath ->
+                        val list = adapter.currentList.toMutableList()
+                        val entriesToAdd = dataset.otherPlaceOfMotherReferral
+                        if (placeOfDeath == dataset.placeOfMotherReferral.entries?.let { it[it.size-1] }) {
+                            if (!list.contains(entriesToAdd))
+                                list.add(list.indexOf(dataset.placeOfMotherReferral) + 1, entriesToAdd)
+                        } else
+                            list.remove(entriesToAdd)
+                        adapter.submitList(list)
+                    }
+                }
+            }
+
+        }
     }
 
     fun setAddress(it: String?, adapter: FormInputAdapter) {

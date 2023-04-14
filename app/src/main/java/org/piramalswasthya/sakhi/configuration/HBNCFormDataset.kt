@@ -7,8 +7,7 @@ import java.util.*
 
 class HBNCFormDataset(
 //    context : Context,
-    private val nthDay: Int,
-    private val hbnc: HBNCCache? = null
+    private val nthDay: Int, private val hbnc: HBNCCache? = null
 ) {
 
     companion object {
@@ -95,8 +94,8 @@ class HBNCFormDataset(
         hbnc.homeVisitForm = HbncHomeVisit(
             dateOfAshaVisit = getLongFromDate(dateOfMotherDeath.value.value),
             babyAlive = babyAlive.getPosition(),
-            numTimesFullMeal24hr = timesMotherFed24hr.value.value?.toInt()?:0,
-            numPadChanged24hr = timesPadChanged.value.value?.toInt()?:0,
+            numTimesFullMeal24hr = timesMotherFed24hr.value.value?.toInt() ?: 0,
+            numPadChanged24hr = timesPadChanged.value.value?.toInt() ?: 0,
             babyKeptWarmWinter = babyKeptWarmWinter.getPosition(),
             babyFedProperly = babyBreastFedProperly.getPosition(),
             babyCryContinuously = babyCryContinuously.getPosition(),
@@ -151,24 +150,16 @@ class HBNCFormDataset(
         required = false
     )
     private val healthSubCenterName = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Health Subcenter Name ",
-        required = false
+        inputType = InputType.EDIT_TEXT, title = "Health Subcenter Name ", required = false
     )
     private val phcName = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "P.H.C. Name ",
-        required = false
+        inputType = InputType.EDIT_TEXT, title = "P.H.C. Name ", required = false
     )
     private val motherName = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Mother Name",
-        required = false
+        inputType = InputType.TEXT_VIEW, title = "Mother Name", required = false
     )
     private val fatherName = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Father Name",
-        required = false
+        inputType = InputType.TEXT_VIEW, title = "Father Name", required = false
     )
 
     private val dateOfDelivery = FormInput(
@@ -180,46 +171,31 @@ class HBNCFormDataset(
     )
 
     private val placeOfDelivery = FormInput(
-        inputType = InputType.DROPDOWN,
-        title = "Place of Delivery",
-        entries = arrayOf(
+        inputType = InputType.DROPDOWN, title = "Place of Delivery", entries = arrayOf(
             "House",
             "Health center",
             "CHC",
             "PHC",
-        ),
-        required = false
+        ), required = false
     )
     private val gender = FormInput(
-        inputType = InputType.RADIO,
-        title = "Baby Gender",
-        entries = arrayOf(
+        inputType = InputType.RADIO, title = "Baby Gender", entries = arrayOf(
             "Male",
             "Female",
             "Transgender",
-        ),
-        required = false
+        ), required = false
     )
 
     private val typeOfDelivery = FormInput(
-        inputType = InputType.RADIO,
-        title = "Type of Delivery",
-        entries = arrayOf(
+        inputType = InputType.RADIO, title = "Type of Delivery", entries = arrayOf(
             "Cesarean",
             "Normal",
-        ),
-        required = false
+        ), required = false
     )
     private val startedBreastFeeding = FormInput(
-        inputType = InputType.DROPDOWN,
-        title = "Started Breastfeeding",
-        entries = arrayOf(
-            "Within an hour",
-            "1 - 4 hours",
-            "4.1 - 24 hours",
-            "After 24 hours"
-        ),
-        required = false
+        inputType = InputType.DROPDOWN, title = "Started Breastfeeding", entries = arrayOf(
+            "Within an hour", "1 - 4 hours", "4.1 - 24 hours", "After 24 hours"
+        ), required = false
     )
     private val weightAtBirth = FormInput(
         inputType = InputType.EDIT_TEXT,
@@ -242,51 +218,33 @@ class HBNCFormDataset(
         required = false
     )
     private val motherStatus = FormInput(
-        inputType = InputType.RADIO,
-        title = "Mother Status",
-        entries = arrayOf(
+        inputType = InputType.RADIO, title = "Mother Status", entries = arrayOf(
             "Living",
             "Dead",
-        ),
-        required = false
+        ), required = false
     )
     private val registrationOfBirth = FormInput(
-        inputType = InputType.RADIO,
-        title = "Registration Of Birth",
-        entries = arrayOf(
+        inputType = InputType.RADIO, title = "Registration Of Birth", entries = arrayOf(
             "Yes",
             "No",
-        ),
-        required = false
+        ), required = false
     )
     private val childStatus = FormInput(
-        inputType = InputType.RADIO,
-        title = "Child Status",
-        entries = arrayOf(
+        inputType = InputType.RADIO, title = "Child Status", entries = arrayOf(
             "Living",
             "Dead",
-        ),
-        required = false
+        ), required = false
     )
     private val homeVisitDate = FormInput(
-        inputType = InputType.RADIO,
-        title = "Home Visit Date",
-        entries = arrayOf(
+        inputType = InputType.RADIO, title = "Home Visit Date", entries = arrayOf(
             "1st Day",
             "3rd Day",
-        ),
-        required = false
+        ), required = false
     )
     private val childImmunizationStatus = FormInput(
-        inputType = InputType.CHECKBOXES,
-        title = "Child Immunization Status",
-        entries = arrayOf(
-            "BCG",
-            "Polio",
-            "DPT 1",
-            "Hepatitis-B"
-        ),
-        required = false
+        inputType = InputType.CHECKBOXES, title = "Child Immunization Status", entries = arrayOf(
+            "BCG", "Polio", "DPT 1", "Hepatitis-B"
+        ), required = false
     )
     private val birthWeightRecordedInCard = FormInput(
         inputType = InputType.RADIO,
@@ -300,15 +258,11 @@ class HBNCFormDataset(
     //////////////////// Part 1 ////////////////////////
 
     private val titleTrainingPart1 = FormInput(
-        inputType = InputType.HEADLINE,
-        title = "New Born First Training Part 1",
-        required = false
+        inputType = InputType.HEADLINE, title = "New Born First Training Part 1", required = false
     )
 
     private val timeOfDelivery = FormInput(
-        inputType = InputType.TIME_PICKER,
-        title = "Delivery time",
-        required = false
+        inputType = InputType.TIME_PICKER, title = "Delivery time", required = false
     )
     private val dateOfCompletionOfPregnancy = FormInput(
         inputType = InputType.DATE_PICKER,
@@ -332,16 +286,13 @@ class HBNCFormDataset(
         required = false
     )
     private val motherAnyProblem = FormInput(
-        inputType = InputType.DROPDOWN,
-        title = "Does mother have any problem",
-        entries = arrayOf(
+        inputType = InputType.DROPDOWN, title = "Does mother have any problem", entries = arrayOf(
             "Very Bleeding ",
             "Anesthesia/ Seizure outbreak",
-        ),
-        required = false
+        ), required = false
     )
 
-    private val babyFedAfterBirth = FormInput(
+    val babyFedAfterBirth = FormInput(
         inputType = InputType.DROPDOWN,
         title = "What was the baby fed after birth ",
         entries = arrayOf(
@@ -362,15 +313,12 @@ class HBNCFormDataset(
 //    )
 
     private val howBabyTookFirstFeed = FormInput(
-        inputType = InputType.DROPDOWN,
-        title = "How did the baby breastfeed? ",
-        entries = arrayOf(
+        inputType = InputType.DROPDOWN, title = "How did the baby breastfeed? ", entries = arrayOf(
             "Forcefully",
             "Weakly ",
             "Could not breastfeed but had to be fed with spoon",
             "Could neither breast-feed nor could take milk given by spoon",
-        ),
-        required = false
+        ), required = false
     )
     private val actionBreastFeedProblem = FormInput(
         inputType = InputType.EDIT_TEXT,
@@ -399,14 +347,9 @@ class HBNCFormDataset(
     )
 
     private val babyEyeCondition = FormInput(
-        inputType = InputType.RADIO,
-        title = "Baby eye condition",
-        entries = arrayOf(
-            "Normal ",
-            "Swelling",
-            "oozing pus"
-        ),
-        required = false
+        inputType = InputType.RADIO, title = "Baby eye condition", entries = arrayOf(
+            "Normal ", "Swelling", "oozing pus"
+        ), required = false
     )
     private val babyBleedUmbilicalCord = FormInput(
         inputType = InputType.RADIO,
@@ -418,14 +361,9 @@ class HBNCFormDataset(
         required = false
     )
     private val babyWeightColor = FormInput(
-        inputType = InputType.RADIO,
-        title = "Weighing machine scale color",
-        entries = arrayOf(
-            "Red",
-            "Yellow",
-            "Green"
-        ),
-        required = false
+        inputType = InputType.RADIO, title = "Weighing machine scale color", entries = arrayOf(
+            "Red", "Yellow", "Green"
+        ), required = false
     )
 
     //////////////////////////// Part Baby Phy Con /////////////////////////////////
@@ -506,9 +444,7 @@ class HBNCFormDataset(
     ////////////////////// Newborn first training (A) ask mother
 
     private val dateOfAshaVisit = FormInput(
-        inputType = InputType.TEXT_VIEW,
-        title = "Date of ASHA's visit",
-        required = false
+        inputType = InputType.TEXT_VIEW, title = "Date of ASHA's visit", required = false
     )
 
     private val titleAskMotherA = FormInput(
@@ -556,9 +492,7 @@ class HBNCFormDataset(
     //////////////////// Part - B //////////////////
 
     private val titleHealthCheckUpMotherB = FormInput(
-        inputType = InputType.HEADLINE,
-        title = "(B) Health Checkup of mother",
-        required = false
+        inputType = InputType.HEADLINE, title = "(B) Health Checkup of mother", required = false
     )
 
     private val motherBodyTemperature = FormInput(
@@ -665,9 +599,7 @@ class HBNCFormDataset(
         required = false
     )
     private val organLethargic = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "All organs are lethargic",
-        required = false
+        inputType = InputType.EDIT_TEXT, title = "All organs are lethargic", required = false
     )
     private val drinkLessNoMilk = FormInput(
         inputType = InputType.EDIT_TEXT,
@@ -675,9 +607,7 @@ class HBNCFormDataset(
         required = false
     )
     private val slowNoCry = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Cry weak/ stopped",
-        required = false
+        inputType = InputType.EDIT_TEXT, title = "Cry weak/ stopped", required = false
     )
     private val bloatedStomach = FormInput(
         inputType = InputType.RADIO,
@@ -710,53 +640,35 @@ class HBNCFormDataset(
 
 
     private val pusNavel = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Pus in the navel",
-        required = false
+        inputType = InputType.EDIT_TEXT, title = "Pus in the navel", required = false
     )
     private val ashaName = FormInput(
-        inputType = InputType.TEXT_VIEW,
-        title = "ASHA NAME",
-        required = false
+        inputType = InputType.TEXT_VIEW, title = "ASHA NAME", required = false
     )
     private val villageName = FormInput(
-        inputType = InputType.TEXT_VIEW,
-        title = "Village Name",
-        required = false
+        inputType = InputType.TEXT_VIEW, title = "Village Name", required = false
     )
     private val blockName = FormInput(
-        inputType = InputType.TEXT_VIEW,
-        title = "Block Name",
-        required = false
+        inputType = InputType.TEXT_VIEW, title = "Block Name", required = false
     )
     private val stillBirth = FormInput(
-        inputType = InputType.RADIO,
-        title = "Still Birth",
-        entries = arrayOf(
+        inputType = InputType.RADIO, title = "Still Birth", entries = arrayOf(
             "Yes",
             "No",
-        ),
-        required = false
+        ), required = false
     )
     private val supRemark = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Supervisors Remark ",
-        required = false
+        inputType = InputType.EDIT_TEXT, title = "Supervisors Remark ", required = false
     )
     private val sup = FormInput(
-        inputType = InputType.DROPDOWN,
-        title = "Supervisor",
-        entries = arrayOf(
+        inputType = InputType.DROPDOWN, title = "Supervisor", entries = arrayOf(
             "ASHA Facilitator",
             "ANM",
             "MPW",
-        ),
-        required = false
+        ), required = false
     )
     private val supName = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Supervisor name",
-        required = false
+        inputType = InputType.EDIT_TEXT, title = "Supervisor name", required = false
     )
     private val supervisorComment = FormInput(
         inputType = InputType.DROPDOWN,
@@ -777,9 +689,7 @@ class HBNCFormDataset(
     )
 
     private val titleVisitCard = FormInput(
-        inputType = InputType.HEADLINE,
-        title = "Mother-Newborn Home Visit Card",
-        required = false
+        inputType = InputType.HEADLINE, title = "Mother-Newborn Home Visit Card", required = false
     )
     private val titleVisitCardDischarge = FormInput(
         inputType = InputType.HEADLINE,
@@ -788,32 +698,25 @@ class HBNCFormDataset(
     )
 
     private val titleDateOfHomeVisit = FormInput(
-        inputType = InputType.HEADLINE,
-        title = "Date of Home Visit",
-        required = false
+        inputType = InputType.HEADLINE, title = "Date of Home Visit", required = false
     )
-    private val babyAlive = FormInput(
-        inputType = InputType.RADIO,
-        title = "Is the baby alive?",
-        entries = arrayOf(
+    val babyAlive = FormInput(
+        inputType = InputType.RADIO, title = "Is the baby alive?", entries = arrayOf(
             "Yes",
             "No",
-        ),
-        required = false
+        ), required = false
     )
-    private val dateOfBabyDeath = FormInput(
+    val dateOfBabyDeath = FormInput(
         inputType = InputType.DATE_PICKER,
         title = "Date of death of baby",
         min = 0L,
         max = System.currentTimeMillis(),
         required = false
     )
-    private val timeOfBabyDeath = FormInput(
-        inputType = InputType.TIME_PICKER,
-        title = "Time of death of baby",
-        required = false
+    val timeOfBabyDeath = FormInput(
+        inputType = InputType.TIME_PICKER, title = "Time of death of baby", required = false
     )
-    private val placeOfBabyDeath = FormInput(
+    val placeOfBabyDeath = FormInput(
         inputType = InputType.DROPDOWN,
         title = "Place of Baby Death",
         entries = arrayOf(
@@ -825,13 +728,11 @@ class HBNCFormDataset(
         ),
         required = false,
     )
-    private val otherPlaceOfBabyDeath = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Other place of Baby Death",
-        required = false
+    val otherPlaceOfBabyDeath = FormInput(
+        inputType = InputType.EDIT_TEXT, title = "Other place of Baby Death", required = false
     )
-    private val babyPreterm = FormInput(
-        inputType = InputType.DROPDOWN,
+    val babyPreterm = FormInput(
+        inputType = InputType.RADIO,
         title = "Is the baby preterm?",
         entries = arrayOf(
             "Yes",
@@ -839,9 +740,10 @@ class HBNCFormDataset(
         ),
         required = false,
     )
-    private val gestationalAge = FormInput(
-        inputType = InputType.DROPDOWN,
+    val gestationalAge = FormInput(
+        inputType = InputType.RADIO,
         title = "How many weeks has it been since baby born (Gestational Age)",
+//        orientation = LinearLayout.VERTICAL,
         entries = arrayOf(
             "24 – 34 Weeks",
             "34 – 36 Weeks",
@@ -863,28 +765,23 @@ class HBNCFormDataset(
     )
 
 
-    private val motherAlive = FormInput(
-        inputType = InputType.RADIO,
-        title = "Is the mother alive?",
-        entries = arrayOf(
+    val motherAlive = FormInput(
+        inputType = InputType.RADIO, title = "Is the mother alive?", entries = arrayOf(
             "Yes",
             "No",
-        ),
-        required = false
+        ), required = false
     )
-    private val dateOfMotherDeath = FormInput(
+    val dateOfMotherDeath = FormInput(
         inputType = InputType.DATE_PICKER,
         title = "Date of death of mother",
         min = 0L,
         max = System.currentTimeMillis(),
         required = false
     )
-    private val timeOfMotherDeath = FormInput(
-        inputType = InputType.TIME_PICKER,
-        title = "Time of death of mother",
-        required = false
+    val timeOfMotherDeath = FormInput(
+        inputType = InputType.TIME_PICKER, title = "Time of death of mother", required = false
     )
-    private val placeOfMotherDeath = FormInput(
+    val placeOfMotherDeath = FormInput(
         inputType = InputType.DROPDOWN,
         title = "Place of mother Death",
         entries = arrayOf(
@@ -896,10 +793,8 @@ class HBNCFormDataset(
         ),
         required = false,
     )
-    private val otherPlaceOfMotherDeath = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Other place of mother Death",
-        required = false
+    val otherPlaceOfMotherDeath = FormInput(
+        inputType = InputType.EDIT_TEXT, title = "Other place of mother Death", required = false
     )
     private val motherProblems = FormInput(
         inputType = InputType.CHECKBOXES,
@@ -911,23 +806,23 @@ class HBNCFormDataset(
         required = false
     )
 
-    private val otherBabyFedAfterBirth = FormInput(
+    val otherBabyFedAfterBirth = FormInput(
         inputType = InputType.EDIT_TEXT,
         title = "Other - What was given as the first feed to baby after birth?",
         required = false
     )
     private val whenBabyFirstFed = FormInput(
         inputType = InputType.TIME_PICKER,
-        title = "Time of death of mother",
+        title = "When was the baby first fed",
         required = false
     )
-    private val motherHasBreastFeedProblem = FormInput(
+    val motherHasBreastFeedProblem = FormInput(
         inputType = InputType.RADIO,
         title = "Does the mother have breastfeeding problem?",
         entries = arrayOf("Yes", "No"),
         required = false,
     )
-    private val motherBreastFeedProblem = FormInput(
+    val motherBreastFeedProblem = FormInput(
         inputType = InputType.EDIT_TEXT,
         title = "Write the problem, if there is any problem in breast feeding, help the mother to overcome it",
         required = false
@@ -941,9 +836,7 @@ class HBNCFormDataset(
         required = false
     )
     private val babyTemperature = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Temperature of the baby",
-        required = false
+        inputType = InputType.EDIT_TEXT, title = "Temperature of the baby", required = false
     )
 
     private val actionUmbilicalBleed = FormInput(
@@ -956,13 +849,10 @@ class HBNCFormDataset(
         required = false
     )
     private val babyWeigntMatchesColor = FormInput(
-        inputType = InputType.RADIO,
-        title = "Weighing matches with the colour?",
-        entries = arrayOf(
+        inputType = InputType.RADIO, title = "Weighing matches with the colour?", entries = arrayOf(
             "Yes",
             "No",
-        ),
-        required = false
+        ), required = false
     )
     private val titleRoutineNewBornCare = FormInput(
         inputType = InputType.HEADLINE,
@@ -970,43 +860,32 @@ class HBNCFormDataset(
         required = false
     )
     private val babyDry = FormInput(
-        inputType = InputType.RADIO,
-        title = "Dry the baby",
-        entries = arrayOf(
+        inputType = InputType.RADIO, title = "Dry the baby", entries = arrayOf(
             "Yes",
             "No",
-        ),
-        required = false
+        ), required = false
     )
     private val cryWeakStopped = FormInput(
-        inputType = InputType.RADIO,
-        title = "Cry weak/ stopped",
-        entries = arrayOf(
+        inputType = InputType.RADIO, title = "Cry weak/ stopped", entries = arrayOf(
             "Yes",
             "No",
-        ),
-        required = false
+        ), required = false
     )
     private val cordCleanDry = FormInput(
-        inputType = InputType.RADIO,
-        title = "Keep the cord clean and dry",
-        entries = arrayOf(
+        inputType = InputType.RADIO, title = "Keep the cord clean and dry", entries = arrayOf(
             "Yes",
             "No",
-        ),
-        required = false
+        ), required = false
     )
 
-    private val unusualWithBaby = FormInput(
+    val unusualWithBaby = FormInput(
         inputType = InputType.RADIO,
         title = "Was there anything unusual with the baby?",
         entries = arrayOf("Curved limbs", "cleft lip", "Other"),
         required = false,
     )
-    private val otherUnusualWithBaby = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Other - unusual with the baby",
-        required = false
+    val otherUnusualWithBaby = FormInput(
+        inputType = InputType.EDIT_TEXT, title = "Other - unusual with the baby", required = false
     )
 
     /////////////// Part Visit //////////
@@ -1016,23 +895,21 @@ class HBNCFormDataset(
         title = "ASHA should wash hands with soap and water before touching the baby during each visit",
         required = false
     )
-    private val babyReferred = FormInput(
+    val babyReferred = FormInput(
         inputType = InputType.RADIO,
         title = "Baby referred for any reason?",
         entries = arrayOf("Yes", "No"),
         required = false
     )
-    private val dateOfBabyReferral = FormInput(
+    val dateOfBabyReferral = FormInput(
         inputType = InputType.DATE_PICKER,
         title = "Date of baby referral",
         min = 0L,
         max = System.currentTimeMillis(),
         required = false
     )
-    private val placeOfBabyReferral = FormInput(
-        inputType = InputType.DROPDOWN,
-        title = "Place of baby referral",
-        entries = arrayOf(
+    val placeOfBabyReferral = FormInput(
+        inputType = InputType.DROPDOWN, title = "Place of baby referral", entries = arrayOf(
             "Sub-Centre",
             "PHC",
             "CHC",
@@ -1043,31 +920,26 @@ class HBNCFormDataset(
             "Private Hospital",
             "Accredited Private Hospital",
             "Other",
-        ),
-        required = false
+        ), required = false
     )
-    private val otherPlaceOfBabyReferral = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Other -Place of baby referral",
-        required = false
+    val otherPlaceOfBabyReferral = FormInput(
+        inputType = InputType.EDIT_TEXT, title = "Other -Place of baby referral", required = false
     )
-    private val motherReferred = FormInput(
+    val motherReferred = FormInput(
         inputType = InputType.RADIO,
         title = "Mother referred for any reason?",
         entries = arrayOf("Yes", "No"),
         required = false
     )
-    private val dateOfMotherReferral = FormInput(
+    val dateOfMotherReferral = FormInput(
         inputType = InputType.DATE_PICKER,
         title = "Date of mother referral",
         min = 0L,
         max = System.currentTimeMillis(),
         required = false
     )
-    private val placeOfMotherReferral = FormInput(
-        inputType = InputType.DROPDOWN,
-        title = "Place of mother referral",
-        entries = arrayOf(
+    val placeOfMotherReferral = FormInput(
+        inputType = InputType.DROPDOWN, title = "Place of mother referral", entries = arrayOf(
             "Sub-Centre",
             "PHC",
             "CHC",
@@ -1078,17 +950,14 @@ class HBNCFormDataset(
             "Private Hospital",
             "Accredited Private Hospital",
             "Other",
-        ),
-        required = false
+        ), required = false
     )
-    private val otherPlaceOfMotherReferral = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Other -Place of mother referral",
-        required = false
+    val otherPlaceOfMotherReferral = FormInput(
+        inputType = InputType.EDIT_TEXT, title = "Other -Place of mother referral", required = false
     )
 
 
-    val cardPage by lazy {
+    private val cardPage by lazy {
         listOf(
             titleVisitCard,
             ashaName,
@@ -1111,33 +980,49 @@ class HBNCFormDataset(
         )
     }
 
-    val partIPage by lazy {
+    fun getCardPage(
+        asha: UserCache, childBen: BenRegCache, motherBen: BenRegCache?
+    ): List<FormInput> {
+        ashaName.value.value = asha.userName
+        villageName.value.value = asha.villageEnglish[0]
+        blockName.value.value = asha.blockEnglish[0]
+        motherName.value.value = childBen.motherName
+        fatherName.value.value = childBen.fatherName
+        placeOfDelivery.value.value = childBen.kidDetails?.birthPlace
+        gender.value.value = gender.entries?.get(childBen.genderId)
+        typeOfDelivery.value.value =
+            childBen.kidDetails?.deliveryTypeId?.let { typeOfDelivery.entries?.get(it) }
+        motherBen?.let {
+            dateOfDelivery.value.value = it.genDetails?.deliveryDate
+        }
+        return cardPage
+
+
+    }
+
+    private val partIPage by lazy {
         listOf(
             titleDateOfHomeVisit,
             babyAlive,
-            dateOfBabyDeath,
-            timeOfBabyDeath,
-            placeOfBabyDeath,
-            otherPlaceOfBabyDeath,
             babyPreterm,
-            gestationalAge,
             dateOfBabyFirstExamination,
             timeOfBabyFirstExamination,
             motherAlive,
-            dateOfMotherDeath,
-            timeOfMotherDeath,
-            placeOfMotherDeath,
-            otherPlaceOfMotherDeath,
             motherProblems,
             babyFedAfterBirth,
-            otherBabyFedAfterBirth,
             whenBabyFirstFed,
             howBabyTookFirstFeed,
             motherHasBreastFeedProblem,
-            motherBreastFeedProblem,
         )
     }
-    val partIIPage by lazy {
+
+    suspend fun getPartIPage(visitCard: HbncVisitCard?): List<FormInput> {
+        babyAlive.value.value = visitCard?.stillBirth?.let { babyAlive.entries?.get(it) }
+        return partIPage
+    }
+
+
+    private val partIIPage by lazy {
         listOf(
             titleBabyFirstHealthCheckup,
             babyTemperature,
@@ -1156,12 +1041,15 @@ class HBNCFormDataset(
             wrapClothKeptMother,
             onlyBreastMilk,
             cordCleanDry,
-            unusualWithBaby,
-            otherUnusualWithBaby
+            unusualWithBaby
         )
     }
 
-    val visitPage by lazy {
+    suspend fun getPartIIPage(): List<FormInput> {
+        return partIIPage
+    }
+
+    private val visitPage by lazy {
         listOf(
             dateOfAshaVisit,
             titleAskMotherA,
@@ -1184,14 +1072,7 @@ class HBNCFormDataset(
             yellowJaundice,
             childImmunizationStatus,
             babyReferred,
-            dateOfBabyReferral,
-            placeOfBabyReferral,
-            otherPlaceOfBabyReferral,
             motherReferred,
-            dateOfMotherReferral,
-            placeOfMotherReferral,
-            otherPlaceOfMotherReferral,
-
             titleSepsisD,
             allLimbsLimp,
             feedingLessStop,
@@ -1206,5 +1087,12 @@ class HBNCFormDataset(
             supRemark,
             dateOfSupSig
         )
+    }
+
+    fun getVisitPage(firstDay: HbncHomeVisit?): List<FormInput> {
+        firstDay?.let {
+            childImmunizationStatus.value.value = it.babyImmunizationStatus
+        }
+        return visitPage
     }
 }

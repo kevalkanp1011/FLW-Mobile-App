@@ -105,7 +105,7 @@ class HbncVisitCardViewModel @Inject constructor(
     }
 
     fun getFirstPage(): List<FormInput> {
-        return dataset.cardPage
+        return dataset.getCardPage(user,ben,null)
     }
 
 
