@@ -1,6 +1,5 @@
 package org.piramalswasthya.sakhi.ui.home_activity.mother_care.pmsma
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,26 +9,22 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
-import org.piramalswasthya.sakhi.databinding.FragmentPmsmaBinding
+import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.ui.home_activity.mother_care.pmsma.PmsmaViewModel.State
-import org.piramalswasthya.sakhi.work.PushToD2DWorker
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
 @AndroidEntryPoint
 class PmsmaFragment : Fragment() {
 
-    private var _binding : FragmentPmsmaBinding? = null
-    private val binding : FragmentPmsmaBinding
+    private var _binding : FragmentNewFormBinding? = null
+    private val binding : FragmentNewFormBinding
         get() = _binding!!
 
 
@@ -70,7 +65,7 @@ class PmsmaFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         Timber.d("onCreateView called!!")
-        _binding = FragmentPmsmaBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentNewFormBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -83,15 +78,15 @@ class PmsmaFragment : Fragment() {
         viewModel.benAgeGender.observe(viewLifecycleOwner) {
             binding.tvAgeGender.text = it
         }
-        binding.btnPmsmaSubmit.setOnClickListener {
+        binding.btnSubmit.setOnClickListener {
             if (validate()) viewModel.submitForm()
         }
         viewModel.exists.observe(viewLifecycleOwner) {exists ->
             Timber.d("observing exists : $exists")
             val adapter = FormInputAdapter(isEnabled = !exists)
-            binding.pmsmaForm.rvInputForm.adapter = adapter
+            binding.form.rvInputForm.adapter = adapter
             if (exists) {
-                binding.btnPmsmaSubmit.visibility = View.GONE
+                binding.btnSubmit.visibility = View.GONE
 //                binding.cdrForm.rvInputForm.apply {
 //                    isClickable = false
 //                    isFocusable = false
@@ -119,20 +114,20 @@ class PmsmaFragment : Fragment() {
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
                 State.LOADING -> {
-                    binding.pmsmaForm.rvInputForm.visibility = View.GONE
-                    binding.btnPmsmaSubmit.visibility = View.GONE
+                    binding.form.rvInputForm.visibility = View.GONE
+                    binding.btnSubmit.visibility = View.GONE
                     binding.cvPatientInformation.visibility = View.GONE
-                    binding.pbPmsma.visibility = View.VISIBLE
+                    binding.pbForm.visibility = View.VISIBLE
                 }
                 State.SUCCESS -> {
                     WorkerUtils.triggerD2dSyncWorker(requireContext())
                     findNavController().navigateUp()
                 }
                 State.FAIL -> {
-                    binding.pmsmaForm.rvInputForm.visibility = View.VISIBLE
-                    binding.btnPmsmaSubmit.visibility = View.VISIBLE
+                    binding.form.rvInputForm.visibility = View.VISIBLE
+                    binding.btnSubmit.visibility = View.VISIBLE
                     binding.cvPatientInformation.visibility = View.VISIBLE
-                    binding.pbPmsma.visibility = View.GONE
+                    binding.pbForm.visibility = View.GONE
                     Toast.makeText(
                         context,
                         "Saving pmsma to database Failed!",
@@ -140,10 +135,10 @@ class PmsmaFragment : Fragment() {
                     ).show()
                 }
                 else -> {
-                    binding.pmsmaForm.rvInputForm.visibility = View.VISIBLE
-                    binding.btnPmsmaSubmit.visibility = View.VISIBLE
+                    binding.form.rvInputForm.visibility = View.VISIBLE
+                    binding.btnSubmit.visibility = View.VISIBLE
                     binding.cvPatientInformation.visibility = View.VISIBLE
-                    binding.pbPmsma.visibility = View.GONE
+                    binding.pbForm.visibility = View.GONE
                 }
             }
         }
@@ -155,7 +150,7 @@ class PmsmaFragment : Fragment() {
 
     fun validate(): Boolean {
 
-        val result = binding.pmsmaForm.rvInputForm.adapter?.let {
+        val result = binding.form.rvInputForm.adapter?.let {
             (it as FormInputAdapter).validateInput()
         }
         Timber.d("Validation : $result")
@@ -163,7 +158,7 @@ class PmsmaFragment : Fragment() {
             true
         else {
             if (result != null) {
-                binding.pmsmaForm.rvInputForm.scrollToPosition(result)
+                binding.form.rvInputForm.scrollToPosition(result)
             }
             false
         }

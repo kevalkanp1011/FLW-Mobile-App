@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import org.piramalswasthya.sakhi.model.HouseholdCache
 
 @Dao
@@ -17,7 +18,7 @@ interface HouseholdDao {
     suspend fun getDraftHousehold(): HouseholdCache?
 
     @Query("SELECT * FROM HOUSEHOLD WHERE isDraft = 0")
-    fun getAllHouseholds(): LiveData<List<HouseholdCache>>
+    fun getAllHouseholds(): Flow<List<HouseholdCache>>
 
     @Query("SELECT * FROM HOUSEHOLD WHERE householdId =:hhId LIMIT 1")
     suspend fun getHousehold(hhId: Long): HouseholdCache?

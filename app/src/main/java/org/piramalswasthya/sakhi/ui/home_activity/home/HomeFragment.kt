@@ -78,7 +78,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as HomeActivity?)?.setHomeMenuItemVisibility(false)
+
         Timber.d("onViewCreated() called! $numViewCopies")
         if (!viewModel.isLocationSet()) {
             findNavController().navigate(HomeFragmentDirections.actionNavHomeToServiceTypeFragment())
@@ -151,8 +151,9 @@ class HomeFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        activity?.let {
-            (it as HomeActivity).setLogo(R.drawable.ic_home)
+        (activity as HomeActivity?)?.let {
+            it.setLogo(R.drawable.ic_home)
+            it.setHomeMenuItemVisibility(false)
         }
         binding.vp2Home.setCurrentItem(1, false)
     }

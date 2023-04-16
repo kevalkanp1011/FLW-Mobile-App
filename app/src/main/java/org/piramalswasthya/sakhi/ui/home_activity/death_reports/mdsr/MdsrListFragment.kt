@@ -10,8 +10,10 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 
@@ -49,13 +51,14 @@ class MdsrListFragment : Fragment() {
             }), "MDSR Form")
         binding.rvAny.adapter = benAdapter
 
-        viewModel.benList.observe(viewLifecycleOwner) {
-            if (it.isNullOrEmpty())
-                binding.flEmpty.visibility = View.VISIBLE
-            else
-                binding.flEmpty.visibility = View.GONE
-
-            benAdapter.submitList(it)
+        lifecycleScope.launch {
+            viewModel.benList.collect{
+                if (it.isEmpty())
+                    binding.flEmpty.visibility = View.VISIBLE
+                else
+                    binding.flEmpty.visibility = View.GONE
+                benAdapter.submitList(it)
+            }
         }
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {

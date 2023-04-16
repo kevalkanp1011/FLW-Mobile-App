@@ -2,32 +2,35 @@ package org.piramalswasthya.sakhi.configuration
 
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.model.Icon
-import org.piramalswasthya.sakhi.model.IconCount
+import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import org.piramalswasthya.sakhi.ui.home_activity.child_care.ChildCareFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.mother_care.MotherCareFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.NcdFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.village_level_forms.VillageLevelFormsFragmentDirections
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object IconDataset {
+@Singleton
+class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
 
-    fun getIconDataset(iconCount: IconCount) = listOf(
+    fun getIconDataset() = listOf(
         Icon(
             R.drawable.ic__hh,
             "All\nHousehold",
-            iconCount.householdCount,
+            recordsRepo.hhCount,
             HomeFragmentDirections.actionNavHomeToAllHouseholdFragment()
         ),
         Icon(
             R.drawable.ic__ben,
             "All\nBeneficiaries",
-            iconCount.allBenCount,
+            recordsRepo.benListCount,
             HomeFragmentDirections.actionNavHomeToAllBenFragment()
         ),
         Icon(
             R.drawable.ic__eligible_couple,
             "Eligible\nCouple List",
-            iconCount.eligibleCoupleCount,
+            recordsRepo.eligibleCoupleListCount,
             HomeFragmentDirections.actionNavHomeToEligibleCoupleFragment()
         ),
         Icon(
@@ -51,13 +54,13 @@ object IconDataset {
         Icon(
             R.drawable.ic__immunization,
             "Immunization Due List",
-            iconCount.immunizationDueCount,
+            recordsRepo.immunizationListCount,
             HomeFragmentDirections.actionNavHomeToImmunizationDueFragment()
         ),
         Icon(
             R.drawable.ic__hrp,
             "HRP Cases",
-            iconCount.hrpCount,
+            recordsRepo.hrpListCount,
             HomeFragmentDirections.actionNavHomeToHrpCasesFragment()
         ),
         Icon(
@@ -69,7 +72,7 @@ object IconDataset {
         Icon(
             R.drawable.ic__menopause,
             "Menopause Stage List",
-            iconCount.menopauseCount,
+            recordsRepo.menopauseListCount,
             HomeFragmentDirections.actionNavHomeToMenopauseStageFragment()
         ),
         Icon(
@@ -84,77 +87,77 @@ object IconDataset {
         ),
     )
 
-    fun getChildCareDataset(iconCount: IconCount) = listOf(
+    fun getChildCareDataset() = listOf(
         Icon(
             R.drawable.ic_infant,
             "Infant List",
-            iconCount.infantCount,
+            recordsRepo.infantListCount,
             ChildCareFragmentDirections.actionChildCareFragmentToInfantListFragment()
         ),
         Icon(
             R.drawable.ic__child,
             "Child List",
-            iconCount.childCount,
+            recordsRepo.childListCount,
             ChildCareFragmentDirections.actionChildCareFragmentToChildListFragment()
         ),
         Icon(
             R.drawable.ic__adolescent,
             "Adolescent List",
-            iconCount.adolescentCount,
+            recordsRepo.adolescentListCount,
             ChildCareFragmentDirections.actionChildCareFragmentToAdolescentListFragment()
         )
     )
 
-    fun getMotherCareDataset(iconCount: IconCount) = listOf(
+    fun getMotherCareDataset() = listOf(
         Icon(
             R.drawable.ic__pregnancy,
             "Pregnancy List",
-            iconCount.pregnantCount,
+            recordsRepo.pregnantListCount,
             MotherCareFragmentDirections.actionMotherCareFragmentToPregnancyListFragment()
         ),
         Icon(
             R.drawable.ic__delivery,
             "Delivery Stage List",
-            iconCount.deliveryStageCount,
+            recordsRepo.deliveryListCount,
             MotherCareFragmentDirections.actionMotherCareFragmentToDeliveryStageListFragment()
         ),
         Icon(
             R.drawable.ic__pnc,
             "PNC Mother List",
-            iconCount.pncMotherCount,
+            recordsRepo.pncMotherListCount,
             MotherCareFragmentDirections.actionMotherCareFragmentToPncMotherListFragment()
         ),
         Icon(
             R.drawable.ic__reproductive_age,
             "Reproductive Age List",
-            iconCount.reproductiveAgeCount,
+            recordsRepo.reproductiveAgeListCount,
             MotherCareFragmentDirections.actionMotherCareFragmentToReproductiveAgeListFragment()
         )
     )
 
-    fun getNCDDataset(iconCount: IconCount) = listOf(
+    fun getNCDDataset() = listOf(
         Icon(
             R.drawable.ic__ncd_list,
             "NCD List",
-            iconCount.ncdCount,
+            recordsRepo.ncdListCount,
             NcdFragmentDirections.actionNcdFragmentToNcdListFragment()
         ),
         Icon(
             R.drawable.ic__ncd_eligibility,
             "NCD Eligible List",
-            iconCount.ncdEligibleCount,
+            recordsRepo.ncdEligibleListCount,
             NcdFragmentDirections.actionNcdFragmentToNcdEligibleListFragment()
         ),
         Icon(
             R.drawable.ic__ncd_priority,
             "NCD Priority List",
-            iconCount.ncdPriorityCount,
+            recordsRepo.ncdPriorityListCount,
             NcdFragmentDirections.actionNcdFragmentToNcdPriorityListFragment()
         ),
         Icon(
             R.drawable.ic_ncd_noneligible,
             "NCD Non-Eligible List",
-            iconCount.ncdNonEligibleCount,
+            recordsRepo.ncdNonEligibleListCount,
             NcdFragmentDirections.actionNcdFragmentToNcdNonEligibleListFragment()
         )
     )
@@ -163,7 +166,7 @@ object IconDataset {
         Icon(
             R.drawable.ic_person,
             "Survey Register",
-            0,
+            null,
             VillageLevelFormsFragmentDirections.actionVillageLevelFormsFragmentToSurveyRegisterFragment()
         )
     )

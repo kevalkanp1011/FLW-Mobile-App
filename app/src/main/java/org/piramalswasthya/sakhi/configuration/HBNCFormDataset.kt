@@ -1,15 +1,13 @@
 package org.piramalswasthya.sakhi.configuration
 
-import android.content.Context
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.model.FormInput.InputType
 import java.text.SimpleDateFormat
 import java.util.*
 
 class HBNCFormDataset(
-    context: Context,
-    private val nthDay: Int,
-    private val hbnc: HBNCCache? = null
+//    context : Context,
+    private val nthDay: Int, private val hbnc: HBNCCache? = null
 ) {
 
     companion object {
@@ -24,94 +22,126 @@ class HBNCFormDataset(
         return value.value?.let { entries?.indexOf(it)?.plus(1) } ?: 0
     }
 
-    fun mapValues(hbnc: HBNCCache, user: UserCache) {
-        hbnc.part0 = HBNCPart0(
-            healthSubCenterName = healthSubCenterName.value.value,
-            phcName = phcName.value.value,
+    fun mapCardValues(hbnc: HBNCCache, user: UserCache) {
+        hbnc.visitCard = HbncVisitCard(
+            ashaName = ashaName.value.value,
+            villageName = villageName.value.value,
+            subCenterName = healthSubCenterName.value.value,
+            blockName = blockName.value.value,
             motherName = motherName.value.value,
             fatherName = fatherName.value.value,
             dateOfDelivery = getLongFromDate(dateOfDelivery.value.value),
             placeOfDelivery = placeOfDelivery.getPosition(),
             babyGender = gender.getPosition(),
             typeOfDelivery = typeOfDelivery.getPosition(),
-            startedBreastFeed = startedBreastFeeding.getPosition(),
-            weightAtBirth = weightAtBirth.value.value?.toInt() ?: 0,
-            dischargeDateFromHospital = getLongFromDate(dateOfDischargeFromHospital.value.value),
-            motherStatus = motherStatus.getPosition(),
-            registeredAtBirth = registrationOfBirth.getPosition(),
-            childStatus = childStatus.getPosition(),
-            childImmunizedBCG = childImmunizationStatus.value.value?.contains("BCG") ?: false,
-            childImmunizedPolio = childImmunizationStatus.value.value?.contains("Polio") ?: false,
-            childImmunizedDpt = childImmunizationStatus.value.value?.contains("DPT 1") ?: false,
-            childImmunizedHepB = childImmunizationStatus.value.value?.contains("Hepatitis-B")
-                ?: false,
-            birthWeightRecordedInMCP = birthWeightRecordedInCard.getPosition(),
-            deliveryTime = timeOfDelivery.value.value,
-            dateOfCompletionOfPregnancy = getLongFromDate(dateOfCompletionOfPregnancy.value.value),
-            numWeeksWhenBorn = weeksSinceBabyBorn.value.value?.toInt() ?: 0,
-            dateOfFirstTraining = getLongFromDate(dateOfFirstTraining.value.value),
-            doesMotherHaveProblem = motherAnyProblem.getPosition(),
-            babyFedAfterBirth = babyFedAfterBirth.getPosition(),
-            whenBabyFirstBreastFed = whenBabyFirstFed.value.value,
-            howBabyFirstFed = howBabyFirstFed.getPosition(),
-            breastFeedProblem = actionBreastFeedProblem.value.value,
-            breastFeedProblem2 = anyBreastFeedProblem.value.value,
-            measureRecordBabyTemperature = babyBodyTemperature.value.value,
-            babyEyeCondition = babyEyeCondition.getPosition(),
-            babyBleedUmbilical = babyBleedUmbilicalCord.getPosition(),
-            babyWeighingScaleColor = babyWeightColor.getPosition(),
-            babyAllOrganLethargic = allOrganLethargic.getPosition(),
-            babyLessMilkDrinking = lessMilkDrink.getPosition(),
-            babyNoDrinkMilk = notDrinkMilk.getPosition(),
-            babyCrySlow = crySlow.getPosition(),
-            babyNoCry = notCry.getPosition(),
-            babyBornLookedAfter = lookedAfterRegularly.getPosition(),
-            babyWipedCleanCloth = wipedWithCleanCloth.getPosition(),
-            babyKeptWarm = keptWarm.getPosition(),
-            babyGivenBath = givenBath.getPosition(),
-            babyWrappedInClothKeptWithMother = wrapClothKeptMother.getPosition(),
-            startedBreastFeedOnlyGivenBreastMilk = onlyBreastMilk.getPosition(),
-            babyAnythingUnusual = unusualWithBaby.getPosition(),
+            stillBirth = stillBirth.getPosition(),
+            startedBreastFeeding = startedBreastFeeding.getPosition(),
+            dischargeDateMother = getLongFromDate(dateOfDischargeFromHospitalMother.value.value),
+            dischargeDateBaby = getLongFromDate(dateOfDischargeFromHospitalBaby.value.value),
+            weightInGrams = weightAtBirth.value.value?.toInt() ?: 0,
+            registrationOfBirth = registrationOfBirth.getPosition(),
         )
-        hbnc.partA = HbncPartA(
-            numTimesEats = timesMotherFed24hr.value.value?.toInt()?:0,
-            numPadsChanged = timesPadChanged.value.value?.toInt()?:0,
-            winterBabyKeptWarm = babyKeptWarmWinter.getPosition(),
-            breastFeedProper = babyBreastFedProperly.getPosition(),
-            babyCryContinuouslyOrUrinateLess6 = babyCryContinuously.getPosition(),
-        )
-        hbnc.partB = HbncPartB(
-            temperature = motherBodyTemperature.value.value,
-            waterDischargeFoulSmell = motherWaterDischarge.getPosition(),
-            motherGrumbleSeizure = motherGrumbleSeizure.getPosition(),
-            motherNoOrLessMilk = motherNoOrLessMilk.getPosition(),
-            crackedNipplePainHardBreast = motherBreastProblem.getPosition(),
-        )
-        hbnc.partC = HbncPartC(
-            eyesSwollenPusComing= babyEyesSwollen.getPosition(),
-            weightOnDayN= babyWeight.value.value?.toInt()?:0,
-            temperature= babyBodyTemperature2.value.value,
-            pusPimpleOnSkin= pusPimples.getPosition(),
-            crackedRednessOfTwistedSkin= crackRedTwistSkin.value.value,
-            yellowEyePalmSoleSkin= yellowJaundice.getPosition(),
-            seizure= seizures.getPosition(),
-            breathGoingFast= breathFast.getPosition(),
-            referredWhere= referredByAsha.value.value,
-        )
-        hbnc.partD = HbncPartD(
-            organsLethargic = organLethargic.value.value,
-            lessNoMilkDrinking = drinkLessNoMilk.value.value,
-            slowOrStoppedCrying = slowNoCry.value.value,
-            bloatedStomachOrVomit = bloatedStomach.value.value,
-            coldOrHotOnTouch = childColdOnTouch.value.value,
-            pusInNavel = pusNavel.value.value,
-        )
-        hbnc.ashaName = user.userName
-        hbnc.supervisorRemark = supRemark.value.value
-        hbnc.supervisorName = supName.value.value
-        hbnc.supervisorComments = supervisorComment.value.value
-        hbnc.dateSupervisorVisit = getLongFromDate(dateOfSupSig.value.value)
+    }
 
+    fun mapPartIValues(hbnc: HBNCCache) {
+        hbnc.part1 = HbncPartI(
+            babyAlive = babyAlive.getPosition(),
+            dateOfBabyDeath = getLongFromDate(dateOfBabyDeath.value.value),
+            timeOfBabyDeath = timeOfBabyDeath.value.value,
+            placeOfBabyDeath = placeOfBabyDeath.getPosition(),
+            otherPlaceOfBabyDeath = otherPlaceOfBabyDeath.value.value,
+            isBabyPreterm = babyPreterm.getPosition(),
+            gestationalAge = gestationalAge.getPosition(),
+            dateOfFirstExamination = getLongFromDate(dateOfBabyFirstExamination.value.value),
+            timeOfFirstExamination = timeOfBabyFirstExamination.value.value,
+            motherAlive = motherAlive.getPosition(),
+            dateOfMotherDeath = getLongFromDate(dateOfMotherDeath.value.value),
+            timeOfMotherDeath = timeOfMotherDeath.value.value,
+            placeOfMotherDeath = placeOfBabyDeath.getPosition(),
+            otherPlaceOfMotherDeath = otherPlaceOfMotherDeath.value.value,
+            motherAnyProblem = motherAnyProblem.value.value,
+            babyFirstFed = babyFedAfterBirth.getPosition(),
+            otherBabyFirstFed = otherBabyFedAfterBirth.value.value,
+            timeBabyFirstFed = whenBabyFirstFed.value.value,
+            howBabyTookFirstFeed = howBabyTookFirstFeed.getPosition(),
+            motherHasBreastFeedProblem = motherHasBreastFeedProblem.getPosition(),
+            motherBreastFeedProblem = motherBreastFeedProblem.value.value,
+        )
+    }
+
+    fun mapPartIIValues(hbnc: HBNCCache) {
+        hbnc.part2 = HbncPartII(
+            babyTemperature = babyTemperature.value.value,
+            babyEyeCondition = babyEyeCondition.getPosition(),
+            babyUmbilicalBleed = babyBleedUmbilicalCord.getPosition(),
+            actionBabyUmbilicalBleed = actionUmbilicalBleed.getPosition(),
+            babyWeight = babyWeight.value.value ?: "0",
+            babyWeightMatchesColor = babyWeigntMatchesColor.getPosition(),
+            babyWeightColorOnScale = babyWeightColor.getPosition(),
+            allLimbsLimp = allLimbsLimp.getPosition(),
+            feedLessStop = feedingLessStop.getPosition(),
+            cryWeakStop = cryWeakStopped.getPosition(),
+            dryBaby = babyDry.getPosition(),
+            keepWarmWinter = babyKeptWarmWinter.getPosition(),
+            exclusiveBreastFeeding = onlyBreastMilk.getPosition(),
+            cordCleanDry = cordCleanDry.getPosition(),
+            unusualInBaby = unusualWithBaby.getPosition(),
+            otherUnusualInBaby = otherUnusualWithBaby.value.value,
+        )
+    }
+
+    fun mapVisitValues(hbnc: HBNCCache) {
+        hbnc.homeVisitForm = HbncHomeVisit(
+            dateOfAshaVisit = getLongFromDate(dateOfMotherDeath.value.value),
+            babyAlive = babyAlive.getPosition(),
+            numTimesFullMeal24hr = timesMotherFed24hr.value.value?.toInt() ?: 0,
+            numPadChanged24hr = timesPadChanged.value.value?.toInt() ?: 0,
+            babyKeptWarmWinter = babyKeptWarmWinter.getPosition(),
+            babyFedProperly = babyBreastFedProperly.getPosition(),
+            babyCryContinuously = babyCryContinuously.getPosition(),
+            motherTemperature = motherBodyTemperature.value.value,
+            foulDischargeFever = motherWaterDischarge.getPosition(),
+            motherSpeakAbnormallyFits = motherSpeakAbnormalFits.getPosition(),
+            motherLessNoMilk = motherNoOrLessMilk.getPosition(),
+            motherBreastProblem = motherBreastProblem.getPosition(),
+            babyEyesSwollen = babyEyesSwollen.getPosition(),
+            babyWeight = babyWeight.value.value,
+            babyTemperature = babyTemperature.value.value,
+            babyYellow = yellowJaundice.getPosition(),
+            babyImmunizationStatus = childImmunizationStatus.value.value,
+            babyReferred = babyReferred.getPosition(),
+            dateOfBabyReferral = getLongFromDate(dateOfBabyReferral.value.value),
+            placeOfBabyReferral = placeOfBabyReferral.getPosition(),
+            otherPlaceOfBabyReferral = otherPlaceOfBabyReferral.value.value,
+            motherReferred = motherReferred.getPosition(),
+            dateOfMotherReferral = getLongFromDate(dateOfMotherReferral.value.value),
+            placeOfMotherReferral = placeOfMotherReferral.getPosition(),
+            otherPlaceOfMotherReferral = otherPlaceOfMotherReferral.value.value,
+            allLimbsLimp = allLimbsLimp.getPosition(),
+            feedingLessStopped = feedingLessStop.getPosition(),
+            cryWeakStopped = cryWeakStopped.getPosition(),
+            bloatedStomach = bloatedStomach.getPosition(),
+            coldOnTouch = childColdOnTouch.getPosition(),
+            chestDrawing = childChestDrawing.getPosition(),
+            breathFast = breathFast.getPosition(),
+            pusNavel = pusNavel.getPosition(),
+            sup = sup.getPosition(),
+            supName = supName.value.value,
+            supComment = supRemark.value.value,
+            supSignDate = getLongFromDate(dateOfSupSig.value.value),
+        )
+    }
+
+    fun setVillageName(village: String) {
+        villageName.value.value = village
+    }
+
+    fun setBlockName(block: String) {
+        blockName.value.value = block
+    }
+
+    fun setAshaName(userName: String) {
+        ashaName.value.value = userName
     }
 
     private val titleHomeVisit = FormInput(
@@ -120,24 +150,16 @@ class HBNCFormDataset(
         required = false
     )
     private val healthSubCenterName = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Health Subcenter Name ",
-        required = false
+        inputType = InputType.EDIT_TEXT, title = "Health Subcenter Name ", required = false
     )
     private val phcName = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "P.H.C. Name ",
-        required = false
+        inputType = InputType.EDIT_TEXT, title = "P.H.C. Name ", required = false
     )
     private val motherName = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Mother Name",
-        required = false
+        inputType = InputType.TEXT_VIEW, title = "Mother Name", required = false
     )
     private val fatherName = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Father Name",
-        required = false
+        inputType = InputType.TEXT_VIEW, title = "Father Name", required = false
     )
 
     private val dateOfDelivery = FormInput(
@@ -149,45 +171,31 @@ class HBNCFormDataset(
     )
 
     private val placeOfDelivery = FormInput(
-        inputType = InputType.DROPDOWN,
-        title = "Place of Delivery",
-        entries = arrayOf(
+        inputType = InputType.DROPDOWN, title = "Place of Delivery", entries = arrayOf(
             "House",
             "Health center",
             "CHC",
             "PHC",
-        ),
-        required = false
+        ), required = false
     )
     private val gender = FormInput(
-        inputType = InputType.RADIO,
-        title = "Baby Gender",
-        entries = arrayOf(
+        inputType = InputType.RADIO, title = "Baby Gender", entries = arrayOf(
             "Male",
             "Female",
             "Transgender",
-        ),
-        required = false
+        ), required = false
     )
 
     private val typeOfDelivery = FormInput(
-        inputType = InputType.RADIO,
-        title = "Type of Delivery",
-        entries = arrayOf(
+        inputType = InputType.RADIO, title = "Type of Delivery", entries = arrayOf(
             "Cesarean",
             "Normal",
-        ),
-        required = false
+        ), required = false
     )
     private val startedBreastFeeding = FormInput(
-        inputType = InputType.DROPDOWN,
-        title = "Started Breastfeeding",
-        entries = arrayOf(
-            "Within an hour ",
-            "An hour later ",
-            "After 24 hours"
-        ),
-        required = false
+        inputType = InputType.DROPDOWN, title = "Started Breastfeeding", entries = arrayOf(
+            "Within an hour", "1 - 4 hours", "4.1 - 24 hours", "After 24 hours"
+        ), required = false
     )
     private val weightAtBirth = FormInput(
         inputType = InputType.EDIT_TEXT,
@@ -195,59 +203,48 @@ class HBNCFormDataset(
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
-    private val dateOfDischargeFromHospital = FormInput(
+    private val dateOfDischargeFromHospitalMother = FormInput(
         inputType = InputType.DATE_PICKER,
-        title = "Discharge date from hospital",
+        title = "Discharge Date of Mother",
+        max = System.currentTimeMillis(),
+        min = 0,
+        required = false
+    )
+    private val dateOfDischargeFromHospitalBaby = FormInput(
+        inputType = InputType.DATE_PICKER,
+        title = "Discharge Date of Baby",
         max = System.currentTimeMillis(),
         min = 0,
         required = false
     )
     private val motherStatus = FormInput(
-        inputType = InputType.RADIO,
-        title = "Mother Status",
-        entries = arrayOf(
+        inputType = InputType.RADIO, title = "Mother Status", entries = arrayOf(
             "Living",
             "Dead",
-        ),
-        required = false
+        ), required = false
     )
     private val registrationOfBirth = FormInput(
-        inputType = InputType.RADIO,
-        title = "Registration Of Birth",
-        entries = arrayOf(
+        inputType = InputType.RADIO, title = "Registration Of Birth", entries = arrayOf(
             "Yes",
             "No",
-        ),
-        required = false
+        ), required = false
     )
     private val childStatus = FormInput(
-        inputType = InputType.RADIO,
-        title = "Child Status",
-        entries = arrayOf(
+        inputType = InputType.RADIO, title = "Child Status", entries = arrayOf(
             "Living",
             "Dead",
-        ),
-        required = false
+        ), required = false
     )
     private val homeVisitDate = FormInput(
-        inputType = InputType.RADIO,
-        title = "Home Visit Date",
-        entries = arrayOf(
+        inputType = InputType.RADIO, title = "Home Visit Date", entries = arrayOf(
             "1st Day",
             "3rd Day",
-        ),
-        required = false
+        ), required = false
     )
     private val childImmunizationStatus = FormInput(
-        inputType = InputType.CHECKBOXES,
-        title = "Child Immunization Status",
-        entries = arrayOf(
-            "BCG",
-            "Polio",
-            "DPT 1",
-            "Hepatitis-B"
-        ),
-        required = false
+        inputType = InputType.CHECKBOXES, title = "Child Immunization Status", entries = arrayOf(
+            "BCG", "Polio", "DPT 1", "Hepatitis-B"
+        ), required = false
     )
     private val birthWeightRecordedInCard = FormInput(
         inputType = InputType.RADIO,
@@ -261,15 +258,11 @@ class HBNCFormDataset(
     //////////////////// Part 1 ////////////////////////
 
     private val titleTrainingPart1 = FormInput(
-        inputType = InputType.HEADLINE,
-        title = "New Born First Training Part 1",
-        required = false
+        inputType = InputType.HEADLINE, title = "New Born First Training Part 1", required = false
     )
 
     private val timeOfDelivery = FormInput(
-        inputType = InputType.TIME_PICKER,
-        title = "Delivery time",
-        required = false
+        inputType = InputType.TIME_PICKER, title = "Delivery time", required = false
     )
     private val dateOfCompletionOfPregnancy = FormInput(
         inputType = InputType.DATE_PICKER,
@@ -293,16 +286,13 @@ class HBNCFormDataset(
         required = false
     )
     private val motherAnyProblem = FormInput(
-        inputType = InputType.DROPDOWN,
-        title = "Does mother have any problem",
-        entries = arrayOf(
+        inputType = InputType.DROPDOWN, title = "Does mother have any problem", entries = arrayOf(
             "Very Bleeding ",
             "Anesthesia/ Seizure outbreak",
-        ),
-        required = false
+        ), required = false
     )
 
-    private val babyFedAfterBirth = FormInput(
+    val babyFedAfterBirth = FormInput(
         inputType = InputType.DROPDOWN,
         title = "What was the baby fed after birth ",
         entries = arrayOf(
@@ -316,21 +306,19 @@ class HBNCFormDataset(
         required = false
     )
 
-    private val whenBabyFirstFed = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "When was the baby first breastfed ",
-        required = false
-    )
+//    private val whenBabyFirstFed = FormInput(
+//        inputType = InputType.EDIT_TEXT,
+//        title = "When was the baby first breastfed ",
+//        required = false
+//    )
 
-    private val howBabyFirstFed = FormInput(
-        inputType = InputType.DROPDOWN,
-        title = "How did the baby breastfeed? ",
-        entries = arrayOf(
-            "Forcefully With weakness ",
-            "Was not able to breastfeed but milk was taken from spoon ",
-            "Neither could have breastfeeding nor did he drink from spoon",
-        ),
-        required = false
+    private val howBabyTookFirstFeed = FormInput(
+        inputType = InputType.DROPDOWN, title = "How did the baby breastfeed? ", entries = arrayOf(
+            "Forcefully",
+            "Weakly ",
+            "Could not breastfeed but had to be fed with spoon",
+            "Could neither breast-feed nor could take milk given by spoon",
+        ), required = false
     )
     private val actionBreastFeedProblem = FormInput(
         inputType = InputType.EDIT_TEXT,
@@ -359,13 +347,9 @@ class HBNCFormDataset(
     )
 
     private val babyEyeCondition = FormInput(
-        inputType = InputType.RADIO,
-        title = "Baby eye condition",
-        entries = arrayOf(
-            "Normal ",
-            "Swollen",
-        ),
-        required = false
+        inputType = InputType.RADIO, title = "Baby eye condition", entries = arrayOf(
+            "Normal ", "Swelling", "oozing pus"
+        ), required = false
     )
     private val babyBleedUmbilicalCord = FormInput(
         inputType = InputType.RADIO,
@@ -377,14 +361,9 @@ class HBNCFormDataset(
         required = false
     )
     private val babyWeightColor = FormInput(
-        inputType = InputType.RADIO,
-        title = "Weighing machine scale color",
-        entries = arrayOf(
-            "Red",
-            "Yellow",
-            "Green"
-        ),
-        required = false
+        inputType = InputType.RADIO, title = "Weighing machine scale color", entries = arrayOf(
+            "Red", "Yellow", "Green"
+        ), required = false
     )
 
     //////////////////////////// Part Baby Phy Con /////////////////////////////////
@@ -394,15 +373,15 @@ class HBNCFormDataset(
         title = "Enter the child physical condition",
         required = false
     )
-    private val allOrganLethargic = FormInput(
+    private val allLimbsLimp = FormInput(
         inputType = InputType.RADIO,
-        title = "All organs are lethargic",
+        title = "All limbs limp",
         entries = arrayOf("Yes", "No"),
         required = false,
     )
-    private val lessMilkDrink = FormInput(
+    private val feedingLessStop = FormInput(
         inputType = InputType.RADIO,
-        title = "Less milk is drinking",
+        title = "Feeding less/stop",
         entries = arrayOf("Yes", "No"),
         required = false,
     )
@@ -460,14 +439,13 @@ class HBNCFormDataset(
         entries = arrayOf("Yes", "No"),
         required = false,
     )
-    private val unusualWithBaby = FormInput(
-        inputType = InputType.RADIO,
-        title = "Was there anything unusual with the baby? (If there is any abnormal, report it to the medical officer in char",
-        entries = arrayOf("Yes", "No"),
-        required = false,
-    )
+
 
     ////////////////////// Newborn first training (A) ask mother
+
+    private val dateOfAshaVisit = FormInput(
+        inputType = InputType.TEXT_VIEW, title = "Date of ASHA's visit", required = false
+    )
 
     private val titleAskMotherA = FormInput(
         inputType = InputType.HEADLINE,
@@ -514,9 +492,7 @@ class HBNCFormDataset(
     //////////////////// Part - B //////////////////
 
     private val titleHealthCheckUpMotherB = FormInput(
-        inputType = InputType.HEADLINE,
-        title = "(B) Health Checkup of mother",
-        required = false
+        inputType = InputType.HEADLINE, title = "(B) Health Checkup of mother", required = false
     )
 
     private val motherBodyTemperature = FormInput(
@@ -531,9 +507,9 @@ class HBNCFormDataset(
         entries = arrayOf("Yes", "No"),
         required = false,
     )
-    private val motherGrumbleSeizure = FormInput(
+    private val motherSpeakAbnormalFits = FormInput(
         inputType = InputType.RADIO,
-        title = "Does the mother grumble unevenly or have seizures? Action – If yes, refer you to the hospital.",
+        title = "Is mother speaking abnormally or having fits?",
         entries = arrayOf("Yes", "No"),
         required = false,
     )
@@ -604,7 +580,7 @@ class HBNCFormDataset(
     )
     private val breathFast = FormInput(
         inputType = InputType.RADIO,
-        title = "Is the breath going fast (yes or no)",
+        title = "Respiratory rate more than 60 per minute",
         entries = arrayOf("Yes", "No"),
         required = false,
     )
@@ -623,9 +599,7 @@ class HBNCFormDataset(
         required = false
     )
     private val organLethargic = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "All organs are lethargic",
-        required = false
+        inputType = InputType.EDIT_TEXT, title = "All organs are lethargic", required = false
     )
     private val drinkLessNoMilk = FormInput(
         inputType = InputType.EDIT_TEXT,
@@ -633,39 +607,68 @@ class HBNCFormDataset(
         required = false
     )
     private val slowNoCry = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Slow Crying/Stopped Crying",
-        required = false
+        inputType = InputType.EDIT_TEXT, title = "Cry weak/ stopped", required = false
     )
     private val bloatedStomach = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Bloated stomach or mother tells that the child vomits again and again",
+        inputType = InputType.RADIO,
+        title = "Distended abdomen or mother says baby vomits often",
+        entries = arrayOf(
+            "Yes",
+            "No",
+        ),
         required = false
     )
     private val childColdOnTouch = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "The mother tells that the child feels cold when touching or the temperature of the child is more than 89 degrees Fahrenheit (37.5 degrees C) and the chest is pulled inward while breathing.",
+        inputType = InputType.RADIO,
+        title = "The mother tells that the child feels cold when touching or the temperature of the child is more than 89 degrees Fahrenheit (37.5 degrees C)",
+        entries = arrayOf(
+            "Yes",
+            "No",
+        ),
         required = false
     )
-    private val pusNavel = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Pus in the navel",
+
+    private val childChestDrawing = FormInput(
+        inputType = InputType.RADIO,
+        title = "and the chest is pulled inward while breathing.",
+        entries = arrayOf(
+            "Yes",
+            "No",
+        ),
         required = false
+    )
+
+
+    private val pusNavel = FormInput(
+        inputType = InputType.EDIT_TEXT, title = "Pus in the navel", required = false
     )
     private val ashaName = FormInput(
-        inputType = InputType.TEXT_VIEW,
-        title = "ASHA NAME",
-        required = false
+        inputType = InputType.TEXT_VIEW, title = "ASHA NAME", required = false
+    )
+    private val villageName = FormInput(
+        inputType = InputType.TEXT_VIEW, title = "Village Name", required = false
+    )
+    private val blockName = FormInput(
+        inputType = InputType.TEXT_VIEW, title = "Block Name", required = false
+    )
+    private val stillBirth = FormInput(
+        inputType = InputType.RADIO, title = "Still Birth", entries = arrayOf(
+            "Yes",
+            "No",
+        ), required = false
     )
     private val supRemark = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Supervisors Remark ",
-        required = false
+        inputType = InputType.EDIT_TEXT, title = "Supervisors Remark ", required = false
+    )
+    private val sup = FormInput(
+        inputType = InputType.DROPDOWN, title = "Supervisor", entries = arrayOf(
+            "ASHA Facilitator",
+            "ANM",
+            "MPW",
+        ), required = false
     )
     private val supName = FormInput(
-        inputType = InputType.EDIT_TEXT,
-        title = "Supervisor name",
-        required = false
+        inputType = InputType.EDIT_TEXT, title = "Supervisor name", required = false
     )
     private val supervisorComment = FormInput(
         inputType = InputType.DROPDOWN,
@@ -685,110 +688,411 @@ class HBNCFormDataset(
         required = false
     )
 
+    private val titleVisitCard = FormInput(
+        inputType = InputType.HEADLINE, title = "Mother-Newborn Home Visit Card", required = false
+    )
+    private val titleVisitCardDischarge = FormInput(
+        inputType = InputType.HEADLINE,
+        title = "Discharge of Institutional Delivery",
+        required = false
+    )
 
-    private val oneTimeFormElements by lazy {
+    private val titleDateOfHomeVisit = FormInput(
+        inputType = InputType.HEADLINE, title = "Date of Home Visit", required = false
+    )
+    val babyAlive = FormInput(
+        inputType = InputType.RADIO, title = "Is the baby alive?", entries = arrayOf(
+            "Yes",
+            "No",
+        ), required = false
+    )
+    val dateOfBabyDeath = FormInput(
+        inputType = InputType.DATE_PICKER,
+        title = "Date of death of baby",
+        min = 0L,
+        max = System.currentTimeMillis(),
+        required = false
+    )
+    val timeOfBabyDeath = FormInput(
+        inputType = InputType.TIME_PICKER, title = "Time of death of baby", required = false
+    )
+    val placeOfBabyDeath = FormInput(
+        inputType = InputType.DROPDOWN,
+        title = "Place of Baby Death",
+        entries = arrayOf(
+            "Home",
+            "Sub-center",
+            "PHC",
+            "CHC",
+            "Other",
+        ),
+        required = false,
+    )
+    val otherPlaceOfBabyDeath = FormInput(
+        inputType = InputType.EDIT_TEXT, title = "Other place of Baby Death", required = false
+    )
+    val babyPreterm = FormInput(
+        inputType = InputType.RADIO,
+        title = "Is the baby preterm?",
+        entries = arrayOf(
+            "Yes",
+            "No",
+        ),
+        required = false,
+    )
+    val gestationalAge = FormInput(
+        inputType = InputType.RADIO,
+        title = "How many weeks has it been since baby born (Gestational Age)",
+//        orientation = LinearLayout.VERTICAL,
+        entries = arrayOf(
+            "24 – 34 Weeks",
+            "34 – 36 Weeks",
+            "36 – 38 Weeks",
+        ),
+        required = false,
+    )
+    private val dateOfBabyFirstExamination = FormInput(
+        inputType = InputType.DATE_PICKER,
+        title = "Date of First examination of baby",
+        min = 0L,
+        max = System.currentTimeMillis(),
+        required = false
+    )
+    private val timeOfBabyFirstExamination = FormInput(
+        inputType = InputType.TIME_PICKER,
+        title = "Time of First examination of baby",
+        required = false
+    )
+
+
+    val motherAlive = FormInput(
+        inputType = InputType.RADIO, title = "Is the mother alive?", entries = arrayOf(
+            "Yes",
+            "No",
+        ), required = false
+    )
+    val dateOfMotherDeath = FormInput(
+        inputType = InputType.DATE_PICKER,
+        title = "Date of death of mother",
+        min = 0L,
+        max = System.currentTimeMillis(),
+        required = false
+    )
+    val timeOfMotherDeath = FormInput(
+        inputType = InputType.TIME_PICKER, title = "Time of death of mother", required = false
+    )
+    val placeOfMotherDeath = FormInput(
+        inputType = InputType.DROPDOWN,
+        title = "Place of mother Death",
+        entries = arrayOf(
+            "Home",
+            "Sub-center",
+            "PHC",
+            "CHC",
+            "Other",
+        ),
+        required = false,
+    )
+    val otherPlaceOfMotherDeath = FormInput(
+        inputType = InputType.EDIT_TEXT, title = "Other place of mother Death", required = false
+    )
+    private val motherProblems = FormInput(
+        inputType = InputType.CHECKBOXES,
+        title = "Does Mother have any problems",
+        entries = arrayOf(
+            "Excessive Bleeding",
+            "Unconscious / Fits",
+        ),
+        required = false
+    )
+
+    val otherBabyFedAfterBirth = FormInput(
+        inputType = InputType.EDIT_TEXT,
+        title = "Other - What was given as the first feed to baby after birth?",
+        required = false
+    )
+    private val whenBabyFirstFed = FormInput(
+        inputType = InputType.TIME_PICKER,
+        title = "When was the baby first fed",
+        required = false
+    )
+    val motherHasBreastFeedProblem = FormInput(
+        inputType = InputType.RADIO,
+        title = "Does the mother have breastfeeding problem?",
+        entries = arrayOf("Yes", "No"),
+        required = false,
+    )
+    val motherBreastFeedProblem = FormInput(
+        inputType = InputType.EDIT_TEXT,
+        title = "Write the problem, if there is any problem in breast feeding, help the mother to overcome it",
+        required = false
+    )
+
+
+    ///////////////////////////Part II////////////////////////////
+    private val titleBabyFirstHealthCheckup = FormInput(
+        inputType = InputType.HEADLINE,
+        title = "Part 2: Baby first health check-up",
+        required = false
+    )
+    private val babyTemperature = FormInput(
+        inputType = InputType.EDIT_TEXT, title = "Temperature of the baby", required = false
+    )
+
+    private val actionUmbilicalBleed = FormInput(
+        inputType = InputType.RADIO,
+        title = "If yes, either ASHA, ANM/MPW or TBA can tie again with a clean thread. Action taken? ",
+        entries = arrayOf(
+            "Yes",
+            "No",
+        ),
+        required = false
+    )
+    private val babyWeigntMatchesColor = FormInput(
+        inputType = InputType.RADIO, title = "Weighing matches with the colour?", entries = arrayOf(
+            "Yes",
+            "No",
+        ), required = false
+    )
+    private val titleRoutineNewBornCare = FormInput(
+        inputType = InputType.HEADLINE,
+        title = "Routine Newborn Care: whether the task was performed",
+        required = false
+    )
+    private val babyDry = FormInput(
+        inputType = InputType.RADIO, title = "Dry the baby", entries = arrayOf(
+            "Yes",
+            "No",
+        ), required = false
+    )
+    private val cryWeakStopped = FormInput(
+        inputType = InputType.RADIO, title = "Cry weak/ stopped", entries = arrayOf(
+            "Yes",
+            "No",
+        ), required = false
+    )
+    private val cordCleanDry = FormInput(
+        inputType = InputType.RADIO, title = "Keep the cord clean and dry", entries = arrayOf(
+            "Yes",
+            "No",
+        ), required = false
+    )
+
+    val unusualWithBaby = FormInput(
+        inputType = InputType.RADIO,
+        title = "Was there anything unusual with the baby?",
+        entries = arrayOf("Curved limbs", "cleft lip", "Other"),
+        required = false,
+    )
+    val otherUnusualWithBaby = FormInput(
+        inputType = InputType.EDIT_TEXT, title = "Other - unusual with the baby", required = false
+    )
+
+    /////////////// Part Visit //////////
+
+    private val titleWashHands = FormInput(
+        inputType = InputType.HEADLINE,
+        title = "ASHA should wash hands with soap and water before touching the baby during each visit",
+        required = false
+    )
+    val babyReferred = FormInput(
+        inputType = InputType.RADIO,
+        title = "Baby referred for any reason?",
+        entries = arrayOf("Yes", "No"),
+        required = false
+    )
+    val dateOfBabyReferral = FormInput(
+        inputType = InputType.DATE_PICKER,
+        title = "Date of baby referral",
+        min = 0L,
+        max = System.currentTimeMillis(),
+        required = false
+    )
+    val placeOfBabyReferral = FormInput(
+        inputType = InputType.DROPDOWN, title = "Place of baby referral", entries = arrayOf(
+            "Sub-Centre",
+            "PHC",
+            "CHC",
+            "Sub-District Hospital",
+            "District Hospital",
+            "Medical College Hospital",
+            "In Transit",
+            "Private Hospital",
+            "Accredited Private Hospital",
+            "Other",
+        ), required = false
+    )
+    val otherPlaceOfBabyReferral = FormInput(
+        inputType = InputType.EDIT_TEXT, title = "Other -Place of baby referral", required = false
+    )
+    val motherReferred = FormInput(
+        inputType = InputType.RADIO,
+        title = "Mother referred for any reason?",
+        entries = arrayOf("Yes", "No"),
+        required = false
+    )
+    val dateOfMotherReferral = FormInput(
+        inputType = InputType.DATE_PICKER,
+        title = "Date of mother referral",
+        min = 0L,
+        max = System.currentTimeMillis(),
+        required = false
+    )
+    val placeOfMotherReferral = FormInput(
+        inputType = InputType.DROPDOWN, title = "Place of mother referral", entries = arrayOf(
+            "Sub-Centre",
+            "PHC",
+            "CHC",
+            "Sub-District Hospital",
+            "District Hospital",
+            "Medical College Hospital",
+            "In Transit",
+            "Private Hospital",
+            "Accredited Private Hospital",
+            "Other",
+        ), required = false
+    )
+    val otherPlaceOfMotherReferral = FormInput(
+        inputType = InputType.EDIT_TEXT, title = "Other -Place of mother referral", required = false
+    )
+
+
+    private val cardPage by lazy {
         listOf(
-            titleHomeVisit,
+            titleVisitCard,
+            ashaName,
+            villageName,
             healthSubCenterName,
-            phcName,
+            blockName,
             motherName,
             fatherName,
             dateOfDelivery,
             placeOfDelivery,
             gender,
             typeOfDelivery,
+            stillBirth,
             startedBreastFeeding,
+            titleVisitCardDischarge,
+            dateOfDischargeFromHospitalMother,
+            dateOfDischargeFromHospitalBaby,
             weightAtBirth,
-            dateOfDischargeFromHospital,
-            motherStatus,
-            registrationOfBirth,
-            childStatus,
-            homeVisitDate,
-            childImmunizationStatus,
-            birthWeightRecordedInCard,
-
-            titleTrainingPart1,
-            timeOfDelivery,
-            dateOfCompletionOfPregnancy,
-            weeksSinceBabyBorn,
-            dateOfFirstTraining,
-            motherAnyProblem,
-            babyFedAfterBirth,
-            whenBabyFirstFed,
-            howBabyFirstFed,
-            actionBreastFeedProblem,
-            anyBreastFeedProblem,
-
-            titleTrainingPart2,
-            babyBodyTemperature,
-            babyEyeCondition,
-            babyBleedUmbilicalCord,
-            babyWeightColor,
-
-            titleBabyPhysicalCondition,
-            allOrganLethargic,
-            lessMilkDrink,
-            notDrinkMilk,
-            crySlow,
-            notCry,
-            lookedAfterRegularly,
-            wipedWithCleanCloth,
-            keptWarm,
-            givenBath,
-            wrapClothKeptMother,
-            onlyBreastMilk,
-            unusualWithBaby,
-
-            )
+            registrationOfBirth
+        )
     }
 
-    private val commonFormElements by lazy {
+    fun getCardPage(
+        asha: UserCache, childBen: BenRegCache, motherBen: BenRegCache?
+    ): List<FormInput> {
+        ashaName.value.value = asha.userName
+        villageName.value.value = asha.villageEnglish[0]
+        blockName.value.value = asha.blockEnglish[0]
+        motherName.value.value = childBen.motherName
+        fatherName.value.value = childBen.fatherName
+        placeOfDelivery.value.value = childBen.kidDetails?.birthPlace
+        gender.value.value = gender.entries?.get(childBen.genderId)
+        typeOfDelivery.value.value =
+            childBen.kidDetails?.deliveryTypeId?.let { typeOfDelivery.entries?.get(it) }
+        motherBen?.let {
+            dateOfDelivery.value.value = it.genDetails?.deliveryDate
+        }
+        return cardPage
+
+
+    }
+
+    private val partIPage by lazy {
         listOf(
+            titleDateOfHomeVisit,
+            babyAlive,
+            babyPreterm,
+            dateOfBabyFirstExamination,
+            timeOfBabyFirstExamination,
+            motherAlive,
+            motherProblems,
+            babyFedAfterBirth,
+            whenBabyFirstFed,
+            howBabyTookFirstFeed,
+            motherHasBreastFeedProblem,
+        )
+    }
+
+    suspend fun getPartIPage(visitCard: HbncVisitCard?): List<FormInput> {
+        babyAlive.value.value = visitCard?.stillBirth?.let { babyAlive.entries?.get(it) }
+        return partIPage
+    }
+
+
+    private val partIIPage by lazy {
+        listOf(
+            titleBabyFirstHealthCheckup,
+            babyTemperature,
+            babyEyeCondition,
+            babyBleedUmbilicalCord,
+            actionUmbilicalBleed,
+            babyWeight,
+            babyWeigntMatchesColor,
+            babyWeightColor,
+            titleBabyPhysicalCondition,
+            allLimbsLimp,
+            feedingLessStop,
+            cryWeakStopped,
+            titleRoutineNewBornCare,
+            babyDry,
+            wrapClothKeptMother,
+            onlyBreastMilk,
+            cordCleanDry,
+            unusualWithBaby
+        )
+    }
+
+    suspend fun getPartIIPage(): List<FormInput> {
+        return partIIPage
+    }
+
+    private val visitPage by lazy {
+        listOf(
+            dateOfAshaVisit,
             titleAskMotherA,
+            babyAlive,
             timesMotherFed24hr,
             timesPadChanged,
             babyKeptWarmWinter,
             babyBreastFedProperly,
             babyCryContinuously,
-
-            titleHealthCheckUpMotherB,
             motherBodyTemperature,
             motherWaterDischarge,
-            motherGrumbleSeizure,
+            motherSpeakAbnormalFits,
             motherNoOrLessMilk,
             motherBreastProblem,
-            titleHealthCheckUpBabyC,
 
+            titleWashHands,
             babyEyesSwollen,
             babyWeight,
-            babyBodyTemperature2,
-            pusPimples,
-            crackRedTwistSkin,
+            babyTemperature,
             yellowJaundice,
-            seizures,
-            breathFast,
-            referredByAsha,
-
+            childImmunizationStatus,
+            babyReferred,
+            motherReferred,
             titleSepsisD,
-            organLethargic,
-            drinkLessNoMilk,
-            slowNoCry,
+            allLimbsLimp,
+            feedingLessStop,
+            cryWeakStopped,
             bloatedStomach,
             childColdOnTouch,
+            childChestDrawing,
+            breathFast,
             pusNavel,
-            ashaName,
-            supRemark,
+            sup,
             supName,
-            supervisorComment,
+            supRemark,
             dateOfSupSig
-
         )
     }
 
-    val firstPage by lazy {
-        if (nthDay == 1) {
-            oneTimeFormElements.toMutableList().also { it.addAll(commonFormElements) }
-        } else
-            commonFormElements
+    fun getVisitPage(firstDay: HbncHomeVisit?): List<FormInput> {
+        firstDay?.let {
+            childImmunizationStatus.value.value = it.babyImmunizationStatus
+        }
+        return visitPage
     }
 }

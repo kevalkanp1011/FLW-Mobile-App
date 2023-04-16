@@ -6,8 +6,11 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.HBNCCache
 import org.piramalswasthya.sakhi.model.HBNCPost
+import org.piramalswasthya.sakhi.model.HbncHomeVisit
+import org.piramalswasthya.sakhi.model.HbncVisitCard
 import org.piramalswasthya.sakhi.network.D2DApiService
 import timber.log.Timber
 import java.io.IOException
@@ -21,7 +24,19 @@ class HbncRepo @Inject constructor(
 ) {
 
 
-    fun hbncList(benId : Long, hhId : Long) = database.hbncDao.gethomeVisitDateList(hhId, benId)
+    fun hbncList(benId: Long, hhId: Long) = database.hbncDao.getAllHbncEntries(hhId, benId)
+
+    suspend fun getHbncCard(benId: Long, hhId: Long): HbncVisitCard? {
+        return withContext(Dispatchers.IO) {
+            database.hbncDao.getHbnc(hhId, benId, Konstants.hbncCardDay)?.visitCard
+        }
+    }
+
+    suspend fun getFirstHomeVisit(hhId: Long, benId: Long): HbncHomeVisit? {
+        return withContext(Dispatchers.IO) {
+            database.hbncDao.getHbnc(hhId, benId, 1)?.homeVisitForm
+        }
+    }
 
     suspend fun saveHbncData(hbncCache: HBNCCache): Boolean {
         return withContext(Dispatchers.IO) {
@@ -61,7 +76,7 @@ class HbncRepo @Inject constructor(
                 val ben = database.benDao.getBen(it.hhId, it.benId)
                     ?: throw IllegalStateException("No beneficiary exists for benId: ${it.benId}!!")
                 val hbncCount = database.hbncDao.hbncCount()
-                hbncPostSet.add(it.asPostModel(user, household, hbncCount))
+//                hbncPostSet.add(it.asPostModel(user, household, hbncCount))
                 it.syncState = SyncState.SYNCING
                 database.hbncDao.update(it)
                 val uploadDone = postDataToD2dServer(hbncPostSet)
@@ -78,7 +93,7 @@ class HbncRepo @Inject constructor(
     }
 
     private suspend fun postDataToD2dServer(hbncPostSet: Set<HBNCPost>): Boolean {
-        if(hbncPostSet.isEmpty())
+        if (hbncPostSet.isEmpty())
             return false
 
         try {
@@ -93,7 +108,7 @@ class HbncRepo @Inject constructor(
 
                         // Log.d("dsfsdfse", "onResponse: "+jsonObj);
                         val errormessage = jsonObj.getString("message")
-                        if(jsonObj.isNull("status"))
+                        if (jsonObj.isNull("status"))
                             throw IllegalStateException("D2d server not responding properly, Contact Service Administrator!!")
                         val responsestatuscode = jsonObj.getInt("status")
 
@@ -127,4 +142,6 @@ class HbncRepo @Inject constructor(
             return false
         }
     }
+
+
 }

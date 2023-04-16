@@ -10,12 +10,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
+
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.HBNCDayGridAdapter
 import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
-import timber.log.Timber
 
 @AndroidEntryPoint
 class HbncDayListFragment : Fragment() {
@@ -45,10 +44,10 @@ class HbncDayListFragment : Fragment() {
         val rvLayoutManager = GridLayoutManager(context, requireContext().resources.getInteger(R.integer.icon_grid_span))
         binding.rvIconGrid.layoutManager = rvLayoutManager
         val iconAdapter = HBNCDayGridAdapter(
-            HBNCDayGridAdapter.HbncIconClickListener { hhId, benId, count ->
-                Timber.d("benId : $benId hhId : $hhId $count")
-                findNavController().navigate(
-                    HbncDayListFragmentDirections.actionHbncDayListFragmentToHbncFragment(hhId, benId, count,))
+            HBNCDayGridAdapter.HbncIconClickListener {
+//                Timber.d("benId : $benId hhId : $hhId $count")
+                findNavController().navigate(it)
+//                    HbncDayListFragmentDirections.actionHbncDayListFragmentToHbncFragment(hhId, benId, count,))
             })
 
         binding.rvIconGrid.adapter = iconAdapter

@@ -2,35 +2,31 @@ package org.piramalswasthya.sakhi.ui.home_activity.mother_care.reproductive_age_
 
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.helpers.filterBenList
 import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
 import org.piramalswasthya.sakhi.repositories.BenRepo
+import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import javax.inject.Inject
 
 @HiltViewModel
 class ReproductiveAgeListViewModel @Inject constructor(
-    private val benRepo: BenRepo
+    recordsRepo: RecordsRepo
+
 ) : ViewModel() {
 
-    private val reproductiveAgeList = benRepo.reproductiveAgeList
-    private val _benList = MutableLiveData<List<BenBasicDomainForForm>>()
-    val benList: LiveData<List<BenBasicDomainForForm>>
-        get() = _benList
-
-    private var lastFilter = ""
-
-    init {
-        viewModelScope.launch {
-            reproductiveAgeList.asFlow().collect {
-                _benList.value = it?.let { filterBenList(it, lastFilter) }
-            }
-        }
+    private val allBenList = recordsRepo.reproductiveAgeList
+    private val filter = MutableStateFlow("")
+    val benList = allBenList.combine(filter){
+            list, filter -> filterBenList(list, filter)
     }
 
     fun filterText(text: String) {
-        lastFilter = text
-        _benList.value = reproductiveAgeList.value?.let { filterBenList(it, text) }
-    }
+        viewModelScope.launch {
+            filter.emit(text)
+        }
 
+    }
 }

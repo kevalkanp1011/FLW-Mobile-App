@@ -14,6 +14,10 @@
             name="clickListener"
             type="org.piramalswasthya.sakhi.adapters.IconGridAdapter.GridIconClickListener" />
 
+        <variable
+            name="scope"
+            type="kotlinx.coroutines.CoroutineScope" />
+
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -38,14 +42,12 @@
 
             <ImageView
                 android:id="@+id/imageView2"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
                 android:layout_marginHorizontal="@dimen/margin_normal"
-                android:background="@drawable/bg_circular"
                 android:contentDescription="@string/cd_icon_grid_icon"
                 android:paddingHorizontal="@dimen/padding_wide"
                 app:imageResource="@{homeIcon.icon}"
-                app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -56,13 +58,14 @@
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:labelFor="@id/imageView2"
                 android:text="@{homeIcon.title}"
-                android:gravity="center"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
 
                 app:autoSizeMaxTextSize="16sp"
                 app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView2"
@@ -70,15 +73,17 @@
 
             <TextView
                 android:id="@+id/tv_count"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{homeIcon.count.toString()}"
                 android:gravity="center"
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView2"
-                tools:layout_editor_absoluteX="382dp"
+                scope="@{scope}"
+                recordCount="@{homeIcon.count}"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:padding="@dimen/padding_normal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="2" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

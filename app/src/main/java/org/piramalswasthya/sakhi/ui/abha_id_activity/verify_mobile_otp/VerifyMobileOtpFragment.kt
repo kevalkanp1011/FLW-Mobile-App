@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity.verify_mobile_otp
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -28,6 +29,17 @@ class VerifyMobileOtpFragment : Fragment() {
     private val viewModel: VerifyMobileOtpViewModel by viewModels()
 
 
+    private var timer = object : CountDownTimer(30000, 1000) {
+        override fun onTick(millisUntilFinished: Long) {
+            val sec = millisUntilFinished / 1000 % 60
+            binding.timerResendOtp.text = sec.toString()
+        }
+
+        override fun onFinish() {
+            binding.resendOtp.isEnabled = true
+            binding.timerResendOtp.visibility = View.INVISIBLE
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,12 +52,14 @@ class VerifyMobileOtpFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navController = findNavController()
 
+        startResendTimer()
         binding.btnVerifyOTP.setOnClickListener {
             viewModel.verifyOtpClicked(binding.tietVerifyMobileOtp.text.toString())
         }
 
         binding.resendOtp.setOnClickListener {
             viewModel.resendOtp()
+            startResendTimer()
         }
 
         binding.tietVerifyMobileOtp.addTextChangedListener(object : TextWatcher {
@@ -105,8 +119,15 @@ class VerifyMobileOtpFragment : Fragment() {
         }
     }
 
+    private fun startResendTimer() {
+        binding.resendOtp.isEnabled = false
+        binding.timerResendOtp.visibility = View.VISIBLE
+        timer.start()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        timer.cancel()
         _binding = null
     }
 

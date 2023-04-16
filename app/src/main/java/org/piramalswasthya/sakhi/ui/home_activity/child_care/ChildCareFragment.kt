@@ -12,13 +12,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.IconGridAdapter
 import org.piramalswasthya.sakhi.configuration.IconDataset
-import org.piramalswasthya.sakhi.databinding.FragmentNewFormViewpagerBinding
 import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChildCareFragment : Fragment() {
+
+    @Inject
+    lateinit var iconDataset: IconDataset
 
     private var _binding : RvIconGridBinding? = null
 
@@ -49,13 +52,11 @@ class ChildCareFragment : Fragment() {
         val iconAdapter = IconGridAdapter(
             IconGridAdapter.GridIconClickListener {
                 findNavController().navigate(it)
-            })
+            },
+            viewModel.scope
+        )
         binding.rvIconGrid.adapter = iconAdapter
-        homeViewModel.iconCount.observe(viewLifecycleOwner) {
-            it?.let {
-                iconAdapter.submitList(IconDataset.getChildCareDataset(it[0]))
-            }
-        }
+        iconAdapter.submitList(iconDataset.getChildCareDataset())
     }
     override fun onStart() {
         super.onStart()

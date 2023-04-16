@@ -118,7 +118,7 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
         return pref.getLong(prefKey, 1603132200000)
     }
 
-    fun setFirstSyncLastSyncedPage(page: Int){
+    fun setFirstSyncLastSyncedPage(page: Int) {
         val editor = pref.edit()
         val prefKey = context.getString(R.string.PREF_first_pull_amrit_last_synced_page)
         editor.putInt(prefKey, page)

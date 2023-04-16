@@ -25,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NewBenRegL15ViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    @ApplicationContext context: Context,
+    @ApplicationContext private val context: Context,
     private val benRepo: BenRepo
 ) : ViewModel() {
     enum class State {
@@ -65,17 +65,19 @@ class NewBenRegL15ViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                household = benRepo.getHousehold(hhId)!!
-                val pncMotherList = benRepo.getPncMothersFromHhId(hhId).map { it.benName }
-                form = BenKidRegFormDataset(context, pncMotherList)
+
             }
         }
 
     }
 
     suspend fun getFirstPage(): List<FormInput> {
+        household = benRepo.getHousehold(hhId)!!
         return if (_recordExists.value == false) {
-
+            if(!this::form.isInitialized) {
+                val pncMotherList = benRepo.getPncMothersFromHhId(hhId).map { it.benName }
+                form = BenKidRegFormDataset(context, pncMotherList)
+            }
             form.firstPage
         } else {
             form = benRepo.getBenKidForm(benIdFromArgs, hhId)

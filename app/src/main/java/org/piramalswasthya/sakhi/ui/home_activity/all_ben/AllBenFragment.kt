@@ -12,8 +12,11 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.databinding.ActivityHomeBinding
@@ -73,14 +76,14 @@ class AllBenFragment : Fragment() {
             }
         ))
         binding.rvAny.adapter = benAdapter
-
-        viewModel.benList.observe(viewLifecycleOwner) {
-
-            if (it.isEmpty())
-                binding.flEmpty.visibility = View.VISIBLE
-            else
-                binding.flEmpty.visibility = View.GONE
-            benAdapter.submitList(it)
+        lifecycleScope.launch {
+            viewModel.benList.collect{
+                if (it.isEmpty())
+                    binding.flEmpty.visibility = View.VISIBLE
+                else
+                    binding.flEmpty.visibility = View.GONE
+                benAdapter.submitList(it)
+            }
         }
 
         binding.btnNextPage.setOnClickListener {

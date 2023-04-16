@@ -4,11 +4,13 @@ import androidx.room.*
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.model.BenBasicCache.Companion.getAgeFromDob
+import org.piramalswasthya.sakhi.model.BenBasicCache.Companion.getAgeUnitFromDob
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-enum class TypeOfList{
+enum class TypeOfList {
     INFANT,
     CHILD,
     ADOLESCENT,
@@ -22,31 +24,38 @@ enum class TypeOfList{
     OTHER,
 
 }
-enum class AgeUnit{
+
+enum class AgeUnit {
     DAYS,
     MONTHS,
     YEARS
 }
-enum class Gender{
+
+enum class Gender {
     MALE,
     FEMALE,
     TRANSGENDER
 }
 
-@DatabaseView(viewName = "BEN_BASIC_CACHE", value="SELECT b.beneficiaryId as benId, b.householdId as hhId, b.regDate, b.firstName as benName, b.lastName as benSurname, b.gender, b.age" +
-        ", b.ageUnit, b.contactNumber as mobileNo, b.fatherName, h.familyHeadName, b.registrationType as typeOfList, b.rchId" +
-        ", b.isHrpStatus as hrpStatus, b.syncState, b.gen_reproductiveStatusId as reproductiveStatusId, b.isKid, b.immunizationStatus," +
-        " cbac.benId is not null as hasCbac, cbac.syncState as cbacSyncState," +
-        " cdr.benId is not null as hasCdr, cdr.syncState as cdrSyncState, " +
-        " mdsr.benId is not null as hasMdsr, mdsr.syncState as mdsrSyncState," +
-        " pmsma.benId is not null as hasPmsma " +
-        "from BENEFICIARY b " +
-        "JOIN HOUSEHOLD h ON b.householdId = h.householdId " +
-        "LEFT OUTER JOIN CBAC cbac on b.beneficiaryId = cbac.benId " +
-        "LEFT OUTER JOIN CDR cdr on b.beneficiaryId = cdr.benId " +
-        "LEFT OUTER JOIN MDSR mdsr on b.beneficiaryId = mdsr.benId " +
-        "LEFT OUTER JOIN PMSMA pmsma on b.beneficiaryId = pmsma.benId " +
-        "where b.isDraft = 0")
+@DatabaseView(
+    viewName = "BEN_BASIC_CACHE",
+    value = "SELECT b.beneficiaryId as benId, b.householdId as hhId, b.regDate, b.firstName as benName, b.lastName as benSurname, b.gender, b.dob as dob" +
+            ", b.ageUnit, b.contactNumber as mobileNo, b.fatherName, h.familyHeadName, b.registrationType as typeOfList, b.rchId" +
+            ", b.isHrpStatus as hrpStatus, b.syncState, b.gen_reproductiveStatusId as reproductiveStatusId, b.isKid, b.immunizationStatus," +
+            " cbac.benId is not null as cbacFilled, cbac.syncState as cbacSyncState," +
+            " cdr.benId is not null as cdrFilled, cdr.syncState as cdrSyncState, " +
+            " mdsr.benId is not null as mdsrFilled, mdsr.syncState as mdsrSyncState," +
+            " pmsma.benId is not null as pmsmaFilled, "+//" pmsma.sync as mdsrSyncState, " +
+            " hbnc.benId is not null as hbncFilled " +
+            "from BENEFICIARY b " +
+            "JOIN HOUSEHOLD h ON b.householdId = h.householdId " +
+            "LEFT OUTER JOIN CBAC cbac on b.beneficiaryId = cbac.benId " +
+            "LEFT OUTER JOIN CDR cdr on b.beneficiaryId = cdr.benId " +
+            "LEFT OUTER JOIN MDSR mdsr on b.beneficiaryId = mdsr.benId " +
+            "LEFT OUTER JOIN PMSMA pmsma on b.beneficiaryId = pmsma.benId " +
+            "LEFT OUTER JOIN HBNC hbnc on b.beneficiaryId = hbnc.benId " +
+            "where b.isDraft = 0 GROUP BY b.beneficiaryId ORDER BY b.updatedDate DESC"
+)
 data class BenBasicCache(
     val benId: Long,
     val hhId: Long,
@@ -54,38 +63,68 @@ data class BenBasicCache(
     val benName: String,
     val benSurname: String? = null,
     val gender: Gender,
-    val age: Int,
-    val ageUnit: AgeUnit,
+    val dob: Long,
     val mobileNo: Long,
     val fatherName: String? = null,
     val familyHeadName: String? = null,
     val typeOfList: TypeOfList,
     val rchId: String? = null,
     val hrpStatus: Boolean,
-    val syncState: SyncState,
+    val syncState: SyncState?,
     val reproductiveStatusId: Int,
     val isKid: Boolean,
     val immunizationStatus: Boolean,
-    val hasCbac : Boolean,
-    val cbacSyncState : SyncState?,
-    val hasCdr : Boolean,
-    val cdrSyncState : SyncState?,
-    val hasMdsr :Boolean,
-    val mdsrSyncState : SyncState?,
-    val hasPmsma : Boolean
+    val cbacFilled: Boolean,
+    val cbacSyncState: SyncState?,
+    val cdrFilled: Boolean,
+    val cdrSyncState: SyncState?,
+    val mdsrFilled: Boolean,
+    val mdsrSyncState: SyncState?,
+    val pmsmaFilled: Boolean,
+    val hbncFilled : Boolean,
 ) {
-    companion object{
+    companion object {
         private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+        fun getAgeFromDob(dob: Long): Int {
+            val diffLong = System.currentTimeMillis() - dob
+            val diffDays = TimeUnit.MILLISECONDS.toDays(diffLong).toInt()
+            if (diffDays < 31)
+                return diffDays
+            val yearDiff = (diffDays / 365)
+            if (yearDiff > 0)
+                return yearDiff
+            val calDob = Calendar.getInstance()
+            calDob.timeInMillis = dob
+            val calNow = Calendar.getInstance()
+            return calNow.get(Calendar.YEAR) * 12 + calNow.get(Calendar.MONTH) - calDob.get(Calendar.YEAR) * 12 + calDob.get(
+                Calendar.MONTH
+            )
+
+
+        }
+
+        fun getAgeUnitFromDob(dob: Long): AgeUnit {
+            val diffLong = System.currentTimeMillis() - dob
+            return when (TimeUnit.MILLISECONDS.toDays(diffLong).toInt()) {
+                in 0..31 -> AgeUnit.DAYS
+                in 366..Int.MAX_VALUE -> AgeUnit.YEARS
+                else -> AgeUnit.MONTHS
+            }
+
+        }
+
     }
+
+
     fun asBasicDomainModel(): BenBasicDomain {
-        return BenBasicDomain (
+        return BenBasicDomain(
             benId = benId,
             hhId = hhId,
             regDate = dateFormat.format(Date(regDate)),
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
-            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            dob = dob,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
@@ -95,119 +134,128 @@ data class BenBasicCache(
             syncState = syncState
         )
     }
-    fun asBenBasicDomainModelForCbacForm() : BenBasicDomainForForm {
-        return BenBasicDomainForForm (
+
+    fun asBenBasicDomainModelForCbacForm(): BenBasicDomainForForm {
+        return BenBasicDomainForForm(
             benId = benId,
             hhId = hhId,
             regDate = dateFormat.format(Date(regDate)),
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
-            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            dob = dob,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
             typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
-            syncState = cbacSyncState?:throw IllegalStateException("Sync state for cbac is null!!"),
-            hasForm1 = hasCbac
+            form1Filled = cbacFilled,
+            syncState = cbacSyncState
+                ?: throw IllegalStateException("Sync state for cbac is null!!")
         )
     }
-    fun asBenBasicDomainModelForCdrForm() : BenBasicDomainForForm {
-        return BenBasicDomainForForm (
+
+    fun asBenBasicDomainModelForCdrForm(): BenBasicDomainForForm {
+        return BenBasicDomainForForm(
             benId = benId,
             hhId = hhId,
             regDate = dateFormat.format(Date(regDate)),
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
-            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            dob = dob,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
             typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
-            syncState = cdrSyncState?:throw IllegalStateException("Sync state for cbac is null!!"),
-            hasForm1 = hasCdr
+            form1Filled = cdrFilled,
+            syncState = cdrSyncState
+                ?: throw IllegalStateException("Sync state for cbac is null!!")
         )
     }
-    fun asBenBasicDomainModelForMdsrForm() : BenBasicDomainForForm {
-        return BenBasicDomainForForm (
+
+    fun asBenBasicDomainModelForMdsrForm(): BenBasicDomainForForm {
+        return BenBasicDomainForForm(
             benId = benId,
             hhId = hhId,
             regDate = dateFormat.format(Date(regDate)),
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
-            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            dob = dob,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
             typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
-            syncState = mdsrSyncState?:throw IllegalStateException("Sync state for mdsr is null!!"),
-            hasForm1 = hasMdsr
+            form1Filled = mdsrFilled,
+            syncState = mdsrSyncState
+                ?: throw IllegalStateException("Sync state for mdsr is null!!")
         )
     }
-    fun asBenBasicDomainModelForPmsmaForm() : BenBasicDomainForForm {
-        return BenBasicDomainForForm (
+
+    fun asBenBasicDomainModelForPmsmaForm(): BenBasicDomainForForm {
+        return BenBasicDomainForForm(
             benId = benId,
             hhId = hhId,
             regDate = dateFormat.format(Date(regDate)),
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
-            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            dob = dob,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
             typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
-            syncState = syncState,
-            hasForm1 = hasPmsma
+            form1Filled = pmsmaFilled,
+            syncState = syncState
         )
     }
-    fun asBasicDomainModelForPmjayForm() : BenBasicDomainForForm {
-        return BenBasicDomainForForm (
+
+    fun asBasicDomainModelForPmjayForm(): BenBasicDomainForForm {
+        return BenBasicDomainForForm(
             benId = benId,
             hhId = hhId,
             regDate = dateFormat.format(Date(regDate)),
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
-            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            dob = dob,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
             typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
-            syncState = syncState,
-            hasForm1 = false
+            form1Filled = false,
+            syncState = syncState
         )
     }
 
     fun asBenBasicDomainModelForHbncForm(): BenBasicDomainForForm {
-        return BenBasicDomainForForm (
+        return BenBasicDomainForForm(
             benId = benId,
             hhId = hhId,
             regDate = dateFormat.format(Date(regDate)),
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
-            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            dob = dob,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
             typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
-            syncState = syncState,
-            hasForm1 = false
+            form1Filled = false,
+            form1Enabled = hbncFilled || dob>(System.currentTimeMillis()-TimeUnit.DAYS.toMillis(42)),
+            syncState = syncState
         )
     }
     fun asBenBasicDomainModelForHbycForm(): BenBasicDomainForForm {
@@ -218,7 +266,7 @@ data class BenBasicCache(
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
-            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            dob = dob,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
@@ -226,30 +274,32 @@ data class BenBasicCache(
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             syncState = syncState,
-            hasForm1 = false
+            form1Filled = false
         )
     }
-    fun asBasicDomainModelForFpotForm() : BenBasicDomainForForm {
-        return BenBasicDomainForForm (
+
+    fun asBasicDomainModelForFpotForm(): BenBasicDomainForForm {
+        return BenBasicDomainForForm(
             benId = benId,
             hhId = hhId,
             regDate = dateFormat.format(Date(regDate)),
             benName = benName,
             benSurname = benSurname ?: "Not Available",
             gender = gender.name,
-            age = if (age == 0) "Not Available" else "$age $ageUnit",
+            dob = dob,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
             typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
-            syncState = syncState,
-            hasForm1 = false
+            form1Filled = false,
+            syncState = syncState
         )
     }
 
 }
+
 
 data class BenBasicDomain(
     val benId: Long,
@@ -258,15 +308,19 @@ data class BenBasicDomain(
     val benName: String,
     val benSurname: String? = null,
     val gender: String,
-    val age: String,
+    val dob: Long,
+    val ageInt: Int = getAgeFromDob(dob),
+    val ageUnit: AgeUnit = getAgeUnitFromDob(dob),
+    val age: String = "$ageInt $ageUnit",
     val mobileNo: String,
     val fatherName: String? = null,
     val familyHeadName: String,
     val typeOfList: String,
     val rchId: String,
     val hrpStatus: Boolean = false,
-    var syncState: SyncState
+    var syncState: SyncState?
 )
+
 data class BenBasicDomainForForm(
     val benId: Long,
     val hhId: Long,
@@ -274,18 +328,28 @@ data class BenBasicDomainForForm(
     val benName: String,
     val benSurname: String? = null,
     val gender: String,
-    val age: String,
+    val dob: Long,
+    val ageInt: Int = getAgeFromDob(dob),
+    val ageUnit: AgeUnit = getAgeUnitFromDob(dob),
+    val age: String = "$ageInt $ageUnit",
     val mobileNo: String,
     val fatherName: String? = null,
     val familyHeadName: String,
     val typeOfList: String,
     val rchId: String,
     val hrpStatus: Boolean = false,
-    val hasForm1 : Boolean,
-    val hasForm2 : Boolean = false,
-    val hasForm3 : Boolean = false,
-    var syncState: SyncState
-)
+    val form1Filled: Boolean = false,
+    val form2Filled: Boolean = false,
+    val form3Filled: Boolean = false,
+    val form1Enabled: Boolean = true,
+    val form2Enabled: Boolean = true,
+    val form3Enabled: Boolean = true,
+    var syncState: SyncState?
+) {
+    companion object {
+
+    }
+}
 
 data class BenRegKid(
     var childName: String? = null,
@@ -636,8 +700,6 @@ data class BenRegCache(
     var diagnosisStatus: String? = null,
 
 
-
-
     /*
     5 Skipped:
         Aadhar, lastHrpVisitDate, marriageDate ( 2 copies)
@@ -670,7 +732,7 @@ data class BenRegCache(
 
     var isDraft: Boolean,
 
-    ){
+    ) {
 
     fun asNetworkPostModel(user: UserCache): BenPost {
         return BenPost(

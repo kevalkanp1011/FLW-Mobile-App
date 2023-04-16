@@ -1,10 +1,15 @@
 package org.piramalswasthya.sakhi.ui.home_activity.mother_care
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 
 @HiltViewModel
 class MotherCareViewModel @Inject constructor() : ViewModel() {
-    // TODO: Implement the ViewModel
+
+
+    val scope : CoroutineScope
+        get() = viewModelScope
 }

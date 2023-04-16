@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_otp
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -24,8 +25,22 @@ class AadhaarOtpFragment : Fragment() {
 
     private val viewModel: AadhaarOtpViewModel by viewModels()
 
-    val args: AadhaarOtpFragmentArgs by navArgs()
+    val args: AadhaarOtpFragmentArgs by lazy {
+        AadhaarOtpFragmentArgs.fromBundle(requireArguments())
+    }
 
+    private var timer = object : CountDownTimer(30000, 1000) {
+        override fun onTick(millisUntilFinished: Long) {
+            val sec = millisUntilFinished / 1000 % 60
+            binding.timerResendOtp.text = sec.toString()
+        }
+
+        // When the task is over it will print 00:00:00 there
+        override fun onFinish() {
+            binding.resendOtp.isEnabled = true
+            binding.timerResendOtp.visibility = View.INVISIBLE
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,13 +52,13 @@ class AadhaarOtpFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        startResendTimer()
         binding.btnVerifyOTP.setOnClickListener {
             viewModel.verifyOtpClicked(binding.tietAadhaarOtp.text.toString())
         }
-
         binding.resendOtp.setOnClickListener {
             viewModel.resendOtp()
+            startResendTimer()
         }
 
         binding.tietAadhaarOtp.addTextChangedListener(object : TextWatcher {
@@ -108,8 +123,14 @@ class AadhaarOtpFragment : Fragment() {
         }
     }
 
+    private fun startResendTimer() {
+        binding.resendOtp.isEnabled = false
+        binding.timerResendOtp.visibility = View.VISIBLE
+        timer.start()
+    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+        timer.cancel()
     }
 }

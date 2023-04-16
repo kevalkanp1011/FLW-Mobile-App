@@ -2,49 +2,33 @@ package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_
 
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.helpers.filterBenList
 import org.piramalswasthya.sakhi.model.BenBasicDomain
 import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
 import org.piramalswasthya.sakhi.repositories.BenRepo
+import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import org.piramalswasthya.sakhi.repositories.UserRepo
 import javax.inject.Inject
 
 @HiltViewModel
 class NcdEligibleListViewModel @Inject constructor(
-    private val benRepo: BenRepo,
-    private val userRepo: UserRepo,
+    recordsRepo: RecordsRepo
 ) : ViewModel() {
 
-    private val ncdEligibleList = benRepo.ncdEligibleList
-
-    //private lateinit var user: UserDomain
-    private val _benList = MutableLiveData<List<BenBasicDomainForForm>>()
-    val benList: LiveData<List<BenBasicDomainForForm>>
-        get() = _benList
-
-    private var lastFilter = ""
-
-    init {
-        viewModelScope.launch {
-            ncdEligibleList.asFlow().collect {
-                _benList.value = it?.let { filterBenList(it, lastFilter) }
-            }
-
-        }
+    private val allBenList = recordsRepo.ncdEligibleList
+    private val filter = MutableStateFlow("")
+    val benList = allBenList.combine(filter){
+            list, filter -> filterBenList(list, filter)
     }
 
-//    suspend fun loadUser() {
-//        withContext(Dispatchers.IO) {
-//            user = userRepo.getLoggedInUser()!!
-//        }
-//    }
-
-    // fun getUserId(): Int = user.userId
-
     fun filterText(text: String) {
-        lastFilter = text
-        _benList.value = ncdEligibleList.value?.let { filterBenList(it, text) }
+        viewModelScope.launch {
+            filter.emit(text)
+        }
+
     }
 
 }

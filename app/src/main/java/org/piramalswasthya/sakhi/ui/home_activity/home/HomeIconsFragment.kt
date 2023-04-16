@@ -1,20 +1,25 @@
 package org.piramalswasthya.sakhi.ui.home_activity.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.IconGridAdapter
 import org.piramalswasthya.sakhi.configuration.IconDataset
-import org.piramalswasthya.sakhi.databinding.FragmentHomeBinding
 import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class HomeIconsFragment : Fragment() {
+
+    @Inject
+    lateinit var iconDataset: IconDataset
 
     private var _binding: RvIconGridBinding? = null
     private val binding: RvIconGridBinding
@@ -38,14 +43,15 @@ class HomeIconsFragment : Fragment() {
     }
 
     private fun setUpHomeIconRvAdapter() {
-        val rvLayoutManager = GridLayoutManager(context, requireContext().resources.getInteger(R.integer.icon_grid_span))
+        val rvLayoutManager = GridLayoutManager(
+            context,
+            requireContext().resources.getInteger(R.integer.icon_grid_span)
+        )
         binding.rvIconGrid.layoutManager = rvLayoutManager
         val rvAdapter = IconGridAdapter(IconGridAdapter.GridIconClickListener {
             findNavController().navigate(it)
-        })
+        }, viewModel.scope)
         binding.rvIconGrid.adapter = rvAdapter
-        viewModel.iconCount.observe(viewLifecycleOwner) {
-            rvAdapter.submitList(IconDataset.getIconDataset(it[0]))
-        }
+        rvAdapter.submitList(iconDataset.getIconDataset())
     }
 }

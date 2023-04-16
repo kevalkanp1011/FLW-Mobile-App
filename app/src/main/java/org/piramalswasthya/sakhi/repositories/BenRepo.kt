@@ -1,7 +1,6 @@
 package org.piramalswasthya.sakhi.repositories
 
 import android.app.Application
-import androidx.lifecycle.Transformations
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -16,9 +15,9 @@ import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.network.AmritApiService
 import org.piramalswasthya.sakhi.network.GetBenRequest
 import org.piramalswasthya.sakhi.network.TmcGenerateBenIdsRequest
-import org.piramalswasthya.sakhi.network.AmritApiService
 import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
@@ -33,132 +32,12 @@ class BenRepo @Inject constructor(
     private val tmcNetworkApiService: AmritApiService
 ) {
 
-    val benList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllBen()) { list ->
-            list.map { it.asBasicDomainModel() }
-        }
-    }
-
-    val eligibleCoupleList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllEligibleCoupleList()) { list ->
-            list.map { it.asBasicDomainModel() }
-        }
-    }
-    val pregnantList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllPregnancyWomenList()) { list ->
-            list.map { it.asBenBasicDomainModelForPmsmaForm() }
-        }
-    }
-    val deliveryList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllDeliveryStageWomenList()) { list ->
-            list.map { it.asBenBasicDomainModelForPmsmaForm() }
-        }
-    }
-    val ncdList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllNCDList()) { list ->
-            list.map { it.asBasicDomainModel() }
-        }
-    }
-    val ncdEligibleList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllNCDEligibleList()) { list ->
-            list.map { it.asBenBasicDomainModelForCbacForm() }
-        }
-    }
-    val ncdPriorityList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllNCDPriorityList()) { list ->
-            list.map { it.asBenBasicDomainModelForCbacForm() }
-        }
-    }
-    val ncdNonEligibleList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllNCDNonEligibleList()) { list ->
-            list.map { it.asBenBasicDomainModelForCbacForm() }
-        }
-    }
-    val menopauseList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllMenopauseStageList()) { list ->
-            list.map { it.asBasicDomainModel() }
-        }
-    }
-    val reproductiveAgeList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllReproductiveAgeList()) { list ->
-            list.map { it.asBasicDomainModelForFpotForm() }
-        }
-    }
-
-    val infantList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllInfantList()) { list ->
-            list.map { it.asBenBasicDomainModelForHbncForm() }
-        }
-    }
-
-    val childList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllChildList()) { list ->
-            list.map { it.asBenBasicDomainModelForHbycForm() }
-        }
-    }
-
-    val adolescentList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllAdolescentList()) { list ->
-            list.map { it.asBasicDomainModel() }
-        }
-    }
-
-    val immunizationList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllImmunizationDueList()) { list ->
-            list.map { it.asBasicDomainModel() }
-        }
-    }
-
-    val hrpList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllHrpCasesList()) { list ->
-            list.map { it.asBasicDomainModel() }
-        }
-    }
-
-    val pncMotherList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllPNCMotherList()) { list ->
-            list.map { it.asBasicDomainModelForPmjayForm() }
-        }
-    }
-
-    val cdrList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllCDRList()) { list ->
-            list.map { it.asBenBasicDomainModelForCdrForm() }
-        }
-    }
-
-    val mdsrList by lazy {
-        //TODO(implement BenDao)
-        Transformations.map(database.benDao.getAllMDSRList()) { list ->
-            list.map { it.asBenBasicDomainModelForMdsrForm() }
-        }
-    }
-
     companion object {
+        private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        private val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
         private fun getCurrentDate(millis: Long = System.currentTimeMillis()): String {
-
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-            val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
             val dateString = dateFormat.format(millis)
             val timeString = timeFormat.format(millis)
-
             return "${dateString}T${timeString}.000Z"
         }
     }
@@ -527,7 +406,7 @@ class BenRepo @Inject constructor(
             throw IllegalStateException("Response undesired!")
         } catch (se: SocketTimeoutException) {
             if (se.message == "Refreshed Token") {
-                    return createBenIdAtServerByBeneficiarySending(ben, user, locationRecord)
+                return createBenIdAtServerByBeneficiarySending(ben, user, locationRecord)
             }
             return false
         } catch (e: java.lang.Exception) {
@@ -667,10 +546,14 @@ class BenRepo @Inject constructor(
 //                            return false
 //                        }
                         val benToUpdateList =
-                            benNetworkPostSet.takeIf { it.isNotEmpty() }?.map { it.benId }?.toTypedArray()?.toLongArray()
+                            benNetworkPostSet.takeIf { it.isNotEmpty() }?.map { it.benId }
+                                ?.toTypedArray()?.toLongArray()
                         val hhToUpdateList =
-                            householdNetworkPostSet.takeIf { it.isNotEmpty() }?.map { it.householdId.toLong() }?.toTypedArray()?.toLongArray()
-                        val cbacToUpdateList = cbacPostList.takeIf { it.isNotEmpty() }?.map { it.benficieryid }?.toTypedArray()?.toLongArray()
+                            householdNetworkPostSet.takeIf { it.isNotEmpty() }
+                                ?.map { it.householdId.toLong() }?.toTypedArray()?.toLongArray()
+                        val cbacToUpdateList =
+                            cbacPostList.takeIf { it.isNotEmpty() }?.map { it.benficieryid }
+                                ?.toTypedArray()?.toLongArray()
                         Timber.d("ben : ${benNetworkPostSet.size}, hh: ${householdNetworkPostSet.size}, cbac : ${cbacPostList.size}")
 //                        Timber.d("Yuuhooo  -- ---${benNetworkPostSet.first().benId}  ${householdNetworkPostSet.first().householdId}")
                         benToUpdateList?.let { database.benDao.benSyncedWithServer(*it) }
@@ -850,7 +733,8 @@ class BenRepo @Inject constructor(
                                             rchId = benDataObj.getString("rchid"),
                                             hrpStatus = benDataObj.getBoolean("hrpStatus"),
                                             typeOfList = benDataObj.getString("registrationType"),
-                                            syncState = if (benExists) SyncState.SYNCED else SyncState.SYNCING
+                                            syncState = if (benExists) SyncState.SYNCED else SyncState.SYNCING,
+                                            dob = 0L,
                                         )
                                     )
                                 }
@@ -1228,7 +1112,13 @@ class BenRepo @Inject constructor(
                                 processed = "P",
                                 serverUpdatedStatus = 1,
                                 createdBy = benDataObj.getString("createdBy"),
+                                updatedBy = if (benDataObj.has("updatedBy")) benDataObj.getString("updatedBy") else benDataObj.getString(
+                                    "createdBy"
+                                ),
                                 createdDate = getLongFromDate(benDataObj.getString("createdDate")),
+                                updatedDate =getLongFromDate(if (benDataObj.has("updatedDate")) benDataObj.getString("updatedDate") else benDataObj.getString(
+                                    "createdDate"
+                                )),
                                 kidDetails = if (childDataObj.length() == 0) null else BenRegKid(
                                     childRegisteredAWCId = if (benDataObj.has("childRegisteredAWCID")) benDataObj.getInt(
                                         "childRegisteredAWCID"
