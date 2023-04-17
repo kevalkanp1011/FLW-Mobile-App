@@ -2,7 +2,6 @@ package org.piramalswasthya.sakhi.repositories
 
 import kotlinx.coroutines.flow.map
 import org.piramalswasthya.sakhi.database.room.InAppDb
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -30,11 +29,11 @@ class RecordsRepo @Inject constructor(
         .map { list -> list.map { it.asBenBasicDomainModelForPmsmaForm() } }
     val deliveryListCount = deliveryList.map { it.size }
 
-    val ncdList = database.benDao.getAllNCDList(getNcdTimestamp())
+    val ncdList = database.benDao.getAllNCDList()
         .map { list -> list.map { it.asBasicDomainModel() } }
     val ncdListCount = ncdList.map { it.size }
 
-    val ncdEligibleList = database.benDao.getAllNCDEligibleList(getNcdTimestamp())
+    val ncdEligibleList = database.benDao.getAllNCDEligibleList()
         .map { list -> list.map { it.asBenBasicDomainModelForCbacForm() } }
     val ncdEligibleListCount = ncdEligibleList.map { it.size }
 
@@ -50,21 +49,20 @@ class RecordsRepo @Inject constructor(
         .map { list -> list.map { it.asBasicDomainModel() } }
     val menopauseListCount = menopauseList.map { it.size }
 
-    val reproductiveAgeList = database.benDao.getAllReproductiveAgeList(
-        minReproductiveAge(), maxReproductiveAge()
-    ).map { list -> list.map { it.asBasicDomainModelForFpotForm() } }
+    val reproductiveAgeList = database.benDao.getAllReproductiveAgeList()
+        .map { list -> list.map { it.asBasicDomainModelForFpotForm() } }
     val reproductiveAgeListCount = reproductiveAgeList.map { it.size }
 
-    val infantList = database.benDao.getAllInfantList(infantTimestamp())
+    val infantList = database.benDao.getAllInfantList()
         .map { list -> list.map { it.asBenBasicDomainModelForHbncForm() } }
-    val infantListCount = database.benDao.getAllInfantList(infantTimestamp()).map { it.size }
+    val infantListCount = infantList.map { it.size }
 
-    val childList = database.benDao.getAllChildList(minChildAge(), maxChildAge())
+    val childList = database.benDao.getAllChildList()
         .map { list -> list.map { it.asBasicDomainModel() } }
     val childListCount = childList.map { it.size }
 
     val adolescentList =
-        database.benDao.getAllAdolescentList(minAdolescentAge(), maxAdolescentAge())
+        database.benDao.getAllAdolescentList()
             .map { list -> list.map { it.asBasicDomainModel() } }
     val adolescentListCount = adolescentList.map { it.size }
 
@@ -80,7 +78,7 @@ class RecordsRepo @Inject constructor(
         .map { list -> list.map { it.asBasicDomainModelForPmjayForm() } }
     val pncMotherListCount = pncMotherList.map { it.size }
 
-    val cdrList = database.benDao.getAllCDRList(cdrTimestamp())
+    val cdrList = database.benDao.getAllCDRList()
         .map { list -> list.map { it.asBenBasicDomainModelForCdrForm() } }
 //    val cdrListCount = cdrList.map { it.size }
 
@@ -89,67 +87,67 @@ class RecordsRepo @Inject constructor(
 //    val mdsrListCount = mdsrList.map { it.size }
 
 
-    private fun getNcdTimestamp() = Calendar.getInstance().run {
-        add(Calendar.YEAR, -30)
-        timeInMillis
-    }
-
-    private fun maxReproductiveAge() = Calendar.getInstance().run {
-        add(Calendar.YEAR, -15)
-        timeInMillis
-    }
-
-    private fun minAdolescentAge(): Long {
-        val minAdolescentAge = Calendar.getInstance().run {
-            add(Calendar.YEAR, -15)
-            timeInMillis
-        }
-        return minAdolescentAge
-    }
-
-    private fun cdrTimestamp(): Long {
-        val cdrTimestamp = Calendar.getInstance().run {
-            add(Calendar.YEAR, -15)
-            timeInMillis
-        }
-        return cdrTimestamp
-    }
-
-    private fun minReproductiveAge() = Calendar.getInstance().run {
-        add(Calendar.YEAR, -60)
-        timeInMillis
-    }
-
-    private fun infantTimestamp(): Long {
-        val infantTimestamp = Calendar.getInstance().run {
-            add(Calendar.YEAR, -2)
-            timeInMillis
-        }
-        return infantTimestamp
-    }
-
-    private fun minChildAge(): Long {
-        val minChildAge = Calendar.getInstance().run {
-            add(Calendar.YEAR, -6)
-            timeInMillis
-        }
-        return minChildAge
-    }
-
-    private fun maxAdolescentAge(): Long {
-        val maxAdolescentAge = Calendar.getInstance().run {
-            add(Calendar.YEAR, -6)
-            timeInMillis
-        }
-        return maxAdolescentAge
-    }
-
-    private fun maxChildAge(): Long {
-        val maxChildAge = Calendar.getInstance().run {
-            add(Calendar.YEAR, -2)
-            timeInMillis
-        }
-        return maxChildAge
-    }
+//    private fun getNcdTimestamp() = Calendar.getInstance().run {
+//        add(Calendar.YEAR, -30)
+//        timeInMillis
+//    }
+//
+//    private fun maxReproductiveAge() = Calendar.getInstance().run {
+//        add(Calendar.YEAR, -15)
+//        timeInMillis
+//    }
+//
+//    private fun minAdolescentAge(): Long {
+//        val minAdolescentAge = Calendar.getInstance().run {
+//            add(Calendar.YEAR, -15)
+//            timeInMillis
+//        }
+//        return minAdolescentAge
+//    }
+//
+//    private fun cdrTimestamp(): Long {
+//        val cdrTimestamp = Calendar.getInstance().run {
+//            add(Calendar.YEAR, -15)
+//            timeInMillis
+//        }
+//        return cdrTimestamp
+//    }
+//
+//    private fun minReproductiveAge() = Calendar.getInstance().run {
+//        add(Calendar.YEAR, -60)
+//        timeInMillis
+//    }
+//
+//    private fun infantTimestamp(): Long {
+//        val infantTimestamp = Calendar.getInstance().run {
+//            add(Calendar.YEAR, -2)
+//            timeInMillis
+//        }
+//        return infantTimestamp
+//    }
+//
+//    private fun minChildAge(): Long {
+//        val minChildAge = Calendar.getInstance().run {
+//            add(Calendar.YEAR, -6)
+//            timeInMillis
+//        }
+//        return minChildAge
+//    }
+//
+//    private fun maxAdolescentAge(): Long {
+//        val maxAdolescentAge = Calendar.getInstance().run {
+//            add(Calendar.YEAR, -6)
+//            timeInMillis
+//        }
+//        return maxAdolescentAge
+//    }
+//
+//    private fun maxChildAge(): Long {
+//        val maxChildAge = Calendar.getInstance().run {
+//            add(Calendar.YEAR, -2)
+//            timeInMillis
+//        }
+//        return maxChildAge
+//    }
 
 }

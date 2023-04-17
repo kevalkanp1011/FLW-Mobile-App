@@ -285,7 +285,7 @@ class HBNCFormDataset(
         min = 0,
         required = false
     )
-    private val motherAnyProblem = FormInput(
+    val motherAnyProblem = FormInput(
         inputType = InputType.DROPDOWN, title = "Does mother have any problem", entries = arrayOf(
             "Very Bleeding ",
             "Anesthesia/ Seizure outbreak",
@@ -453,35 +453,36 @@ class HBNCFormDataset(
         required = false
     )
 
-    private val timesMotherFed24hr = FormInput(
+    val timesMotherFed24hr = FormInput(
         inputType = InputType.EDIT_TEXT,
         title = "How many times the mother feeds her stomach in 24 hours. Action – If the mother does not eat full stomach or eat less than 4 times, advise mother to do so",
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 1,
         required = false
     )
 
 
-    private val timesPadChanged = FormInput(
+    val timesPadChanged = FormInput(
         inputType = InputType.EDIT_TEXT,
         title = "How many pads have been changed in a day for bleeding? Action – If more than 2 pad, refer the mother to the hospital.",
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
 
-    private val babyKeptWarmWinter = FormInput(
+    val babyKeptWarmWinter = FormInput(
         inputType = InputType.RADIO,
         title = "During the winter season, is the baby kept warm? (Closer to the mother, dressed well and wrapped). - If it is not being done, ask the mother to do it.",
         entries = arrayOf("Yes", "No"),
         required = false,
     )
 
-    private val babyBreastFedProperly = FormInput(
+    val babyBreastFedProperly = FormInput(
         inputType = InputType.RADIO,
         title = "Is the child breastfed properly? (Whenever feeling hungry or breastfeeding at least 7 – 8 times in 24 hours). Action – if it is not being done then ask the mother to do it. ",
         entries = arrayOf("Yes", "No"),
         required = false,
     )
-    private val babyCryContinuously = FormInput(
+    val babyCryContinuously = FormInput(
         inputType = InputType.RADIO,
         title = "Does the child cry continuously or urinate less than 6 times a day? Action – Advice the mother for breast-feeding",
         entries = arrayOf("Yes", "No"),
@@ -501,25 +502,25 @@ class HBNCFormDataset(
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
-    private val motherWaterDischarge = FormInput(
+    val motherWaterDischarge = FormInput(
         inputType = InputType.RADIO,
         title = "Water discharge with foul smell and fever 102 degree Fahrenheit (38.9 degree C). ",
         entries = arrayOf("Yes", "No"),
         required = false,
     )
-    private val motherSpeakAbnormalFits = FormInput(
+    val motherSpeakAbnormalFits = FormInput(
         inputType = InputType.RADIO,
         title = "Is mother speaking abnormally or having fits?",
         entries = arrayOf("Yes", "No"),
         required = false,
     )
-    private val motherNoOrLessMilk = FormInput(
+    val motherNoOrLessMilk = FormInput(
         inputType = InputType.RADIO,
         title = "Mothers milk is not being produced after delivery or she thinks less milk is being produced.",
         entries = arrayOf("Yes", "No"),
         required = false,
     )
-    private val motherBreastProblem = FormInput(
+    val motherBreastProblem = FormInput(
         inputType = InputType.RADIO,
         title = "Does the mother have cracked nipple / pain and / or hard breasts",
         entries = arrayOf("Yes", "No"),
@@ -533,18 +534,21 @@ class HBNCFormDataset(
         title = "(c) Health check-up of newborn baby ",
         required = false
     )
-    private val babyEyesSwollen = FormInput(
+    val babyEyesSwollen = FormInput(
         inputType = InputType.RADIO,
         title = "Are the eyes swollen / Are there pus from the eyes?",
         entries = arrayOf("Yes", "No"),
         required = false,
     )
-    private val babyWeight = FormInput(
+    val babyWeight = FormInput(
         inputType = InputType.EDIT_TEXT,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL,
+        minDecimal = 0.5,
+        maxDecimal = 7.0,
+        etMaxLength = 3,
         title = "Weight on Day $nthDay",
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false,
-    )
+        )
 
     private val babyBodyTemperature2 = FormInput(
         inputType = InputType.EDIT_TEXT,
@@ -796,7 +800,7 @@ class HBNCFormDataset(
     val otherPlaceOfMotherDeath = FormInput(
         inputType = InputType.EDIT_TEXT, title = "Other place of mother Death", required = false
     )
-    private val motherProblems = FormInput(
+    val motherProblems = FormInput(
         inputType = InputType.CHECKBOXES,
         title = "Does Mother have any problems",
         entries = arrayOf(

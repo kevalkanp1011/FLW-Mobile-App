@@ -357,6 +357,26 @@
     <string name="mdsr_action">Action taken</string>
 
 
+    <!--    HBNC-->
+    <string name="hbnc_baby_dead_alert">Cause of death to be reported to ANM/MPW/PHC for infant death review.</string>
+    <string name="hbnc_baby_gestational_age_alert">If child is born in less than 35 weeks, pay attention.</string>
+    <string name="hbnc_mother_dead_alert">Report to ANM/PHC for maternal death review.</string>
+    <string name="hbnc_mother_problem_alert">If yes, refer immediately to a hospital.</string>
+    <string name="hbnc_mother_num_eat_alert">If the mother does not eat full stomach or eat less than 4 times, advise mother to do so.</string>
+    <string name="hbnc_mother_num_pad_alert">If more than 5 pads, refer the mother to the hospital.</string>
+    <string name="hbnc_baby_warm_winter_alert">Advise the mother to do so, if not being done.</string>
+    <string name="hbnc_baby_fed_properly_alert">Advise the mother to do so, if not being done.</string>
+    <string name="hbnc_baby_cry_incessant_alert">Advise mother to feed the baby after every 2 hours.</string>
+    <string name="hbnc_baby_temp_alert">Temperature up to 102°F (38.9°C) - treat with paracetamol, and if the temperature is above it, refer to hospital.</string>
+    <string name="hbnc_mother_foul_discharge_alert">If yes, refer the mother to a hospital.</string>
+    <string name="hbnc_mother_speak_abnormal_fits_alert">If yes, refer the mother to a hospital.</string>
+    <string name="hbnc_mother_less_no_milk_alert">Ask the mother to feed the baby more often and counsel her for proper attachment and positioning during breastfeeding.</string>
+    <string name="hbnc_mother_breast_problem_alert">In case of cracked nipples, advise the mother to keep the breast clean and lubricated.</string>
+    <string name="hbnc_baby_eye_pus_alert">If there is pus in the eye then antibiotic ointment can be applied.</string>
+    <string name="hbnc_baby_weight_1_8_alert">Refer the baby to Sick New born care unit at the nearest health facility and also conduct extra home visits as per the high risk baby form. If the baby (low birth weight or normal) is not gaining weight then refer to SNCU at the nearest health facility.</string>
+    <string name="hbnc_baby_weight_2_5_alert">Advise the mother to provide extra warmth to the baby and feed the baby more frequently. If the baby (low birth weight or normal) is not gaining weight then refer to SNCU at the nearest health facility.</string>
+
+
     <string-array name="cbac_age">
         <item>0-29 years</item>
         <item>30-39 years</item>
@@ -577,12 +597,6 @@
     <string name="nbr_child_corticosteroid">Corticosteroid given to mother at labor</string>
     <string name="nbr_child_cry_imm_birth">Baby cried immediately at birth</string>
     <string name="nbr_child_defect_at_birth">Any Defect Seen at Birth</string>
-
-
-
-
-
-
 
 
     <string name="hbnc_day_text">Day %1d</string>

@@ -1,10 +1,14 @@
 package org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.part_1
 
+import android.app.Application
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.configuration.HBNCFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
@@ -20,6 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HbncPartIViewModel @Inject constructor(
+    private val context: Application,
     state: SavedStateHandle,
     private val database: InAppDb,
     private val hbncRepo: HbncRepo,
@@ -52,6 +57,16 @@ class HbncPartIViewModel @Inject constructor(
     private val _exists = MutableLiveData<Boolean>()
     val exists: LiveData<Boolean>
         get() = _exists
+
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: Flow<String?>
+        get() = _errorMessage
+
+    fun resetErrorMessage() {
+        viewModelScope.launch {
+            _errorMessage.emit(null)
+        }
+    }
 
     private val dataset = HBNCFormDataset(Konstants.hbncPart1Day)
 
@@ -104,7 +119,7 @@ class HbncPartIViewModel @Inject constructor(
         viewModelScope.launch {
             launch {
                 dataset.babyAlive.value.collect {
-                    it?.let{
+                    it?.let {
                         val list = adapter.currentList.toMutableList()
                         val entriesToAdd = listOf(
                             dataset.dateOfBabyDeath,
@@ -114,6 +129,7 @@ class HbncPartIViewModel @Inject constructor(
                         if (it == dataset.babyAlive.entries?.get(1)) {
                             if (!list.containsAll(entriesToAdd))
                                 list.addAll(list.indexOf(dataset.babyAlive) + 1, entriesToAdd)
+                            _errorMessage.emit(context.getString(R.string.hbnc_baby_dead_alert))
                         } else
                             list.removeAll(entriesToAdd)
                         adapter.submitList(list)
@@ -122,10 +138,10 @@ class HbncPartIViewModel @Inject constructor(
             }
             launch {
                 dataset.placeOfBabyDeath.value.collect { nullablePlaceOfDeath ->
-                    nullablePlaceOfDeath?.let{ placeOfDeath ->
+                    nullablePlaceOfDeath?.let { placeOfDeath ->
                         val list = adapter.currentList.toMutableList()
                         val entriesToAdd = dataset.otherPlaceOfBabyDeath
-                        if (placeOfDeath == dataset.placeOfBabyDeath.entries?.let { it[it.size-1] }) {
+                        if (placeOfDeath == dataset.placeOfBabyDeath.entries?.let { it[it.size - 1] }) {
                             if (!list.contains(entriesToAdd))
                                 list.add(list.indexOf(dataset.placeOfBabyDeath) + 1, entriesToAdd)
                         } else
@@ -136,7 +152,7 @@ class HbncPartIViewModel @Inject constructor(
             }
             launch {
                 dataset.motherAlive.value.collect {
-                    it?.let{
+                    it?.let {
                         val list = adapter.currentList.toMutableList()
                         val entriesToAdd = listOf(
                             dataset.dateOfMotherDeath,
@@ -146,6 +162,7 @@ class HbncPartIViewModel @Inject constructor(
                         if (it == dataset.motherAlive.entries?.get(1)) {
                             if (!list.contains(dataset.dateOfMotherDeath))
                                 list.addAll(list.indexOf(dataset.motherAlive) + 1, entriesToAdd)
+                            _errorMessage.emit(context.getString(R.string.hbnc_mother_dead_alert))
                         } else
                             list.removeAll(entriesToAdd)
                         adapter.submitList(list)
@@ -154,10 +171,10 @@ class HbncPartIViewModel @Inject constructor(
             }
             launch {
                 dataset.placeOfMotherDeath.value.collect { nullablePlaceOfDeath ->
-                    nullablePlaceOfDeath?.let{ placeOfDeath ->
+                    nullablePlaceOfDeath?.let { placeOfDeath ->
                         val list = adapter.currentList.toMutableList()
                         val entriesToAdd = dataset.otherPlaceOfMotherDeath
-                        if (placeOfDeath == dataset.placeOfMotherDeath.entries?.let { it[it.size-1] }) {
+                        if (placeOfDeath == dataset.placeOfMotherDeath.entries?.let { it[it.size - 1] }) {
                             if (!list.contains(entriesToAdd))
                                 list.add(list.indexOf(dataset.placeOfMotherDeath) + 1, entriesToAdd)
                         } else
@@ -168,7 +185,7 @@ class HbncPartIViewModel @Inject constructor(
             }
             launch {
                 dataset.babyPreterm.value.collect {
-                    it?.let{
+                    it?.let {
                         Timber.d("Baby Preterm : $it")
                         val list = adapter.currentList.toMutableList()
                         val entriesToAdd = dataset.gestationalAge
@@ -182,11 +199,20 @@ class HbncPartIViewModel @Inject constructor(
                 }
             }
             launch {
+                dataset.gestationalAge.value.collect {
+                    it?.let {
+                        if (it == dataset.gestationalAge.entries?.get(0)) {
+                            _errorMessage.emit(context.getString(R.string.hbnc_baby_gestational_age_alert))
+                        }
+                    }
+                }
+            }
+            launch {
                 dataset.babyFedAfterBirth.value.collect { nullablePlaceOfDeath ->
-                    nullablePlaceOfDeath?.let{ placeOfDeath ->
+                    nullablePlaceOfDeath?.let { placeOfDeath ->
                         val list = adapter.currentList.toMutableList()
                         val entriesToAdd = dataset.otherBabyFedAfterBirth
-                        if (placeOfDeath == dataset.babyFedAfterBirth.entries?.let { it[it.size-1] }) {
+                        if (placeOfDeath == dataset.babyFedAfterBirth.entries?.let { it[it.size - 1] }) {
                             if (!list.contains(entriesToAdd))
                                 list.add(list.indexOf(dataset.babyFedAfterBirth) + 1, entriesToAdd)
                         } else
@@ -197,15 +223,28 @@ class HbncPartIViewModel @Inject constructor(
             }
             launch {
                 dataset.motherHasBreastFeedProblem.value.collect { nullablePlaceOfDeath ->
-                    nullablePlaceOfDeath?.let{ placeOfDeath ->
+                    nullablePlaceOfDeath?.let { placeOfDeath ->
                         val list = adapter.currentList.toMutableList()
                         val entriesToAdd = dataset.motherBreastFeedProblem
                         if (placeOfDeath == dataset.motherHasBreastFeedProblem.entries?.first()) {
                             if (!list.contains(entriesToAdd))
-                                list.add(list.indexOf(dataset.motherHasBreastFeedProblem) + 1, entriesToAdd)
+                                list.add(
+                                    list.indexOf(dataset.motherHasBreastFeedProblem) + 1,
+                                    entriesToAdd
+                                )
                         } else
                             list.remove(entriesToAdd)
                         adapter.submitList(list)
+                    }
+                }
+            }
+            launch {
+                dataset.motherProblems.value.collect {
+                    it?.let {
+                        if(it.isNotEmpty()) {
+                            Timber.d("Mother any problem emit : $it")
+                            _errorMessage.emit(context.getString(R.string.hbnc_mother_problem_alert))
+                        }
                     }
                 }
             }

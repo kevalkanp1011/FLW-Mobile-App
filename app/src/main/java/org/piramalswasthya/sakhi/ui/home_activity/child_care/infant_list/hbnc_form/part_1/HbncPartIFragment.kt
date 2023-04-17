@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -26,6 +27,21 @@ class HbncPartIFragment : Fragment() {
 
 
     private val viewModel: HbncPartIViewModel by viewModels()
+
+    private val errorAlert by lazy {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Alert")
+            .setPositiveButton("Ok"){dialog,_ ->
+                viewModel.resetErrorMessage()
+                dialog.dismiss()
+            }
+            .create()
+    }
+
+    private fun showErrorAlert(message : String){
+        errorAlert.setMessage(message)
+        errorAlert.show()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -92,6 +108,14 @@ class HbncPartIFragment : Fragment() {
                     binding.btnSubmit.visibility = View.VISIBLE
                     binding.cvPatientInformation.visibility = View.VISIBLE
                     binding.pbForm.visibility = View.GONE
+                }
+
+            }
+        }
+        lifecycleScope.launch{
+            viewModel.errorMessage.collect{
+                it?.let {
+                    showErrorAlert(it)
                 }
 
             }
