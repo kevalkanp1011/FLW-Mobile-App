@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.transform
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.HbncIcon
 import org.piramalswasthya.sakhi.repositories.HbncRepo
-import org.piramalswasthya.sakhi.ui.home_activity.immunization_due.immunization_list.ImmunizationListFragmentArgs
 import javax.inject.Inject
 
 
@@ -18,8 +17,8 @@ class HbncDayListViewModel @Inject constructor(
 
     ) : ViewModel() {
 
-    private val benId = ImmunizationListFragmentArgs.fromSavedStateHandle(state).benId
-    private val hhId = ImmunizationListFragmentArgs.fromSavedStateHandle(state).hhId
+    private val benId = HbncDayListFragmentArgs.fromSavedStateHandle(state).benId
+    private val hhId = HbncDayListFragmentArgs.fromSavedStateHandle(state).hhId
 
     val dayList = hbncRepo.hbncList(benId, hhId).transform { dateList ->
         val daysList = dateList.map { it.homeVisitDate }

@@ -5,6 +5,7 @@ import org.piramalswasthya.sakhi.model.Icon
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import org.piramalswasthya.sakhi.ui.home_activity.child_care.ChildCareFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeFragmentDirections
+import org.piramalswasthya.sakhi.ui.home_activity.immunization_due.ImmunizationDueTypeFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.mother_care.MotherCareFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.NcdFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.village_level_forms.VillageLevelFormsFragmentDirections
@@ -54,7 +55,7 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
         Icon(
             R.drawable.ic__immunization,
             "Immunization Due List",
-            recordsRepo.immunizationListCount,
+            null,
             HomeFragmentDirections.actionNavHomeToImmunizationDueFragment()
         ),
         Icon(
@@ -162,6 +163,23 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
         )
     )
 
+    fun getImmunizationDataset() = listOf(
+        Icon(
+            R.drawable.ic__immunization,
+            "Child Immunization",
+            recordsRepo.childrenImmunizationListCount,
+            ImmunizationDueTypeFragmentDirections.actionImmunizationDueTypeFragmentToChildImmunizationFragment()
+        ),
+        Icon(
+            R.drawable.ic__immunization,
+            "Mother Immunization",
+            recordsRepo.motherImmunizationListCount,
+            ImmunizationDueTypeFragmentDirections.actionImmunizationDueTypeFragmentToMotherImmunizationFragment()
+        ),
+
+    )
+
+
     fun getVillageLevelFormsDataset() = listOf(
         Icon(
             R.drawable.ic_person,
@@ -170,4 +188,5 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             VillageLevelFormsFragmentDirections.actionVillageLevelFormsFragmentToSurveyRegisterFragment()
         )
     )
+
 }
