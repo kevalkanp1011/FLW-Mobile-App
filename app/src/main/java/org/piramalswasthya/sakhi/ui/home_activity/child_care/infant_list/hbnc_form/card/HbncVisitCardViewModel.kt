@@ -119,6 +119,6 @@ class HbncVisitCardViewModel @Inject constructor(
     }
 
     fun setExistingValues() {
-
+        dataset.setExistingValuesForCardPage(hbnc!!)
     }
 }

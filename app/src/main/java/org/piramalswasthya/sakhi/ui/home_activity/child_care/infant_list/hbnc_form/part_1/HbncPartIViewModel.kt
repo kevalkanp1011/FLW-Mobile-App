@@ -262,7 +262,7 @@ class HbncPartIViewModel @Inject constructor(
     }
 
     fun setExistingValues() {
-
+        dataset.setExistingValuesForPartIPage(hbnc!!)
     }
 }
 

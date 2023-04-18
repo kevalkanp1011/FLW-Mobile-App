@@ -228,13 +228,13 @@ data class HbncPartII(
     val feedLessStop : Int,
     val cryWeakStop : Int,
     val dryBaby : Int,
-    val keepWarmWinter : Int,
+    val wrapClothCloseToMother : Int,
     val exclusiveBreastFeeding : Int,
     val cordCleanDry : Int,
     val unusualInBaby : Int,
     val otherUnusualInBaby : String?,
 
-)
+    )
 
 data class HbncHomeVisit(
     val dateOfAshaVisit : Long,
