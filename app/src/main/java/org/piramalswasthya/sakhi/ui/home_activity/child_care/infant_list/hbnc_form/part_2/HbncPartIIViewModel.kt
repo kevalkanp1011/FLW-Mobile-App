@@ -5,6 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.configuration.HBNCFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
@@ -13,8 +14,6 @@ import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.HbncRepo
-import org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.card.HbncVisitCardFragmentArgs
-import org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.part_1.HbncPartIFragment
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
@@ -97,8 +96,27 @@ class HbncPartIIViewModel  @Inject constructor(
         }
     }
 
-    fun getFirstPage(): List<FormInput> {
-        return dataset.partIIPage
+    suspend fun getFirstPage(): List<FormInput> {
+        return dataset.getPartIIPage()
+    }
+
+    fun observeForm(adapter: FormInputAdapter) {
+        viewModelScope.launch {
+            launch {
+                dataset.unusualWithBaby.value.collect { nullablePlaceOfDeath ->
+                    nullablePlaceOfDeath?.let{ placeOfDeath ->
+                        val list = adapter.currentList.toMutableList()
+                        val entriesToAdd = dataset.otherUnusualWithBaby
+                        if (placeOfDeath == dataset.unusualWithBaby.entries?.last()) {
+                            if (!list.contains(entriesToAdd))
+                                list.add(list.indexOf(dataset.unusualWithBaby) + 1, entriesToAdd)
+                        } else
+                            list.remove(entriesToAdd)
+                        adapter.submitList(list)
+                    }
+                }
+            }
+        }
     }
 
 
@@ -112,6 +130,6 @@ class HbncPartIIViewModel  @Inject constructor(
     }
 
     fun setExistingValues() {
-
+        dataset.setExistingValuesForPartIIPage(hbnc!!)
     }
 }

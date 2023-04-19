@@ -1,34 +1,47 @@
 package org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.part_1
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
-import org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.card.HbncVisitCardViewModel
-import org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.part_1.HbncPartIViewModel.*
+import org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.part_1.HbncPartIViewModel.State
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
 @AndroidEntryPoint
 class HbncPartIFragment : Fragment() {
 
-    private var _binding : FragmentNewFormBinding? = null
-    private val binding : FragmentNewFormBinding
+    private var _binding: FragmentNewFormBinding? = null
+    private val binding: FragmentNewFormBinding
         get() = _binding!!
 
 
     private val viewModel: HbncPartIViewModel by viewModels()
+
+    private val errorAlert by lazy {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Alert")
+            .setPositiveButton("Ok"){dialog,_ ->
+                viewModel.resetErrorMessage()
+                dialog.dismiss()
+            }
+            .create()
+    }
+
+    private fun showErrorAlert(message : String){
+        errorAlert.setMessage(message)
+        errorAlert.show()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,12 +62,12 @@ class HbncPartIFragment : Fragment() {
         binding.btnSubmit.setOnClickListener {
             if (validate()) viewModel.submitForm()
         }
-        viewModel.exists.observe(viewLifecycleOwner) {exists ->
+        viewModel.exists.observe(viewLifecycleOwner) { exists ->
             val adapter = FormInputAdapter(isEnabled = !exists)
             binding.form.rvInputForm.adapter = adapter
             if (exists) {
                 binding.btnSubmit.visibility = View.GONE
-                viewModel.setExistingValues()
+//                viewModel.setExistingValues()
             }
 //            else {
 //                viewModel.address.observe(viewLifecycleOwner) {
@@ -62,7 +75,8 @@ class HbncPartIFragment : Fragment() {
 //                }
 //            }
             lifecycleScope.launch {
-                adapter.submitList(viewModel.getFirstPage())
+                adapter.submitList(viewModel.getFirstPage(exists))
+                if(!exists)viewModel.observeForm(adapter)
             }
         }
 
@@ -94,6 +108,14 @@ class HbncPartIFragment : Fragment() {
                     binding.btnSubmit.visibility = View.VISIBLE
                     binding.cvPatientInformation.visibility = View.VISIBLE
                     binding.pbForm.visibility = View.GONE
+                }
+
+            }
+        }
+        lifecycleScope.launch{
+            viewModel.errorMessage.collect{
+                it?.let {
+                    showErrorAlert(it)
                 }
 
             }

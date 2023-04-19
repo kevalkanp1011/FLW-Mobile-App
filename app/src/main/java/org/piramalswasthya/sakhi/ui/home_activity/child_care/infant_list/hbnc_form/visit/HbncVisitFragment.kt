@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -13,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
-import org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.visit.HbncVisitViewModel.*
+import org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.visit.HbncVisitViewModel.State
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
@@ -27,6 +28,24 @@ class HbncVisitFragment : Fragment() {
 
 
     private val viewModel: HbncVisitViewModel by viewModels()
+
+    private val errorAlert by lazy {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Alert")
+            .setPositiveButton("Ok"){dialog,_ ->
+                dialog.dismiss()
+            }
+            .setOnDismissListener {
+                viewModel.resetErrorMessage()
+            }
+            .create()
+    }
+
+    private fun showErrorAlert(message : String){
+        errorAlert.setMessage(message)
+        errorAlert.show()
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,6 +75,7 @@ class HbncVisitFragment : Fragment() {
             }
             lifecycleScope.launch {
                 adapter.submitList(viewModel.getFirstPage())
+                if(!exists)viewModel.observerForm(adapter)
             }
         }
 
@@ -89,6 +109,13 @@ class HbncVisitFragment : Fragment() {
                     binding.pbForm.visibility = View.GONE
                 }
 
+            }
+        }
+        lifecycleScope.launch{
+            viewModel.errorMessage.collect{
+                it?.let {
+                    showErrorAlert(it)
+                }
             }
         }
     }
