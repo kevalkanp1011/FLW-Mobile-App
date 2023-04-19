@@ -1000,6 +1000,7 @@ class HBNCFormDataset(
 
     fun getCardPage(
         asha: UserCache, childBen: BenRegCache, motherBen: BenRegCache?
+        , visitCard: HbncVisitCard?, exists: Boolean
     ): List<FormInput> {
         ashaName.value.value = asha.userName
         villageName.value.value = asha.villageEnglish[0]
@@ -1013,13 +1014,16 @@ class HBNCFormDataset(
         motherBen?.let {
             dateOfDelivery.value.value = it.genDetails?.deliveryDate
         }
+         if(exists)
+             setExistingValuesForCardPage(visitCard)
+
         return cardPage
 
 
     }
 
-    fun setExistingValuesForCardPage(hbnc: HBNCCache) {
-        hbnc.visitCard?.let {
+    fun setExistingValuesForCardPage(visitCard: HbncVisitCard?) {
+        visitCard?.let {
             healthSubCenterName.value.value = it.subCenterName
             dateOfDelivery.value.value = getDateFromLong(it.dateOfDelivery)
             gender.value.value = gender.entries?.get(it.babyGender)
@@ -1053,7 +1057,7 @@ class HBNCFormDataset(
         )
     }
 
-    fun getPartIPage(visitCard: HbncVisitCard?): List<FormInput> {
+    fun getPartIPage(visitCard: HbncVisitCard?, hbncPartI: HbncPartI?, exists: Boolean): List<FormInput> {
         babyAlive.value.value = visitCard?.stillBirth?.let {
            when(it){
                0 -> null
@@ -1061,11 +1065,58 @@ class HBNCFormDataset(
                2 -> babyAlive.entries?.get(0)
                else -> null
            } }
-        return partIPage
+        return if(!exists)
+            partIPage
+        else{
+            setExistingValuesForPartIPage(hbncPartI)
+            val list = partIPage.toMutableList()
+            addNecessaryDependantFieldsToList(list, hbncPartI)
+            list
+        }
     }
-    fun setExistingValuesForPartIPage(hbnc: HBNCCache) {
-        hbnc.part1?.let {
+
+    private fun addNecessaryDependantFieldsToList(list: MutableList<FormInput>, hbncPartI: HbncPartI?) {
+        hbncPartI?.let {
+            if(it.babyAlive==2) {
+                list.addAll(
+                    list.indexOf(babyAlive) + 1,
+                    listOf(
+                        dateOfBabyDeath,
+                        timeOfBabyDeath,
+                        placeOfBabyDeath,
+                    )
+                )
+                if(it.placeOfBabyDeath == (placeOfBabyDeath.entries!!.size-1))
+                    list.add(list.indexOf(placeOfBabyDeath)+1,otherPlaceOfBabyDeath)
+
+            }
+            if(it.motherAlive==2) {
+                list.addAll(
+                    list.indexOf(motherAlive) + 1,
+                    listOf(
+                        dateOfMotherDeath,
+                        timeOfMotherDeath,
+                        placeOfMotherDeath
+                    )
+                )
+                if(it.placeOfMotherDeath == (placeOfMotherDeath.entries!!.size-1))
+                    list.add(list.indexOf(placeOfMotherDeath)+1,otherPlaceOfMotherDeath)
+            }
+        }
+
+    }
+
+    private fun setExistingValuesForPartIPage(hbncPartI : HbncPartI?) {
+        hbncPartI?.let {
             babyAlive.value.value = babyAlive.getStringFromPosition(it.babyAlive)
+            dateOfBabyDeath.value.value = getDateFromLong(it.dateOfBabyDeath)
+            timeOfBabyDeath.value.value = it.timeOfBabyDeath
+            placeOfBabyDeath.value.value = placeOfBabyDeath.getStringFromPosition(it.placeOfBabyDeath)
+            otherPlaceOfBabyDeath.value.value = it.otherPlaceOfBabyDeath
+            dateOfMotherDeath.value.value = getDateFromLong(it.dateOfMotherDeath)
+            timeOfMotherDeath.value.value = it.timeOfMotherDeath
+            placeOfMotherDeath.value.value = placeOfMotherDeath.getStringFromPosition(it.placeOfMotherDeath)
+            otherPlaceOfMotherDeath.value.value = it.otherPlaceOfMotherDeath
             babyPreterm.value.value = babyPreterm.getStringFromPosition(it.isBabyPreterm)
             dateOfBabyFirstExamination.value.value = getDateFromLong(it.dateOfFirstExamination)
             timeOfBabyFirstExamination.value.value = it.timeOfFirstExamination

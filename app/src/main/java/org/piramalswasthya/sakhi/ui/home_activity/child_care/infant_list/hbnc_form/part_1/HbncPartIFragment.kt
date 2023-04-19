@@ -67,7 +67,7 @@ class HbncPartIFragment : Fragment() {
             binding.form.rvInputForm.adapter = adapter
             if (exists) {
                 binding.btnSubmit.visibility = View.GONE
-                viewModel.setExistingValues()
+//                viewModel.setExistingValues()
             }
 //            else {
 //                viewModel.address.observe(viewLifecycleOwner) {
@@ -75,7 +75,7 @@ class HbncPartIFragment : Fragment() {
 //                }
 //            }
             lifecycleScope.launch {
-                adapter.submitList(viewModel.getFirstPage())
+                adapter.submitList(viewModel.getFirstPage(exists))
                 if(!exists)viewModel.observeForm(adapter)
             }
         }

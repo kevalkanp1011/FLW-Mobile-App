@@ -110,9 +110,9 @@ class HbncPartIViewModel @Inject constructor(
         }
     }
 
-    suspend fun getFirstPage(): List<FormInput> {
+    suspend fun getFirstPage(exists : Boolean): List<FormInput> {
         val visitCard = hbncRepo.getHbncCard(benId, hhId)
-        return dataset.getPartIPage(visitCard)
+        return dataset.getPartIPage(visitCard, hbnc?.part1, exists)
     }
 
     fun observeForm(adapter: FormInputAdapter) {
@@ -261,8 +261,8 @@ class HbncPartIViewModel @Inject constructor(
         }
     }
 
-    fun setExistingValues() {
-        dataset.setExistingValuesForPartIPage(hbnc!!)
-    }
+//    fun setExistingValues() {
+//        dataset.setExistingValuesForPartIPage(hbnc!!)
+//    }
 }
 

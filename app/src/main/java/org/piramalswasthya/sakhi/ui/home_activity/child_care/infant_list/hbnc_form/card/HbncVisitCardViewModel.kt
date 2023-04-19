@@ -104,8 +104,9 @@ class HbncVisitCardViewModel @Inject constructor(
         }
     }
 
-    fun getFirstPage(): List<FormInput> {
-        return dataset.getCardPage(user,ben,null)
+    fun getFirstPage(exists: Boolean): List<FormInput> {
+
+        return dataset.getCardPage(user,ben,null, hbnc?.visitCard, exists)
     }
 
 
@@ -118,7 +119,7 @@ class HbncVisitCardViewModel @Inject constructor(
         }
     }
 
-    fun setExistingValues() {
-        dataset.setExistingValuesForCardPage(hbnc!!)
-    }
+//    private fun setExistingValues() {
+//        dataset.setExistingValuesForCardPage(hbnc!!)
+//    }
 }
