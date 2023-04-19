@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity.create_abha_id
 
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
@@ -41,6 +42,8 @@ class CreateAbhaFragment : Fragment() {
     private val binding: FragmentCreateAbhaBinding
         get() = _binding!!
     private val viewModel: CreateAbhaViewModel by viewModels()
+
+    private val channelId = "download abha card"
 
     private val onBackPressedCallback by lazy {
         object : OnBackPressedCallback(true) {
@@ -85,6 +88,13 @@ class CreateAbhaFragment : Fragment() {
             val abhaVal = viewModel.abha.value
             val fileName =
                 "${abhaVal?.name}_${System.currentTimeMillis()}.pdf"
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val notificationManager =
+                    requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                val channel = NotificationChannel(channelId,channelId,
+                    NotificationManager.IMPORTANCE_HIGH)
+                notificationManager.createNotificationChannel(channel)
+            }
 
             val state: LiveData<Operation.State> = WorkerUtils
                 .triggerDownloadCardWorker(requireContext(), fileName)
@@ -94,11 +104,6 @@ class CreateAbhaFragment : Fragment() {
                     is Operation.State.SUCCESS -> {
                         binding.txtDownloadAbha.visibility = View.INVISIBLE
                         binding.downloadAbha.visibility = View.INVISIBLE
-                        val notificationManager = requireContext()
-                            .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                        notificationManager.cancel(1)
-//                        NotificationUtils.showDownloadedFile(requireContext(),
-//                            fileName, "Abha Card Download")
                         Snackbar.make(binding.root,
                             "Downloaded $fileName successfully", Snackbar.LENGTH_SHORT).show()
                     }

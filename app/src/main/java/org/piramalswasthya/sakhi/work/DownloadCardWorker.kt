@@ -73,17 +73,17 @@ class DownloadCardWorker @AssistedInject constructor(
                 outputStream.close()
                 inputStream.close()
 
-//                MediaScannerConnection.scanFile(
-//                    appContext,
-//                    arrayOf(file.toString()),
-//                    null,
-//                ) { _, uri ->
-//                    run {
-//                        if (fileName != null) {
-//                            showDownload(fileName, uri)
-//                        }
-//                    }
-//                }
+                MediaScannerConnection.scanFile(
+                    appContext,
+                    arrayOf(file.toString()),
+                    null,
+                ) { _, uri ->
+                    run {
+                        if (fileName != null) {
+                            showDownload(fileName, uri)
+                        }
+                    }
+                }
                 return@withContext Result.success()
             }
         } catch (e : java.lang.Exception) {
@@ -93,10 +93,6 @@ class DownloadCardWorker @AssistedInject constructor(
 
     private fun createForegroundInfo(progress: String): ForegroundInfo {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId,channelId,NotificationManager.IMPORTANCE_HIGH)
-            notificationManager.createNotificationChannel(channel)
-        }
         val notification = NotificationCompat.Builder(appContext,channelId)
             .setContentTitle("Downloading abha card")
             .setContentText(progress)
@@ -110,14 +106,14 @@ class DownloadCardWorker @AssistedInject constructor(
     private fun showDownload(fileName: String, uri: Uri) {
         val notificationBuilder = NotificationCompat.Builder(appContext,fileName)
             .setSmallIcon(R.drawable.ic_download)
-            .setChannelId(fileName)
+            .setChannelId(channelId)
             .setContentTitle(fileName)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-        notificationManager.notify(1, notificationBuilder.build())
+
         notificationBuilder.setContentTitle(fileName)
             .setContentText(fileName)
             .setAutoCancel(true)
-            .setOngoing(true)
+            .setOngoing(false)
             .setContentIntent(
                 PendingIntent.getActivity(
                     appContext,
