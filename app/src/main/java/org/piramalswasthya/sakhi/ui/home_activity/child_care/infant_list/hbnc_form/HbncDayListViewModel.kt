@@ -22,8 +22,6 @@ class HbncDayListViewModel @Inject constructor(
     private val benId = HbncDayListFragmentArgs.fromSavedStateHandle(state).benId
     private val hhId = HbncDayListFragmentArgs.fromSavedStateHandle(state).hhId
 
-
-
     val dayList = hbncRepo.hbncList(benId, hhId).transform { dateList ->
         val daysList = dateList.map { it.homeVisitDate }
         val visitCardIcon = HbncIcon(

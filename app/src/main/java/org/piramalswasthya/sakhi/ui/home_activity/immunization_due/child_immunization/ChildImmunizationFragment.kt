@@ -1,46 +1,39 @@
-package org.piramalswasthya.sakhi.ui.home_activity.immunization_due
+package org.piramalswasthya.sakhi.ui.home_activity.immunization_due.child_immunization
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
-import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
-import org.piramalswasthya.sakhi.model.TypeOfList
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
-import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
-import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
-import org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_eligible_list.NcdEligibleListFragmentDirections
-import org.piramalswasthya.sakhi.work.WorkerUtils
 
 @AndroidEntryPoint
-class ImmunizationDueFragment : Fragment() {
+class ChildImmunizationFragment : Fragment() {
+    private var _binding : FragmentDisplaySearchRvButtonBinding? = null
 
-    private val binding: FragmentDisplaySearchRvButtonBinding by lazy {
-        FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater)
-    }
+    private val binding  : FragmentDisplaySearchRvButtonBinding
+        get() = _binding!!
 
-    private val viewModel: ImmunizationDueViewModel by viewModels()
 
-    private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
+    private val viewModel: ChildImmunizationViewModel by viewModels()
+
+//    private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -57,15 +50,7 @@ class ImmunizationDueFragment : Fragment() {
                 {
 
                 }
-    //            { hhId, benId  ->
-//                    findNavController().navigate(
-//                        ImmunizationDueFragmentDirections.actionImmunizationDueFragmentToImmunizationListFragment(
-//                            hhId,
-//                            benId)
-//                    )
-            //    }
-            //), "Vaccine Form"
-        ))
+            ))
         binding.rvAny.adapter = benAdapter
 
         lifecycleScope.launch {
@@ -102,7 +87,7 @@ class ImmunizationDueFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let{
-            (it as HomeActivity).setLogo(R.drawable.ic__immunization)
+            (it as HomeActivity).setLogo(R.drawable.ic__child)
         }
     }
 

@@ -84,6 +84,15 @@ class RecordsRepo @Inject constructor(
 
     val mdsrList = database.benDao.getAllMDSRList()
         .map { list -> list.map { it.asBenBasicDomainModelForMdsrForm() } }
+
+    val childrenImmunizationList = database.benDao.getAllChildrenImmunizationList()
+        .map { list -> list.map { it.asBasicDomainModel() } }
+    val childrenImmunizationListCount = childrenImmunizationList.map { it.size }
+
+    val motherImmunizationList = database.benDao.getAllMotherImmunizationList()
+        .map { list -> list.map { it.asBasicDomainModel() } }
+    val motherImmunizationListCount = motherImmunizationList.map { it.size }
+
 //    val mdsrListCount = mdsrList.map { it.size }
 
 
