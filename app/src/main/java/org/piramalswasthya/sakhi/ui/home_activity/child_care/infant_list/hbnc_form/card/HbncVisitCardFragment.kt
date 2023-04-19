@@ -13,7 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
-import org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.card.HbncVisitCardViewModel.*
+import org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.card.HbncVisitCardViewModel.State
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
@@ -51,7 +51,6 @@ class HbncVisitCardFragment : Fragment() {
             binding.form.rvInputForm.adapter = adapter
             if (exists) {
                 binding.btnSubmit.visibility = View.GONE
-                viewModel.setExistingValues()
             }
 //            else {
 //                viewModel.address.observe(viewLifecycleOwner) {
@@ -59,7 +58,7 @@ class HbncVisitCardFragment : Fragment() {
 //                }
 //            }
             lifecycleScope.launch {
-                adapter.submitList(viewModel.getFirstPage())
+                adapter.submitList(viewModel.getFirstPage(exists))
             }
         }
 

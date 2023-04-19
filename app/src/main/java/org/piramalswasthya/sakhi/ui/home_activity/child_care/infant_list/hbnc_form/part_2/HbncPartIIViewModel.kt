@@ -130,6 +130,6 @@ class HbncPartIIViewModel  @Inject constructor(
     }
 
     fun setExistingValues() {
-
+        dataset.setExistingValuesForPartIIPage(hbnc!!)
     }
 }

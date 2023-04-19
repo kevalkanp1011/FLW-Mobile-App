@@ -18,8 +18,8 @@ object Konstants {
     const val minAgeForChild: Int = 2
     const val maxAgeForChild: Int = 5
     const val minAgeForAdolescent: Int = 6
-    const val maxAgeForAdolescent: Int = 15
-    const val maxAgeForCdr: Int = 15
+    const val maxAgeForAdolescent: Int = 14
+    const val maxAgeForCdr: Int = 14
 
 
     //HBNC
