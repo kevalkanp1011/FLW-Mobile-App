@@ -1,20 +1,35 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity.create_abha_id
 
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.Operation
+import androidx.work.WorkManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentCreateAbhaBinding
 import org.piramalswasthya.sakhi.ui.abha_id_activity.create_abha_id.CreateAbhaViewModel.State
+import org.piramalswasthya.sakhi.utils.NotificationUtils
+import org.piramalswasthya.sakhi.work.DownloadCardWorker
+import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class CreateAbhaFragment : Fragment() {
@@ -67,7 +82,31 @@ class CreateAbhaFragment : Fragment() {
         navController = findNavController()
 
         binding.btnDownloadAbhaYes.setOnClickListener {
-            viewModel.downloadAbhaClicked(requireActivity())
+            val abhaVal = viewModel.abha.value
+            val fileName =
+                "${abhaVal?.name}_${System.currentTimeMillis()}.pdf"
+
+            val state: LiveData<Operation.State> = WorkerUtils
+                .triggerDownloadCardWorker(requireContext(), fileName)
+
+            state.observe(viewLifecycleOwner) {
+                when(it) {
+                    is Operation.State.SUCCESS -> {
+                        binding.txtDownloadAbha.visibility = View.INVISIBLE
+                        binding.downloadAbha.visibility = View.INVISIBLE
+                        val notificationManager = requireContext()
+                            .getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                        notificationManager.cancel(1)
+//                        NotificationUtils.showDownloadedFile(requireContext(),
+//                            fileName, "Abha Card Download")
+                        Snackbar.make(binding.root,
+                            "Downloaded $fileName successfully", Snackbar.LENGTH_SHORT).show()
+                    }
+                    is Operation.State.FAILURE -> {
+                        Toast.makeText(context, "Failed to download , Please retry", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
 
         binding.btnDownloadAbhaNo.setOnClickListener{
@@ -107,8 +146,6 @@ class CreateAbhaFragment : Fragment() {
                     binding.pbCai.visibility = View.INVISIBLE
                     binding.clCreateAbhaId.visibility = View.VISIBLE
                     binding.clError.visibility = View.INVISIBLE
-                    binding.txtDownloadAbha.visibility = View.INVISIBLE
-                    binding.downloadAbha.visibility = View.INVISIBLE
                 }
             }
         }

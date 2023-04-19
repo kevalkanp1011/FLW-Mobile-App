@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.work
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.work.*
 
 object WorkerUtils {
@@ -45,6 +46,16 @@ object WorkerUtils {
             .enqueueUniqueWork(GenerateBenIdsWorker.name, ExistingWorkPolicy.KEEP, workRequest)
     }
 
+    fun triggerDownloadCardWorker(context: Context, fileName: String): LiveData<Operation.State> {
+
+        val workRequest = OneTimeWorkRequestBuilder<DownloadCardWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .setInputData(Data.Builder().apply { putString(DownloadCardWorker.file_name, fileName) }.build())
+            .build()
+
+        return WorkManager.getInstance(context)
+            .enqueueUniqueWork(DownloadCardWorker.name, ExistingWorkPolicy.REPLACE, workRequest).state
+    }
     fun cancelAllWork(context: Context) {
         val workManager = WorkManager.getInstance(context)
         workManager.cancelAllWork()
