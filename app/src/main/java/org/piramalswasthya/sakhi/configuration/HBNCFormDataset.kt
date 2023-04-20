@@ -1,7 +1,6 @@
 package org.piramalswasthya.sakhi.configuration
 
 import org.piramalswasthya.sakhi.model.*
-import org.piramalswasthya.sakhi.model.FormInput.InputType
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -57,34 +56,35 @@ class HBNCFormDataset(
         )
     }
 
-    fun mapPartIValues(hbnc: HBNCCache) {
-        hbnc.part1 = HbncPartI(
-            babyAlive = babyAlive.getPosition(),
-            dateOfBabyDeath = getLongFromDate(dateOfBabyDeath.value.value),
-            timeOfBabyDeath = timeOfBabyDeath.value.value,
-            placeOfBabyDeath = placeOfBabyDeath.getPosition(),
-            otherPlaceOfBabyDeath = otherPlaceOfBabyDeath.value.value,
-            isBabyPreterm = babyPreterm.getPosition(),
-            gestationalAge = gestationalAge.getPosition(),
-            dateOfFirstExamination = getLongFromDate(dateOfBabyFirstExamination.value.value),
-            timeOfFirstExamination = timeOfBabyFirstExamination.value.value,
-            motherAlive = motherAlive.getPosition(),
-            dateOfMotherDeath = getLongFromDate(dateOfMotherDeath.value.value),
-            timeOfMotherDeath = timeOfMotherDeath.value.value,
-            placeOfMotherDeath = placeOfBabyDeath.getPosition(),
-            otherPlaceOfMotherDeath = otherPlaceOfMotherDeath.value.value,
-            motherAnyProblem = motherProblems.value.value,
-            babyFirstFed = babyFedAfterBirth.getPosition(),
-            otherBabyFirstFed = otherBabyFedAfterBirth.value.value,
-            timeBabyFirstFed = whenBabyFirstFed.value.value,
-            howBabyTookFirstFeed = howBabyTookFirstFeed.getPosition(),
-            motherHasBreastFeedProblem = motherHasBreastFeedProblem.getPosition(),
-            motherBreastFeedProblem = motherBreastFeedProblem.value.value,
-        )
-    }
+//    fun mapPartIValues(hbnc: HBNCCache) {
+//        hbnc.part1 = HbncPartI(
+//            babyAlive = babyAlive.getPosition(),
+//            dateOfBabyDeath = getLongFromDate(dateOfBabyDeath.value.value),
+//            timeOfBabyDeath = timeOfBabyDeath.value.value,
+//            placeOfBabyDeath = placeOfBabyDeath.getPosition(),
+//            otherPlaceOfBabyDeath = otherPlaceOfBabyDeath.value.value,
+//            isBabyPreterm = babyPreterm.getPosition(),
+//            gestationalAge = gestationalAge.getPosition(),
+//            dateOfFirstExamination = getLongFromDate(dateOfBabyFirstExamination.value.value),
+//            timeOfFirstExamination = timeOfBabyFirstExamination.value.value,
+//            motherAlive = motherAlive.getPosition(),
+//            dateOfMotherDeath = getLongFromDate(dateOfMotherDeath.value.value),
+//            timeOfMotherDeath = timeOfMotherDeath.value.value,
+//            placeOfMotherDeath = placeOfBabyDeath.getPosition(),
+//            otherPlaceOfMotherDeath = otherPlaceOfMotherDeath.value.value,
+//            motherAnyProblem = motherProblems.value.value,
+//            babyFirstFed = babyFedAfterBirth.getPosition(),
+//            otherBabyFirstFed = otherBabyFedAfterBirth.value.value,
+//            timeBabyFirstFed = whenBabyFirstFed.value.value,
+//            howBabyTookFirstFeed = howBabyTookFirstFeed.getPosition(),
+//            motherHasBreastFeedProblem = motherHasBreastFeedProblem.getPosition(),
+//            motherBreastFeedProblem = motherBreastFeedProblem.value.value,
+//        )
+//    }
 
     fun mapPartIIValues(hbnc: HBNCCache) {
         hbnc.part2 = HbncPartII(
+            dateOfVisit = System.currentTimeMillis(),
             babyTemperature = babyTemperature.value.value,
             babyEyeCondition = babyEyeCondition.getPosition(),
             babyUmbilicalBleed = babyBleedUmbilicalCord.getPosition(),
@@ -106,7 +106,7 @@ class HBNCFormDataset(
 
     fun mapVisitValues(hbnc: HBNCCache) {
         hbnc.homeVisitForm = HbncHomeVisit(
-            dateOfAshaVisit = getLongFromDate(dateOfMotherDeath.value.value),
+            dateOfVisit = getLongFromDate(dateOfMotherDeath.value.value),
             babyAlive = babyAlive.getPosition(),
             numTimesFullMeal24hr = timesMotherFed24hr.value.value?.toInt() ?: 0,
             numPadChanged24hr = timesPadChanged.value.value?.toInt() ?: 0,
@@ -1228,7 +1228,7 @@ class HBNCFormDataset(
 
     fun setExistingValuesForVisitPage(hbnc: HBNCCache) {
         hbnc.homeVisitForm?.let {
-            dateOfAshaVisit.value.value = getDateFromLong(it.dateOfAshaVisit)
+            dateOfAshaVisit.value.value = getDateFromLong(it.dateOfVisit)
             babyAlive.value.value = babyAlive.getStringFromPosition(it.babyAlive)
             timesMotherFed24hr.value.value = it.numTimesFullMeal24hr.toString()
             timesPadChanged.value.value = it.numPadChanged24hr.toString()

@@ -11,7 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.adapters.FormInputAdapterV2
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.card.HbncVisitCardViewModel.State
 import org.piramalswasthya.sakhi.work.WorkerUtils
@@ -20,8 +20,8 @@ import timber.log.Timber
 @AndroidEntryPoint
 class HbncVisitCardFragment : Fragment() {
 
-    private var _binding : FragmentNewFormBinding? = null
-    private val binding : FragmentNewFormBinding
+    private var _binding: FragmentNewFormBinding? = null
+    private val binding: FragmentNewFormBinding
         get() = _binding!!
 
 
@@ -46,8 +46,13 @@ class HbncVisitCardFragment : Fragment() {
         binding.btnSubmit.setOnClickListener {
             if (validate()) viewModel.submitForm()
         }
-        viewModel.exists.observe(viewLifecycleOwner) {exists ->
-            val adapter = FormInputAdapter(isEnabled = !exists)
+        viewModel.exists.observe(viewLifecycleOwner) { exists ->
+            val adapter = FormInputAdapterV2(
+                imageClickListener = null,
+                formValueListener = FormInputAdapterV2.FormValueListener { formId, index ->
+                    viewModel.updateListOnValueChanged(formId, index)
+                }, isEnabled = !exists
+            )
             binding.form.rvInputForm.adapter = adapter
             if (exists) {
                 binding.btnSubmit.visibility = View.GONE
@@ -57,10 +62,15 @@ class HbncVisitCardFragment : Fragment() {
 //                    viewModel.setAddress(it, adapter)
 //                }
 //            }
-            lifecycleScope.launch {
-                adapter.submitList(viewModel.getFirstPage(exists))
+        }
+
+        lifecycleScope.launch{
+            viewModel.formList.collect{
+                Timber.d("Collecting formList : $it")
+                (binding.form.rvInputForm.adapter as FormInputAdapterV2?)?.submitList(it)
             }
         }
+
 
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
@@ -98,7 +108,7 @@ class HbncVisitCardFragment : Fragment() {
 
     fun validate(): Boolean {
         val result = binding.form.rvInputForm.adapter?.let {
-            (it as FormInputAdapter).validateInput()
+            (it as FormInputAdapterV2).validateInput()
         }
         Timber.d("Validation : $result")
         return if (result == -1)

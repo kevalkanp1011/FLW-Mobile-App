@@ -18,46 +18,46 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     }
 
     private val mctsNumberOrRchNumber = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "MCTS Number/RCH Number",
         required = false
     )
     val haveMCPCard = FormInput(
-        inputType = FormInput.InputType.RADIO,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = "Does the beneficiary have an MCP card",
         entries = arrayOf("Yes", "No"),
         required = false
     )
 
     val givenMCPCard = FormInput(
-        inputType = FormInput.InputType.RADIO,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = "MCP card is given",
         entries = arrayOf("Yes", "No"),
         required = false
     )
     val husbandName = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "Husband’s Name",
         required = false
     )
     val address = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "Address",
         required = false
     )
     val mobileNumber = FormInput(
-        inputType = FormInput.InputType.TEXT_VIEW,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Mobile number",
         required = false
     )
     private val numANC = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "Number of ANCs done before delivery",
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
     private val weight = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "Weight (in Kg)",
         min = 30,
         max = 200,
@@ -66,102 +66,102 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
         required = false
     )
     val systolicBloodPressure = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "Systolic Blood Pressure",
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
     val diastolicBloodPressure = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "Diastolic Blood Pressure",
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
     private val abdominalCheckUp = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "Abdominal Check-up",
         required = false
     )
     private val fetalHRPM = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "Fetal Heart Rate per minute",
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
     private val twinPregnancy = FormInput(
-        inputType = FormInput.InputType.RADIO,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = "Twins pregnancy",
         entries = arrayOf("Yes", "No"),
         required = false
     )
     private val urineAlbumin = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "Urine albumin",
         required = false
     )
     private val haemoglobinAndBloodGroup = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "Haemoglobin and blood group",
         required = false
     )
     private val hiv = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "HIV",
         required = false
     )
     private val vdrl = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "Vdrl",
         required = false
     )
     private val hbsc = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "HBSC (Hepatitis B) ",
         required = false
     )
     private val malaria = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "Malaria ",
         required = false
     )
     private val hivTestDuringANC = FormInput(
-        inputType = FormInput.InputType.RADIO,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = "Was HIV test done during ANC Check up? ",
         entries = arrayOf("Yes", "No"),
         required = false
     )
     private val swollenCondtion = FormInput(
-        inputType = FormInput.InputType.RADIO,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = "Swollen condition ",
         entries = arrayOf("Yes", "No"),
         required = false
     )
     private val bloodSugarTest = FormInput(
-        inputType = FormInput.InputType.RADIO,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = "Blood sugar test ",
         entries = arrayOf("Yes", "No"),
         required = false
     )
     private val ultraSound = FormInput(
-        inputType = FormInput.InputType.RADIO,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = "Ultrasound ",
         entries = arrayOf("Yes", "No"),
         required = false
     )
     private val ironFolicAcid = FormInput(
-        inputType = FormInput.InputType.RADIO,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = "Iron Folic Acid ",
         entries = arrayOf("Yes", "No"),
         required = false
     )
     private val calciumSupplementation = FormInput(
-        inputType = FormInput.InputType.RADIO,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = "Calcium Supplementation ",
         entries = arrayOf("Yes", "No"),
         required = false
     )
     private val tetanusToxoid = FormInput(
-        inputType = FormInput.InputType.RADIO,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = "Tetanus toxoid ",
         entries = arrayOf(
             "First",
@@ -171,48 +171,48 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
         required = false
     )
     val lastMenstrualPeriod = FormInput(
-        inputType = FormInput.InputType.DATE_PICKER,
+        inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
         title = "Last Menstrual Period ",
         min = 0L,
         max = System.currentTimeMillis(),
         required = true
     )
     val expectedDateOfDelivery = FormInput(
-        inputType = FormInput.InputType.TEXT_VIEW,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Expected Date of Delivery ",
         required = true
     )
     val highriskSymbols = FormInput(
-        inputType = FormInput.InputType.RADIO,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = "Identification of high risk symbols",
         entries = arrayOf("Yes", "No"),
         required = false
     )
     val highRiskReason = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "If yes, select the reason give below and write",
         required = false
     )
     private val highRiskPregnant = FormInput(
-        inputType = FormInput.InputType.RADIO,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = "Pregnant in high risk category treated",
         entries = arrayOf("Yes", "No"),
         required = false
     )
     private val highRiskPregnancyReferred = FormInput(
-        inputType = FormInput.InputType.RADIO,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = "Pregnant in high risk category was referred",
         entries = arrayOf("Yes", "No"),
         required = false
     )
     private val birthPrepAndNutritionAndFamilyPlanning = FormInput(
-        inputType = FormInput.InputType.RADIO,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = "Preparation for birth and complications, nutrition and family planning",
         entries = arrayOf("Yes", "No"),
         required = false
     )
     private val medicalOfficerSign = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "Signature of medical officer in charge ",
         required = false
     )

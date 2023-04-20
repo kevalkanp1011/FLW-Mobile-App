@@ -60,6 +60,8 @@ data class HBNCCache(
         return format1.format(Calendar.getInstance().apply { timeInMillis = long }.time)
     }
 
+
+
 //    fun asPostModel(
 //        user: UserCache,
 //        household: HouseholdCache,
@@ -192,6 +194,7 @@ data class HbncVisitCard(
 )
 
 data class HbncPartI(
+    val dateOfVisit : Long,
     val babyAlive: Int,
     val dateOfBabyDeath: Long,
     val timeOfBabyDeath: String?,
@@ -216,6 +219,7 @@ data class HbncPartI(
 )
 
 data class HbncPartII(
+    val dateOfVisit : Long,
     val babyTemperature: String?,
     val babyEyeCondition: Int,
     val babyUmbilicalBleed : Int,
@@ -237,7 +241,7 @@ data class HbncPartII(
     )
 
 data class HbncHomeVisit(
-    val dateOfAshaVisit : Long,
+    val dateOfVisit : Long,
     val babyAlive: Int,
     val numTimesFullMeal24hr : Int,
     val numPadChanged24hr : Int,

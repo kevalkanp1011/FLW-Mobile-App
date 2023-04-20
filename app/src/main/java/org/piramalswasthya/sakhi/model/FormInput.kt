@@ -24,18 +24,27 @@ data class FormInput(
     var maxDecimal : Double? = null,
     val orientation: Int? = null,
     var imageFile: File? = null
-){
+)
 
-//-----------------Do NOT mess with order of enum values ----------------------//
-    enum class InputType{
-        EDIT_TEXT,
-        DROPDOWN,
-        RADIO,
-        DATE_PICKER,
-        TEXT_VIEW,
-        IMAGE_VIEW,
-        CHECKBOXES,
-        TIME_PICKER,
-        HEADLINE
-    }
-}
+data class FormInputV2(
+    val id : Int,
+    val inputType: InputType,
+    var title: String,
+    val subtitle : String? = null,
+    var entries: Array<String>? = null,
+    var required: Boolean,
+    val hasDependants : Boolean = false,
+    var value: String? = null,
+    val regex: String? = null,
+    val allCaps: Boolean = false,
+    val etInputType: Int = TYPE_CLASS_TEXT,
+    val isMobileNumber: Boolean = false,
+    val etMaxLength: Int = 50,
+    var errorText: String? = null,
+    var max: Long? = null,
+    var min: Long? = null,
+    var minDecimal : Double? = null,
+    var maxDecimal : Double? = null,
+    val orientation: Int? = null,
+    var imageFile: File? = null
+)

@@ -2,6 +2,7 @@ package org.piramalswasthya.sakhi.adapters
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.os.Build
 import android.text.Editable
 import android.text.InputFilter
 import android.text.InputFilter.AllCaps
@@ -11,6 +12,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -22,48 +24,51 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.configuration.FormEditTextDefaultInputFilter
 import org.piramalswasthya.sakhi.databinding.*
 import org.piramalswasthya.sakhi.helpers.Konstants
-import org.piramalswasthya.sakhi.model.FormInput
+import org.piramalswasthya.sakhi.model.FormInputV2
 import org.piramalswasthya.sakhi.model.InputType.*
 import timber.log.Timber
 import java.util.*
 
-class FormInputAdapter(private val imageClickListener: ImageClickListener? = null, private val isEnabled: Boolean = true) :
-    ListAdapter<FormInput, ViewHolder>(FormInputDiffCallBack) {
-    object FormInputDiffCallBack : DiffUtil.ItemCallback<FormInput>() {
-        override fun areItemsTheSame(oldItem: FormInput, newItem: FormInput) =
-            oldItem.title == newItem.title
+class FormInputAdapterV2(
+    private val imageClickListener: ImageClickListener? = null,
+    private val formValueListener: FormValueListener? = null,
+    private val isEnabled: Boolean = true
+) :
+    ListAdapter<FormInputV2, ViewHolder>(FormInputDiffCallBack) {
+    object FormInputDiffCallBack : DiffUtil.ItemCallback<FormInputV2>() {
+        override fun areItemsTheSame(oldItem: FormInputV2, newItem: FormInputV2) =
+            oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: FormInput, newItem: FormInput) =
+        override fun areContentsTheSame(oldItem: FormInputV2, newItem: FormInputV2) =
             (oldItem == newItem)
 
     }
 
-    class EditTextInputViewHolder private constructor(private val binding: RvItemFormEditTextBinding) :
+    class EditTextInputViewHolder private constructor(private val binding: RvItemFormEditTextV2Binding) :
         ViewHolder(binding.root) {
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RvItemFormEditTextBinding.inflate(layoutInflater, parent, false)
+                val binding = RvItemFormEditTextV2Binding.inflate(layoutInflater, parent, false)
                 return EditTextInputViewHolder(binding)
             }
         }
 
-        fun bind(item: FormInput, isEnabled: Boolean) {
+        fun bind(item: FormInputV2, isEnabled: Boolean) {
 
             binding.et.isClickable = isEnabled
             binding.et.isFocusable = isEnabled
             binding.form = item
-            if(item.title.length>Konstants.editTextHintLimit) {
+            if (item.title.length > Konstants.editTextHintLimit) {
                 binding.tvHint.visibility = View.VISIBLE
                 binding.et.hint = null
                 binding.tilEditText.hint = null
                 binding.tilEditText.isHintEnabled = false
-            }
-            else {
+            } else {
                 binding.tvHint.visibility = View.GONE
                 binding.tilEditText.isHintEnabled = true
             }
-            if(!isEnabled){
+            if (!isEnabled) {
                 binding.executePendingBindings()
                 return
             }
@@ -82,15 +87,15 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
 
                 override fun afterTextChanged(editable: Editable?) {
                     if (editable == null || editable.toString() == "") {
-                        if(!item.required) {
+                        if (!item.required) {
                             item.errorText = null
                             binding.tilEditText.error = null
                         }
-                        item.value.value = null
+                        item.value = null
                         return
                     }
-                    editable.let { item.value.value = it.toString() }
-                    item.value.value = editable.toString()
+                    editable.let { item.value = it.toString() }
+                    item.value = editable.toString()
                     Timber.d("Item ET : $item")
                     if (item.isMobileNumber) {
                         if (item.etMaxLength == 10) {
@@ -105,7 +110,8 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
                             }
                         } else if (item.etMaxLength == 12) {
                             if (editable.first().toString()
-                                    .toInt() ==0 ||editable.length != item.etMaxLength ) {
+                                    .toInt() == 0 || editable.length != item.etMaxLength
+                            ) {
                                 item.errorText = "Invalid ${item.title} !"
                                 binding.tilEditText.error = item.errorText
                             } else {
@@ -113,8 +119,7 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
                                 binding.tilEditText.error = item.errorText
                             }
                         }
-                    }
-                    else if(item.etInputType == InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL){
+                    } else if (item.etInputType == InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL) {
                         val entered = editable.toString().toDouble()
                         item.minDecimal?.let {
                             if (entered < it) {
@@ -134,8 +139,7 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
                             item.errorText = null
                         }
 
-                    }
-                    else if (item.etInputType == (InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL)) {
+                    } else if (item.etInputType == (InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL)) {
                         val age = editable.toString().toLong()
                         item.min?.let {
                             if (age < it) {
@@ -186,36 +190,33 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
         }
     }
 
-    class DropDownInputViewHolder private constructor(private val binding: RvItemFormDropdownBinding) :
+    class DropDownInputViewHolder private constructor(private val binding: RvItemFormDropdownV2Binding) :
         ViewHolder(binding.root) {
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RvItemFormDropdownBinding.inflate(layoutInflater, parent, false)
+                val binding = RvItemFormDropdownV2Binding.inflate(layoutInflater, parent, false)
                 return DropDownInputViewHolder(binding)
             }
         }
 
-        fun bind(item: FormInput, isEnabled : Boolean) {
-            if(!isEnabled){
-                binding.form = item
+        fun bind(item: FormInputV2, isEnabled: Boolean, formValueListener: FormValueListener?) {
+            binding.form = item
+            if (!isEnabled) {
                 binding.tilRvDropdown.visibility = View.GONE
                 binding.tilEditText.visibility = View.VISIBLE
                 binding.et.isFocusable = false
                 binding.et.isClickable = false
-//                binding.clContent.isClickable = false
-
                 binding.executePendingBindings()
                 return
             }
-            val savedValue = item.value.value
-            item.value.value = null
-            item.value.value = savedValue
-            binding.form = item
 
             binding.actvRvDropdown.setOnItemClickListener { _, _, index, _ ->
-                item.value.value = item.entries?.get(index)
+                item.value = item.entries?.get(index)
                 Timber.d("Item DD : $item")
+                if(item.hasDependants) {
+                    formValueListener?.onValueChanged(item, index)
+                }
                 item.errorText = null
                 binding.tilRvDropdown.error = null
             }
@@ -226,19 +227,20 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
         }
     }
 
-    class RadioInputViewHolder private constructor(private val binding: RvItemFormRadioBinding) :
+    class RadioInputViewHolder private constructor(private val binding: RvItemFormRadioV2Binding) :
         ViewHolder(binding.root) {
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RvItemFormRadioBinding.inflate(layoutInflater, parent, false)
+                val binding = RvItemFormRadioV2Binding.inflate(layoutInflater, parent, false)
                 return RadioInputViewHolder(binding)
             }
         }
 
         fun bind(
-            item: FormInput, isEnabled: Boolean) {
-            if(!isEnabled){
+            item: FormInputV2, isEnabled: Boolean, formValueListener: FormValueListener?
+        ) {
+            if (!isEnabled) {
                 binding.rg.isClickable = false
                 binding.rg.isFocusable = false
             }
@@ -265,30 +267,37 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
 
                         rdBtn.text = it
                         addView(rdBtn)
-                        if (item.value.value == it)
+                        if (item.value == it)
                             rdBtn.isChecked = true
                         rdBtn.setOnCheckedChangeListener { _, b ->
                             if (b) {
-                                item.value.value = it
+                                item.value = it
+                                if(item.hasDependants) {
+                                    Timber.d("listener trigger : ${item.id} ${item.entries!!.indexOf(it)} $it")
+                                    formValueListener?.onValueChanged(
+                                        item,
+                                        item.entries!!.indexOf(it)
+                                    )
+                                }
                             }
                             item.errorText = null
                             binding.clRi.setBackgroundResource(0)
                         }
                     }
-                    item.value.value?.let { value ->
-                        children.forEach {
-                            if ((it as RadioButton).text == value) {
-                                clearCheck()
-                                check(it.id)
-                            }
-                        }
-                    }
+//                    item.value?.let { value ->
+//                        children.forEach {
+//                            if ((it as RadioButton).text == value) {
+//                                clearCheck()
+//                                check(it.id)
+//                            }
+//                        }
+//                    }
                 }
             }
 
 
 
-            if(!isEnabled){
+            if (!isEnabled) {
                 binding.rg.children.forEach {
                     it.isClickable = false
                 }
@@ -304,43 +313,89 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
         }
     }
 
-    class CheckBoxesInputViewHolder private constructor(private val binding: RvItemFormCheckBinding) :
+    class CheckBoxesInputViewHolder private constructor(private val binding: RvItemFormCheckV2Binding) :
         ViewHolder(binding.root) {
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RvItemFormCheckBinding.inflate(layoutInflater, parent, false)
+                val binding = RvItemFormCheckV2Binding.inflate(layoutInflater, parent, false)
                 return CheckBoxesInputViewHolder(binding)
             }
         }
 
         fun bind(
-            item: FormInput
+            item: FormInputV2
         ) {
             binding.form = item
             if (item.errorText != null)
                 binding.clRi.setBackgroundResource(R.drawable.state_errored)
             else
                 binding.clRi.setBackgroundResource(0)
+            binding.llChecks.removeAllViews()
+            binding.llChecks.apply{
+                item.entries?.let { items ->
+                    orientation = item.orientation ?: LinearLayout.VERTICAL
+                    weightSum = items.size.toFloat()
+                    items.forEach {
+                        val cbx = CheckBox(this.context)
+                        cbx.layoutParams =
+                            RadioGroup.LayoutParams(
+                                RadioGroup.LayoutParams.MATCH_PARENT,
+                                RadioGroup.LayoutParams.WRAP_CONTENT,
+                                1.0F
+                            )
+                        cbx.id = View.generateViewId()
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+                            cbx.setTextAppearance(context, android.R.style.TextAppearance_Material_Medium)
+                        else
+                            cbx.setTextAppearance(android.R.style.TextAppearance_Material_Subhead)
+                        cbx.text = it
+                        addView(cbx)
+                        if (item.value?.contains(it) == true)
+                            cbx.isChecked = true
+                        cbx.setOnCheckedChangeListener { _, b ->
+                            if (b) {
+                                if (item.value != null)
+                                    item.value = item.value + it
+                                else
+                                    item.value = it
+                            } else {
+                                if (item.value?.contains(it) == true) {
+                                    item.value = item.value?.replace(it, "")
+                                }
+                            }
+                            if (item.value.isNullOrBlank()) {
+                                item.value = null
+                            } else {
+                                Timber.d("Called here!")
+                                item.errorText = null
+                                binding.clRi.setBackgroundResource(0)
+                            }
+                            Timber.d("Checkbox value : ${item.value}")
+                        }
+                    }
+                }
+            }
             binding.executePendingBindings()
 
         }
     }
 
-    class DatePickerInputViewHolder private constructor(private val binding: RvItemFormDatepickerBinding) :
+    class DatePickerInputViewHolder private constructor(private val binding: RvItemFormDatepickerV2Binding) :
         ViewHolder(binding.root) {
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RvItemFormDatepickerBinding.inflate(layoutInflater, parent, false)
+                val binding = RvItemFormDatepickerV2Binding.inflate(layoutInflater, parent, false)
                 return DatePickerInputViewHolder(binding)
             }
         }
 
         fun bind(
-            item: FormInput, isEnabled: Boolean) {
+            item: FormInputV2, isEnabled: Boolean
+        ) {
             binding.form = item
-            if(!isEnabled){
+            if (!isEnabled) {
                 binding.et.isFocusable = false
                 binding.et.isClickable = false
                 binding.executePendingBindings()
@@ -354,7 +409,7 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
             item.errorText?.also { binding.tilEditText.error = it }
                 ?: run { binding.tilEditText.error = null }
             binding.et.setOnClickListener {
-                item.value.value?.let { value ->
+                item.value?.let { value ->
                     thisYear = value.substring(6).toInt()
                     thisMonth = value.substring(3, 5).trim().toInt() - 1
                     thisDay = value.substring(0, 2).trim().toInt()
@@ -362,7 +417,7 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
                 val datePickerDialog = DatePickerDialog(
                     it.context,
                     { _, year, month, day ->
-                        item.value.value =
+                        item.value =
                             "${if (day > 9) day else "0$day"}-${if (month > 8) month + 1 else "0${month + 1}"}-$year"
                         binding.invalidateAll()
                     }, thisYear, thisMonth, thisDay
@@ -379,81 +434,80 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
         }
     }
 
-    class TimePickerInputViewHolder private constructor(private val binding: RvItemFormTimepickerBinding) :
+    class TimePickerInputViewHolder private constructor(private val binding: RvItemFormTimepickerV2Binding) :
         ViewHolder(binding.root) {
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RvItemFormTimepickerBinding.inflate(layoutInflater, parent, false)
+                val binding = RvItemFormTimepickerV2Binding.inflate(layoutInflater, parent, false)
                 return TimePickerInputViewHolder(binding)
             }
         }
 
         fun bind(
-            item: FormInput, isEnabled: Boolean
+            item: FormInputV2, isEnabled: Boolean
         ) {
             binding.form = item
             binding.et.isEnabled = isEnabled
             binding.et.setOnClickListener {
                 val hour: Int
                 val minute: Int
-                if(item.value.value==null) {
-                    val currentTime = Calendar.getInstance();
-                    hour = currentTime.get(Calendar.HOUR_OF_DAY);
-                    minute = currentTime.get(Calendar.MINUTE);
-                }else{
-                    hour = item.value.value!!.substringBefore(":").toInt()
-                    minute = item.value.value!!.substringAfter(":").toInt()
+                if (item.value == null) {
+                    val currentTime = Calendar.getInstance()
+                    hour = currentTime.get(Calendar.HOUR_OF_DAY)
+                    minute = currentTime.get(Calendar.MINUTE)
+                } else {
+                    hour = item.value!!.substringBefore(":").toInt()
+                    minute = item.value!!.substringAfter(":").toInt()
                     Timber.d("Time picker hour min : $hour $minute")
                 }
-                    val mTimePicker = TimePickerDialog(it.context, {
-                            _, hourOfDay, minuteOfHour ->
-                        item.value.value =
-                            "$hourOfDay:$minuteOfHour"
-                        binding.invalidateAll()
+                val mTimePicker = TimePickerDialog(it.context, { _, hourOfDay, minuteOfHour ->
+                    item.value =
+                        "$hourOfDay:$minuteOfHour"
+                    binding.invalidateAll()
 
-                }, hour, minute, false );
-                    mTimePicker.setTitle("Select Time");
-                    mTimePicker.show();
-                }
+                }, hour, minute, false)
+                mTimePicker.setTitle("Select Time")
+                mTimePicker.show()
+            }
             binding.executePendingBindings()
 
         }
     }
 
-    class TextViewInputViewHolder private constructor(private val binding: RvItemFormTextViewBinding) :
+    class TextViewInputViewHolder private constructor(private val binding: RvItemFormTextViewV2Binding) :
         ViewHolder(binding.root) {
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RvItemFormTextViewBinding.inflate(layoutInflater, parent, false)
+                val binding = RvItemFormTextViewV2Binding.inflate(layoutInflater, parent, false)
                 return TextViewInputViewHolder(binding)
             }
         }
 
-        fun bind(item: FormInput) {
+        fun bind(item: FormInputV2) {
             binding.form = item
             binding.executePendingBindings()
         }
     }
 
-    class ImageViewInputViewHolder private constructor(private val binding: RvItemFormImageViewBinding) :
+    class ImageViewInputViewHolder private constructor(private val binding: RvItemFormImageViewV2Binding) :
         ViewHolder(binding.root) {
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RvItemFormImageViewBinding.inflate(layoutInflater, parent, false)
+                val binding = RvItemFormImageViewV2Binding.inflate(layoutInflater, parent, false)
                 return ImageViewInputViewHolder(binding)
             }
         }
 
         fun bind(
-            item: FormInput,
+            item: FormInputV2,
             clickListener: ImageClickListener?,
             isEnabled: Boolean
         ) {
             binding.form = item
-            if(isEnabled) {
+            if (isEnabled) {
                 binding.clickListener = clickListener
                 if (item.errorText != null)
                     binding.clRi.setBackgroundResource(R.drawable.state_errored)
@@ -466,18 +520,18 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
     }
 
 
-    class HeadlineViewHolder private constructor(private val binding: RvItemFormHeadlineBinding) :
+    class HeadlineViewHolder private constructor(private val binding: RvItemFormHeadlineV2Binding) :
         ViewHolder(binding.root) {
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RvItemFormHeadlineBinding.inflate(layoutInflater, parent, false)
+                val binding = RvItemFormHeadlineV2Binding.inflate(layoutInflater, parent, false)
                 return HeadlineViewHolder(binding)
             }
         }
 
         fun bind(
-            item: FormInput,
+            item: FormInputV2,
         ) {
             binding.form = item
             binding.executePendingBindings()
@@ -485,9 +539,19 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
         }
     }
 
-    class ImageClickListener(private val imageClick: (form: FormInput) -> Unit) {
+    class ImageClickListener(private val imageClick: (form: FormInputV2) -> Unit) {
 
-        fun onImageClick(form: FormInput) = imageClick(form)
+        fun onImageClick(form: FormInputV2) = imageClick(form)
+
+    }
+
+    class FormValueListener(private val valueChanged: (id: Int, value: Int) -> Unit) {
+
+        fun onValueChanged(form: FormInputV2, index: Int) {
+            Timber.d("Triggering value changed")
+            valueChanged(form.id, index)
+
+        }
 
     }
 
@@ -511,11 +575,15 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
         val item = getItem(position)
         when (item.inputType) {
             EDIT_TEXT -> (holder as EditTextInputViewHolder).bind(item, isEnabled)
-            DROPDOWN -> (holder as DropDownInputViewHolder).bind(item, isEnabled)
-            RADIO -> (holder as RadioInputViewHolder).bind(item, isEnabled)
+            DROPDOWN -> (holder as DropDownInputViewHolder).bind(item, isEnabled, formValueListener)
+            RADIO -> (holder as RadioInputViewHolder).bind(item, isEnabled, formValueListener)
             DATE_PICKER -> (holder as DatePickerInputViewHolder).bind(item, isEnabled)
             TEXT_VIEW -> (holder as TextViewInputViewHolder).bind(item)
-            IMAGE_VIEW -> (holder as ImageViewInputViewHolder).bind(item, imageClickListener, isEnabled)
+            IMAGE_VIEW -> (holder as ImageViewInputViewHolder).bind(
+                item,
+                imageClickListener,
+                isEnabled
+            )
             CHECKBOXES -> (holder as CheckBoxesInputViewHolder).bind(item)
             TIME_PICKER -> (holder as TimePickerInputViewHolder).bind(item, isEnabled)
             HEADLINE -> (holder as HeadlineViewHolder).bind(item)
@@ -531,7 +599,7 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
      */
     fun validateInput(): Int {
         var retVal = -1
-        if(!isEnabled)
+        if (!isEnabled)
             return retVal
         currentList.forEach {
             Timber.d("Error text for ${it.title} ${it.errorText}")
@@ -545,7 +613,7 @@ class FormInputAdapter(private val imageClickListener: ImageClickListener? = nul
             return retVal
         currentList.forEach {
             if (it.required) {
-                if (it.value.value.isNullOrBlank()) {
+                if (it.value.isNullOrBlank()) {
                     Timber.d("validateInput called for item $it, with index ${currentList.indexOf(it)}")
                     it.errorText = "Required field cannot be empty !"
                     notifyItemChanged(currentList.indexOf(it))

@@ -74,20 +74,20 @@ class HouseholdFormDataset(context: Context) {
     //////////////////////////////// First Page /////////////////////////////////////////
 
     private val firstNameHeadOfFamily = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_first_name_hof),
         allCaps = true,
         required = true
     )
 
     private val lastNameHeadOfFamily = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_last_name_hof),
         allCaps = true,
         required = false
     )
     private val mobileNoHeadOfFamily = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_mob_no_hof),
         required = true,
         etMaxLength = 10,
@@ -97,31 +97,31 @@ class HouseholdFormDataset(context: Context) {
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
     )
     private val houseNo = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_house_no),
         etMaxLength = 100,
         required = false
     )
     private val wardNo = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_ward_no),
         etMaxLength = 100,
         required = false
     )
     private val wardName = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_ward_name),
         etMaxLength = 100,
         required = false
     )
     private val mohallaName = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_mohalla_name),
         etMaxLength = 100,
         required = false
     )
     private val povertyLine = FormInput(
-        inputType = FormInput.InputType.RADIO,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = context.getString(R.string.nhhr_poverty_line),
         entries = context.resources.getStringArray(R.array.nhhr_poverty_line_array),
         required = true
@@ -142,7 +142,7 @@ class HouseholdFormDataset(context: Context) {
     //////////////////////////////// Second Page /////////////////////////////////////////
 
     val residentialArea = FormInput(
-        inputType = FormInput.InputType.DROPDOWN,
+        inputType = org.piramalswasthya.sakhi.model.InputType.DROPDOWN,
         title = context.getString(R.string.nhhr_type_residential_area),
         entries = context.resources.getStringArray(R.array.nhhr_type_residential_area_array),
         required = false
@@ -150,20 +150,20 @@ class HouseholdFormDataset(context: Context) {
 
 
     val otherResidentialArea = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_type_residential_area_other),
         etMaxLength = 100,
         required = true
     )
 
     private val typeOfHouse = FormInput(
-        inputType = FormInput.InputType.DROPDOWN,
+        inputType = org.piramalswasthya.sakhi.model.InputType.DROPDOWN,
         title = context.getString(R.string.nhhr_type_of_house),
         entries = context.resources.getStringArray(R.array.nhhr_type_of_house_array),
         required = true
     )
     private val houseOwnership = FormInput(
-        inputType = FormInput.InputType.RADIO,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = context.getString(R.string.nhhr_house_own),
         entries = context.resources.getStringArray(R.array.nhhr_house_own_array),
         required = true
@@ -179,14 +179,14 @@ class HouseholdFormDataset(context: Context) {
     //////////////////////////////// Third Page /////////////////////////////////////////
 
     private val separateKitchen = FormInput(
-        inputType = FormInput.InputType.RADIO,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = context.getString(R.string.nhhr_separate_kitchen),
         entries = context.resources.getStringArray(R.array.nhhr_separate_kitchen_array),
         required = true
     )
 
     private val fuelForCooking = FormInput(
-        inputType = FormInput.InputType.DROPDOWN,
+        inputType = org.piramalswasthya.sakhi.model.InputType.DROPDOWN,
         title = context.getString(R.string.nhhr_fuel_cooking),
         entries = context.resources.getStringArray(R.array.nhhr_fuel_cooking_array),
         required = true,
@@ -196,7 +196,7 @@ class HouseholdFormDataset(context: Context) {
 
 
     val otherFuelForCooking = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_fuel_cooking_other),
         etMaxLength = 100,
         required = true
@@ -204,7 +204,7 @@ class HouseholdFormDataset(context: Context) {
 
 
     private val sourceOfWater = FormInput(
-        inputType = FormInput.InputType.DROPDOWN,
+        inputType = org.piramalswasthya.sakhi.model.InputType.DROPDOWN,
         title = context.getString(R.string.nhhr_primary_water),
         entries = context.resources.getStringArray(R.array.nhhr_primary_water_array),
         required = true,
@@ -215,7 +215,7 @@ class HouseholdFormDataset(context: Context) {
 
 
     val otherSourceOfWater = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_primary_water_other),
         etMaxLength = 100,
         required = true
@@ -223,7 +223,7 @@ class HouseholdFormDataset(context: Context) {
 
 
     private val sourceOfElectricity = FormInput(
-        inputType = FormInput.InputType.DROPDOWN,
+        inputType = org.piramalswasthya.sakhi.model.InputType.DROPDOWN,
         title = context.getString(R.string.nhhr_avail_electricity),
         entries = context.resources.getStringArray(R.array.nhhr_avail_electricity_array),
         required = true
@@ -232,7 +232,7 @@ class HouseholdFormDataset(context: Context) {
         get() = sourceOfElectricity
 
     val otherSourceOfElectricity = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_avail_electricity_other),
         etMaxLength = 100,
         required = true
@@ -240,7 +240,7 @@ class HouseholdFormDataset(context: Context) {
 
 
     private val availOfToilet = FormInput(
-        inputType = FormInput.InputType.DROPDOWN,
+        inputType = org.piramalswasthya.sakhi.model.InputType.DROPDOWN,
         title = context.getString(R.string.nhhr_avail_toilet),
         entries = context.resources.getStringArray(R.array.nhhr_avail_toilet_array),
         required = true,
@@ -250,7 +250,7 @@ class HouseholdFormDataset(context: Context) {
         get() = availOfToilet
 
     val otherAvailOfToilet = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = context.getString(R.string.nhhr_avail_toilet_other),
         etMaxLength = 100,
         required = true

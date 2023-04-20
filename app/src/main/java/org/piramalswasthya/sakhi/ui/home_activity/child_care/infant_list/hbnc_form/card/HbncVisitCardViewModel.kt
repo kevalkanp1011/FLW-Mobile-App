@@ -5,23 +5,23 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.configuration.HBNCFormDataset
+import org.piramalswasthya.sakhi.configuration.HBNCFormDatasetV2
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
-import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.HBNCCache
+import org.piramalswasthya.sakhi.model.HouseholdCache
+import org.piramalswasthya.sakhi.model.UserCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.HbncRepo
 import timber.log.Timber
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class HbncVisitCardViewModel @Inject constructor(
     state: SavedStateHandle,
-//    @ApplicationContext context: Context,
     private val preferenceDao : PreferenceDao,
     private val database: InAppDb,
     private val hbncRepo: HbncRepo,
@@ -55,7 +55,9 @@ class HbncVisitCardViewModel @Inject constructor(
     val exists: LiveData<Boolean>
         get() = _exists
 
-    private val dataset = HBNCFormDataset(Konstants.hbncCardDay)
+    private val dataset = HBNCFormDatasetV2(Konstants.hbncCardDay)
+//    private val _formList = MutableStateFlow<List<FormInputV2>>(emptyList())
+    val formList = dataset.listFlow
 
     fun submitForm() {
         _state.value = State.LOADING
@@ -66,7 +68,7 @@ class HbncVisitCardViewModel @Inject constructor(
             processed = "N",
             syncState = SyncState.UNSYNCED
         )
-        dataset.mapCardValues(hbncCache, user)
+        dataset.mapCardValues(hbncCache)
         Timber.d("saving hbnc: $hbncCache")
         viewModelScope.launch {
             val saved = hbncRepo.saveHbncData(hbncCache)
@@ -100,23 +102,30 @@ class HbncVisitCardViewModel @Inject constructor(
                 }
                 dataset.setAshaName(user.userName)
             }
+            dataset.setCardPageToList(user,ben, null, hbnc?.visitCard)
+            Timber.d("Emitting formList")
+//            _formList.emit(dataset.list)
 
         }
     }
 
-    fun getFirstPage(exists: Boolean): List<FormInput> {
+//    fun getFirstPage(exists: Boolean): List<FormInput> {
+//
+//        return dataset.getCardPage(user,ben,null, hbnc?.visitCard, exists)
+//    }
 
-        return dataset.getCardPage(user,ben,null, hbnc?.visitCard, exists)
-    }
 
+//    private fun getDateFromLong(dateLong: Long?): String? {
+//        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+//        dateLong?.let {
+//            return dateFormat.format(dateLong)
+//        } ?: run {
+//            return null
+//        }
+//    }
 
-    private fun getDateFromLong(dateLong: Long?): String? {
-        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
-        dateLong?.let {
-            return dateFormat.format(dateLong)
-        } ?: run {
-            return null
-        }
+     fun updateListOnValueChanged(formId: Int, index: Int) {
+//        dataset.handleListOnValueChanged(Konstants.hbncCardDay, formId, index)
     }
 
 //    private fun setExistingValues() {

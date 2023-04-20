@@ -8,7 +8,7 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.model.*
-import org.piramalswasthya.sakhi.model.FormInput.InputType.*
+import org.piramalswasthya.sakhi.model.InputType.*
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*

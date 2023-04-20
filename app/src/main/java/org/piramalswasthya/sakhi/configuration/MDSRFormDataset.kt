@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.configuration
 import android.content.Context
 import android.widget.LinearLayout
 import org.piramalswasthya.sakhi.model.FormInput
+import org.piramalswasthya.sakhi.model.InputType
 import org.piramalswasthya.sakhi.model.MDSRCache
 import java.text.SimpleDateFormat
 import java.util.*
@@ -45,56 +46,56 @@ class MDSRFormDataset(context: Context) {
     }
 
     val dateOfDeath = FormInput(
-        inputType = FormInput.InputType.DATE_PICKER,
+        inputType = InputType.DATE_PICKER,
         title = "Date of death ",
         min = 0L,
         max = System.currentTimeMillis(),
         required = true
     )
     val address = FormInput(
-        inputType = FormInput.InputType.TEXT_VIEW,
+        inputType = InputType.TEXT_VIEW,
         title = "Address",
         required = false
     )
     val husbandName = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = InputType.EDIT_TEXT,
         etMaxLength = 50,
         title = "Husband’s Name",
         required = false
     )
     val causeOfDeath = FormInput(
-        inputType = FormInput.InputType.RADIO,
+        inputType = InputType.RADIO,
         title = "Cause of death",
         required = true,
         orientation = LinearLayout.VERTICAL,
         entries = arrayOf("Maternal", "Non-maternal")
     )
     val reasonOfDeath = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = InputType.EDIT_TEXT,
         title = "Specify Reason",
         required = true
     )
     val investigationDate = FormInput(
-        inputType = FormInput.InputType.DATE_PICKER,
+        inputType = InputType.DATE_PICKER,
         title = "Date of field investigation",
         min = 0L,
         max = System.currentTimeMillis(),
         required = false
     )
     val actionTaken = FormInput(
-        inputType = FormInput.InputType.RADIO,
+        inputType = InputType.RADIO,
         title = "Action Take",
         required = false,
         orientation = LinearLayout.VERTICAL,
         entries = arrayOf("Yes", "No")
     )
     val blockMOSign = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+        inputType = InputType.EDIT_TEXT,
         title = "Signature of MO I/C of the block",
         required = false
     )
     val date = FormInput(
-        inputType = FormInput.InputType.DATE_PICKER,
+        inputType = InputType.DATE_PICKER,
         min = 0L,
         max = System.currentTimeMillis(),
         title = "Date",
