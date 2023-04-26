@@ -41,7 +41,7 @@ class DownloadCardWorker @AssistedInject constructor(
 
     private val notificationManager =
         appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    private val channelId = "downloading abha card"
+    private val channelId = "download abha card"
 
     override suspend fun doWork(): Result {
         val fileName = inputData.getString(file_name)
