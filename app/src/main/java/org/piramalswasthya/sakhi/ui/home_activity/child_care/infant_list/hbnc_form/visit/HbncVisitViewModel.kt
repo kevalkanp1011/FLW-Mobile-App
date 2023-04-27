@@ -1,14 +1,15 @@
 package org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.visit
 
-import android.app.Application
+import android.content.Context
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.configuration.HBNCFormDatasetV2
+import org.piramalswasthya.sakhi.configuration.HBNCFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.BenRegCache
@@ -23,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HbncVisitViewModel @Inject constructor(
     state: SavedStateHandle,
-    private val context: Application,
+    @ApplicationContext context: Context,
     private val database: InAppDb,
     private val hbncRepo: HbncRepo,
     private val benRepo: BenRepo
@@ -63,12 +64,13 @@ class HbncVisitViewModel @Inject constructor(
 
     fun resetErrorMessage() {
         viewModelScope.launch {
-            _errorMessage.emit(null)
+            dataset.resetErrorMessageFlow()
         }
     }
 
-    private val dataset = HBNCFormDatasetV2(nthDay)
+    private val dataset = HBNCFormDataset(context.resources, nthDay)
     val formList = dataset.listFlow
+    val alertError = dataset.errorMessageFlow
 
     fun submitForm() {
         _state.value = State.LOADING
@@ -113,8 +115,7 @@ class HbncVisitViewModel @Inject constructor(
 
     fun updateListOnValueChanged(formId: Int, index: Int) {
         viewModelScope.launch {
-            Timber.d("Handle called $formId $index")
-            dataset.handleListOnValueChanged(nthDay, formId, index)
+            dataset.updateList( formId, index)
         }
 
     }

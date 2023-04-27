@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.configuration.BenGenRegFormDataset
-import org.piramalswasthya.sakhi.model.FormInput
+import org.piramalswasthya.sakhi.model.FormInputOld
 import org.piramalswasthya.sakhi.model.HouseholdCache
 import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.repositories.BenRepo
@@ -108,7 +108,7 @@ class NewBenRegG15ViewModel @Inject constructor(
         return diffM
     }
 
-    suspend fun getFirstPage(): List<FormInput> {
+    suspend fun getFirstPage(): List<FormInputOld> {
         Timber.d("Record Exists ${recordExists.value}")
         return if (_recordExists.value == false) {
             form.firstPage
@@ -121,7 +121,7 @@ class NewBenRegG15ViewModel @Inject constructor(
         }
     }
 
-    suspend fun observeFirstPage(adapter: FormInputAdapter) {
+    suspend fun observeFirstPage(adapter: FormInputAdapterOld) {
         viewModelScope.launch {
             var emittedFromDob = false
             var emittedFromAge = false
@@ -388,7 +388,7 @@ class NewBenRegG15ViewModel @Inject constructor(
     }
 
 
-    fun getSecondPage(): List<FormInput> {
+    fun getSecondPage(): List<FormInputOld> {
         return if (_recordExists.value == false) {
             form.secondPage
         } else
@@ -396,7 +396,7 @@ class NewBenRegG15ViewModel @Inject constructor(
 
     }
 
-    fun observeSecondPage(adapter: FormInputAdapter) {
+    fun observeSecondPage(adapter: FormInputAdapterOld) {
         viewModelScope.launch {
             launch {
                 form.hasAadharNo.value.collect {
@@ -417,13 +417,13 @@ class NewBenRegG15ViewModel @Inject constructor(
         }
     }
 
-    fun getThirdPage(): List<FormInput> {
+    fun getThirdPage(): List<FormInputOld> {
             return if (_recordExists.value == false) {
                 form.thirdPage
             } else
                 form.loadThirdPageOnViewModel()
     }
-    fun observeThirdPage(adapter: FormInputAdapter){
+    fun observeThirdPage(adapter: FormInputAdapterOld){
         viewModelScope.launch {
             launch {
                 form.reproductiveStatus.value.collect {

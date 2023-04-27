@@ -7,9 +7,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.configuration.HouseholdFormDataset
-import org.piramalswasthya.sakhi.model.FormInput
+import org.piramalswasthya.sakhi.model.FormInputOld
 import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.repositories.HouseholdRepo
 import timber.log.Timber
@@ -55,7 +55,7 @@ class NewHouseholdViewModel
 
     private lateinit var form: HouseholdFormDataset
 
-    suspend fun getFirstPage(): List<FormInput> {
+    suspend fun getFirstPage(): List<FormInputOld> {
         return withContext(Dispatchers.IO) {
             form = if (hhIdFromArgs > 0)
                 householdRepo.getHouseholdForm(hhIdFromArgs)
@@ -66,7 +66,7 @@ class NewHouseholdViewModel
         }
     }
 
-    fun getSecondPage(adapter: FormInputAdapter): List<FormInput> {
+    fun getSecondPage(adapter: FormInputAdapterOld): List<FormInputOld> {
         viewModelScope.launch {
             form.residentialArea.value.collect {
                 toggleFieldOnTrigger(
@@ -81,7 +81,7 @@ class NewHouseholdViewModel
 
     }
 
-    fun getThirdPage(adapter: FormInputAdapter): List<FormInput> {
+    fun getThirdPage(adapter: FormInputAdapterOld): List<FormInputOld> {
         viewModelScope.launch {
             launch {
                 form.fuelForCookingTrigger.value.collect {
@@ -129,10 +129,10 @@ class NewHouseholdViewModel
     }
 
     private fun toggleFieldOnTrigger(
-        causeField: FormInput,
-        effectField: FormInput,
+        causeField: FormInputOld,
+        effectField: FormInputOld,
         value: String?,
-        adapter: FormInputAdapter
+        adapter: FormInputAdapterOld
     ) {
         value?.let {
             if (it == context.getString(R.string.nhhr_fuel_cooking_7)) {

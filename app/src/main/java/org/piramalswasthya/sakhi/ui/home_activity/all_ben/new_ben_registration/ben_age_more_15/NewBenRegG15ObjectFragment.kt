@@ -13,10 +13,10 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.BuildConfig
-import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.adapters.NewBenKidPagerAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentInputFormPageBinding
-import org.piramalswasthya.sakhi.model.FormInput
+import org.piramalswasthya.sakhi.model.FormInputOld
 import timber.log.Timber
 import java.io.File
 
@@ -32,7 +32,7 @@ class NewBenRegG15ObjectFragment : Fragment() {
 
     private var latestTmpUri: Uri? = null
 
-    private var latestImageForm: FormInput? = null
+    private var latestImageForm: FormInputOld? = null
 
     private val takePicture =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { success: Boolean ->
@@ -40,7 +40,7 @@ class NewBenRegG15ObjectFragment : Fragment() {
                 latestTmpUri?.let { uri ->
                     latestImageForm?.value?.value = uri.toString()
                     binding.inputForm.rvInputForm.apply {
-                        val adapter = this.adapter as FormInputAdapter
+                        val adapter = this.adapter as FormInputAdapterOld
                         latestImageForm?.errorText = null
                         adapter.notifyItemChanged(0)
                     }
@@ -67,7 +67,7 @@ class NewBenRegG15ObjectFragment : Fragment() {
                 when (pageNumber) {
                     1 -> {
                         val adapter =
-                            FormInputAdapter(FormInputAdapter.ImageClickListener { form ->
+                            FormInputAdapterOld(FormInputAdapterOld.ImageClickListener { form ->
                                 latestImageForm = form
                                 takeImage()
 
@@ -80,14 +80,14 @@ class NewBenRegG15ObjectFragment : Fragment() {
                     }
                     2 -> {
 
-                        val adapter = FormInputAdapter(isEnabled = !it)
+                        val adapter = FormInputAdapterOld(isEnabled = !it)
                         binding.inputForm.rvInputForm.adapter = adapter
                         adapter.submitList(viewModel.getSecondPage())
                         if(!it)viewModel.observeSecondPage(adapter)
                     }
                     3 -> {
 
-                        val adapter = FormInputAdapter(isEnabled = !it)
+                        val adapter = FormInputAdapterOld(isEnabled = !it)
                         binding.inputForm.rvInputForm.adapter = adapter
                         adapter.submitList(viewModel.getThirdPage())
                         if(!it)viewModel.observeThirdPage(adapter)
@@ -123,7 +123,7 @@ class NewBenRegG15ObjectFragment : Fragment() {
 
     fun validate(): Boolean {
         val result = binding.inputForm.rvInputForm.adapter?.let {
-            (it as FormInputAdapter).validateInput()
+            (it as FormInputAdapterOld).validateInput()
         }
         Timber.d("Validation : $result")
         return if (result == -1)

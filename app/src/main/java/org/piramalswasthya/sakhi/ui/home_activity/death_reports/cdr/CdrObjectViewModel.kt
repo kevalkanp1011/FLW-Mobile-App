@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.configuration.CDRFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
@@ -59,10 +59,10 @@ class CdrObjectViewModel @Inject constructor(
     private val dataset = CDRFormDataset(context)
 
     private fun toggleFieldOnTrigger(
-        causeField: FormInput,
-        effectField: FormInput,
+        causeField: FormInputOld,
+        effectField: FormInputOld,
         value: String?,
-        adapter: FormInputAdapter
+        adapter: FormInputAdapterOld
     ) {
         value?.let {
             if (it == "Hospital") {
@@ -131,7 +131,7 @@ class CdrObjectViewModel @Inject constructor(
         return address
     }
 
-    suspend fun getFirstPage(adapter: FormInputAdapter): List<FormInput> {
+    suspend fun getFirstPage(adapter: FormInputAdapterOld): List<FormInputOld> {
         viewModelScope.launch {
             launch{
                 dataset.placeOfDeath.value.collect {
@@ -147,7 +147,7 @@ class CdrObjectViewModel @Inject constructor(
         return dataset.firstPage
     }
 
-    fun setAddress(it: String?, adapter: FormInputAdapter) {
+    fun setAddress(it: String?, adapter: FormInputAdapterOld) {
         dataset.address.value.value = it
         dataset.childName.value.value = ben.firstName
         dataset.gender.value.value = when (ben.gender){

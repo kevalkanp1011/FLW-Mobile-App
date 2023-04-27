@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.configuration.BenKidRegFormDataset
-import org.piramalswasthya.sakhi.model.FormInput
+import org.piramalswasthya.sakhi.model.FormInputOld
 import org.piramalswasthya.sakhi.model.HouseholdCache
 import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.model.TypeOfList
@@ -71,7 +71,7 @@ class NewBenRegL15ViewModel @Inject constructor(
 
     }
 
-    suspend fun getFirstPage(): List<FormInput> {
+    suspend fun getFirstPage(): List<FormInputOld> {
         household = benRepo.getHousehold(hhId)!!
         return if (_recordExists.value == false) {
             if(!this::form.isInitialized) {
@@ -88,7 +88,7 @@ class NewBenRegL15ViewModel @Inject constructor(
 
     }
 
-    suspend fun observeFirstPage(adapter: FormInputAdapter) {
+    suspend fun observeFirstPage(adapter: FormInputAdapterOld) {
         viewModelScope.launch {
             var emittedFromDobForAge = false
             var emittedFromDobForAgeUnit = false
@@ -385,7 +385,7 @@ class NewBenRegL15ViewModel @Inject constructor(
     }
 
     private fun toggleChildRegisteredFieldsVisibility(
-        adapter: FormInputAdapter, yearDiff: Int
+        adapter: FormInputAdapterOld, yearDiff: Int
     ) {
         val list = adapter.currentList.toMutableList()
         if (yearDiff in 3..14) {
@@ -418,14 +418,14 @@ class NewBenRegL15ViewModel @Inject constructor(
     }
 
 
-    fun getSecondPage(): List<FormInput> {
+    fun getSecondPage(): List<FormInputOld> {
 
         return if (recordExists.value==false) {
             form.secondPage
         } else form.loadSecondPageOnViewMode()
     }
 
-    fun observeSecondPage(adapter: FormInputAdapter) {
+    fun observeSecondPage(adapter: FormInputAdapterOld) {
         viewModelScope.launch {
             launch {
                 form.placeOfBirth.value.collect {

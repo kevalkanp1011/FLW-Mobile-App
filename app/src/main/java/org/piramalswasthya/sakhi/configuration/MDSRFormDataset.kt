@@ -2,7 +2,7 @@ package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
 import android.widget.LinearLayout
-import org.piramalswasthya.sakhi.model.FormInput
+import org.piramalswasthya.sakhi.model.FormInputOld
 import org.piramalswasthya.sakhi.model.InputType
 import org.piramalswasthya.sakhi.model.MDSRCache
 import java.text.SimpleDateFormat
@@ -45,56 +45,56 @@ class MDSRFormDataset(context: Context) {
         //TODO(SETUP THE VALUES)
     }
 
-    val dateOfDeath = FormInput(
+    val dateOfDeath = FormInputOld(
         inputType = InputType.DATE_PICKER,
         title = "Date of death ",
         min = 0L,
         max = System.currentTimeMillis(),
         required = true
     )
-    val address = FormInput(
+    val address = FormInputOld(
         inputType = InputType.TEXT_VIEW,
         title = "Address",
         required = false
     )
-    val husbandName = FormInput(
+    val husbandName = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         etMaxLength = 50,
         title = "Husband’s Name",
         required = false
     )
-    val causeOfDeath = FormInput(
+    val causeOfDeath = FormInputOld(
         inputType = InputType.RADIO,
         title = "Cause of death",
         required = true,
         orientation = LinearLayout.VERTICAL,
         entries = arrayOf("Maternal", "Non-maternal")
     )
-    val reasonOfDeath = FormInput(
+    val reasonOfDeath = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "Specify Reason",
         required = true
     )
-    val investigationDate = FormInput(
+    val investigationDate = FormInputOld(
         inputType = InputType.DATE_PICKER,
         title = "Date of field investigation",
         min = 0L,
         max = System.currentTimeMillis(),
         required = false
     )
-    val actionTaken = FormInput(
+    val actionTaken = FormInputOld(
         inputType = InputType.RADIO,
         title = "Action Take",
         required = false,
         orientation = LinearLayout.VERTICAL,
         entries = arrayOf("Yes", "No")
     )
-    val blockMOSign = FormInput(
+    val blockMOSign = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "Signature of MO I/C of the block",
         required = false
     )
-    val date = FormInput(
+    val date = FormInputOld(
         inputType = InputType.DATE_PICKER,
         min = 0L,
         max = System.currentTimeMillis(),

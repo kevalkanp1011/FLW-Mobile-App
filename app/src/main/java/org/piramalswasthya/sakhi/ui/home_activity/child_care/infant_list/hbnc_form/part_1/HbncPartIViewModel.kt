@@ -1,13 +1,13 @@
 package org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.part_1
 
+import android.content.Context
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.configuration.HBNCFormDatasetV2
+import org.piramalswasthya.sakhi.configuration.HBNCFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.Konstants
@@ -22,6 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HbncPartIViewModel @Inject constructor(
+    @ApplicationContext context : Context,
     state: SavedStateHandle,
     private val database: InAppDb,
     private val hbncRepo: HbncRepo,
@@ -52,18 +53,9 @@ class HbncPartIViewModel @Inject constructor(
     val exists: LiveData<Boolean>
         get() = _exists
 
-    private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: Flow<String?>
-        get() = _errorMessage
-
-    fun resetErrorMessage() {
-        viewModelScope.launch {
-            _errorMessage.emit(null)
-        }
-    }
-
-    private val dataset = HBNCFormDatasetV2(Konstants.hbncPart1Day)
+    private val dataset = HBNCFormDataset(context.resources, Konstants.hbncPart1Day)
     val formList = dataset.listFlow
+    val alertError = dataset.errorMessageFlow
 
     fun submitForm() {
         _state.value = State.LOADING
@@ -107,10 +99,15 @@ class HbncPartIViewModel @Inject constructor(
 
     fun updateListOnValueChanged(formId: Int, index: Int) {
         viewModelScope.launch {
-            Timber.d("Handle called $formId $index")
-            dataset.handleListOnValueChanged(Konstants.hbncPart1Day, formId, index)
+            dataset.updateList( formId, index)
         }
 
+    }
+
+    fun resetErrorMessage() {
+        viewModelScope.launch {
+            dataset.resetErrorMessageFlow()
+        }
     }
 
 

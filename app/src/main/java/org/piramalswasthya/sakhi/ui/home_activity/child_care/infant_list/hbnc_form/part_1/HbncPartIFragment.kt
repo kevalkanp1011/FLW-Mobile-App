@@ -15,7 +15,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.adapters.FormInputAdapterV2
+import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.part_1.HbncPartIViewModel.State
 import org.piramalswasthya.sakhi.work.WorkerUtils
@@ -34,14 +34,19 @@ class HbncPartIFragment : Fragment() {
     private val errorAlert by lazy {
         AlertDialog.Builder(requireContext()).setTitle("Alert")
             .setPositiveButton("Ok") { dialog, _ ->
-                viewModel.resetErrorMessage()
                 dialog.dismiss()
+            }
+            .setOnDismissListener {
+                viewModel.resetErrorMessage()
             }.create()
     }
 
     private fun showErrorAlert(message: String) {
-        errorAlert.setMessage(message)
-        errorAlert.show()
+        message.let {
+            errorAlert.setMessage(it)
+            errorAlert.show()
+        }
+
     }
 
     override fun onCreateView(
@@ -63,10 +68,9 @@ class HbncPartIFragment : Fragment() {
             if (validate()) viewModel.submitForm()
         }
         viewModel.exists.observe(viewLifecycleOwner) { exists ->
-            val adapter = FormInputAdapterV2(
+            val adapter = FormInputAdapter(
                 imageClickListener = null,
-                formValueListener = FormInputAdapterV2.FormValueListener { formId, index ->
-                    Timber.d("Triggering value changed")
+                formValueListener = FormInputAdapter.FormValueListener { formId, index ->
                     viewModel.updateListOnValueChanged(formId, index)
                 },
                 isEnabled = !exists
@@ -89,7 +93,17 @@ class HbncPartIFragment : Fragment() {
                     viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED
                 ).collect { list ->
                     Timber.d("Collecting formList : ${list.map { it.id }}")
-                    (binding.form.rvInputForm.adapter as FormInputAdapterV2?)?.submitList(list)
+                    (binding.form.rvInputForm.adapter as FormInputAdapter?)?.submitList(list)
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.alertError.flowWithLifecycle(
+                    viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED
+                ).collect {
+                    Timber.d("Collecting error : $it")
+                    it?.let{showErrorAlert(it)}
                 }
             }
         }
@@ -124,19 +138,11 @@ class HbncPartIFragment : Fragment() {
 
             }
         }
-        lifecycleScope.launch {
-            viewModel.errorMessage.collect {
-                it?.let {
-                    showErrorAlert(it)
-                }
-
-            }
-        }
     }
 
     fun validate(): Boolean {
         val result = binding.form.rvInputForm.adapter?.let {
-            (it as FormInputAdapterV2).validateInput()
+            (it as FormInputAdapter).validateInput()
         }
         Timber.d("Validation : $result")
         return if (result == -1) true

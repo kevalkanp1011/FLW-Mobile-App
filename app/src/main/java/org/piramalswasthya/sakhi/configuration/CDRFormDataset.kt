@@ -3,7 +3,7 @@ package org.piramalswasthya.sakhi.configuration
 import android.content.Context
 import android.widget.LinearLayout
 import org.piramalswasthya.sakhi.model.CDRCache
-import org.piramalswasthya.sakhi.model.FormInput
+import org.piramalswasthya.sakhi.model.FormInputOld
 import org.piramalswasthya.sakhi.model.InputType
 import java.text.SimpleDateFormat
 import java.util.*
@@ -48,64 +48,64 @@ class CDRFormDataset(context: Context, private val childDeathReview: CDRCache? =
         cdrCache.dateOfNotification = dateOfNotification.value.value?.let { getLongFromDate(it) }?: System.currentTimeMillis()
     }
 
-    val childName = FormInput(
+    val childName = FormInputOld(
         inputType = InputType.TEXT_VIEW,
         title = "Name of the Child",
         required = false
     )
-    val dateOfBirth = FormInput(
+    val dateOfBirth = FormInputOld(
         inputType = InputType.TEXT_VIEW,
         title = "Date of Birth",
         required = false
     )
-    val age = FormInput(
+    val age = FormInputOld(
         inputType = InputType.TEXT_VIEW,
         title = "Age",
         required = false
     )
-    val visitDate = FormInput(
+    val visitDate = FormInputOld(
         inputType = InputType.DATE_PICKER,
         min = 0L,
         max = System.currentTimeMillis(),
         title = "Visit Date",
         required = true
     )
-    val gender = FormInput(
+    val gender = FormInputOld(
         inputType = InputType.TEXT_VIEW,
         title = "Gender",
         required = false
     )
-    val motherName = FormInput(
+    val motherName = FormInputOld(
         inputType = InputType.TEXT_VIEW,
         title = "Mother’s Name",
         required = false
     )
-    val fatherName = FormInput(
+    val fatherName = FormInputOld(
         inputType = InputType.TEXT_VIEW,
         title = "Father’s Name",
         required = false
     )
-    val address = FormInput(
+    val address = FormInputOld(
         inputType = InputType.TEXT_VIEW,
         title = "Address",
         required = false
     )
-    val houseNumber = FormInput(
+    val houseNumber = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "House number",
         required = false
     )
-    val mohalla = FormInput(
+    val mohalla = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "Mohalla/Colony ",
         required = false
     )
-    val landmarks = FormInput(
+    val landmarks = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "Landmarks, if any ",
         required = false
     )
-    val pincode = FormInput(
+    val pincode = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "Pincode",
         etMaxLength = 6,
@@ -114,53 +114,53 @@ class CDRFormDataset(context: Context, private val childDeathReview: CDRCache? =
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
-    val landline = FormInput(
+    val landline = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "Landline",
         etMaxLength = 12,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
-    val mobileNumber = FormInput(
+    val mobileNumber = FormInputOld(
         inputType = InputType.TEXT_VIEW,
         title = "Mobile number",
         required = false
     )
-    val dateOfDeath = FormInput(
+    val dateOfDeath = FormInputOld(
         inputType = InputType.DATE_PICKER,
         title = "Date of death",
         min = 0L,
         max = System.currentTimeMillis(),
         required = true
     )
-    val timeOfDeath = FormInput(
+    val timeOfDeath = FormInputOld(
         inputType = InputType.TIME_PICKER,
         title = "Time",
         required = false
     )
-    val placeOfDeath = FormInput(
+    val placeOfDeath = FormInputOld(
         inputType = InputType.RADIO,
         title = "Place of Death",
         required = true,
         orientation = LinearLayout.VERTICAL,
         entries = arrayOf("Home", "Hospital", "In transit")
     )
-    val hospitalName = FormInput(
+    val hospitalName = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "Hospital Name",
         required = false
     )
-    val firstInformant = FormInput(
+    val firstInformant = FormInputOld(
         inputType = InputType.TEXT_VIEW,
         title = "Name of First Informant ",
         required = false
     )
-    val ashaSign = FormInput(
+    val ashaSign = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "Signature/Name of ASHA",
         required = false
     )
-    val dateOfNotification = FormInput(
+    val dateOfNotification = FormInputOld(
         inputType = InputType.DATE_PICKER,
         title = "Date of Notification ",
         min = 0L,

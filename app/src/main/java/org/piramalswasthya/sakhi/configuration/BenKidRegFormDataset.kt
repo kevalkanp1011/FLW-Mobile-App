@@ -61,71 +61,71 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
 
     //////////////////////////////////First Page////////////////////////////////////
 
-    private val pic = FormInput(
+    private val pic = FormInputOld(
         inputType = IMAGE_VIEW,
         title = context.getString(R.string.nbr_image),
         required = true
     )
 
-    private val dateOfReg = FormInput(
+    private val dateOfReg = FormInputOld(
         inputType = TEXT_VIEW,
         title = context.getString(R.string.nbr_dor),
         value = MutableStateFlow(getCurrentDate()),
         required = true
     )
-    private val firstName = FormInput(
+    private val firstName = FormInputOld(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_nb_first_name),
         allCaps = true,
         required = true
     )
-    private val lastName = FormInput(
+    private val lastName = FormInputOld(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_nb_last_name),
         allCaps = true,
 
         required = false,
     )
-    val ageUnit = FormInput(
+    val ageUnit = FormInputOld(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_nb_age_unit),
         entries = context.resources.getStringArray(R.array.nbr_age_unit_array),
         required = true,
     )
-    val age = FormInput(
+    val age = FormInputOld(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_age),
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = true,
     )
-    val dob = FormInput(
+    val dob = FormInputOld(
         inputType = DATE_PICKER,
         title = context.getString(R.string.nbr_dob),
         max = getMaxDobMillis(),
         min = getMinDobMillis(),
         required = true,
     )
-    val gender = FormInput(
+    val gender = FormInputOld(
         inputType = RADIO,
         title = context.getString(R.string.nbr_gender),
         entries = context.resources.getStringArray(R.array.nbr_gender_array),
         required = true,
     )
-    private val fatherName = FormInput(
+    private val fatherName = FormInputOld(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_father_name),
         allCaps = true,
 
         required = true
     )
-    private val motherName = FormInput(
+    private val motherName = FormInputOld(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_mother_name),
         allCaps = true,
         required = true
     )
 
-    val mobileNoOfRelation = FormInput(
+    val mobileNoOfRelation = FormInputOld(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_mobile_number_of),
         entries = arrayOf(
@@ -136,12 +136,12 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         ),
         required = true,
     )
-    val otherMobileNoOfRelation = FormInput(
+    val otherMobileNoOfRelation = FormInputOld(
         inputType = EDIT_TEXT,
         title = "Other - Mobile Number of",
         required = true
     )
-    val contactNumber = FormInput(
+    val contactNumber = FormInputOld(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nrb_contact_number),
         required = true,
@@ -201,19 +201,19 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         "Self",
         "Other"
     )
-    val relationToHead = FormInput(
+    val relationToHead = FormInputOld(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_rel_to_head),
         entries = relationToHeadListDefault,
         required = true,
     )
-    val otherRelationToHead = FormInput(
+    val otherRelationToHead = FormInputOld(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_rel_to_head_other),
         allCaps = true,
         required = true
     )
-    private val community = FormInput(
+    private val community = FormInputOld(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_community),
         entries = arrayOf(
@@ -227,7 +227,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         ),
         required = true
     )
-    val religion = FormInput(
+    val religion = FormInputOld(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_religion),
         entries = arrayOf(
@@ -243,14 +243,14 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         ),
         required = true
     )
-    val otherReligion = FormInput(
+    val otherReligion = FormInputOld(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_religion_other),
         allCaps = true,
         required = true
     )
 
-    val childRegisteredAtAwc = FormInput(
+    val childRegisteredAtAwc = FormInputOld(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_awc),
         entries = arrayOf(
@@ -260,7 +260,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         required = true
     )
 
-    val childRegisteredAtSchool = FormInput(
+    val childRegisteredAtSchool = FormInputOld(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_reg_school),
         entries = arrayOf(
@@ -271,7 +271,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     )
 
 
-    val typeOfSchool = FormInput(
+    val typeOfSchool = FormInputOld(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_type_school),
         entries = arrayOf(
@@ -284,7 +284,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     )
 
 
-    val rchId = FormInput(
+    val rchId = FormInputOld(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_rch_id),
         required = false,
@@ -295,7 +295,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
 
     )
-    val firstPage: List<FormInput> by lazy {
+    val firstPage: List<FormInputOld> by lazy {
         listOf(
             pic,
             dateOfReg,
@@ -315,7 +315,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         )
     }
     
-    fun loadFirstPageOnViewMode(): List<FormInput> {
+    fun loadFirstPageOnViewMode(): List<FormInputOld> {
         val viewList = mutableListOf(
             pic,
             dateOfReg,
@@ -380,7 +380,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
 
     //////////////////////////////////////////Second Page///////////////////////////////////////////
 
-    val placeOfBirth = FormInput(
+    val placeOfBirth = FormInputOld(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_pob),
         entries = arrayOf(
@@ -390,7 +390,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         ),
         required = true
     )
-    val facility = FormInput(
+    val facility = FormInputOld(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_facility),
         entries = arrayOf(
@@ -407,17 +407,17 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         ),
         required = true
     )
-    val otherFacility = FormInput(
+    val otherFacility = FormInputOld(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_child_pob_other_facility),
         required = true
     )
-    val otherPlaceOfBirth = FormInput(
+    val otherPlaceOfBirth = FormInputOld(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_child_pob_other),
         required = true
     )
-    val whoConductedDelivery = FormInput(
+    val whoConductedDelivery = FormInputOld(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_who_cond_del),
         entries = arrayOf(
@@ -431,12 +431,12 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         ),
         required = true
     )
-    val otherWhoConductedDelivery = FormInput(
+    val otherWhoConductedDelivery = FormInputOld(
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_child_who_cond_del_other),
         required = true
     )
-    private val typeOfDelivery = FormInput(
+    private val typeOfDelivery = FormInputOld(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_type_del),
         entries = arrayOf(
@@ -446,7 +446,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         ),
         required = true
     )
-     val complicationsDuringDelivery = FormInput(
+     val complicationsDuringDelivery = FormInputOld(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_comp_del),
         entries = arrayOf(
@@ -459,7 +459,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         ),
         required = true
     )
-    private val breastFeedWithin1Hr = FormInput(
+    private val breastFeedWithin1Hr = FormInputOld(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_feed_1_hr),
         entries = arrayOf(
@@ -469,7 +469,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         ),
         required = true
     )
-    val birthDose = FormInput(
+    val birthDose = FormInputOld(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_birth_dose),
         entries = arrayOf(
@@ -479,7 +479,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         ),
         required = true
     )
-    val birthDoseGiven = FormInput(
+    val birthDoseGiven = FormInputOld(
         inputType = CHECKBOXES,
         title = context.getString(R.string.nbr_child_birth_dose_details),
         entries = arrayOf(
@@ -490,7 +490,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         required = true
     )
 
-    val term = FormInput(
+    val term = FormInputOld(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_term),
         entries = arrayOf(
@@ -501,7 +501,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         required = true
     )
 
-    val termGestationalAge = FormInput(
+    val termGestationalAge = FormInputOld(
         inputType = RADIO,
         title = context.getString(R.string.nbr_child_gest_age),
         entries = arrayOf(
@@ -511,7 +511,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         ),
         required = true
     )
-    val corticosteroidGivenAtLabor = FormInput(
+    val corticosteroidGivenAtLabor = FormInputOld(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_corticosteroid),
         entries = arrayOf(
@@ -521,7 +521,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         ),
         required = true
     )
-    private val babyCriedImmediatelyAfterBirth = FormInput(
+    private val babyCriedImmediatelyAfterBirth = FormInputOld(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_cry_imm_birth),
         entries = arrayOf(
@@ -531,7 +531,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         ),
         required = true
     )
-    private val anyDefectAtBirth = FormInput(
+    private val anyDefectAtBirth = FormInputOld(
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_defect_at_birth),
         entries = arrayOf(
@@ -545,14 +545,14 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         ),
         required = true
     )
-    val motherUnselected  = FormInput(
+    val motherUnselected  = FormInputOld(
         inputType = CHECKBOXES,
         title = "Mother Unselected",
         entries = arrayOf("Yes"),
         orientation = LinearLayout.HORIZONTAL,
         required = false
     )
-    val motherOfChild = FormInput(
+    val motherOfChild = FormInputOld(
         inputType = DROPDOWN,
         title = "Mother of the child",
         entries = pncMotherList?.toTypedArray(),
@@ -560,7 +560,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
     )
 
 
-    private val babyHeight = FormInput(
+    private val babyHeight = FormInputOld(
         inputType = EDIT_TEXT,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL,
         minDecimal = 40.0,
@@ -569,7 +569,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         title = "Height at birth ( cm )",
         required = false
     )
-    private val babyWeight = FormInput(
+    private val babyWeight = FormInputOld(
         inputType = EDIT_TEXT,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL,
         minDecimal = 0.5,
@@ -591,7 +591,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
         )
     }
 
-    val secondPage: List<FormInput> by lazy {
+    val secondPage: List<FormInputOld> by lazy {
         listOf(
             placeOfBirth,
             whoConductedDelivery,
@@ -609,7 +609,7 @@ class BenKidRegFormDataset(private val context: Context, pncMotherList : List<St
 
             )
     }
-    fun loadSecondPageOnViewMode(): List<FormInput> {
+    fun loadSecondPageOnViewMode(): List<FormInputOld> {
         val viewList = mutableListOf(
             placeOfBirth,
             whoConductedDelivery,

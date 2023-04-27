@@ -6,7 +6,7 @@
     <data>
         <variable
             name="form"
-            type="org.piramalswasthya.sakhi.model.FormInputV2" />
+            type="org.piramalswasthya.sakhi.model.FormElement" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,6 +33,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@{form.title}"
+            app:errorEnabled="true"
             android:paddingBottom="@dimen/padding_normal"
             app:layout_constraintEnd_toStartOf="@id/tv_nullable"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,9 +43,12 @@
                 android:id="@+id/et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="@{form.value}"
+                android:singleLine="@{!form.multiLine}"
+                android:text="@={form.value}"
+                android:maxLength="@{form.etMaxLength}"
+                android:textAllCaps="@{form.allCaps}"
                 tools:text="lsdkfnsld"
+                android:inputType="@{form.etInputType}"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
 
         </com.google.android.material.textfield.TextInputLayout>

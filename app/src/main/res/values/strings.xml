@@ -609,6 +609,11 @@
     <string name="error_sign_in_invalid_u_p">Invalid Username / password !</string>
     <string name="error_sign_in_timeout">Server timed out, try again!</string>
     <string name="error_sign_in_disconnected_network">Unable to connect to network!</string>
+    <string name="hbnc_mother_temp_case_1">Treat mother to paracetamol.</string>
+    <string name="hbnc_mother_temp_case_2">Refer mother to Hospital.</string>
+    <string name="hbnc_baby_temp_97_alert">advice the mother to keep the baby warm by increasing the room temperature, providing skin to skin contact, putting the baby in a warm bag and frequently feeding the baby.</string>
+    <string name="hbnc_baby_temp_96_alert">advice the mother to keep the baby warm by increasing the room temperature, providing skin to skin contact, putting the baby in a warm bag and frequently feeding the baby. once the baby is warmer then clothe the baby and place in a pre warmed bed close to the mother.</string>
+    <string name="hbnc_baby_temp_99_alert">then look for signs of sepsis. In case signs of sepsis are not present manage only with 1/4th of a spoon of paracetamol and immediately refer to the SNCU at the nearest health facility.</string>
 
 
 </resources>

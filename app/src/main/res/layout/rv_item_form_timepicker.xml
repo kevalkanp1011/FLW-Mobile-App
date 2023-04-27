@@ -5,7 +5,7 @@
     <data>
         <variable
             name="form"
-            type="org.piramalswasthya.sakhi.model.FormInput" />
+            type="org.piramalswasthya.sakhi.model.FormInputOld" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

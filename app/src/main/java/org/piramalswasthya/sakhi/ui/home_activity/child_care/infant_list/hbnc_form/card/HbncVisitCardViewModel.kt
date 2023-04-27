@@ -1,11 +1,13 @@
 package org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.card
 
+import android.content.Context
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.configuration.HBNCFormDatasetV2
+import org.piramalswasthya.sakhi.configuration.HBNCFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
@@ -22,6 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HbncVisitCardViewModel @Inject constructor(
     state: SavedStateHandle,
+    @ApplicationContext context : Context,
     private val preferenceDao : PreferenceDao,
     private val database: InAppDb,
     private val hbncRepo: HbncRepo,
@@ -55,7 +58,7 @@ class HbncVisitCardViewModel @Inject constructor(
     val exists: LiveData<Boolean>
         get() = _exists
 
-    private val dataset = HBNCFormDatasetV2(Konstants.hbncCardDay)
+    private val dataset = HBNCFormDataset(context.resources, Konstants.hbncCardDay)
 //    private val _formList = MutableStateFlow<List<FormInputV2>>(emptyList())
     val formList = dataset.listFlow
 
@@ -103,7 +106,6 @@ class HbncVisitCardViewModel @Inject constructor(
                 dataset.setAshaName(user.userName)
             }
             dataset.setCardPageToList(user,ben, null, hbnc?.visitCard)
-            Timber.d("Emitting formList")
 //            _formList.emit(dataset.list)
 
         }
@@ -124,8 +126,13 @@ class HbncVisitCardViewModel @Inject constructor(
 //        }
 //    }
 
-     fun updateListOnValueChanged(formId: Int, index: Int) {
-//        dataset.handleListOnValueChanged(Konstants.hbncCardDay, formId, index)
+    fun updateListOnValueChanged(formId: Int, index: Int) {
+        viewModelScope.launch {
+            Timber.d("updateListOnValueChanged called : $formId $index")
+
+            dataset.updateList(formId, index)
+        }
+
     }
 
 //    private fun setExistingValues() {

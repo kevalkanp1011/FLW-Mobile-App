@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.adapters.FormInputAdapterV2
+import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.card.HbncVisitCardViewModel.State
 import org.piramalswasthya.sakhi.work.WorkerUtils
@@ -47,9 +50,9 @@ class HbncVisitCardFragment : Fragment() {
             if (validate()) viewModel.submitForm()
         }
         viewModel.exists.observe(viewLifecycleOwner) { exists ->
-            val adapter = FormInputAdapterV2(
+            val adapter = FormInputAdapter(
                 imageClickListener = null,
-                formValueListener = FormInputAdapterV2.FormValueListener { formId, index ->
+                formValueListener = FormInputAdapter.FormValueListener { formId, index ->
                     viewModel.updateListOnValueChanged(formId, index)
                 }, isEnabled = !exists
             )
@@ -64,14 +67,17 @@ class HbncVisitCardFragment : Fragment() {
 //            }
         }
 
-        lifecycleScope.launch{
-            viewModel.formList.collect{
-                Timber.d("Collecting formList : $it")
-                (binding.form.rvInputForm.adapter as FormInputAdapterV2?)?.submitList(it)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.formList.flowWithLifecycle(
+                    viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED
+                ).collect { list ->
+                    Timber.d("Collecting formList : ${list.map { it.id }}")
+                    (binding.form.rvInputForm.adapter as FormInputAdapter?)?.submitList(list)
+                }
             }
         }
-
-
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
                 State.LOADING -> {
@@ -108,7 +114,7 @@ class HbncVisitCardFragment : Fragment() {
 
     fun validate(): Boolean {
         val result = binding.form.rvInputForm.adapter?.let {
-            (it as FormInputAdapterV2).validateInput()
+            (it as FormInputAdapter).validateInput()
         }
         Timber.d("Validation : $result")
         return if (result == -1)

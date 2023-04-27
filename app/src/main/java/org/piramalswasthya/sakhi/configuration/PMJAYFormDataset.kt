@@ -1,7 +1,7 @@
 package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
-import org.piramalswasthya.sakhi.model.FormInput
+import org.piramalswasthya.sakhi.model.FormInputOld
 import org.piramalswasthya.sakhi.model.InputType
 import org.piramalswasthya.sakhi.model.PMJAYCache
 import java.text.SimpleDateFormat
@@ -32,70 +32,70 @@ class PMJAYFormDataset(context: Context) {
         pmjayCache.scheme = scheme.value.value
     }
 
-    val id = FormInput(
+    val id = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "Id Number",
         required = false
     )
-    val registrationDate = FormInput(
+    val registrationDate = FormInputOld(
         inputType = InputType.DATE_PICKER,
         title = "Registration Date",
         min = 0L,
         max = System.currentTimeMillis(),
         required = false
     )
-    private val registeredHospital = FormInput(
+    private val registeredHospital = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "Registered Hospital",
         required = false
     )
-    val contactNumber = FormInput(
+    val contactNumber = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "Contact No",
         required = false
     )
-    val communicationContactNumber = FormInput(
+    val communicationContactNumber = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "Communication Contact No",
         required = false
     )
-    val patientAddress = FormInput(
+    val patientAddress = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "Patient Address",
         required = false
     )
-    val communicationAddress = FormInput(
+    val communicationAddress = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "Communication Address",
         required = false
     )
-    val hospitalAddress = FormInput(
+    val hospitalAddress = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "Hospital Address",
         required = false
     )
-    val familyId = FormInput(
+    val familyId = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "Family Id",
         required = false
     )
-    val isAadhaarBeneficiary = FormInput(
+    val isAadhaarBeneficiary = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "Is Aadhaar Beneficiary",
         required = false,
     )
-    val memberType = FormInput(
+    val memberType = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "Member Type",
         required = false
     )
-    val patientType = FormInput(
+    val patientType = FormInputOld(
         inputType = InputType.DROPDOWN,
         title = "Patient Type",
         required = false,
         entries = arrayOf("Select Type", "General OP", "IP")
     )
-    val scheme = FormInput(
+    val scheme = FormInputOld(
         inputType = InputType.DROPDOWN,
         title = "Scheme",
         required = false,

@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.configuration.MDSRFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
@@ -60,10 +60,10 @@ class MdsrObjectViewModel @Inject constructor(
     private val dataset = MDSRFormDataset(context)
 
     private fun toggleFieldOnTrigger(
-        causeField: FormInput,
-        effectField: FormInput,
+        causeField: FormInputOld,
+        effectField: FormInputOld,
         value: String?,
-        adapter: FormInputAdapter
+        adapter: FormInputAdapterOld
     ) {
         value?.let {
             if (it == "Maternal") {
@@ -133,7 +133,7 @@ class MdsrObjectViewModel @Inject constructor(
         return address
     }
 
-    suspend fun getFirstPage(adapter: FormInputAdapter): List<FormInput> {
+    suspend fun getFirstPage(adapter: FormInputAdapterOld): List<FormInputOld> {
         viewModelScope.launch {
             dataset.causeOfDeath.value.collect {
                 toggleFieldOnTrigger(
@@ -147,7 +147,7 @@ class MdsrObjectViewModel @Inject constructor(
         return dataset.firstPage
     }
 
-    fun setAddress(it: String?, adapter: FormInputAdapter) {
+    fun setAddress(it: String?, adapter: FormInputAdapterOld) {
         dataset.address.value.value = it
         dataset.husbandName.value.value = ben.genDetails?.spouseName
         dataset.date.min = ben.dob

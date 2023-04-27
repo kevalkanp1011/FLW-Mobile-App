@@ -11,7 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
@@ -46,7 +46,7 @@ class PmjayFragment : Fragment() {
             if (validate()) viewModel.submitForm()
         }
         viewModel.exists.observe(viewLifecycleOwner) {exists ->
-            val adapter = FormInputAdapter(isEnabled = !exists)
+            val adapter = FormInputAdapterOld(isEnabled = !exists)
             binding.form.rvInputForm.adapter = adapter
             if (exists) {
                 binding.btnSubmit.visibility = View.GONE
@@ -98,7 +98,7 @@ class PmjayFragment : Fragment() {
 
     fun validate(): Boolean {
         val result = binding.form.rvInputForm.adapter?.let {
-            (it as FormInputAdapter).validateInput()
+            (it as FormInputAdapterOld).validateInput()
         }
         Timber.d("Validation : $result")
         return if (result == -1)

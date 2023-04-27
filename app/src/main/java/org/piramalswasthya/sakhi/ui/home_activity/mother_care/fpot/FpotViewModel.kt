@@ -6,9 +6,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.configuration.FPOTFormDataset
-import org.piramalswasthya.sakhi.configuration.PMJAYFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.repositories.BenRepo
@@ -112,11 +111,11 @@ class FpotViewModel @Inject constructor(
         return address
     }
 
-    fun getFirstPage(): List<FormInput> {
+    fun getFirstPage(): List<FormInputOld> {
         return dataset.firstPage
     }
 
-    fun setAddress(it: String?, adapter: FormInputAdapter) {
+    fun setAddress(it: String?, adapter: FormInputAdapterOld) {
         dataset.contactNumber.value.value = ben.contactNumber.toString()
         dataset.spouseName.value.value = ben.genDetails?.spouseName
     }

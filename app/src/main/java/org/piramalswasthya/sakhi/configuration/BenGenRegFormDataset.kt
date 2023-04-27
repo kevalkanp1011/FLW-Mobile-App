@@ -63,30 +63,30 @@ class BenGenRegFormDataset(private val context: Context) {
     }
 
     //////////////////////////////////First Page////////////////////////////////////
-    private val pic = FormInput(
+    private val pic = FormInputOld(
         inputType = IMAGE_VIEW,
         title = "Image",
         required = true
     )
-    private val dateOfReg = FormInput(
+    private val dateOfReg = FormInputOld(
         inputType = TEXT_VIEW,
         title = "Date of Registration",
         value = MutableStateFlow(getCurrentDate()),
         required = true
     )
-    private val firstName = FormInput(
+    private val firstName = FormInputOld(
         inputType = EDIT_TEXT,
         title = "First Name",
         allCaps = true,
         required = true
     )
-    private val lastName = FormInput(
+    private val lastName = FormInputOld(
         inputType = EDIT_TEXT,
         title = "Last Name / Surname",
         allCaps = true,
         required = false,
     )
-    val age = FormInput(
+    val age = FormInputOld(
         inputType = EDIT_TEXT,
         title = "Age (in Years)",
         min = 15,
@@ -95,14 +95,14 @@ class BenGenRegFormDataset(private val context: Context) {
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = true,
     )
-    val dob = FormInput(
+    val dob = FormInputOld(
         inputType = DATE_PICKER,
         title = "Date of Birth",
         max = getMaxDobMillis(),
         min = getMinDobMillis(),
         required = true,
     )
-    val gender = FormInput(
+    val gender = FormInputOld(
         inputType = RADIO,
         title = "Gender",
         entries = arrayOf(
@@ -128,58 +128,58 @@ class BenGenRegFormDataset(private val context: Context) {
         "Separated",
         "Widow",
     )
-    val maritalStatus = FormInput(
+    val maritalStatus = FormInputOld(
         inputType = DROPDOWN,
         title = "Marital Status",
         entries = maritalStatusMale,
         required = true,
     )
-    val husbandName = FormInput(
+    val husbandName = FormInputOld(
         inputType = EDIT_TEXT,
         title = "Husband's Name",
         allCaps = true,
         required = true
     )
-    val wifeName = FormInput(
+    val wifeName = FormInputOld(
         inputType = EDIT_TEXT,
         title = "Wife's Name",
         allCaps = true,
         required = true
     )
-    val spouseName = FormInput(
+    val spouseName = FormInputOld(
         inputType = EDIT_TEXT,
         title = "Spouse's Name",
         allCaps = true,
         required = true
     )
-    val ageAtMarriage = FormInput(
+    val ageAtMarriage = FormInputOld(
         inputType = EDIT_TEXT,
         title = "Age At Marriage",
         min = 12,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = true,
     )
-    val dateOfMarriage = FormInput(
+    val dateOfMarriage = FormInputOld(
         inputType = DATE_PICKER,
         title = "Date of Marriage",
         max = System.currentTimeMillis(),
         min = 0L,
         required = true,
     )
-    val fatherName = FormInput(
+    val fatherName = FormInputOld(
         inputType = EDIT_TEXT,
         title = "Father's Name",
         allCaps = true,
         required = true
     )
-    val motherName = FormInput(
+    val motherName = FormInputOld(
         inputType = EDIT_TEXT,
         title = "Mother's Name",
         allCaps = true,
         required = true
     )
 
-    val mobileNoOfRelation = FormInput(
+    val mobileNoOfRelation = FormInputOld(
         inputType = DROPDOWN,
         title = "Mobile Number Of",
         entries = arrayOf(
@@ -192,12 +192,12 @@ class BenGenRegFormDataset(private val context: Context) {
         ),
         required = true,
     )
-    val otherMobileNoOfRelation = FormInput(
+    val otherMobileNoOfRelation = FormInputOld(
         inputType = EDIT_TEXT,
         title = "Other - Mobile Number of",
         required = true
     )
-    val contactNumber = FormInput(
+    val contactNumber = FormInputOld(
         inputType = EDIT_TEXT,
         title = "Contact Number",
         required = true,
@@ -257,18 +257,18 @@ class BenGenRegFormDataset(private val context: Context) {
         "Self",
         "Other"
     )
-    val relationToHead = FormInput(
+    val relationToHead = FormInputOld(
         inputType = DROPDOWN,
         title = "Relation with family head",
         entries = relationToHeadListDefault,
         required = true,
     )
-    val otherRelationToHead = FormInput(
+    val otherRelationToHead = FormInputOld(
         inputType = EDIT_TEXT,
         title = "Other - Enter relation to head",
         required = true
     )
-    private val community = FormInput(
+    private val community = FormInputOld(
         inputType = DROPDOWN,
         title = "Community",
         entries = arrayOf(
@@ -282,7 +282,7 @@ class BenGenRegFormDataset(private val context: Context) {
         ),
         required = true
     )
-    val religion = FormInput(
+    val religion = FormInputOld(
         inputType = DROPDOWN,
         title = "Religion",
         entries = arrayOf(
@@ -298,13 +298,13 @@ class BenGenRegFormDataset(private val context: Context) {
         ),
         required = true
     )
-    val otherReligion = FormInput(
+    val otherReligion = FormInputOld(
         inputType = EDIT_TEXT,
         title = "Other - Enter Religion",
         required = true
     )
 
-    val firstPage: List<FormInput> by lazy {
+    val firstPage: List<FormInputOld> by lazy {
         listOf(
             pic,
             dateOfReg,
@@ -325,7 +325,7 @@ class BenGenRegFormDataset(private val context: Context) {
 
     //////////////////////////////////Second Page////////////////////////////////////
 
-    val hasAadharNo = FormInput(
+    val hasAadharNo = FormInputOld(
         inputType = RADIO,
         title = "Has Aadhar Number",
         entries = arrayOf("Yes", "No"),
@@ -333,7 +333,7 @@ class BenGenRegFormDataset(private val context: Context) {
         required = false
     )
 
-    val aadharNo = FormInput(
+    val aadharNo = FormInputOld(
         inputType = EDIT_TEXT,
         title = "Enter Aadhar Number",
         required = true,
@@ -344,7 +344,7 @@ class BenGenRegFormDataset(private val context: Context) {
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
     )
 
-    val rchId = FormInput(
+    val rchId = FormInputOld(
         inputType = EDIT_TEXT,
         title = "RCH ID",
         required = false,
@@ -363,7 +363,7 @@ class BenGenRegFormDataset(private val context: Context) {
 
     //////////////////////////////////Third(if any) Page////////////////////////////////////
 
-    val lastMenstrualPeriod = FormInput(
+    val lastMenstrualPeriod = FormInputOld(
         inputType = DATE_PICKER,
         title = "Last Menstrual Period",
         required = false,
@@ -372,7 +372,7 @@ class BenGenRegFormDataset(private val context: Context) {
 
     )
 
-    val reproductiveStatus = FormInput(
+    val reproductiveStatus = FormInputOld(
         inputType = DROPDOWN,
         title = "Reproductive Status",
         entries = arrayOf(
@@ -387,14 +387,14 @@ class BenGenRegFormDataset(private val context: Context) {
         required = true
     )
 
-    val reproductiveStatusOther = FormInput(
+    val reproductiveStatusOther = FormInputOld(
         inputType = EDIT_TEXT,
         title = "Reproductive Status Other",
         etMaxLength = 100,
         required = true
     )
 
-    val nishchayKitDeliveryStatus = FormInput(
+    val nishchayKitDeliveryStatus = FormInputOld(
         inputType = RADIO,
         title = "Nishchay Kit Delivery Status",
         entries = arrayOf("Delivered", "Not Delivered"),
@@ -403,7 +403,7 @@ class BenGenRegFormDataset(private val context: Context) {
 
         )
 
-    val pregnancyTestResult = FormInput(
+    val pregnancyTestResult = FormInputOld(
         inputType = RADIO,
         title = "Pregnancy Test Result",
         entries = arrayOf("Pregnant", "Not Pregnant", "Pending"),
@@ -412,14 +412,14 @@ class BenGenRegFormDataset(private val context: Context) {
 
         )
 
-    val expectedDateOfDelivery = FormInput(
+    val expectedDateOfDelivery = FormInputOld(
         inputType = TEXT_VIEW,
         title = "Expected Date Of Delivery",
         required = true
     )
 
 
-    val numPrevLiveBirthOrPregnancy = FormInput(
+    val numPrevLiveBirthOrPregnancy = FormInputOld(
         inputType = EDIT_TEXT,
         title = "No. of Previous Live Birth / Pregnancy",
         min = 0,
@@ -428,7 +428,7 @@ class BenGenRegFormDataset(private val context: Context) {
         required = true,
     )
 
-    val lastDeliveryConducted = FormInput(
+    val lastDeliveryConducted = FormInputOld(
         inputType = DROPDOWN,
         title = "Last Delivery Conducted",
         entries = arrayOf(
@@ -442,17 +442,17 @@ class BenGenRegFormDataset(private val context: Context) {
         ),
         required = true
     )
-    val facility = FormInput(
+    val facility = FormInputOld(
         inputType = EDIT_TEXT,
         title = "Facility Name",
         required = true
     )
-    val otherPlaceOfDelivery = FormInput(
+    val otherPlaceOfDelivery = FormInputOld(
         inputType = EDIT_TEXT,
         title = " Enter the Place of last delivery conducted",
         required = true
     )
-    val whoConductedDelivery = FormInput(
+    val whoConductedDelivery = FormInputOld(
         inputType = DROPDOWN,
         title = "Who Conducted Delivery",
         entries = arrayOf(
@@ -466,13 +466,13 @@ class BenGenRegFormDataset(private val context: Context) {
         ),
         required = true
     )
-    val otherWhoConductedDelivery = FormInput(
+    val otherWhoConductedDelivery = FormInputOld(
         inputType = EDIT_TEXT,
         title = "Other - Enter who Conducted Delivery",
         required = true
     )
 
-    val dateOfDelivery = FormInput(
+    val dateOfDelivery = FormInputOld(
         inputType = DATE_PICKER,
         title = "Date Of Delivery",
         required = true,
@@ -488,7 +488,7 @@ class BenGenRegFormDataset(private val context: Context) {
 
             )
 
-    fun loadFirstPageOnViewModel(): List<FormInput> {
+    fun loadFirstPageOnViewModel(): List<FormInputOld> {
         val viewList = mutableListOf(
             pic,
             dateOfReg,
@@ -585,7 +585,7 @@ class BenGenRegFormDataset(private val context: Context) {
         return viewList
     }
 
-    fun loadSecondPageOnViewModel(): List<FormInput> {
+    fun loadSecondPageOnViewModel(): List<FormInputOld> {
         val viewList = mutableListOf(
             hasAadharNo,
             rchId
@@ -603,7 +603,7 @@ class BenGenRegFormDataset(private val context: Context) {
         return viewList
     }
 
-    fun loadThirdPageOnViewModel(): List<FormInput> {
+    fun loadThirdPageOnViewModel(): List<FormInputOld> {
         val viewList = mutableListOf(
             reproductiveStatus
         )

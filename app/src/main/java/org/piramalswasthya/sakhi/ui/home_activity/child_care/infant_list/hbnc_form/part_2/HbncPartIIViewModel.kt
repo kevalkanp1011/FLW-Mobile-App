@@ -1,11 +1,13 @@
 package org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.part_2
 
+import android.content.Context
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.configuration.HBNCFormDatasetV2
+import org.piramalswasthya.sakhi.configuration.HBNCFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.Konstants
@@ -20,6 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HbncPartIIViewModel @Inject constructor(
+    @ApplicationContext context : Context,
     state: SavedStateHandle,
     private val database: InAppDb,
     private val hbncRepo: HbncRepo,
@@ -50,7 +53,7 @@ class HbncPartIIViewModel @Inject constructor(
     val exists: LiveData<Boolean>
         get() = _exists
 
-    private val dataset = HBNCFormDatasetV2(Konstants.hbncPart2Day)
+    private val dataset = HBNCFormDataset(context.resources, Konstants.hbncPart2Day)
     val formList = dataset.listFlow
     fun submitForm() {
         _state.value = State.LOADING
@@ -93,8 +96,7 @@ class HbncPartIIViewModel @Inject constructor(
 
     fun updateListOnValueChanged(formId: Int, index: Int) {
         viewModelScope.launch {
-            Timber.d("Handle called $formId $index")
-            dataset.handleListOnValueChanged(Konstants.hbncPart2Day, formId, index)
+            dataset.updateList( formId, index)
         }
 
     }

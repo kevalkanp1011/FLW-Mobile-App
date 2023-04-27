@@ -7,11 +7,11 @@
 
         <variable
             name="form"
-            type="org.piramalswasthya.sakhi.model.FormInput" />
+            type="org.piramalswasthya.sakhi.model.FormInputOld" />
 
         <variable
             name="clickListener"
-            type="org.piramalswasthya.sakhi.adapters.FormInputAdapter.ImageClickListener" />
+            type="org.piramalswasthya.sakhi.adapters.FormInputAdapterOld.ImageClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.adapters.NewHouseholdPagerAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentInputFormPageBinding
 import timber.log.Timber
@@ -37,7 +37,7 @@ class NewHouseholdFormObjectFragment : Fragment() {
             ?: throw IllegalStateException("No argument passed to viewpager object!")
         viewModel.recordExists.observe(viewLifecycleOwner){
             it?.let{
-                val adapter = FormInputAdapter(isEnabled = !it)
+                val adapter = FormInputAdapterOld(isEnabled = !it)
                 binding.inputForm.rvInputForm.adapter = adapter
                 lifecycleScope.launch {
                     when (pageNumber) {
@@ -56,7 +56,7 @@ class NewHouseholdFormObjectFragment : Fragment() {
 
     fun validate(): Boolean {
         val result = binding.inputForm.rvInputForm.adapter?.let {
-            (it as FormInputAdapter).validateInput()
+            (it as FormInputAdapterOld).validateInput()
         }
         Timber.d("Validation : $result")
         return if (result == -1)
