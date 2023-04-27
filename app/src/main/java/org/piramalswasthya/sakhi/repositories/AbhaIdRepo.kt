@@ -380,6 +380,9 @@ class AbhaIdRepo @Inject constructor(
         }
     }
 
+    suspend fun downloadPdfCard(): Response<ResponseBody> {
+        return abhaApiService.getPdfCard()
+    }
     suspend fun getPdfCard(context: Context, fileName: String) {
         return withContext(Dispatchers.IO) {
             try {
