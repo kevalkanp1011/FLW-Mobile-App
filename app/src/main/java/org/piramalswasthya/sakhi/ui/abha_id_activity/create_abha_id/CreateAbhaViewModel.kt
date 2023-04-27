@@ -1,6 +1,5 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity.create_abha_id
 
-import android.content.Context
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -9,7 +8,6 @@ import org.piramalswasthya.sakhi.network.CreateAbhaIdResponse
 import org.piramalswasthya.sakhi.network.NetworkResult
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertAbhaInterceptor
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -61,23 +59,11 @@ class CreateAbhaViewModel @Inject constructor(
         }
     }
 
-    private fun downloadAbhaCard(context: Context) {
-        viewModelScope.launch {
-            abha.value?.name?.let { abhaIdRepo.getPdfCard(context, "$it.pdf") }
-            _state.value = State.DOWNLOAD_SUCCESS
-        }
-    }
-
     fun resetState() {
         _state.value = State.IDLE
     }
 
     fun resetErrorMessage() {
         _errorMessage.value = null
-    }
-
-    fun downloadAbhaClicked(context: Context) {
-        _state.value = State.LOADING
-        downloadAbhaCard(context)
     }
 }
