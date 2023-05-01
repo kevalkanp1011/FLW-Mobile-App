@@ -28,3 +28,13 @@ data class HbncIcon(
     val title : String = "Day $count",
     val destination: NavDirections
     )
+
+data class HbycIcon(
+    val hhId: Long,
+    val benId: Long,
+    val count: Int,
+    val isFilled: Boolean,
+    val syncState : SyncState?,
+    val title : String = "Month $count",
+    val destination: NavDirections
+)

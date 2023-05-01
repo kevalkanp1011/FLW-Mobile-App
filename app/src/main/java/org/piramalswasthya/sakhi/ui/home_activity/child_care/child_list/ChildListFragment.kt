@@ -54,7 +54,7 @@ class ChildListFragment : Fragment() {
                 { hhId, benId ->
                     Timber.d("benId : $benId hhId : $hhId")
                     findNavController().navigate(
-                        ChildListFragmentDirections.actionChildListFragmentToHbycFragment(
+                        ChildListFragmentDirections.actionChildListFragmentToHbycMonthListFragment(
                             hhId = hhId,
                             benId = benId
                         )

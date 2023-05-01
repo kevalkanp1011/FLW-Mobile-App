@@ -20,6 +20,8 @@ class HbycRepo @Inject constructor(
     private val d2DNetworkApiService: D2DApiService
 ) {
 
+    fun hbycList(benId: Long, hhId: Long) = database.hbycDao.getAllHbycEntries(hhId, benId)
+
     suspend fun saveHbycData(hbycCache: HBYCCache): Boolean {
         return withContext(Dispatchers.IO) {
 

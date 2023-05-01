@@ -290,8 +290,8 @@
         android:label="@string/child_care_icon_title_child_list"
         tools:layout="@layout/fragment_child_list" >
         <action
-            android:id="@+id/action_childListFragment_to_hbycFragment"
-            app:destination="@id/hbycFragment" />
+            android:id="@+id/action_childListFragment_to_hbycMonthListFragment"
+            app:destination="@id/hbycMonthListFragment" />
     </fragment>
     <fragment
         android:id="@+id/pregnancyListFragment"
@@ -581,9 +581,26 @@
     </fragment>
     <fragment
         android:id="@+id/hbycFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.child_care.child_list.hbyc.HbycFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.child_care.child_list.hbyc.form.HbycFragment"
         android:label="fragment_hbyc"
         tools:layout="@layout/fragment_hbyc" >
+        <argument
+            android:name="hhId"
+            app:argType="long" />
+        <argument
+            android:name="benId"
+            app:argType="long" />
+        <argument
+            android:name="month"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/hbycMonthListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.child_care.child_list.hbyc.HbycMonthListFragment"
+        android:label="HbycMonthListFragment" >
+        <action
+            android:id="@+id/action_hbycMonthListFragment_to_hbycFragment"
+            app:destination="@id/hbycFragment" />
         <argument
             android:name="hhId"
             app:argType="long" />
