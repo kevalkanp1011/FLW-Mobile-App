@@ -229,7 +229,7 @@ class NewBenRegG15Fragment : Fragment() {
                 viewModel.setMTabPosition(i)
 //                when (viewModel.mTabPosition) {
 //                    1 -> {
-//                        viewModel.persistFirstPage()
+//                        viewModel.persistRecord()
 //                    }
 //                    2 -> {
 //                        viewModel.persistSecondPage()

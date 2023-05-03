@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.model
 import androidx.room.*
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
 import java.text.SimpleDateFormat
 import java.util.*
@@ -50,7 +51,7 @@ data class HBNCCache(
     var processed: String? = null,
     var syncState: SyncState
 
-) {
+) : FormDataModel {
 
     companion object {
         private val format1 = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)

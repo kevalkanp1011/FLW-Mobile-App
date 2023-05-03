@@ -100,7 +100,7 @@
     </string-array>
     <string name="nhhr_primary_water">Primary Source of Water</string>
     <string name="nhhr_primary_water_1">Tap Water</string>
-    <string name="nhhr_primary_water_2">Hand pump within house</string>
+    <string name="nhhr_primary_water_2">Hand pump inside house</string>
     <string name="nhhr_primary_water_3">Hand pump outside of house</string>
     <string name="nhhr_primary_water_4">Well</string>
     <string name="nhhr_primary_water_5">Tank</string>

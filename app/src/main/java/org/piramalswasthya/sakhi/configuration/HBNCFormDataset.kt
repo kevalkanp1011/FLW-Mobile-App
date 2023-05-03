@@ -1,20 +1,23 @@
 package org.piramalswasthya.sakhi.configuration
 
-import android.content.res.Resources
+import android.content.Context
 import android.text.InputType.TYPE_CLASS_TEXT
 import android.text.InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Konstants
+import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.*
 import timber.log.Timber
 
 
 class HBNCFormDataset(
-    resource: Resources, private val nthDay: Int
-) : Dataset(resource) {
+    context: Context,
+    language: Languages,
+    private val nthDay: Int
+) : Dataset(context, language) {
 
     suspend fun setCardPageToList(
-        asha: UserCache, childBen: BenRegCache, motherBen: BenRegCache?, visitCard: HbncVisitCard?
+        asha: UserDomain, childBen: BenRegCache, motherBen: BenRegCache?, visitCard: HbncVisitCard?
     ) {
 
         visitCard?.let { setExistingValuesForCardPage(it) } ?: run {
@@ -112,6 +115,15 @@ class HBNCFormDataset(
 //        Timber.d("Make ${list.map { it.hashCode() }}")
 //        Timber.d("Current list : ${list.map { Pair(it.id, it.errorText) }}")
 
+    }
+
+    override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
+        when(nthDay){
+            Konstants.hbncCardDay ->mapCardValues(cacheModel as HBNCCache)
+            Konstants.hbncPart1Day ->mapPartIValues(cacheModel as HBNCCache)
+            Konstants.hbncPart2Day ->mapPartIIValues(cacheModel as HBNCCache)
+            else->mapVisitValues(cacheModel as HBNCCache)
+        }
     }
 
 
@@ -321,7 +333,7 @@ class HBNCFormDataset(
     }
 
 
-    fun mapCardValues(hbnc: HBNCCache) {
+    private fun mapCardValues(hbnc: HBNCCache) {
         hbnc.visitCard = HbncVisitCard(
             ashaName = ashaName.value,
             villageName = villageName.value,
@@ -342,7 +354,7 @@ class HBNCFormDataset(
         )
     }
 
-    fun mapPartIValues(hbnc: HBNCCache) {
+    private fun mapPartIValues(hbnc: HBNCCache) {
         hbnc.part1 = HbncPartI(
             dateOfVisit = getLongFromDate(dateOfHomeVisit.value),
             babyAlive = babyAlive.getPosition(),
@@ -369,7 +381,7 @@ class HBNCFormDataset(
         )
     }
 
-    fun mapPartIIValues(hbnc: HBNCCache) {
+    private fun mapPartIIValues(hbnc: HBNCCache) {
         hbnc.part2 = HbncPartII(
             dateOfVisit = getLongFromDate(dateOfHomeVisit.value),
             babyTemperature = babyTemperature.value,
@@ -391,7 +403,7 @@ class HBNCFormDataset(
         )
     }
 
-    fun mapVisitValues(hbnc: HBNCCache) {
+    private fun mapVisitValues(hbnc: HBNCCache) {
         hbnc.homeVisitForm = HbncHomeVisit(
             dateOfVisit = getLongFromDate(dateOfMotherDeath.value),
             babyAlive = babyAlive.getPosition(),

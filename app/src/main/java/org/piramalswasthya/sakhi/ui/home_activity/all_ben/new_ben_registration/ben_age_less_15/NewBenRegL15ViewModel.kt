@@ -217,7 +217,7 @@ class NewBenRegL15ViewModel @Inject constructor(
                 form.mobileNoOfRelation.value.collect {
                     it?.let {
                         if (it == "Family Head") {
-                            household.familyHeadPhoneNo?.let { mobNo ->
+                            household.family?.familyHeadPhoneNo?.let { mobNo ->
                                 form.contactNumber.value.value = mobNo.toString()
                             }
                         } else form.contactNumber.value.value = null

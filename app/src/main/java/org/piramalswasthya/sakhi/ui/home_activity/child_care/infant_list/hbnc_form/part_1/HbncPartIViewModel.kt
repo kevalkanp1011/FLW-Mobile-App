@@ -8,15 +8,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.HBNCFormDataset
-import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.HBNCCache
 import org.piramalswasthya.sakhi.model.HouseholdCache
-import org.piramalswasthya.sakhi.model.UserCache
+import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.HbncRepo
+import org.piramalswasthya.sakhi.repositories.UserRepo
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -24,9 +25,10 @@ import javax.inject.Inject
 class HbncPartIViewModel @Inject constructor(
     @ApplicationContext context : Context,
     state: SavedStateHandle,
-    private val database: InAppDb,
+    preferenceDao: PreferenceDao,
     private val hbncRepo: HbncRepo,
-    private val benRepo: BenRepo
+    benRepo: BenRepo,
+    userRepo : UserRepo
 ) : ViewModel() {
 
     enum class State {
@@ -37,7 +39,7 @@ class HbncPartIViewModel @Inject constructor(
     private val hhId = HbncPartIFragmentArgs.fromSavedStateHandle(state).hhId
     private lateinit var ben: BenRegCache
     private lateinit var household: HouseholdCache
-    private lateinit var user: UserCache
+    private lateinit var user: UserDomain
     private var hbnc: HBNCCache? = null
 
     private val _benName = MutableLiveData<String>()
@@ -53,9 +55,9 @@ class HbncPartIViewModel @Inject constructor(
     val exists: LiveData<Boolean>
         get() = _exists
 
-    private val dataset = HBNCFormDataset(context.resources, Konstants.hbncPart1Day)
+    private val dataset = HBNCFormDataset(context, preferenceDao.getCurrentLanguage(), Konstants.hbncPart1Day)
     val formList = dataset.listFlow
-    val alertError = dataset.errorMessageFlow
+    val alertError = dataset.alertErrorMessageFlow
 
     fun submitForm() {
         _state.value = State.LOADING
@@ -66,7 +68,7 @@ class HbncPartIViewModel @Inject constructor(
             processed = "N",
             syncState = SyncState.UNSYNCED
         )
-        dataset.mapPartIValues(hbncCache)
+        dataset.mapValues(hbncCache)
         Timber.d("saving hbnc: $hbncCache")
         viewModelScope.launch {
             val saved = hbncRepo.saveHbncData(hbncCache)
@@ -86,8 +88,8 @@ class HbncPartIViewModel @Inject constructor(
                 Timber.d("benId : $benId hhId : $hhId")
                 ben = benRepo.getBeneficiary(benId, hhId)!!
                 household = benRepo.getHousehold(hhId)!!
-                user = database.userDao.getLoggedInUser()!!
-                hbnc = database.hbncDao.getHbnc(hhId, benId, Konstants.hbncPart1Day)
+                user = userRepo.getLoggedInUser()!!
+                hbnc = hbncRepo.getHbncRecord(benId, hhId, Konstants.hbncPart1Day)
             }
             _benName.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"

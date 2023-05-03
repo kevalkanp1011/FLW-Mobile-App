@@ -79,10 +79,11 @@ class FormInputAdapter(
                 override fun afterTextChanged(editable: Editable?) {
                     Timber.d("editable : $editable Current value : ${item.value}  isNull: ${item.value == null} isEmpty: ${item.value == ""}")
                     formValueListener?.onValueChanged(item, -1)
-                    if(item.errorText==null && binding.tilEditText.error!=null)
-                        binding.tilEditText.error = null
-                    else if(item.errorText!= null && binding.tilEditText.error==null)
+                    if(item.errorText!=binding.tilEditText.error)
                         binding.tilEditText.error = item.errorText
+//                        binding.tilEditText.error = null
+//                    else if(item.errorText!= null && binding.tilEditText.error==null)
+//                        binding.tilEditText.error = item.errorText
 
 
 //                    if(item.etInputType == InputType.TYPE_CLASS_NUMBER && (item.hasDependants|| item.hasAlertError)){

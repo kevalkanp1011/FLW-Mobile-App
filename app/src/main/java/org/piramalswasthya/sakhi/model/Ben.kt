@@ -40,7 +40,7 @@ enum class Gender {
 @DatabaseView(
     viewName = "BEN_BASIC_CACHE",
     value = "SELECT b.beneficiaryId as benId, b.householdId as hhId, b.regDate, b.firstName as benName, b.lastName as benSurname, b.gender, b.dob as dob" +
-            ", b.ageUnit, b.contactNumber as mobileNo, b.fatherName, h.familyHeadName, b.registrationType as typeOfList, b.rchId" +
+            ", b.contactNumber as mobileNo, b.fatherName, h.famfamilyHeadName as familyHeadName, b.registrationType as typeOfList, b.rchId" +
             ", b.isHrpStatus as hrpStatus, b.syncState, b.gen_reproductiveStatusId as reproductiveStatusId, b.isKid, b.immunizationStatus," +
             " cbac.benId is not null as cbacFilled, cbac.syncState as cbacSyncState," +
             " cdr.benId is not null as cdrFilled, cdr.syncState as cdrSyncState, " +

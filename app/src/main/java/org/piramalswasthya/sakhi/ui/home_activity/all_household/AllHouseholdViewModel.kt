@@ -36,7 +36,7 @@ class AllHouseholdViewModel @Inject constructor(
 
     fun checkDraft() {
         viewModelScope.launch {
-            _hasDraft.value = householdRepo.getDraftForm() != null
+            _hasDraft.value = householdRepo.getDraftRecord() != null
         }
     }
 

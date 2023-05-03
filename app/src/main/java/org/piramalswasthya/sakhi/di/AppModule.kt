@@ -11,10 +11,11 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.network.AbhaApiService
-import org.piramalswasthya.sakhi.network.D2DApiService
 import org.piramalswasthya.sakhi.network.AmritApiService
+import org.piramalswasthya.sakhi.network.D2DApiService
 import org.piramalswasthya.sakhi.network.interceptors.ContentTypeInterceptor
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertAbhaInterceptor
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertD2DInterceptor
@@ -138,6 +139,10 @@ object AppModule {
     @Singleton
     @Provides
     fun provideRoomDatabase(@ApplicationContext context: Context) = InAppDb.getInstance(context)
+
+    @Singleton
+    @Provides
+    fun provideHouseholdDao(database : InAppDb) : HouseholdDao = database.householdDao
 
 
     @Singleton

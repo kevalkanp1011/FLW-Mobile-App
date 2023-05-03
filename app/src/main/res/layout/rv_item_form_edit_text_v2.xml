@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:hint="@{form.title}"
             app:errorEnabled="true"
-            android:paddingBottom="@dimen/padding_normal"
+            android:paddingBottom="@dimen/padding_small"
             app:layout_constraintEnd_toStartOf="@id/tv_nullable"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_hint">
@@ -46,7 +46,6 @@
                 android:singleLine="@{!form.multiLine}"
                 android:text="@={form.value}"
                 android:maxLength="@{form.etMaxLength}"
-                android:textAllCaps="@{form.allCaps}"
                 tools:text="lsdkfnsld"
                 android:inputType="@{form.etInputType}"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
