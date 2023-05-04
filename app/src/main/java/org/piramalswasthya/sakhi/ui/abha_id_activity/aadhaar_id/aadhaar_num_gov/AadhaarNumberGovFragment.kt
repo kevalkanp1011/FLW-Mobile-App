@@ -2,6 +2,8 @@ package org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.aadhaar_num_gov
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +11,9 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentAadhaarNumberGovBinding
-import org.piramalswasthya.sakhi.network.StateCodeResponse
+import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdViewModel
 import java.util.*
 
 @AndroidEntryPoint
@@ -18,6 +21,8 @@ class AadhaarNumberGovFragment: Fragment() {
     private var _binding: FragmentAadhaarNumberGovBinding? = null
     private val binding: FragmentAadhaarNumberGovBinding
         get() = _binding!!
+
+    private val parentViewModel: AadhaarIdViewModel by viewModels({ requireActivity() })
 
     private val viewModel: AadhaarNumberGovViewModel by viewModels()
 
@@ -30,6 +35,31 @@ class AadhaarNumberGovFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        var isValid: Boolean
+        var gender = ""
+        binding.tietAadhaarNumber.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                isValid = s != null && s.length == 12
+                binding.btnGenerateAbha.isEnabled = isValid
+            }
+        })
+
+        binding.rgGender.setOnCheckedChangeListener{
+            _, id ->
+            run {
+                when (id) {
+                    R.id.rb_male -> gender = "M"
+                    R.id.rb_female -> gender = "F"
+                }
+            }
+        }
 
         // observing and setting values for state code dropdown
         viewModel.stateCodes.observe(viewLifecycleOwner){stateCodes ->
@@ -80,7 +110,14 @@ class AadhaarNumberGovFragment: Fragment() {
 
         // generating abha
         binding.btnGenerateAbha.setOnClickListener{
-            viewModel.generateAbha()
+            parentViewModel.setRequest(
+                viewModel
+                    .createAbhaGovRequest(binding.tietAadhaarNumber.text.toString(),
+                    binding.tietFullName.text.toString(),
+                    binding.et.text.toString(),
+                    gender)
+            )
+            parentViewModel.setState(AadhaarIdViewModel.State.SUCCESS)
         }
     }
 }

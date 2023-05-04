@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_aadhaarIdFragment_to_aadhaarOtpFragment"
             app:destination="@id/aadhaarOtpFragment" />
+        <action
+            android:id="@+id/action_aadhaarIdFragment_to_createAbhaFragment"
+            app:destination="@id/createAbhaFragment" />
     </fragment>
     <fragment
         android:id="@+id/aadhaarOtpFragment"
@@ -68,7 +71,10 @@
         android:label="@string/generate_abha_id"
         tools:layout="@layout/fragment_create_abha">
         <argument
-            android:name="txnId"
+            android:name="createAbhaRequest"
+            app:argType="string" />
+        <argument
+            android:name="creationType"
             app:argType="string" />
     </fragment>
 </navigation>

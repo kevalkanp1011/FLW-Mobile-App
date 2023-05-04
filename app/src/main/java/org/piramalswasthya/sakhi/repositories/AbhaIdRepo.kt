@@ -2,6 +2,7 @@ package org.piramalswasthya.sakhi.repositories
 
 import android.util.Base64
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
@@ -57,6 +58,32 @@ class AbhaIdRepo @Inject constructor(
                     key = key.replace("-----END PUBLIC KEY-----", "")
                     key = key.trim()
                     NetworkResult.Success(key)
+                } else {
+                    sendErrorResponse(response)
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
+            }
+        }
+    }
+
+
+    suspend fun getStateAndDistricts(): NetworkResult<List<StateCodeResponse>> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = abhaApiService.getStateAndDistricts()
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val typeToken = object : TypeToken<List<StateCodeResponse>>() {}.type
+                    val stateCodes = Gson().fromJson<List<StateCodeResponse>>(responseBody, typeToken)
+                    NetworkResult.Success(stateCodes)
                 } else {
                     sendErrorResponse(response)
                 }
@@ -264,5 +291,29 @@ class AbhaIdRepo @Inject constructor(
             }
         }
     }
+
+    suspend fun generateAbhaIdGov(request: CreateAbhaIdGovRequest): NetworkResult<CreateAbhaIdResponse> {
+        return withContext((Dispatchers.IO)) {
+            try {
+                val response = abhaApiService.createAbhaIdGov(request)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val result = Gson().fromJson(responseBody, CreateAbhaIdResponse::class.java)
+                    NetworkResult.Success(result)
+                } else {
+                    sendErrorResponse(response)
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
+            } catch (e: java.lang.Exception) {
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
+            }
+        }    }
+
+
 
 }

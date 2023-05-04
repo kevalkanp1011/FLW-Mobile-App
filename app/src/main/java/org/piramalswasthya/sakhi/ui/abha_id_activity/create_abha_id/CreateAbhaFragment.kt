@@ -84,6 +84,8 @@ class CreateAbhaFragment : Fragment() {
 
         navController = findNavController()
 
+        viewModel.generateAbhaCard()
+
         binding.btnDownloadAbhaYes.setOnClickListener {
             val abhaVal = viewModel.abha.value
             val fileName =
@@ -152,6 +154,7 @@ class CreateAbhaFragment : Fragment() {
                     binding.clCreateAbhaId.visibility = View.VISIBLE
                     binding.clError.visibility = View.INVISIBLE
                 }
+                State.ERROR_INTERNAL -> {}
             }
         }
 

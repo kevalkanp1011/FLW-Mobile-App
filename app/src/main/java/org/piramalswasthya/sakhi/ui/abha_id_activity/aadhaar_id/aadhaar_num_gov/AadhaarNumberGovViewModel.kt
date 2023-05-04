@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.network.*
@@ -72,10 +73,10 @@ class AadhaarNumberGovViewModel @Inject constructor(
     /**
      * generating abha number with gov api
      */
-    fun generateAbha() {
+    fun createAbhaGovRequest(aadhaar: String, fullName: String, dateOfBirth: String, gender: String): String {
         val createAbhaIdRequest = CreateAbhaIdGovRequest(
-            aadhaarNumber,
-            "",
+            aadhaar.toLong(),
+            "healthid api",
             true,
             dateOfBirth,
             gender,
@@ -83,6 +84,6 @@ class AadhaarNumberGovViewModel @Inject constructor(
             activeState?.code?.toInt()?: 0,
             activeDistrict?.code?.toInt()?: 0
         )
-        abhaIdRepo.generaateAbhaIdGov(createAbhaIdRequest)
+        return Gson().toJson(createAbhaIdRequest)
     }
 }

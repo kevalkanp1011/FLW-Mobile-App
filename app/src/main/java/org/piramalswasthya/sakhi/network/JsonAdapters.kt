@@ -72,9 +72,11 @@ data class GetBenRequest(
 
 @JsonClass(generateAdapter = true)
 data class AbhaTokenRequest(
-    val clientId: String = "SBX_001542",
-    val clientSecret: String = "87b7eb89-b236-43b6-82b0-6eef154a9b90",
-    val grantType: String = "client_credentials"
+//    val clientId: String = "SBX_001542",
+//    val clientSecret: String = "87b7eb89-b236-43b6-82b0-6eef154a9b90",
+//    val grantType: String = "client_credentials"
+    val clientId: String = "healthid-api",
+    val clientSecret: String = "9042c774-f57b-46ba-bb11-796a4345ada1"
 )
 
 @JsonClass(generateAdapter = true)
@@ -148,6 +150,32 @@ data class AbhaVerifyMobileOtpRequest(
 @JsonClass(generateAdapter = true)
 data class AbhaVerifyMobileOtpResponse(
     val txnId: String
+)
+
+@JsonClass(generateAdapter = true)
+data class StateCodeResponse(
+    val code: String,
+    val name: String,
+    val districts: List<DistrictCodeResponse>?
+)
+
+@JsonClass(generateAdapter = true)
+data class DistrictCodeResponse(
+    val code: String,
+    val name: String
+)
+
+@JsonClass(generateAdapter = true)
+data class CreateAbhaIdGovRequest(
+
+    val aadharNumber: Long,
+    val benefitName: String,
+    val consentHealthId: Boolean ,
+    val dateOfBirth: String,
+    val gender: String,
+    val name: String,
+    val stateCode: Int,
+    val districtCode: Int
 )
 
 @JsonClass(generateAdapter = true)

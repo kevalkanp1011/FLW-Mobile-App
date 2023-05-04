@@ -1,10 +1,12 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity.generate_mobile_otp
 
 import androidx.lifecycle.*
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.network.AbhaCheckAndGenerateMobileOtpResponse
 import org.piramalswasthya.sakhi.network.AbhaGenerateMobileOtpRequest
+import org.piramalswasthya.sakhi.network.CreateAbhaIdRequest
 import org.piramalswasthya.sakhi.network.NetworkResult
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
 import javax.inject.Inject
@@ -72,5 +74,12 @@ class GenerateMobileOtpViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun getCreateRequest(): String {
+        val createRequest = CreateAbhaIdRequest(
+            null, null, null, null, null, null, null, txnIdFromArgs
+        )
+        return Gson().toJson(createRequest)
     }
 }

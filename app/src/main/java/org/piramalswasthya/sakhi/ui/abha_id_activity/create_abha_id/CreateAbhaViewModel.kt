@@ -1,8 +1,10 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity.create_abha_id
 
 import androidx.lifecycle.*
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.network.CreateAbhaIdGovRequest
 import org.piramalswasthya.sakhi.network.CreateAbhaIdRequest
 import org.piramalswasthya.sakhi.network.CreateAbhaIdResponse
 import org.piramalswasthya.sakhi.network.NetworkResult
@@ -15,7 +17,7 @@ class CreateAbhaViewModel @Inject constructor(
     private val abhaIdRepo: AbhaIdRepo, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     enum class State {
-        IDLE, LOADING, ERROR_NETWORK, ERROR_SERVER, GENERATE_SUCCESS, DOWNLOAD_SUCCESS
+        IDLE, LOADING, ERROR_NETWORK, ERROR_SERVER, ERROR_INTERNAL, GENERATE_SUCCESS, DOWNLOAD_SUCCESS
     }
 
     private val _state = MutableLiveData<State>()
@@ -24,7 +26,11 @@ class CreateAbhaViewModel @Inject constructor(
 
     var abha = MutableLiveData<CreateAbhaIdResponse?>(null)
 
-    private val txnIdFromArgs = CreateAbhaFragmentArgs.fromSavedStateHandle(savedStateHandle).txnId
+    private val createAbhaRequest =
+        CreateAbhaFragmentArgs.fromSavedStateHandle(savedStateHandle).createAbhaRequest
+
+    private val userType =
+        CreateAbhaFragmentArgs.fromSavedStateHandle(savedStateHandle).creationType
 
     private val _errorMessage = MutableLiveData<String?>(null)
     val errorMessage: LiveData<String?>
@@ -32,16 +38,25 @@ class CreateAbhaViewModel @Inject constructor(
 
     init {
         _state.value = State.LOADING
-        generateAbhaCard()
     }
 
-    private fun generateAbhaCard() {
+    fun generateAbhaCard() {
         viewModelScope.launch {
-            val result = abhaIdRepo.generateAbhaId(
-                CreateAbhaIdRequest(
-                    null, null, null, null, null, null, null, txnIdFromArgs
-                )
-            )
+
+            var result: NetworkResult<CreateAbhaIdResponse>? = null
+
+            when(userType) {
+                "ASHA" -> {
+                    result = abhaIdRepo.generateAbhaId(Gson()
+                        .fromJson(createAbhaRequest, CreateAbhaIdRequest::class.java) )
+                }
+
+                "GOV" -> {
+                result = abhaIdRepo.generateAbhaIdGov(Gson()
+                    .fromJson(createAbhaRequest, CreateAbhaIdGovRequest::class.java) )
+                }
+            }
+
             when (result) {
                 is NetworkResult.Success -> {
                     TokenInsertAbhaInterceptor.setXToken(result.data.token)
@@ -54,6 +69,9 @@ class CreateAbhaViewModel @Inject constructor(
                 }
                 is NetworkResult.NetworkError -> {
                     _state.value = State.ERROR_NETWORK
+                }
+                else -> {
+                    _state.value = State.ERROR_INTERNAL
                 }
             }
         }

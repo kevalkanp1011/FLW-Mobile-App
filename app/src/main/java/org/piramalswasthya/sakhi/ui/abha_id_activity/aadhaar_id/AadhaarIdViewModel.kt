@@ -3,20 +3,15 @@ package org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.network.AbhaGenerateAadhaarOtpRequest
-import org.piramalswasthya.sakhi.network.AbhaGenerateAadhaarOtpResponseV2
-import org.piramalswasthya.sakhi.network.NetworkResult
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class
 AadhaarIdViewModel @Inject constructor(
-    private val abhaIdRepo: AbhaIdRepo
 ) : ViewModel() {
     enum class State {
         IDLE,
@@ -26,9 +21,20 @@ AadhaarIdViewModel @Inject constructor(
         SUCCESS
     }
 
+    init {
+        Timber.d("initialised at ${Date().time}")
+    }
+    @Inject
+    lateinit var abhaIdRepo: AbhaIdRepo
+
+
     private val _state = MutableLiveData(State.IDLE)
     val state: LiveData<State>
         get() = _state
+
+    private var _createRequest: String? = null
+    val createRequest: String
+        get() = _createRequest!!
 
     private var _txnId: String? = null
     val txnId: String
@@ -42,11 +48,6 @@ AadhaarIdViewModel @Inject constructor(
     val errorMessage: LiveData<String?>
         get() = _errorMessage
 
-    fun generateOtpClicked(aadhaarNo: String) {
-        _state.value = State.LOADING
-        generateAadhaarOtp(aadhaarNo)
-    }
-
     fun resetState() {
         _state.value = State.IDLE
     }
@@ -55,24 +56,19 @@ AadhaarIdViewModel @Inject constructor(
         _errorMessage.value = null
     }
 
-    private fun generateAadhaarOtp(aadhaarNo: String) {
-        viewModelScope.launch {
-            when (val result =
-                abhaIdRepo.generateOtpForAadhaarV2(AbhaGenerateAadhaarOtpRequest(aadhaarNo))) {
-                is NetworkResult.Success -> {
-                    _txnId = result.data.txnId
-                    _mobileNumber = result.data.mobileNumber
-                    _state.value = State.SUCCESS
-                }
-                is NetworkResult.Error -> {
-                    _errorMessage.value = result.message
-                    _state.value = State.ERROR_SERVER
-                }
-                is NetworkResult.NetworkError -> {
-                    Timber.i(result.toString())
-                    _state.value = State.ERROR_NETWORK
-                }
-            }
-        }
+    fun setRequest(request: String) {
+        _createRequest = request
+    }
+
+    fun setState(state: State) {
+        _state.value = state
+    }
+
+    fun setMobileNumber(mobileNumber: String) {
+        _mobileNumber = mobileNumber
+    }
+
+    fun setTxnId(txnId: String) {
+        _txnId = txnId
     }
 }

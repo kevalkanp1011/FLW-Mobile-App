@@ -101,7 +101,7 @@ class GenerateMobileOtpFragment : Fragment() {
                     if (viewModel.apiResponse.mobileLinked) {
                         navController.navigate(
                             GenerateMobileOtpFragmentDirections.actionGenerateMobileOtpFragmentToCreateAbhaFragment(
-                                viewModel.apiResponse.txnId
+                                viewModel.getCreateRequest(), "ASHA"
                             )
                         )
                     } else {

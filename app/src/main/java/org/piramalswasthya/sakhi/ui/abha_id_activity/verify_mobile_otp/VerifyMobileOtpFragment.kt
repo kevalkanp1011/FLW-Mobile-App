@@ -85,7 +85,7 @@ class VerifyMobileOtpFragment : Fragment() {
                 State.OTP_VERIFY_SUCCESS -> {
                     findNavController().navigate(
                         VerifyMobileOtpFragmentDirections.actionVerifyMobileOtpFragmentToCreateAbhaFragment(
-                            viewModel.txnID
+                            viewModel.getCreateRequest(), "ASHA"
                         )
                     )
                     viewModel.resetState()
