@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.BuildConfig
 import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.adapters.NewBenKidPagerAdapter
@@ -62,40 +61,40 @@ class NewBenRegG15ObjectFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val pageNumber = arguments?.getInt(NewBenKidPagerAdapter.ARG_OBJECT_INDEX)
             ?: throw IllegalStateException("No argument passed to viewpager object!")
-        viewModel.recordExists.observe(viewLifecycleOwner) {
-            it?.let {
-                when (pageNumber) {
-                    1 -> {
-                        val adapter =
-                            FormInputAdapterOld(FormInputAdapterOld.ImageClickListener { form ->
-                                latestImageForm = form
-                                takeImage()
-
-                            }, isEnabled = !it)
-                        binding.inputForm.rvInputForm.adapter = adapter
-                        lifecycleScope.launch {
-                            adapter.submitList(viewModel.getFirstPage())
-                            if(!it)viewModel.observeFirstPage(adapter)
-                        }
-                    }
-                    2 -> {
-
-                        val adapter = FormInputAdapterOld(isEnabled = !it)
-                        binding.inputForm.rvInputForm.adapter = adapter
-                        adapter.submitList(viewModel.getSecondPage())
-                        if(!it)viewModel.observeSecondPage(adapter)
-                    }
-                    3 -> {
-
-                        val adapter = FormInputAdapterOld(isEnabled = !it)
-                        binding.inputForm.rvInputForm.adapter = adapter
-                        adapter.submitList(viewModel.getThirdPage())
-                        if(!it)viewModel.observeThirdPage(adapter)
-                    }
-                }
-            }
-        }
-
+//        viewModel.recordExists.observe(viewLifecycleOwner) {
+//            it?.let {
+//                when (pageNumber) {
+//                    1 -> {
+//                        val adapter =
+//                            FormInputAdapterOld(FormInputAdapterOld.ImageClickListener { form ->
+//                                latestImageForm = form
+//                                takeImage()
+//
+//                            }, isEnabled = !it)
+//                        binding.inputForm.rvInputForm.adapter = adapter
+//                        lifecycleScope.launch {
+//                            adapter.submitList(viewModel.getFirstPage())
+//                            if(!it)viewModel.observeFirstPage(adapter)
+//                        }
+//                    }
+//                    2 -> {
+//
+//                        val adapter = FormInputAdapterOld(isEnabled = !it)
+//                        binding.inputForm.rvInputForm.adapter = adapter
+//                        adapter.submitList(viewModel.getSecondPage())
+//                        if(!it)viewModel.observeSecondPage(adapter)
+//                    }
+//                    3 -> {
+//
+//                        val adapter = FormInputAdapterOld(isEnabled = !it)
+//                        binding.inputForm.rvInputForm.adapter = adapter
+//                        adapter.submitList(viewModel.getThirdPage())
+//                        if(!it)viewModel.observeThirdPage(adapter)
+//                    }
+//                }
+//            }
+//        }
+//
 
     }
 

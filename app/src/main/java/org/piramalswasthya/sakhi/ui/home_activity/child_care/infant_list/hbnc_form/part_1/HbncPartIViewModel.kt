@@ -86,7 +86,7 @@ class HbncPartIViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 Timber.d("benId : $benId hhId : $hhId")
-                ben = benRepo.getBeneficiary(benId, hhId)!!
+                ben = benRepo.getBeneficiaryRecord(benId, hhId)!!
                 household = benRepo.getHousehold(hhId)!!
                 user = userRepo.getLoggedInUser()!!
                 hbnc = hbncRepo.getHbncRecord(benId, hhId, Konstants.hbncPart1Day)

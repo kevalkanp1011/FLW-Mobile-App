@@ -80,7 +80,7 @@ class FpotViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                ben = benRepo.getBeneficiary(benId, hhId)!!
+                ben = benRepo.getBeneficiaryRecord(benId, hhId)!!
                 household = benRepo.getHousehold(hhId)!!
                 user = database.userDao.getLoggedInUser()!!
                 fpot = database.fpotDao.getFpot(hhId, benId)

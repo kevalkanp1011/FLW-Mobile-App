@@ -13,8 +13,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
-import androidx.lifecycle.coroutineScope
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -26,11 +24,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.flow.FlowCollector
-import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.databinding.ActivityHomeBinding
+import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.helpers.MyContextWrapper
 import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdActivity
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
@@ -47,47 +44,41 @@ class HomeActivity : AppCompatActivity() {
     interface WrapperEntryPoint {
         val pref: PreferenceDao
     }
-    private var _binding : ActivityHomeBinding? = null
 
-    private val binding  : ActivityHomeBinding
-    get() = _binding!!
+    private var _binding: ActivityHomeBinding? = null
 
-    private val viewModel : HomeViewModel by viewModels()
+    private val binding: ActivityHomeBinding
+        get() = _binding!!
+
+    private val viewModel: HomeViewModel by viewModels()
 
 
-    private val logoutAlert by lazy{
-        MaterialAlertDialogBuilder(this)
-            .setTitle("Logout")
-            .setMessage("${if(viewModel.unprocessedRecords>0) "${viewModel.unprocessedRecords} not Processed." else "All records synced"} Are you sure to logout?")
-            .setPositiveButton("YES"){
-                    dialog,_->
+    private val logoutAlert by lazy {
+        MaterialAlertDialogBuilder(this).setTitle("Logout")
+            .setMessage("${if (viewModel.unprocessedRecords > 0) "${viewModel.unprocessedRecords} not Processed." else "All records synced"} Are you sure to logout?")
+            .setPositiveButton("YES") { dialog, _ ->
                 viewModel.logout()
+                ImageUtils.removeAllBenImages(this)
                 WorkerUtils.cancelAllWork(this)
                 dialog.dismiss()
-            }
-            .setNegativeButton("NO"){
-                    dialog,_->
+            }.setNegativeButton("NO") { dialog, _ ->
 
                 dialog.dismiss()
-            }
-            .create()
+            }.create()
     }
 
-    private val imagePickerActivityResult = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) {
+    private val imagePickerActivityResult =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) {
             it?.let {
                 viewModel.saveProfilePicUri(it)
-                Glide
-                    .with(this)
-                    .load(it)
-                    .placeholder(R.drawable.ic_person)
-                    .circleCrop()
+                Glide.with(this).load(it).placeholder(R.drawable.ic_person).circleCrop()
                     .into(binding.navView.getHeaderView(0).findViewById(R.id.iv_profile_pic))
 //                binding.navView.getHeaderView(0).findViewById<ImageView>(R.id.iv_profile_pic).setImageURI(it)
 //                Glide.with(this)
 //                    .load(it)
 //                    .into(binding.navView.getHeaderView(0).findViewById(R.id.iv_profile_pic))
             }
-    }
+        }
 
     private val navController by lazy {
         val navHostFragment: NavHostFragment =
@@ -95,12 +86,11 @@ class HomeActivity : AppCompatActivity() {
         navHostFragment.navController
     }
 
-    var showMenuHome : Boolean = false
+    var showMenuHome: Boolean = false
 
     override fun attachBaseContext(newBase: Context) {
         val pref = EntryPointAccessors.fromApplication(
-            newBase,
-            WrapperEntryPoint::class.java
+            newBase, WrapperEntryPoint::class.java
         ).pref
         super.attachBaseContext(MyContextWrapper.wrap(newBase, pref.getCurrentLanguage().symbol))
     }
@@ -127,7 +117,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setUpMenu() {
 
-        val menu = object : MenuProvider{
+        val menu = object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.home_toolbar, menu)
                 val homeMenu = menu.findItem(R.id.toolbar_menu_home)
@@ -135,7 +125,7 @@ class HomeActivity : AppCompatActivity() {
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                when(menuItem.itemId){
+                when (menuItem.itemId) {
                     R.id.toolbar_menu_home -> {
                         navController.popBackStack(R.id.homeFragment, false)
                         return true
@@ -149,7 +139,7 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
-    fun setHomeMenuItemVisibility(show  : Boolean){
+    fun setHomeMenuItemVisibility(show: Boolean) {
         showMenuHome = show
         invalidateOptionsMenu()
     }
@@ -176,20 +166,17 @@ class HomeActivity : AppCompatActivity() {
         }
         val dpUri = viewModel.getProfilePicUri()
         dpUri?.let {
-            Glide
-                .with(this)
-                .load(it)
-                .placeholder(R.drawable.ic_person)
-                .circleCrop()
+            Glide.with(this).load(it).placeholder(R.drawable.ic_person).circleCrop()
                 .into(binding.navView.getHeaderView(0).findViewById(R.id.iv_profile_pic))
         }
 //
 
-        binding.navView.getHeaderView(0).findViewById<ImageView>(R.id.iv_profile_pic).setOnClickListener {
+        binding.navView.getHeaderView(0).findViewById<ImageView>(R.id.iv_profile_pic)
+            .setOnClickListener {
 //            val galleryIntent = Intent(Intent.ACTION_PICK)
 //            galleryIntent.type = "image/*"
-            imagePickerActivityResult.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-        }
+                imagePickerActivityResult.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            }
     }
 
     private fun setUpActionBar() {
@@ -197,16 +184,11 @@ class HomeActivity : AppCompatActivity() {
 
         binding.navView.setupWithNavController(navController)
 
-        val appBarConfiguration = AppBarConfiguration
-            .Builder(
+        val appBarConfiguration = AppBarConfiguration.Builder(
                 setOf(
-                    R.id.homeFragment,
-                    R.id.allHouseholdFragment,
-                    R.id.allBenFragment
+                    R.id.homeFragment, R.id.allHouseholdFragment, R.id.allBenFragment
                 )
-            )
-            .setOpenableLayout(binding.drawerLayout)
-            .build()
+            ).setOpenableLayout(binding.drawerLayout).build()
 
         NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration)
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
@@ -256,7 +238,7 @@ class HomeActivity : AppCompatActivity() {
 //        }
 //    }
 
-    fun setLogo(resId : Int){
+    fun setLogo(resId: Int) {
         binding.toolbar.setLogo(resId)
     }
 

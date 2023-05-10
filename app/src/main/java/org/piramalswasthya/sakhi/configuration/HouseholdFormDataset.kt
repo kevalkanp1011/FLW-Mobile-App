@@ -13,8 +13,6 @@ import java.util.*
 
 class HouseholdFormDataset(context: Context, language: Languages) : Dataset(context, language) {
     companion object {
-
-
         private fun getCurrentDate(): String {
             val calendar = Calendar.getInstance()
             val mdFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)

@@ -2,17 +2,19 @@ package org.piramalswasthya.sakhi.ui.home_activity.home
 
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.model.UserDomain
-import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import org.piramalswasthya.sakhi.repositories.UserRepo
 import javax.inject.Inject
 
@@ -100,6 +102,7 @@ class HomeViewModel @Inject constructor(
             userRepo.logout()
             pref.setLastSyncedTimeStamp(Konstants.defaultTimeStamp)
             pref.deleteForLogout()
+
 
             _navigateToLoginPage.value = true
         }

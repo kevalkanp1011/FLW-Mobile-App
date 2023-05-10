@@ -40,10 +40,11 @@ class PushToAmritWorker @AssistedInject constructor(
         } catch (e: SocketTimeoutException) {
             Timber.e("Caught Exception for push amrit worker $e")
             return Result.retry()
-        } catch (e : java.lang.Exception) {
-            Timber.e("Caught Exception for push amrit worker $e")
-            return Result.failure()
         }
+//        catch (e : java.lang.Exception) {
+//            Timber.e("Caught Exception for push amrit worker $e")
+//            return Result.failure()
+//        }
     }
 
     private fun init() {

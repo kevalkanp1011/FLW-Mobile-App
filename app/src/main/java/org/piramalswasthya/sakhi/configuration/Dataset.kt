@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.configuration
 import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.util.Range
 import androidx.annotation.StringRes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,6 +12,7 @@ import org.piramalswasthya.sakhi.model.FormElement
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -72,13 +74,13 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     }
 
     protected fun FormElement.getStringFromPosition(position: Int): String? {
-        return if (position == 0) null else entries?.get(position - 1)
+        return if (position <= 0) null else entries?.get(position - 1)
     }
 
     protected abstract suspend fun handleListOnValueChanged(formId: Int, index: Int): Int
 
     abstract fun mapValues(cacheModel: FormDataModel, pageNumber: Int = 0)
-
+    protected fun getIndexOfElement(element : FormElement) = list.indexOf(element)
     suspend fun updateList(formId: Int, index: Int) {
         val updateIndex = handleListOnValueChanged(formId, index)
         if (updateIndex != -1) {
@@ -107,12 +109,14 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         target: List<FormElement>,
         targetSideEffect: List<FormElement>? = null
     ): Int {
-        return if (passedIndex == triggerIndex && !list.containsAll(target)) {
-            val listIndex = list.indexOf(source)
-            list.addAll(
-                listIndex + 1, target
-            )
-            listIndex
+        return if (passedIndex == triggerIndex) {
+            if (!list.containsAll(target)) {
+                val listIndex = list.indexOf(source)
+                list.addAll(
+                    listIndex + 1, target
+                )
+                listIndex
+            } else -1
         } else {
             val anyRemoved = list.removeAll(
                 target
@@ -130,6 +134,39 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         }
     }
 
+    protected fun triggerDependantsReverse(
+        source: FormElement,
+        passedIndex: Int,
+        triggerIndex: Int,
+        target: List<FormElement>,
+        targetSideEffect: List<FormElement>? = null
+    ): Int {
+        return if (passedIndex != triggerIndex) {
+            if (!list.containsAll(target)) {
+                val listIndex = list.indexOf(source)
+                list.addAll(
+                    listIndex + 1, target
+                )
+                listIndex
+            } else -1
+        } else {
+            val anyRemoved = list.removeAll(
+                target
+            )
+            if (anyRemoved) {
+                target.forEach {
+                    it.value = null
+                }
+                targetSideEffect?.let { sideEffectList ->
+                    list.removeAll(sideEffectList)
+                    sideEffectList.forEach { it.value = null }
+                }
+                list.indexOf(source)
+            } else -1
+        }
+    }
+
+
     protected fun triggerDependants(
         source: FormElement,
         passedIndex: Int,
@@ -137,13 +174,14 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         target: FormElement,
         targetSideEffect: List<FormElement>? = null
     ): Int {
-        return if (passedIndex == triggerIndex && !list.contains(target)) {
-            val listIndex = list.indexOf(source)
-            list.add(
-                listIndex + 1, target
-            )
-
-            listIndex
+        return if (passedIndex == triggerIndex) {
+            if (!list.contains(target)) {
+                val listIndex = list.indexOf(source)
+                list.add(
+                    listIndex + 1, target
+                )
+                listIndex
+            } else -1
         } else {
             val anyRemoved = list.remove(
                 target
@@ -159,11 +197,185 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         }
     }
 
+    protected fun triggerDependants(
+        age: Int,
+        ageUnit: FormElement,
+        ageTriggerRange: Range<Int>,
+        ageUnitTriggerIndex: Int,
+        target: FormElement,
+        placeAfter: FormElement,
+        targetSideEffect: List<FormElement>? = null
+    ): Int {
+        Timber.d("YTRU")
+        return if (age in ageTriggerRange && ageUnit.value == ageUnit.entries?.get(
+                ageUnitTriggerIndex
+            )
+        ) {
+            if (!list.contains(target)) {
+                val listIndex = list.indexOf(placeAfter)
+                list.add(
+                    listIndex + 1, target
+                )
+                listIndex + 1
+            } else
+                -1
+        } else {
+            val anyRemoved = list.remove(
+                target
+            )
+            if (anyRemoved) {
+                target.value = null
+                targetSideEffect?.let { sideEffectList ->
+                    list.removeAll(sideEffectList)
+                    sideEffectList.forEach { it.value = null }
+                }
+                302
+            } else -1
+        }
+    }
+
+    protected fun triggerDependants(
+        source: FormElement,
+        removeItems: List<FormElement>,
+        addItems: List<FormElement>,
+        position : Int = -1,
+    ): Int {
+        removeItems.forEach {
+            it.value = null
+        }
+        list.removeAll(removeItems)
+//        list.removeAll(addItems)
+        addItems.forEach {
+            if (list.contains(it))
+                list.remove(it)
+        }
+        val addPosition = position.takeIf { it != -1 } ?: (list.indexOf(source) + 1)
+        list.addAll(addPosition, addItems)
+        return addPosition
+//        return if (age in ageTriggerRange && ageUnit.value == ageUnit.entries?.get(
+//                ageUnitTriggerIndex
+//            )
+//        ) {
+//            if (!list.contains(target)) {
+//                val listIndex = list.indexOf(placeAfter)
+//                list.add(
+//                    listIndex + 1, target
+//                )
+//                listIndex + 1
+//            } else
+//                -1
+//        } else {
+//            val anyRemoved = list.remove(
+//                target
+//            )
+//            if (anyRemoved) {
+//                target.value = null
+//                targetSideEffect?.let { sideEffectList ->
+//                    list.removeAll(sideEffectList)
+//                    sideEffectList.forEach { it.value = null }
+//                }
+//                302
+//            } else -1
+//        }
+    }
+
+
+    private fun getDiffYears(a: Calendar, b: Calendar): Int {
+        var diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR)
+        if (a.get(Calendar.MONTH) > b.get(Calendar.MONTH) || a.get(Calendar.MONTH) == b.get(
+                Calendar.MONTH
+            ) && a.get(
+                Calendar.DAY_OF_MONTH
+            ) > b.get(
+                Calendar.DAY_OF_MONTH
+            )
+        ) {
+            diff--
+        }
+        return diff
+    }
+
+    protected fun getDiffMonths(a: Calendar, b: Calendar): Int {
+        var diffY = b.get(Calendar.YEAR) - a.get(Calendar.YEAR)
+        if (a.get(Calendar.MONTH) > b.get(Calendar.MONTH) || a.get(Calendar.MONTH) == b.get(
+                Calendar.MONTH
+            ) && a.get(
+                Calendar.DAY_OF_MONTH
+            ) > b.get(
+                Calendar.DAY_OF_MONTH
+            )
+        ) {
+            diffY--
+        }
+        if (diffY != 0) return -1
+        var diffM = b.get(Calendar.MONTH) - a.get(Calendar.MONTH)
+        if (a.get(Calendar.DAY_OF_MONTH) > b.get(Calendar.DAY_OF_MONTH)) {
+            diffM--
+        }
+        if (diffM < 0) diffM += 12
+
+        return diffM
+    }
+
+    private fun getDiffDays(a: Calendar, b: Calendar): Int {
+        val millisDiff = b.timeInMillis - a.timeInMillis
+        return TimeUnit.MILLISECONDS.toDays(millisDiff).toInt()
+    }
+
     protected suspend fun emitAlertErrorMessage(
         @StringRes errorMessage: Int
     ) {
         _alertErrorMessageFlow.emit(resources.getString(errorMessage))
     }
+
+    protected fun assignValuesToAgeAndAgeUnitFromDob(
+        dob: Long, ageElement: FormElement, ageUnitElement: FormElement
+    ): Int {
+        ageUnitElement.errorText = null
+        ageElement.errorText = null
+        val calDob = Calendar.getInstance().apply {
+            timeInMillis = dob
+        }
+        val calNow = Calendar.getInstance()
+        val yearsDiff = getDiffYears(calDob, calNow)
+        if (yearsDiff > 0) {
+            ageUnitElement.value = ageUnitElement.entries?.last()
+            ageElement.value = yearsDiff.toString()
+            return -1
+        } else {
+            val monthDiff = getDiffMonths(calDob, calNow)
+            if (monthDiff > 0) {
+                ageUnitElement.value = ageUnitElement.entries?.get(1)
+                ageElement.value = monthDiff.toString()
+                return -1
+            } else {
+                val dayDiff = getDiffDays(calDob, calNow)
+                if (dayDiff > 0) {
+                    ageUnitElement.value = ageUnitElement.entries?.get(0)
+                    ageElement.value = dayDiff.toString()
+                    return -1
+                }
+            }
+            return -1
+        }
+    }
+
+
+    protected fun assignValuesToAgeFromDob(
+        dob: Long, ageElement: FormElement
+    ): Int {
+        ageElement.errorText = null
+        val calDob = Calendar.getInstance().apply {
+            timeInMillis = dob
+        }
+        val calNow = Calendar.getInstance()
+        val yearsDiff = getDiffYears(calDob, calNow)
+        if (yearsDiff > 0) {
+            ageElement.value = yearsDiff.toString()
+        }
+        return -1
+    }
+
 
     protected fun validateEmptyOnEditText(formElement: FormElement): Int {
         if (formElement.required) {
@@ -177,7 +389,8 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     }
 
     private fun String.isAllUppercaseOrSpace() =
-        takeIf { it.isNotEmpty() }?.toCharArray()?.all { it.isUpperCase() || it.isWhitespace() } ?: false
+        takeIf { it.isNotEmpty() }?.toCharArray()?.all { it.isUpperCase() || it.isWhitespace() }
+            ?: false
 
 
     private fun String.isAllAlphabetsAndSpace() =
@@ -205,10 +418,37 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         return -1
     }
 
+    protected fun validateIntMinMax(formElement: FormElement): Int {
+        formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.toLong()?.let {
+            formElement.min?.let { min ->
+                formElement.max?.let { max ->
+                    if (it in Range(min, max))
+                        null
+                    else if (it < min) {
+                        "Age shoud be greater than or equal to $min"
+                    } else
+                        "Age shoud be lesser than or equal to $max"
+                }
+            }
+        }
+        return -1
+    }
+
+    init {
+        resources = getLocalizedResources(context, currentLanguage)
+    }
+
 
     protected fun validateMobileNumberOnEditText(formElement: FormElement): Int {
         formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.toLong()?.let {
-            if (it < 6_000_000_000L) "Invalid Mobile Number" else null
+            if (it < 6_000_000_000L) "Invalid Mobile Number !" else null
+        }
+        return -1
+    }
+
+    protected fun validateRchIdOnEditText(formElement: FormElement): Int {
+        formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.let {
+            if (it.length < 12) "Invalid RCH ID !" else null
         }
         return -1
     }

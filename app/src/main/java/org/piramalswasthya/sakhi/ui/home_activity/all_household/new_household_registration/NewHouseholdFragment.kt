@@ -241,6 +241,7 @@ class NewHouseholdFragment : Fragment() {
         }
         viewModel.recordExists.observe(viewLifecycleOwner) { notIt ->
             notIt?.let { recordExists ->
+                binding.fabEdit.visibility = if(recordExists) View.VISIBLE else View.GONE
                 val adapter = FormInputAdapter(
                     formValueListener = FormInputAdapter.FormValueListener { formId, index ->
                         viewModel.updateListOnValueChanged(formId, index)
@@ -254,6 +255,9 @@ class NewHouseholdFragment : Fragment() {
                     }
                 }
             }
+        }
+        binding.fabEdit.setOnClickListener {
+            viewModel.setRecordExists(false)
         }
 //        binding.vp2Nhhr.adapter = NewHouseholdPagerAdapter(this)
 //        binding.vp2Nhhr.isUserInputEnabled = false

@@ -172,6 +172,18 @@
     </string-array>
 
 
+    <!--    BEN GEN-->
+    <string-array name="nbr_reproductive_status_array">
+        <item>Eligible Couple</item>
+        <item>Antenatal Mother</item>
+        <item>Delivery Stage</item>
+        <item>Postnatal Mother-Lactating Mother</item>
+        <item>Menopause Stage</item>
+        <item>Teenager</item>
+        <item>Other</item>
+    </string-array>
+
+
     <!--   CBAC -->
 
     <string name="cbac_ask_pat">Ask if Patient has any of these Symptoms</string>
@@ -572,7 +584,7 @@
     <string name="nbr_mother_name">Mother\'s Name</string>
     <string name="nbr_mobile_number_of">Mobile Number Of</string>
     <string name="nrb_contact_number">Contact Number</string>
-    <string name="nbr_rel_to_head">Relation with family head</string>
+    <string name="nbr_rel_to_head">Relation with head of family</string>
     <string name="nbr_rel_to_head_other">Other - Enter relation to head</string>
     <string name="nbr_community">Community</string>
     <string name="nbr_religion">Religion</string>

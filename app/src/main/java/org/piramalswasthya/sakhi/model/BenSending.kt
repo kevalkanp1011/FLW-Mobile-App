@@ -1,9 +1,10 @@
 package org.piramalswasthya.sakhi.model
 
-import android.util.Base64
+import android.content.Context
 import androidx.room.ColumnInfo
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.model.Gender.*
 
 @JsonClass(generateAdapter = true)
@@ -218,17 +219,18 @@ data class BenPhoneMaps(
 
 fun BenRegCache.asNetworkSendingModel(
     user: UserCache,
-    locationRecord: LocationRecord
+    locationRecord: LocationRecord,
+    context : Context
 ): BeneficiaryDataSending {
 
     return BeneficiaryDataSending(
-        benImage = "abc", //Base64.encodeToString(userImageBlob, Base64.DEFAULT),
+        benImage = ImageUtils.getEncodedStringForBenImage(context, beneficiaryId)?:"", //Base64.encodeToString(userImageBlob, Base64.DEFAULT),
         firstName = firstName!!,
         lastName = lastName ?: "",
         dob = getDateTimeStringFromLong(dob) ?: "",
-        fatherName = fatherName!!,
-        motherName = motherName!!,
-        spouseName = genDetails?.spouseName,
+        fatherName = fatherName ?: "",
+        motherName = motherName ?: "",
+        spouseName = genDetails?.spouseName ?: "",
         govtIdentityNo = null,
         govtIdentityTypeID = null,
         isEmergencyRegistration = false,

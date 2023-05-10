@@ -20,8 +20,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class NewHouseholdViewModel
-@Inject constructor(
+class NewHouseholdViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     preferenceDao: PreferenceDao,
     @ApplicationContext context: Context,
@@ -147,19 +146,15 @@ class NewHouseholdViewModel
     }
 
 
-    suspend fun setPageToList(page: Int) {
-        when (page) {
-            1 -> dataset.setFirstPage(household.family)
-            2 -> dataset.setSecondPage(household.details)
-            3 -> dataset.setThirdPage(household.amenities)
-        }
-
-    }
-
     fun updateListOnValueChanged(formId: Int, index: Int) {
         viewModelScope.launch {
             dataset.updateList(formId, index)
         }
+
+    }
+
+    fun setRecordExists(b: Boolean) {
+        _recordExists.value = b
 
     }
 
@@ -250,7 +245,7 @@ class NewHouseholdViewModel
 //    }
 //
 //
-//    fun persistForm(locationRecord: LocationRecord) {
+//    fun saveForm(locationRecord: LocationRecord) {
 //        viewModelScope.launch {
 //            _state.value = State.SAVING
 //            withContext(Dispatchers.IO) {
