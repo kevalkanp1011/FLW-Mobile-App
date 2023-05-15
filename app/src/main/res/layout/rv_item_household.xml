@@ -51,24 +51,28 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_normal"
                 android:text="@{@string/rv_item_hh_entry_1(household.hhId)}"
-                tools:text="akjnfdkljfnsadkfjn\\naolnfsdljkfnsdf\\nalsdjfgnsdf losdfnlkd gnelkjngu wdklf nsdklf nkdfn ksdln fvksdlvf nioefbg ioweruf niruwe ibpsdifn ;pdfgh;oiwerg m;ler uoig be;gi hergo"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 android:textColor="?attr/colorSecondary"
                 app:layout_constraintBottom_toTopOf="@+id/rv_item_hh_2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/rv_item_hh_ph_1"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="akjnfdkljfnsadkfjn\\naolnfsdljkfnsdf\\nalsdjfgnsdf losdfnlkd gnelkjngu wdklf nsdklf nkdfn ksdln fvksdlvf nioefbg ioweruf niruwe ibpsdifn ;pdfgh;oiwerg m;ler uoig be;gi hergo" />
 
             <TextView
                 android:id="@+id/rv_item_hh_ph_2"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:paddingVertical="@dimen/padding_normal"
                 android:text="@string/rv_item_hh_ph_2"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 android:textColor="?attr/colorSecondary"
                 android:textStyle="italic"
+                tools:text="asl;kdfnlsdfn oasi fnslfn slkfn sdlnf sdfnksdf"
                 app:layout_constraintBottom_toBottomOf="@+id/rv_item_hh_2"
+                app:layout_constraintEnd_toStartOf="@+id/rv_item_hh_2"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/rv_item_hh_2" />
 
@@ -78,14 +82,15 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_normal"
                 android:text="@{household.headName}"
-                tools:text="akjnfdkljfnsadkfjn\\naolnfsdljkfnsdf\\nalsdjfgnsdf losdfnlkd gnelkjngu wdklf nsdklf nkdfn ksdln fvksdlvf nioefbg ioweruf niruwe ibpsdifn ;pdfgh;oiwerg m;ler uoig be;gi hergo"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 android:textColor="?attr/colorSecondary"
                 android:textStyle="italic"
                 app:layout_constraintBottom_toTopOf="@+id/rv_item_hh_3"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/rv_item_hh_ph_2"
-                app:layout_constraintTop_toBottomOf="@+id/rv_item_hh_1" />
+                app:layout_constraintTop_toBottomOf="@+id/rv_item_hh_1"
+                tools:text="akjnfdkljfnsadkfjn\\naolnfsdljkfnsdf\\nalsdjfgnsdf losdfnlkd gnelkjngu wdklf nsdklf nkdfn ksdln fvksdlvf nioefbg ioweruf niruwe ibpsdifn ;pdfgh;oiwerg m;ler uoig be;gi hergo" />
 
             <TextView
                 android:id="@+id/rv_item_hh_ph_3"
@@ -107,13 +112,13 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_normal"
                 android:text="@{household.headSurname}"
-                tools:text="akjnfdkljfnsadkfjn\\naolnfsdljkfnsdf\\nalsdjfgnsdf losdfnlkd gnelkjngu wdklf nsdklf nkdfn ksdln fvksdlvf nioefbg ioweruf niruwe ibpsdifn ;pdfgh;oiwerg m;ler uoig be;gi hergo"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 android:textColor="?attr/colorSecondary"
                 app:layout_constraintBottom_toTopOf="@+id/button4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/rv_item_hh_ph_3"
-                app:layout_constraintTop_toBottomOf="@+id/rv_item_hh_2" />
+                app:layout_constraintTop_toBottomOf="@+id/rv_item_hh_2"
+                tools:text="akjnfdkljfnsadkfjn\\naolnfsdljkfnsdf\\nalsdjfgnsdf losdfnlkd gnelkjngu wdklf nsdklf nkdfn ksdln fvksdlvf nioefbg ioweruf niruwe ibpsdifn ;pdfgh;oiwerg m;ler uoig be;gi hergo" />
 
             <Button
                 android:id="@+id/button4"
@@ -138,7 +143,7 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_person"
                 android:onClick="@{()->clickListener.onClickedForMembers(household)}"
-                android:text="Members"
+                android:text="@string/hh_members_text"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 android:textColor="?attr/colorPrimary"
                 app:backgroundTint="?attr/colorSecondary"

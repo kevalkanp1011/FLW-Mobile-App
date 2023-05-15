@@ -7,6 +7,7 @@ import android.util.Range
 import androidx.annotation.StringRes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.FormElement
 import timber.log.Timber
@@ -25,6 +26,12 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
      * Resource object of currently selected language. To be used to get language specific strings from strings.xml.
      */
     protected var resources: Resources
+    protected var englishResources: Resources
+
+    init {
+        englishResources = context.resources
+        resources = getLocalizedResources(context, currentLanguage)
+    }
 
     /**
      * Helper function to get resource instance chosen language.
@@ -77,10 +84,15 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         return if (position <= 0) null else entries?.get(position - 1)
     }
 
+    protected fun FormElement.getEnglishStringFromPosition(position: Int): String? {
+        return if (position <= 0) null else englishResources.getStringArray(arrayId)[position - 1]
+    }
+
+
     protected abstract suspend fun handleListOnValueChanged(formId: Int, index: Int): Int
 
     abstract fun mapValues(cacheModel: FormDataModel, pageNumber: Int = 0)
-    protected fun getIndexOfElement(element : FormElement) = list.indexOf(element)
+    protected fun getIndexOfElement(element: FormElement) = list.indexOf(element)
     suspend fun updateList(formId: Int, index: Int) {
         val updateIndex = handleListOnValueChanged(formId, index)
         if (updateIndex != -1) {
@@ -217,8 +229,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
                     listIndex + 1, target
                 )
                 listIndex + 1
-            } else
-                -1
+            } else -1
         } else {
             val anyRemoved = list.remove(
                 target
@@ -238,7 +249,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         source: FormElement,
         removeItems: List<FormElement>,
         addItems: List<FormElement>,
-        position : Int = -1,
+        position: Int = -1,
     ): Int {
         removeItems.forEach {
             it.value = null
@@ -246,8 +257,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         list.removeAll(removeItems)
 //        list.removeAll(addItems)
         addItems.forEach {
-            if (list.contains(it))
-                list.remove(it)
+            if (list.contains(it)) list.remove(it)
         }
         val addPosition = position.takeIf { it != -1 } ?: (list.indexOf(source) + 1)
         list.addAll(addPosition, addItems)
@@ -380,7 +390,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     protected fun validateEmptyOnEditText(formElement: FormElement): Int {
         if (formElement.required) {
             if (formElement.value.isNullOrEmpty()) formElement.errorText =
-                "This Field Cannot Be Empty"
+                resources.getString(R.string.form_input_empty_error)
             else {
                 formElement.errorText = null
             }
@@ -402,7 +412,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
             formElement.value?.takeIf { it.isNotEmpty() }?.isAllUppercaseOrSpace()?.let {
                 Timber.d("Is ok : $it")
                 formElement.errorText = if (it) null
-                else "Only Alphabets in upper case allowed!"
+                else resources.getString(R.string.form_input_upper_case_error)
             } ?: run {
                 if (!formElement.required) formElement.errorText = null
             }
@@ -413,7 +423,8 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     protected fun validateAllAlphabetsSpaceOnEditText(formElement: FormElement): Int {
         formElement.value?.takeIf { it.isNotEmpty() }?.isAllAlphabetsAndSpace()?.let {
             if (it) formElement.errorText = null
-            else formElement.errorText = "Only Alphabets and whitespace allowed!"
+            else formElement.errorText =
+                resources.getString(R.string.form_input_alphabet_space_only_error)
         }
         return -1
     }
@@ -422,39 +433,42 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.toLong()?.let {
             formElement.min?.let { min ->
                 formElement.max?.let { max ->
-                    if (it in Range(min, max))
-                        null
+                    if (it in Range(min, max)) null
                     else if (it < min) {
-                        "Age shoud be greater than or equal to $min"
-                    } else
-                        "Age shoud be lesser than or equal to $max"
+                        resources.getString(
+                            R.string.form_input_min_limit_error, formElement.title, min
+                        )
+                    } else resources.getString(
+                        R.string.form_input_max_limit_error, formElement.title, max
+                    )
                 }
             }
         }
         return -1
     }
 
-    init {
-        resources = getLocalizedResources(context, currentLanguage)
-    }
-
 
     protected fun validateMobileNumberOnEditText(formElement: FormElement): Int {
         formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.toLong()?.let {
-            if (it < 6_000_000_000L) "Invalid Mobile Number !" else null
+            if (it < 6_000_000_000L) resources.getString(R.string.form_input_error_invalid_mobile) else null
         }
         return -1
     }
 
     protected fun validateRchIdOnEditText(formElement: FormElement): Int {
         formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.let {
-            if (it.length < 12) "Invalid RCH ID !" else null
+            if (it.length < 12) resources.getString(R.string.form_input_error_invalid_rch) else null
         }
         return -1
     }
 
-    init {
-        resources = getLocalizedResources(context, currentLanguage)
+    protected fun validateAadharNoOnEditText(formElement: FormElement): Int {
+        formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.let {
+            if (it.length < 12 || (it.isNotEmpty() && it.first() != '0'))
+                resources.getString(R.string.form_input_error_invalid_aadhar) else null
+        }
+        return -1
     }
+
 
 }

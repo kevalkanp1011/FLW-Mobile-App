@@ -2,6 +2,7 @@ package org.piramalswasthya.sakhi.adapters
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.res.Resources
 import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
@@ -610,7 +611,7 @@ class FormInputAdapter(
      * Validation Result : -1 -> all good
      * else index of element creating trouble
      */
-    fun validateInput(): Int {
+    fun validateInput(resources : Resources): Int {
         var retVal = -1
         if (!isEnabled) return retVal
         currentList.forEach {
@@ -626,7 +627,7 @@ class FormInputAdapter(
             if (it.required) {
                 if (it.value.isNullOrBlank()) {
                     Timber.d("validateInput called for item $it, with index ${currentList.indexOf(it)}")
-                    it.errorText = "Required field cannot be empty !"
+                    it.errorText = resources.getString(R.string.form_input_empty_error)
                     notifyItemChanged(currentList.indexOf(it))
                     if (retVal == -1) retVal = currentList.indexOf(it)
                 }

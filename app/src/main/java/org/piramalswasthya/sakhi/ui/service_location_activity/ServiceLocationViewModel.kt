@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.service_type
+package org.piramalswasthya.sakhi.ui.service_location_activity
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

@@ -156,7 +156,7 @@ class NewHouseholdFragment : Fragment() {
 
     private fun validateCurrentPage(): Boolean {
         val result = binding.inputForm.rvInputForm.adapter?.let {
-            (it as FormInputAdapter).validateInput()
+            (it as FormInputAdapter).validateInput(resources)
         }
         Timber.d("Validation : $result")
         return if (result == -1) true
@@ -196,9 +196,9 @@ class NewHouseholdFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.currentPage.collect {
                 binding.tvTitle.text = when(it){
-                    1 -> "Family Details"
-                    2 -> "Household Details"
-                    3 -> "Household Amenities"
+                    1 -> getString(R.string.nhhr_title_page_1)
+                    2 -> getString(R.string.nhhr_title_page_2)
+                    3 -> getString(R.string.nhhr_title_page_2)
                     else -> null
                 }
 //                binding.tlNhhr.selectTab(binding.tlNhhr.getTabAt(it - 1), true)

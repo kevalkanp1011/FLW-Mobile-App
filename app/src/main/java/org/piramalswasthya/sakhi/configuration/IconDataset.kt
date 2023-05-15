@@ -1,5 +1,7 @@
 package org.piramalswasthya.sakhi.configuration
 
+import android.content.res.Resources
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.model.Icon
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
@@ -10,154 +12,147 @@ import org.piramalswasthya.sakhi.ui.home_activity.mother_care.MotherCareFragment
 import org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.NcdFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.village_level_forms.VillageLevelFormsFragmentDirections
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@ActivityRetainedScoped
 class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
 
-    fun getIconDataset() = listOf(
+    fun getIconDataset(resources: Resources) = listOf(
         Icon(
             R.drawable.ic__hh,
-            "All\nHousehold",
+            resources.getString(R.string.icon_title_household),
             recordsRepo.hhCount,
             HomeFragmentDirections.actionNavHomeToAllHouseholdFragment()
         ),
         Icon(
             R.drawable.ic__ben,
-            "All\nBeneficiaries",
+            resources.getString(R.string.icon_title_ben),
             recordsRepo.benListCount,
             HomeFragmentDirections.actionNavHomeToAllBenFragment()
         ),
         Icon(
             R.drawable.ic__eligible_couple,
-            "Eligible\nCouple List",
+            resources.getString(R.string.icon_title_ec),
             recordsRepo.eligibleCoupleListCount,
             HomeFragmentDirections.actionNavHomeToEligibleCoupleFragment()
         ),
         Icon(
             R.drawable.ic__mother_care,
-            "Mother Care",
+            resources.getString(R.string.icon_title_mc),
             null,
             HomeFragmentDirections.actionNavHomeToMotherCareFragment()
         ),
         Icon(
             R.drawable.ic__child_care,
-            "Child Care",
+            resources.getString(R.string.icon_title_cc),
             null,
             HomeFragmentDirections.actionNavHomeToChildCareFragment()
         ),
         Icon(
             R.drawable.ic__ncd,
-            "NCD",
+            resources.getString(R.string.icon_title_ncd),
             null,
             HomeFragmentDirections.actionNavHomeToNcdFragment()
         ),
         Icon(
             R.drawable.ic__immunization,
-            "Immunization Due List",
+            resources.getString(R.string.icon_title_imm),
             null,
             HomeFragmentDirections.actionNavHomeToImmunizationDueFragment()
         ),
         Icon(
             R.drawable.ic__hrp,
-            "HRP Cases",
+            resources.getString(R.string.icon_title_hrp),
             recordsRepo.hrpListCount,
             HomeFragmentDirections.actionNavHomeToHrpCasesFragment()
         ),
         Icon(
             R.drawable.ic__general_op,
-            "General OP Care List",
+            resources.getString(R.string.icon_title_gop),
             null,
             HomeFragmentDirections.actionNavHomeToGeneralOpCareFragment()
         ),
         Icon(
             R.drawable.ic__menopause,
-            "Menopause Stage List",
+            resources.getString(R.string.icon_title_msl),
             recordsRepo.menopauseListCount,
             HomeFragmentDirections.actionNavHomeToMenopauseStageFragment()
         ),
         Icon(
-            R.drawable.ic__death, "Death Reports",
+            R.drawable.ic__death,
+            resources.getString(R.string.icon_title_dr),
             null,
             HomeFragmentDirections.actionNavHomeToDeathReportsFragment()
         ),
         Icon(
-            R.drawable.ic__village_level_form, "Village Level Forms",
+            R.drawable.ic__village_level_form,
+            resources.getString(R.string.icon_title_vlf),
             null,
             HomeFragmentDirections.actionNavHomeToVillageLevelFormsFragment()
         ),
     )
 
-    fun getChildCareDataset() = listOf(
+    fun getChildCareDataset(resources: Resources) = listOf(
         Icon(
             R.drawable.ic_infant,
-            "Infant List",
+            resources.getString(R.string.icon_title_icc),
             recordsRepo.infantListCount,
             ChildCareFragmentDirections.actionChildCareFragmentToInfantListFragment()
-        ),
-        Icon(
+        ), Icon(
             R.drawable.ic__child,
-            "Child List",
+            resources.getString(R.string.icon_title_ccc),
             recordsRepo.childListCount,
             ChildCareFragmentDirections.actionChildCareFragmentToChildListFragment()
-        ),
-        Icon(
+        ), Icon(
             R.drawable.ic__adolescent,
-            "Adolescent List",
+            resources.getString(R.string.icon_title_acc),
             recordsRepo.adolescentListCount,
             ChildCareFragmentDirections.actionChildCareFragmentToAdolescentListFragment()
         )
     )
 
-    fun getMotherCareDataset() = listOf(
+    fun getMotherCareDataset(resources: Resources) = listOf(
         Icon(
             R.drawable.ic__pregnancy,
-            "Pregnancy List",
+            resources.getString(R.string.icon_title_pmc),
             recordsRepo.pregnantListCount,
             MotherCareFragmentDirections.actionMotherCareFragmentToPregnancyListFragment()
-        ),
-        Icon(
+        ), Icon(
             R.drawable.ic__delivery,
-            "Delivery Stage List",
+            resources.getString(R.string.icon_title_dmc),
             recordsRepo.deliveryListCount,
             MotherCareFragmentDirections.actionMotherCareFragmentToDeliveryStageListFragment()
-        ),
-        Icon(
+        ), Icon(
             R.drawable.ic__pnc,
-            "PNC Mother List",
+            resources.getString(R.string.icon_title_pncmc),
             recordsRepo.pncMotherListCount,
             MotherCareFragmentDirections.actionMotherCareFragmentToPncMotherListFragment()
-        ),
-        Icon(
+        ), Icon(
             R.drawable.ic__reproductive_age,
-            "Reproductive Age List",
+            resources.getString(R.string.icon_title_rmc),
             recordsRepo.reproductiveAgeListCount,
             MotherCareFragmentDirections.actionMotherCareFragmentToReproductiveAgeListFragment()
         )
     )
 
-    fun getNCDDataset() = listOf(
+    fun getNCDDataset(resources: Resources) = listOf(
         Icon(
             R.drawable.ic__ncd_list,
-            "NCD List",
+            resources.getString(R.string.icon_title_ncd_list),
             recordsRepo.ncdListCount,
             NcdFragmentDirections.actionNcdFragmentToNcdListFragment()
-        ),
-        Icon(
+        ), Icon(
             R.drawable.ic__ncd_eligibility,
-            "NCD Eligible List",
+            resources.getString(R.string.icon_title_ncd_eligible_list),
             recordsRepo.ncdEligibleListCount,
             NcdFragmentDirections.actionNcdFragmentToNcdEligibleListFragment()
-        ),
-        Icon(
+        ), Icon(
             R.drawable.ic__ncd_priority,
-            "NCD Priority List",
+            resources.getString(R.string.icon_title_ncd_non_eligible_list),
             recordsRepo.ncdPriorityListCount,
             NcdFragmentDirections.actionNcdFragmentToNcdPriorityListFragment()
-        ),
-        Icon(
+        ), Icon(
             R.drawable.ic_ncd_noneligible,
-            "NCD Non-Eligible List",
+            resources.getString(R.string.icon_title_ncd_priority_list),
             recordsRepo.ncdNonEligibleListCount,
             NcdFragmentDirections.actionNcdFragmentToNcdNonEligibleListFragment()
         )
@@ -177,13 +172,13 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             ImmunizationDueTypeFragmentDirections.actionImmunizationDueTypeFragmentToMotherImmunizationFragment()
         ),
 
-    )
+        )
 
 
-    fun getVillageLevelFormsDataset() = listOf(
+    fun getVillageLevelFormsDataset(resources: Resources) = listOf(
         Icon(
             R.drawable.ic_person,
-            "Survey Register",
+            resources.getString(R.string.icon_title_sr),
             null,
             VillageLevelFormsFragmentDirections.actionVillageLevelFormsFragmentToSurveyRegisterFragment()
         )

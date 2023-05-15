@@ -45,6 +45,7 @@ enum class Gender {
     value = "SELECT b.beneficiaryId as benId, b.householdId as hhId, b.regDate, b.firstName as benName, b.lastName as benSurname, b.gender, b.dob as dob" +
             ", b.contactNumber as mobileNo, b.fatherName, h.fam_familyHeadName as familyHeadName, b.registrationType as typeOfList, b.rchId" +
             ", b.isHrpStatus as hrpStatus, b.syncState, b.gen_reproductiveStatusId as reproductiveStatusId, b.isKid, b.immunizationStatus," +
+            " b.loc_villageId as villageId,"+
             " cbac.benId is not null as cbacFilled, cbac.syncState as cbacSyncState," +
             " cdr.benId is not null as cdrFilled, cdr.syncState as cdrSyncState, " +
             " mdsr.benId is not null as mdsrFilled, mdsr.syncState as mdsrSyncState," +
@@ -77,6 +78,7 @@ data class BenBasicCache(
     val reproductiveStatusId: Int,
     val isKid: Boolean,
     val immunizationStatus: Boolean,
+    val villageId : Int,
     val cbacFilled: Boolean,
     val cbacSyncState: SyncState?,
     val cdrFilled: Boolean,

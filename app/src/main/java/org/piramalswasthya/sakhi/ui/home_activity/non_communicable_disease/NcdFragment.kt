@@ -57,7 +57,7 @@ class NcdFragment : Fragment() {
             viewModel.scope
         )
         binding.rvIconGrid.adapter = iconAdapter
-        iconAdapter.submitList(iconDataset.getNCDDataset())
+        iconAdapter.submitList(iconDataset.getNCDDataset(resources))
     }
 
 override fun onStart() {

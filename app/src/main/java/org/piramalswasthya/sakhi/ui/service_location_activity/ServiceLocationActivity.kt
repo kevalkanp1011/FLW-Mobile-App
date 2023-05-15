@@ -1,35 +1,34 @@
-package org.piramalswasthya.sakhi.ui.home_activity.service_type
+package org.piramalswasthya.sakhi.ui.service_location_activity
 
+import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.databinding.FragmentServiceTypeBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
-import org.piramalswasthya.sakhi.ui.home_activity.service_type.ServiceTypeViewModel.State.*
 import timber.log.Timber
 
 @AndroidEntryPoint
-class ServiceTypeFragment : Fragment() {
+class ServiceLocationActivity : AppCompatActivity() {
 
-    private var _binding : FragmentServiceTypeBinding? = null
-    private val binding : FragmentServiceTypeBinding
+    private var _binding: FragmentServiceTypeBinding? = null
+    private val binding: FragmentServiceTypeBinding
         get() = _binding!!
 
     private val viewModel: ServiceTypeViewModel by viewModels()
-    private val homeViewModel : HomeViewModel by viewModels({requireActivity()})
+    private val homeViewModel: HomeViewModel by viewModels()
     private val onBackPressedCallback by lazy {
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (homeViewModel.isLocationSet())
-                    findNavController().navigate(ServiceTypeFragmentDirections.actionServiceTypeFragmentToNavHome())
-                else
+                if (homeViewModel.isLocationSet()) {
+                    finish()
+                    val goToHome = Intent(this@ServiceLocationActivity, HomeActivity::class.java)
+                    startActivity(goToHome)
+                } else
                     if (!exitAlert.isShowing)
                         exitAlert.show()
 
@@ -37,7 +36,7 @@ class ServiceTypeFragment : Fragment() {
         }
     }
     private val incompleteLocationAlert by lazy {
-        MaterialAlertDialogBuilder(requireContext())
+        MaterialAlertDialogBuilder(this)
             .setTitle("Missing Detail")
             .setMessage("At least one of the following is missing value:\n \n\tState\n\tDistrict\n\tBlock\n\tVillage")
             .setPositiveButton("Understood") { dialog, _ ->
@@ -46,11 +45,11 @@ class ServiceTypeFragment : Fragment() {
             .create()
     }
     private val exitAlert by lazy {
-        MaterialAlertDialogBuilder(requireContext())
+        MaterialAlertDialogBuilder(this)
             .setTitle("Exit Application")
             .setMessage("Do you want to exit application")
             .setPositiveButton("Yes") { _, _ ->
-                activity?.finish()
+                finish()
             }
             .setNegativeButton("No") { d, _ ->
                 d.dismiss()
@@ -58,23 +57,18 @@ class ServiceTypeFragment : Fragment() {
             .create()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentServiceTypeBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        _binding = FragmentServiceTypeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         Timber.d("onViewCreated() called!")
         binding.viewModel = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner
+        binding.lifecycleOwner = this
 
 
-        activity?.onBackPressedDispatcher?.addCallback(
-            viewLifecycleOwner, onBackPressedCallback
+        onBackPressedDispatcher.addCallback(
+            this, onBackPressedCallback
         )
         binding.actvStateDropdown.setOnItemClickListener { _, _, i, _ ->
             viewModel.setStateId(i)
@@ -96,17 +90,18 @@ class ServiceTypeFragment : Fragment() {
                     viewModel.selectedBlock!!,
                     viewModel.selectedVillage!!,
                 )
-                findNavController().navigate(ServiceTypeFragmentDirections.actionServiceTypeFragmentToNavHome())
+                finish()
+                val goToHome = Intent(this@ServiceLocationActivity, HomeActivity::class.java)
+                startActivity(goToHome)
             } else
                 incompleteLocationAlert.show()
-
         }
-        viewModel.state.observe(viewLifecycleOwner) {
-            it?.let{
+        viewModel.state.observe(this) {
+            it?.let {
                 when (it) {
-                    IDLE -> {}//TODO()
-                    LOADING -> {}//TODO()
-                    SUCCESS -> {
+                    ServiceTypeViewModel.State.IDLE -> {}//TODO()
+                    ServiceTypeViewModel.State.LOADING -> {}//TODO()
+                    ServiceTypeViewModel.State.SUCCESS -> {
                         if (homeViewModel.isLocationSet())
                             viewModel.loadLocation(homeViewModel.getLocationRecord())
                         else {
@@ -116,26 +111,27 @@ class ServiceTypeFragment : Fragment() {
                 }
             }
         }
-        viewModel.selectedStateId.observe(viewLifecycleOwner) {
+        viewModel.selectedStateId.observe(this) {
             if (it >= 0)
                 viewModel.stateList.value?.get(it)
                     ?.let { state -> binding.actvStateDropdown.setText(state) }
         }
-        viewModel.selectedDistrictId.observe(viewLifecycleOwner) {
+        viewModel.selectedDistrictId.observe(this) {
             if (it >= 0)
                 viewModel.districtList.value?.get(it)
                     ?.let { state -> binding.actvDistrictDropdown.setText(state) }
         }
-        viewModel.selectedBlockId.observe(viewLifecycleOwner) {
+        viewModel.selectedBlockId.observe(this) {
             if (it >= 0)
                 viewModel.blockList.value?.get(it)
                     ?.let { state -> binding.actvBlockDropdown.setText(state) }
         }
-        viewModel.selectedVillageId.observe(viewLifecycleOwner) {
+        viewModel.selectedVillageId.observe(this) {
             if (it >= 0)
                 viewModel.villageList.value?.get(it)
                     ?.let { state -> binding.actvVillageDropdown.setText(state) }
         }
+
     }
 
     private fun dataValid(): Boolean {

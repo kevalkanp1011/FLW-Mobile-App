@@ -16,8 +16,8 @@ interface HouseholdDao {
     @Query("SELECT * FROM HOUSEHOLD WHERE isDraft = 1 LIMIT 1")
     suspend fun getDraftHousehold(): HouseholdCache?
 
-    @Query("SELECT * FROM HOUSEHOLD WHERE isDraft = 0")
-    fun getAllHouseholds(): Flow<List<HouseholdCache>>
+    @Query("SELECT * FROM HOUSEHOLD WHERE isDraft = 0 and loc_villageId = :selectedVillage")
+    fun getAllHouseholds(selectedVillage: Int): Flow<List<HouseholdCache>>
 
     @Query("SELECT * FROM HOUSEHOLD WHERE householdId =:hhId LIMIT 1")
     suspend fun getHousehold(hhId: Long): HouseholdCache?

@@ -460,28 +460,29 @@ class HBNCFormDataset(
 
 
     private val healthSubCenterName = FormElement(
-        id = 2, inputType = InputType.EDIT_TEXT, allCaps = true, title = "Health Subcenter Name ",
+        id = 2, inputType = InputType.EDIT_TEXT, title = "Health Subcenter Name ", arrayId = -1,
 //        etMaxLength = 6,
-        etInputType = TYPE_CLASS_TEXT or TYPE_TEXT_FLAG_CAP_CHARACTERS, required = false
+        required = false, allCaps = true, etInputType = TYPE_CLASS_TEXT or TYPE_TEXT_FLAG_CAP_CHARACTERS
     )
     private val motherName = FormElement(
-        id = 4, inputType = InputType.TEXT_VIEW, title = "Mother Name", required = false
+        id = 4, inputType = InputType.TEXT_VIEW, title = "Mother Name", arrayId = -1, required = false
     )
     private val fatherName = FormElement(
-        id = 5, inputType = InputType.TEXT_VIEW, title = "Father Name", required = false
+        id = 5, inputType = InputType.TEXT_VIEW, title = "Father Name", arrayId = -1, required = false
     )
 
     private val dateOfDelivery = FormElement(
         id = 6,
         inputType = InputType.DATE_PICKER,
         title = "Date of Delivery",
+        arrayId = -1,
+        required = false,
         max = System.currentTimeMillis(),
-        min = 0,
-        required = false
+        min = 0
     )
 
     private val placeOfDelivery = FormElement(
-        id = 7, inputType = InputType.DROPDOWN, title = "Place of Delivery", entries = arrayOf(
+        id = 7, inputType = InputType.DROPDOWN, title = "Place of Delivery", arrayId = -1, entries = arrayOf(
             "House",
             "Health center",
             "CHC",
@@ -489,7 +490,7 @@ class HBNCFormDataset(
         ), required = false
     )
     private val gender = FormElement(
-        id = 8, inputType = InputType.RADIO, title = "Baby Gender", entries = arrayOf(
+        id = 8, inputType = InputType.RADIO, title = "Baby Gender", arrayId = -1, entries = arrayOf(
             "Male",
             "Female",
             "Transgender",
@@ -497,40 +498,48 @@ class HBNCFormDataset(
     )
 
     private val typeOfDelivery = FormElement(
-        id = 9, inputType = InputType.RADIO, title = "Type of Delivery", entries = arrayOf(
+        id = 9, inputType = InputType.RADIO, title = "Type of Delivery", arrayId = -1, entries = arrayOf(
             "Normal Delivery", "C - Section", "Assisted"
         ), required = false
     )
     private val startedBreastFeeding = FormElement(
-        id = 10, inputType = InputType.DROPDOWN, title = "Started Breastfeeding", entries = arrayOf(
+        id = 10,
+        inputType = InputType.DROPDOWN,
+        title = "Started Breastfeeding",
+        arrayId = -1,
+        entries = arrayOf(
             "Within an hour", "1 - 4 hours", "4.1 - 24 hours", "After 24 hours"
-        ), required = false
+        ),
+        required = false
     )
     private val weightAtBirth = FormElement(
         id = 11,
         inputType = InputType.EDIT_TEXT,
         title = "Weight at birth ( grams )",
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
-        required = false
+        arrayId = -1,
+        required = false,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL
     )
     private val dateOfDischargeFromHospitalMother = FormElement(
         id = 12,
         inputType = InputType.DATE_PICKER,
         title = "Discharge Date of Mother",
+        arrayId = -1,
+        required = false,
         max = System.currentTimeMillis(),
-        min = 0,
-        required = false
+        min = 0
     )
     private val dateOfDischargeFromHospitalBaby = FormElement(
         id = 13,
         inputType = InputType.DATE_PICKER,
         title = "Discharge Date of Baby",
+        arrayId = -1,
+        required = false,
         max = System.currentTimeMillis(),
-        min = 0,
-        required = false
+        min = 0
     )
     private val registrationOfBirth = FormElement(
-        id = 15, inputType = InputType.RADIO, title = "Registration Of Birth", entries = arrayOf(
+        id = 15, inputType = InputType.RADIO, title = "Registration Of Birth", arrayId = -1, entries = arrayOf(
             "Yes",
             "No",
         ), required = false
@@ -540,6 +549,7 @@ class HBNCFormDataset(
         id = 18,
         inputType = InputType.CHECKBOXES,
         title = "Child Immunization Status",
+        arrayId = -1,
         entries = arrayOf(
             "BCG", "Polio", "DPT 1", "Hepatitis-B"
         ),
@@ -550,6 +560,7 @@ class HBNCFormDataset(
         id = 26,
         inputType = InputType.DROPDOWN,
         title = "What was the baby fed after birth ",
+        arrayId = -1,
         entries = arrayOf(
             "Mother Milk",
             "Water",
@@ -558,14 +569,15 @@ class HBNCFormDataset(
             "Goat Milk",
             "Other",
         ),
-        hasDependants = true,
-        required = false
+        required = false,
+        hasDependants = true
     )
 
     private val howBabyTookFirstFeed = FormElement(
         id = 27,
         inputType = InputType.DROPDOWN,
         title = "How did the baby breastfeed? ",
+        arrayId = -1,
         entries = arrayOf(
             "Forcefully",
             "Weakly ",
@@ -575,7 +587,7 @@ class HBNCFormDataset(
         required = false
     )
     private val babyEyeCondition = FormElement(
-        id = 32, inputType = InputType.RADIO, title = "Baby eye condition", entries = arrayOf(
+        id = 32, inputType = InputType.RADIO, title = "Baby eye condition", arrayId = -1, entries = arrayOf(
             "Normal ", "Swelling", "oozing pus"
         ), required = false
     )
@@ -583,6 +595,7 @@ class HBNCFormDataset(
         id = 33,
         inputType = InputType.RADIO,
         title = "Is there bleeding from the baby umbilical cord ",
+        arrayId = -1,
         entries = arrayOf(
             "Yes",
             "No",
@@ -593,6 +606,7 @@ class HBNCFormDataset(
         id = 34,
         inputType = InputType.RADIO,
         title = "Weighing machine scale color",
+        arrayId = -1,
         entries = arrayOf(
             "Red", "Yellow", "Green"
         ),
@@ -603,12 +617,14 @@ class HBNCFormDataset(
         id = 35,
         inputType = InputType.HEADLINE,
         title = "Enter the child physical condition",
+        arrayId = -1,
         required = false
     )
     private val allLimbsLimp = FormElement(
         id = 36,
         inputType = InputType.RADIO,
         title = "All limbs limp",
+        arrayId = -1,
         entries = arrayOf("Yes", "No"),
         required = false,
     )
@@ -616,6 +632,7 @@ class HBNCFormDataset(
         id = 37,
         inputType = InputType.RADIO,
         title = "Feeding less/stop",
+        arrayId = -1,
         entries = arrayOf("Yes", "No"),
         required = false,
     )
@@ -623,6 +640,7 @@ class HBNCFormDataset(
         id = 45,
         inputType = InputType.RADIO,
         title = "The child is wrapped in cloth and kept to the mother",
+        arrayId = -1,
         entries = arrayOf("Yes", "No"),
         required = false,
     )
@@ -630,6 +648,7 @@ class HBNCFormDataset(
         id = 46,
         inputType = InputType.RADIO,
         title = "Started breastfeeding only/ only given breast milk",
+        arrayId = -1,
         entries = arrayOf("Yes", "No"),
         required = false,
     )
@@ -641,6 +660,7 @@ class HBNCFormDataset(
         id = 48,
         inputType = InputType.HEADLINE,
         title = "Newborn first training (A) Ask mother",
+        arrayId = -1,
         required = false
     )
 
@@ -648,10 +668,11 @@ class HBNCFormDataset(
         id = 49,
         inputType = InputType.EDIT_TEXT,
         title = "How many times the mother feeds her stomach in 24 hours. Action – If the mother does not eat full stomach or eat less than 4 times, advise mother to do so",
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
-        etMaxLength = 1,
+        arrayId = -1,
+        required = false,
         hasAlertError = true,
-        required = false
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 1
     )
 
 
@@ -659,16 +680,18 @@ class HBNCFormDataset(
         id = 50,
         inputType = InputType.EDIT_TEXT,
         title = "How many pads have been changed in a day for bleeding? Action – If more than 2 pad, refer the mother to the hospital.",
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
-        etMaxLength = 2,
+        arrayId = -1,
+        required = false,
         hasAlertError = true,
-        required = false
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 2
     )
 
     private val babyKeptWarmWinter = FormElement(
         id = 51,
         inputType = InputType.RADIO,
         title = "During the winter season, is the baby kept warm? (Closer to the mother, dressed well and wrapped). - If it is not being done, ask the mother to do it.",
+        arrayId = -1,
         entries = arrayOf("Yes", "No"),
         required = false,
     )
@@ -677,6 +700,7 @@ class HBNCFormDataset(
         id = 52,
         inputType = InputType.RADIO,
         title = "Is the child breastfed properly? (Whenever feeling hungry or breastfeeding at least 7 – 8 times in 24 hours). Action – if it is not being done then ask the mother to do it. ",
+        arrayId = -1,
         entries = arrayOf("Yes", "No"),
         required = false,
     )
@@ -684,6 +708,7 @@ class HBNCFormDataset(
         id = 53,
         inputType = InputType.RADIO,
         title = "Does the child cry continuously or urinate less than 6 times a day? Action – Advice the mother for breast-feeding",
+        arrayId = -1,
         entries = arrayOf("Yes", "No"),
         required = false,
     )
@@ -692,14 +717,16 @@ class HBNCFormDataset(
         id = 55,
         inputType = InputType.EDIT_TEXT,
         title = "Measure and check the temperature. Action – Give the patient paracetamol tablet if the temperature is 102°F (38.9°C) and refer to the hospital if the temperature is higher than this.",
+        arrayId = -1,
+        required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
-        etMaxLength = 3,
-        required = false
+        etMaxLength = 3
     )
     private val motherWaterDischarge = FormElement(
         id = 56,
         inputType = InputType.RADIO,
         title = "Water discharge with foul smell and fever 102 degree Fahrenheit (38.9 degree C). ",
+        arrayId = -1,
         entries = arrayOf("Yes", "No"),
         required = false,
     )
@@ -707,6 +734,7 @@ class HBNCFormDataset(
         id = 57,
         inputType = InputType.RADIO,
         title = "Is mother speaking abnormally or having fits?",
+        arrayId = -1,
         entries = arrayOf("Yes", "No"),
         required = false,
     )
@@ -714,6 +742,7 @@ class HBNCFormDataset(
         id = 58,
         inputType = InputType.RADIO,
         title = "Mothers milk is not being produced after delivery or she thinks less milk is being produced.",
+        arrayId = -1,
         entries = arrayOf("Yes", "No"),
         required = false,
     )
@@ -721,6 +750,7 @@ class HBNCFormDataset(
         id = 59,
         inputType = InputType.RADIO,
         title = "Does the mother have cracked nipple / pain and / or hard breasts",
+        arrayId = -1,
         entries = arrayOf("Yes", "No"),
         required = false,
     )
@@ -729,23 +759,26 @@ class HBNCFormDataset(
         id = 61,
         inputType = InputType.RADIO,
         title = "Are the eyes swollen / Are there pus from the eyes?",
+        arrayId = -1,
         entries = arrayOf("Yes", "No"),
         required = false,
     )
     private val babyWeight = FormElement(
         id = 62,
         inputType = InputType.EDIT_TEXT,
+        title = "Weight on Day ${if (nthDay > 0) nthDay else 1}",
+        arrayId = -1,
+        required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL,
+        etMaxLength = 4,
         minDecimal = 0.5,
         maxDecimal = 7.0,
-        etMaxLength = 4,
-        title = "Weight on Day ${if (nthDay > 0) nthDay else 1}",
-        required = false,
     )
     private val yellowJaundice = FormElement(
         id = 66,
         inputType = InputType.RADIO,
         title = "Yellowing of the eye/palm/sole/skin (jaundice)",
+        arrayId = -1,
         entries = arrayOf("Yes", "No"),
         required = false
     )
@@ -755,6 +788,7 @@ class HBNCFormDataset(
         id = 68,
         inputType = InputType.RADIO,
         title = "Respiratory rate more than 60 per minute",
+        arrayId = -1,
         entries = arrayOf("Yes", "No"),
         required = false,
     )
@@ -764,6 +798,7 @@ class HBNCFormDataset(
         inputType = InputType.HEADLINE,
         title = "(D) Sepsis",
         subtitle = "Examine the following symptoms of sepsis. If symptoms are present, then write, Yes, if symptoms are not present, then do not write. Enter the symptoms seen from the health check-up on the first day of the newborns birth.",
+        arrayId = -1,
         required = false
     )
 
@@ -771,6 +806,7 @@ class HBNCFormDataset(
         id = 74,
         inputType = InputType.RADIO,
         title = "Distended abdomen or mother says baby vomits often",
+        arrayId = -1,
         entries = arrayOf(
             "Yes",
             "No",
@@ -781,6 +817,7 @@ class HBNCFormDataset(
         id = 75,
         inputType = InputType.RADIO,
         title = "The mother tells that the child feels cold when touching or the temperature of the child is more than 89 degrees Fahrenheit (37.5 degrees C)",
+        arrayId = -1,
         entries = arrayOf(
             "Yes",
             "No",
@@ -792,6 +829,7 @@ class HBNCFormDataset(
         id = 76,
         inputType = InputType.RADIO,
         title = "and the chest is pulled inward while breathing.",
+        arrayId = -1,
         entries = arrayOf(
             "Yes",
             "No",
@@ -801,19 +839,19 @@ class HBNCFormDataset(
 
 
     private val pusNavel = FormElement(
-        id = 77, inputType = InputType.EDIT_TEXT, title = "Pus in the navel", required = false
+        id = 77, inputType = InputType.EDIT_TEXT, title = "Pus in the navel", arrayId = -1, required = false
     )
     private val ashaName = FormElement(
-        id = 78, inputType = InputType.TEXT_VIEW, title = "ASHA NAME", required = false
+        id = 78, inputType = InputType.TEXT_VIEW, title = "ASHA NAME", arrayId = -1, required = false
     )
     private val villageName = FormElement(
-        id = 79, inputType = InputType.TEXT_VIEW, title = "Village Name", required = false
+        id = 79, inputType = InputType.TEXT_VIEW, title = "Village Name", arrayId = -1, required = false
     )
     private val blockName = FormElement(
-        id = 80, inputType = InputType.TEXT_VIEW, title = "Block Name", required = false
+        id = 80, inputType = InputType.TEXT_VIEW, title = "Block Name", arrayId = -1, required = false
     )
     private val stillBirth = FormElement(
-        id = 81, inputType = InputType.RADIO, title = "Still Birth", entries = arrayOf(
+        id = 81, inputType = InputType.RADIO, title = "Still Birth", arrayId = -1, entries = arrayOf(
             "Yes",
             "No",
         ), required = false
@@ -822,12 +860,13 @@ class HBNCFormDataset(
         id = 82,
         inputType = InputType.EDIT_TEXT,
         title = "Supervisors Remark ",
+        arrayId = -1,
+        required = false,
         etMaxLength = 500,
-        multiLine = true,
-        required = false
+        multiLine = true
     )
     private val sup = FormElement(
-        id = 83, inputType = InputType.DROPDOWN, title = "Supervisor", entries = arrayOf(
+        id = 83, inputType = InputType.DROPDOWN, title = "Supervisor", arrayId = -1, entries = arrayOf(
             "ASHA Facilitator",
             "ANM",
             "MPW",
@@ -837,59 +876,70 @@ class HBNCFormDataset(
         id = 84,
         inputType = InputType.EDIT_TEXT,
         title = "Supervisor name",
+        arrayId = -1,
+        required = false,
         allCaps = true,
-        etMaxLength = 100,
-        required = false
+        etMaxLength = 100
     )
     private val dateOfSupSig = FormElement(
         id = 86,
         inputType = InputType.DATE_PICKER,
         title = "Signature with Date of Supervisor",
-        min = 0L,
+        arrayId = -1,
+        required = false,
         max = System.currentTimeMillis(),
-        required = false
+        min = 0L
     )
 
     private val titleVisitCard = FormElement(
         id = 87,
         inputType = InputType.HEADLINE,
         title = "Mother-Newborn Home Visit Card",
+        arrayId = -1,
         required = false
     )
     private val titleVisitCardDischarge = FormElement(
         id = 88,
         inputType = InputType.HEADLINE,
         title = "Discharge of Institutional Delivery",
+        arrayId = -1,
         required = false
     )
 
     private val dateOfHomeVisit = FormElement(
-        id = 89, inputType = InputType.TEXT_VIEW, title = "Date of Home Visit", required = false
+        id = 89,
+        inputType = InputType.TEXT_VIEW,
+        title = "Date of Home Visit",
+        arrayId = -1,
+        required = false
     )
     private val babyAlive = FormElement(
-        id = 90, inputType = InputType.RADIO, title = "Is the baby alive?", entries = arrayOf(
+        id = 90, inputType = InputType.RADIO, title = "Is the baby alive?", arrayId = -1, entries = arrayOf(
             "Yes",
             "No",
-        ), hasDependants = true, required = false
+        ), required = false, hasDependants = true
     )
     private val dateOfBabyDeath = FormElement(
         id = 91,
         inputType = InputType.DATE_PICKER,
         title = "Date of death of baby",
-        min = 0L,
+        arrayId = -1,
+        required = false,
         max = System.currentTimeMillis(),
-        required = false
+        min = 0L
     )
     private val timeOfBabyDeath = FormElement(
         id = 92,
         inputType = InputType.TIME_PICKER,
         title = "Time of death of baby",
+        arrayId = -1,
         required = false
     )
     private val placeOfBabyDeath = FormElement(
         id = 93,
         inputType = InputType.DROPDOWN,
         title = "Place of Baby Death",
+        arrayId = -1,
         entries = arrayOf(
             "Home",
             "Sub-center",
@@ -897,80 +947,88 @@ class HBNCFormDataset(
             "CHC",
             "Other",
         ),
-        hasDependants = true,
         required = false,
+        hasDependants = true,
     )
     private val otherPlaceOfBabyDeath = FormElement(
         id = 94,
         inputType = InputType.EDIT_TEXT,
         title = "Other place of Baby Death",
+        arrayId = -1,
         required = false
     )
     private val babyPreterm = FormElement(
         id = 95,
         inputType = InputType.RADIO,
         title = "Is the baby preterm?",
+        arrayId = -1,
         entries = arrayOf(
             "Yes",
             "No",
         ),
+        required = false,
         hasDependants = true,
         hasAlertError = true,
-        required = false,
     )
     private val gestationalAge = FormElement(
         id = 96,
         inputType = InputType.RADIO,
         title = "How many weeks has it been since baby born (Gestational Age)",
 //        orientation = LinearLayout.VERTICAL,
+        arrayId = -1,
         entries = arrayOf(
             "24 – 34 Weeks",
             "34 – 36 Weeks",
             "36 – 38 Weeks",
         ),
-        hasAlertError = true,
         required = true,
+        hasAlertError = true,
     )
     private val dateOfBabyFirstExamination = FormElement(
         id = 97,
         inputType = InputType.DATE_PICKER,
         title = "Date of First examination of baby",
-        min = 0L,
+        arrayId = -1,
+        required = false,
         max = System.currentTimeMillis(),
-        required = false
+        min = 0L
     )
     private val timeOfBabyFirstExamination = FormElement(
         id = 98,
         inputType = InputType.TIME_PICKER,
         title = "Time of First examination of baby",
+        arrayId = -1,
         required = false
     )
 
 
     private val motherAlive = FormElement(
-        id = 99, inputType = InputType.RADIO, title = "Is the mother alive?", entries = arrayOf(
+        id = 99, inputType = InputType.RADIO, title = "Is the mother alive?", arrayId = -1, entries = arrayOf(
             "Yes",
             "No",
-        ), hasDependants = true, required = false
+        ), required = false, hasDependants = true
     )
     private val dateOfMotherDeath = FormElement(
         id = 100,
         inputType = InputType.DATE_PICKER,
         title = "Date of death of mother",
-        min = 0L,
+        arrayId = -1,
+        required = false,
         max = System.currentTimeMillis(),
-        required = false
+        min = 0L
     )
     private val timeOfMotherDeath = FormElement(
         id = 101,
         inputType = InputType.TIME_PICKER,
         title = "Time of death of mother",
+        arrayId = -1,
         required = false
     )
     private val placeOfMotherDeath = FormElement(
         id = 102,
         inputType = InputType.DROPDOWN,
         title = "Place of mother Death",
+        arrayId = -1,
         entries = arrayOf(
             "Home",
             "Sub-center",
@@ -978,52 +1036,58 @@ class HBNCFormDataset(
             "CHC",
             "Other",
         ),
-        hasDependants = true,
         required = false,
+        hasDependants = true,
     )
     private val otherPlaceOfMotherDeath = FormElement(
         id = 103,
         inputType = InputType.EDIT_TEXT,
         title = "Other place of mother Death",
-        hasDependants = true,
-        required = false
+        arrayId = -1,
+        required = false,
+        hasDependants = true
     )
     private val motherProblems = FormElement(
         id = 104,
         inputType = InputType.CHECKBOXES,
         title = "Does Mother have any problems",
+        arrayId = -1,
         entries = arrayOf(
             "Excessive Bleeding",
             "Unconscious / Fits",
         ),
-        hasAlertError = true,
-        required = false
+        required = false,
+        hasAlertError = true
     )
 
     private val otherBabyFedAfterBirth = FormElement(
         id = 105,
         inputType = InputType.EDIT_TEXT,
         title = "Other - What was given as the first feed to baby after birth?",
+        arrayId = -1,
         required = false
     )
     private val whenBabyFirstFed = FormElement(
         id = 106,
         inputType = InputType.TIME_PICKER,
         title = "When was the baby first fed",
+        arrayId = -1,
         required = false
     )
     private val motherHasBreastFeedProblem = FormElement(
         id = 107,
         inputType = InputType.RADIO,
         title = "Does the mother have breastfeeding problem?",
+        arrayId = -1,
         entries = arrayOf("Yes", "No"),
-        hasDependants = true,
         required = false,
+        hasDependants = true,
     )
     private val motherBreastFeedProblem = FormElement(
         id = 108,
         inputType = InputType.EDIT_TEXT,
         title = "Write the problem, if there is any problem in breast feeding, help the mother to overcome it",
+        arrayId = -1,
         required = false
     )
 
@@ -1033,21 +1097,24 @@ class HBNCFormDataset(
         id = 109,
         inputType = InputType.HEADLINE,
         title = "Part 2: Baby first health check-up",
+        arrayId = -1,
         required = false
     )
     private val babyTemperature = FormElement(
         id = 110,
         inputType = InputType.EDIT_TEXT,
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         title = "Temperature of the baby",
-        etMaxLength = 3,
-        required = false
+        arrayId = -1,
+        required = false,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 3
     )
 
     private val actionUmbilicalBleed = FormElement(
         id = 111,
         inputType = InputType.RADIO,
         title = "If yes, either ASHA, ANM/MPW or TBA can tie again with a clean thread. Action taken? ",
+        arrayId = -1,
         entries = arrayOf(
             "Yes",
             "No",
@@ -1058,6 +1125,7 @@ class HBNCFormDataset(
         id = 112,
         inputType = InputType.RADIO,
         title = "Weighing matches with the colour?",
+        arrayId = -1,
         entries = arrayOf(
             "Yes",
             "No",
@@ -1068,16 +1136,17 @@ class HBNCFormDataset(
         id = 113,
         inputType = InputType.HEADLINE,
         title = "Routine Newborn Care: whether the task was performed",
+        arrayId = -1,
         required = false
     )
     private val babyDry = FormElement(
-        id = 114, inputType = InputType.RADIO, title = "Dry the baby", entries = arrayOf(
+        id = 114, inputType = InputType.RADIO, title = "Dry the baby", arrayId = -1, entries = arrayOf(
             "Yes",
             "No",
         ), required = false
     )
     private val cryWeakStopped = FormElement(
-        id = 115, inputType = InputType.RADIO, title = "Cry weak/ stopped", entries = arrayOf(
+        id = 115, inputType = InputType.RADIO, title = "Cry weak/ stopped", arrayId = -1, entries = arrayOf(
             "Yes",
             "No",
         ), required = false
@@ -1086,6 +1155,7 @@ class HBNCFormDataset(
         id = 116,
         inputType = InputType.RADIO,
         title = "Keep the cord clean and dry",
+        arrayId = -1,
         entries = arrayOf(
             "Yes",
             "No",
@@ -1097,14 +1167,16 @@ class HBNCFormDataset(
         id = 117,
         inputType = InputType.RADIO,
         title = "Was there anything unusual with the baby?",
+        arrayId = -1,
         entries = arrayOf("Curved limbs", "cleft lip", "Other"),
-        hasDependants = true,
         required = false,
+        hasDependants = true,
     )
     private val otherUnusualWithBaby = FormElement(
         id = 118,
         inputType = InputType.EDIT_TEXT,
         title = "Other - unusual with the baby",
+        arrayId = -1,
         required = false
     )
 
@@ -1114,28 +1186,32 @@ class HBNCFormDataset(
         id = 119,
         inputType = InputType.HEADLINE,
         title = "ASHA should wash hands with soap and water before touching the baby during each visit",
+        arrayId = -1,
         required = false
     )
     private val babyReferred = FormElement(
         id = 120,
         inputType = InputType.RADIO,
         title = "Baby referred for any reason?",
+        arrayId = -1,
         entries = arrayOf("Yes", "No"),
-        hasDependants = true,
-        required = false
+        required = false,
+        hasDependants = true
     )
     private val dateOfBabyReferral = FormElement(
         id = 121,
         inputType = InputType.DATE_PICKER,
         title = "Date of baby referral",
-        min = 0L,
+        arrayId = -1,
+        required = false,
         max = System.currentTimeMillis(),
-        required = false
+        min = 0L
     )
     private val placeOfBabyReferral = FormElement(
         id = 122,
         inputType = InputType.DROPDOWN,
         title = "Place of baby referral",
+        arrayId = -1,
         entries = arrayOf(
             "Sub-Centre",
             "PHC",
@@ -1148,35 +1224,39 @@ class HBNCFormDataset(
             "Accredited Private Hospital",
             "Other",
         ),
-        hasDependants = true,
-        required = false
+        required = false,
+        hasDependants = true
     )
     private val otherPlaceOfBabyReferral = FormElement(
         id = 123,
         inputType = InputType.EDIT_TEXT,
         title = "Other -Place of baby referral",
+        arrayId = -1,
         required = false
     )
     private val motherReferred = FormElement(
         id = 124,
         inputType = InputType.RADIO,
         title = "Mother referred for any reason?",
+        arrayId = -1,
         entries = arrayOf("Yes", "No"),
-        hasDependants = true,
-        required = false
+        required = false,
+        hasDependants = true
     )
     private val dateOfMotherReferral = FormElement(
         id = 125,
         inputType = InputType.DATE_PICKER,
         title = "Date of mother referral",
-        min = 0L,
+        arrayId = -1,
+        required = false,
         max = System.currentTimeMillis(),
-        required = false
+        min = 0L
     )
     private val placeOfMotherReferral = FormElement(
         id = 126,
         inputType = InputType.DROPDOWN,
         title = "Place of mother referral",
+        arrayId = -1,
         entries = arrayOf(
             "Sub-Centre",
             "PHC",
@@ -1189,13 +1269,14 @@ class HBNCFormDataset(
             "Accredited Private Hospital",
             "Other",
         ),
-        hasDependants = true,
-        required = false
+        required = false,
+        hasDependants = true
     )
     private val otherPlaceOfMotherReferral = FormElement(
         id = 127,
         inputType = InputType.EDIT_TEXT,
         title = "Other -Place of mother referral",
+        arrayId = -1,
         required = false
     )
 

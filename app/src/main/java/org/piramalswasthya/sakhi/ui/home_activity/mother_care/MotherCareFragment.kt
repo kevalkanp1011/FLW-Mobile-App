@@ -58,7 +58,7 @@ class MotherCareFragment : Fragment() {
             viewModel.scope
         )
         binding.rvIconGrid.adapter = rvAdapter
-        rvAdapter.submitList(iconDataset.getMotherCareDataset())
+        rvAdapter.submitList(iconDataset.getMotherCareDataset(resources))
 
     }
 

@@ -56,7 +56,7 @@ class ChildCareFragment : Fragment() {
             viewModel.scope
         )
         binding.rvIconGrid.adapter = iconAdapter
-        iconAdapter.submitList(iconDataset.getChildCareDataset())
+        iconAdapter.submitList(iconDataset.getChildCareDataset(resources))
     }
     override fun onStart() {
         super.onStart()

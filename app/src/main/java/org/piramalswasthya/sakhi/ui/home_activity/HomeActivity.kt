@@ -28,11 +28,13 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.databinding.ActivityHomeBinding
 import org.piramalswasthya.sakhi.helpers.ImageUtils
+import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.helpers.MyContextWrapper
 import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdActivity
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
 import org.piramalswasthya.sakhi.work.WorkerUtils
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -45,12 +47,42 @@ class HomeActivity : AppCompatActivity() {
         val pref: PreferenceDao
     }
 
+    @Inject
+    lateinit var pref: PreferenceDao
+
     private var _binding: ActivityHomeBinding? = null
 
     private val binding: ActivityHomeBinding
         get() = _binding!!
 
     private val viewModel: HomeViewModel by viewModels()
+
+    private val langChooseAlert by lazy {
+        val currentLanguageIndex = when (pref.getCurrentLanguage()) {
+            Languages.ENGLISH -> 0
+            Languages.HINDI -> 1
+            Languages.ASSAMESE -> 2
+        }
+        MaterialAlertDialogBuilder(this).setTitle("Choose Application Language")
+            .setSingleChoiceItems(
+                arrayOf("English", "Hindi", "Assamese"), currentLanguageIndex
+            ){di, checkedItemIndex ->
+                val checkedLanguage = when (checkedItemIndex) {
+                    0 -> Languages.ENGLISH
+                    1 -> Languages.HINDI
+                    2 -> Languages.ASSAMESE
+                    else -> throw IllegalStateException("yoohuulanguageindexunkonwn $checkedItemIndex")
+                }
+                if(checkedItemIndex!= currentLanguageIndex) {
+                    pref.saveSetLanguage(checkedLanguage)
+                    val restart = Intent(this, HomeActivity::class.java)
+                    finish()
+                    startActivity(restart)
+                }
+
+            }
+            .create()
+    }
 
 
     private val logoutAlert by lazy {
@@ -121,7 +153,10 @@ class HomeActivity : AppCompatActivity() {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.home_toolbar, menu)
                 val homeMenu = menu.findItem(R.id.toolbar_menu_home)
+                val langMenu = menu.findItem(R.id.toolbar_menu_language)
                 homeMenu.isVisible = showMenuHome
+                langMenu.isVisible = !showMenuHome
+
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -129,6 +164,9 @@ class HomeActivity : AppCompatActivity() {
                     R.id.toolbar_menu_home -> {
                         navController.popBackStack(R.id.homeFragment, false)
                         return true
+                    }
+                    R.id.toolbar_menu_language -> {
+                        langChooseAlert.show()
                     }
                 }
                 return false
@@ -185,10 +223,10 @@ class HomeActivity : AppCompatActivity() {
         binding.navView.setupWithNavController(navController)
 
         val appBarConfiguration = AppBarConfiguration.Builder(
-                setOf(
-                    R.id.homeFragment, R.id.allHouseholdFragment, R.id.allBenFragment
-                )
-            ).setOpenableLayout(binding.drawerLayout).build()
+            setOf(
+                R.id.homeFragment, R.id.allHouseholdFragment, R.id.allBenFragment
+            )
+        ).setOpenableLayout(binding.drawerLayout).build()
 
         NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration)
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)

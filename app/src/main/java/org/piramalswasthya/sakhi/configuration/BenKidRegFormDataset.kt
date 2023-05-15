@@ -44,6 +44,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         id = 1,
         inputType = IMAGE_VIEW,
         title = context.getString(R.string.nbr_image),
+        arrayId = -1,
         required = false
     )
 
@@ -51,105 +52,117 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         id = 2,
         inputType = TEXT_VIEW,
         title = context.getString(R.string.nbr_dor),
-        value = getCurrentDateString(),
-        required = true
+        arrayId = -1,
+        required = true,
+        value = getCurrentDateString()
     )
     private val firstName = FormElement(
         id = 3,
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_nb_first_name),
-        etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS,
+        arrayId = -1,
+        required = true,
         allCaps = true,
-        required = true
+        etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
     )
     private val lastName = FormElement(
         id = 4,
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_nb_last_name),
-        etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS,
-        allCaps = true,
+        arrayId = -1,
         required = false,
+        allCaps = true,
+        etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS,
     )
     val ageUnit = FormElement(
         id = 5,
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_nb_age_unit),
-        hasDependants = true,
+        arrayId = -1,
         entries = resources.getStringArray(R.array.nbr_age_unit_array),
         required = true,
+        hasDependants = true,
     )
     val age = FormElement(
         id = 7,
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_age),
-        min = 1,
-        max = 15,
+        arrayId = -1,
+        required = true,
         hasDependants = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
-        required = true,
+        max = 15,
+        min = 1,
     )
     val dob = FormElement(
         id = 8,
         inputType = DATE_PICKER,
         title = context.getString(R.string.nbr_dob),
+        arrayId = -1,
+        required = true,
         hasDependants = true,
         max = getMaxDobMillis(),
         min = getMinDobMillis(),
-        required = true,
     )
     val gender = FormElement(
         id = 9,
         inputType = RADIO,
         title = context.getString(R.string.nbr_gender),
+        arrayId = -1,
         entries = resources.getStringArray(R.array.nbr_gender_array),
-        hasDependants = true,
         required = true,
+        hasDependants = true,
     )
     private val fatherName = FormElement(
         id = 10,
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_father_name),
-        etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS,
+        arrayId = -1,
+        required = true,
         allCaps = true,
-        required = true
+        etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
     )
     private val motherName = FormElement(
         id = 11,
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_mother_name),
-        etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS,
+        arrayId = -1,
+        required = true,
         allCaps = true,
-        required = true
+        etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
     )
 
     val mobileNoOfRelation = FormElement(
         id = 12,
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_mobile_number_of),
+        arrayId = -1,
         entries = arrayOf(
             "Mother", "Father", "Family Head", "Other"
         ),
-        hasDependants = true,
         required = true,
+        hasDependants = true,
     )
     private val otherMobileNoOfRelation = FormElement(
-        id = 13, inputType = EDIT_TEXT, title = "Other - Mobile Number of", required = true
+        id = 13, inputType = EDIT_TEXT, title = "Other - Mobile Number of", arrayId = -1, required = true
     )
     private val contactNumber = FormElement(
         id = 14,
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nrb_contact_number),
+        arrayId = -1,
         required = true,
-        etMaxLength = 10,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         isMobileNumber = true,
-        min = 6000000000,
+        etMaxLength = 10,
         max = 9999999999,
-        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
+        min = 6000000000
     )
     private val contactNumberFamilyHead = FormElement(
         id = 114,
         inputType = TEXT_VIEW,
         title = context.getString(R.string.nrb_contact_number),
+        arrayId = -1,
         required = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
     )
@@ -207,22 +220,25 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         id = 15,
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_rel_to_head),
+        arrayId = -1,
         entries = relationToHeadListDefault,
-        hasDependants = true,
         required = true,
+        hasDependants = true,
     )
     private val otherRelationToHead = FormElement(
         id = 16,
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_rel_to_head_other),
+        arrayId = -1,
+        required = true,
         allCaps = true,
-        etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS,
-        required = true
+        etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
     )
     private val community = FormElement(
         id = 17,
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_community),
+        arrayId = -1,
         entries = arrayOf(
             "General",
             "SC",
@@ -237,6 +253,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         id = 18,
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_religion),
+        arrayId = -1,
         entries = arrayOf(
             "Hindu",
             "Muslim",
@@ -248,21 +265,23 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
             "Other",
             "Not disclosed",
         ),
-        hasDependants = true,
-        required = true
+        required = true,
+        hasDependants = true
     )
     private val otherReligion = FormElement(
         id = 19,
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_religion_other),
-        allCaps = true,
-        required = true
+        arrayId = -1,
+        required = true,
+        allCaps = true
     )
 
     private val childRegisteredAtAwc = FormElement(
         id = 20,
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_awc),
+        arrayId = -1,
         entries = arrayOf(
             "Yes", "No"
         ),
@@ -273,11 +292,12 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         id = 21,
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_reg_school),
+        arrayId = -1,
         entries = arrayOf(
             "Yes", "No"
         ),
-        hasDependants = true,
-        required = true
+        required = true,
+        hasDependants = true
     )
 
 
@@ -285,6 +305,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         id = 22,
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_type_school),
+        arrayId = -1,
         entries = arrayOf(
             "Anganwadi", "Primary", "Secondary", "Private"
         ),
@@ -296,12 +317,13 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         id = 23,
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_rch_id),
+        arrayId = -1,
         required = false,
-        etMaxLength = 12,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         isMobileNumber = true,
-        min = 100000000000,
+        etMaxLength = 12,
         max = 999999999999,
-        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
+        min = 100000000000
 
     )
     val firstPage by lazy {
@@ -338,7 +360,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
             ageUnit.value = ageUnit.getStringFromPosition(saved.ageUnitId)
             gender.value = gender.getStringFromPosition(saved.genderId)
             fatherName.value = saved.fatherName
-            motherName.value  =saved.motherName
+            motherName.value =saved.motherName
             mobileNoOfRelation.value =
                 mobileNoOfRelation.getStringFromPosition(saved.mobileNoOfRelationId)
             otherMobileNoOfRelation.value = saved.mobileOthers
@@ -490,16 +512,18 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         id = 24,
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_pob),
+        arrayId = -1,
         entries = arrayOf(
             "Home", "Health Facility", "Any other Place"
         ),
-        hasDependants = true,
-        required = true
+        required = true,
+        hasDependants = true
     )
     private val facility = FormElement(
         id = 25,
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_facility),
+        arrayId = -1,
         entries = arrayOf(
             "Sub Centre",
             "PHC",
@@ -512,25 +536,28 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
             "Accredited Private Hospital",
             "Other",
         ),
-        hasDependants = true,
-        required = true
+        required = true,
+        hasDependants = true
     )
     private val otherFacility = FormElement(
         id = 26,
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_child_pob_other_facility),
+        arrayId = -1,
         required = true
     )
     private val otherPlaceOfBirth = FormElement(
         id = 27,
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_child_pob_other),
+        arrayId = -1,
         required = true
     )
     private val whoConductedDelivery = FormElement(
         id = 28,
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_who_cond_del),
+        arrayId = -1,
         entries = arrayOf(
             "ANM",
             "LHV",
@@ -540,19 +567,21 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
             "TBA(Non-Skilled Birth Attendant)",
             "Other",
         ),
-        hasDependants = true,
-        required = true
+        required = true,
+        hasDependants = true
     )
     private val otherWhoConductedDelivery = FormElement(
         id = 29,
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_child_who_cond_del_other),
+        arrayId = -1,
         required = true
     )
     private val typeOfDelivery = FormElement(
         id = 30,
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_type_del),
+        arrayId = -1,
         entries = arrayOf(
             "Normal Delivery", "C - Section", "Assisted"
         ),
@@ -562,6 +591,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         id = 31,
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_comp_del),
+        arrayId = -1,
         entries = arrayOf(
             "PPH",
             "Retained Placenta",
@@ -570,13 +600,14 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
             "Death",
             "None",
         ),
-        hasDependants = true,
-        required = true
+        required = true,
+        hasDependants = true
     )
     private val breastFeedWithin1Hr = FormElement(
         id = 32,
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_feed_1_hr),
+        arrayId = -1,
         entries = arrayOf(
             "Yes", "No", "Don't Know"
         ),
@@ -586,16 +617,18 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         id = 33,
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_birth_dose),
+        arrayId = -1,
         entries = arrayOf(
             "Given", "Not Given", "Don't Know"
         ),
-        hasDependants = true,
-        required = true
+        required = true,
+        hasDependants = true
     )
     private val birthDoseGiven = FormElement(
         id = 34,
         inputType = CHECKBOXES,
         title = context.getString(R.string.nbr_child_birth_dose_details),
+        arrayId = -1,
         entries = arrayOf(
             "BCG", "Hepatitis", "OPV"
         ),
@@ -606,29 +639,32 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         id = 35,
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_term),
+        arrayId = -1,
         entries = arrayOf(
             "Full-Term", "Pre-Term", "Don't Know"
         ),
-        hasDependants = true,
-        required = true
+        required = true,
+        hasDependants = true
     )
 
     private val termGestationalAge = FormElement(
         id = 36,
         inputType = RADIO,
         title = context.getString(R.string.nbr_child_gest_age),
+        arrayId = -1,
         entries = arrayOf(
             "24-34 Weeks",
             "34-36 Weeks",
             "36-38 Weeks",
         ),
-        hasDependants = true,
-        required = true
+        required = true,
+        hasDependants = true
     )
     private val corticosteroidGivenAtLabor = FormElement(
         id = 37,
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_corticosteroid),
+        arrayId = -1,
         entries = arrayOf(
             "Yes",
             "No",
@@ -640,6 +676,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         id = 38,
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_cry_imm_birth),
+        arrayId = -1,
         entries = arrayOf(
             "Yes", "No", "Don't Know"
         ),
@@ -649,6 +686,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         id = 39,
         inputType = DROPDOWN,
         title = context.getString(R.string.nbr_child_defect_at_birth),
+        arrayId = -1,
         entries = arrayOf(
             "Cleft Lip / Cleft Palate",
             "Neural Tube defect(Spinal Bifida)",
@@ -664,14 +702,16 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         id = 40,
         inputType = CHECKBOXES,
         title = "Mother Unselected",
+        arrayId = -1,
         entries = arrayOf("Yes"),
-        orientation = LinearLayout.HORIZONTAL,
+        required = false,
         hasDependants = true,
-        required = false
+        orientation = LinearLayout.HORIZONTAL
     )
     private val motherOfChild = FormElement(
         id = 41, inputType = DROPDOWN, title = "Mother of the child",
 //        entries = pncMotherList?.toTypedArray(),
+        arrayId = -1,
         required = true
     )
 
@@ -679,18 +719,20 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
     private val babyHeight = FormElement(
         id = 42,
         inputType = EDIT_TEXT,
-        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
-        etMaxLength = 3,
         title = "Height at birth ( cm )",
-        required = false
+        arrayId = -1,
+        required = false,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 3
     )
     private val babyWeight = FormElement(
         id = 43,
         inputType = EDIT_TEXT,
-        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
-        etMaxLength = 4,
         title = "Weight at birth ( gram )",
-        required = false
+        arrayId = -1,
+        required = false,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 4
     )
 
     private val deathRemoveList by lazy {
@@ -769,7 +811,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         if (facility.value == facility.entries!!.last()) list.add(
             list.indexOf(facility) + 1, otherFacility
         )
-        if(birthDose.value==birthDose.entries!!.first())
+        if(birthDose.value ==birthDose.entries!!.first())
             list.add(list.indexOf(birthDose)+1,birthDoseGiven)
         if(term.value == term.entries!!.first())
             list.add(list.indexOf(term)+1, termGestationalAge)
@@ -963,9 +1005,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                 )
             }
             otherReligion.id -> validateEmptyOnEditText(otherReligion)
-            rchId.id -> {
-                validateRchIdOnEditText(rchId)
-            }
+            rchId.id -> validateRchIdOnEditText(rchId)
             ///Page 2///
             placeOfBirth.id -> {
                 when (index) {

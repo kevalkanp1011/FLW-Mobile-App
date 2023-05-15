@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.model
 
+import androidx.annotation.ArrayRes
 import java.io.File
 
 data class FormElement(
@@ -7,6 +8,7 @@ data class FormElement(
     val inputType: InputType,
     var title: String,
     val subtitle: String? = null,
+    @ArrayRes var arrayId : Int,
     var entries: Array<String>? = null,
     var required: Boolean,
     val hasDependants: Boolean = false,

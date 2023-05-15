@@ -14,144 +14,8 @@
     <string name="PREF_current_saved_language" translatable="false">Locale.Helper.Selected.Language</string>
     <string name="PREF_current_dp_uri" translatable="false">DP_URI_cat</string>
 
-    <!--    Login-->
-    <string name="tv_text_welcome">Welcome, please login</string>
-    <string name="tv_text_welcome_user">Welcome, %s</string>
-    <string name="tv_text_sign_in">Log in to continue</string>
-    <string name="tv_text_select_language">Please Select Your language</string>
-    <string name="text_english" translatable="false">English</string>
-    <string name="text_hindi" translatable="false">हिंदी</string>
-    <string name="text_assamese" translatable="false">অসমীয়া</string>
-    <string name="cd_assam_nhm_logo" translatable="false">ASSAM NHM_LOGO</string>
-    <string name="til_username_hint_text">Username</string>
-    <string name="til_password_hint_text">Password</string>
-    <string name="cb_login_remember_me_text">Remember me</string>
-    <string name="btn_login_forgot_password_text">Forgot Password?</string>
-    <string name="btn_login_text">Login</string>
-
 
     <!-- HOME -->
-    <string name="menu_home">Home</string>
-
-    <!-- HOUSEHOLD -->
-    <string name="nhhr_first_name_hof">First Name of Head of the family</string>
-    <string name="nhhr_last_name_hof">Last Name / Surname of head of the family</string>
-    <string name="nhhr_mob_no_hof">Mobile No of Head of Family</string>
-    <string name="nhhr_house_no">House No.</string>
-    <string name="nhhr_ward_no">Ward No.</string>
-    <string name="nhhr_ward_name">Ward Name</string>
-    <string name="nhhr_mohalla_name">Mohalla Name</string>
-    <string name="nhhr_poverty_line">Poverty Line</string>
-    <string-array name="nhhr_poverty_line_array">
-        <item>APL</item>
-        <item>BPL</item>
-        <item>Don\'t Know</item>
-    </string-array>
-    <string name="btn_frag_nhhr_prev">previous</string>
-    <string name="btn_frag_nhhr_next">next</string>
-    <string name="nhhr_type_residential_area">Type of residential area</string>
-    <string name="nhhr_type_residential_area_1">Rural</string>
-    <string name="nhhr_type_residential_area_2">Urban</string>
-    <string name="nhhr_type_residential_area_3">Tribal</string>
-    <string name="nhhr_type_residential_area_4">Other</string>
-    <string-array name="nhhr_type_residential_area_array">
-        <item>@string/nhhr_type_residential_area_1</item>
-        <item>@string/nhhr_type_residential_area_2</item>
-        <item>@string/nhhr_type_residential_area_3</item>
-        <item>@string/nhhr_type_residential_area_4</item>
-    </string-array>
-    <string name="nhhr_type_of_house">Type of house</string>
-    <string name="nhhr_type_of_house_1">None</string>
-    <string name="nhhr_type_of_house_2">Kuchha</string>
-    <string name="nhhr_type_of_house_3">Pucca</string>
-    <string name="nhhr_type_of_house_4">Other</string>
-    <string-array name="nhhr_type_of_house_array">
-        <item>@string/nhhr_type_of_house_1</item>
-        <item>@string/nhhr_type_of_house_2</item>
-        <item>@string/nhhr_type_of_house_3</item>
-        <item>@string/nhhr_type_of_house_4</item>
-    </string-array>
-    <string name="nhhr_house_own">House ownership</string>
-    <string-array name="nhhr_house_own_array">
-        <item>Yes</item>
-        <item>No</item>
-    </string-array>
-    <string name="nhhr_separate_kitchen">Separate Kitchen</string>
-    <string-array name="nhhr_separate_kitchen_array">
-        <item>Yes</item>
-        <item>No</item>
-    </string-array>
-    <string name="nhhr_fuel_cooking">Type of fuel used for Cooking</string>
-    <string name="nhhr_fuel_cooking_1">Firewood</string>
-    <string name="nhhr_fuel_cooking_2">Crop Residue</string>
-    <string name="nhhr_fuel_cooking_3">Cow dung cake</string>
-    <string name="nhhr_fuel_cooking_4">Coal</string>
-    <string name="nhhr_fuel_cooking_5">Kerosene</string>
-    <string name="nhhr_fuel_cooking_6">LPG</string>
-    <string name="nhhr_fuel_cooking_7">Other</string>
-    <string-array name="nhhr_fuel_cooking_array">
-        <item>@string/nhhr_fuel_cooking_1</item>
-        <item>@string/nhhr_fuel_cooking_2</item>
-        <item>@string/nhhr_fuel_cooking_3</item>
-        <item>@string/nhhr_fuel_cooking_4</item>
-        <item>@string/nhhr_fuel_cooking_5</item>
-        <item>@string/nhhr_fuel_cooking_6</item>
-        <item>@string/nhhr_fuel_cooking_7</item>
-    </string-array>
-    <string name="nhhr_primary_water">Primary Source of Water</string>
-    <string name="nhhr_primary_water_1">Tap Water</string>
-    <string name="nhhr_primary_water_2">Hand pump inside house</string>
-    <string name="nhhr_primary_water_3">Hand pump outside of house</string>
-    <string name="nhhr_primary_water_4">Well</string>
-    <string name="nhhr_primary_water_5">Tank</string>
-    <string name="nhhr_primary_water_6">River</string>
-    <string name="nhhr_primary_water_7">Pond</string>
-    <string name="nhhr_primary_water_8">Other</string>
-    <string-array name="nhhr_primary_water_array">
-        <item>@string/nhhr_primary_water_1</item>
-        <item>@string/nhhr_primary_water_2</item>
-        <item>@string/nhhr_primary_water_3</item>
-        <item>@string/nhhr_primary_water_4</item>
-        <item>@string/nhhr_primary_water_5</item>
-        <item>@string/nhhr_primary_water_6</item>
-        <item>@string/nhhr_primary_water_7</item>
-        <item>@string/nhhr_primary_water_8</item>
-    </string-array>
-
-    <string name="nhhr_avail_electricity">Availability of Electricity</string>
-    <string name="nhhr_avail_electricity_1">Electricity Supply</string>
-    <string name="nhhr_avail_electricity_2">Generator</string>
-    <string name="nhhr_avail_electricity_3">Solar Power</string>
-    <string name="nhhr_avail_electricity_4">Kerosene Lamp</string>
-    <string name="nhhr_avail_electricity_5">Other</string>
-    <string-array name="nhhr_avail_electricity_array">
-        <item>@string/nhhr_avail_electricity_1</item>
-        <item>@string/nhhr_avail_electricity_2</item>
-        <item>@string/nhhr_avail_electricity_3</item>
-        <item>@string/nhhr_avail_electricity_4</item>
-        <item>@string/nhhr_avail_electricity_5</item>
-    </string-array>
-    <string name="nhhr_avail_toilet">Availability of Toilet</string>
-    <string name="nhhr_avail_toilet_1">Flush toilet with running water</string>
-    <string name="nhhr_avail_toilet_2">Flush toilet without water</string>
-    <string name="nhhr_avail_toilet_3">Pit toilet with running water supply</string>
-    <string name="nhhr_avail_toilet_4">Pit toilet without water supply</string>
-    <string name="nhhr_avail_toilet_5">Other</string>
-    <string name="nhhr_avail_toilet_6">None</string>
-    <string-array name="nhhr_avail_toilet_array">
-        <item>@string/nhhr_avail_toilet_1</item>
-        <item>@string/nhhr_avail_toilet_2</item>
-        <item>@string/nhhr_avail_toilet_3</item>
-        <item>@string/nhhr_avail_toilet_4</item>
-        <item>@string/nhhr_avail_toilet_5</item>
-        <item>@string/nhhr_avail_toilet_6</item>
-    </string-array>
-    <string name="nhhr_type_residential_area_other">Other type of residential area</string>
-    <string name="nhhr_fuel_cooking_other">Other Type of fuel used for Cooking</string>
-    <string name="nhhr_primary_water_other">Other Primary Source of Water</string>
-    <string name="nhhr_avail_electricity_other">Other availability of Electricity</string>
-    <string name="nhhr_avail_toilet_other">Other Availability of Toilet</string>
-    <string name="btn_frag_nhhr_to_ben">Continue to Beneficiary</string>
 
 
     <!-- BEN KID -->
@@ -453,36 +317,24 @@
 
 
     <string name="title_activity_home" translatable="false">HomeActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_desc" translatable="false">Navigation header</string>
 
 
-    <string name="btn_continue_text">Continue</string>
-
-    <string name="service_type_dd_state_text">State</string>
-    <string name="service_type_dd_district_text">District</string>
-    <string name="service_type_dd_block_text">Block</string>
-    <string name="service_type_dd_village_text">Village</string>
-    <string name="til_hint_selected_village">Selected Village</string>
-    <string name="home_icon_title_all_ben">All Beneficiaries</string>
-    <string name="home_icon_title_elig_coup">Eligible Couples</string>
-    <string name="home_icon_title_child_care">Child Care</string>
+    <!--    <string name="home_icon_title_all_ben">All Beneficiaries</string>-->
+    <!--    <string name="home_icon_title_elig_coup">Eligible Couples</string>-->
+    <!--    <string name="home_icon_title_child_care">Child Care</string>-->
     <string name="child_care_icon_title_child_list">Child List</string>
     <string name="child_care_icon_title_infant_list">Infant List</string>
     <string name="child_care_icon_title_adolescent_list">Adolescent List</string>
-    <string name="home_icon_title_mother_care">Mother Care</string>
-    <string name="home_icon_title_death_rep">Death Reports</string>
-    <string name="home_icon_title_gen_op">General OP Care</string>
-    <string name="home_icon_title_hrp_cases">HRP Cases</string>
-    <string name="home_icon_title_imm_due">Immunization Due</string>
-    <string name="home_icon_title_menopause_stage_list">Menopause Stage List</string>
-    <string name="home_icon_title_ncd">NCD</string>
-    <string name="home_icon_title_village_lvl_forms">Village Level Forms</string>
-    <string name="frag_service_type_title">Select Village</string>
-    <string name="frag_nhhr_title">New Household Registration</string>
-    <string name="home_icon_all_household">All Household List</string>
-    <string name="btn_text_frag_home_nhhr">New Household Registration</string>
+    <!--    <string name="home_icon_title_mother_care">Mother Care</string>-->
+    <!--    <string name="home_icon_title_death_rep">Death Reports</string>-->
+    <!--    <string name="home_icon_title_gen_op">General OP Care</string>-->
+    <!--    <string name="home_icon_title_hrp_cases">HRP Cases</string>-->
+    <!--    <string name="home_icon_title_imm_due">Immunization Due</string>-->
+    <!--    <string name="home_icon_title_menopause_stage_list">Menopause Stage List</string>-->
+    <!--    <string name="home_icon_title_ncd">NCD</string>-->
+    <!--    <string name="home_icon_title_village_lvl_forms">Village Level Forms</string>-->
+
     <string name="cd_icon_grid_icon">icon</string>
 
 
@@ -495,9 +347,6 @@
     <string name="tv_required_text_asterisk">*</string>
 
 
-    <string name="rv_item_hh_ph_1">HHID : </string>
-    <string name="rv_item_hh_ph_2">Family Head Name :</string>
-    <string name="rv_item_hh_ph_3">Surname : </string>
     <string name="rv_item_hh_entry_1">%1$d</string>
 
 
@@ -506,7 +355,7 @@
     <string name="notification_sync_channel_id">sakhi-sync0</string>
     <string name="consent_text">Consent:\nI have been explained by the ASHA, the purpose for which the information and measurement findings is being collected from me, in a language I understand and I give my consent to collect the information and measurement findings on my personal health profile.</string>
     <string name="aadhar_consent_text">I hereby confirm that I have explained the below mentioned consent process to the individual for the creation of the ABHA Number using he individual\'s aadhar number</string>
-    <string name="consent_alert_title">Consent Form</string>
+
     <string name="btn_submit">Submit</string>
 
     <string name="long_to_string">%d</string>
@@ -528,13 +377,12 @@
     <string name="tv_ncd_status_ph">NCD Status</string>
     <string name="tv_tb_status_ph">TB Status</string>
     <string name="iv_sync_state_tv">SYNC STATE</string>
-    <string name="btn_rv_item_hh_add_ben">Add Beneficiary</string>
+
     <string name="frag_new_ben_type_kid_text">New Born / Infant / Child / Adolescent\n( 0 - less than 15 years of age )</string>
     <string name="frag_new_ben_type_adult_text">General Registration \n( 15 years and above )</string>
     <string name="frag_new_ben_type_select_text">Select Beneficiary Type</string>
     <string name="frag_new_ben_reg_type_title">Beneficiary Type for Registration</string>
     <string name="version">2.0.0</string>
-    <string name="tv_text_select_village">Please select the village below.</string>
     <string name="cbac_Question">Question</string>
     <string name="cbac_score">Score</string>
     <string name="cbac_type_of_fuel">Type of fuel used for cooking</string>
@@ -626,6 +474,14 @@
     <string name="hbnc_baby_temp_97_alert">advice the mother to keep the baby warm by increasing the room temperature, providing skin to skin contact, putting the baby in a warm bag and frequently feeding the baby.</string>
     <string name="hbnc_baby_temp_96_alert">advice the mother to keep the baby warm by increasing the room temperature, providing skin to skin contact, putting the baby in a warm bag and frequently feeding the baby. once the baby is warmer then clothe the baby and place in a pre warmed bed close to the mother.</string>
     <string name="hbnc_baby_temp_99_alert">then look for signs of sepsis. In case signs of sepsis are not present manage only with 1/4th of a spoon of paracetamol and immediately refer to the SNCU at the nearest health facility.</string>
+    <string name="form_input_empty_error">Required field cannot be empty !</string>
+    <string name="form_input_upper_case_error">Only Alphabets in upper case allowed!</string>
+    <string name="form_input_alphabet_space_only_error">Only Alphabets and whitespace allowed!</string>
+    <string name="form_input_min_limit_error">%1s should be greater than or equal to %2d</string>
+    <string name="form_input_max_limit_error">%1s should be lesser than or equal to %2d</string>
+    <string name="form_input_error_invalid_mobile">Invalid Mobile Number !</string>
+    <string name="form_input_error_invalid_rch">Invalid RCH ID !</string>
+    <string name="form_input_error_invalid_aadhar">Invalid Aadhar Number</string>
 
 
 </resources>
