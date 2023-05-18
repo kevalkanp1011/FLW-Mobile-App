@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
@@ -84,8 +85,6 @@ class CreateAbhaFragment : Fragment() {
 
         navController = findNavController()
 
-        viewModel.generateAbhaCard()
-
         binding.btnDownloadAbhaYes.setOnClickListener {
             val abhaVal = viewModel.abha.value
             val fileName =
@@ -96,6 +95,14 @@ class CreateAbhaFragment : Fragment() {
                 val channel = NotificationChannel(channelId,channelId,
                     NotificationManager.IMPORTANCE_HIGH)
                 notificationManager.createNotificationChannel(channel)
+
+                val notification = NotificationCompat.Builder(requireContext(),channelId)
+                    .setContentTitle("Downloading abha card")
+                    .setContentText("Downloading")
+                    .setSmallIcon(R.drawable.ic_download)
+                    .setProgress(100, 0, true)
+                    .build()
+                notificationManager.notify(0, notification)
             }
 
             val state: LiveData<Operation.State> = WorkerUtils
@@ -107,7 +114,7 @@ class CreateAbhaFragment : Fragment() {
                         binding.txtDownloadAbha.visibility = View.INVISIBLE
                         binding.downloadAbha.visibility = View.INVISIBLE
                         Snackbar.make(binding.root,
-                            "Downloaded $fileName successfully", Snackbar.LENGTH_SHORT).show()
+                            "Downloading $fileName ", Snackbar.LENGTH_SHORT).show()
                     }
                     is Operation.State.FAILURE -> {
                         Toast.makeText(context, "Failed to download , Please retry", Toast.LENGTH_SHORT).show()

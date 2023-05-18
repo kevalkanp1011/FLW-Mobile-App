@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.network.*
+import org.piramalswasthya.sakhi.network.interceptors.TokenInsertAbhaInterceptor
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
 import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdViewModel
 import timber.log.Timber
@@ -42,6 +43,8 @@ class AadhaarNumberGovViewModel @Inject constructor(
     val errorMessage: LiveData<String?>
         get() = _errorMessage
 
+    var abha = MutableLiveData<CreateAbhaIdResponse?>(null)
+
     init {
         getStates()
     }
@@ -50,12 +53,13 @@ class AadhaarNumberGovViewModel @Inject constructor(
      * getting state and district codes from api's
      */
     private fun getStates() {
+        _state.value = AadhaarIdViewModel.State.LOADING
         viewModelScope.launch {
             when (val result =
                 abhaIdRepo.getStateAndDistricts()) {
                 is NetworkResult.Success -> {
                     _stateCodes.value = result.data
-                    _state.value = AadhaarIdViewModel.State.SUCCESS
+                    _state.value = AadhaarIdViewModel.State.STATE_DETAILS_SUCCESS
                 }
                 is NetworkResult.Error -> {
                     _errorMessage.value = result.message
@@ -70,20 +74,41 @@ class AadhaarNumberGovViewModel @Inject constructor(
 
     }
 
-    /**
-     * generating abha number with gov api
-     */
-    fun createAbhaGovRequest(aadhaar: String, fullName: String, dateOfBirth: String, gender: String): String {
-        val createAbhaIdRequest = CreateAbhaIdGovRequest(
-            aadhaar.toLong(),
-            "healthid api",
-            true,
-            dateOfBirth,
-            gender,
-            fullName,
-            activeState?.code?.toInt()?: 0,
-            activeDistrict?.code?.toInt()?: 0
-        )
-        return Gson().toJson(createAbhaIdRequest)
+    fun generateAbhaCard(aadhaarNumber: String, fullName: String, dateOfBirth: String, gender: String): String {
+        _state.value = AadhaarIdViewModel.State.LOADING
+        viewModelScope.launch {
+
+            val result: NetworkResult<CreateAbhaIdResponse>?
+
+            val createRequest = CreateAbhaIdGovRequest(
+                aadhaarNumber.toLong(),
+                "healthid api",
+                true,
+                dateOfBirth,
+                gender,
+                fullName,
+                activeState?.code?.toInt()?: 0,
+                activeDistrict?.code?.toInt()?: 0
+            )
+            result = abhaIdRepo.generateAbhaIdGov(createRequest)
+
+
+            when (result) {
+                is NetworkResult.Success -> {
+                    TokenInsertAbhaInterceptor.setXToken(result.data.token)
+                    abha.value = result.data
+                    _state.value = AadhaarIdViewModel.State.ABHA_GENERATED_SUCCESS
+                }
+                is NetworkResult.Error -> {
+                    _errorMessage.value = result.message
+                    _state.value = AadhaarIdViewModel.State.ERROR_SERVER
+                }
+                is NetworkResult.NetworkError -> {
+                    _state.value = AadhaarIdViewModel.State.ERROR_NETWORK
+                }
+            }
+
+        }
+        return Gson().toJson(abha.value)
     }
 }

@@ -26,11 +26,8 @@ class CreateAbhaViewModel @Inject constructor(
 
     var abha = MutableLiveData<CreateAbhaIdResponse?>(null)
 
-    private val createAbhaRequest =
-        CreateAbhaFragmentArgs.fromSavedStateHandle(savedStateHandle).createAbhaRequest
-
-    private val userType =
-        CreateAbhaFragmentArgs.fromSavedStateHandle(savedStateHandle).creationType
+    private val abhaResponse =
+        CreateAbhaFragmentArgs.fromSavedStateHandle(savedStateHandle).abhaResponse
 
     private val _errorMessage = MutableLiveData<String?>(null)
     val errorMessage: LiveData<String?>
@@ -38,43 +35,10 @@ class CreateAbhaViewModel @Inject constructor(
 
     init {
         _state.value = State.LOADING
-    }
-
-    fun generateAbhaCard() {
-        viewModelScope.launch {
-
-            var result: NetworkResult<CreateAbhaIdResponse>? = null
-
-            when(userType) {
-                "ASHA" -> {
-                    result = abhaIdRepo.generateAbhaId(Gson()
-                        .fromJson(createAbhaRequest, CreateAbhaIdRequest::class.java) )
-                }
-
-                "GOV" -> {
-                result = abhaIdRepo.generateAbhaIdGov(Gson()
-                    .fromJson(createAbhaRequest, CreateAbhaIdGovRequest::class.java) )
-                }
-            }
-
-            when (result) {
-                is NetworkResult.Success -> {
-                    TokenInsertAbhaInterceptor.setXToken(result.data.token)
-                    abha.value = result.data
-                    _state.value = State.GENERATE_SUCCESS
-                }
-                is NetworkResult.Error -> {
-                    _errorMessage.value = result.message
-                    _state.value = State.ERROR_SERVER
-                }
-                is NetworkResult.NetworkError -> {
-                    _state.value = State.ERROR_NETWORK
-                }
-                else -> {
-                    _state.value = State.ERROR_INTERNAL
-                }
-            }
-        }
+        val abhaVal = Gson().fromJson(abhaResponse, CreateAbhaIdResponse::class.java)
+        TokenInsertAbhaInterceptor.setXToken(abhaVal.token)
+        abha.value = abhaVal
+        _state.value = State.GENERATE_SUCCESS
     }
 
     fun resetState() {

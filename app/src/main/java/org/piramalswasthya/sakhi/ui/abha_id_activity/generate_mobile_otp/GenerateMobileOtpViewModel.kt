@@ -4,11 +4,10 @@ import androidx.lifecycle.*
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.network.AbhaCheckAndGenerateMobileOtpResponse
-import org.piramalswasthya.sakhi.network.AbhaGenerateMobileOtpRequest
-import org.piramalswasthya.sakhi.network.CreateAbhaIdRequest
-import org.piramalswasthya.sakhi.network.NetworkResult
+import org.piramalswasthya.sakhi.network.*
+import org.piramalswasthya.sakhi.network.interceptors.TokenInsertAbhaInterceptor
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
+import org.piramalswasthya.sakhi.ui.abha_id_activity.verify_mobile_otp.VerifyMobileOtpViewModel
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,7 +20,8 @@ class GenerateMobileOtpViewModel @Inject constructor(
         LOADING,
         ERROR_SERVER,
         ERROR_NETWORK,
-        SUCCESS
+        SUCCESS,
+        ABHA_GENERATED_SUCCESS
     }
 
     private val _state = MutableLiveData<State>()
@@ -38,6 +38,8 @@ class GenerateMobileOtpViewModel @Inject constructor(
     private var _apiResponse: AbhaCheckAndGenerateMobileOtpResponse? = null
     val apiResponse: AbhaCheckAndGenerateMobileOtpResponse
         get() = _apiResponse!!
+
+    var abha = MutableLiveData<CreateAbhaIdResponse?>(null)
 
     fun generateOtpClicked(phoneNumber: String) {
         _state.value = State.LOADING
@@ -76,10 +78,33 @@ class GenerateMobileOtpViewModel @Inject constructor(
         }
     }
 
-    fun getCreateRequest(): String {
-        val createRequest = CreateAbhaIdRequest(
-            null, null, null, null, null, null, null, txnIdFromArgs
-        )
-        return Gson().toJson(createRequest)
+    fun generateAbhaCard() {
+        viewModelScope.launch {
+
+            val result: NetworkResult<CreateAbhaIdResponse>?
+
+            val createRequest = CreateAbhaIdRequest(
+                null, null, null, null, null, null,
+                null, txnIdFromArgs
+            )
+            result = abhaIdRepo.generateAbhaId(createRequest)
+
+
+            when (result) {
+                is NetworkResult.Success -> {
+                    TokenInsertAbhaInterceptor.setXToken(result.data.token)
+                    abha.value = result.data
+                    _state.value = State.ABHA_GENERATED_SUCCESS
+                }
+                is NetworkResult.Error -> {
+                    _errorMessage.value = result.message
+                    _state.value = State.ERROR_SERVER
+                }
+                is NetworkResult.NetworkError -> {
+                    _state.value = State.ERROR_NETWORK
+                }
+            }
+
+        }
     }
 }

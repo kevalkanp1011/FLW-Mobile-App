@@ -18,7 +18,9 @@ AadhaarIdViewModel @Inject constructor(
         LOADING,
         ERROR_SERVER,
         ERROR_NETWORK,
-        SUCCESS
+        SUCCESS,
+        STATE_DETAILS_SUCCESS,
+        ABHA_GENERATED_SUCCESS
     }
 
     init {
@@ -32,9 +34,9 @@ AadhaarIdViewModel @Inject constructor(
     val state: LiveData<State>
         get() = _state
 
-    private var _createRequest: String? = null
-    val createRequest: String
-        get() = _createRequest!!
+    private var _abhaResponse: String? = null
+    val abhaResponse: String
+        get() = _abhaResponse!!
 
     private var _txnId: String? = null
     val txnId: String
@@ -56,8 +58,8 @@ AadhaarIdViewModel @Inject constructor(
         _errorMessage.value = null
     }
 
-    fun setRequest(request: String) {
-        _createRequest = request
+    fun setAbha(abha: String) {
+        _abhaResponse = abha
     }
 
     fun setState(state: State) {

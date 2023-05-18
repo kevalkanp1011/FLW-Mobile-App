@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.databinding.FragmentVerifyMobileOtpBinding
 import org.piramalswasthya.sakhi.ui.abha_id_activity.verify_mobile_otp.VerifyMobileOtpViewModel.State
@@ -83,12 +84,7 @@ class VerifyMobileOtpFragment : Fragment() {
                     binding.clError.visibility = View.INVISIBLE
                 }
                 State.OTP_VERIFY_SUCCESS -> {
-                    findNavController().navigate(
-                        VerifyMobileOtpFragmentDirections.actionVerifyMobileOtpFragmentToCreateAbhaFragment(
-                            viewModel.getCreateRequest(), "ASHA"
-                        )
-                    )
-                    viewModel.resetState()
+                    viewModel.generateAbhaCard()
                 }
                 State.ERROR_NETWORK -> {
                     binding.clVerifyMobileOtp.visibility = View.INVISIBLE
@@ -107,6 +103,14 @@ class VerifyMobileOtpFragment : Fragment() {
                     binding.clError.visibility = View.INVISIBLE
                     Toast.makeText(activity, "OTP was resent.", Toast.LENGTH_LONG)
                         .show()
+                }
+                State.ABHA_GENERATED_SUCCESS -> {
+                    findNavController().navigate(
+                        VerifyMobileOtpFragmentDirections.actionVerifyMobileOtpFragmentToCreateAbhaFragment(
+                            Gson().toJson(viewModel.abha.value)
+                        )
+                    )
+                    viewModel.resetState()
                 }
             }
         }

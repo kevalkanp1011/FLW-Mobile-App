@@ -1,6 +1,5 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,8 +13,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentAadhaarIdBinding
 import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdViewModel.State
-import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.aadhaar_num_asha.AadhaarNumberAshaFragment
-import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.aadhaar_num_gov.AadhaarNumberGovFragment
 
 
 @AndroidEntryPoint
@@ -69,24 +66,14 @@ class AadhaarIdFragment : Fragment() {
                     binding.clError.visibility = View.INVISIBLE
                 }
                 State.SUCCESS -> {
-                    viewModel.resetState()
-                    when(userType) {
-                        "ASHA" -> {
-                            findNavController().navigate(
-                                AadhaarIdFragmentDirections.actionAadhaarIdFragmentToAadhaarOtpFragment(
-                                    viewModel.txnId, viewModel.mobileNumber
-                                )
+                    if (userType == "ASHA") {
+                        viewModel.resetState()
+                        findNavController().navigate(
+                            AadhaarIdFragmentDirections.actionAadhaarIdFragmentToAadhaarOtpFragment(
+                                viewModel.txnId, viewModel.mobileNumber
                             )
-                        }
-                        "GOV" -> {
-                            findNavController().navigate(
-                                AadhaarIdFragmentDirections.actionAadhaarIdFragmentToCreateAbhaFragment(
-                                    viewModel.createRequest, userType
-                                )
-                            )
-                        }
+                        )
                     }
-
                 }
                 State.ERROR_SERVER -> {
                     binding.pbLoadingAadharId.visibility = View.INVISIBLE
@@ -97,6 +84,17 @@ class AadhaarIdFragment : Fragment() {
                     binding.clContentAadharId.visibility = View.INVISIBLE
                     binding.pbLoadingAadharId.visibility = View.INVISIBLE
                     binding.clError.visibility = View.VISIBLE
+                }
+                State.STATE_DETAILS_SUCCESS -> {
+                    binding.clContentAadharId.visibility = View.VISIBLE
+                    binding.pbLoadingAadharId.visibility = View.INVISIBLE
+                }
+                State.ABHA_GENERATED_SUCCESS -> {
+                    findNavController().navigate(
+                        AadhaarIdFragmentDirections.actionAadhaarIdFragmentToCreateAbhaFragment(
+                            viewModel.abhaResponse
+                        )
+                    )
                 }
             }
         }

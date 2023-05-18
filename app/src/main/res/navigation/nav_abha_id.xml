@@ -71,10 +71,7 @@
         android:label="@string/generate_abha_id"
         tools:layout="@layout/fragment_create_abha">
         <argument
-            android:name="createAbhaRequest"
-            app:argType="string" />
-        <argument
-            android:name="creationType"
+            android:name="abhaResponse"
             app:argType="string" />
     </fragment>
 </navigation>
