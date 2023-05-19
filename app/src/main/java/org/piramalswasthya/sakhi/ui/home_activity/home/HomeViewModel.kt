@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.model.UserDomain
@@ -38,33 +37,9 @@ class HomeViewModel @Inject constructor(
 
 
 
-    private var locationRecord: LocationRecord? = null
+    val locationRecord: LocationRecord? = pref.getLocationRecord()
+    val currentLanguage = pref.getCurrentLanguage()
 
-    fun setLocationDetails(
-        state: String,
-        district: String,
-        block: String,
-        village: String
-    ) {
-        val stateId = user.stateIds[user.stateEnglish.indexOf(state)]
-        val districtId = user.districtIds[user.districtEnglish.indexOf(district)]
-        val blockId = user.blockIds[user.blockEnglish.indexOf(block)]
-        val villageId = user.villageIds[user.villageEnglish.indexOf(village)]
-        this.locationRecord = LocationRecord(
-            stateId,
-            state,
-            districtId,
-            district,
-            blockId,
-            block,
-            villageId,
-            village,
-            user.countryId
-        )
-        pref.saveLocationRecord(locationRecord!!)
-    }
-
-    fun getLocationRecord() = locationRecord!!
 
 
     fun isLocationSet(): Boolean {

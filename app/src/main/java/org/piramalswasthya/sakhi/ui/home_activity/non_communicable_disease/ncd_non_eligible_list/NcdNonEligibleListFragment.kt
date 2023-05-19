@@ -82,7 +82,7 @@ class NcdNonEligibleListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let{
-            (it as HomeActivity).setLogo(R.drawable.ic_ncd_noneligible)
+            (it as HomeActivity).updateActionBar(R.drawable.ic_ncd_noneligible)
         }
     }
 }

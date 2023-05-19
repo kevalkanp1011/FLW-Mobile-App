@@ -1076,15 +1076,23 @@ class BenRepo @Inject constructor(
                                 "diagnosis_status"
                             ) else null,
                             locationRecord = LocationRecord(
-                                countryId = houseDataObj.getInt("Countyid"),
-                                stateId = benDataObj.getInt("stateId"),
-                                state = benDataObj.getString("stateName"),
-                                districtId = benDataObj.getInt("districtid"),
-                                district = benDataObj.getString("districtname"),
-                                blockId = benDataObj.getInt("blockId"),
-                                block = benDataObj.getString("blockName"),
-                                villageId = benDataObj.getInt("villageId"),
-                                village = benDataObj.getString("villageName"),
+                                country = userDao.getCountry()!!,
+                                state = LocationEntity(
+                                    benDataObj.getInt("stateId"),
+                                    benDataObj.getString("stateName"),
+                                ),
+                                district = LocationEntity(
+                                    benDataObj.getInt("districtid"),
+                                    benDataObj.getString("districtname"),
+                                ),
+                                block = LocationEntity(
+                                    benDataObj.getInt("blockId"),
+                                    benDataObj.getString("blockName"),
+                                ),
+                                village = LocationEntity(
+                                    benDataObj.getInt("villageId"),
+                                    benDataObj.getString("villageName"),
+                                ),
                             ),
                             processed = "P",
                             serverUpdatedStatus = 1,
@@ -1435,15 +1443,23 @@ class BenRepo @Inject constructor(
                                     "registrationType"
                                 ) else null,
                                 locationRecord = LocationRecord(
-                                    state = houseDataObj.getString("state"),
-                                    stateId = houseDataObj.getInt("stateid"),
-                                    district = benDataObj.getString("districtname"),
-                                    districtId = houseDataObj.getInt("districtid"),
-                                    block = benDataObj.getString("blockName"),
-                                    blockId = houseDataObj.getInt("blockid"),
-                                    village = houseDataObj.getString("village"),
-                                    villageId = houseDataObj.getInt("villageid"),
-                                    countryId = houseDataObj.getInt("Countyid"),
+                                    country = userDao.getCountry()!!,
+                                    state = LocationEntity(
+                                        benDataObj.getInt("stateId"),
+                                        benDataObj.getString("stateName"),
+                                    ),
+                                    district = LocationEntity(
+                                        benDataObj.getInt("districtid"),
+                                        benDataObj.getString("districtname"),
+                                    ),
+                                    block = LocationEntity(
+                                        benDataObj.getInt("blockId"),
+                                        benDataObj.getString("blockName"),
+                                    ),
+                                    village = LocationEntity(
+                                        benDataObj.getInt("villageId"),
+                                        benDataObj.getString("villageName"),
+                                    ),
                                 ),
                                 serverUpdatedStatus = houseDataObj.getInt("serverUpdatedStatus"),
                                 createdBy = houseDataObj.getString("createdBy"),

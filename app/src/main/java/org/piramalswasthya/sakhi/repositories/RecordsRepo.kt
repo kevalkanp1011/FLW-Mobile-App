@@ -13,7 +13,7 @@ class RecordsRepo @Inject constructor(
     benDao: BenDao,
     preferenceDao: PreferenceDao
 ) {
-    private val selectedVillage = preferenceDao.getLocationRecord()!!.villageId
+    private val selectedVillage = preferenceDao.getLocationRecord()!!.village.id
 
     val hhList = householdDao.getAllHouseholds(selectedVillage)
         .map { list -> list.map { it.asBasicDomainModel() } }

@@ -7,10 +7,17 @@
         android:icon="@drawable/ic_home"
         app:showAsAction="ifRoom"/>
 
+<!--    <item android:id="@+id/change_service_location"-->
+<!--        android:title="Change Service Location"-->
+<!--        android:icon="@drawable/ic_location"-->
+<!--        app:showAsAction="ifRoom"/>-->
+
     <item android:id="@+id/toolbar_menu_language"
         android:title="Change Language"
         android:icon="@drawable/ic_language"
         app:showAsAction="ifRoom"/>
+
+
 
 
 </menu>

@@ -528,11 +528,11 @@ class CbacViewModel @Inject constructor(
 
 
         //locationReocrd:
-        cbac.Countyid = ben.locationRecord?.countryId ?: 0
-        cbac.stateid = ben.locationRecord?.stateId ?: 0
-        cbac.districtid = ben.locationRecord?.districtId ?: 0
-//        cbac.districtname = ben.locationRecord?.district
-        cbac.villageid = ben.locationRecord?.villageId ?: 0
+        cbac.Countyid = ben.locationRecord.country.id
+        cbac.stateid = ben.locationRecord.state.id
+        cbac.districtid = ben.locationRecord.district.id
+//        cbac.districtname = ben.locationRecord
+        cbac.villageid = ben.locationRecord.village.id
         cbac.cbac_reg_id = ben.benRegId
 
         viewModelScope.launch {

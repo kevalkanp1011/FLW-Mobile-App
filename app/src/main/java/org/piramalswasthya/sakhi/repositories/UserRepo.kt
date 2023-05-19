@@ -6,6 +6,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.model.LocationEntity
 import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.model.UserNetwork
 import org.piramalswasthya.sakhi.network.*
@@ -123,14 +124,27 @@ class UserRepo @Inject constructor(
                 val countryId = state.getInt("countryID")
                 this@UserRepo.user?.apply {
                     if(stateToggle!="Assam") {
-                        this.stateIds.add(stateId)
-                        this.stateEnglish.add(stateName)
-                        this.districtIds.add(districtId)
-                        this.districtEnglish.add(districtName)
-                        this.blockIds.add(blockId)
-                        this.blockEnglish.add(blockName)
+                        this.states.add(
+                            LocationEntity(
+                                stateId,
+                                stateName,
+                            )
+                        )
+                        this.districts.add(
+                            LocationEntity(
+                                districtId,
+                                districtName,
+                            )
+                        )
+                        this.blocks.add(
+                            LocationEntity(
+                                blockId,
+                                blockName,
+                            )
+                        )
                     }
-                    this.countryId = countryId
+                    this.country = LocationEntity(
+                        countryId, "India")
                 }
                 val roleJsonArray = data.getJSONArray("roleids")
                 val role =
@@ -173,9 +187,14 @@ class UserRepo @Inject constructor(
                     val stateId = state.getInt("id")
                     val stateNameEnglish = state.getString("stateNameInEnglish")
                     val stateNameHindi = state.getString("stateNameInhindi")
-                    user?.stateIds?.add(stateId)
-                    user?.stateEnglish?.add(stateNameEnglish)
-                    user?.stateHindi?.add(stateNameHindi)
+                    user?.states?.add(
+                        LocationEntity(
+                            stateId, stateNameEnglish, stateNameHindi
+                        )
+                    )
+//                    user?.stateIds?.add(stateId)
+//                    user?.stateEnglish?.add(stateNameEnglish)
+//                    user?.stateHindi?.add(stateNameHindi)
                     val districts = dataEntry.getJSONArray("district")
                     for (j in 0 until districts.length()) {
                         val district = districts.getJSONObject(j)
@@ -183,9 +202,11 @@ class UserRepo @Inject constructor(
                         val districtId = district.getInt("id")
                         val districtNameEnglish = district.getString("districtNameInEnglish")
                         val districtNameHindi = district.getString("districtNameInHindi")
-                        user?.districtIds?.add(districtId)
-                        user?.districtEnglish?.add(districtNameEnglish)
-                        user?.districtHindi?.add(districtNameHindi)
+                        user?.districts?.add(
+                            LocationEntity(
+                                districtId, districtNameEnglish, districtNameHindi
+                            )
+                        )
                         //TODO(Save Above data somewhere)
                     }
                     val blocks = dataEntry.getJSONArray("block")
@@ -194,9 +215,11 @@ class UserRepo @Inject constructor(
                         val blockId = block.getInt("blockId")
                         val blockNameEnglish = block.getString("blockNameInEnglish")
                         val blockNameHindi = block.getString("blockNameIndHindi")
-                        user?.blockIds?.add(blockId)
-                        user?.blockEnglish?.add(blockNameEnglish)
-                        user?.blockHindi?.add(blockNameHindi)
+                        user?.blocks?.add(
+                            LocationEntity(
+                                blockId, blockNameEnglish, blockNameHindi
+                            )
+                        )
                         //TODO(Save Above data somewhere)
                     }
 //                val villages = data.getJSONArray("villages")
@@ -206,9 +229,11 @@ class UserRepo @Inject constructor(
                         val villageId = village.getInt("villageid")
                         val villageNameEnglish = village.getString("villageNameEnglish")
                         val villageNameHindi = village.getString("villageNameHindi")
-                        user?.villageIds?.add(villageId)
-                        user?.villageEnglish?.add(villageNameEnglish)
-                        user?.villageHindi?.add(villageNameHindi)
+                        user?.villages?.add(
+                            LocationEntity(
+                                villageId, villageNameEnglish, villageNameHindi
+                            )
+                        )
                         //TODO(Save Above data somewhere)
                     }
                 }
@@ -234,9 +259,14 @@ class UserRepo @Inject constructor(
                     val villageId = village.getInt("villageid")
                     val villageNameEnglish = village.getString("villageNameEnglish")
                     val villageNameHindi = village.getString("villageNameHindi")
-                    user?.villageIds?.add(villageId)
-                    user?.villageEnglish?.add(villageNameEnglish)
-                    user?.villageHindi?.add(villageNameHindi)
+                    user?.villages?.add(
+                        LocationEntity(
+                            villageId, villageNameEnglish, villageNameHindi
+                        )
+                    )
+//                    user?.villageIds?.add(villageId)
+//                    user?.villageEnglish?.add(villageNameEnglish)
+//                    user?.villageHindi?.add(villageNameHindi)
                     //TODO(Save Above data somewhere)
                 }
                 getUserVanSpDetails()

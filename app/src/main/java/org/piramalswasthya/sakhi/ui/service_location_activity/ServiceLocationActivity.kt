@@ -1,30 +1,41 @@
 package org.piramalswasthya.sakhi.ui.service_location_activity
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
-import org.piramalswasthya.sakhi.databinding.FragmentServiceTypeBinding
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.databinding.ActivityServiceTypeBinding
+import org.piramalswasthya.sakhi.helpers.MyContextWrapper
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
-import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import timber.log.Timber
 
 @AndroidEntryPoint
 class ServiceLocationActivity : AppCompatActivity() {
 
-    private var _binding: FragmentServiceTypeBinding? = null
-    private val binding: FragmentServiceTypeBinding
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface WrapperEntryPoint {
+        val pref: PreferenceDao
+    }
+
+    private var _binding: ActivityServiceTypeBinding? = null
+    private val binding: ActivityServiceTypeBinding
         get() = _binding!!
 
     private val viewModel: ServiceTypeViewModel by viewModels()
-    private val homeViewModel: HomeViewModel by viewModels()
     private val onBackPressedCallback by lazy {
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (homeViewModel.isLocationSet()) {
+                if (viewModel.isLocationSet()) {
                     finish()
                     val goToHome = Intent(this@ServiceLocationActivity, HomeActivity::class.java)
                     startActivity(goToHome)
@@ -57,39 +68,29 @@ class ServiceLocationActivity : AppCompatActivity() {
             .create()
     }
 
+    override fun attachBaseContext(newBase: Context) {
+        val pref = EntryPointAccessors.fromApplication(
+            newBase, WrapperEntryPoint::class.java
+        ).pref
+        super.attachBaseContext(MyContextWrapper.wrap(newBase, pref.getCurrentLanguage().symbol))
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = FragmentServiceTypeBinding.inflate(layoutInflater)
+        _binding = ActivityServiceTypeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         Timber.d("onViewCreated() called!")
-        binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
 
         onBackPressedDispatcher.addCallback(
             this, onBackPressedCallback
         )
-        binding.actvStateDropdown.setOnItemClickListener { _, _, i, _ ->
-            viewModel.setStateId(i)
-        }
-        binding.actvDistrictDropdown.setOnItemClickListener { _, _, i, _ ->
-            viewModel.setDistrictId(i)
-        }
-        binding.actvBlockDropdown.setOnItemClickListener { _, _, i, _ ->
-            viewModel.setBlockId(i)
-        }
-        binding.actvVillageDropdown.setOnItemClickListener { _, _, i, _ ->
-            viewModel.setVillageId(i)
-        }
+
         binding.btnContinue.setOnClickListener {
             if (dataValid()) {
-                homeViewModel.setLocationDetails(
-                    viewModel.selectedState!!,
-                    viewModel.selectedDistrict!!,
-                    viewModel.selectedBlock!!,
-                    viewModel.selectedVillage!!,
-                )
+                viewModel.saveCurrentLocation()
                 finish()
                 val goToHome = Intent(this@ServiceLocationActivity, HomeActivity::class.java)
                 startActivity(goToHome)
@@ -102,36 +103,27 @@ class ServiceLocationActivity : AppCompatActivity() {
                     ServiceTypeViewModel.State.IDLE -> {}//TODO()
                     ServiceTypeViewModel.State.LOADING -> {}//TODO()
                     ServiceTypeViewModel.State.SUCCESS -> {
-                        if (homeViewModel.isLocationSet())
-                            viewModel.loadLocation(homeViewModel.getLocationRecord())
-                        else {
-                            viewModel.loadDefaultLocation()
+                        binding.viewModel = viewModel
+                        binding.actvStateDropdown.apply {
+                            isEnabled = false
+                            setText(viewModel.stateList.first())
+                        }
+                        binding.actvDistrictDropdown.apply {
+                            isEnabled = false
+                            setText(viewModel.districtList.first())
+                        }
+                        binding.actvBlockDropdown.apply {
+                            isEnabled = false
+                            setText(viewModel.blockList.first())
+                        }
+                        binding.actvVillageDropdown.setText(viewModel.selectedVillageName)
+                        binding.actvVillageDropdown.setOnItemClickListener { _, _, i, _ ->
+                            viewModel.setVillage(i)
                         }
                     }
                 }
             }
         }
-        viewModel.selectedStateId.observe(this) {
-            if (it >= 0)
-                viewModel.stateList.value?.get(it)
-                    ?.let { state -> binding.actvStateDropdown.setText(state) }
-        }
-        viewModel.selectedDistrictId.observe(this) {
-            if (it >= 0)
-                viewModel.districtList.value?.get(it)
-                    ?.let { state -> binding.actvDistrictDropdown.setText(state) }
-        }
-        viewModel.selectedBlockId.observe(this) {
-            if (it >= 0)
-                viewModel.blockList.value?.get(it)
-                    ?.let { state -> binding.actvBlockDropdown.setText(state) }
-        }
-        viewModel.selectedVillageId.observe(this) {
-            if (it >= 0)
-                viewModel.villageList.value?.get(it)
-                    ?.let { state -> binding.actvVillageDropdown.setText(state) }
-        }
-
     }
 
     private fun dataValid(): Boolean {

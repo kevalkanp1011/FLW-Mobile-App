@@ -1,6 +1,5 @@
 package org.piramalswasthya.sakhi.ui.home_activity.home
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,8 +16,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.HomePagerAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentHomeBinding
+import org.piramalswasthya.sakhi.helpers.Languages.*
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
-import org.piramalswasthya.sakhi.ui.service_location_activity.ServiceLocationActivity
 import org.piramalswasthya.sakhi.work.PullFromAmritWorker
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
@@ -84,17 +83,10 @@ class HomeFragment : Fragment() {
 //            findNavController().navigate(HomeFragmentDirections.actionNavHomeToServiceTypeFragment())
 //        }
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, onBackPressedCallback)
-        binding.etSelectVillage.setOnClickListener {
-            val serviceLocationActivity = Intent(requireActivity(), ServiceLocationActivity::class.java)
-            activity?.finish()
-            startActivity(serviceLocationActivity)
-        }
 //        binding.btnNhhr.setOnClickListener {
 //            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToNewHouseholdFragment())
 //        }
 
-        if (viewModel.isLocationSet())
-            binding.etSelectVillage.setText(viewModel.getLocationRecord().village)
         setUpViewPager()
         setUpWorkerProgress()
 
@@ -153,16 +145,28 @@ class HomeFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        (activity as HomeActivity?)?.let {
-            it.setLogo(R.drawable.ic_home)
-            it.setHomeMenuItemVisibility(false)
+        (activity as HomeActivity?)?.let { homeActivity ->
+            homeActivity.addClickListenerToHomepageActionBarTitle()
+            viewModel.locationRecord?.village?.let {
+                homeActivity.updateActionBar(
+                    R.drawable.ic_home, when (viewModel.currentLanguage) {
+                        ENGLISH -> it.name
+                        HINDI -> it.nameHindi ?: it.name
+                        ASSAMESE -> it.nameAssamese ?: it.name
+                    }
+                )
+                homeActivity.setHomeMenuItemVisibility(false)
+            }
+            binding.vp2Home.setCurrentItem(1, false)
         }
-        binding.vp2Home.setCurrentItem(1, false)
     }
 
     override fun onStop() {
         super.onStop()
-        (activity as HomeActivity?)?.setHomeMenuItemVisibility(true)
+        (activity as HomeActivity?)?.let {
+            it.setHomeMenuItemVisibility(true)
+            it.removeClickListenerToHomepageActionBarTitle()
+        }
     }
 
 

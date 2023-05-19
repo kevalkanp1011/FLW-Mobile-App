@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.PickVisualMediaRequest
@@ -33,6 +34,7 @@ import org.piramalswasthya.sakhi.helpers.MyContextWrapper
 import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdActivity
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
+import org.piramalswasthya.sakhi.ui.service_location_activity.ServiceLocationActivity
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import javax.inject.Inject
 
@@ -45,6 +47,12 @@ class HomeActivity : AppCompatActivity() {
     @InstallIn(SingletonComponent::class)
     interface WrapperEntryPoint {
         val pref: PreferenceDao
+    }
+
+    private val onClickTitleBar = View.OnClickListener {
+        if (!showMenuHome) {
+            finishAndStartServiceLocationActivity()
+        }
     }
 
     @Inject
@@ -66,22 +74,23 @@ class HomeActivity : AppCompatActivity() {
         MaterialAlertDialogBuilder(this).setTitle("Choose Application Language")
             .setSingleChoiceItems(
                 arrayOf("English", "Hindi", "Assamese"), currentLanguageIndex
-            ){di, checkedItemIndex ->
+            ) { di, checkedItemIndex ->
                 val checkedLanguage = when (checkedItemIndex) {
                     0 -> Languages.ENGLISH
                     1 -> Languages.HINDI
                     2 -> Languages.ASSAMESE
                     else -> throw IllegalStateException("yoohuulanguageindexunkonwn $checkedItemIndex")
                 }
-                if(checkedItemIndex!= currentLanguageIndex) {
+                if (checkedItemIndex == currentLanguageIndex) {
+                    di.dismiss()
+                } else {
                     pref.saveSetLanguage(checkedLanguage)
                     val restart = Intent(this, HomeActivity::class.java)
                     finish()
                     startActivity(restart)
                 }
 
-            }
-            .create()
+            }.create()
     }
 
 
@@ -154,8 +163,10 @@ class HomeActivity : AppCompatActivity() {
                 menuInflater.inflate(R.menu.home_toolbar, menu)
                 val homeMenu = menu.findItem(R.id.toolbar_menu_home)
                 val langMenu = menu.findItem(R.id.toolbar_menu_language)
+//                val servMenu = menu.findItem(R.id.change_service_location)
                 homeMenu.isVisible = showMenuHome
                 langMenu.isVisible = !showMenuHome
+//                servMenu.isVisible = !showMenuHome
 
             }
 
@@ -168,6 +179,9 @@ class HomeActivity : AppCompatActivity() {
                     R.id.toolbar_menu_language -> {
                         langChooseAlert.show()
                     }
+//                    R.id.change_service_location -> {
+//                        finishAndStartServiceLocationActivity()
+//                    }
                 }
                 return false
             }
@@ -175,6 +189,22 @@ class HomeActivity : AppCompatActivity() {
         }
         addMenuProvider(menu)
 
+    }
+
+    fun addClickListenerToHomepageActionBarTitle() {
+        binding.toolbar.setOnClickListener(onClickTitleBar)
+        binding.toolbar.subtitle = "Tap to Change"
+    }
+    fun removeClickListenerToHomepageActionBarTitle() {
+        binding.toolbar.setOnClickListener(null)
+        binding.toolbar.subtitle = null
+    }
+
+
+    private fun finishAndStartServiceLocationActivity() {
+        val serviceLocationActivity = Intent(this, ServiceLocationActivity::class.java)
+        finish()
+        startActivity(serviceLocationActivity)
     }
 
     fun setHomeMenuItemVisibility(show: Boolean) {
@@ -276,8 +306,11 @@ class HomeActivity : AppCompatActivity() {
 //        }
 //    }
 
-    fun setLogo(resId: Int) {
-        binding.toolbar.setLogo(resId)
+    fun updateActionBar(logoResource: Int, title: String? = null) {
+        binding.toolbar.setLogo(logoResource)
+        title?.let {
+            binding.toolbar.title = it
+        }
     }
 
     override fun onDestroy() {

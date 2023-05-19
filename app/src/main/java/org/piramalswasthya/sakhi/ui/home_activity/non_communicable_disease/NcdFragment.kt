@@ -63,7 +63,7 @@ class NcdFragment : Fragment() {
 override fun onStart() {
     super.onStart()
     activity?.let {
-        (it as HomeActivity).setLogo(R.drawable.ic__ncd)
+        (it as HomeActivity).updateActionBar(R.drawable.ic__ncd)
     }
 }
 

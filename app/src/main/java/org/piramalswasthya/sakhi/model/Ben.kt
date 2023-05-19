@@ -45,7 +45,7 @@ enum class Gender {
     value = "SELECT b.beneficiaryId as benId, b.householdId as hhId, b.regDate, b.firstName as benName, b.lastName as benSurname, b.gender, b.dob as dob" +
             ", b.contactNumber as mobileNo, b.fatherName, h.fam_familyHeadName as familyHeadName, b.registrationType as typeOfList, b.rchId" +
             ", b.isHrpStatus as hrpStatus, b.syncState, b.gen_reproductiveStatusId as reproductiveStatusId, b.isKid, b.immunizationStatus," +
-            " b.loc_villageId as villageId,"+
+            " b.loc_village_id as villageId,"+
             " cbac.benId is not null as cbacFilled, cbac.syncState as cbacSyncState," +
             " cdr.benId is not null as cdrFilled, cdr.syncState as cdrSyncState, " +
             " mdsr.benId is not null as mdsrFilled, mdsr.syncState as mdsrSyncState," +
@@ -726,7 +726,7 @@ data class BenRegCache(
         return BenPost(
             householdId = householdId.toString(),
             benRegId = benRegId,
-            countyid = locationRecord?.countryId!!,
+            countyid = locationRecord.country.id,
             processed = processed,
             providerServiceMapID = user.serviceMapId,
             vanID = user.vanId,
@@ -811,9 +811,9 @@ data class BenRegCache(
             createdDate = getDateTimeStringFromLong(createdDate!!)!!,
             ncdPriority = ncdPriority,
             guidelineId = guidelineId ?: "0",
-            villageName = locationRecord?.village,
-            currSubDistrictId = locationRecord?.blockId!!,
-            villageId = locationRecord?.villageId!!,
+            villageName = locationRecord.village.name,
+            currSubDistrictId = locationRecord.block.id,
+            villageId = locationRecord.village.id,
             expectedDateOfDelivery = getDateTimeStringFromLong(genDetails?.expectedDateOfDelivery),
             isHrpStatus = isHrpStatus,
             menstrualStatus = genDetails?.menstrualStatus,
@@ -902,10 +902,10 @@ data class BenRegCache(
             serverUpdatedStatus = serverUpdatedStatus,
             VanID = user.vanId,
             ProviderServiceMapID = user.serviceMapId,
-            Countyid = locationRecord!!.countryId,
-            stateid = locationRecord!!.stateId,
-            districtid = locationRecord!!.districtId,
-            villageid = locationRecord!!.villageId,
+            Countyid = locationRecord.country.id,
+            stateid = locationRecord.state.id,
+            districtid = locationRecord.district.id,
+            villageid = locationRecord.village.id,
 
             )
     }

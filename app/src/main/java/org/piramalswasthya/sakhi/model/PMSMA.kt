@@ -162,7 +162,7 @@ data class PMSMACache(
             updatedDate = System.currentTimeMillis(),
             urineAlubmin = urineAlbumin,
             vdrl = vdrl,
-            villageid = ben.locationRecord?.villageId,
+            villageid = ben.locationRecord.village.id,
             wasHivTest = if(hivTestDuringANC==true) "1" else "2",
             weight = weight.toString(),
             writeTheNumberOfAncs = numANC.toString(),

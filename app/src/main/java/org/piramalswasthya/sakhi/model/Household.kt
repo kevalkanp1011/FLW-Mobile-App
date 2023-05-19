@@ -93,7 +93,7 @@ data class HouseholdCache(
 
     fun asNetworkModel(userCache: UserCache): HouseholdNetwork {
         return HouseholdNetwork(
-            Countyid = locationRecord.countryId,
+            Countyid = locationRecord.country.id,
             Processed = processed,
             ProviderServiceMapID = userCache.serviceMapId,
             VanID = userCache.vanId,
@@ -102,11 +102,11 @@ data class HouseholdCache(
             availabilityofToiletId = amenities?.availabilityOfToiletId?:0,
             availabilityOfElectricity = amenities?.availabilityOfElectricity,
             avalabilityofElectricityId = amenities?.availabilityOfElectricityId?:0,
-            blockid = locationRecord.blockId,
+            blockid = locationRecord.block.id,
             povertyLineId = family?.povertyLineId?:0,
             createdBy = createdBy,
             createdDate = getDateTimeStringFromLong(createdTimeStamp),
-            districtid = locationRecord.districtId,
+            districtid = locationRecord.district.id,
             familyHeadName = family?.familyHeadName,
             familyHeadPhoneNo = family?.familyHeadPhoneNo.toString(),
             fuelUsed = amenities?.fuelUsed,
@@ -131,20 +131,20 @@ data class HouseholdCache(
             serverUpdatedStatus = serverUpdatedStatus,
             sourceOfDrinkingWater = amenities?.sourceOfDrinkingWater,
             sourceofDrinkingWaterId = amenities?.sourceOfDrinkingWaterId?:0,
-            state = locationRecord.state,
-            stateid = locationRecord.stateId,
+            state = locationRecord.state.name,
+            stateid = locationRecord.state.id,
             povertyLine = family?.povertyLine,
             updatedBy = updatedBy,
             updatedDate = getDateTimeStringFromLong(updatedTimeStamp),
-            village = locationRecord.village,
-            villageid = locationRecord.villageId,
+            village = locationRecord.village.name,
+            villageid = locationRecord.village.id,
             familyName = family?.familyName,
 
             wardNo = family?.wardNo,
             wardName = family?.wardName,
             mohallaName = family?.mohallaName,
             rationCardDetails = family?.rationCardDetails,
-            districtname = locationRecord.district,
+            districtname = locationRecord.district.name,
         )
 
     }

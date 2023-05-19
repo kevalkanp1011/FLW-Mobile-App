@@ -19,7 +19,7 @@ class ToBeDeletedHBNCFormDataset(
         private fun getDateFromLong(dateLong: Long): String? {
             if(dateLong==0L) return null
             val cal = Calendar.getInstance()
-            cal.timeInMillis = dateLong ?: return null
+            cal.timeInMillis = dateLong
             val f = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
             return f.format(cal.time)
 
@@ -1003,8 +1003,8 @@ class ToBeDeletedHBNCFormDataset(
         , visitCard: HbncVisitCard?, exists: Boolean
     ): List<FormInputOld> {
         ashaName.value.value = asha.userName
-        villageName.value.value = asha.villageEnglish[0]
-        blockName.value.value = asha.blockEnglish[0]
+//        villageName.value.value = asha.villageEnglish[0]
+//        blockName.value.value = asha.blockEnglish[0]
         motherName.value.value = childBen.motherName
         fatherName.value.value = childBen.fatherName
         placeOfDelivery.value.value = childBen.kidDetails?.birthPlace

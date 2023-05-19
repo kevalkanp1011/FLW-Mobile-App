@@ -17,13 +17,17 @@ class HBNCFormDataset(
 ) : Dataset(context, language) {
 
     suspend fun setCardPageToList(
-        asha: UserDomain, childBen: BenRegCache, motherBen: BenRegCache?, visitCard: HbncVisitCard?
+        location: LocationRecord?,
+        asha: UserDomain,
+        childBen: BenRegCache,
+        motherBen: BenRegCache?,
+        visitCard: HbncVisitCard?
     ) {
 
         visitCard?.let { setExistingValuesForCardPage(it) } ?: run {
             ashaName.value = asha.userName
-            villageName.value = asha.villageEnglish[0]
-            blockName.value = asha.blockEnglish[0]
+            villageName.value = location?.village?.name
+            blockName.value = location?.block?.name
             motherName.value = childBen.motherName
             fatherName.value = childBen.fatherName
             placeOfDelivery.value = childBen.kidDetails?.birthPlace

@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -16,12 +15,8 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
-import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
-import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
-import org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.EligibleCoupleViewModel
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
-import org.piramalswasthya.sakhi.work.WorkerUtils
 
 @AndroidEntryPoint
 class HrpCasesFragment : Fragment() {
@@ -91,7 +86,7 @@ class HrpCasesFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let{
-            (it as HomeActivity).setLogo(R.drawable.ic__hrp)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__hrp)
         }
     }
 }

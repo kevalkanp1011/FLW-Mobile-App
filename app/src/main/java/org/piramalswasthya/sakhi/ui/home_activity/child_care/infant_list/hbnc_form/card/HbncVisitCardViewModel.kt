@@ -96,12 +96,12 @@ class HbncVisitCardViewModel @Inject constructor(
             if (hbnc == null) {
                 val location = preferenceDao.getLocationRecord()
                 location?.let {
-                    dataset.setVillageName(it.village)
-                    dataset.setBlockName(it.block)
+                    dataset.setVillageName(it.village.name)
+                    dataset.setBlockName(it.block.name)
                 }
                 dataset.setAshaName(user.userName)
             }
-            dataset.setCardPageToList(user, ben, null, hbnc?.visitCard)
+            dataset.setCardPageToList(preferenceDao.getLocationRecord(),user, ben, null, hbnc?.visitCard)
         }
     }
 
