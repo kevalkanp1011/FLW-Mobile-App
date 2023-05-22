@@ -312,8 +312,31 @@ class AbhaIdRepo @Inject constructor(
             } catch (e: java.lang.Exception) {
                 NetworkResult.Error(-4, e.message ?: "Unknown Error")
             }
-        }    }
+        }
+    }
 
+    suspend fun verifyBio(aadhaarVerifyBioRequest: AadhaarVerifyBioRequest): NetworkResult<CreateAbhaIdResponse> {
+        return withContext((Dispatchers.IO)) {
+            try {
+                val response = abhaApiService.verifyBio(aadhaarVerifyBioRequest)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val result = Gson().fromJson(responseBody, CreateAbhaIdResponse::class.java)
+                    NetworkResult.Success(result)
+                } else {
+                    sendErrorResponse(response)
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
+            } catch (e: java.lang.Exception) {
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
+            }
+        }
+    }
 
 
 }

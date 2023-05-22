@@ -6,8 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.network.AbhaGenerateAadhaarOtpRequest
-import org.piramalswasthya.sakhi.network.NetworkResult
+import org.piramalswasthya.sakhi.network.*
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
 import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdViewModel
 import timber.log.Timber
@@ -25,6 +24,7 @@ class AadhaarNumberAshaViewModel @Inject constructor(
     private var _txnId = MutableLiveData<String?>(null)
     val txnId: LiveData<String?>
         get() = _txnId
+    var responseData: CreateAbhaIdResponse? = null
 
     private var _mobileNumber = MutableLiveData<String?>(null)
     val mobileNumber: LiveData<String?>
@@ -57,6 +57,29 @@ class AadhaarNumberAshaViewModel @Inject constructor(
                 is NetworkResult.Success -> {
                     _txnId.value = result.data.txnId
                     _mobileNumber.value = result.data.mobileNumber
+                    _state.value = AadhaarIdViewModel.State.SUCCESS
+                }
+                is NetworkResult.Error -> {
+                    _errorMessage.value = result.message
+                    _state.value = AadhaarIdViewModel.State.ERROR_SERVER
+                }
+                is NetworkResult.NetworkError -> {
+                    Timber.i(result.toString())
+                    _state.value = AadhaarIdViewModel.State.ERROR_NETWORK
+                }
+            }
+        }
+    }
+
+    fun verifyBio(aadhaarNo: String, pid: String?) {
+        _state.value = AadhaarIdViewModel.State.LOADING
+        viewModelScope.launch {
+            when (val result =
+                abhaIdRepo.verifyBio(AadhaarVerifyBioRequest(aadhaarNo, "FMR", pid.toString()))) {
+                is NetworkResult.Success -> {
+                    responseData = result.data
+                    _txnId.value = result.data.txnId
+                    _mobileNumber.value = result.data.mobile
                     _state.value = AadhaarIdViewModel.State.SUCCESS
                 }
                 is NetworkResult.Error -> {

@@ -23,6 +23,10 @@ AadhaarIdViewModel @Inject constructor(
         ABHA_GENERATED_SUCCESS
     }
 
+    val aadhaarVerificationTypeValues = arrayOf("Aadhaar ID", "Fingerprint")
+    private val _aadhaarVerificationTypes = MutableLiveData(aadhaarVerificationTypeValues[0])
+    val aadhaarVerificationTypes: LiveData<String>
+        get() = _aadhaarVerificationTypes
     init {
         Timber.d("initialised at ${Date().time}")
     }
@@ -33,6 +37,14 @@ AadhaarIdViewModel @Inject constructor(
     private val _state = MutableLiveData(State.IDLE)
     val state: LiveData<State>
         get() = _state
+
+    private var _userType = MutableLiveData("ASHA")
+    val userType: LiveData<String>
+        get() = _userType
+
+    private var _verificationType = MutableLiveData("OTP")
+    val verificationType: LiveData<String>
+        get() = _verificationType
 
     private var _abhaResponse: String? = null
     val abhaResponse: String
@@ -72,5 +84,13 @@ AadhaarIdViewModel @Inject constructor(
 
     fun setTxnId(txnId: String) {
         _txnId = txnId
+    }
+
+    fun setUserType(userType: String) {
+        _userType.value = userType
+    }
+
+    fun setVerificationType(verificationType: String) {
+        _verificationType.value = verificationType
     }
 }

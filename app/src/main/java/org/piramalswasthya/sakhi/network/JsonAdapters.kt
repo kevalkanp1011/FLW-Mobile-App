@@ -94,6 +94,13 @@ data class AbhaGenerateAadhaarOtpRequest(
 )
 
 @JsonClass(generateAdapter = true)
+data class AadhaarVerifyBioRequest(
+    var aadhaar: String,
+    var bioType: String,
+    var pid: String
+)
+
+@JsonClass(generateAdapter = true)
 data class AbhaGenerateAadhaarOtpResponse(
     val txnId: String
 )
@@ -220,6 +227,7 @@ data class CreateAbhaIdResponse(
     val tags: Map<String, String>?,
     val alreadyExists: String,
     val new: Boolean,
+    var txnId: String
 )
 
 

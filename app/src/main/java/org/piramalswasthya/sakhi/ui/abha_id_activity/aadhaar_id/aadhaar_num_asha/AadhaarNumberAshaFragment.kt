@@ -1,18 +1,26 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.aadhaar_num_asha
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.activity_contracts.RDServiceCapturePIDContract
+import org.piramalswasthya.sakhi.activity_contracts.RDServiceInfoContract
+import org.piramalswasthya.sakhi.activity_contracts.RDServiceInitContract
 import org.piramalswasthya.sakhi.databinding.FragmentAadhaarNumberAshaBinding
+import org.piramalswasthya.sakhi.network.AadhaarVerifyBioRequest
 import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdViewModel
+
 
 @AndroidEntryPoint
 class AadhaarNumberAshaFragment : Fragment() {
@@ -33,6 +41,22 @@ class AadhaarNumberAshaFragment : Fragment() {
             .create()
     }
 
+    private val rdServiceCapturePIDContract = registerForActivityResult(RDServiceCapturePIDContract()) {
+        Toast.makeText(requireContext(), "pid captured $it", Toast.LENGTH_SHORT).show()
+        binding.pid.text = Gson().toJson(AadhaarVerifyBioRequest(binding.tietAadhaarNumber.text.toString(),
+            "FMR", it.toString()))
+        viewModel.verifyBio(binding.tietAadhaarNumber.text.toString(), it)
+        binding.pid.text = Gson().toJson(viewModel.responseData)
+    }
+
+    private val rdServiceDeviceInfoContract = registerForActivityResult(RDServiceInfoContract()) {
+        binding.pid.text = Gson().toJson(AadhaarVerifyBioRequest(binding.tietAadhaarNumber.toString(),
+            "FMR", it.toString()))
+        viewModel.verifyBio(binding.tietAadhaarNumber.text.toString(), it)
+    }
+    private val rdServiceInitContract = registerForActivityResult(RDServiceInitContract()) {
+
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -44,28 +68,38 @@ class AadhaarNumberAshaFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         var isValidAadhaar = false
 
-        binding.btnGenerateOtp.setOnClickListener {
-            viewModel.generateOtpClicked(binding.tietAadhaarNumber.text.toString())
-
-            viewModel.state.observe(viewLifecycleOwner) {
-                parentViewModel.setState(it)
-            }
-
-            viewModel.mobileNumber.observe(viewLifecycleOwner) {
-                it?.let {
-                    parentViewModel.setMobileNumber(it)
-                }
-            }
-
-            viewModel.txnId.observe(viewLifecycleOwner) {
-                it?.let {
-                    parentViewModel.setTxnId(it)
+        parentViewModel.verificationType.observe(viewLifecycleOwner) {
+            when(it) {
+                "OTP" -> binding.btnVerifyAadhaar.text = "Generate OTP"
+                "FP" -> {
+                    checkApp()
+                    binding.btnVerifyAadhaar.text = "Validate FP"
                 }
             }
         }
 
+        binding.btnVerifyAadhaar.setOnClickListener {
+            verifyAadhaar()
+        }
+
+        viewModel.state.observe(viewLifecycleOwner) {
+            parentViewModel.setState(it)
+        }
+
+        viewModel.mobileNumber.observe(viewLifecycleOwner) {
+            it?.let {
+                parentViewModel.setMobileNumber(it)
+            }
+        }
+
+        viewModel.txnId.observe(viewLifecycleOwner) {
+            it?.let {
+                parentViewModel.setTxnId(it)
+            }
+        }
+
         binding.aadharConsentCheckBox.setOnCheckedChangeListener{ _, ischecked ->
-            binding.btnGenerateOtp.isEnabled = isValidAadhaar && ischecked
+            binding.btnVerifyAadhaar.isEnabled = isValidAadhaar && ischecked
         }
 
         binding.aadharDisclaimer.setOnClickListener{
@@ -80,8 +114,8 @@ class AadhaarNumberAshaFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                isValidAadhaar = s != null && s.length == 12
-                binding.btnGenerateOtp.isEnabled = isValidAadhaar
+                isValidAadhaar = (s != null) && (s.length == 12)
+                binding.btnVerifyAadhaar.isEnabled = isValidAadhaar
                         && binding.aadharConsentCheckBox.isChecked
             }
 
@@ -95,5 +129,32 @@ class AadhaarNumberAshaFragment : Fragment() {
                 viewModel.resetErrorMessage()
             }
         }
+    }
+
+    private fun verifyAadhaar() {
+        Toast.makeText(requireContext(),parentViewModel.verificationType.value, Toast.LENGTH_SHORT).show()
+        when(parentViewModel.verificationType.value) {
+            "OTP" ->  viewModel.generateOtpClicked(binding.tietAadhaarNumber.text.toString())
+            "FP" -> rdServiceCapturePIDContract.launch(Unit)
+        }
+    }
+
+    private fun checkApp() {
+
+
+//        rdServiceDeviceInfoContract.launch(Unit)
+//        val ACTION_RDINIT = "in.secugen.rdservice.INIT"
+//        val RDINIT_REQUEST = 3
+//        val sendIntent = Intent()
+//        sendIntent.action = ACTION_RDINIT
+//
+//
+//        try {
+//            startActivityForResult(sendIntent, RDINIT_REQUEST)
+//        } catch (exception:Exception) {
+//            var a = exception
+//            var b = a
+//        }
+//        rdServiceInitContract.launch(Unit)
     }
 }

@@ -54,4 +54,6 @@ interface AbhaApiService {
     @GET("v2/ha/lgd/states")
     suspend fun getStateAndDistricts(): Response<ResponseBody>
 
+    @POST("v1/registration/aadhaar/verifyBio")
+    suspend fun verifyBio(@Body aadhaarVerifyBioRequest: AadhaarVerifyBioRequest): Response<ResponseBody>
 }

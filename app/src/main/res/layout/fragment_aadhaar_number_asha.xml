@@ -71,7 +71,7 @@
         app:layout_constraintTop_toBottomOf="@id/aadharConsentCheckBox" />
 
     <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_generate_otp"
+            android:id="@+id/btn_verify_aadhaar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -86,6 +86,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/aadharDisclaimer" />
+
+    <TextView
+        android:id="@+id/pid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btn_verify_aadhaar"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textIsSelectable="true"
+        android:text="PID">
+    </TextView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
