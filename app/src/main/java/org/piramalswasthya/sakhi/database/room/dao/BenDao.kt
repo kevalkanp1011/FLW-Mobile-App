@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.*
 
 @Dao
@@ -60,8 +61,10 @@ interface BenDao {
     @Query("SELECT beneficiaryId FROM BENEFICIARY WHERE beneficiaryId IN (:list)")
     fun getAllBeneficiaryFromList(list: List<Long>): LiveData<List<Long>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE /*age BETWEEN 15 AND 49 and*/ reproductiveStatusId = 1")
-    fun getAllEligibleCoupleList(): Flow<List<BenBasicCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE CAST((strftime('%s','now') - dob/1000)/60/60/24/365 AS INTEGER) BETWEEN :min and :max and reproductiveStatusId = 1")
+    fun getAllEligibleCoupleList(
+        min: Int = Konstants.minAgeForEligibleCouple, max: Int = Konstants.maxAgeForEligibleCouple
+    ): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 2")
     fun getAllPregnancyWomenList(): Flow<List<BenBasicCache>>
@@ -69,12 +72,12 @@ interface BenDao {
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 3")
     fun getAllDeliveryStageWomenList(): Flow<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE where dob<=:ncdTimestamp")
-    fun getAllNCDList(ncdTimestamp: Long): Flow<List<BenBasicCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE where  CAST((strftime('%s','now') - dob/1000)/60/60/24/365 AS INTEGER)  >= :min")
+    fun getAllNCDList(min: Int = Konstants.minAgeForNcd): Flow<List<BenBasicCache>>
 
 
-    @Query("SELECT b.* FROM BEN_BASIC_CACHE b LEFT OUTER JOIN CBAC c ON b.benId=c.benId where b.dob<=:ncdTimestamp and c.benId IS NULL")
-    fun getAllNCDEligibleList(ncdTimestamp: Long): Flow<List<BenBasicCache>>
+    @Query("SELECT b.* FROM BEN_BASIC_CACHE b LEFT OUTER JOIN CBAC c ON b.benId=c.benId where CAST((strftime('%s','now') - b.dob/1000)/60/60/24/365 AS INTEGER)  >= :min and c.benId IS NULL")
+    fun getAllNCDEligibleList(min: Int = Konstants.minAgeForNcd): Flow<List<BenBasicCache>>
 
     @Query("SELECT b.* FROM BEN_BASIC_CACHE b INNER JOIN CBAC c on b.benId==c.benId WHERE c.total_score >= 4")
     fun getAllNCDPriorityList(): Flow<List<BenBasicCache>>
@@ -86,26 +89,28 @@ interface BenDao {
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 5")
     fun getAllMenopauseStageList(): Flow<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE gender = :female and dob BETWEEN :minReproductiveAge AND :maxReproductiveAge")
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE gender = :female and CAST((strftime('%s','now') - dob/1000)/60/60/24/365 AS INTEGER) BETWEEN :min and :max")
     fun getAllReproductiveAgeList(
-        minReproductiveAge: Long,
-        maxReproductiveAge: Long,
+        min: Int = Konstants.minAgeForReproductiveAge,
+        max: Int = Konstants.maxAgeForReproductiveAge,
         female: Gender = Gender.FEMALE
     ): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 4")
     fun getAllPNCMotherList(): Flow<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE dob>=:infantTimestamp")
-    fun getAllInfantList(infantTimestamp : Long): Flow<List<BenBasicCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE CAST((strftime('%s','now') - dob/1000)/60/60/24/365 AS INTEGER) <= :max")
+    fun getAllInfantList(max: Int = Konstants.maxAgeForInfant): Flow<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE dob between :minChildTimestamp AND :maxChildTimestamp")
-    fun getAllChildList( minChildTimestamp: Long,
-                         maxChildTimestamp: Long,): Flow<List<BenBasicCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE  CAST((strftime('%s','now') - dob/1000)/60/60/24/365 AS INTEGER) BETWEEN :min and :max")
+    fun getAllChildList(
+        min: Int = Konstants.minAgeForChild, max: Int = Konstants.maxAgeForChild
+    ): Flow<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE dob between :minAdolescentTimestamp AND :maxAdolescentTimestamp")
-    fun getAllAdolescentList(minAdolescentTimestamp: Long,
-                             maxAdolescentTimestamp: Long,): Flow<List<BenBasicCache>>
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE  CAST((strftime('%s','now') - dob/1000)/60/60/24/365 AS INTEGER) BETWEEN :min and :max")
+    fun getAllAdolescentList(
+        min: Int = Konstants.minAgeForAdolescent, max: Int = Konstants.maxAgeForAdolescent
+    ): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE isKid = 1 or reproductiveStatusId in (2, 3) ")
     fun getAllImmunizationDueList(): Flow<List<BenBasicCache>>
@@ -116,13 +121,21 @@ interface BenDao {
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 4 and hhId = :hhId")
     suspend fun getAllPNCMotherListFromHousehold(hhId: Long): List<BenBasicCache>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE dob>= :cdrTimestamp")
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE CAST((strftime('%s','now') - dob/1000)/60/60/24/365 AS INTEGER) <= :max")
     fun getAllCDRList(
-       cdrTimestamp : Long
+        max: Int = Konstants.maxAgeForCdr
     ): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId in (2, 3, 4)")
     fun getAllMDSRList(): Flow<List<BenBasicCache>>
+
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE  CAST((strftime('%s','now') - dob/1000)/60/60/24/365 AS INTEGER)<=:max")
+    fun getAllChildrenImmunizationList(
+        max: Int = Konstants.maxAgeForAdolescent
+    ): Flow<List<BenBasicCache>>
+
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 4")
+    fun getAllMotherImmunizationList(): Flow<List<BenBasicCache>>
 
 
 }

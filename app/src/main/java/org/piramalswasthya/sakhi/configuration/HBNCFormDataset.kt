@@ -16,11 +16,25 @@ class HBNCFormDataset(
             val date = dateString?.let { f.parse(it) }
             return date?.time ?: 0L
         }
+
+        private fun getDateFromLong(dateLong: Long): String? {
+            if(dateLong==0L) return null
+            val cal = Calendar.getInstance()
+            cal.timeInMillis = dateLong ?: return null
+            val f = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+            return f.format(cal.time)
+
+
+        }
     }
 
     private fun FormInput.getPosition(): Int {
         return value.value?.let { entries?.indexOf(it)?.plus(1) } ?: 0
     }
+    private fun FormInput.getStringFromPosition(position : Int): String? {
+        return if (position == 0) null else entries?.get(position-1)
+    }
+
 
     fun mapCardValues(hbnc: HBNCCache, user: UserCache) {
         hbnc.visitCard = HbncVisitCard(
@@ -59,7 +73,7 @@ class HBNCFormDataset(
             timeOfMotherDeath = timeOfMotherDeath.value.value,
             placeOfMotherDeath = placeOfBabyDeath.getPosition(),
             otherPlaceOfMotherDeath = otherPlaceOfMotherDeath.value.value,
-            motherAnyProblem = motherAnyProblem.value.value,
+            motherAnyProblem = motherProblems.value.value,
             babyFirstFed = babyFedAfterBirth.getPosition(),
             otherBabyFirstFed = otherBabyFedAfterBirth.value.value,
             timeBabyFirstFed = whenBabyFirstFed.value.value,
@@ -82,7 +96,7 @@ class HBNCFormDataset(
             feedLessStop = feedingLessStop.getPosition(),
             cryWeakStop = cryWeakStopped.getPosition(),
             dryBaby = babyDry.getPosition(),
-            keepWarmWinter = babyKeptWarmWinter.getPosition(),
+            wrapClothCloseToMother = wrapClothKeptMother.getPosition(),
             exclusiveBreastFeeding = onlyBreastMilk.getPosition(),
             cordCleanDry = cordCleanDry.getPosition(),
             unusualInBaby = unusualWithBaby.getPosition(),
@@ -285,7 +299,7 @@ class HBNCFormDataset(
         min = 0,
         required = false
     )
-    private val motherAnyProblem = FormInput(
+    val motherAnyProblem = FormInput(
         inputType = InputType.DROPDOWN, title = "Does mother have any problem", entries = arrayOf(
             "Very Bleeding ",
             "Anesthesia/ Seizure outbreak",
@@ -453,35 +467,36 @@ class HBNCFormDataset(
         required = false
     )
 
-    private val timesMotherFed24hr = FormInput(
+    val timesMotherFed24hr = FormInput(
         inputType = InputType.EDIT_TEXT,
         title = "How many times the mother feeds her stomach in 24 hours. Action – If the mother does not eat full stomach or eat less than 4 times, advise mother to do so",
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 1,
         required = false
     )
 
 
-    private val timesPadChanged = FormInput(
+    val timesPadChanged = FormInput(
         inputType = InputType.EDIT_TEXT,
         title = "How many pads have been changed in a day for bleeding? Action – If more than 2 pad, refer the mother to the hospital.",
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
 
-    private val babyKeptWarmWinter = FormInput(
+    val babyKeptWarmWinter = FormInput(
         inputType = InputType.RADIO,
         title = "During the winter season, is the baby kept warm? (Closer to the mother, dressed well and wrapped). - If it is not being done, ask the mother to do it.",
         entries = arrayOf("Yes", "No"),
         required = false,
     )
 
-    private val babyBreastFedProperly = FormInput(
+    val babyBreastFedProperly = FormInput(
         inputType = InputType.RADIO,
         title = "Is the child breastfed properly? (Whenever feeling hungry or breastfeeding at least 7 – 8 times in 24 hours). Action – if it is not being done then ask the mother to do it. ",
         entries = arrayOf("Yes", "No"),
         required = false,
     )
-    private val babyCryContinuously = FormInput(
+    val babyCryContinuously = FormInput(
         inputType = InputType.RADIO,
         title = "Does the child cry continuously or urinate less than 6 times a day? Action – Advice the mother for breast-feeding",
         entries = arrayOf("Yes", "No"),
@@ -501,25 +516,25 @@ class HBNCFormDataset(
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
-    private val motherWaterDischarge = FormInput(
+    val motherWaterDischarge = FormInput(
         inputType = InputType.RADIO,
         title = "Water discharge with foul smell and fever 102 degree Fahrenheit (38.9 degree C). ",
         entries = arrayOf("Yes", "No"),
         required = false,
     )
-    private val motherSpeakAbnormalFits = FormInput(
+    val motherSpeakAbnormalFits = FormInput(
         inputType = InputType.RADIO,
         title = "Is mother speaking abnormally or having fits?",
         entries = arrayOf("Yes", "No"),
         required = false,
     )
-    private val motherNoOrLessMilk = FormInput(
+    val motherNoOrLessMilk = FormInput(
         inputType = InputType.RADIO,
         title = "Mothers milk is not being produced after delivery or she thinks less milk is being produced.",
         entries = arrayOf("Yes", "No"),
         required = false,
     )
-    private val motherBreastProblem = FormInput(
+    val motherBreastProblem = FormInput(
         inputType = InputType.RADIO,
         title = "Does the mother have cracked nipple / pain and / or hard breasts",
         entries = arrayOf("Yes", "No"),
@@ -533,16 +548,19 @@ class HBNCFormDataset(
         title = "(c) Health check-up of newborn baby ",
         required = false
     )
-    private val babyEyesSwollen = FormInput(
+    val babyEyesSwollen = FormInput(
         inputType = InputType.RADIO,
         title = "Are the eyes swollen / Are there pus from the eyes?",
         entries = arrayOf("Yes", "No"),
         required = false,
     )
-    private val babyWeight = FormInput(
+    val babyWeight = FormInput(
         inputType = InputType.EDIT_TEXT,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL,
+        minDecimal = 0.5,
+        maxDecimal = 7.0,
+        etMaxLength = 3,
         title = "Weight on Day $nthDay",
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false,
     )
 
@@ -796,7 +814,7 @@ class HBNCFormDataset(
     val otherPlaceOfMotherDeath = FormInput(
         inputType = InputType.EDIT_TEXT, title = "Other place of mother Death", required = false
     )
-    private val motherProblems = FormInput(
+    val motherProblems = FormInput(
         inputType = InputType.CHECKBOXES,
         title = "Does Mother have any problems",
         entries = arrayOf(
@@ -982,6 +1000,7 @@ class HBNCFormDataset(
 
     fun getCardPage(
         asha: UserCache, childBen: BenRegCache, motherBen: BenRegCache?
+        , visitCard: HbncVisitCard?, exists: Boolean
     ): List<FormInput> {
         ashaName.value.value = asha.userName
         villageName.value.value = asha.villageEnglish[0]
@@ -995,10 +1014,32 @@ class HBNCFormDataset(
         motherBen?.let {
             dateOfDelivery.value.value = it.genDetails?.deliveryDate
         }
+         if(exists)
+             setExistingValuesForCardPage(visitCard)
+
         return cardPage
 
 
     }
+
+    fun setExistingValuesForCardPage(visitCard: HbncVisitCard?) {
+        visitCard?.let {
+            healthSubCenterName.value.value = it.subCenterName
+            dateOfDelivery.value.value = getDateFromLong(it.dateOfDelivery)
+            gender.value.value = gender.entries?.get(it.babyGender)
+            stillBirth.value.value = stillBirth.getStringFromPosition(it.stillBirth)
+            startedBreastFeeding.value.value =
+                startedBreastFeeding.getStringFromPosition(it.startedBreastFeeding)
+            dateOfDischargeFromHospitalMother.value.value = getDateFromLong(it.dischargeDateMother)
+            dateOfDischargeFromHospitalBaby.value.value = getDateFromLong(it.dischargeDateMother)
+            weightAtBirth.value.value = it.weightInGrams.toString()
+            registrationOfBirth.value.value = registrationOfBirth.getStringFromPosition(it.registrationOfBirth)
+
+        }
+
+    }
+
+
 
     private val partIPage by lazy {
         listOf(
@@ -1016,9 +1057,78 @@ class HBNCFormDataset(
         )
     }
 
-    suspend fun getPartIPage(visitCard: HbncVisitCard?): List<FormInput> {
-        babyAlive.value.value = visitCard?.stillBirth?.let { babyAlive.entries?.get(it) }
-        return partIPage
+    fun getPartIPage(visitCard: HbncVisitCard?, hbncPartI: HbncPartI?, exists: Boolean): List<FormInput> {
+        babyAlive.value.value = visitCard?.stillBirth?.let {
+           when(it){
+               0 -> null
+               1 -> babyAlive.entries?.get(1)
+               2 -> babyAlive.entries?.get(0)
+               else -> null
+           } }
+        return if(!exists)
+            partIPage
+        else{
+            setExistingValuesForPartIPage(hbncPartI)
+            val list = partIPage.toMutableList()
+            addNecessaryDependantFieldsToList(list, hbncPartI)
+            list
+        }
+    }
+
+    private fun addNecessaryDependantFieldsToList(list: MutableList<FormInput>, hbncPartI: HbncPartI?) {
+        hbncPartI?.let {
+            if(it.babyAlive==2) {
+                list.addAll(
+                    list.indexOf(babyAlive) + 1,
+                    listOf(
+                        dateOfBabyDeath,
+                        timeOfBabyDeath,
+                        placeOfBabyDeath,
+                    )
+                )
+                if(it.placeOfBabyDeath == (placeOfBabyDeath.entries!!.size-1))
+                    list.add(list.indexOf(placeOfBabyDeath)+1,otherPlaceOfBabyDeath)
+
+            }
+            if(it.motherAlive==2) {
+                list.addAll(
+                    list.indexOf(motherAlive) + 1,
+                    listOf(
+                        dateOfMotherDeath,
+                        timeOfMotherDeath,
+                        placeOfMotherDeath
+                    )
+                )
+                if(it.placeOfMotherDeath == (placeOfMotherDeath.entries!!.size-1))
+                    list.add(list.indexOf(placeOfMotherDeath)+1,otherPlaceOfMotherDeath)
+            }
+        }
+
+    }
+
+    private fun setExistingValuesForPartIPage(hbncPartI : HbncPartI?) {
+        hbncPartI?.let {
+            babyAlive.value.value = babyAlive.getStringFromPosition(it.babyAlive)
+            dateOfBabyDeath.value.value = getDateFromLong(it.dateOfBabyDeath)
+            timeOfBabyDeath.value.value = it.timeOfBabyDeath
+            placeOfBabyDeath.value.value = placeOfBabyDeath.getStringFromPosition(it.placeOfBabyDeath)
+            otherPlaceOfBabyDeath.value.value = it.otherPlaceOfBabyDeath
+            dateOfMotherDeath.value.value = getDateFromLong(it.dateOfMotherDeath)
+            timeOfMotherDeath.value.value = it.timeOfMotherDeath
+            placeOfMotherDeath.value.value = placeOfMotherDeath.getStringFromPosition(it.placeOfMotherDeath)
+            otherPlaceOfMotherDeath.value.value = it.otherPlaceOfMotherDeath
+            babyPreterm.value.value = babyPreterm.getStringFromPosition(it.isBabyPreterm)
+            dateOfBabyFirstExamination.value.value = getDateFromLong(it.dateOfFirstExamination)
+            timeOfBabyFirstExamination.value.value = it.timeOfFirstExamination
+            motherAlive.value.value = motherAlive.getStringFromPosition(it.motherAlive)
+            motherProblems.value.value = it.motherAnyProblem
+            babyFedAfterBirth.value.value = babyFedAfterBirth.getStringFromPosition(it.babyFirstFed)
+            whenBabyFirstFed.value.value = it.timeBabyFirstFed
+            howBabyTookFirstFeed.value.value = howBabyTookFirstFeed.getStringFromPosition(it.howBabyTookFirstFeed)
+            motherHasBreastFeedProblem.value.value = motherHasBreastFeedProblem.getStringFromPosition(it.motherHasBreastFeedProblem)
+            motherBreastProblem.value.value = it.motherBreastFeedProblem
+        }
+
     }
 
 
@@ -1047,6 +1157,26 @@ class HBNCFormDataset(
 
     suspend fun getPartIIPage(): List<FormInput> {
         return partIIPage
+    }
+    fun setExistingValuesForPartIIPage(hbnc: HBNCCache) {
+        hbnc.part2?.let {
+            babyTemperature.value.value = it.babyTemperature
+            babyEyeCondition.value.value = babyEyeCondition.getStringFromPosition(it.babyEyeCondition)
+            babyBleedUmbilicalCord.value.value = babyBleedUmbilicalCord.getStringFromPosition(it.babyUmbilicalBleed)
+            actionUmbilicalBleed.value.value = actionUmbilicalBleed.getStringFromPosition(it.actionBabyUmbilicalBleed)
+            babyWeight.value.value = it.babyWeight
+            babyWeigntMatchesColor.value.value = babyWeigntMatchesColor.getStringFromPosition(it.babyWeightMatchesColor)
+            babyWeightColor.value.value = babyWeightColor.getStringFromPosition(it.babyWeightColorOnScale)
+            allLimbsLimp.value.value = allLimbsLimp.getStringFromPosition(it.allLimbsLimp)
+            feedingLessStop.value.value = feedingLessStop.getStringFromPosition(it.feedLessStop)
+            cryWeakStopped.value.value = cryWeakStopped.getStringFromPosition(it.cryWeakStop)
+            babyDry.value.value = babyDry.getStringFromPosition(it.dryBaby)
+            wrapClothKeptMother.value.value = wrapClothKeptMother.getStringFromPosition(it.wrapClothCloseToMother)
+            onlyBreastMilk.value.value = onlyBreastMilk.getStringFromPosition(it.exclusiveBreastFeeding)
+            cordCleanDry.value.value = cordCleanDry.getStringFromPosition(it.cordCleanDry)
+            unusualWithBaby.value.value = unusualWithBaby.getStringFromPosition(it.unusualInBaby)
+        }
+
     }
 
     private val visitPage by lazy {
@@ -1085,7 +1215,7 @@ class HBNCFormDataset(
             sup,
             supName,
             supRemark,
-            dateOfSupSig
+            dateOfSupSig,
         )
     }
 
@@ -1095,4 +1225,42 @@ class HBNCFormDataset(
         }
         return visitPage
     }
+
+    fun setExistingValuesForVisitPage(hbnc: HBNCCache) {
+        hbnc.homeVisitForm?.let {
+            dateOfAshaVisit.value.value = getDateFromLong(it.dateOfAshaVisit)
+            babyAlive.value.value = babyAlive.getStringFromPosition(it.babyAlive)
+            timesMotherFed24hr.value.value = it.numTimesFullMeal24hr.toString()
+            timesPadChanged.value.value = it.numPadChanged24hr.toString()
+            babyKeptWarmWinter.value.value = babyKeptWarmWinter.getStringFromPosition(it.babyKeptWarmWinter)
+            babyBreastFedProperly.value.value = babyBreastFedProperly.getStringFromPosition(it.babyFedProperly)
+            babyCryContinuously.value.value = babyCryContinuously.getStringFromPosition(it.babyCryContinuously)
+            motherBodyTemperature.value.value = it.motherTemperature
+            motherWaterDischarge.value.value = motherWaterDischarge.getStringFromPosition(it.foulDischargeFever)
+            motherSpeakAbnormalFits.value.value = motherSpeakAbnormalFits.getStringFromPosition(it.motherSpeakAbnormallyFits)
+            motherNoOrLessMilk.value.value = motherNoOrLessMilk.getStringFromPosition(it.motherLessNoMilk)
+            motherBreastProblem.value.value = motherBreastProblem.getStringFromPosition(it.motherBreastProblem)
+            babyEyesSwollen.value.value = babyEyesSwollen.getStringFromPosition(it.babyEyesSwollen)
+            babyWeight.value.value = it.babyWeight
+            babyTemperature.value.value = it.babyTemperature
+            yellowJaundice.value.value = yellowJaundice.getStringFromPosition(it.babyYellow)
+            childImmunizationStatus.value.value = it.babyImmunizationStatus
+            babyReferred.value.value = babyReferred.getStringFromPosition(it.babyReferred)
+            motherReferred.value.value = motherReferred.getStringFromPosition(it.motherReferred)
+            allLimbsLimp.value.value = allLimbsLimp.getStringFromPosition(it.allLimbsLimp)
+            feedingLessStop.value.value = feedingLessStop.getStringFromPosition(it.feedingLessStopped)
+            cryWeakStopped.value.value = cryWeakStopped.getStringFromPosition(it.cryWeakStopped)
+            bloatedStomach.value.value = bloatedStomach.getStringFromPosition(it.bloatedStomach)
+            childColdOnTouch.value.value = childColdOnTouch.getStringFromPosition(it.coldOnTouch)
+            childChestDrawing.value.value = childChestDrawing.getStringFromPosition(it.chestDrawing)
+            breathFast.value.value = breathFast.getStringFromPosition(it.breathFast)
+            pusNavel.value.value = pusNavel.getStringFromPosition(it.pusNavel)
+            sup.value.value = sup.getStringFromPosition(it.sup)
+            supName.value.value = it.supName
+            supRemark.value.value = it.supComment
+            dateOfSupSig.value.value= getDateFromLong(it.supSignDate)
+        }
+
+    }
+
 }

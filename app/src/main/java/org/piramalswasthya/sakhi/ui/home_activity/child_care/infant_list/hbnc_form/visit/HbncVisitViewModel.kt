@@ -1,17 +1,18 @@
 package org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.visit
 
-import android.content.Context
+import android.app.Application
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.configuration.HBNCFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
-import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.HbncRepo
@@ -23,8 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HbncVisitViewModel @Inject constructor(
     state: SavedStateHandle,
-    @ApplicationContext context: Context,
-    private val preferenceDao: PreferenceDao,
+    private val context: Application,
     private val database: InAppDb,
     private val hbncRepo: HbncRepo,
     private val benRepo: BenRepo
@@ -58,6 +58,15 @@ class HbncVisitViewModel @Inject constructor(
     private val _exists = MutableLiveData<Boolean>()
     val exists: LiveData<Boolean>
         get() = _exists
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: Flow<String?>
+        get() = _errorMessage
+
+    fun resetErrorMessage() {
+        viewModelScope.launch {
+            _errorMessage.emit(null)
+        }
+    }
 
     private val dataset = HBNCFormDataset(nthDay)
 
@@ -98,16 +107,107 @@ class HbncVisitViewModel @Inject constructor(
             _exists.value = hbnc != null
         }
     }
+
     suspend fun getFirstPage(): List<FormInput> {
         val firstDay = hbncRepo.getFirstHomeVisit(hhId, benId)
         return dataset.getVisitPage(firstDay)
     }
 
-    fun observerForm(adapter: FormInputAdapter){
+    fun observerForm(adapter: FormInputAdapter) {
         viewModelScope.launch {
             launch {
+                dataset.timesMotherFed24hr.value.collect { input ->
+                    input?.toInt()?.let {
+                        if (it < 4)
+                            _errorMessage.emit(context.getString(R.string.hbnc_mother_num_eat_alert))
+                    }
+                }
+            }
+            launch {
+                dataset.timesPadChanged.value.collect { input ->
+                    input?.toInt()?.let {
+                        if (it > 5)
+                            _errorMessage.emit(context.getString(R.string.hbnc_mother_num_pad_alert))
+                    }
+                }
+            }
+            launch {
+                dataset.babyKeptWarmWinter.value.collect { input ->
+                    if (input == dataset.babyKeptWarmWinter.entries?.get(1))
+                        _errorMessage.emit(context.getString(R.string.hbnc_baby_warm_winter_alert))
+                }
+            }
+            launch {
+                dataset.babyBreastFedProperly.value.collect { input ->
+                    if (input == dataset.babyBreastFedProperly.entries?.get(1))
+                        _errorMessage.emit(context.getString(R.string.hbnc_baby_fed_properly_alert))
+                }
+            }
+            launch {
+                dataset.babyCryContinuously.value.collect { input ->
+                    if (input == dataset.babyCryContinuously.entries?.get(1))
+                        _errorMessage.emit(context.getString(R.string.hbnc_baby_cry_incessant_alert))
+                }
+            }
+            //TODO handle alert for mother temperature after consulting with M@dh@v
+            launch {
+                dataset.motherWaterDischarge.value.collect { input ->
+                    if (input == dataset.motherWaterDischarge.entries?.get(0))
+                        _errorMessage.emit(context.getString(R.string.hbnc_mother_foul_discharge_alert))
+                }
+            }
+            launch {
+                dataset.motherWaterDischarge.value.collect { input ->
+                    if (input == dataset.motherWaterDischarge.entries?.get(0))
+                        _errorMessage.emit(context.getString(R.string.hbnc_mother_foul_discharge_alert))
+                }
+            }
+            launch {
+                dataset.motherSpeakAbnormalFits.value.collect { input ->
+                    if (input == dataset.motherSpeakAbnormalFits.entries?.get(0))
+                        _errorMessage.emit(context.getString(R.string.hbnc_mother_speak_abnormal_fits_alert))
+                }
+            }
+            launch {
+                dataset.motherNoOrLessMilk.value.collect { input ->
+                    if (input == dataset.motherNoOrLessMilk.entries?.get(0))
+                        _errorMessage.emit(context.getString(R.string.hbnc_mother_less_no_milk_alert))
+                }
+            }
+            launch {
+                dataset.motherBreastProblem.value.collect { input ->
+                    if (input == dataset.motherBreastProblem.entries?.get(0))
+                        _errorMessage.emit(context.getString(R.string.hbnc_mother_breast_problem_alert))
+                }
+            }
+            launch {
+                dataset.babyEyesSwollen.value.collect { input ->
+                    if (input == dataset.babyEyesSwollen.entries?.get(0))
+                        _errorMessage.emit(context.getString(R.string.hbnc_baby_eye_pus_alert))
+                }
+            }
+            launch {
+                dataset.babyWeight.value.collect { input ->
+                    try {
+                        input?.takeIf { it.length>=3 }?.toDouble()?.let {
+                            if(it<1.8)
+                                _errorMessage.emit(context.getString(R.string.hbnc_baby_weight_1_8_alert))
+                            else if(it<2.5)
+                                _errorMessage.emit(context.getString(R.string.hbnc_baby_weight_2_5_alert))
+                        }
+                    }catch (e : NumberFormatException){
+                        Timber.d("NFE raised! ")
+                    }
+
+                    if (input == dataset.babyEyesSwollen.entries?.get(0))
+                        _errorMessage.emit(context.getString(R.string.hbnc_baby_eye_pus_alert))
+                }
+            }
+            //TODO handle alert for mother temperature after consulting with M@dh@v
+
+            launch {
                 dataset.babyReferred.value.collect {
-                    it?.let{
+                    it?.let {
                         val list = adapter.currentList.toMutableList()
                         val entriesToAdd = listOf(
                             dataset.dateOfBabyReferral,
@@ -124,12 +224,15 @@ class HbncVisitViewModel @Inject constructor(
             }
             launch {
                 dataset.placeOfBabyReferral.value.collect { nullablePlaceOfDeath ->
-                    nullablePlaceOfDeath?.let{ placeOfDeath ->
+                    nullablePlaceOfDeath?.let { placeOfDeath ->
                         val list = adapter.currentList.toMutableList()
                         val entriesToAdd = dataset.otherPlaceOfBabyReferral
-                        if (placeOfDeath == dataset.placeOfBabyReferral.entries?.let { it[it.size-1] }) {
+                        if (placeOfDeath == dataset.placeOfBabyReferral.entries?.let { it[it.size - 1] }) {
                             if (!list.contains(entriesToAdd))
-                                list.add(list.indexOf(dataset.placeOfBabyReferral) + 1, entriesToAdd)
+                                list.add(
+                                    list.indexOf(dataset.placeOfBabyReferral) + 1,
+                                    entriesToAdd
+                                )
                         } else
                             list.remove(entriesToAdd)
                         adapter.submitList(list)
@@ -138,7 +241,7 @@ class HbncVisitViewModel @Inject constructor(
             }
             launch {
                 dataset.motherReferred.value.collect {
-                    it?.let{
+                    it?.let {
                         val list = adapter.currentList.toMutableList()
                         val entriesToAdd = listOf(
                             dataset.dateOfMotherReferral,
@@ -155,12 +258,15 @@ class HbncVisitViewModel @Inject constructor(
             }
             launch {
                 dataset.placeOfMotherReferral.value.collect { nullablePlaceOfDeath ->
-                    nullablePlaceOfDeath?.let{ placeOfDeath ->
+                    nullablePlaceOfDeath?.let { placeOfDeath ->
                         val list = adapter.currentList.toMutableList()
                         val entriesToAdd = dataset.otherPlaceOfMotherReferral
-                        if (placeOfDeath == dataset.placeOfMotherReferral.entries?.let { it[it.size-1] }) {
+                        if (placeOfDeath == dataset.placeOfMotherReferral.entries?.let { it[it.size - 1] }) {
                             if (!list.contains(entriesToAdd))
-                                list.add(list.indexOf(dataset.placeOfMotherReferral) + 1, entriesToAdd)
+                                list.add(
+                                    list.indexOf(dataset.placeOfMotherReferral) + 1,
+                                    entriesToAdd
+                                )
                         } else
                             list.remove(entriesToAdd)
                         adapter.submitList(list)
@@ -186,26 +292,6 @@ class HbncVisitViewModel @Inject constructor(
     }
 
     fun setExistingValues() {
-//        dataset.address.value.value = cdr?.address
-//        dataset.childName.value.value = cdr?.childName
-//        dataset.gender.value.value = cdr?.gender
-//        dataset.age.value.value = "${cdr?.age} ${ben.ageUnit?.name}"
-//        dataset.dateOfBirth.value.value = getDateFromLong(cdr?.dateOfBirth)
-//        dataset.firstInformant.value.value = cdr?.firstInformant
-//        dataset.motherName.value.value = cdr?.motherName
-//        dataset.fatherName.value.value = cdr?.fatherName
-//        dataset.mobileNumber.value.value = cdr?.mobileNumber.toString()
-//        dataset.dateOfNotification.value.value = getDateFromLong(cdr?.dateOfNotification)
-//        dataset.childName.value.value = cdr?.childName
-//        dataset.visitDate.value.value = getDateFromLong(cdr?.visitDate)
-//        dataset.houseNumber.value.value = cdr?.houseNumber
-//        dataset.mohalla.value.value = cdr?.mohalla
-//        dataset.landmarks.value.value = cdr?.landmarks
-//        dataset.pincode.value.value = cdr?.pincode.toString()
-//        dataset.landline.value.value = cdr?.landline.toString()
-//        dataset.dateOfDeath.value.value = getDateFromLong(cdr?.dateOfDeath)
-//        dataset.timeOfDeath.value.value = cdr?.timeOfDeath?.toString()
-//        dataset.ashaSign.value.value = cdr?.ashaSign
-//        dataset.placeOfDeath.value.value = cdr?.placeOfDeath
+        dataset.setExistingValuesForVisitPage(hbnc!!)
     }
 }

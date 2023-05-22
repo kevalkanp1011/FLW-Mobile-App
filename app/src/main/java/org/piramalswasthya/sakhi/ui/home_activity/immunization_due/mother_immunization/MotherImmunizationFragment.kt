@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list
+package org.piramalswasthya.sakhi.ui.home_activity.immunization_due.mother_immunization
 
 import android.os.Bundle
 import android.text.Editable
@@ -7,54 +7,50 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
+import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
-import timber.log.Timber
 
 @AndroidEntryPoint
-class InfantListFragment : Fragment() {
+class MotherImmunizationFragment : Fragment() {
+    private var _binding : FragmentDisplaySearchRvButtonBinding? = null
 
-    private var _binding: FragmentDisplaySearchRvButtonBinding? = null
-    private val binding : FragmentDisplaySearchRvButtonBinding
+    private val binding  : FragmentDisplaySearchRvButtonBinding
         get() = _binding!!
 
-    private val viewModel: InfantListViewModel by viewModels()
 
+    private val viewModel: MotherImmunizationViewModel by viewModels()
+
+//    private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding  = FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapterForForm(
-            BenListAdapterForForm.ClickListener(
-                {
-                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
+        val benAdapter = BenListAdapter(
+            BenListAdapter.BenClickListener(
+                { hhId, benId, isKid ->
+
+
                 },
-                { hhId, benId ->
-                    Timber.d("benId : $benId hhId : $hhId")
-                    findNavController().navigate(
-                        InfantListFragmentDirections.actionInfantListFragmentToHbncDayListFragment(
-                            hhId = hhId,
-                            benId = benId
-                        )
-                    )
-                }), "HBNC Form")
+                {
+
+                }
+            ))
         binding.rvAny.adapter = benAdapter
 
         lifecycleScope.launch {
@@ -91,14 +87,8 @@ class InfantListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let{
-            (it as HomeActivity).setLogo(R.drawable.ic_infant)
+            (it as HomeActivity).setLogo(R.drawable.ic__child)
         }
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 
 }
