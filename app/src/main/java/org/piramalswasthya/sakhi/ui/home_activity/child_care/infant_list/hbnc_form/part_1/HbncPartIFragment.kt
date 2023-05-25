@@ -8,7 +8,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -29,23 +32,25 @@ class HbncPartIFragment : Fragment() {
     private val viewModel: HbncPartIViewModel by viewModels()
 
     private val errorAlert by lazy {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Alert")
-            .setPositiveButton("Ok"){dialog,_ ->
-                viewModel.resetErrorMessage()
+        AlertDialog.Builder(requireContext()).setTitle("Alert")
+            .setPositiveButton("Ok") { dialog, _ ->
                 dialog.dismiss()
             }
-            .create()
+            .setOnDismissListener {
+                viewModel.resetErrorMessage()
+            }.create()
     }
 
-    private fun showErrorAlert(message : String){
-        errorAlert.setMessage(message)
-        errorAlert.show()
+    private fun showErrorAlert(message: String) {
+        message.let {
+            errorAlert.setMessage(it)
+            errorAlert.show()
+        }
+
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentNewFormBinding.inflate(layoutInflater, container, false)
         return binding.root
@@ -63,20 +68,43 @@ class HbncPartIFragment : Fragment() {
             if (validate()) viewModel.submitForm()
         }
         viewModel.exists.observe(viewLifecycleOwner) { exists ->
-            val adapter = FormInputAdapter(isEnabled = !exists)
+            val adapter = FormInputAdapter(
+                imageClickListener = null,
+                formValueListener = FormInputAdapter.FormValueListener { formId, index ->
+                    viewModel.updateListOnValueChanged(formId, index)
+                },
+                isEnabled = !exists
+            )
             binding.form.rvInputForm.adapter = adapter
             if (exists) {
                 binding.btnSubmit.visibility = View.GONE
-//                viewModel.setExistingValues()
             }
 //            else {
 //                viewModel.address.observe(viewLifecycleOwner) {
 //                    viewModel.setAddress(it, adapter)
 //                }
 //            }
-            lifecycleScope.launch {
-                adapter.submitList(viewModel.getFirstPage(exists))
-                if(!exists)viewModel.observeForm(adapter)
+        }
+
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.formList.flowWithLifecycle(
+                    viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED
+                ).collect { list ->
+                    Timber.d("Collecting formList : ${list.map { it.id }}")
+                    (binding.form.rvInputForm.adapter as FormInputAdapter?)?.submitList(list)
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.alertError.flowWithLifecycle(
+                    viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED
+                ).collect {
+                    Timber.d("Collecting error : $it")
+                    it?.let{showErrorAlert(it)}
+                }
             }
         }
 
@@ -98,9 +126,7 @@ class HbncPartIFragment : Fragment() {
                     binding.cvPatientInformation.visibility = View.VISIBLE
                     binding.pbForm.visibility = View.GONE
                     Toast.makeText(
-                        context,
-                        "Saving Mdsr to database Failed!",
-                        Toast.LENGTH_LONG
+                        context, "Saving Mdsr to database Failed!", Toast.LENGTH_LONG
                     ).show()
                 }
                 else -> {
@@ -112,23 +138,14 @@ class HbncPartIFragment : Fragment() {
 
             }
         }
-        lifecycleScope.launch{
-            viewModel.errorMessage.collect{
-                it?.let {
-                    showErrorAlert(it)
-                }
-
-            }
-        }
     }
 
     fun validate(): Boolean {
         val result = binding.form.rvInputForm.adapter?.let {
-            (it as FormInputAdapter).validateInput()
+            (it as FormInputAdapter).validateInput(resources)
         }
         Timber.d("Validation : $result")
-        return if (result == -1)
-            true
+        return if (result == -1) true
         else {
             if (result != null) {
                 binding.form.rvInputForm.scrollToPosition(result)

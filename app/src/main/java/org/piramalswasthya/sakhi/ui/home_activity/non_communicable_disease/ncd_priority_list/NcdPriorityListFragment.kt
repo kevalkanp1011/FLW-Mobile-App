@@ -87,7 +87,7 @@ class NcdPriorityListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let{
-            (it as HomeActivity).setLogo(R.drawable.ic__ncd_priority)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__ncd_priority)
         }
     }
 

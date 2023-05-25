@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.configuration.PMJAYFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.model.*
@@ -79,7 +79,7 @@ class PmjayViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                ben = benRepo.getBeneficiary(benId, hhId)!!
+                ben = benRepo.getBeneficiaryRecord(benId, hhId)!!
                 household = benRepo.getHousehold(hhId)!!
                 user = database.userDao.getLoggedInUser()!!
                 pmjay = database.pmjayDao.getPmjay(hhId, benId)
@@ -92,13 +92,13 @@ class PmjayViewModel @Inject constructor(
     }
 
     private fun getAddress(household: HouseholdCache): String {
-        val houseNo = household.houseNo
-        val wardNo = household.wardNo
-        val name = household.wardName
-        val mohalla = household.mohallaName
-        val district = household.district
-        val city = household.village
-        val state = household.state
+        val houseNo = household.family?.houseNo
+        val wardNo = household.family?.wardNo
+        val name = household.family?.wardName
+        val mohalla = household.family?.mohallaName
+        val district = household.locationRecord.district
+        val city = household.locationRecord.village
+        val state = household.locationRecord.state
 
         var address = "$houseNo, $wardNo, $name, $mohalla, $city, $district, $state"
         address = address.replace(", ,", ",")
@@ -110,11 +110,11 @@ class PmjayViewModel @Inject constructor(
         return address
     }
 
-    fun getFirstPage(): List<FormInput> {
+    fun getFirstPage(): List<FormInputOld> {
         return dataset.firstPage
     }
 
-    fun setAddress(it: String?, adapter: FormInputAdapter) {
+    fun setAddress(it: String?, adapter: FormInputAdapterOld) {
         dataset.patientAddress.value.value = it
         dataset.contactNumber.value.value = ben.contactNumber.toString()
         dataset.familyId.value.value = hhId.toString()

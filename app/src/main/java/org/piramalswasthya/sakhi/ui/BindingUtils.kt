@@ -15,11 +15,10 @@ import com.bumptech.glide.Glide
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.room.SyncState
-import org.piramalswasthya.sakhi.model.FormInput
+import org.piramalswasthya.sakhi.model.FormInputOld
 import timber.log.Timber
 
 
@@ -50,7 +49,7 @@ fun TextInputEditText.setAllAlphabetCaps(allCaps : Boolean){
 }
 
 @BindingAdapter("radioForm")
-fun ConstraintLayout.setItems(form: FormInput?) {
+fun ConstraintLayout.setItems(form: FormInputOld?) {
 //    if(this.childCount!=0)
 //        return
 
@@ -93,7 +92,7 @@ fun ConstraintLayout.setItems(form: FormInput?) {
 }
 
 @BindingAdapter("checkBoxesForm")
-fun ConstraintLayout.setItemsCheckBox(form: FormInput?) {
+fun ConstraintLayout.setItemsCheckBox(form: FormInputOld?) {
 //    if (this.childCount != 0)
 //        return
     val ll = this.findViewById<LinearLayout>(R.id.ll_checks)

@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.configuration.MDSRFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
@@ -60,10 +60,10 @@ class MdsrObjectViewModel @Inject constructor(
     private val dataset = MDSRFormDataset(context)
 
     private fun toggleFieldOnTrigger(
-        causeField: FormInput,
-        effectField: FormInput,
+        causeField: FormInputOld,
+        effectField: FormInputOld,
         value: String?,
-        adapter: FormInputAdapter
+        adapter: FormInputAdapterOld
     ) {
         value?.let {
             if (it == "Maternal") {
@@ -102,7 +102,7 @@ class MdsrObjectViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                ben = benRepo.getBeneficiary(benId, hhId)!!
+                ben = benRepo.getBeneficiaryRecord(benId, hhId)!!
                 household = benRepo.getHousehold(hhId)!!
                 user = database.userDao.getLoggedInUser()!!
                 mdsr = database.mdsrDao.getMDSR(hhId, benId)
@@ -115,13 +115,13 @@ class MdsrObjectViewModel @Inject constructor(
     }
 
     fun getAddress(household: HouseholdCache): String {
-        val houseNo = household.houseNo
-        val wardNo = household.wardNo
-        val name = household.wardName
-        val mohalla = household.mohallaName
-        val district = household.district
-        val city = household.village
-        val state = household.state
+        val houseNo = household.family?.houseNo
+        val wardNo = household.family?.wardNo
+        val name = household.family?.wardName
+        val mohalla = household.family?.mohallaName
+        val district = household.locationRecord.district
+        val city = household.locationRecord.village
+        val state = household.locationRecord.state
 
         var address = "$houseNo, $wardNo, $name, $mohalla, $city, $district, $state"
         address = address.replace(", ,", ",")
@@ -133,7 +133,7 @@ class MdsrObjectViewModel @Inject constructor(
         return address
     }
 
-    suspend fun getFirstPage(adapter: FormInputAdapter): List<FormInput> {
+    suspend fun getFirstPage(adapter: FormInputAdapterOld): List<FormInputOld> {
         viewModelScope.launch {
             dataset.causeOfDeath.value.collect {
                 toggleFieldOnTrigger(
@@ -147,7 +147,7 @@ class MdsrObjectViewModel @Inject constructor(
         return dataset.firstPage
     }
 
-    fun setAddress(it: String?, adapter: FormInputAdapter) {
+    fun setAddress(it: String?, adapter: FormInputAdapterOld) {
         dataset.address.value.value = it
         dataset.husbandName.value.value = ben.genDetails?.spouseName
         dataset.date.min = ben.dob

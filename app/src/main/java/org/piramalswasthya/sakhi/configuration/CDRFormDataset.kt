@@ -1,10 +1,10 @@
 package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
-import android.text.InputType
 import android.widget.LinearLayout
 import org.piramalswasthya.sakhi.model.CDRCache
-import org.piramalswasthya.sakhi.model.FormInput
+import org.piramalswasthya.sakhi.model.FormInputOld
+import org.piramalswasthya.sakhi.model.InputType
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -48,120 +48,120 @@ class CDRFormDataset(context: Context, private val childDeathReview: CDRCache? =
         cdrCache.dateOfNotification = dateOfNotification.value.value?.let { getLongFromDate(it) }?: System.currentTimeMillis()
     }
 
-    val childName = FormInput(
-        inputType = FormInput.InputType.TEXT_VIEW,
+    val childName = FormInputOld(
+        inputType = InputType.TEXT_VIEW,
         title = "Name of the Child",
         required = false
     )
-    val dateOfBirth = FormInput(
-        inputType = FormInput.InputType.TEXT_VIEW,
+    val dateOfBirth = FormInputOld(
+        inputType = InputType.TEXT_VIEW,
         title = "Date of Birth",
         required = false
     )
-    val age = FormInput(
-        inputType = FormInput.InputType.TEXT_VIEW,
+    val age = FormInputOld(
+        inputType = InputType.TEXT_VIEW,
         title = "Age",
         required = false
     )
-    val visitDate = FormInput(
-        inputType = FormInput.InputType.DATE_PICKER,
+    val visitDate = FormInputOld(
+        inputType = InputType.DATE_PICKER,
         min = 0L,
         max = System.currentTimeMillis(),
         title = "Visit Date",
         required = true
     )
-    val gender = FormInput(
-        inputType = FormInput.InputType.TEXT_VIEW,
+    val gender = FormInputOld(
+        inputType = InputType.TEXT_VIEW,
         title = "Gender",
         required = false
     )
-    val motherName = FormInput(
-        inputType = FormInput.InputType.TEXT_VIEW,
+    val motherName = FormInputOld(
+        inputType = InputType.TEXT_VIEW,
         title = "Mother’s Name",
         required = false
     )
-    val fatherName = FormInput(
-        inputType = FormInput.InputType.TEXT_VIEW,
+    val fatherName = FormInputOld(
+        inputType = InputType.TEXT_VIEW,
         title = "Father’s Name",
         required = false
     )
-    val address = FormInput(
-        inputType = FormInput.InputType.TEXT_VIEW,
+    val address = FormInputOld(
+        inputType = InputType.TEXT_VIEW,
         title = "Address",
         required = false
     )
-    val houseNumber = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+    val houseNumber = FormInputOld(
+        inputType = InputType.EDIT_TEXT,
         title = "House number",
         required = false
     )
-    val mohalla = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+    val mohalla = FormInputOld(
+        inputType = InputType.EDIT_TEXT,
         title = "Mohalla/Colony ",
         required = false
     )
-    val landmarks = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+    val landmarks = FormInputOld(
+        inputType = InputType.EDIT_TEXT,
         title = "Landmarks, if any ",
         required = false
     )
-    val pincode = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+    val pincode = FormInputOld(
+        inputType = InputType.EDIT_TEXT,
         title = "Pincode",
         etMaxLength = 6,
         min=100000,
         max=999999,
-        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
-    val landline = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+    val landline = FormInputOld(
+        inputType = InputType.EDIT_TEXT,
         title = "Landline",
         etMaxLength = 12,
-        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
-    val mobileNumber = FormInput(
-        inputType = FormInput.InputType.TEXT_VIEW,
+    val mobileNumber = FormInputOld(
+        inputType = InputType.TEXT_VIEW,
         title = "Mobile number",
         required = false
     )
-    val dateOfDeath = FormInput(
-        inputType = FormInput.InputType.DATE_PICKER,
+    val dateOfDeath = FormInputOld(
+        inputType = InputType.DATE_PICKER,
         title = "Date of death",
         min = 0L,
         max = System.currentTimeMillis(),
         required = true
     )
-    val timeOfDeath = FormInput(
-        inputType = FormInput.InputType.TIME_PICKER,
+    val timeOfDeath = FormInputOld(
+        inputType = InputType.TIME_PICKER,
         title = "Time",
         required = false
     )
-    val placeOfDeath = FormInput(
-        inputType = FormInput.InputType.RADIO,
+    val placeOfDeath = FormInputOld(
+        inputType = InputType.RADIO,
         title = "Place of Death",
         required = true,
         orientation = LinearLayout.VERTICAL,
         entries = arrayOf("Home", "Hospital", "In transit")
     )
-    val hospitalName = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+    val hospitalName = FormInputOld(
+        inputType = InputType.EDIT_TEXT,
         title = "Hospital Name",
         required = false
     )
-    val firstInformant = FormInput(
-        inputType = FormInput.InputType.TEXT_VIEW,
+    val firstInformant = FormInputOld(
+        inputType = InputType.TEXT_VIEW,
         title = "Name of First Informant ",
         required = false
     )
-    val ashaSign = FormInput(
-        inputType = FormInput.InputType.EDIT_TEXT,
+    val ashaSign = FormInputOld(
+        inputType = InputType.EDIT_TEXT,
         title = "Signature/Name of ASHA",
         required = false
     )
-    val dateOfNotification = FormInput(
-        inputType = FormInput.InputType.DATE_PICKER,
+    val dateOfNotification = FormInputOld(
+        inputType = InputType.DATE_PICKER,
         title = "Date of Notification ",
         min = 0L,
         max = System.currentTimeMillis(),

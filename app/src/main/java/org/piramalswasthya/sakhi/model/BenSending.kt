@@ -1,9 +1,10 @@
 package org.piramalswasthya.sakhi.model
 
-import android.util.Base64
+import android.content.Context
 import androidx.room.ColumnInfo
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.model.Gender.*
 
 @JsonClass(generateAdapter = true)
@@ -218,17 +219,18 @@ data class BenPhoneMaps(
 
 fun BenRegCache.asNetworkSendingModel(
     user: UserCache,
-    locationRecord: LocationRecord
+    locationRecord: LocationRecord,
+    context : Context
 ): BeneficiaryDataSending {
 
     return BeneficiaryDataSending(
-        benImage = "abc", //Base64.encodeToString(userImageBlob, Base64.DEFAULT),
+        benImage = ImageUtils.getEncodedStringForBenImage(context, beneficiaryId)?:"", //Base64.encodeToString(userImageBlob, Base64.DEFAULT),
         firstName = firstName!!,
         lastName = lastName ?: "",
         dob = getDateTimeStringFromLong(dob) ?: "",
-        fatherName = fatherName!!,
-        motherName = motherName!!,
-        spouseName = genDetails?.spouseName,
+        fatherName = fatherName ?: "",
+        motherName = motherName ?: "",
+        spouseName = genDetails?.spouseName ?: "",
         govtIdentityNo = null,
         govtIdentityTypeID = null,
         isEmergencyRegistration = false,
@@ -259,13 +261,13 @@ fun BenRegCache.asNetworkSendingModel(
             religionName = religion ?: "",
             countryID = 1,
             countryName = "India",
-            stateID = locationRecord.stateId,
-            stateName = locationRecord.state,
-            districtID = locationRecord.districtId,
-            districtName = locationRecord.district,
-            blockID = locationRecord.blockId,
-            districtBranchID = locationRecord.villageId,
-            districtBranchName = locationRecord.village,
+            stateID = locationRecord.state.id,
+            stateName = locationRecord.state.name,
+            districtID = locationRecord.district.id,
+            districtName = locationRecord.district.name,
+            blockID = locationRecord.block.id,
+            districtBranchID = locationRecord.village.id,
+            districtBranchName = locationRecord.village.name,
             zoneID = user.zoneId,
             zoneName = user.zoneName,
             parkingPlaceName = user.parkingPlaceName,

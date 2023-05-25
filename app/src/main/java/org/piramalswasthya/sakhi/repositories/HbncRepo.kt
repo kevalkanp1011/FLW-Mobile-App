@@ -32,6 +32,13 @@ class HbncRepo @Inject constructor(
         }
     }
 
+    suspend fun getHbncRecord(benId: Long, hhId: Long, day : Int): HBNCCache? {
+        return withContext(Dispatchers.IO) {
+            database.hbncDao.getHbnc(benId, hhId, day)
+        }
+    }
+
+
     suspend fun getFirstHomeVisit(hhId: Long, benId: Long): HbncHomeVisit? {
         return withContext(Dispatchers.IO) {
             database.hbncDao.getHbnc(hhId, benId, 1)?.homeVisitForm

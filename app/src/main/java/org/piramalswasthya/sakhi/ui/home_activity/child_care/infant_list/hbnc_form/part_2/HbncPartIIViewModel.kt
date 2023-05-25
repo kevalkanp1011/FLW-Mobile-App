@@ -1,46 +1,45 @@
 package org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.part_2
 
+import android.content.Context
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.configuration.HBNCFormDataset
-import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
-import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.HBNCCache
+import org.piramalswasthya.sakhi.model.HouseholdCache
+import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.HbncRepo
+import org.piramalswasthya.sakhi.repositories.UserRepo
 import timber.log.Timber
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class HbncPartIIViewModel  @Inject constructor(
+class HbncPartIIViewModel @Inject constructor(
+    @ApplicationContext context: Context,
     state: SavedStateHandle,
-//    @ApplicationContext context: Context,
-    private val preferenceDao : PreferenceDao,
-    private val database: InAppDb,
+    preferenceDao: PreferenceDao,
     private val hbncRepo: HbncRepo,
-    private val benRepo: BenRepo
+    benRepo: BenRepo,
+    userRepo: UserRepo
 ) : ViewModel() {
 
     enum class State {
-        IDLE,
-        LOADING,
-        SUCCESS,
-        FAIL
+        IDLE, LOADING, SUCCESS, FAIL
     }
 
     private val benId = HbncPartIIFragmentArgs.fromSavedStateHandle(state).benId
     private val hhId = HbncPartIIFragmentArgs.fromSavedStateHandle(state).hhId
     private lateinit var ben: BenRegCache
     private lateinit var household: HouseholdCache
-    private lateinit var user: UserCache
+    private lateinit var user: UserDomain
     private var hbnc: HBNCCache? = null
 
     private val _benName = MutableLiveData<String>()
@@ -56,8 +55,8 @@ class HbncPartIIViewModel  @Inject constructor(
     val exists: LiveData<Boolean>
         get() = _exists
 
-    private val dataset = HBNCFormDataset(Konstants.hbncPart2Day)
-
+    private val dataset = HBNCFormDataset(context, preferenceDao.getCurrentLanguage(), Konstants.hbncPart2Day)
+    val formList = dataset.listFlow
     fun submitForm() {
         _state.value = State.LOADING
         val hbncCache = HBNCCache(
@@ -67,7 +66,7 @@ class HbncPartIIViewModel  @Inject constructor(
             processed = "N",
             syncState = SyncState.UNSYNCED
         )
-        dataset.mapPartIIValues(hbncCache)
+        dataset.mapValues(hbncCache)
         Timber.d("saving hbnc: $hbncCache")
         viewModelScope.launch {
             val saved = hbncRepo.saveHbncData(hbncCache)
@@ -85,51 +84,22 @@ class HbncPartIIViewModel  @Inject constructor(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 Timber.d("benId : $benId hhId : $hhId")
-                ben = benRepo.getBeneficiary(benId, hhId)!!
+                ben = benRepo.getBeneficiaryRecord(benId, hhId)!!
                 household = benRepo.getHousehold(hhId)!!
-                user = database.userDao.getLoggedInUser()!!
-                hbnc = database.hbncDao.getHbnc(hhId, benId, Konstants.hbncPart2Day)
+                user = userRepo.getLoggedInUser()!!
+                hbnc = hbncRepo.getHbncRecord(benId, hhId, Konstants.hbncPart2Day)
             }
             _benName.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
             _exists.value = hbnc != null
+            dataset.setPart2PageToList(hbnc?.part2)
         }
     }
 
-    suspend fun getFirstPage(): List<FormInput> {
-        return dataset.getPartIIPage()
-    }
-
-    fun observeForm(adapter: FormInputAdapter) {
+    fun updateListOnValueChanged(formId: Int, index: Int) {
         viewModelScope.launch {
-            launch {
-                dataset.unusualWithBaby.value.collect { nullablePlaceOfDeath ->
-                    nullablePlaceOfDeath?.let{ placeOfDeath ->
-                        val list = adapter.currentList.toMutableList()
-                        val entriesToAdd = dataset.otherUnusualWithBaby
-                        if (placeOfDeath == dataset.unusualWithBaby.entries?.last()) {
-                            if (!list.contains(entriesToAdd))
-                                list.add(list.indexOf(dataset.unusualWithBaby) + 1, entriesToAdd)
-                        } else
-                            list.remove(entriesToAdd)
-                        adapter.submitList(list)
-                    }
-                }
-            }
+            dataset.updateList(formId, index)
         }
-    }
 
-
-    private fun getDateFromLong(dateLong: Long?): String? {
-        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
-        dateLong?.let {
-            return dateFormat.format(dateLong)
-        } ?: run {
-            return null
-        }
-    }
-
-    fun setExistingValues() {
-        dataset.setExistingValuesForPartIIPage(hbnc!!)
     }
 }

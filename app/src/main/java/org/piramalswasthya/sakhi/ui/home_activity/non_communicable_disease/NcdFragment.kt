@@ -57,13 +57,13 @@ class NcdFragment : Fragment() {
             viewModel.scope
         )
         binding.rvIconGrid.adapter = iconAdapter
-        iconAdapter.submitList(iconDataset.getNCDDataset())
+        iconAdapter.submitList(iconDataset.getNCDDataset(resources))
     }
 
 override fun onStart() {
     super.onStart()
     activity?.let {
-        (it as HomeActivity).setLogo(R.drawable.ic__ncd)
+        (it as HomeActivity).updateActionBar(R.drawable.ic__ncd)
     }
 }
 

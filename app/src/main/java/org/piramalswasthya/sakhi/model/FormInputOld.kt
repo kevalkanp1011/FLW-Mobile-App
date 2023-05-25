@@ -5,10 +5,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.File
 
 
-data class FormInput(
+data class FormInputOld(
     val inputType: InputType,
     var title: String,
-    val subtitle : String? = null,
+    val subtitle: String? = null,
     var entries: Array<String>? = null,
     var required: Boolean,
     var value: MutableStateFlow<String?> = MutableStateFlow(null),
@@ -20,22 +20,9 @@ data class FormInput(
     var errorText: String? = null,
     var max: Long? = null,
     var min: Long? = null,
-    var minDecimal : Double? = null,
-    var maxDecimal : Double? = null,
+    var minDecimal: Double? = null,
+    var maxDecimal: Double? = null,
     val orientation: Int? = null,
     var imageFile: File? = null
-){
+)
 
-//-----------------Do NOT mess with order of enum values ----------------------//
-    enum class InputType{
-        EDIT_TEXT,
-        DROPDOWN,
-        RADIO,
-        DATE_PICKER,
-        TEXT_VIEW,
-        IMAGE_VIEW,
-        CHECKBOXES,
-        TIME_PICKER,
-        HEADLINE
-    }
-}

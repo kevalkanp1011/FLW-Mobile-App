@@ -60,7 +60,7 @@ class HbncDayListViewModel @Inject constructor(
         val headerList = mutableListOf(visitCardIcon)
         if(visitCardIcon.isFilled) headerList.add(partIIcon)
         if(partIIcon.isFilled) headerList.add(partIIIcon)
-        val ben = benRepo.getBeneficiary(benId,hhId)!!
+        val ben = benRepo.getBeneficiaryRecord(benId,hhId)!!
         val allDayList = listOf(1, 3, 7, 14, 21, 28, 42)
         val dayList = allDayList.filter { it<=ben.age }
 

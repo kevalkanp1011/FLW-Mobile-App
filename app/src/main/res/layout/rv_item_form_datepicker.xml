@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
             name="form"
-            type="org.piramalswasthya.sakhi.model.FormInput" />
+            type="org.piramalswasthya.sakhi.model.FormInputOld" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,26 +17,22 @@
             android:id="@+id/til_edit_text"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
+
             android:layout_height="wrap_content"
-            app:boxBackgroundColor="?attr/colorOnSecondary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:labelFor="@id/et"
             app:layout_constraintEnd_toStartOf="@id/tv_nullable"
             android:hint="@{form.title}">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et"
                 android:focusable="false"
-                android:clickable="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
+                android:drawableEnd="@drawable/ic_calendar"
                 android:text="@{form.value}"
-                android:inputType="none"
-                tools:text="Woo hoo"
-                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                />
+                android:singleLine="true"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

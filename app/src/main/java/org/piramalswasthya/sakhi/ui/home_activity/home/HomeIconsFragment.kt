@@ -52,6 +52,6 @@ class HomeIconsFragment : Fragment() {
             findNavController().navigate(it)
         }, viewModel.scope)
         binding.rvIconGrid.adapter = rvAdapter
-        rvAdapter.submitList(iconDataset.getIconDataset())
+        rvAdapter.submitList(iconDataset.getIconDataset(resources))
     }
 }

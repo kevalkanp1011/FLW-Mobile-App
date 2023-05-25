@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.model
 import androidx.room.*
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
 import java.text.SimpleDateFormat
 import java.util.*
@@ -50,7 +51,7 @@ data class HBNCCache(
     var processed: String? = null,
     var syncState: SyncState
 
-) {
+) : FormDataModel {
 
     companion object {
         private val format1 = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
@@ -59,6 +60,8 @@ data class HBNCCache(
     private fun longToDateString(long: Long): String {
         return format1.format(Calendar.getInstance().apply { timeInMillis = long }.time)
     }
+
+
 
 //    fun asPostModel(
 //        user: UserCache,
@@ -192,6 +195,7 @@ data class HbncVisitCard(
 )
 
 data class HbncPartI(
+    val dateOfVisit : Long,
     val babyAlive: Int,
     val dateOfBabyDeath: Long,
     val timeOfBabyDeath: String?,
@@ -216,6 +220,7 @@ data class HbncPartI(
 )
 
 data class HbncPartII(
+    val dateOfVisit : Long,
     val babyTemperature: String?,
     val babyEyeCondition: Int,
     val babyUmbilicalBleed : Int,
@@ -237,7 +242,7 @@ data class HbncPartII(
     )
 
 data class HbncHomeVisit(
-    val dateOfAshaVisit : Long,
+    val dateOfVisit : Long,
     val babyAlive: Int,
     val numTimesFullMeal24hr : Int,
     val numPadChanged24hr : Int,

@@ -48,7 +48,7 @@ data class PMJAYCache (
             contactNumber = contactNumber.toString(),
             createdBy = createdBy,
             houseoldId = hhId.toString(),
-            villageid = household.villageId,
+            villageid = household.locationRecord.village.id,
             createdDate = createdDate,
             familyId = familyId.toString(),
             gender = when (ben.gender) {

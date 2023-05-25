@@ -10,11 +10,16 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.piramalswasthya.sakhi.database.room.BeneficiaryIdsAvailDao
 import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.database.room.dao.BenDao
+import org.piramalswasthya.sakhi.database.room.dao.CbacDao
+import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
+import org.piramalswasthya.sakhi.database.room.dao.UserDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.network.AbhaApiService
-import org.piramalswasthya.sakhi.network.D2DApiService
 import org.piramalswasthya.sakhi.network.AmritApiService
+import org.piramalswasthya.sakhi.network.D2DApiService
 import org.piramalswasthya.sakhi.network.interceptors.ContentTypeInterceptor
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertAbhaInterceptor
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertD2DInterceptor
@@ -139,6 +144,25 @@ object AppModule {
     @Provides
     fun provideRoomDatabase(@ApplicationContext context: Context) = InAppDb.getInstance(context)
 
+    @Singleton
+    @Provides
+    fun provideHouseholdDao(database : InAppDb) : HouseholdDao = database.householdDao
+
+    @Singleton
+    @Provides
+    fun provideBenDao(database : InAppDb) : BenDao = database.benDao
+
+    @Singleton
+    @Provides
+    fun provideUserDao(database : InAppDb) : UserDao = database.userDao
+
+    @Singleton
+    @Provides
+    fun provideBenIdDao(database : InAppDb) : BeneficiaryIdsAvailDao = database.benIdGenDao
+
+    @Singleton
+    @Provides
+    fun provideCbacDao(database : InAppDb) : CbacDao = database.cbacDao
 
     @Singleton
     @Provides
