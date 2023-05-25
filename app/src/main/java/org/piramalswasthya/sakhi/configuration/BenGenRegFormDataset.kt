@@ -3,14 +3,27 @@ package org.piramalswasthya.sakhi.configuration
 import android.content.Context
 import android.net.Uri
 import android.text.InputType
-import android.widget.LinearLayout
 import androidx.core.text.isDigitsOnly
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.helpers.Konstants.maxAgeForGenBen
+import org.piramalswasthya.sakhi.helpers.Konstants.minAgeForGenBen
+import org.piramalswasthya.sakhi.helpers.Konstants.minAgeForMarriage
 import org.piramalswasthya.sakhi.helpers.Languages
-import org.piramalswasthya.sakhi.model.*
-import org.piramalswasthya.sakhi.model.InputType.*
+import org.piramalswasthya.sakhi.model.AgeUnit
+import org.piramalswasthya.sakhi.model.BenBasicCache
+import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.FormElement
+import org.piramalswasthya.sakhi.model.Gender
+import org.piramalswasthya.sakhi.model.InputType.DATE_PICKER
+import org.piramalswasthya.sakhi.model.InputType.DROPDOWN
+import org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT
+import org.piramalswasthya.sakhi.model.InputType.IMAGE_VIEW
+import org.piramalswasthya.sakhi.model.InputType.RADIO
+import org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW
+import org.piramalswasthya.sakhi.model.TypeOfList
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(context, language) {
 
@@ -24,13 +37,13 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
 
         private fun getMinDobMillis(): Long {
             val cal = Calendar.getInstance()
-            cal.add(Calendar.YEAR, -115)
+            cal.add(Calendar.YEAR, -1 * maxAgeForGenBen)
             return cal.timeInMillis
         }
 
         private fun getMaxDobMillis(): Long {
             val cal = Calendar.getInstance()
-            cal.add(Calendar.YEAR, -15)
+            cal.add(Calendar.YEAR, -1 * minAgeForGenBen)
             return cal.timeInMillis
         }
 
@@ -61,6 +74,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         arrayId = -1,
         required = true,
         allCaps = true,
+        hasSpeechToText = true,
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
     )
     private val lastName = FormElement(
@@ -70,6 +84,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         arrayId = -1,
         required = false,
         allCaps = true,
+        hasSpeechToText = true,
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS,
     )
     private val age = FormElement(
@@ -80,8 +95,8 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         required = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 2,
-        max = 99,
-        min = 15,
+        max = maxAgeForGenBen.toLong(),
+        min = minAgeForGenBen.toLong(),
     )
     private val dob = FormElement(
         id = 6,
@@ -158,11 +173,14 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         id = 12,
         inputType = EDIT_TEXT,
         title = "Age At Marriage",
+        etMaxLength = 2,
         arrayId = -1,
         required = true,
         hasDependants = true,
+
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
-        min = 12,
+        min = minAgeForMarriage.toLong(),
+        max = maxAgeForGenBen.toLong()
     )
     private val dateOfMarriage = FormElement(
         id = 13,
@@ -171,7 +189,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         arrayId = -1,
         required = true,
         max = System.currentTimeMillis(),
-        min = 0L,
+        min = getMinDobMillis(),
     )
     private val fatherName = FormElement(
         id = 14,
@@ -204,7 +222,11 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         hasDependants = true,
     )
     private val otherMobileNoOfRelation = FormElement(
-        id = 17, inputType = EDIT_TEXT, title = "Other - Mobile Number of", arrayId = -1, required = true
+        id = 17,
+        inputType = EDIT_TEXT,
+        title = "Other - Mobile Number of",
+        arrayId = -1,
+        required = true
     )
     private val contactNumber = FormElement(
         id = 18,
@@ -314,7 +336,11 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         ), required = true, hasDependants = true
     )
     private val otherReligion = FormElement(
-        id = 23, inputType = EDIT_TEXT, title = "Other - Enter Religion", arrayId = -1, required = true
+        id = 23,
+        inputType = EDIT_TEXT,
+        title = "Other - Enter Religion",
+        arrayId = -1,
+        required = true
     )
 
     private val firstPage: List<FormElement> by lazy {
@@ -418,9 +444,8 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         entries = arrayOf("Delivered", "Not Delivered"),
         required = true,
         hasDependants = true,
-        orientation = LinearLayout.HORIZONTAL
 
-    )
+        )
 
     private val pregnancyTestResult = FormElement(
         id = 31,
@@ -429,12 +454,14 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         arrayId = -1,
         entries = arrayOf("Pregnant", "Not Pregnant", "Pending"),
         required = true,
-        orientation = LinearLayout.VERTICAL,
-
-        )
+    )
 
     private val expectedDateOfDelivery = FormElement(
-        id = 32, inputType = TEXT_VIEW, title = "Expected Date Of Delivery", arrayId = -1, required = true
+        id = 32,
+        inputType = TEXT_VIEW,
+        title = "Expected Date Of Delivery",
+        arrayId = -1,
+        required = true
     )
 
 
@@ -446,12 +473,17 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         required = true,
         hasDependants = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 2,
         max = 20,
         min = 0
     )
 
     private val lastDeliveryConducted = FormElement(
-        id = 34, inputType = DROPDOWN, title = "Last Delivery Conducted", arrayId = -1, entries = arrayOf(
+        id = 34,
+        inputType = DROPDOWN,
+        title = "Last Delivery Conducted",
+        arrayId = -1,
+        entries = arrayOf(
             "Home",
             "PHC",
             "HWC",
@@ -459,7 +491,9 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
             "District Hospital",
             "Medical college Hospital",
             "Other",
-        ), required = true, hasDependants = true
+        ),
+        required = true,
+        hasDependants = true
     )
     private val facility = FormElement(
         id = 35, inputType = EDIT_TEXT, title = "Facility Name", arrayId = -1, required = true
@@ -472,7 +506,11 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         required = true
     )
     private val whoConductedDelivery = FormElement(
-        id = 37, inputType = DROPDOWN, title = "Who Conducted Delivery", arrayId = -1, entries = arrayOf(
+        id = 37,
+        inputType = DROPDOWN,
+        title = "Who Conducted Delivery",
+        arrayId = -1,
+        entries = arrayOf(
             "ANM",
             "LHV",
             "Doctor",
@@ -480,7 +518,9 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
             "Relative",
             "TBA(Non-Skilled Birth Attendant)",
             "Other",
-        ), required = true, hasDependants = true
+        ),
+        required = true,
+        hasDependants = true
     )
     private val otherWhoConductedDelivery = FormElement(
         id = 38,
@@ -526,6 +566,12 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     3 -> spouseName.value = it
                 }
             }
+            maritalStatus.value =
+                maritalStatus.getStringFromPosition(saved.genDetails?.maritalStatusId ?: 0)
+            ageAtMarriage.value = saved.genDetails?.ageAtMarriage.toString()
+            dateOfMarriage.value = getDateFromLong(
+                saved.genDetails?.marriageDate ?: 0
+            )
             mobileNoOfRelation.value =
                 mobileNoOfRelation.getStringFromPosition(saved.mobileNoOfRelationId)
             otherMobileNoOfRelation.value = saved.mobileOthers
@@ -540,29 +586,34 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         /// Set up fields
         if (maritalStatus.value != maritalStatus.entries!![0] && gender.value != null) {
 //            if(maritalStatus.value ==maritalStatus.entries!![1])
-            list.removeAll(listOf(fatherName, motherName))
-//            fatherName.required = false
-//            motherName.required = false
+//            list.removeAll(listOf(fatherName, motherName))
+            fatherName.required = false
+            motherName.required = false
             list.add(
-                list.indexOf(maritalStatus) + 1, when (gender.value) {
+                list.indexOf(maritalStatus) + 3, when (gender.value) {
                     gender.entries!![0] -> wifeName
                     gender.entries!![1] -> husbandName
                     gender.entries!![2] -> spouseName
                     else -> throw java.lang.IllegalStateException("Gender unspecified with non empty marital status value!")
                 }
             )
-            list.add(list.indexOf(maritalStatus) + 2, ageAtMarriage)
+            list.add(list.indexOf(maritalStatus) + 4, ageAtMarriage)
         }
         ageAtMarriage.value?.takeIf { it.isNotEmpty() && it == age.value }?.let {
             list.add(list.indexOf(ageAtMarriage) + 1, dateOfMarriage)
         }
+
         if (mobileNoOfRelation.value == mobileNoOfRelation.entries!!.last()) {
             list.add(list.indexOf(mobileNoOfRelation) + 1, otherMobileNoOfRelation)
         }
+        if (mobileNoOfRelation.value == mobileNoOfRelation.entries!![4]) {
+            list.add(list.indexOf(mobileNoOfRelation) + 1, contactNumberFamilyHead)
+        } else
+            list.add(list.indexOf(community), contactNumber)
         if (relationToHead.value == relationToHead.entries!!.last()) {
             list.add(list.indexOf(relationToHead) + 1, otherRelationToHead)
         }
-        if (religion.value == relationToHead.entries!![6]) {
+        if (religion.value == religion.entries!![6]) {
             list.add(list.indexOf(religion) + 1, otherReligion)
         }
 
@@ -571,6 +622,13 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
 
     fun getIndexOfRelationToHead() = getIndexOfElement(relationToHead)
     fun getIndexOfAgeAtMarriage() = getIndexOfElement(ageAtMarriage)
+
+    fun getIndexOfFatherName() = getIndexOfElement(fatherName)
+    fun getIndexOfMotherName() = getIndexOfElement(motherName)
+    fun getIndexOfSpouseName() = getIndexOfElement(husbandName).takeIf { it != -1 }
+        ?: getIndexOfElement(wifeName).takeIf { it != -1 } ?: getIndexOfElement(spouseName)
+
+    fun getIndexOfExpectedDateOfDelivery() = getIndexOfElement(expectedDateOfDelivery)
 
 
     /*
@@ -684,23 +742,23 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         setUpPage(list)
     }
 
-/*    fun loadSecondPageOnViewModel(): List<FormElement> {
-        val viewList = mutableListOf(
-            hasAadharNo,
-            rchId
-        )
-        ben?.let { benCache ->
+    /*    fun loadSecondPageOnViewModel(): List<FormElement> {
+            val viewList = mutableListOf(
+                hasAadharNo,
+                rchId
+            )
+            ben?.let { benCache ->
 
-            hasAadharNo.value = if (benCache.hasAadhar == true) "Yes" else "No"
-            rchId.value = benCache.rchId
-            benCache.hasAadhar?.takeIf { it }?.run {
-                aadharNo.value = benCache.aadharNum
-                viewList.add(1, aadharNo)
+                hasAadharNo.value = if (benCache.hasAadhar == true) "Yes" else "No"
+                rchId.value = benCache.rchId
+                benCache.hasAadhar?.takeIf { it }?.run {
+                    aadharNo.value = benCache.aadharNum
+                    viewList.add(1, aadharNo)
+                }
             }
-        }
 
-        return viewList
-    }*/
+            return viewList
+        }*/
 
     suspend fun setThirdPage(ben: BenRegCache?) {
         val list = thirdPage.toMutableList()
@@ -744,10 +802,12 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                 lastMenstrualPeriod.required = true
                 list.addAll(listOf(expectedDateOfDelivery, numPrevLiveBirthOrPregnancy))
             }
+
             reproductiveStatus.entries!![3] -> {
                 list.remove(lastMenstrualPeriod)
                 list.add(dateOfDelivery)
             }
+
             reproductiveStatus.entries!![6] -> list.add(reproductiveStatusOther)
             else -> {}
         }
@@ -757,115 +817,115 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         if (pregnancyTestResult.value?.isNotEmpty() == true) {
             list.add(pregnancyTestResult)
         }
-        if (numPrevLiveBirthOrPregnancy.value?.isDigitsOnly() == true) {
-            if (numPrevLiveBirthOrPregnancy.value!!.toInt() > 0) list.addAll(
-                listOf(
-                    lastDeliveryConducted, whoConductedDelivery
-                )
-            )
-        }
-        if (lastDeliveryConducted.value in lastDeliveryConducted.entries!!.sliceArray(
-                IntRange(
-                    0, 3
-                )
-            )
-        ) {
-            list.add(facility)
-        } else if (lastDeliveryConducted.value in lastDeliveryConducted.entries!!.sliceArray(
-                IntRange(
-                    4, 5
-                )
-            )
-        ) {
-            list.add(otherPlaceOfDelivery)
-        }
-        if (whoConductedDelivery.value == whoConductedDelivery.entries!!.last()) {
-            list.add(otherWhoConductedDelivery)
-        }
+//        if (numPrevLiveBirthOrPregnancy.value?.isDigitsOnly() == true) {
+//            if (numPrevLiveBirthOrPregnancy.value!!.toInt() > 0) list.addAll(
+//                listOf(
+//                    lastDeliveryConducted, whoConductedDelivery
+//                )
+//            )
+//        }
+//        if (lastDeliveryConducted.value in lastDeliveryConducted.entries!!.sliceArray(
+//                IntRange(
+//                    0, 3
+//                )
+//            )
+//        ) {
+//            list.add(facility)
+//        } else if (lastDeliveryConducted.value in lastDeliveryConducted.entries!!.sliceArray(
+//                IntRange(
+//                    4, 5
+//                )
+//            )
+//        ) {
+//            list.add(otherPlaceOfDelivery)
+//        }
+//        if (whoConductedDelivery.value == whoConductedDelivery.entries!!.last()) {
+//            list.add(otherWhoConductedDelivery)
+//        }
         setUpPage(list)
     }
 
 
-/*    fun loadThirdPageOnViewModel(): List<FormElement> {
-        val viewList = mutableListOf(
-            reproductiveStatus
-        )
-        ben?.let { benCache ->
-            benCache.genDetails?.reproductiveStatusId?.takeIf { it > 0 }?.let {
-                reproductiveStatus.value = reproductiveStatus.entries?.get(it - 1)
-            }
-            when (benCache.genDetails?.reproductiveStatusId) {
-                1 -> {
-                    lastMenstrualPeriod.value =
-                        benCache.genDetails?.lastMenstrualPeriod?.let { getDateFromLong(it) }
-                    benCache.nishchayDeliveryStatusPosition.takeIf { it > 0 }?.let {
-                        nishchayKitDeliveryStatus.value = nishchayKitDeliveryStatus.entries?.get(it)
+    /*    fun loadThirdPageOnViewModel(): List<FormElement> {
+            val viewList = mutableListOf(
+                reproductiveStatus
+            )
+            ben?.let { benCache ->
+                benCache.genDetails?.reproductiveStatusId?.takeIf { it > 0 }?.let {
+                    reproductiveStatus.value = reproductiveStatus.entries?.get(it - 1)
+                }
+                when (benCache.genDetails?.reproductiveStatusId) {
+                    1 -> {
+                        lastMenstrualPeriod.value =
+                            benCache.genDetails?.lastMenstrualPeriod?.let { getDateFromLong(it) }
+                        benCache.nishchayDeliveryStatusPosition.takeIf { it > 0 }?.let {
+                            nishchayKitDeliveryStatus.value = nishchayKitDeliveryStatus.entries?.get(it)
+                        }
+                        benCache.nishchayPregnancyStatusPosition.takeIf { it > 0 }?.let {
+                            pregnancyTestResult.value = pregnancyTestResult.entries?.get(it)
+                        }
+                        viewList.addAll(
+                            listOf(
+                                lastMenstrualPeriod, nishchayKitDeliveryStatus, pregnancyTestResult
+                            )
+                        )
                     }
-                    benCache.nishchayPregnancyStatusPosition.takeIf { it > 0 }?.let {
-                        pregnancyTestResult.value = pregnancyTestResult.entries?.get(it)
-                    }
-                    viewList.addAll(
-                        listOf(
-                            lastMenstrualPeriod, nishchayKitDeliveryStatus, pregnancyTestResult
-                        )
-                    )
-                }
-                2, 3 -> {
-                    lastMenstrualPeriod.value =
-                        benCache.genDetails?.lastMenstrualPeriod?.let { getDateFromLong(it) }
-                    expectedDateOfDelivery.value =
-                        benCache.genDetails?.expectedDateOfDelivery?.let { getDateFromLong(it) }
-                    numPrevLiveBirthOrPregnancy.value =
-                        benCache.genDetails?.numPreviousLiveBirth?.toString()
-                    lastDeliveryConducted.value = benCache.genDetails?.lastDeliveryConducted
-                    facility.value = benCache.genDetails?.facilityName
-                    otherPlaceOfDelivery.value = benCache.genDetails?.otherLastDeliveryConducted
-                    whoConductedDelivery.value = benCache.genDetails?.whoConductedDelivery
-                    otherWhoConductedDelivery.value = benCache.genDetails?.otherWhoConductedDelivery
-                    viewList.addAll(
-                        listOf(
-                            lastMenstrualPeriod,
-                            expectedDateOfDelivery,
-                            numPrevLiveBirthOrPregnancy,
-                            lastDeliveryConducted,
-                            facility,
-                            otherPlaceOfDelivery,
-                            whoConductedDelivery,
-                            otherWhoConductedDelivery
+                    2, 3 -> {
+                        lastMenstrualPeriod.value =
+                            benCache.genDetails?.lastMenstrualPeriod?.let { getDateFromLong(it) }
+                        expectedDateOfDelivery.value =
+                            benCache.genDetails?.expectedDateOfDelivery?.let { getDateFromLong(it) }
+                        numPrevLiveBirthOrPregnancy.value =
+                            benCache.genDetails?.numPreviousLiveBirth?.toString()
+                        lastDeliveryConducted.value = benCache.genDetails?.lastDeliveryConducted
+                        facility.value = benCache.genDetails?.facilityName
+                        otherPlaceOfDelivery.value = benCache.genDetails?.otherLastDeliveryConducted
+                        whoConductedDelivery.value = benCache.genDetails?.whoConductedDelivery
+                        otherWhoConductedDelivery.value = benCache.genDetails?.otherWhoConductedDelivery
+                        viewList.addAll(
+                            listOf(
+                                lastMenstrualPeriod,
+                                expectedDateOfDelivery,
+                                numPrevLiveBirthOrPregnancy,
+                                lastDeliveryConducted,
+                                facility,
+                                otherPlaceOfDelivery,
+                                whoConductedDelivery,
+                                otherWhoConductedDelivery
 
+                            )
                         )
-                    )
-                }
-                4 -> {
-                    dateOfDelivery.value = benCache.genDetails?.deliveryDate
-                    viewList.addAll(
-                        listOf(
-                            dateOfDelivery
+                    }
+                    4 -> {
+                        dateOfDelivery.value = benCache.genDetails?.deliveryDate
+                        viewList.addAll(
+                            listOf(
+                                dateOfDelivery
+                            )
                         )
-                    )
-                }
-                5, 6 -> {
-                    lastMenstrualPeriod.value =
-                        benCache.genDetails?.lastMenstrualPeriod?.let { getDateFromLong(it) }
-                    viewList.addAll(
-                        listOf(
-                            lastMenstrualPeriod
+                    }
+                    5, 6 -> {
+                        lastMenstrualPeriod.value =
+                            benCache.genDetails?.lastMenstrualPeriod?.let { getDateFromLong(it) }
+                        viewList.addAll(
+                            listOf(
+                                lastMenstrualPeriod
+                            )
                         )
-                    )
-                }
-                else -> {
-                    reproductiveStatusOther.value = benCache.genDetails?.reproductiveStatus
-                    viewList.addAll(
-                        listOf(
-                            reproductiveStatusOther
+                    }
+                    else -> {
+                        reproductiveStatusOther.value = benCache.genDetails?.reproductiveStatus
+                        viewList.addAll(
+                            listOf(
+                                reproductiveStatusOther
+                            )
                         )
-                    )
+                    }
                 }
             }
-        }
 
-        return viewList
-    }*/
+            return viewList
+        }*/
 
 
 //    suspend fun getBenForFirstPage(userId: Int, hhId: Long): BenRegCache {
@@ -1060,10 +1120,17 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                 validateEmptyOnEditText(firstName)
                 validateAllCapsOrSpaceOnEditText(firstName)
             }
+
             lastName.id -> {
                 validateAllCapsOrSpaceOnEditText(lastName)
             }
-            dob.id -> assignValuesToAgeFromDob(getLongFromDate(dob.value), age)
+
+            dob.id -> {
+                assignValuesToAgeFromDob(getLongFromDate(dob.value), age)
+                age.value?.takeIf { it.isNotEmpty() }?.toLong()?.let { ageAtMarriage.max = it }
+                -1
+            }
+
             age.id -> {
 
                 if (age.value.isNullOrEmpty()) {
@@ -1089,12 +1156,20 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     }
                 }
                 ageAtMarriage.value = null
+                age.value?.toLong()?.let {
+                    ageAtMarriage.max = it
+                }
                 triggerDependants(
                     source = age, passedIndex = index, triggerIndex = 0, target = dateOfMarriage
                 )
             }
+
             gender.id, maritalStatus.id -> {
                 relationToHead.value = null
+                maritalStatus.entries = when (index) {
+                    0 -> maritalStatusMale
+                    else -> maritalStatusFemale
+                }
                 relationToHead.entries = when (index) {
                     0 -> relationToHeadListMale
                     1 -> relationToHeadListFemale
@@ -1106,25 +1181,44 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     addItems = emptyList()
                 )
                 when (maritalStatus.value) {
-                    maritalStatus.entries!![0] -> triggerDependants(
-                        source = maritalStatus,
-                        addItems = listOf(fatherName, motherName),
-                        removeItems = listOf(spouseName, husbandName, wifeName, ageAtMarriage)
-                    )
-                    else -> triggerDependants(
-                        source = maritalStatus, addItems = when (gender.value) {
-                            gender.entries!![0] -> listOf(wifeName, ageAtMarriage)
-                            gender.entries!![1] -> listOf(husbandName, ageAtMarriage)
-                            else -> listOf(spouseName, ageAtMarriage)
-                        }, removeItems = listOf(
-                            fatherName, motherName, wifeName, husbandName, spouseName, ageAtMarriage
+                    maritalStatus.entries!![0] -> {
+                        fatherName.required = true
+                        motherName.required = true
+                        triggerDependants(
+                            source = maritalStatus,
+                            addItems = emptyList(),//listOf(fatherName, motherName),
+                            removeItems = listOf(spouseName, husbandName, wifeName, ageAtMarriage)
                         )
-                    )
+                    }
+
+                    else -> {
+                        fatherName.required = false
+                        motherName.required = false
+                        (maritalStatus.value != maritalStatus.entries!![2]).let {
+//                            wifeName.required = it
+//                            husbandName.required = it
+                            spouseName.required = it
+                        }
+                        triggerDependants(
+                            source = maritalStatus, addItems = when (gender.value) {
+                                gender.entries!![0] -> listOf(wifeName, ageAtMarriage)
+                                gender.entries!![1] -> listOf(husbandName, ageAtMarriage)
+                                else -> listOf(spouseName, ageAtMarriage)
+                            }, removeItems = listOf(
+                                wifeName,
+                                husbandName,
+                                spouseName,
+                                ageAtMarriage
+                            )
+                        )
+                    }
                 }
             }
+
             ageAtMarriage.id -> age.value?.takeIf { it.isNotEmpty() && it.isDigitsOnly() && !ageAtMarriage.value.isNullOrEmpty() }
                 ?.toInt()?.let {
                     validateEmptyOnEditText(ageAtMarriage)
+                    validateIntMinMax(ageAtMarriage)
                     triggerDependants(
                         source = ageAtMarriage,
                         passedIndex = ageAtMarriage.value!!.toInt(),
@@ -1132,30 +1226,37 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                         target = dateOfMarriage
                     )
                 } ?: -1
+
             fatherName.id -> {
                 validateEmptyOnEditText(fatherName)
                 validateAllCapsOrSpaceOnEditText(fatherName)
             }
+
             motherName.id -> {
                 validateEmptyOnEditText(motherName)
                 validateAllCapsOrSpaceOnEditText(motherName)
             }
+
             husbandName.id -> {
                 validateEmptyOnEditText(husbandName)
                 validateAllCapsOrSpaceOnEditText(husbandName)
             }
+
             wifeName.id -> {
                 validateEmptyOnEditText(wifeName)
                 validateAllCapsOrSpaceOnEditText(wifeName)
             }
+
             spouseName.id -> {
                 validateEmptyOnEditText(spouseName)
                 validateAllCapsOrSpaceOnEditText(spouseName)
             }
+
             contactNumber.id -> {
                 validateEmptyOnEditText(contactNumber)
                 validateMobileNumberOnEditText(contactNumber)
             }
+
             mobileNoOfRelation.id -> {
                 when (index) {
                     0, 1, 2, 3 -> triggerDependants(
@@ -1163,6 +1264,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                         removeItems = listOf(otherMobileNoOfRelation, contactNumberFamilyHead),
                         addItems = listOf(contactNumber)
                     )
+
                     4 -> {
                         contactNumberFamilyHead.value = familyHeadPhoneNo
                         triggerDependants(
@@ -1171,6 +1273,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                             removeItems = listOf(otherMobileNoOfRelation, contactNumber)
                         )
                     }
+
                     else -> triggerDependants(
                         source = mobileNoOfRelation,
                         removeItems = listOf(contactNumberFamilyHead),
@@ -1178,6 +1281,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     )
                 }
             }
+
             otherMobileNoOfRelation.id -> validateEmptyOnEditText(otherMobileNoOfRelation)
             relationToHead.id -> {
                 triggerDependants(
@@ -1187,16 +1291,19 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     target = otherRelationToHead
                 )
             }
+
             otherRelationToHead.id -> validateEmptyOnEditText(otherRelationToHead)
             religion.id -> {
                 triggerDependants(
                     source = religion, passedIndex = index, triggerIndex = 6, target = otherReligion
                 )
             }
+
             otherReligion.id -> validateEmptyOnEditText(otherReligion)
             hasAadharNo.id -> triggerDependants(
                 source = hasAadharNo, passedIndex = index, triggerIndex = 0, target = aadharNo
             )
+
             aadharNo.id -> validateAadharNoOnEditText(aadharNo)
             rchId.id -> validateRchIdOnEditText(rchId)
             lastMenstrualPeriod.id -> {
@@ -1208,23 +1315,31 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     calLmp.set(year, month, day)
                     val calNow = Calendar.getInstance()
                     val monthsDiff = getDiffMonths(calLmp, calNow)
-                    if (monthsDiff >= 1) {
-                        triggerDependants(
-                            source = lastMenstrualPeriod,
-                            addItems = listOf(nishchayKitDeliveryStatus),
-                            removeItems = listOf(pregnancyTestResult)
-                        )
-                    } else {
-                        triggerDependants(
-                            source = lastMenstrualPeriod,
-                            addItems = emptyList(),
-                            removeItems = listOf(nishchayKitDeliveryStatus, pregnancyTestResult)
-                        )
-                    }
-
+                    if (reproductiveStatus.value == reproductiveStatus.entries!!.first()) {
+                        if (monthsDiff >= 1) {
+                            triggerDependants(
+                                source = lastMenstrualPeriod,
+                                addItems = listOf(nishchayKitDeliveryStatus),
+                                removeItems = listOf(pregnancyTestResult)
+                            )
+                        } else {
+                            triggerDependants(
+                                source = lastMenstrualPeriod,
+                                addItems = emptyList(),
+                                removeItems = listOf(nishchayKitDeliveryStatus, pregnancyTestResult)
+                            )
+                        }
+                    } else if (reproductiveStatus.value == reproductiveStatus.entries!![1] || reproductiveStatus.value == reproductiveStatus.entries!![2]) {
+                        val calEdd = Calendar.getInstance()
+                        calEdd.timeInMillis = calLmp.timeInMillis
+                        calEdd.add(Calendar.DAY_OF_YEAR, 270)
+                        expectedDateOfDelivery.value = getDateFromLong(calEdd.timeInMillis)
+                        -1
+                    } else
+                        -1
                 } ?: -1
-
             }
+
             nishchayKitDeliveryStatus.id -> {
                 triggerDependants(
                     source = nishchayKitDeliveryStatus,
@@ -1233,10 +1348,12 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     target = pregnancyTestResult
                 )
             }
+
             reproductiveStatus.id -> {
+                lastMenstrualPeriod.value = null
                 when (index) {
                     0 -> {
-                        lastMenstrualPeriod.value = null
+
                         lastMenstrualPeriod.required = false
                         triggerDependants(
                             source = reproductiveStatus,
@@ -1256,6 +1373,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                             )
                         )
                     }
+
                     4, 5 -> {
                         lastMenstrualPeriod.required = false
                         triggerDependants(
@@ -1276,6 +1394,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                             )
                         )
                     }
+
                     1, 2 -> {
                         lastMenstrualPeriod.required = true
                         triggerDependants(
@@ -1297,6 +1416,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                             )
                         )
                     }
+
                     3 -> {
                         triggerDependants(
                             source = reproductiveStatus,
@@ -1315,6 +1435,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                             )
                         )
                     }
+
                     6 -> {
                         lastMenstrualPeriod.required = false
                         triggerDependants(
@@ -1334,10 +1455,12 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                             )
                         )
                     }
+
                     else -> -1
                 }
             }
-            numPrevLiveBirthOrPregnancy.id -> {
+
+            /*numPrevLiveBirthOrPregnancy.id -> {
                 numPrevLiveBirthOrPregnancy.value?.takeIf { it.isNotEmpty() }?.toInt()?.let {
                     if (it > 0) triggerDependants(
                         source = numPrevLiveBirthOrPregnancy, removeItems = listOf(
@@ -1356,7 +1479,8 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                         ),
                     )
                 } ?: -1
-            }
+            }*/
+
             lastDeliveryConducted.id -> {
                 when (index) {
                     0, 1, 2, 3, 4 -> triggerDependants(
@@ -1364,6 +1488,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                         addItems = listOf(facility),
                         removeItems = listOf(otherPlaceOfDelivery)
                     )
+
                     else -> triggerDependants(
                         source = lastDeliveryConducted,
                         addItems = listOf(otherPlaceOfDelivery),
@@ -1371,6 +1496,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     )
                 }
             }
+
             facility.id -> validateEmptyOnEditText(facility)
             otherPlaceOfDelivery.id -> validateEmptyOnEditText(otherPlaceOfDelivery)
             whoConductedDelivery.id -> {
@@ -1381,6 +1507,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     target = otherWhoConductedDelivery
                 )
             }
+
             otherWhoConductedDelivery.id -> validateEmptyOnEditText(otherWhoConductedDelivery)
 
 
@@ -1427,12 +1554,15 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
             ben.motherName = motherName.value
             ben.familyHeadRelationPosition =
                 relationToHeadListDefault.indexOf(relationToHead.value) + 1
-            ben.familyHeadRelation = relationToHeadListDefault[ben.familyHeadRelationPosition-1]
+            ben.familyHeadRelation =
+                relationToHeadListDefault[ben.familyHeadRelationPosition - 1]
             ben.familyHeadRelationOther = otherRelationToHead.value
             ben.mobileNoOfRelationId = mobileNoOfRelation.getPosition()
-            ben.mobileNoOfRelation = mobileNoOfRelation.getStringFromPosition(ben.mobileNoOfRelationId)
+            ben.mobileNoOfRelation =
+                mobileNoOfRelation.getStringFromPosition(ben.mobileNoOfRelationId)
             ben.mobileOthers = otherMobileNoOfRelation.value
-            ben.contactNumber = if(ben.mobileNoOfRelationId == 5) familyHeadPhoneNo!!.toLong() else contactNumber.value!!.toLong()
+            ben.contactNumber =
+                if (ben.mobileNoOfRelationId == 5) familyHeadPhoneNo!!.toLong() else contactNumber.value!!.toLong()
             ben.community = community.value
             ben.communityId = community.getPosition()
             ben.religion = religion.value
@@ -1481,6 +1611,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                             it
                         )
                     }
+                gen.deliveryDate = dateOfDelivery.value
                 gen.numPreviousLiveBirth =
                     numPrevLiveBirthOrPregnancy.value?.toInt() ?: 0
                 gen.lastDeliveryConducted = lastDeliveryConducted.value

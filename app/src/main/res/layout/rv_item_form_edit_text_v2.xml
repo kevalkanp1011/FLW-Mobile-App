@@ -36,14 +36,14 @@
             android:paddingBottom="@dimen/padding_small"
             app:layout_constraintEnd_toStartOf="@id/tv_nullable"
             app:layout_constraintStart_toStartOf="parent"
-            app:endIconMode="clear_text"
+            app:endIconMode="custom"
             app:layout_constraintTop_toBottomOf="@+id/tv_hint">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@={form.value}"
+                android:text="@{form.value}"
                 android:maxLength="@{form.etMaxLength}"
                 tools:text="lsdkfnsld"
                 android:inputType="@{form.etInputType}"

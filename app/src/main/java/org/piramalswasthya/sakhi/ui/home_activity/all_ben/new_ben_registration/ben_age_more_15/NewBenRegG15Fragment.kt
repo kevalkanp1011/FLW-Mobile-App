@@ -25,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.BuildConfig
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.contracts.SpeechToTextContract
 import org.piramalswasthya.sakhi.databinding.FragmentInputFormPageHhBinding
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_more_15.NewBenRegG15ViewModel.State
@@ -41,6 +42,14 @@ class NewBenRegG15Fragment : Fragment() {
         get() = _binding!!
 
     private val viewModel: NewBenRegG15ViewModel by viewModels()
+    private  var micClickedElementId : Int = -1
+    private val sttContract = registerForActivityResult(SpeechToTextContract()){ value ->
+        val formattedValue = value.substring(0,50).uppercase()
+        val listIndex = viewModel.updateValueByIdAndReturnListIndex(micClickedElementId, formattedValue)
+        listIndex.takeIf { it>=0 }?.let {
+            binding.inputForm.rvInputForm.adapter?.notifyItemChanged(it)
+        }
+    }
 
     private val requestLocationPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { b ->
@@ -227,8 +236,17 @@ class NewBenRegG15Fragment : Fragment() {
                         viewModel.setCurrentImageFormId(it)
                         takeImage()
                     }, formValueListener = FormInputAdapter.FormValueListener { formId, index ->
-                        viewModel.updateListOnValueChanged(formId, index)
-                        hardCodedListUpdate(formId)
+                        when(index){
+                            Konstants.micClickIndex -> {
+                                micClickedElementId = formId
+                                sttContract.launch(Unit)
+                            }
+                            else -> {
+                                viewModel.updateListOnValueChanged(formId, index)
+                                hardCodedListUpdate(formId)
+                            }
+                        }
+
                     }, isEnabled = !recordExists
                     )
                 binding.inputForm.rvInputForm.adapter = adapter
@@ -245,10 +263,12 @@ class NewBenRegG15Fragment : Fragment() {
             when (state!!) {
                 State.IDLE -> {
                 }
+
                 State.SAVING -> {
                     binding.clContent.visibility = View.GONE
                     binding.rlSaving.visibility = View.VISIBLE
                 }
+
                 State.SAVE_SUCCESS -> {
                     binding.clContent.visibility = View.VISIBLE
                     binding.rlSaving.visibility = View.GONE
@@ -256,6 +276,7 @@ class NewBenRegG15Fragment : Fragment() {
                     WorkerUtils.triggerAmritSyncWorker(requireContext())
                     findNavController().navigate(NewBenRegG15FragmentDirections.actionNewBenRegG15FragmentToHomeFragment())
                 }
+
                 State.SAVE_FAILED -> {
                     Toast.makeText(
 
@@ -290,13 +311,34 @@ class NewBenRegG15Fragment : Fragment() {
                     notifyItemChanged(5)
                     notifyItemChanged(viewModel.getIndexOfAgeAtMarriage())
                 }
+
                 5 -> {
                     notifyItemChanged(4)
                 }
+
                 7 -> {
                     notifyItemChanged(viewModel.getIndexOfRelationToHead())
                 }
+                8 ->{
+                    viewModel.getIndexOfFatherName().takeIf { it > 0 }?.let {
+                        notifyItemChanged(it)
+                    }
+                    viewModel.getIndexOfMotherName().takeIf { it > 0 }?.let {
+                        notifyItemChanged(it)
+                    }
+                    viewModel.getIndexOfSpouseName().takeIf { it > 0 }?.let {
+                        notifyItemChanged(it)
+                    }
+
+                }
+
+                27 ->
+                    viewModel.getIndexOfExpectedDateOfDelivery().takeIf { it > 0 }?.let {
+                        notifyItemChanged(it)
+                    }
+
                 28 -> notifyItemChanged(1)
+
             }
         }
     }
@@ -309,18 +351,21 @@ class NewBenRegG15Fragment : Fragment() {
             }
         }
     }
+
     private fun getTmpFileUri(): Uri {
         val tmpFile =
-            File.createTempFile(Konstants.tempBenImagePrefix,null, requireActivity().cacheDir).apply {
-                createNewFile()
+            File.createTempFile(Konstants.tempBenImagePrefix, null, requireActivity().cacheDir)
+                .apply {
+                    createNewFile()
 //                deleteOnExit()
-            }
+                }
         return FileProvider.getUriForFile(
             requireContext(),
             "${BuildConfig.APPLICATION_ID}.provider",
             tmpFile
         )
     }
+
     private fun submitBenForm() {
         if (validateCurrentPage()) {
             viewModel.saveForm()

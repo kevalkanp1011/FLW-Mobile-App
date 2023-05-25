@@ -12,7 +12,8 @@ import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.FormElement
 import timber.log.Timber
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 
@@ -433,14 +434,16 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.toLong()?.let {
             formElement.min?.let { min ->
                 formElement.max?.let { max ->
-                    if (it in Range(min, max)) null
-                    else if (it < min) {
+                    if (it < min) {
                         resources.getString(
                             R.string.form_input_min_limit_error, formElement.title, min
                         )
-                    } else resources.getString(
-                        R.string.form_input_max_limit_error, formElement.title, max
-                    )
+                    } else if (it > max) {
+                        resources.getString(
+                            R.string.form_input_max_limit_error, formElement.title, max
+                        )
+                    } else
+                        null
                 }
             }
         }
@@ -464,10 +467,22 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
 
     protected fun validateAadharNoOnEditText(formElement: FormElement): Int {
         formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.let {
-            if (it.length < 12 || (it.isNotEmpty() && it.first() != '0'))
+            if (it.length < 12 || (it.isNotEmpty() && it.first() == '0'))
                 resources.getString(R.string.form_input_error_invalid_aadhar) else null
         }
         return -1
+    }
+
+    fun getIndexById(id: Int): Int {
+        return list.find { it.id == id }?.let {
+            list.indexOf(it)
+        } ?: -1
+    }
+
+    fun setValueById(id : Int, value : String? ){
+        list.find { it.id==id }?.let {
+            it.value = value
+        }
     }
 
 

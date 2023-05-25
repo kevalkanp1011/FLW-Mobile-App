@@ -6,13 +6,27 @@ import android.text.InputType
 import android.util.Range
 import android.widget.LinearLayout
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.helpers.Languages
-import org.piramalswasthya.sakhi.model.*
-import org.piramalswasthya.sakhi.model.Gender.*
-import org.piramalswasthya.sakhi.model.InputType.*
+import org.piramalswasthya.sakhi.model.AgeUnit
+import org.piramalswasthya.sakhi.model.BenBasicCache
+import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.FormElement
+import org.piramalswasthya.sakhi.model.Gender.FEMALE
+import org.piramalswasthya.sakhi.model.Gender.MALE
+import org.piramalswasthya.sakhi.model.Gender.TRANSGENDER
+import org.piramalswasthya.sakhi.model.InputType.CHECKBOXES
+import org.piramalswasthya.sakhi.model.InputType.DATE_PICKER
+import org.piramalswasthya.sakhi.model.InputType.DROPDOWN
+import org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT
+import org.piramalswasthya.sakhi.model.InputType.IMAGE_VIEW
+import org.piramalswasthya.sakhi.model.InputType.RADIO
+import org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW
+import org.piramalswasthya.sakhi.model.TypeOfList
 import timber.log.Timber
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(context, language) {
 
@@ -91,7 +105,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         required = true,
         hasDependants = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
-        max = 15,
+        max = Konstants.maxAgeForAdolescent.toLong(),
         min = 1,
     )
     val dob = FormElement(
@@ -144,7 +158,11 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         hasDependants = true,
     )
     private val otherMobileNoOfRelation = FormElement(
-        id = 13, inputType = EDIT_TEXT, title = "Other - Mobile Number of", arrayId = -1, required = true
+        id = 13,
+        inputType = EDIT_TEXT,
+        title = "Other - Mobile Number of",
+        arrayId = -1,
+        required = true
     )
     private val contactNumber = FormElement(
         id = 14,
@@ -360,7 +378,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
             ageUnit.value = ageUnit.getStringFromPosition(saved.ageUnitId)
             gender.value = gender.getStringFromPosition(saved.genderId)
             fatherName.value = saved.fatherName
-            motherName.value =saved.motherName
+            motherName.value = saved.motherName
             mobileNoOfRelation.value =
                 mobileNoOfRelation.getStringFromPosition(saved.mobileNoOfRelationId)
             otherMobileNoOfRelation.value = saved.mobileOthers
@@ -398,9 +416,9 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         if (mobileNoOfRelation.value == mobileNoOfRelation.entries!!.last()) {
             list.add(list.indexOf(mobileNoOfRelation) + 1, otherMobileNoOfRelation)
         }
-        if(mobileNoOfRelation.value == mobileNoOfRelation.entries!![2]){
-            list.add(list.indexOf(mobileNoOfRelation)+1,contactNumberFamilyHead)
-        }else
+        if (mobileNoOfRelation.value == mobileNoOfRelation.entries!![2]) {
+            list.add(list.indexOf(mobileNoOfRelation) + 1, contactNumberFamilyHead)
+        } else
             list.add(list.indexOf(community), contactNumber)
         if (relationToHead.value == relationToHead.entries!!.last()) {
             list.add(list.indexOf(relationToHead) + 1, otherRelationToHead)
@@ -423,87 +441,87 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
     }
 
 
-/*
-    fun loadFirstPageOnViewMode(): List<FormElement> {
-        val viewList = mutableListOf(
-            pic,
-            dateOfReg,
-            firstName,
-            lastName,
-            dob,
-            age,
-            ageUnit,
-            gender,
-            fatherName,
-            motherName,
-            relationToHead,
-            mobileNoOfRelation,
-            contactNumber,
-            community,
-            religion,
-            rchId,
-        )
-
-        ben?.let { benCache ->
-            dateOfReg.value = getDateFromLong(benCache.regDate)
-            firstName.value = benCache.firstName
-            lastName.value = benCache.lastName
-            ageUnit.value =
-                resources.getStringArray(R.array.nbr_age_unit_array)[benCache.ageUnitId - 1]
-            age.value = benCache.age.toString()
-            dob.value = getDateFromLong(benCache.dob)
-            gender.value = resources.getStringArray(R.array.nbr_gender_array)[benCache.genderId - 1]
-            fatherName.value = benCache.fatherName
-            motherName.value = benCache.motherName
-            mobileNoOfRelation.value =
-                mobileNoOfRelation.entries?.get(benCache.mobileNoOfRelationId - 1)
-            otherMobileNoOfRelation.value = benCache.mobileOthers
-            contactNumber.value = benCache.contactNumber.toString()
-            relationToHead.value =
-                relationToHeadListDefault[benCache.familyHeadRelationPosition - 1]
-            community.value = community.entries?.get(benCache.communityId - 1)
-            religion.value = religion.entries?.get(benCache.religionId - 1)
-            otherReligion.value = benCache.religionOthers
-            childRegisteredAtAwc.value =
-                benCache.kidDetails?.childRegisteredAWCId?.takeIf { it > 0 }
-                    ?.let { childRegisteredAtAwc.entries?.get(it - 1) }
-            childRegisteredAtSchool.value =
-                benCache.kidDetails?.childRegisteredSchoolId?.takeIf { it > 0 }
-                    ?.let { childRegisteredAtSchool.entries?.get(it - 1) }
-            typeOfSchool.value = benCache.kidDetails?.typeOfSchoolId?.takeIf { it > 0 }
-                ?.let { typeOfSchool.entries?.get(it - 1) }
-            rchId.value = benCache.rchId
-        }
-        otherRelationToHead.value?.let {
-            viewList.add(
-                viewList.indexOf(relationToHead) + 1, otherRelationToHead
+    /*
+        fun loadFirstPageOnViewMode(): List<FormElement> {
+            val viewList = mutableListOf(
+                pic,
+                dateOfReg,
+                firstName,
+                lastName,
+                dob,
+                age,
+                ageUnit,
+                gender,
+                fatherName,
+                motherName,
+                relationToHead,
+                mobileNoOfRelation,
+                contactNumber,
+                community,
+                religion,
+                rchId,
             )
+
+            ben?.let { benCache ->
+                dateOfReg.value = getDateFromLong(benCache.regDate)
+                firstName.value = benCache.firstName
+                lastName.value = benCache.lastName
+                ageUnit.value =
+                    resources.getStringArray(R.array.nbr_age_unit_array)[benCache.ageUnitId - 1]
+                age.value = benCache.age.toString()
+                dob.value = getDateFromLong(benCache.dob)
+                gender.value = resources.getStringArray(R.array.nbr_gender_array)[benCache.genderId - 1]
+                fatherName.value = benCache.fatherName
+                motherName.value = benCache.motherName
+                mobileNoOfRelation.value =
+                    mobileNoOfRelation.entries?.get(benCache.mobileNoOfRelationId - 1)
+                otherMobileNoOfRelation.value = benCache.mobileOthers
+                contactNumber.value = benCache.contactNumber.toString()
+                relationToHead.value =
+                    relationToHeadListDefault[benCache.familyHeadRelationPosition - 1]
+                community.value = community.entries?.get(benCache.communityId - 1)
+                religion.value = religion.entries?.get(benCache.religionId - 1)
+                otherReligion.value = benCache.religionOthers
+                childRegisteredAtAwc.value =
+                    benCache.kidDetails?.childRegisteredAWCId?.takeIf { it > 0 }
+                        ?.let { childRegisteredAtAwc.entries?.get(it - 1) }
+                childRegisteredAtSchool.value =
+                    benCache.kidDetails?.childRegisteredSchoolId?.takeIf { it > 0 }
+                        ?.let { childRegisteredAtSchool.entries?.get(it - 1) }
+                typeOfSchool.value = benCache.kidDetails?.typeOfSchoolId?.takeIf { it > 0 }
+                    ?.let { typeOfSchool.entries?.get(it - 1) }
+                rchId.value = benCache.rchId
+            }
+            otherRelationToHead.value?.let {
+                viewList.add(
+                    viewList.indexOf(relationToHead) + 1, otherRelationToHead
+                )
+            }
+            otherMobileNoOfRelation.value?.let {
+                viewList.add(
+                    viewList.indexOf(mobileNoOfRelation) + 1, otherMobileNoOfRelation
+                )
+            }
+            otherReligion.value?.let { viewList.add(viewList.indexOf(religion) + 1, otherReligion) }
+
+            childRegisteredAtAwc.value?.let {
+                viewList.add(
+                    viewList.indexOf(rchId), childRegisteredAtAwc
+                )
+            }
+            childRegisteredAtSchool.value?.let {
+                viewList.add(
+                    viewList.indexOf(rchId), childRegisteredAtSchool
+                )
+            }
+            typeOfSchool.value?.let { viewList.add(viewList.indexOf(rchId), typeOfSchool) }
+
+
+
+            return viewList
+
         }
-        otherMobileNoOfRelation.value?.let {
-            viewList.add(
-                viewList.indexOf(mobileNoOfRelation) + 1, otherMobileNoOfRelation
-            )
-        }
-        otherReligion.value?.let { viewList.add(viewList.indexOf(religion) + 1, otherReligion) }
-
-        childRegisteredAtAwc.value?.let {
-            viewList.add(
-                viewList.indexOf(rchId), childRegisteredAtAwc
-            )
-        }
-        childRegisteredAtSchool.value?.let {
-            viewList.add(
-                viewList.indexOf(rchId), childRegisteredAtSchool
-            )
-        }
-        typeOfSchool.value?.let { viewList.add(viewList.indexOf(rchId), typeOfSchool) }
-
-
-
-        return viewList
-
-    }
-*/
+    */
 
 
     //////////////////////////////////////////Second Page///////////////////////////////////////////
@@ -811,12 +829,12 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         if (facility.value == facility.entries!!.last()) list.add(
             list.indexOf(facility) + 1, otherFacility
         )
-        if(birthDose.value ==birthDose.entries!!.first())
-            list.add(list.indexOf(birthDose)+1,birthDoseGiven)
-        if(term.value == term.entries!!.first())
-            list.add(list.indexOf(term)+1, termGestationalAge)
-        if(termGestationalAge.value == termGestationalAge.entries!!.first())
-            list.add(list.indexOf(term)+1, corticosteroidGivenAtLabor)
+        if (birthDose.value == birthDose.entries!!.first())
+            list.add(list.indexOf(birthDose) + 1, birthDoseGiven)
+        if (term.value == term.entries!![1])
+            list.add(list.indexOf(term) + 1, termGestationalAge)
+        if (termGestationalAge.value == termGestationalAge.entries!!.first())
+            list.add(list.indexOf(termGestationalAge) + 1, corticosteroidGivenAtLabor)
         if (whoConductedDelivery.value == whoConductedDelivery.entries!!.last()) list.add(
             list.indexOf(whoConductedDelivery) + 1, otherWhoConductedDelivery
         )
@@ -842,9 +860,11 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                 validateEmptyOnEditText(firstName)
                 validateAllCapsOrSpaceOnEditText(firstName)
             }
+
             lastName.id -> {
                 validateAllCapsOrSpaceOnEditText(lastName)
             }
+
             dob.id -> {
                 assignValuesToAgeAndAgeUnitFromDob(getLongFromDate(dob.value), age, ageUnit)
 //                val case1 = triggerDependants(
@@ -867,6 +887,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                 )
 
             }
+
             ageUnit.id, age.id -> {
                 if (age.value.isNullOrEmpty() || ageUnit.value == null) {
                     validateEmptyOnEditText(age)
@@ -878,14 +899,17 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                         age.min = 0
                         age.max = 31
                     }
+
                     ageUnit.entries?.get(1) -> {
                         age.min = 1
                         age.max = 11
                     }
+
                     ageUnit.entries?.get(2) -> {
                         age.min = 1
                         age.max = 14
                     }
+
                     else -> return -1
                 }
                 validateIntMinMax(age)
@@ -897,11 +921,13 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                                 Calendar.YEAR, -1 * age.value!!.toInt()
                             )
                         }
+
                         ageUnit.entries?.get(1) -> {
                             cal.add(
                                 Calendar.MONTH, -1 * age.value!!.toInt()
                             )
                         }
+
                         ageUnit.entries?.get(0) -> {
                             cal.add(
                                 Calendar.DAY_OF_YEAR, -1 * age.value!!.toInt()
@@ -928,6 +954,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     targetSideEffect = listOf(typeOfSchool)
                 )
             }
+
             childRegisteredAtSchool.id -> {
                 triggerDependants(
                     source = childRegisteredAtSchool,
@@ -950,6 +977,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     addItems = emptyList()
                 )
             }
+
             otherRelationToHead.id -> {
                 validateEmptyOnEditText(otherRelationToHead)
             }
@@ -957,18 +985,22 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
             otherMobileNoOfRelation.id -> {
                 validateEmptyOnEditText(otherMobileNoOfRelation)
             }
+
             fatherName.id -> {
                 validateEmptyOnEditText(fatherName)
                 validateAllCapsOrSpaceOnEditText(fatherName)
             }
+
             motherName.id -> {
                 validateEmptyOnEditText(motherName)
                 validateAllCapsOrSpaceOnEditText(motherName)
             }
+
             contactNumber.id -> {
                 validateEmptyOnEditText(contactNumber)
                 validateMobileNumberOnEditText(contactNumber)
             }
+
             mobileNoOfRelation.id -> {
                 when (index) {
                     0, 1 -> triggerDependants(
@@ -976,6 +1008,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                         removeItems = listOf(otherMobileNoOfRelation, contactNumberFamilyHead),
                         addItems = listOf(contactNumber)
                     )
+
                     2 -> {
                         contactNumberFamilyHead.value = familyHeadPhoneNo
                         triggerDependants(
@@ -984,6 +1017,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                             removeItems = listOf(otherMobileNoOfRelation, contactNumber)
                         )
                     }
+
                     else -> triggerDependants(
                         source = mobileNoOfRelation,
                         removeItems = listOf(contactNumberFamilyHead),
@@ -991,6 +1025,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     )
                 }
             }
+
             relationToHead.id -> {
                 triggerDependants(
                     source = relationToHead,
@@ -999,11 +1034,13 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     target = otherRelationToHead
                 )
             }
+
             religion.id -> {
                 triggerDependants(
                     source = religion, passedIndex = index, triggerIndex = 7, target = otherReligion
                 )
             }
+
             otherReligion.id -> validateEmptyOnEditText(otherReligion)
             rchId.id -> validateRchIdOnEditText(rchId)
             ///Page 2///
@@ -1014,20 +1051,24 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                         removeItems = listOf(otherPlaceOfBirth, facility, otherFacility),
                         addItems = emptyList()
                     )
+
                     1 -> triggerDependants(
                         source = placeOfBirth,
                         removeItems = listOf(otherPlaceOfBirth, otherFacility),
                         addItems = listOf(facility)
                     )
+
                     2 -> triggerDependants(
                         source = placeOfBirth,
                         removeItems = listOf(facility, otherFacility),
                         addItems = listOf(otherPlaceOfBirth)
                     )
+
                     else -> -1
                 }
 
             }
+
             facility.id -> {
                 triggerDependants(
                     source = facility,
@@ -1036,6 +1077,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     target = otherFacility,
                 )
             }
+
             otherPlaceOfBirth.id -> validateEmptyOnEditText(otherPlaceOfBirth)
             otherFacility.id -> validateEmptyOnEditText(otherFacility)
 
@@ -1047,6 +1089,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     target = otherWhoConductedDelivery,
                 )
             }
+
             otherWhoConductedDelivery.id -> validateEmptyOnEditText(otherWhoConductedDelivery)
             complicationsDuringDelivery.id -> {
                 triggerDependantsReverse(
@@ -1062,6 +1105,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     )
                 )
             }
+
             motherUnselected.id -> {
                 triggerDependants(
                     source = motherUnselected,
@@ -1070,6 +1114,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     target = motherOfChild,
                 )
             }
+
             birthDose.id -> {
                 triggerDependants(
                     source = birthDose,
@@ -1079,6 +1124,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
 
                     )
             }
+
             term.id -> {
                 triggerDependants(
                     source = term,
@@ -1088,6 +1134,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     targetSideEffect = listOf(corticosteroidGivenAtLabor)
                 )
             }
+
             termGestationalAge.id -> {
                 triggerDependants(
                     source = termGestationalAge,
@@ -1138,12 +1185,14 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
             }
             ben.fatherName = fatherName.value
             ben.motherName = motherName.value
-            ben.familyHeadRelationPosition = relationToHeadListDefault.indexOf(relationToHead.value)+1
+            ben.familyHeadRelationPosition =
+                relationToHeadListDefault.indexOf(relationToHead.value) + 1
             ben.familyHeadRelation = relationToHead.value
             ben.familyHeadRelationOther = otherRelationToHead.value
             ben.mobileNoOfRelationId = mobileNoOfRelation.getPosition()
             ben.mobileNoOfRelation =
                 mobileNoOfRelation.getStringFromPosition(ben.mobileNoOfRelationId)
+            ben.mobileOthers = otherMobileNoOfRelation.value
             ben.contactNumber =
                 if (ben.mobileNoOfRelationId == 3) familyHeadPhoneNo!!.toLong() else contactNumber.value!!.toLong()
             ben.community = community.value

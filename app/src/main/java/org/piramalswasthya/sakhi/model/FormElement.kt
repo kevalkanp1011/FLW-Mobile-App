@@ -1,7 +1,6 @@
 package org.piramalswasthya.sakhi.model
 
 import androidx.annotation.ArrayRes
-import java.io.File
 
 data class FormElement(
     val id: Int,
@@ -26,5 +25,5 @@ data class FormElement(
     var minDecimal: Double? = null,
     var maxDecimal: Double? = null,
     val orientation: Int? = null,
-    var imageFile: File? = null
+    var hasSpeechToText: Boolean = false
 )

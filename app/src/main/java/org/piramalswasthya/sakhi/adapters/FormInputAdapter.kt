@@ -14,17 +14,35 @@ import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.children
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.databinding.*
+import org.piramalswasthya.sakhi.databinding.RvItemFormCheckV2Binding
+import org.piramalswasthya.sakhi.databinding.RvItemFormDatepickerV2Binding
+import org.piramalswasthya.sakhi.databinding.RvItemFormDropdownV2Binding
+import org.piramalswasthya.sakhi.databinding.RvItemFormEditTextV2Binding
+import org.piramalswasthya.sakhi.databinding.RvItemFormHeadlineV2Binding
+import org.piramalswasthya.sakhi.databinding.RvItemFormImageViewV2Binding
+import org.piramalswasthya.sakhi.databinding.RvItemFormRadioV2Binding
+import org.piramalswasthya.sakhi.databinding.RvItemFormTextViewV2Binding
+import org.piramalswasthya.sakhi.databinding.RvItemFormTimepickerV2Binding
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.FormElement
-import org.piramalswasthya.sakhi.model.InputType.*
+import org.piramalswasthya.sakhi.model.InputType.CHECKBOXES
+import org.piramalswasthya.sakhi.model.InputType.DATE_PICKER
+import org.piramalswasthya.sakhi.model.InputType.DROPDOWN
+import org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT
+import org.piramalswasthya.sakhi.model.InputType.HEADLINE
+import org.piramalswasthya.sakhi.model.InputType.IMAGE_VIEW
+import org.piramalswasthya.sakhi.model.InputType.RADIO
+import org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW
+import org.piramalswasthya.sakhi.model.InputType.TIME_PICKER
+import org.piramalswasthya.sakhi.model.InputType.values
 import timber.log.Timber
-import java.util.*
+import java.util.Calendar
 
 class FormInputAdapter(
     private val imageClickListener: ImageClickListener? = null,
@@ -54,15 +72,27 @@ class FormInputAdapter(
 
         fun bind(item: FormElement, isEnabled: Boolean, formValueListener: FormValueListener?) {
             Timber.d("binding triggered!!!")
-            binding.form = item
-            binding.tilEditText.error = item.errorText
-            handleHintLength(item)
-            binding.et.isClickable = isEnabled
-            binding.et.isFocusable = isEnabled
             if (!isEnabled) {
+                binding.et.isClickable = false
+                binding.et.isFocusable = false
+                handleHintLength(item)
+                binding.form = item
+                binding.et.setText(item.value)
                 binding.executePendingBindings()
                 return
             }
+            binding.form = item
+            binding.tilEditText.error = item.errorText
+            handleHintLength(item)
+            if(item.hasSpeechToText){
+                binding.tilEditText.endIconDrawable = AppCompatResources.getDrawable(binding.root.context,R.drawable.ic_mic)
+                binding.tilEditText.setEndIconOnClickListener {
+                    formValueListener?.onValueChanged(item, Konstants.micClickIndex)
+                }
+            }else
+                binding.tilEditText.endIconDrawable = null
+
+
             //binding.et.setText(item.value.value)
             val textWatcher = object : TextWatcher {
                 override fun beforeTextChanged(
@@ -74,6 +104,7 @@ class FormInputAdapter(
                 }
 
                 override fun afterTextChanged(editable: Editable?) {
+                    item.value = editable?.toString()
                     Timber.d("editable : $editable Current value : ${item.value}  isNull: ${item.value == null} isEmpty: ${item.value == ""}")
                     formValueListener?.onValueChanged(item, -1)
                     if (item.errorText != binding.tilEditText.error) binding.tilEditText.error =

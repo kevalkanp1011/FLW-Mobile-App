@@ -2,7 +2,11 @@ package org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.
 
 import android.content.Context
 import android.net.Uri
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +25,7 @@ import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.UserRepo
 import timber.log.Timber
-import java.util.*
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -46,10 +50,10 @@ class NewBenRegG15ViewModel @Inject constructor(
         emit(it > 1)
     }
     val nextPageButtonVisibility = currentPage.transform {
-        emit(it==1 || (it ==2 && dataset.hasThirdPage()))
+        emit(it == 1 || (it == 2 && dataset.hasThirdPage()))
     }
     val submitPageButtonVisibility = currentPage.transform {
-        emit((it == 2 && !dataset.hasThirdPage()) || it == 3)
+        emit(((it == 2 && !dataset.hasThirdPage()) || it == 3) && recordExists.value == false)
     }
 
 //    private var _mTabPosition = 0
@@ -112,6 +116,7 @@ class NewBenRegG15ViewModel @Inject constructor(
 //                            dataset.mapValues(household, 1)
 //                            householdRepo.persistRecord(household)
                         }
+
                         3 -> dataset.setThirdPage(ben)
                     }
                 }
@@ -121,6 +126,17 @@ class NewBenRegG15ViewModel @Inject constructor(
 
     fun getIndexOfRelationToHead() = dataset.getIndexOfRelationToHead()
     fun getIndexOfAgeAtMarriage() = dataset.getIndexOfAgeAtMarriage()
+
+    fun getIndexOfExpectedDateOfDelivery() = dataset.getIndexOfExpectedDateOfDelivery()
+
+    fun getIndexOfFatherName() = dataset.getIndexOfFatherName()
+    fun getIndexOfMotherName() = dataset.getIndexOfMotherName()
+    fun getIndexOfSpouseName() = dataset.getIndexOfSpouseName()
+
+    fun updateValueByIdAndReturnListIndex ( id : Int, value : String?)  : Int{
+        dataset.setValueById(id, value)
+        return dataset.getIndexById(id )
+    }
 
     fun saveForm() {
         viewModelScope.launch {
@@ -174,9 +190,10 @@ class NewBenRegG15ViewModel @Inject constructor(
 
     }
 
-    fun setCurrentImageFormId(id : Int) {
+    fun setCurrentImageFormId(id: Int) {
         lastImageFormId = id
     }
+
     fun setImageUriToFormElement(dpUri: Uri) {
         dataset.setImageUriToFormElement(lastImageFormId, dpUri)
 
