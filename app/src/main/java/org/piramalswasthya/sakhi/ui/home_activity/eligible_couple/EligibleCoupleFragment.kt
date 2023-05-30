@@ -43,7 +43,6 @@ class EligibleCoupleFragment : Fragment() {
             BenListAdapter.BenClickListener(
                 { hhId, benId, isKid ->
 
-
                 },
                 {
 

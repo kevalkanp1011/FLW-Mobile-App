@@ -484,5 +484,10 @@
     <string name="form_input_error_invalid_rch">Invalid RCH ID !</string>
     <string name="form_input_error_invalid_aadhar">Invalid Aadhar Number</string>
 
+    <!-- Eligible couple registration -->
+    <string-array name="ecr_gender_array">
+        <item name="nbr_gender_1">Male</item>
+        <item name="nbr_gender_2">Female</item>
+    </string-array>
 
 </resources>
