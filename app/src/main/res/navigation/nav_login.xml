@@ -13,10 +13,18 @@
         <action
             android:id="@+id/action_signInFragment_to_homeActivity"
             app:destination="@id/homeActivity" />
+        <action
+            android:id="@+id/action_signInFragment_to_serviceLocationActivity"
+            app:destination="@id/serviceLocationActivity" />
     </fragment>
     <activity
         android:id="@+id/homeActivity"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.HomeActivity"
         android:label="activity_home_content"
         tools:layout="@layout/activity_home_content" />
+    <activity
+        android:id="@+id/serviceLocationActivity"
+        android:name="org.piramalswasthya.sakhi.ui.service_location_activity.ServiceLocationActivity"
+        android:label="activity_service_location"
+        tools:layout="@layout/activity_service_location" />
 </navigation>

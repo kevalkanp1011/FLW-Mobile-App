@@ -1,9 +1,12 @@
 package org.piramalswasthya.sakhi.model
 
+import android.content.Context
 import androidx.room.*
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.model.BenBasicCache.Companion.getAgeFromDob
 import org.piramalswasthya.sakhi.model.BenBasicCache.Companion.getAgeUnitFromDob
 import java.text.SimpleDateFormat
@@ -40,12 +43,13 @@ enum class Gender {
 @DatabaseView(
     viewName = "BEN_BASIC_CACHE",
     value = "SELECT b.beneficiaryId as benId, b.householdId as hhId, b.regDate, b.firstName as benName, b.lastName as benSurname, b.gender, b.dob as dob" +
-            ", b.ageUnit, b.contactNumber as mobileNo, b.fatherName, h.familyHeadName, b.registrationType as typeOfList, b.rchId" +
+            ", b.contactNumber as mobileNo, b.fatherName, h.fam_familyHeadName as familyHeadName, b.registrationType as typeOfList, b.rchId" +
             ", b.isHrpStatus as hrpStatus, b.syncState, b.gen_reproductiveStatusId as reproductiveStatusId, b.isKid, b.immunizationStatus," +
+            " b.loc_village_id as villageId,"+
             " cbac.benId is not null as cbacFilled, cbac.syncState as cbacSyncState," +
             " cdr.benId is not null as cdrFilled, cdr.syncState as cdrSyncState, " +
             " mdsr.benId is not null as mdsrFilled, mdsr.syncState as mdsrSyncState," +
-            " pmsma.benId is not null as pmsmaFilled, "+//" pmsma.sync as mdsrSyncState, " +
+            " pmsma.benId is not null as pmsmaFilled, " +//" pmsma.sync as mdsrSyncState, " +
             " hbnc.benId is not null as hbncFilled " +
             "from BENEFICIARY b " +
             "JOIN HOUSEHOLD h ON b.householdId = h.householdId " +
@@ -74,6 +78,7 @@ data class BenBasicCache(
     val reproductiveStatusId: Int,
     val isKid: Boolean,
     val immunizationStatus: Boolean,
+    val villageId : Int,
     val cbacFilled: Boolean,
     val cbacSyncState: SyncState?,
     val cdrFilled: Boolean,
@@ -81,7 +86,7 @@ data class BenBasicCache(
     val mdsrFilled: Boolean,
     val mdsrSyncState: SyncState?,
     val pmsmaFilled: Boolean,
-    val hbncFilled : Boolean,
+    val hbncFilled: Boolean,
 ) {
     companion object {
         private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
@@ -107,8 +112,8 @@ data class BenBasicCache(
             val diffLong = System.currentTimeMillis() - dob
             return when (TimeUnit.MILLISECONDS.toDays(diffLong).toInt()) {
                 in 0..31 -> AgeUnit.DAYS
-                in 366..Int.MAX_VALUE -> AgeUnit.YEARS
-                else -> AgeUnit.MONTHS
+                in 32..365 -> AgeUnit.MONTHS
+                else -> AgeUnit.YEARS
             }
 
         }
@@ -254,7 +259,9 @@ data class BenBasicCache(
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             form1Filled = false,
-            form1Enabled = hbncFilled || dob>(System.currentTimeMillis()-TimeUnit.DAYS.toMillis(42)),
+            form1Enabled = hbncFilled || dob > (System.currentTimeMillis() - TimeUnit.DAYS.toMillis(
+                42
+            )),
             syncState = syncState
         )
     }
@@ -569,9 +576,9 @@ data class BenRegCache(
 
     var userImage: String? = null,
 
-    @Suppress("ArrayInDataClass")
-    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
-    var userImageBlob: ByteArray? = null,
+//    @Suppress("ArrayInDataClass")
+//    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
+//    var userImageBlob: ByteArray? = null,
 
     var regDate: Long = 0,
 
@@ -589,7 +596,7 @@ data class BenRegCache(
 
     var ageUnit: AgeUnit? = null,
 
-    var age_unitId: Int = 0,
+    var ageUnitId: Int = 0,
 
     var fatherName: String? = null,
 
@@ -714,7 +721,7 @@ data class BenRegCache(
     var genDetails: BenRegGen? = null,
 
     @Embedded(prefix = "loc_")
-    var locationRecord: LocationRecord? = null,
+    var locationRecord: LocationRecord,
 
     var processed: String? = null,
 
@@ -732,13 +739,13 @@ data class BenRegCache(
 
     var isDraft: Boolean,
 
-    ) {
+    ) : FormDataModel {
 
-    fun asNetworkPostModel(user: UserCache): BenPost {
+    fun asNetworkPostModel(context: Context, user: UserCache): BenPost {
         return BenPost(
             householdId = householdId.toString(),
             benRegId = benRegId,
-            countyid = locationRecord?.countryId!!,
+            countyid = locationRecord.country.id,
             processed = processed,
             providerServiceMapID = user.serviceMapId,
             vanID = user.vanId,
@@ -823,9 +830,9 @@ data class BenRegCache(
             createdDate = getDateTimeStringFromLong(createdDate!!)!!,
             ncdPriority = ncdPriority,
             guidelineId = guidelineId ?: "0",
-            villageName = locationRecord?.village,
-            currSubDistrictId = locationRecord?.blockId!!,
-            villageId = locationRecord?.villageId!!,
+            villageName = locationRecord.village.name,
+            currSubDistrictId = locationRecord.block.id,
+            villageId = locationRecord.village.id,
             expectedDateOfDelivery = getDateTimeStringFromLong(genDetails?.expectedDateOfDelivery),
             isHrpStatus = isHrpStatus,
             menstrualStatus = genDetails?.menstrualStatus,
@@ -846,7 +853,10 @@ data class BenRegCache(
             nishchayDeliveryStatusPosition = nishchayDeliveryStatusPosition,
             nayiPahalDeliveryStatusPosition = nayiPahalDeliveryStatusPosition,
             isImmunizationStatus = immunizationStatus,
-            userImage = "abc"// Base64.encodeToString(userImageBlob, Base64.DEFAULT),
+            userImage = ImageUtils.getEncodedStringForBenImage(
+                context,
+                beneficiaryId
+            )?:""// Base64.encodeToString(userImageBlob, Base64.DEFAULT),
         )
     }
 
@@ -911,10 +921,10 @@ data class BenRegCache(
             serverUpdatedStatus = serverUpdatedStatus,
             VanID = user.vanId,
             ProviderServiceMapID = user.serviceMapId,
-            Countyid = locationRecord!!.countryId,
-            stateid = locationRecord!!.stateId,
-            districtid = locationRecord!!.districtId,
-            villageid = locationRecord!!.villageId,
+            Countyid = locationRecord.country.id,
+            stateid = locationRecord.state.id,
+            districtid = locationRecord.district.id,
+            villageid = locationRecord.village.id,
 
             )
     }
@@ -976,8 +986,8 @@ data class BenRegNetwork(
     @Json(name = "age_unit")
     var age_unit: String? = null,
 
-    @Json(name = "age_unitId")
-    var age_unitId: Int = 0,
+    @Json(name = "ageUnitId")
+    var ageUnitId: Int = 0,
 
     @Json(name = "maritalstatus")
     var maritalstatus: String? = null,
@@ -1368,7 +1378,7 @@ fun asCacheModel(benRegNetwork: BenRegNetwork, newBornRegNetwork: NewBornRegNetw
            },
            genderId = genderId,
            dob = getLongFromDate(dob),
-           age_unitId = age_unitId,
+           ageUnitId = ageUnitId,
            fatherName = fatherName,
            motherName = motherName,
            familyHeadRelation = familyHeadRelation,

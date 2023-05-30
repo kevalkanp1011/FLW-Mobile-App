@@ -56,12 +56,12 @@ class ChildCareFragment : Fragment() {
             viewModel.scope
         )
         binding.rvIconGrid.adapter = iconAdapter
-        iconAdapter.submitList(iconDataset.getChildCareDataset())
+        iconAdapter.submitList(iconDataset.getChildCareDataset(resources))
     }
     override fun onStart() {
         super.onStart()
         activity?.let{
-            (it as HomeActivity).setLogo(R.drawable.ic__child_care)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__child_care)
         }
     }
 

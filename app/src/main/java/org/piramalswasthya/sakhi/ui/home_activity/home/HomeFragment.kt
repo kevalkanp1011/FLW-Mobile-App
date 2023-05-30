@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkQuery
@@ -18,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.HomePagerAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentHomeBinding
+import org.piramalswasthya.sakhi.helpers.Languages.*
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.work.PullFromAmritWorker
 import org.piramalswasthya.sakhi.work.WorkerUtils
@@ -80,19 +79,14 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Timber.d("onViewCreated() called! $numViewCopies")
-        if (!viewModel.isLocationSet()) {
-            findNavController().navigate(HomeFragmentDirections.actionNavHomeToServiceTypeFragment())
-        }
+//        if (!viewModel.isLocationSet()) {
+//            findNavController().navigate(HomeFragmentDirections.actionNavHomeToServiceTypeFragment())
+//        }
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, onBackPressedCallback)
-        binding.etSelectVillage.setOnClickListener {
-            findNavController().navigate(HomeFragmentDirections.actionNavHomeToServiceTypeFragment())
-        }
 //        binding.btnNhhr.setOnClickListener {
 //            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToNewHouseholdFragment())
 //        }
 
-        if (viewModel.isLocationSet())
-            binding.etSelectVillage.setText(viewModel.getLocationRecord().village)
         setUpViewPager()
         setUpWorkerProgress()
 
@@ -142,8 +136,8 @@ class HomeFragment : Fragment() {
         binding.vp2Home.adapter = HomePagerAdapter(this)
         TabLayoutMediator(binding.tlHomeViewpager, binding.vp2Home) { tab, position ->
             tab.text = when (position) {
-                0 -> "Scheduler"
-                1 -> "Home"
+                0 -> requireActivity().getString(R.string.menu_home_scheduler)
+                1 -> requireActivity().getString(R.string.menu_home_home)
                 else -> "NA"
             }
         }.attach()
@@ -151,16 +145,28 @@ class HomeFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        (activity as HomeActivity?)?.let {
-            it.setLogo(R.drawable.ic_home)
-            it.setHomeMenuItemVisibility(false)
+        (activity as HomeActivity?)?.let { homeActivity ->
+            homeActivity.addClickListenerToHomepageActionBarTitle()
+            viewModel.locationRecord?.village?.let {
+                homeActivity.updateActionBar(
+                    R.drawable.ic_home, when (viewModel.currentLanguage) {
+                        ENGLISH -> it.name
+                        HINDI -> it.nameHindi ?: it.name
+                        ASSAMESE -> it.nameAssamese ?: it.name
+                    }
+                )
+                homeActivity.setHomeMenuItemVisibility(false)
+            }
+            binding.vp2Home.setCurrentItem(1, false)
         }
-        binding.vp2Home.setCurrentItem(1, false)
     }
 
     override fun onStop() {
         super.onStop()
-        (activity as HomeActivity?)?.setHomeMenuItemVisibility(true)
+        (activity as HomeActivity?)?.let {
+            it.setHomeMenuItemVisibility(true)
+            it.removeClickListenerToHomepageActionBarTitle()
+        }
     }
 
 

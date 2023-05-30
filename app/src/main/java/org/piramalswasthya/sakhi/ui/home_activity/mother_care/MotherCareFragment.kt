@@ -58,14 +58,14 @@ class MotherCareFragment : Fragment() {
             viewModel.scope
         )
         binding.rvIconGrid.adapter = rvAdapter
-        rvAdapter.submitList(iconDataset.getMotherCareDataset())
+        rvAdapter.submitList(iconDataset.getMotherCareDataset(resources))
 
     }
 
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).setLogo(R.drawable.ic__mother_care)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__mother_care)
         }
     }
 

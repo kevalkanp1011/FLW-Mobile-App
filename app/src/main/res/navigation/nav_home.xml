@@ -47,9 +47,6 @@
             android:id="@+id/action_nav_home_to_eligibleCoupleFragment"
             app:destination="@id/eligibleCoupleFragment" />
         <action
-            android:id="@+id/action_nav_home_to_serviceTypeFragment"
-            app:destination="@id/serviceTypeFragment" />
-        <action
             android:id="@+id/action_homeFragment_to_newHouseholdFragment"
             app:destination="@id/newHouseholdFragment" />
         <action
@@ -59,7 +56,7 @@
     <fragment
         android:id="@+id/allHouseholdFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.all_household.AllHouseholdFragment"
-        android:label="@string/home_icon_all_household"
+        android:label="@string/icon_title_household"
         tools:layout="@layout/fragment_display_search_rv_button">
         <action
             android:id="@+id/action_allHouseholdFragment_to_newHouseholdFragment"
@@ -74,7 +71,7 @@
     <fragment
         android:id="@+id/allBenFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.all_ben.AllBenFragment"
-        android:label="@string/home_icon_title_all_ben"
+        android:label="@string/icon_title_ben"
         tools:layout="@layout/fragment_all_ben">
         <action
             android:id="@+id/action_allBenFragment_to_newBenRegTypeFragment"
@@ -89,12 +86,12 @@
     <fragment
         android:id="@+id/eligibleCoupleFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.EligibleCoupleFragment"
-        android:label="@string/home_icon_title_elig_coup"
+        android:label="@string/icon_title_ec"
         tools:layout="@layout/fragment_eligible_couple" />
     <fragment
         android:id="@+id/childCareFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.child_care.ChildCareFragment"
-        android:label="@string/home_icon_title_child_care"
+        android:label="@string/icon_title_cc"
         tools:layout="@layout/rv_icon_grid">
         <action
             android:id="@+id/action_childCareFragment_to_infantListFragment"
@@ -109,7 +106,7 @@
     <fragment
         android:id="@+id/motherCareFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.mother_care.MotherCareFragment"
-        android:label="@string/home_icon_title_mother_care"
+        android:label="@string/icon_title_mc"
         tools:layout="@layout/rv_icon_grid">
         <action
             android:id="@+id/action_motherCareFragment_to_pregnancyListFragment"
@@ -127,7 +124,7 @@
     <fragment
         android:id="@+id/deathReportsFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.death_reports.DeathReportsFragment"
-        android:label="@string/home_icon_title_death_rep"
+        android:label="@string/icon_title_dr"
         tools:layout="@layout/fragment_death_reports">
         <action
             android:id="@+id/action_deathReportsFragment_to_mdsrListFragment"
@@ -139,17 +136,17 @@
     <fragment
         android:id="@+id/generalOpCareFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.general_op_care.GeneralOpCareFragment"
-        android:label="@string/home_icon_title_gen_op"
+        android:label="@string/icon_title_gop"
         tools:layout="@layout/fragment_general_op_care" />
     <fragment
         android:id="@+id/hrpCasesFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.hrp_cases.HrpCasesFragment"
-        android:label="@string/home_icon_title_hrp_cases"
+        android:label="@string/icon_title_hrp"
         tools:layout="@layout/fragment_hrp_cases" />
     <fragment
         android:id="@+id/immunizationDueTypeFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.immunization_due.ImmunizationDueTypeFragment"
-        android:label="@string/home_icon_title_imm_due"
+        android:label="@string/icon_title_imm"
         tools:layout="@layout/fragment_immunization_due">
         <action
             android:id="@+id/action_immunizationDueTypeFragment_to_childImmunizationFragment"
@@ -161,12 +158,12 @@
     <fragment
         android:id="@+id/menopauseStageFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.menopause_stage.MenopauseStageFragment"
-        android:label="@string/home_icon_title_menopause_stage_list"
+        android:label="@string/icon_title_msl"
         tools:layout="@layout/fragment_menopause_stage" />
     <fragment
         android:id="@+id/ncdFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.NcdFragment"
-        android:label="@string/home_icon_title_ncd"
+        android:label="@string/icon_title_ncd"
         tools:layout="@layout/rv_icon_grid">
         <action
             android:id="@+id/action_ncdFragment_to_ncdEligibleListFragment"
@@ -184,22 +181,11 @@
     <fragment
         android:id="@+id/villageLevelFormsFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.village_level_forms.VillageLevelFormsFragment"
-        android:label="@string/home_icon_title_village_lvl_forms"
+        android:label="@string/icon_title_vlf"
         tools:layout="@layout/rv_icon_grid">
         <action
             android:id="@+id/action_villageLevelFormsFragment_to_surveyRegisterFragment"
             app:destination="@id/surveyRegisterFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/serviceTypeFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.service_type.ServiceTypeFragment"
-        android:label="@string/frag_service_type_title"
-        tools:layout="@layout/fragment_service_type">
-        <action
-            android:id="@+id/action_serviceTypeFragment_to_nav_home"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/newHouseholdFragment"
@@ -580,8 +566,7 @@
     <fragment
         android:id="@+id/childImmunizationFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.immunization_due.child_immunization.ChildImmunizationFragment"
-        android:label="fragment_child_immunization"
-        tools:layout="@layout/fragment_child_immunization" />
+        android:label="fragment_child_immunization" />
     <fragment
         android:id="@+id/motherImmunizationFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.immunization_due.mother_immunization.MotherImmunizationFragment"

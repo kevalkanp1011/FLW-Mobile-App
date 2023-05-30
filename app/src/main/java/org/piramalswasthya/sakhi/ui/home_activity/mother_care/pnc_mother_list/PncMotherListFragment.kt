@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
@@ -91,7 +90,7 @@ class PncMotherListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let{
-            (it as HomeActivity).setLogo(R.drawable.ic__pnc)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__pnc)
         }
     }
 

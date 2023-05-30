@@ -11,11 +11,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.databinding.FragmentFpotBinding
-import org.piramalswasthya.sakhi.ui.home_activity.mother_care.pmjay.PmjayViewModel
 import org.piramalswasthya.sakhi.work.WorkerUtils
-import timber.log.Timber
 
 @AndroidEntryPoint
 class FpotFragment : Fragment() {
@@ -47,7 +45,7 @@ class FpotFragment : Fragment() {
             if (validate()) viewModel.submitForm()
         }
         viewModel.exists.observe(viewLifecycleOwner) {exists ->
-            val adapter = FormInputAdapter(isEnabled = !exists)
+            val adapter = FormInputAdapterOld(isEnabled = !exists)
             binding.hbncForm.rvInputForm.adapter = adapter
             if (exists) {
                 binding.btnHbncSubmit.visibility = View.GONE

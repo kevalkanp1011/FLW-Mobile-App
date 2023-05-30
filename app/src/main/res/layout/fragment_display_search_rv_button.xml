@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:drawableStart="@drawable/ic_search"
         android:drawablePadding="@dimen/padding_normal"
-        android:hint="Search"
+        android:hint="@string/household_search"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -37,7 +37,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="No Records Found !!"
+            android:padding="@dimen/padding_normal"
+            android:text="@string/no_records_found"
             android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
     </FrameLayout>
 

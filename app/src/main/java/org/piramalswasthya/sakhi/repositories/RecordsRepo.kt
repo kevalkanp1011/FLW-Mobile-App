@@ -1,162 +1,100 @@
 package org.piramalswasthya.sakhi.repositories
 
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.map
-import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.database.room.dao.BenDao
+import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@ActivityRetainedScoped
 class RecordsRepo @Inject constructor(
-    database: InAppDb,
+    householdDao: HouseholdDao,
+    benDao: BenDao,
+    preferenceDao: PreferenceDao
 ) {
+    private val selectedVillage = preferenceDao.getLocationRecord()!!.village.id
 
-    val hhList = database.householdDao.getAllHouseholds()
+    val hhList = householdDao.getAllHouseholds(selectedVillage)
         .map { list -> list.map { it.asBasicDomainModel() } }
     val hhCount = hhList.map { it.size }
 
-    val benList = database.benDao.getAllBen().map { list -> list.map { it.asBasicDomainModel() } }
+    val benList = benDao.getAllBen(selectedVillage).map { list -> list.map { it.asBasicDomainModel() } }
     val benListCount = benList.map { it.size }
 
-    val eligibleCoupleList = database.benDao.getAllEligibleCoupleList()
+    val eligibleCoupleList = benDao.getAllEligibleCoupleList(selectedVillage)
         .map { list -> list.map { it.asBasicDomainModel() } }
     val eligibleCoupleListCount = eligibleCoupleList.map { it.size }
 
-    val pregnantList = database.benDao.getAllPregnancyWomenList()
+    val pregnantList = benDao.getAllPregnancyWomenList(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForPmsmaForm() } }
     val pregnantListCount = pregnantList.map { it.size }
 
-    val deliveryList = database.benDao.getAllDeliveryStageWomenList()
+    val deliveryList = benDao.getAllDeliveryStageWomenList(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForPmsmaForm() } }
     val deliveryListCount = deliveryList.map { it.size }
 
-    val ncdList = database.benDao.getAllNCDList()
+    val ncdList = benDao.getAllNCDList(selectedVillage)
         .map { list -> list.map { it.asBasicDomainModel() } }
     val ncdListCount = ncdList.map { it.size }
 
-    val ncdEligibleList = database.benDao.getAllNCDEligibleList()
+    val ncdEligibleList = benDao.getAllNCDEligibleList(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForCbacForm() } }
     val ncdEligibleListCount = ncdEligibleList.map { it.size }
 
-    val ncdPriorityList = database.benDao.getAllNCDPriorityList()
+    val ncdPriorityList = benDao.getAllNCDPriorityList(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForCbacForm() } }
     val ncdPriorityListCount = ncdPriorityList.map { it.size }
 
-    val ncdNonEligibleList = database.benDao.getAllNCDNonEligibleList()
+    val ncdNonEligibleList = benDao.getAllNCDNonEligibleList(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForCbacForm() } }
     val ncdNonEligibleListCount = ncdNonEligibleList.map { it.size }
 
-    val menopauseList = database.benDao.getAllMenopauseStageList()
+    val menopauseList = benDao.getAllMenopauseStageList(selectedVillage)
         .map { list -> list.map { it.asBasicDomainModel() } }
     val menopauseListCount = menopauseList.map { it.size }
 
-    val reproductiveAgeList = database.benDao.getAllReproductiveAgeList()
+    val reproductiveAgeList = benDao.getAllReproductiveAgeList(selectedVillage)
         .map { list -> list.map { it.asBasicDomainModelForFpotForm() } }
     val reproductiveAgeListCount = reproductiveAgeList.map { it.size }
 
-    val infantList = database.benDao.getAllInfantList()
+    val infantList = benDao.getAllInfantList(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForHbncForm() } }
     val infantListCount = infantList.map { it.size }
 
-    val childList = database.benDao.getAllChildList(minChildAge(), maxChildAge())
+    val childList = benDao.getAllChildList(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForHbycForm() } }
     val childListCount = childList.map { it.size }
 
     val adolescentList =
-        database.benDao.getAllAdolescentList()
+        benDao.getAllAdolescentList(selectedVillage)
             .map { list -> list.map { it.asBasicDomainModel() } }
     val adolescentListCount = adolescentList.map { it.size }
 
-    val immunizationList = database.benDao.getAllImmunizationDueList()
+    val immunizationList = benDao.getAllImmunizationDueList(selectedVillage)
         .map { list -> list.map { it.asBasicDomainModel() } }
     val immunizationListCount = menopauseList.map { it.size }
 
     val hrpList =
-        database.benDao.getAllHrpCasesList().map { list -> list.map { it.asBasicDomainModel() } }
+        benDao.getAllHrpCasesList(selectedVillage).map { list -> list.map { it.asBasicDomainModel() } }
     val hrpListCount = menopauseList.map { it.size }
 
-    val pncMotherList = database.benDao.getAllPNCMotherList()
+    val pncMotherList = benDao.getAllPNCMotherList(selectedVillage)
         .map { list -> list.map { it.asBasicDomainModelForPmjayForm() } }
     val pncMotherListCount = pncMotherList.map { it.size }
 
-    val cdrList = database.benDao.getAllCDRList()
+    val cdrList = benDao.getAllCDRList(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForCdrForm() } }
 //    val cdrListCount = cdrList.map { it.size }
 
-    val mdsrList = database.benDao.getAllMDSRList()
+    val mdsrList = benDao.getAllMDSRList(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForMdsrForm() } }
 
-    val childrenImmunizationList = database.benDao.getAllChildrenImmunizationList()
+    val childrenImmunizationList = benDao.getAllChildrenImmunizationList(selectedVillage)
         .map { list -> list.map { it.asBasicDomainModel() } }
     val childrenImmunizationListCount = childrenImmunizationList.map { it.size }
 
-    val motherImmunizationList = database.benDao.getAllMotherImmunizationList()
+    val motherImmunizationList = benDao.getAllMotherImmunizationList(selectedVillage)
         .map { list -> list.map { it.asBasicDomainModel() } }
     val motherImmunizationListCount = motherImmunizationList.map { it.size }
-
-//    val mdsrListCount = mdsrList.map { it.size }
-
-
-//    private fun getNcdTimestamp() = Calendar.getInstance().run {
-//        add(Calendar.YEAR, -30)
-//        timeInMillis
-//    }
-//
-//    private fun maxReproductiveAge() = Calendar.getInstance().run {
-//        add(Calendar.YEAR, -15)
-//        timeInMillis
-//    }
-//
-//    private fun minAdolescentAge(): Long {
-//        val minAdolescentAge = Calendar.getInstance().run {
-//            add(Calendar.YEAR, -15)
-//            timeInMillis
-//        }
-//        return minAdolescentAge
-//    }
-//
-//    private fun cdrTimestamp(): Long {
-//        val cdrTimestamp = Calendar.getInstance().run {
-//            add(Calendar.YEAR, -15)
-//            timeInMillis
-//        }
-//        return cdrTimestamp
-//    }
-//
-//    private fun minReproductiveAge() = Calendar.getInstance().run {
-//        add(Calendar.YEAR, -60)
-//        timeInMillis
-//    }
-//
-//    private fun infantTimestamp(): Long {
-//        val infantTimestamp = Calendar.getInstance().run {
-//            add(Calendar.YEAR, -2)
-//            timeInMillis
-//        }
-//        return infantTimestamp
-//    }
-//
-//    private fun minChildAge(): Long {
-//        val minChildAge = Calendar.getInstance().run {
-//            add(Calendar.YEAR, -6)
-//            timeInMillis
-//        }
-//        return minChildAge
-//    }
-//
-//    private fun maxAdolescentAge(): Long {
-//        val maxAdolescentAge = Calendar.getInstance().run {
-//            add(Calendar.YEAR, -6)
-//            timeInMillis
-//        }
-//        return maxAdolescentAge
-//    }
-//
-//    private fun maxChildAge(): Long {
-//        val maxChildAge = Calendar.getInstance().run {
-//            add(Calendar.YEAR, -2)
-//            timeInMillis
-//        }
-//        return maxChildAge
-//    }
-
 }

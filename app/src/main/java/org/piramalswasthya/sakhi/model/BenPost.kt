@@ -27,7 +27,7 @@ data class BenPost(
     val ageAtMarriage: Int = 0,
     @Json(name = "age_unit")
     val age_unit: String,
-    @Json(name = "age_unitId")
+    @Json(name = "ageUnitId")
     val age_unitId: Int,
     @Json(name = "ashaid")
     val ashaId: Int,

@@ -13,7 +13,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.ui.home_activity.mother_care.pmsma.PmsmaViewModel.State
@@ -83,7 +83,7 @@ class PmsmaFragment : Fragment() {
         }
         viewModel.exists.observe(viewLifecycleOwner) {exists ->
             Timber.d("observing exists : $exists")
-            val adapter = FormInputAdapter(isEnabled = !exists)
+            val adapter = FormInputAdapterOld(isEnabled = !exists)
             binding.form.rvInputForm.adapter = adapter
             if (exists) {
                 binding.btnSubmit.visibility = View.GONE
@@ -151,7 +151,7 @@ class PmsmaFragment : Fragment() {
     fun validate(): Boolean {
 
         val result = binding.form.rvInputForm.adapter?.let {
-            (it as FormInputAdapter).validateInput()
+            (it as FormInputAdapterOld).validateInput()
         }
         Timber.d("Validation : $result")
         return if (result == -1)

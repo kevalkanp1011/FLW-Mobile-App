@@ -19,6 +19,7 @@ import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
+import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -96,7 +97,7 @@ class ChildListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let{
-            (it as HomeActivity).setLogo(R.drawable.ic__child)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__child)
         }
     }
 

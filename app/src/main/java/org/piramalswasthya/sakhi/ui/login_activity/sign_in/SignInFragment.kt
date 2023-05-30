@@ -40,16 +40,13 @@ class SignInFragment : Fragment() {
     private val viewModel: SignInViewModel by viewModels()
 
     private val stateUnselectedAlert by lazy {
-        AlertDialog.Builder(context)
-            .setTitle("State Missing")
+        AlertDialog.Builder(context).setTitle("State Missing")
             .setMessage("Please choose user registered state: ")
-            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-            .create()
+            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }.create()
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSignInBinding.inflate(layoutInflater, container, false)
         return binding.root
@@ -60,15 +57,16 @@ class SignInFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.btnLogin.setOnClickListener {
             view.findFocus()?.let { view ->
-                val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                val imm =
+                    activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                 imm?.hideSoftInputFromWindow(view.windowToken, 0)
             }
             viewModel.loginInClicked()
         }
-        var ee=0
+        var ee = 0
         binding.ivNhmLogo.setOnLongClickListener {
-            if(ee==0) {
-                Toast.makeText(context, "Madhav Rocks!#?/!", Toast.LENGTH_SHORT/4).show()
+            if (ee == 0) {
+                Toast.makeText(context, "Madhav Rocks!#?/!", Toast.LENGTH_SHORT / 4).show()
                 ee++
             }
             true
@@ -113,16 +111,17 @@ class SignInFragment : Fragment() {
                         binding.cbRemember.isChecked = true
                         hasRememberMePassword = true
                     }
-                    viewModel.fetchRememberedState()?.let{
-                        binding.toggleStates.check(when(it){
-                            "Bihar" -> binding.tbtnBihar.id
-                            "Assam" -> binding.tbtnAssam.id
-                            else -> throw IllegalStateException("State unknown $it")
-                        })
+                    viewModel.fetchRememberedState()?.let {
+                        binding.toggleStates.check(
+                            when (it) {
+                                "Bihar" -> binding.tbtnBihar.id
+                                "Assam" -> binding.tbtnAssam.id
+                                else -> throw IllegalStateException("State unknown $it")
+                            }
+                        )
                         hasRememberMeState = true
                     }
-                    if (hasRememberMeUsername && hasRememberMePassword && hasRememberMeState)
-                        validateInput()
+                    if (hasRememberMeUsername && hasRememberMePassword && hasRememberMeState) validateInput()
                 }
                 State.LOADING -> validateInput()
                 State.ERROR_INPUT -> {
@@ -147,18 +146,19 @@ class SignInFragment : Fragment() {
                     val firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext())
                     firebaseAnalytics.logEvent("Click_Dice_track_2") {
                         param(
-                            "LOG STATE",
-                            "${binding.etUsername.text} logged in!"
+                            "LOG STATE", "${binding.etUsername.text} logged in!"
                         ) // send predefined parameters
                     }
                     if (binding.cbRemember.isChecked) {
                         val username = binding.etUsername.text.toString()
                         val password = binding.etPassword.text.toString()
-                        viewModel.rememberUser(username, password, when(binding.toggleStates.checkedButtonId){
-                            binding.tbtnBihar.id -> "Bihar"
-                            binding.tbtnAssam.id -> "Assam"
-                            else -> throw IllegalStateException("Unknown State!! !! !!")
-                        })
+                        viewModel.rememberUser(
+                            username, password, when (binding.toggleStates.checkedButtonId) {
+                                binding.tbtnBihar.id -> "Bihar"
+                                binding.tbtnAssam.id -> "Assam"
+                                else -> throw IllegalStateException("Unknown State!! !! !!")
+                            }
+                        )
                     } else {
                         viewModel.forgetUser()
                     }
@@ -166,7 +166,10 @@ class SignInFragment : Fragment() {
                     binding.pbSignIn.visibility = View.VISIBLE
                     binding.tvError.visibility = View.GONE
                     WorkerUtils.triggerGenBenIdWorker(requireContext())
-                    findNavController().navigate(SignInFragmentDirections.actionSignInFragmentToHomeActivity())
+                    findNavController().navigate(
+                        if (prefDao.getLocationRecord() == null) SignInFragmentDirections.actionSignInFragmentToServiceLocationActivity()
+                        else SignInFragmentDirections.actionSignInFragmentToHomeActivity()
+                    )
                     activity?.finish()
                 }
             }

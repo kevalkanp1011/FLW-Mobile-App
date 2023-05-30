@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.model
 
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -43,40 +44,24 @@ data class UserCache(
     @ColumnInfo(name = "van_id")
     val vanId : Int,
 
-    @ColumnInfo(name = "country_id")
-    val countryId : Int,
+    @Embedded(prefix = "country_")
+    val country : LocationEntity,
 
-    val stateIds: List<Int>,
+//    val stateIds: List<Int>,
+//
+//    val districtIds:List<Int>,
+//
+//    val blockIds:List<Int> ,
+//
+//    val villageIds:List<Int>,
 
-    val districtIds:List<Int>,
+    val states: List<LocationEntity>,
 
-    val blockIds:List<Int> ,
+    val districts: List<LocationEntity>,
 
-    val villageIds:List<Int>,
+    val blocks: List<LocationEntity>,
 
-    @ColumnInfo(name = "state_en")
-    val stateEnglish: List<String>,
-
-    @ColumnInfo(name = "state_hi")
-    val stateHindi: List<String>,
-
-    @ColumnInfo(name = "district_en")
-    val districtEnglish: List<String>,
-
-    @ColumnInfo(name = "district_hi")
-    val districtHindi: List<String>,
-
-    @ColumnInfo(name = "block_en")
-    val blockEnglish: List<String>,
-
-    @ColumnInfo(name = "block_hi")
-    val blockHindi: List<String>,
-
-    @ColumnInfo(name = "village_en")
-    val villageEnglish: List<String>,
-
-    @ColumnInfo(name = "village_hi")
-    val villageHindi: List<String>,
+    val villages: List<LocationEntity>,
 
     @ColumnInfo(name = "emergency_contact_number")
     val emergencyContactNo: String,
@@ -101,21 +86,29 @@ data class UserCache(
             zoneName = zoneName,
             parkingPlaceId = parkingPlaceId,
             parkingPlaceName = parkingPlaceName,
+            country = country,
+            states = states,
+            districts = districts,
+            blocks = blocks,
+            villages = villages,
 
-            countryId = countryId,
-
-            stateIds = stateIds,
-            districtIds = districtIds,
-            blockIds = blockIds,
-            villageIds = villageIds,
-            stateEnglish = stateEnglish,
-            stateHindi = stateHindi,
-            districtEnglish = districtEnglish,
-            districtHindi = districtHindi,
-            blockEnglish = blockEnglish,
-            blockHindi = blockHindi,
-            villageEnglish = villageEnglish,
-            villageHindi = villageHindi,
+//            countryId = countryId,
+//            stateIds = stateIds,
+//            districtIds = districtIds,
+//            blockIds = blockIds,
+//            villageIds = villageIds,
+//            stateEnglish = stateEnglish,
+//            stateHindi = stateHindi,
+//            stateAssamese = emptyList(),
+//            districtEnglish = districtEnglish,
+//            districtHindi = districtHindi,
+//            districtAssamese = emptyList(),
+//            blockEnglish = blockEnglish,
+//            blockHindi = blockHindi,
+//            blockAssamese = emptyList(),
+//            villageEnglish = villageEnglish,
+//            villageHindi = villageHindi,
+//            villageAssamese = emptyList(),
 
             contactNo = emergencyContactNo,
             userType = userType,
@@ -139,20 +132,28 @@ data class UserDomain(
     val zoneId: Int,
     val zoneName: String,
     val vanId: Int,
-    val countryId: Int,
-    val stateIds: List<Int>,
-    val districtIds: List<Int>,
-    val blockIds: List<Int>,
-    val villageIds: List<Int>,
-
-    val stateEnglish: List<String>,
-    val stateHindi: List<String>,
-    val districtEnglish: List<String>,
-    val districtHindi: List<String>,
-    val blockEnglish: List<String>,
-    val blockHindi: List<String>,
-    val villageEnglish: List<String>,
-    val villageHindi: List<String>,
+    val country: LocationEntity,
+    val states : List<LocationEntity>,
+    val districts : List<LocationEntity>,
+    val blocks : List<LocationEntity>,
+    val villages : List<LocationEntity>,
+//    val stateIds: List<Int>,
+//    val districtIds: List<Int>,
+//    val blockIds: List<Int>,
+//    val villageIds: List<Int>,
+//
+//    val stateEnglish: List<String>,
+//    val stateHindi: List<String>,
+//    val stateAssamese: List<String>,
+//    val districtEnglish: List<String>,
+//    val districtHindi: List<String>,
+//    val districtAssamese: List<String>,
+//    val blockEnglish: List<String>,
+//    val blockHindi: List<String>,
+//    val blockAssamese: List<String>,
+//    val villageEnglish: List<String>,
+//    val villageHindi: List<String>,
+//    val villageAssamese: List<String>,
     val contactNo: String,
     val userType: String,
     val loggedIn: Boolean,
@@ -175,24 +176,31 @@ data class UserNetwork(
     var servicePointName: String?=null,
     var zoneName : String?=null,
 
+    var country : LocationEntity? = null,
 
-    var stateIds: MutableList<Int> = mutableListOf(),
-    var stateEnglish: MutableList<String> = mutableListOf(),
-    var stateHindi: MutableList<String> = mutableListOf(),
+    var states : MutableList<LocationEntity> = mutableListOf(),
+    var districts : MutableList<LocationEntity> = mutableListOf(),
+    var blocks : MutableList<LocationEntity> = mutableListOf(),
+    var villages : MutableList<LocationEntity> = mutableListOf(),
 
-    var districtIds:MutableList<Int> = mutableListOf(),
-    var districtEnglish:MutableList<String> = mutableListOf(),
-    var districtHindi:MutableList<String> = mutableListOf(),
 
-    var blockIds:MutableList<Int> = mutableListOf(),
-    var blockEnglish:MutableList<String> = mutableListOf(),
-    var blockHindi:MutableList<String> = mutableListOf(),
+//    var stateIds: MutableList<Int> = mutableListOf(),
+//    var stateEnglish: MutableList<String> = mutableListOf(),
+//    var stateHindi: MutableList<String> = mutableListOf(),
+//
+//    var districtIds:MutableList<Int> = mutableListOf(),
+//    var districtEnglish:MutableList<String> = mutableListOf(),
+//    var districtHindi:MutableList<String> = mutableListOf(),
+//
+//    var blockIds:MutableList<Int> = mutableListOf(),
+//    var blockEnglish:MutableList<String> = mutableListOf(),
+//    var blockHindi:MutableList<String> = mutableListOf(),
+//
+//    var villageIds:MutableList<Int> = mutableListOf(),
+//    var villageEnglish:MutableList<String> = mutableListOf(),
+//    var villageHindi:MutableList<String> = mutableListOf(),
 
-    var villageIds:MutableList<Int> = mutableListOf(),
-    var villageEnglish:MutableList<String> = mutableListOf(),
-    var villageHindi:MutableList<String> = mutableListOf(),
-
-    var countryId : Int = -1,
+//    var countryId : Int = -1,
 
     var emergencyContactNo: String? = null,
     var userType: String? = null,
@@ -212,22 +220,28 @@ data class UserNetwork(
             zoneName = zoneName?:"",
             parkingPlaceId = parkingPlaceId,
             parkingPlaceName = parkingPlaceName?:"",
+            country = country?:LocationEntity(1,"India"),
+            states = states,
+            districts = districts,
+            blocks = blocks,
+            villages = villages,
 
-            countryId = countryId,
 
-            stateIds = stateIds,
-            districtIds = districtIds,
-            blockIds = blockIds,
-            villageIds = villageIds,
-
-            stateEnglish = stateEnglish,
-            stateHindi = stateHindi,
-            districtEnglish = districtEnglish,
-            districtHindi = districtHindi,
-            blockEnglish = blockEnglish,
-            blockHindi = blockHindi,
-            villageEnglish = villageEnglish,
-            villageHindi = villageHindi,
+//            countryId = countryId,
+//
+//            stateIds = stateIds,
+//            districtIds = districtIds,
+//            blockIds = blockIds,
+//            villageIds = villageIds,
+//
+//            stateEnglish = stateEnglish,
+//            stateHindi = stateHindi,
+//            districtEnglish = districtEnglish,
+//            districtHindi = districtHindi,
+//            blockEnglish = blockEnglish,
+//            blockHindi = blockHindi,
+//            villageEnglish = villageEnglish,
+//            villageHindi = villageHindi,
 
             emergencyContactNo = emergencyContactNo?:"",
             userType = userType?:"",

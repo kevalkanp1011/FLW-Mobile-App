@@ -1,184 +1,124 @@
 package org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_registration
 
-import android.app.Application
+import android.content.Context
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.configuration.HouseholdFormDataset
-import org.piramalswasthya.sakhi.model.FormInput
-import org.piramalswasthya.sakhi.model.LocationRecord
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.model.HouseholdCache
+import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.repositories.HouseholdRepo
+import org.piramalswasthya.sakhi.repositories.UserRepo
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class NewHouseholdViewModel
-@Inject constructor(
+class NewHouseholdViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val context: Application,
-    private val householdRepo: HouseholdRepo
-) : AndroidViewModel(context) {
+    preferenceDao: PreferenceDao,
+    @ApplicationContext context: Context,
+    private val householdRepo: HouseholdRepo,
+    userRepo: UserRepo
+) : ViewModel() {
 
     enum class State {
-        IDLE,
-        SAVING,
-        SAVE_SUCCESS,
-        SAVE_FAILED
+        IDLE, SAVING, SAVE_SUCCESS, SAVE_FAILED
     }
 
     private val hhIdFromArgs = NewHouseholdFragmentArgs.fromSavedStateHandle(savedStateHandle).hhId
 
-    private var _mTabPosition = 0
-    private var hhId = 0L
-
-    fun getHHId() = hhId.takeIf { it > 0 } ?: throw IllegalStateException("Not got no HHId!!!!")
-
-    val mTabPosition: Int
-        get() = _mTabPosition
-
-    fun setMTabPosition(position: Int) {
-        _mTabPosition = position
+    private val _currentPage = MutableStateFlow(1)
+    val currentPage = _currentPage.asStateFlow()
+    val prevPageButtonVisibility = currentPage.transform {
+        emit(it > 1)
     }
+    val nextPageButtonVisibility = currentPage.transform {
+        emit(it < 3)
+    }
+    val submitPageButtonVisibility = currentPage.transform {
+        emit(it == 3 && recordExists.value == false)
+    }
+
 
     private val _state = MutableLiveData(State.IDLE)
     val state: LiveData<State>
         get() = _state
 
-    private val _recordExists = MutableLiveData(hhIdFromArgs>0)
-    val recordExists : LiveData<Boolean>
-    get() = _recordExists
+    private val _recordExists = MutableLiveData(hhIdFromArgs > 0)
+    val recordExists: LiveData<Boolean>
+        get() = _recordExists
+
+    private lateinit var user: UserDomain
+    private val dataset = HouseholdFormDataset(context, preferenceDao.getCurrentLanguage())
+    val formList = dataset.listFlow
+    private lateinit var household: HouseholdCache
 
 
-    private lateinit var form: HouseholdFormDataset
-
-    suspend fun getFirstPage(): List<FormInput> {
-        return withContext(Dispatchers.IO) {
-            form = if (hhIdFromArgs > 0)
-                householdRepo.getHouseholdForm(hhIdFromArgs)
-            else
-                householdRepo.getDraftForm()?: HouseholdFormDataset(context)
-
-            form.firstPage
-        }
-    }
-
-    fun getSecondPage(adapter: FormInputAdapter): List<FormInput> {
+    init {
         viewModelScope.launch {
-            form.residentialArea.value.collect {
-                toggleFieldOnTrigger(
-                    form.residentialArea,
-                    form.otherResidentialArea,
-                    it,
-                    adapter
+            withContext(Dispatchers.IO) {
+                user = userRepo.getLoggedInUser()!!
+                val locationRecord = preferenceDao.getLocationRecord()!!
+                household = householdRepo.getRecord(hhIdFromArgs) ?: householdRepo.getDraftRecord()
+                        ?: HouseholdCache(
+                    householdId = 0,
+                    ashaId = user.userId,
+                    isDraft = true,
+                    processed = "N",
+                    locationRecord = locationRecord
                 )
+                currentPage.collect {
+                    when (it) {
+                        1 -> dataset.setFirstPage(household.family)
+                        2 -> {
+                            dataset.setSecondPage(household.details)
+                            dataset.mapValues(household, 1)
+                            householdRepo.persistRecord(household)
+                        }
+                        3 -> {
+                            dataset.setThirdPage(household.amenities)
+                            dataset.mapValues(household, 2)
+                            householdRepo.persistRecord(household)
+                        }
+                    }
+                }
             }
-        }
-        return form.secondPage
 
+        }
     }
 
-    fun getThirdPage(adapter: FormInputAdapter): List<FormInput> {
+    fun saveForm() {
         viewModelScope.launch {
-            launch {
-                form.fuelForCookingTrigger.value.collect {
-                    toggleFieldOnTrigger(
-                        form.fuelForCookingTrigger,
-                        form.otherFuelForCooking,
-                        it,
-                        adapter
-                    )
-                }
-            }
-            launch {
-                form.sourceOfWaterTrigger.value.collect {
-                    toggleFieldOnTrigger(
-                        form.sourceOfWaterTrigger,
-                        form.otherSourceOfWater,
-                        it,
-                        adapter
-                    )
-                }
-            }
-            launch {
-                form.sourceOfElectricityTrigger.value.collect {
-                    toggleFieldOnTrigger(
-                        form.sourceOfElectricityTrigger,
-                        form.otherSourceOfElectricity,
-                        it,
-                        adapter
-                    )
-                }
-            }
-            launch {
-                form.availOfToiletTrigger.value.collect {
-                    toggleFieldOnTrigger(
-                        form.availOfToiletTrigger,
-                        form.otherAvailOfToilet,
-                        it,
-                        adapter
-                    )
-                }
-            }
-
-        }
-        return form.thirdPage
-    }
-
-    private fun toggleFieldOnTrigger(
-        causeField: FormInput,
-        effectField: FormInput,
-        value: String?,
-        adapter: FormInputAdapter
-    ) {
-        value?.let {
-            if (it == context.getString(R.string.nhhr_fuel_cooking_7)) {
-                val list = adapter.currentList.toMutableList()
-                if (!list.contains(effectField)) {
-                    list.add(
-                        adapter.currentList.indexOf(causeField) + 1,
-                        effectField
-                    )
-                    adapter.submitList(list)
-                }
-            } else {
-                if (adapter.currentList.contains(effectField)) {
-                    val list = adapter.currentList.toMutableList()
-                    list.remove(effectField)
-                    adapter.submitList(list)
-                }
-            }
-        }
-    }
-
-    fun persistFirstPage() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                householdRepo.persistFirstPage(form)
-            }
-        }
-    }
-    fun persistSecondPage() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                householdRepo.persistSecondPage(form)
-            }
-        }
-    }
-
-
-
-
-
-    fun persistForm(locationRecord: LocationRecord) {
-        viewModelScope.launch {
-            _state.value = State.SAVING
             withContext(Dispatchers.IO) {
                 try {
-                    hhId = householdRepo.persistThirdPage(form, locationRecord)
+                    _state.postValue(State.SAVING)
+                    dataset.mapValues(household, 3)
+                    household.apply {
+                        if (householdId == 0L) {
+                            dataset.freezeHouseholdId(household, user.userId)
+                            householdRepo.substituteHouseholdIdForDraft(household)
+                            serverUpdatedStatus = 1
+                            processed = "N"
+                        } else {
+                            serverUpdatedStatus = 2
+                            processed = "U"
+                        }
+
+                        if (createdTimeStamp == null) {
+                            createdTimeStamp = System.currentTimeMillis()
+                            createdBy = user.userName
+                        }
+                        updatedTimeStamp = System.currentTimeMillis()
+                        updatedBy = user.userName
+                    }
+                    householdRepo.persistRecord(household)
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
                     Timber.d("saving HH data failed!!")
@@ -186,8 +126,141 @@ class NewHouseholdViewModel
                 }
             }
         }
+    }
+
+    /**
+     * Household Id to be passed to Ben registration upon persisting household data to Room
+     */
+    fun getHHId() = household.householdId
+
+    fun goToPreviousPage() {
+        viewModelScope.launch {
+            _currentPage.emit(currentPage.value - 1)
+        }
+    }
+
+    fun goToNextPage() {
+        viewModelScope.launch {
+            _currentPage.emit(currentPage.value + 1)
+        }
+    }
+
+
+    fun updateListOnValueChanged(formId: Int, index: Int) {
+        viewModelScope.launch {
+            dataset.updateList(formId, index)
+        }
 
     }
+
+    fun setRecordExists(b: Boolean) {
+        _recordExists.value = b
+
+    }
+
+
+//    suspend fun getFirstPage(): List<FormElement> {
+//        return dataset.firstPage
+//    }
+
+//    suspend fun getThirdPage(adapter: FormInputAdapterOld): List<FormElement> {
+//        viewModelScope.launch {
+//            launch {
+//                dataset.fuelForCookingTrigger.value.collect {
+//                    toggleFieldOnTrigger(
+//                        dataset.fuelForCookingTrigger, dataset.otherFuelForCooking, it, adapter
+//                    )
+//                }
+//            }
+//            launch {
+//                dataset.sourceOfWaterTrigger.value.collect {
+//                    toggleFieldOnTrigger(
+//                        dataset.sourceOfWaterTrigger, dataset.otherSourceOfWater, it, adapter
+//                    )
+//                }
+//            }
+//            launch {
+//                dataset.sourceOfElectricityTrigger.value.collect {
+//                    toggleFieldOnTrigger(
+//                        dataset.sourceOfElectricityTrigger, dataset.otherSourceOfElectricity, it, adapter
+//                    )
+//                }
+//            }
+//            launch {
+//                dataset.availOfToiletTrigger.value.collect {
+//                    toggleFieldOnTrigger(
+//                        dataset.availOfToiletTrigger, dataset.otherAvailOfToilet, it, adapter
+//                    )
+//                }
+//            }
+//
+//        }
+//        dataset.setThirdPage(household?.amenities)
+//    }
+
+//    private fun toggleFieldOnTrigger(
+//        causeField: FormInputOld,
+//        effectField: FormInputOld,
+//        value: String?,
+//        adapter: FormInputAdapterOld
+//    ) {
+//        value?.let {
+//            if (it == context.getString(R.string.nhhr_fuel_cooking_7)) {
+//                val list = adapter.currentList.toMutableList()
+//                if (!list.contains(effectField)) {
+//                    list.add(
+//                        adapter.currentList.indexOf(causeField) + 1, effectField
+//                    )
+//                    adapter.submitList(list)
+//                }
+//            } else {
+//                if (adapter.currentList.contains(effectField)) {
+//                    val list = adapter.currentList.toMutableList()
+//                    list.remove(effectField)
+//                    adapter.submitList(list)
+//                }
+//            }
+//        }
+//    }
+
+
+//    fun persistFirstPage() {
+//        viewModelScope.launch {
+//            withContext(Dispatchers.IO) {
+//                household?.let {
+//                    dataset.mapValues(it, mTabPosition)
+//                    householdRepo.persistRecord(it)
+//                }
+//
+//            }
+//        }
+//    }
+//
+//    fun persistSecondPage() {
+//        viewModelScope.launch {
+//            withContext(Dispatchers.IO) {
+//                householdRepo.persistSecondPage(dataset)
+//            }
+//        }
+//    }
+//
+//
+//    fun saveForm(locationRecord: LocationRecord) {
+//        viewModelScope.launch {
+//            _state.value = State.SAVING
+//            withContext(Dispatchers.IO) {
+//                try {
+//                    hhId = householdRepo.persistThirdPage(dataset, locationRecord)
+//                    _state.postValue(State.SAVE_SUCCESS)
+//                } catch (e: Exception) {
+//                    Timber.d("saving HH data failed!!")
+//                    _state.postValue(State.SAVE_FAILED)
+//                }
+//            }
+//        }
+//
+//    }
+//
 
 
 }

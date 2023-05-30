@@ -7,7 +7,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -44,22 +47,29 @@ class HbncPartIIFragment : Fragment() {
             if (validate()) viewModel.submitForm()
         }
         viewModel.exists.observe(viewLifecycleOwner) { exists ->
-            val adapter = FormInputAdapter(isEnabled = !exists)
+            val adapter = FormInputAdapter(
+                imageClickListener = null,
+                formValueListener = FormInputAdapter.FormValueListener { formId, index ->
+                    viewModel.updateListOnValueChanged(formId, index)
+                },
+                isEnabled = !exists
+            )
             binding.form.rvInputForm.adapter = adapter
             if (exists) {
                 binding.btnSubmit.visibility = View.GONE
-                viewModel.setExistingValues()
-            }
-//            else {
-//                viewModel.address.observe(viewLifecycleOwner) {
-//                    viewModel.setAddress(it, adapter)
-//                }
-//            }
-            lifecycleScope.launch {
-                adapter.submitList(viewModel.getFirstPage())
-                if(!exists)viewModel.observeForm(adapter)
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.formList.flowWithLifecycle(
+                    viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED
+                ).collect { list ->
+                    Timber.d("Collecting formList : ${list.map { it.id }}")
+                    (binding.form.rvInputForm.adapter as FormInputAdapter?)?.submitList(list)
+                }
+            }
+        }
+
 
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
@@ -95,7 +105,7 @@ class HbncPartIIFragment : Fragment() {
 
     fun validate(): Boolean {
         val result = binding.form.rvInputForm.adapter?.let {
-            (it as FormInputAdapter).validateInput()
+            (it as FormInputAdapter).validateInput(resources)
         }
         Timber.d("Validation : $result")
         return if (result == -1) true

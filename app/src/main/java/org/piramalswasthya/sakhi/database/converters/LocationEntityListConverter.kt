@@ -3,17 +3,18 @@ package org.piramalswasthya.sakhi.database.converters
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import org.piramalswasthya.sakhi.model.LocationEntity
 
-object PrimitiveListConverter {
+object LocationEntityListConverter {
 
     @TypeConverter
-    fun toStringList(value: String?): List<String> {
-        val listType = object : TypeToken<List<String?>?>() {}.type
+    fun toLocationEntityList(value: String?): List<LocationEntity> {
+        val listType = object : TypeToken<List<LocationEntity?>?>() {}.type
         return Gson().fromJson(value, listType)
     }
 
     @TypeConverter
-    fun fromStringList(list: List<String>): String? {
+    fun fromLocationEntityList(list: List<LocationEntity>): String? {
         val gson = Gson()
         return gson.toJson(list)
     }

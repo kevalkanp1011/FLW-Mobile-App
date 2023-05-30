@@ -65,7 +65,7 @@ class DeathReportsFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let{
-            (it as HomeActivity).setLogo(R.drawable.ic__death)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__death)
         }
     }
 
