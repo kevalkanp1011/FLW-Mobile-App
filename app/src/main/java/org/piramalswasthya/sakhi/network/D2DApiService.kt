@@ -36,6 +36,12 @@ interface D2DApiService {
         @Body mdsrPostList: List<MdsrPost>
     ): Response<ResponseBody>
 
+    @POST("hbyncRegister")
+    @Headers("Content-Type: application/json")
+    suspend fun postHbycForm(
+        @Body hbycPostList: List<HbycPost>
+    ): Response<ResponseBody>
+
     @POST("cdrRegister")
     suspend fun postCdrForm(
         @Body cdrPost: List<CDRPost>

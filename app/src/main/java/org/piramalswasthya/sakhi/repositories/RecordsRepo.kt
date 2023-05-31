@@ -63,7 +63,7 @@ class RecordsRepo @Inject constructor(
     val infantListCount = infantList.map { it.size }
 
     val childList = benDao.getAllChildList(selectedVillage)
-        .map { list -> list.map { it.asBasicDomainModel() } }
+        .map { list -> list.map { it.asBenBasicDomainModelForHbycForm() } }
     val childListCount = childList.map { it.size }
 
     val adolescentList =
