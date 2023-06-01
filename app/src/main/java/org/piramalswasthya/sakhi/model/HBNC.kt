@@ -1,23 +1,28 @@
 package org.piramalswasthya.sakhi.model
 
-import androidx.room.*
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 @Entity(
     tableName = "HBNC",
     foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
-        parentColumns = arrayOf("beneficiaryId", "householdId"),
-        childColumns = arrayOf("benId", "hhId"),
+        parentColumns = arrayOf("beneficiaryId",/* "householdId"*/),
+        childColumns = arrayOf("benId", /*"hhId"*/),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "hbncInd", value = ["benId", "hhId"])]
+    indices = [Index(name = "ind_hbnc", value = ["benId",/* "hhId"*/])]
 )
 
 data class HBNCCache(

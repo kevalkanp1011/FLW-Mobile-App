@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.home
+package org.piramalswasthya.sakhi.ui.home_activity.immunization_due.child_immunization.categories
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,36 +13,49 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.IconGridAdapter
 import org.piramalswasthya.sakhi.configuration.IconDataset
 import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeIconsFragment : Fragment() {
+class ChildImmunizationCategoriesFragment : Fragment() {
 
     @Inject
     lateinit var iconDataset: IconDataset
+
 
     private var _binding: RvIconGridBinding? = null
     private val binding: RvIconGridBinding
         get() = _binding!!
 
-    private val viewModel: HomeViewModel by viewModels({ requireActivity() })
+    private val viewModel: ChildImmunizationCategoriesViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         _binding = RvIconGridBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setUpHomeIconRvAdapter()
-
+        setUpCategoriesIconRvAdapter()
     }
 
-    private fun setUpHomeIconRvAdapter() {
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(R.drawable.ic__child)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
+
+    private fun setUpCategoriesIconRvAdapter() {
         val rvLayoutManager = GridLayoutManager(
             context,
             requireContext().resources.getInteger(R.integer.icon_grid_span)
@@ -52,6 +65,7 @@ class HomeIconsFragment : Fragment() {
             findNavController().navigate(it)
         }, viewModel.scope)
         binding.rvIconGrid.adapter = rvAdapter
-        rvAdapter.submitList(iconDataset.getHomeIconDataset(resources))
+        rvAdapter.submitList(iconDataset.getChildImmunizationCategories(resources))
     }
+
 }

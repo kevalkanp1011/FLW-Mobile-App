@@ -1,7 +1,11 @@
 package org.piramalswasthya.sakhi.model
 
 import android.content.res.Resources
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.room.SyncState
 
@@ -9,8 +13,8 @@ import org.piramalswasthya.sakhi.database.room.SyncState
     tableName = "CBAC",
     foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
-        parentColumns = arrayOf("beneficiaryId", "householdId"),
-        childColumns = arrayOf("benId", "hhId"),
+        parentColumns = arrayOf("beneficiaryId",/* "householdId"*/),
+        childColumns = arrayOf("benId",/* "hhId"*/),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     ),
@@ -19,7 +23,7 @@ import org.piramalswasthya.sakhi.database.room.SyncState
             parentColumns = arrayOf("user_id"),
             childColumns = arrayOf("ashaId"),
         )],
-    indices = [Index(name = "ind", value = ["benId", "hhId"])]
+    indices = [Index(name = "ind_cbac", value = ["benId",/* "hhId"*/])]
 )
 data class CbacCache(
     @PrimaryKey(autoGenerate = true)

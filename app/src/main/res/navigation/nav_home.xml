@@ -532,12 +532,40 @@
     </fragment>
     <fragment
         android:id="@+id/childImmunizationFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.immunization_due.child_immunization.ChildImmunizationFragment"
-        android:label="fragment_child_immunization" />
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.immunization_due.child_immunization.categories.ChildImmunizationCategoriesFragment"
+        android:label="fragment_child_immunization" >
+        <action
+            android:id="@+id/action_childImmunizationFragment_to_childImmunizationListFragment"
+            app:destination="@id/childImmunizationListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/motherImmunizationFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.immunization_due.mother_immunization.MotherImmunizationFragment"
         android:label="fragment_mother_immunization"
         tools:layout="@layout/fragment_mother_immunization" />
+    <fragment
+        android:id="@+id/immunizationFormFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.immunization_due.child_immunization.form.ImmunizationFormFragment"
+        android:label="fragment_immunization_form"
+        tools:layout="@layout/fragment_immunization_form" >
+        <argument
+            android:name="vaccineId"
+            app:argType="integer" />
+        <argument
+            android:name="benId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/childImmunizationListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.immunization_due.child_immunization.list.ChildImmunizationListFragment"
+        android:label="fragment_child_immunization_list"
+        tools:layout="@layout/fragment_child_immunization_list" >
+        <action
+            android:id="@+id/action_childImmunizationListFragment_to_immunizationFormFragment"
+            app:destination="@id/immunizationFormFragment" />
+        <argument
+            android:name="category"
+            app:argType="org.piramalswasthya.sakhi.model.ChildImmunizationCategory" />
+    </fragment>
 
 </navigation>

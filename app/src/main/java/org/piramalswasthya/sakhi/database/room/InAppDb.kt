@@ -5,10 +5,35 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.asExecutor
 import org.piramalswasthya.sakhi.database.converters.LocationEntityListConverter
 import org.piramalswasthya.sakhi.database.converters.SyncStateConverter
-import org.piramalswasthya.sakhi.database.room.dao.*
-import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.database.room.dao.BenDao
+import org.piramalswasthya.sakhi.database.room.dao.CbacDao
+import org.piramalswasthya.sakhi.database.room.dao.CdrDao
+import org.piramalswasthya.sakhi.database.room.dao.FpotDao
+import org.piramalswasthya.sakhi.database.room.dao.HbncDao
+import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
+import org.piramalswasthya.sakhi.database.room.dao.ImmunizationDao
+import org.piramalswasthya.sakhi.database.room.dao.MdsrDao
+import org.piramalswasthya.sakhi.database.room.dao.PmjayDao
+import org.piramalswasthya.sakhi.database.room.dao.PmsmaDao
+import org.piramalswasthya.sakhi.database.room.dao.UserDao
+import org.piramalswasthya.sakhi.model.BenBasicCache
+import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.CDRCache
+import org.piramalswasthya.sakhi.model.CbacCache
+import org.piramalswasthya.sakhi.model.FPOTCache
+import org.piramalswasthya.sakhi.model.HBNCCache
+import org.piramalswasthya.sakhi.model.HouseholdCache
+import org.piramalswasthya.sakhi.model.ImmunizationCache
+import org.piramalswasthya.sakhi.model.MDSRCache
+import org.piramalswasthya.sakhi.model.PMJAYCache
+import org.piramalswasthya.sakhi.model.PMSMACache
+import org.piramalswasthya.sakhi.model.UserCache
+import org.piramalswasthya.sakhi.model.Vaccine
+import timber.log.Timber
 
 @Database(
     entities = [
@@ -22,15 +47,17 @@ import org.piramalswasthya.sakhi.model.*
         PMSMACache::class,
         PMJAYCache::class,
         FPOTCache::class,
-        HBNCCache::class
-               ],
+        HBNCCache::class,
+        Vaccine::class,
+        ImmunizationCache::class
+    ],
     views = [BenBasicCache::class],
-    version = 1, exportSchema = false
+    version = 2, exportSchema = false
 )
 
 @TypeConverters(LocationEntityListConverter::class, SyncStateConverter::class)
 
-abstract class InAppDb  : RoomDatabase(){
+abstract class InAppDb : RoomDatabase() {
 
     abstract val userDao: UserDao
     abstract val benIdGenDao: BeneficiaryIdsAvailDao
@@ -42,22 +69,32 @@ abstract class InAppDb  : RoomDatabase(){
     abstract val pmsmaDao: PmsmaDao
     abstract val pmjayDao: PmjayDao
     abstract val fpotDao: FpotDao
-    abstract val hbncDao : HbncDao
+    abstract val hbncDao: HbncDao
+    abstract val vaccineDao: ImmunizationDao
 
-    companion object{
+    companion object {
         @Volatile
-        private var INSTANCE : InAppDb? = null
+        private var INSTANCE: InAppDb? = null
 
-        fun getInstance(appContext : Context) : InAppDb {
+        fun getInstance(appContext: Context): InAppDb {
 
-            synchronized(this){
+            synchronized(this) {
                 var instance = INSTANCE
-                if(instance ==null){
+                if (instance == null) {
                     instance = Room.databaseBuilder(
                         appContext,
                         InAppDb::class.java,
-                        "Sakhi-2.0-In-app-database")
+                        "Sakhi-2.0-In-app-database"
+                    )
                         .fallbackToDestructiveMigration()
+                        .setQueryCallback(
+                            object : QueryCallback {
+                                override fun onQuery(sqlQuery: String, bindArgs: List<Any?>) {
+                                    Timber.d("Query to Room : sqlQuery=$sqlQuery with arguments : $bindArgs")
+                                }
+                            },
+                            Dispatchers.IO.asExecutor()
+                        )
                         .build()
 
                     INSTANCE = instance

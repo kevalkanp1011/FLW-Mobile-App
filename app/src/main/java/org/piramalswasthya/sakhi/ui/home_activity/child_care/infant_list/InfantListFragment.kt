@@ -91,7 +91,7 @@ class InfantListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let{
-            (it as HomeActivity).updateActionBar(R.drawable.ic_infant)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__infant)
         }
     }
 

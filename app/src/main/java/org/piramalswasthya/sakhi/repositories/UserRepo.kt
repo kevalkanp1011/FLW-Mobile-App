@@ -4,12 +4,26 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.database.room.dao.BenDao
+import org.piramalswasthya.sakhi.database.room.dao.ImmunizationDao
+import org.piramalswasthya.sakhi.database.room.dao.UserDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.BIRTH
+import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.MONTH_16_24
+import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.WEEK_10
+import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.WEEK_14
+import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.WEEK_6
 import org.piramalswasthya.sakhi.model.LocationEntity
 import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.model.UserNetwork
-import org.piramalswasthya.sakhi.network.*
+import org.piramalswasthya.sakhi.model.Vaccine
+import org.piramalswasthya.sakhi.network.AmritApiService
+import org.piramalswasthya.sakhi.network.D2DApiService
+import org.piramalswasthya.sakhi.network.D2DAuthUserRequest
+import org.piramalswasthya.sakhi.network.TmcAuthUserRequest
+import org.piramalswasthya.sakhi.network.TmcLocationDetailsRequest
+import org.piramalswasthya.sakhi.network.TmcUserDetailsRequest
+import org.piramalswasthya.sakhi.network.TmcUserVanSpDetailsRequest
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertD2DInterceptor
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertTmcInterceptor
 import org.piramalswasthya.sakhi.ui.login_activity.sign_in.SignInViewModel.State
@@ -17,10 +31,13 @@ import timber.log.Timber
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class UserRepo @Inject constructor(
-    private val database: InAppDb,
+    private val userDao: UserDao,
+    benDao: BenDao,
+    private val vaccineDao: ImmunizationDao,
     private val preferenceDao: PreferenceDao,
     private val d2dNetworkApi: D2DApiService,
     private val tmcNetworkApiService: AmritApiService
@@ -29,19 +46,143 @@ class UserRepo @Inject constructor(
 
     private var user: UserNetwork? = null
 
-    val unProcessedRecordCount : Flow<Int> = database.benDao.getUnProcessedRecordCount()
+    val unProcessedRecordCount: Flow<Int> = benDao.getUnProcessedRecordCount()
+
+    suspend fun checkAndAddVaccines() {
+        if (vaccineDao.vaccinesLoaded())
+            return
+        val vaccineList = arrayOf(
+            //Birth
+            Vaccine(
+                category = BIRTH,
+                name = "OPV",
+                dosage = 0,
+                dueDuration = TimeUnit.DAYS.toMillis(0),
+                overdueDuration = TimeUnit.DAYS.toMillis(15),
+            ),
+            Vaccine(
+                category = BIRTH,
+                name = "BCG",
+                dosage = 0,
+                dueDuration = TimeUnit.DAYS.toMillis(0),
+                overdueDuration = TimeUnit.DAYS.toMillis(365),
+            ),
+            Vaccine(
+                category = BIRTH,
+                name = "Hepatitis B",
+                dosage = 0,
+                dueDuration = TimeUnit.DAYS.toMillis(0),
+                overdueDuration = TimeUnit.DAYS.toMillis(1),
+            ),
+            Vaccine(
+                category = BIRTH,
+                name = "Vit K",
+                dosage = 0,
+                dueDuration = TimeUnit.DAYS.toMillis(0),
+                overdueDuration = TimeUnit.DAYS.toMillis(1),
+            ),
+            //Week 6
+            Vaccine(
+                category = WEEK_6,
+                name = "OPV",
+                dosage = 1,
+                dueDuration = TimeUnit.DAYS.toMillis(6*7),
+                overdueDuration = TimeUnit.DAYS.toMillis(365*2),
+            ),
+            Vaccine(
+                category = WEEK_6,
+                name = "Pentavalent",
+                dosage = 1,
+                dueDuration = TimeUnit.DAYS.toMillis(6*7),
+                overdueDuration = TimeUnit.DAYS.toMillis(365),
+            ),
+            Vaccine(
+                category = WEEK_6,
+                name = "ROTA",
+                dosage = 1,
+                dueDuration = TimeUnit.DAYS.toMillis(6*7),
+                overdueDuration = TimeUnit.DAYS.toMillis(365),
+            ),
+            Vaccine(
+                category = WEEK_6,
+                name = "IPV",
+                dosage = 1,
+                dueDuration = TimeUnit.DAYS.toMillis(6*7),
+                overdueDuration = TimeUnit.DAYS.toMillis(365),
+            ),
+            //Week 10
+            Vaccine(
+                category = WEEK_10,
+                name = "OPV",
+                dosage = 2,
+                dueDuration = TimeUnit.DAYS.toMillis(10*7),
+                overdueDuration = TimeUnit.DAYS.toMillis(365*2),
+                dependantDose = 1,
+                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
+            ),
+            Vaccine(
+                category = WEEK_10,
+                name = "Pentavalent",
+                dosage = 2,
+                dueDuration = TimeUnit.DAYS.toMillis(10*7),
+                overdueDuration = TimeUnit.DAYS.toMillis(365*1),
+                dependantDose = 1,
+                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
+            ),
+            Vaccine(
+                category = WEEK_10,
+                name = "ROTA",
+                dosage = 2,
+                dueDuration = TimeUnit.DAYS.toMillis(10*7),
+                overdueDuration = TimeUnit.DAYS.toMillis(365*1),
+                dependantDose = 1,
+                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
+            ),
+            //Week 14
+            Vaccine(
+                category = WEEK_14,
+                name = "OPV",
+                dosage = 3,
+                dueDuration = TimeUnit.DAYS.toMillis(14*7),
+                overdueDuration = TimeUnit.DAYS.toMillis(365*2),
+                dependantDose = 2,
+                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
+            ),
+            Vaccine(
+                category = WEEK_14,
+                name = "OPV",
+                dosage = 3,
+                dueDuration = TimeUnit.DAYS.toMillis(14*7),
+                overdueDuration = TimeUnit.DAYS.toMillis(365*2),
+                dependantDose = 2,
+                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
+            ),
+            Vaccine(
+                category = MONTH_16_24,
+                name = "OPV Booster",
+                dosage = 1,
+                dueDuration = TimeUnit.DAYS.toMillis(1),
+                overdueDuration = TimeUnit.DAYS.toMillis(365*2),
+                dependantDose = 2,
+                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
+            ),
+
+
+            )
+        vaccineDao.addVaccine(*vaccineList)
+    }
 
 
     suspend fun getLoggedInUser(): UserDomain? {
         return withContext(Dispatchers.IO) {
-            database.userDao.getLoggedInUser()?.asDomainModel()
+            userDao.getLoggedInUser()?.asDomainModel()
         }
     }
 
 
     suspend fun authenticateUser(userName: String, password: String, state: String): State {
         return withContext(Dispatchers.IO) {
-            val loggedInUser = database.userDao.getLoggedInUser()
+            val loggedInUser = userDao.getLoggedInUser()
             loggedInUser?.let {
                 if (it.userName == userName && it.password == password) {
                     val tokenA = preferenceDao.getD2DApiToken()
@@ -68,11 +209,11 @@ class UserRepo @Inject constructor(
                         if (result) {
                             Timber.d("User Auth Complete!!!!")
                             user?.loggedIn = true
-                            if (database.userDao.getLoggedInUser()?.userName == userName) {
-                                database.userDao.update(user!!.asCacheModel())
+                            if (userDao.getLoggedInUser()?.userName == userName) {
+                                userDao.update(user!!.asCacheModel())
                             } else {
-                                database.userDao.resetAllUsersLoggedInState()
-                                database.userDao.insert(user!!.asCacheModel())
+                                userDao.resetAllUsersLoggedInState()
+                                userDao.insert(user!!.asCacheModel())
                             }
                             return@withContext State.SUCCESS
                         }
@@ -123,7 +264,7 @@ class UserRepo @Inject constructor(
                 val blockName = block.getString("blockName")
                 val countryId = state.getInt("countryID")
                 this@UserRepo.user?.apply {
-                    if(stateToggle!="Assam") {
+                    if (stateToggle != "Assam") {
                         this.states.add(
                             LocationEntity(
                                 stateId,
@@ -144,7 +285,8 @@ class UserRepo @Inject constructor(
                         )
                     }
                     this.country = LocationEntity(
-                        countryId, "India")
+                        countryId, "India"
+                    )
                 }
                 val roleJsonArray = data.getJSONArray("roleids")
                 val role =
@@ -368,9 +510,9 @@ class UserRepo @Inject constructor(
         }
     }
 
-/*    private suspend fun saveUserD2D() {
+    /*    private suspend fun saveUserD2D() {
 
-    }*/
+        }*/
 
     suspend fun refreshTokenTmc(userName: String, password: String): Boolean {
         return withContext(Dispatchers.IO) {
@@ -472,8 +614,8 @@ class UserRepo @Inject constructor(
 
     suspend fun logout() {
         withContext(Dispatchers.IO) {
-            val loggedInUser = database.userDao.getLoggedInUser()!!
-            database.userDao.logout(loggedInUser)
+            val loggedInUser = userDao.getLoggedInUser()!!
+            userDao.logout(loggedInUser)
         }
     }
 

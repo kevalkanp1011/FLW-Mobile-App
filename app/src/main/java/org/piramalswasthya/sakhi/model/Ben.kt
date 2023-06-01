@@ -1,7 +1,12 @@
 package org.piramalswasthya.sakhi.model
 
 import android.content.Context
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.DatabaseView
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.piramalswasthya.sakhi.configuration.FormDataModel
@@ -10,7 +15,9 @@ import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.model.BenBasicCache.Companion.getAgeFromDob
 import org.piramalswasthya.sakhi.model.BenBasicCache.Companion.getAgeUnitFromDob
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 enum class TypeOfList {
@@ -522,7 +529,7 @@ data class BenRegGen(
 
 @Entity(
     tableName = "BENEFICIARY",
-    primaryKeys = ["householdId", "beneficiaryId"],
+    primaryKeys = ["beneficiaryId"],
     foreignKeys = [
         ForeignKey(
             entity = HouseholdCache::class,
@@ -536,7 +543,8 @@ data class BenRegGen(
             childColumns = arrayOf("ashaId"),
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index(name = "ind_ben", value = ["beneficiaryId"/*, "householdId"*/])]
 )
 
 data class BenRegCache(

@@ -7,19 +7,18 @@ import androidx.room.PrimaryKey
 import com.squareup.moshi.JsonClass
 import org.piramalswasthya.sakhi.database.room.SyncState
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
 
 @Entity(
     tableName = "MDSR",
     foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
-        parentColumns = arrayOf("beneficiaryId", "householdId"),
-        childColumns = arrayOf("benId", "hhId"),
+        parentColumns = arrayOf("beneficiaryId", /*"householdId"*/),
+        childColumns = arrayOf("benId", /*"hhId"*/),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "mdsrInd", value = ["benId", "hhId"])]
-)
+    indices = [Index(name = "ind_mdsr", value = ["benId",/* "hhId"*/])])
 
 data class MDSRCache (
     @PrimaryKey(autoGenerate = true)

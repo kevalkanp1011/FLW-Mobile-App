@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="temp"
+            type="org.piramalswasthya.sakhi.model.ImmunizationDetailsDomain" />
+
+        <variable
+            name="clickListener"
+            type="org.piramalswasthya.sakhi.model.VaccineClickListener" />
+    </data>
+
+    <org.piramalswasthya.sakhi.custom_views.VaccinationElement
+        android:id="@+id/vaccine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        vaccine_items="@{temp}"
+        vaccine_click="@{clickListener}"
+        app:numberOfItems="12"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</layout>
