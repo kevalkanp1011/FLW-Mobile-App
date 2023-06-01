@@ -28,6 +28,10 @@ interface BenDao {
     @Query("SELECT * FROM BENEFICIARY WHERE beneficiaryId =:benId AND householdId = :hhId LIMIT 1")
     suspend fun getBen(hhId: Long, benId: Long): BenRegCache?
 
+    @Query("SELECT * FROM BENEFICIARY WHERE beneficiaryId =:benId LIMIT 1")
+    suspend fun getBen( benId: Long): BenRegCache?
+
+
     @Query("UPDATE BENEFICIARY SET syncState = :syncState WHERE beneficiaryId =:benId AND householdId = :hhId")
     suspend fun setSyncState(hhId: Long, benId: Long, syncState: SyncState)
 

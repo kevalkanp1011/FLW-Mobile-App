@@ -10,12 +10,12 @@ import com.squareup.moshi.JsonClass
     tableName = "FPOT",
     foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
-        parentColumns = arrayOf("beneficiaryId", "householdId"),
-        childColumns = arrayOf("benId", "hhId"),
+        parentColumns = arrayOf("beneficiaryId", /*"householdId"*/),
+        childColumns = arrayOf("benId", /*"hhId"*/),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "fpotInd", value = ["benId", "hhId"])]
+    indices = [Index(name = "ind_fpot", value = ["benId",/* "hhId"*/])]
 )
 
 data class FPOTCache (
