@@ -1,15 +1,11 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity.create_abha_id
 
 import androidx.lifecycle.*
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.network.CreateAbhaIdGovRequest
-import org.piramalswasthya.sakhi.network.CreateAbhaIdRequest
-import org.piramalswasthya.sakhi.network.CreateAbhaIdResponse
-import org.piramalswasthya.sakhi.network.NetworkResult
-import org.piramalswasthya.sakhi.network.interceptors.TokenInsertAbhaInterceptor
+import org.piramalswasthya.sakhi.network.*
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,7 +13,7 @@ class CreateAbhaViewModel @Inject constructor(
     private val abhaIdRepo: AbhaIdRepo, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     enum class State {
-        IDLE, LOADING, ERROR_NETWORK, ERROR_SERVER, ERROR_INTERNAL, GENERATE_SUCCESS, DOWNLOAD_SUCCESS
+        IDLE, LOADING, ERROR_NETWORK, ERROR_SERVER, ERROR_INTERNAL, DOWNLOAD_SUCCESS, ABHA_GENERATE_SUCCESS, OTP_GENERATE_SUCCESS, OTP_VERIFY_SUCCESS
     }
 
     private val _state = MutableLiveData<State>()
@@ -26,8 +22,14 @@ class CreateAbhaViewModel @Inject constructor(
 
     var abha = MutableLiveData<CreateAbhaIdResponse?>(null)
 
-    private val abhaResponse =
-        CreateAbhaFragmentArgs.fromSavedStateHandle(savedStateHandle).abhaResponse
+    var hidResponse = MutableLiveData<CreateHIDResponse?>(null)
+
+    private val txnId =
+        CreateAbhaFragmentArgs.fromSavedStateHandle(savedStateHandle).txnId
+
+    val otpTxnID = MutableLiveData<String?>(null)
+
+    val cardBase64 = MutableLiveData<String>(null)
 
     private val _errorMessage = MutableLiveData<String?>(null)
     val errorMessage: LiveData<String?>
@@ -35,10 +37,33 @@ class CreateAbhaViewModel @Inject constructor(
 
     init {
         _state.value = State.LOADING
-        val abhaVal = Gson().fromJson(abhaResponse, CreateAbhaIdResponse::class.java)
-        TokenInsertAbhaInterceptor.setXToken(abhaVal.token)
-        abha.value = abhaVal
-        _state.value = State.GENERATE_SUCCESS
+    }
+
+    fun createHID(benId: Long, benRegId: Long) {
+        viewModelScope.launch {
+            when (val result =
+                abhaIdRepo.createHealthIdWithUid(CreateHealthIdRequest(
+                    "", txnId, "", "", "", "", "",
+                    "", "", "", "", "", "",
+                    "","", 0, "", 34, ""))) {
+                is NetworkResult.Success -> {
+                    hidResponse.value = result.data
+                    if ((benId != 0L) and (benRegId != 0L)) {
+                        mapBeneficiary(benId, benRegId, result.data.hID.toString(), result.data.healthIdNumber)
+                    } else {
+                        _state.value = State.ABHA_GENERATE_SUCCESS
+                    }
+                }
+                is NetworkResult.Error -> {
+                    _errorMessage.value = result.message
+                    _state.value = State.ERROR_SERVER
+                }
+                is NetworkResult.NetworkError -> {
+                    Timber.i(result.toString())
+                    _state.value = State.ERROR_NETWORK
+                }
+            }
+        }
     }
 
     fun resetState() {
@@ -47,5 +72,67 @@ class CreateAbhaViewModel @Inject constructor(
 
     fun resetErrorMessage() {
         _errorMessage.value = null
+    }
+
+    private fun mapBeneficiary(benId: Long, benRegId: Long, healthId: String, healthIdNumber: String?) {
+        val req = MapHIDtoBeneficiary(benRegId, benId, healthId, healthIdNumber,34, "")
+
+        viewModelScope.launch {
+            when (val result =
+                abhaIdRepo.mapHealthIDToBeneficiary(req)) {
+                is NetworkResult.Success -> {
+                    _state.value = State.ABHA_GENERATE_SUCCESS
+                }
+                is NetworkResult.Error -> {
+                    _errorMessage.value = result.message
+                    _state.value = State.ERROR_SERVER
+                }
+                is NetworkResult.NetworkError -> {
+                    Timber.i(result.toString())
+                    _state.value = State.ERROR_NETWORK
+                }
+            }
+        }
+    }
+
+    fun generateOtp() {
+        viewModelScope.launch {
+            when (val result =
+                abhaIdRepo.generateOtpHid(GenerateOtpHid("AADHAAR_OTP", hidResponse.value?.healthId,
+                    hidResponse.value?.healthIdNumber))) {
+                is NetworkResult.Success -> {
+                    otpTxnID.value = result.data
+                    _state.value = State.OTP_GENERATE_SUCCESS
+                }
+                is NetworkResult.Error -> {
+                    _errorMessage.value = result.message
+                    _state.value = State.ERROR_SERVER
+                }
+                is NetworkResult.NetworkError -> {
+                    Timber.i(result.toString())
+                    _state.value = State.ERROR_NETWORK
+                }
+            }
+        }
+    }
+
+    fun verifyOtp(otp: String?) {
+        viewModelScope.launch {
+            when (val result =
+                abhaIdRepo.verifyOtpAndGenerateHealthCard(ValidateOtpHid(otp,otpTxnID.value,"AADHAAR_OTP"))) {
+                is NetworkResult.Success -> {
+                    cardBase64.value = result.data
+                    _state.value = State.OTP_VERIFY_SUCCESS
+                }
+                is NetworkResult.Error -> {
+                    _errorMessage.value = result.message
+                    _state.value = State.ERROR_SERVER
+                }
+                is NetworkResult.NetworkError -> {
+                    Timber.i(result.toString())
+                    _state.value = State.ERROR_NETWORK
+                }
+            }
+        }
     }
 }

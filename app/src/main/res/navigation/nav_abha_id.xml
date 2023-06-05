@@ -75,7 +75,7 @@
         android:label="@string/generate_abha_id"
         tools:layout="@layout/fragment_create_abha">
         <argument
-            android:name="abhaResponse"
+            android:name="txnId"
             app:argType="string" />
     </fragment>
 </navigation>

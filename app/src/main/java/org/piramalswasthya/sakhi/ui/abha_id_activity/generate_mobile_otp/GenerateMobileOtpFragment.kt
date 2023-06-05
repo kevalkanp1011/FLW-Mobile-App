@@ -100,7 +100,11 @@ class GenerateMobileOtpFragment : Fragment() {
                 }
                 State.SUCCESS -> {
                     if (viewModel.apiResponse.mobileLinked) {
-                        viewModel.generateAbhaCard()
+                        navController.navigate(
+                            GenerateMobileOtpFragmentDirections.actionGenerateMobileOtpFragmentToCreateAbhaFragment(
+                                viewModel.txnIdFromArgs
+                            )
+                        )
                     } else {
                         navController.navigate(
                             GenerateMobileOtpFragmentDirections.actionGenerateMobileOtpFragmentToVerifyMobileOtpFragment(
@@ -125,7 +129,7 @@ class GenerateMobileOtpFragment : Fragment() {
                 State.ABHA_GENERATED_SUCCESS -> {
                     navController.navigate(
                         GenerateMobileOtpFragmentDirections.actionGenerateMobileOtpFragmentToCreateAbhaFragment(
-                            Gson().toJson(viewModel.abha.value)
+                             viewModel.txnIdFromArgs
                         )
                     )
                 }

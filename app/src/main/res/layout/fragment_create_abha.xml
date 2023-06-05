@@ -82,7 +82,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@{viewModel.abha.name}"
+                            android:text="@{viewModel.hidResponse.name}"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -108,7 +108,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@{viewModel.abha.healthIdNumber}"
+                            android:text="@{viewModel.hidResponse.healthIdNumber}"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -116,30 +116,29 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/txt_download_abha"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/padding_normal"
-                android:textAlignment="center"
-                android:clickable="false"
-                android:padding="@dimen/padding_normal"
-                android:text="Do you want to download the ABHA card?"
-                android:textAllCaps="false"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textColor="@color/primaryTextColor"
-                app:layout_constraintTop_toBottomOf="@id/cardView"
-                tools:layout_editor_absoluteX="0dp">
-
-            </TextView>
-
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/download_abha"
+                android:id="@+id/cl_download_abha"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="50dp"
                 android:paddingRight="50dp"
-                app:layout_constraintTop_toBottomOf="@id/txt_download_abha">
+                app:layout_constraintTop_toBottomOf="@id/cardView">
+                <TextView
+                    android:id="@+id/txt_download_abha"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding_normal"
+                    android:textAlignment="center"
+                    android:clickable="false"
+                    android:padding="@dimen/padding_normal"
+                    android:text="Do you want to download the ABHA card?"
+                    android:textAllCaps="false"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                    android:textColor="@color/primaryTextColor"
+                    app:layout_constraintTop_toTopOf="@id/cl_download_abha"
+                    tools:layout_editor_absoluteX="0dp">
+
+                </TextView>
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_download_abha_yes"
                     android:layout_width="wrap_content"
@@ -155,6 +154,7 @@
                     app:layout_constrainedWidth="true"
                     app:layout_constraintEnd_toStartOf="@id/btn_download_abha_no"
                     app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_download_abha"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
@@ -175,6 +175,99 @@
                     app:layout_constraintEnd_toEndOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_verify_mobile_otp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/cl_download_abha">
+                    <TextView
+                        android:id="@+id/tv_otp_msg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_big"
+                        android:layout_weight="1"
+                        android:textSize="14sp"
+                        android:visibility="invisible"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/cl_verify_mobile_otp" />
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputLayout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_normal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.45"
+                        tools:layout_editor_absoluteX="16dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/tiet_aadhaar_otp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="Enter OTP"
+                            android:inputType="number"
+                            android:maxLength="6"
+                            android:singleLine="true"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+
+                        <TextView
+                            android:id="@+id/tv_error_text_verify"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_small"
+                            android:layout_weight="1"
+                            android:text="TextView"
+                            android:textColor="@color/red"
+                            android:visibility="gone" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_verify_OTP"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="@dimen/margin_normal"
+                        android:layout_marginTop="16dp"
+                        android:clickable="false"
+                        android:enabled="false"
+                        android:padding="@dimen/padding_normal"
+                        android:text="Verify OTP"
+                        android:textAllCaps="false"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                        android:textColor="?attr/colorSecondary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/resend_otp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_normal"
+                        android:layout_marginEnd="16dp"
+                        android:text="Resend OTP"
+                        android:textAllCaps="false"
+                        android:textColor="@color/secondaryColor"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/btn_verify_OTP" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/timer_resend_otp"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:text="30"
+                        android:padding="0dp"
+                        app:cornerRadius="40dp"
+                        android:textColor="@color/secondaryColor"
+                        android:layout_marginTop="@dimen/margin_normal"
+                        android:layout_marginEnd="16dp"
+                        app:layout_constraintEnd_toStartOf="@+id/resend_otp"
+                        app:layout_constraintTop_toBottomOf="@+id/btn_verify_OTP"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

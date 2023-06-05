@@ -49,7 +49,7 @@ class MotherImmunizationFragment : Fragment() {
                 },
                 {
 
-                }
+                },{_,_ ->}
             ))
         binding.rvAny.adapter = benAdapter
 

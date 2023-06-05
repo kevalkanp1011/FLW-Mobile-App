@@ -1,32 +1,27 @@
 package org.piramalswasthya.sakhi.ui.home_activity.all_ben
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.EditText
-import android.widget.Spinner
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
-import org.piramalswasthya.sakhi.databinding.ActivityHomeBinding
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
+import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdActivity
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
-import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.NewBenRegTypeFragment
 import org.piramalswasthya.sakhi.ui.home_activity.all_household.AllHouseholdFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
-import org.piramalswasthya.sakhi.work.WorkerUtils
-import timber.log.Timber
 
 @AndroidEntryPoint
 class AllBenFragment : Fragment() {
@@ -41,6 +36,13 @@ class AllBenFragment : Fragment() {
 
     private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
 
+    val aadhaarDisclaimer by lazy {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Beneficiary ABHA Number.")
+            .setMessage("it")
+            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
+            .create()
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -73,6 +75,9 @@ class AllBenFragment : Fragment() {
                         it
                     )
                 )
+            },
+            { benId, hhId ->
+                checkAndGenerateABHA(benId)
             }
         ))
         binding.rvAny.adapter = benAdapter
@@ -108,6 +113,30 @@ class AllBenFragment : Fragment() {
                 (searchView as EditText).addTextChangedListener(searchTextWatcher)
             else
                 (searchView as EditText).removeTextChangedListener(searchTextWatcher)
+
+        }
+    }
+
+    private fun checkAndGenerateABHA(benId: Long) {
+        viewModel.fetchAbha(benId)
+
+        viewModel.abha.observe(viewLifecycleOwner) {
+            it.let {
+                if (it != null){
+                    aadhaarDisclaimer.setMessage(it)
+                    aadhaarDisclaimer.show()
+                }
+            }
+        }
+
+        viewModel.benRegId.observe(viewLifecycleOwner) {
+            if (it != null) {
+                val intent = Intent (requireActivity(), AbhaIdActivity::class.java)
+                intent.putExtra("benId", benId)
+                intent.putExtra("benRegId", it)
+                requireActivity().startActivity(intent)
+                viewModel.resetBenRegId()
+            }
 
         }
     }

@@ -83,6 +83,9 @@ class AadhaarNumberAshaFragment : Fragment() {
         }
 
         viewModel.state.observe(viewLifecycleOwner) {
+            if (it == AadhaarIdViewModel.State.SUCCESS) {
+                viewModel.resetState()
+            }
             parentViewModel.setState(it)
         }
 

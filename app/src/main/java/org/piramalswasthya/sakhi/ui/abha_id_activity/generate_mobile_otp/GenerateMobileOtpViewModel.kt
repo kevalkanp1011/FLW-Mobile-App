@@ -32,7 +32,7 @@ class GenerateMobileOtpViewModel @Inject constructor(
     val errorMessage: LiveData<String?>
         get() = _errorMessage
 
-    private val txnIdFromArgs =
+    val txnIdFromArgs =
         GenerateMobileOtpFragmentArgs.fromSavedStateHandle(savedStateHandle).txnId
 
     private var _apiResponse: AbhaCheckAndGenerateMobileOtpResponse? = null
