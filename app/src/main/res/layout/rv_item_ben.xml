@@ -88,11 +88,10 @@
                     app:strokeColor="?attr/colorPrimary" />
 
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_abha"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_toEndOf="@id/tv_hh_id"
-                    android:paddingHorizontal="@dimen/padding_tiny"
                     android:onClick="@{()-> clickListener.onClickABHA(ben)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -101,7 +100,6 @@
                     android:text="ABHA"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_hh_id"
                     android:textColor="?attr/colorPrimary"
-                    app:icon="@android:drawable/sym_action_email"
                     app:layout_constraintEnd_toStartOf="@+id/iv_sync_state"
                     app:layout_constraintStart_toEndOf="@+id/btn_new_ben"
                     app:layout_constraintTop_toTopOf="@+id/tv_hh_id"
