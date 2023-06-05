@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.repositories
 
 import android.app.Application
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -18,9 +19,7 @@ import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.*
-import org.piramalswasthya.sakhi.network.AmritApiService
-import org.piramalswasthya.sakhi.network.GetBenRequest
-import org.piramalswasthya.sakhi.network.TmcGenerateBenIdsRequest
+import org.piramalswasthya.sakhi.network.*
 import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
@@ -1484,4 +1483,22 @@ class BenRepo @Inject constructor(
     }
 
 
+    suspend fun getBeneficiaryWithId(benId: Long): BenResponse? {
+            try {
+                val response = tmcNetworkApiService.getBeneficiaryWithId(benId)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val jsonObj = responseBody?.let { JSONObject(it) }
+                    val data = jsonObj?.getJSONObject("response")?.getString("data")
+                    val bens = Gson().fromJson(data, Array<BenResponse>::class.java)
+                    return if (bens.isNotEmpty()) {
+                        bens[0]
+                    } else {
+                        null
+                    }
+                }
+            } catch (_: java.lang.Exception) {
+            }
+        return null
+    }
 }

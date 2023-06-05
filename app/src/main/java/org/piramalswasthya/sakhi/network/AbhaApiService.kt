@@ -37,6 +37,9 @@ interface AbhaApiService {
     @POST("v1/registration/aadhaar/createHealthIdWithPreVerified")
     suspend fun createAbhaId(@Body request: CreateAbhaIdRequest): Response<ResponseBody>
 
+    @POST("v1/hid/benefit/createHealthId/demo/auth")
+    suspend fun createAbhaIdGov(@Body request: CreateAbhaIdGovRequest): Response<ResponseBody>
+
     @GET("v1/account/getCard")
     suspend fun getPdfCard(): Response<ResponseBody>
 
@@ -48,5 +51,9 @@ interface AbhaApiService {
         @Url url: String = "https://healthidsbx.abdm.gov.in/api/v2/auth/cert"
     ): Response<ResponseBody>
 
+    @GET("v2/ha/lgd/states")
+    suspend fun getStateAndDistricts(): Response<ResponseBody>
 
+    @POST("v1/registration/aadhaar/verifyBio")
+    suspend fun verifyBio(@Body aadhaarVerifyBioRequest: AadhaarVerifyBioRequest): Response<ResponseBody>
 }

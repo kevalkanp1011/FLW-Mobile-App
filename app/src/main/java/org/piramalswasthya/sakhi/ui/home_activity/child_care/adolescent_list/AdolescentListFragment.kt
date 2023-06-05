@@ -50,7 +50,8 @@ class AdolescentListFragment : Fragment() {
                 },
                 {
 
-                }
+                },
+                {_,_ ->}
             ))
         binding.rvAny.adapter = benAdapter
 

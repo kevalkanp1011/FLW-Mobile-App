@@ -79,7 +79,10 @@ class AbhaIdActivity : AppCompatActivity() {
                 exitActivityAlert.show()
                 true
             }
-            else -> navController.navigateUp() || super.onSupportNavigateUp()
+            else -> {
+                navController.popBackStack()
+                navController.navigateUp() || super.onSupportNavigateUp()
+            }
         }
     }
 
@@ -88,7 +91,7 @@ class AbhaIdActivity : AppCompatActivity() {
             .setTitle("Exit")
             .setMessage("Do you want to go back?")
             .setPositiveButton("Yes") { _, _ ->
-                navController.popBackStack(R.id.aadhaarIdFragment, true)
+                navController.popBackStack()
                 navController.navigate(R.id.aadhaarIdFragment)
             }
             .setNegativeButton("No") { d, _ ->
@@ -120,5 +123,7 @@ class AbhaIdActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         TokenInsertAbhaInterceptor.setToken("")
+        intent.removeExtra("benId")
+        intent.removeExtra("benRegId")
     }
 }

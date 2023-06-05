@@ -2,6 +2,7 @@ package org.piramalswasthya.sakhi.work
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.work.*
 
 object WorkerUtils {
@@ -46,7 +47,11 @@ object WorkerUtils {
             .enqueueUniqueWork(GenerateBenIdsWorker.name, ExistingWorkPolicy.KEEP, workRequest)
     }
 
-    fun triggerDownloadCardWorker(context: Context, fileName: String): LiveData<Operation.State> {
+    fun triggerDownloadCardWorker(
+        context: Context,
+        fileName: String,
+        otpTxnID: MutableLiveData<String?>
+    ): LiveData<Operation.State> {
 
         val workRequest = OneTimeWorkRequestBuilder<DownloadCardWorker>()
             .setConstraints(networkOnlyConstraint)
