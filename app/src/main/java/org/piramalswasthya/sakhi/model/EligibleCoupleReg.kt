@@ -15,7 +15,7 @@ import org.piramalswasthya.sakhi.database.room.SyncState
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "hbncInd", value = ["benId", "hhId"])]
+    indices = [Index(name = "ecrInd", value = ["benId", "hhId"])]
 )
 data class EligibleCoupleRegCache (
     @PrimaryKey(autoGenerate = true)

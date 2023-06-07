@@ -212,7 +212,7 @@ class HBYCFormDataset(context: Context, private val hbyc: HBYCCache? = null) {
         deathAge, deathCause, qmOrAnmInformed, deathPlace, superVisorOn, orsShortage, ifaDecreased)
     }
 
-    private fun FormInput.getPosition(): Int {
+    private fun FormInputOld.getPosition(): Int {
         return value.value?.let { entries?.indexOf(it)?.plus(1) } ?: 0
     }
 }

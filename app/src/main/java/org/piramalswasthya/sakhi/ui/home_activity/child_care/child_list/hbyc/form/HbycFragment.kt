@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.databinding.FragmentHbycBinding
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
@@ -45,7 +46,7 @@ class HbycFragment : Fragment() {
             if (validate()) viewModel.submitForm()
         }
         viewModel.exists.observe(viewLifecycleOwner) {exists ->
-            val adapter = FormInputAdapter(isEnabled = !exists)
+            val adapter = FormInputAdapterOld(isEnabled = !exists)
             binding.hbycForm.rvInputForm.adapter = adapter
             if (exists) {
                 binding.btnHbycSubmit.visibility = View.GONE
@@ -97,7 +98,7 @@ class HbycFragment : Fragment() {
 
     fun validate(): Boolean {
         val result = binding.hbycForm.rvInputForm.adapter?.let {
-            (it as FormInputAdapter).validateInput()
+            (it as FormInputAdapter).validateInput(resources)
         }
         Timber.d("Validation : $result")
         return if (result == -1)
