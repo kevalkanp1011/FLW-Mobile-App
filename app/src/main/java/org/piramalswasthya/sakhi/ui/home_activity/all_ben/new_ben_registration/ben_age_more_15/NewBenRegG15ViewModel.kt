@@ -25,7 +25,6 @@ import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.UserRepo
 import timber.log.Timber
-import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -127,7 +126,7 @@ class NewBenRegG15ViewModel @Inject constructor(
     fun getIndexOfRelationToHead() = dataset.getIndexOfRelationToHead()
     fun getIndexOfAgeAtMarriage() = dataset.getIndexOfAgeAtMarriage()
 
-    fun getIndexOfExpectedDateOfDelivery() = dataset.getIndexOfExpectedDateOfDelivery()
+//    fun getIndexOfExpectedDateOfDelivery() = dataset.getIndexOfExpectedDateOfDelivery()
 
     fun getIndexOfFatherName() = dataset.getIndexOfFatherName()
     fun getIndexOfMotherName() = dataset.getIndexOfMotherName()
@@ -716,17 +715,7 @@ class NewBenRegG15ViewModel @Inject constructor(
 //
 //    }
 
-    private fun getExpectedDoDFromLmp(year: Int, month: Int, day: Int): String {
 
-        val cal = Calendar.getInstance()
-        cal.set(year, month, day)
-        cal.add(Calendar.WEEK_OF_YEAR, 40)
-        val dayC = cal.get(Calendar.DAY_OF_MONTH)
-        val monthC = cal.get(Calendar.MONTH)
-        val yearC = cal.get(Calendar.YEAR)
-        return "${if (dayC > 9) dayC else "0$dayC"}-${if (monthC > 8) monthC + 1 else "0${monthC + 1}"}-$yearC"
-
-    }
 
 
 //    fun persistFirstPage() {

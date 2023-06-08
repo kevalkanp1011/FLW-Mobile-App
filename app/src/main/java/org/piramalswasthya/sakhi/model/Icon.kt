@@ -16,7 +16,7 @@ data class ImmunizationIcon(
     val title: String,
     val count: Int,
     val maxCount: Int = 5,
-    val typeOfList: TypeOfList
+//    val typeOfList: TypeOfList
 )
 
 data class HbncIcon(

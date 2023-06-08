@@ -20,7 +20,6 @@ import org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT
 import org.piramalswasthya.sakhi.model.InputType.IMAGE_VIEW
 import org.piramalswasthya.sakhi.model.InputType.RADIO
 import org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW
-import org.piramalswasthya.sakhi.model.TypeOfList
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -406,16 +405,16 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
 
     //////////////////////////////////Third(if any) Page////////////////////////////////////
 
-    private val lastMenstrualPeriod = FormElement(id = 27,
-        inputType = DATE_PICKER,
-        title = "Last Menstrual Period",
-        arrayId = -1,
-        required = false,
-        hasDependants = true,
-        max = System.currentTimeMillis(),
-        min = age.value?.let { getLongFromDate(it) } ?: 0L
-
-    )
+//    private val lastMenstrualPeriod = FormElement(id = 27,
+//        inputType = DATE_PICKER,
+//        title = "Last Menstrual Period",
+//        arrayId = -1,
+//        required = false,
+//        hasDependants = true,
+//        max = System.currentTimeMillis(),
+//        min = age.value?.let { getLongFromDate(it) } ?: 0L
+//
+//    )
 
     private val reproductiveStatus = FormElement(
         id = 28,
@@ -427,7 +426,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         hasDependants = true
     )
 
-    private val reproductiveStatusOther = FormElement(
+    private val otherReproductiveStatus = FormElement(
         id = 29,
         inputType = EDIT_TEXT,
         title = "Reproductive Status Other",
@@ -436,112 +435,112 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         etMaxLength = 100
     )
 
-    private val nishchayKitDeliveryStatus = FormElement(
-        id = 30,
-        inputType = RADIO,
-        title = "Nishchay Kit Delivery Status",
-        arrayId = -1,
-        entries = arrayOf("Delivered", "Not Delivered"),
-        required = true,
-        hasDependants = true,
-
-        )
-
-    private val pregnancyTestResult = FormElement(
-        id = 31,
-        inputType = RADIO,
-        title = "Pregnancy Test Result",
-        arrayId = -1,
-        entries = arrayOf("Pregnant", "Not Pregnant", "Pending"),
-        required = true,
-    )
-
-    private val expectedDateOfDelivery = FormElement(
-        id = 32,
-        inputType = TEXT_VIEW,
-        title = "Expected Date Of Delivery",
-        arrayId = -1,
-        required = true
-    )
-
-
-    private val numPrevLiveBirthOrPregnancy = FormElement(
-        id = 33,
-        inputType = EDIT_TEXT,
-        title = "No. of Previous Live Birth / Pregnancy",
-        arrayId = -1,
-        required = true,
-        hasDependants = true,
-        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
-        etMaxLength = 2,
-        max = 20,
-        min = 0
-    )
-
-    private val lastDeliveryConducted = FormElement(
-        id = 34,
-        inputType = DROPDOWN,
-        title = "Last Delivery Conducted",
-        arrayId = -1,
-        entries = arrayOf(
-            "Home",
-            "PHC",
-            "HWC",
-            "CHC",
-            "District Hospital",
-            "Medical college Hospital",
-            "Other",
-        ),
-        required = true,
-        hasDependants = true
-    )
-    private val facility = FormElement(
-        id = 35, inputType = EDIT_TEXT, title = "Facility Name", arrayId = -1, required = true
-    )
-    private val otherPlaceOfDelivery = FormElement(
-        id = 36,
-        inputType = EDIT_TEXT,
-        title = " Enter the Place of last delivery conducted",
-        arrayId = -1,
-        required = true
-    )
-    private val whoConductedDelivery = FormElement(
-        id = 37,
-        inputType = DROPDOWN,
-        title = "Who Conducted Delivery",
-        arrayId = -1,
-        entries = arrayOf(
-            "ANM",
-            "LHV",
-            "Doctor",
-            "Staff Nurse",
-            "Relative",
-            "TBA(Non-Skilled Birth Attendant)",
-            "Other",
-        ),
-        required = true,
-        hasDependants = true
-    )
-    private val otherWhoConductedDelivery = FormElement(
-        id = 38,
-        inputType = EDIT_TEXT,
-        title = "Other - Enter who Conducted Delivery",
-        arrayId = -1,
-        required = true
-    )
-
-    private val dateOfDelivery = FormElement(id = 39,
-        inputType = DATE_PICKER,
-        title = "Date Of Delivery",
-        arrayId = -1,
-        required = true,
-        max = System.currentTimeMillis(),
-        min = age.value?.let { getLongFromDate(it) } ?: 0L)
+//    private val nishchayKitDeliveryStatus = FormElement(
+//        id = 30,
+//        inputType = RADIO,
+//        title = "Nishchay Kit Delivery Status",
+//        arrayId = -1,
+//        entries = arrayOf("Delivered", "Not Delivered"),
+//        required = true,
+//        hasDependants = true,
+//
+//        )
+//
+//    private val pregnancyTestResult = FormElement(
+//        id = 31,
+//        inputType = RADIO,
+//        title = "Pregnancy Test Result",
+//        arrayId = -1,
+//        entries = arrayOf("Pregnant", "Not Pregnant", "Pending"),
+//        required = true,
+//    )
+//
+//    private val expectedDateOfDelivery = FormElement(
+//        id = 32,
+//        inputType = TEXT_VIEW,
+//        title = "Expected Date Of Delivery",
+//        arrayId = -1,
+//        required = true
+//    )
+//
+//
+//    private val numPrevLiveBirthOrPregnancy = FormElement(
+//        id = 33,
+//        inputType = EDIT_TEXT,
+//        title = "No. of Previous Live Birth / Pregnancy",
+//        arrayId = -1,
+//        required = true,
+//        hasDependants = true,
+//        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+//        etMaxLength = 2,
+//        max = 20,
+//        min = 0
+//    )
+//
+//    private val lastDeliveryConducted = FormElement(
+//        id = 34,
+//        inputType = DROPDOWN,
+//        title = "Last Delivery Conducted",
+//        arrayId = -1,
+//        entries = arrayOf(
+//            "Home",
+//            "PHC",
+//            "HWC",
+//            "CHC",
+//            "District Hospital",
+//            "Medical college Hospital",
+//            "Other",
+//        ),
+//        required = true,
+//        hasDependants = true
+//    )
+//    private val facility = FormElement(
+//        id = 35, inputType = EDIT_TEXT, title = "Facility Name", arrayId = -1, required = true
+//    )
+//    private val otherPlaceOfDelivery = FormElement(
+//        id = 36,
+//        inputType = EDIT_TEXT,
+//        title = " Enter the Place of last delivery conducted",
+//        arrayId = -1,
+//        required = true
+//    )
+//    private val whoConductedDelivery = FormElement(
+//        id = 37,
+//        inputType = DROPDOWN,
+//        title = "Who Conducted Delivery",
+//        arrayId = -1,
+//        entries = arrayOf(
+//            "ANM",
+//            "LHV",
+//            "Doctor",
+//            "Staff Nurse",
+//            "Relative",
+//            "TBA(Non-Skilled Birth Attendant)",
+//            "Other",
+//        ),
+//        required = true,
+//        hasDependants = true
+//    )
+//    private val otherWhoConductedDelivery = FormElement(
+//        id = 38,
+//        inputType = EDIT_TEXT,
+//        title = "Other - Enter who Conducted Delivery",
+//        arrayId = -1,
+//        required = true
+//    )
+//
+//    private val dateOfDelivery = FormElement(id = 39,
+//        inputType = DATE_PICKER,
+//        title = "Date Of Delivery",
+//        arrayId = -1,
+//        required = true,
+//        max = System.currentTimeMillis(),
+//        min = age.value?.let { getLongFromDate(it) } ?: 0L)
 
 
     private val thirdPage = listOf(
         reproductiveStatus,
-        lastMenstrualPeriod,
+//        lastMenstrualPeriod,
 
         )
 
@@ -628,7 +627,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
     fun getIndexOfSpouseName() = getIndexOfElement(husbandName).takeIf { it != -1 }
         ?: getIndexOfElement(wifeName).takeIf { it != -1 } ?: getIndexOfElement(spouseName)
 
-    fun getIndexOfExpectedDateOfDelivery() = getIndexOfElement(expectedDateOfDelivery)
+//    fun getIndexOfExpectedDateOfDelivery() = getIndexOfElement(expectedDateOfDelivery)
 
 
     /*
@@ -763,60 +762,60 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
     suspend fun setThirdPage(ben: BenRegCache?) {
         val list = thirdPage.toMutableList()
         ben?.takeIf { !it.isDraft }?.let { saved ->
-            lastMenstrualPeriod.value = saved.genDetails?.lastMenstrualPeriod?.let {
-                getDateFromLong(
-                    it
-                )
-            }
+//            lastMenstrualPeriod.value = saved.genDetails?.lastMenstrualPeriod?.let {
+//                getDateFromLong(
+//                    it
+//                )
+//            }
             reproductiveStatus.value = reproductiveStatus.getStringFromPosition(
                 saved.genDetails?.reproductiveStatusId ?: 0
             )
-            reproductiveStatusOther.value = saved.genDetails?.reproductiveStatus
-            nishchayKitDeliveryStatus.value =
-                nishchayKitDeliveryStatus.getStringFromPosition(saved.nishchayDeliveryStatusPosition)
-            pregnancyTestResult.value =
-                pregnancyTestResult.getStringFromPosition(saved.nishchayPregnancyStatusPosition)
-            expectedDateOfDelivery.value = saved.genDetails?.expectedDateOfDelivery?.let {
-                getDateFromLong(
-                    it
-                )
-            }
-            dateOfDelivery.value = saved.genDetails?.deliveryDate
-            numPrevLiveBirthOrPregnancy.value = saved.genDetails?.numPreviousLiveBirth?.toString()
-            lastDeliveryConducted.value = saved.genDetails?.lastDeliveryConductedId?.let {
-                lastDeliveryConducted.getStringFromPosition(
-                    it
-                )
-            }
-            facility.value = saved.genDetails?.facilityName
-            otherPlaceOfDelivery.value = saved.genDetails?.otherLastDeliveryConducted
-            whoConductedDelivery.value = saved.genDetails?.whoConductedDeliveryId?.let {
-                whoConductedDelivery.getStringFromPosition(
-                    it
-                )
-            }
-            otherWhoConductedDelivery.value = saved.genDetails?.otherWhoConductedDelivery
+            otherReproductiveStatus.value = saved.genDetails?.reproductiveStatus
+//            nishchayKitDeliveryStatus.value =
+//                nishchayKitDeliveryStatus.getStringFromPosition(saved.nishchayDeliveryStatusPosition)
+//            pregnancyTestResult.value =
+//                pregnancyTestResult.getStringFromPosition(saved.nishchayPregnancyStatusPosition)
+//            expectedDateOfDelivery.value = saved.genDetails?.expectedDateOfDelivery?.let {
+//                getDateFromLong(
+//                    it
+//                )
+//            }
+//            dateOfDelivery.value = saved.genDetails?.deliveryDate
+//            numPrevLiveBirthOrPregnancy.value = saved.genDetails?.numPreviousLiveBirth?.toString()
+//            lastDeliveryConducted.value = saved.genDetails?.lastDeliveryConductedId?.let {
+//                lastDeliveryConducted.getStringFromPosition(
+//                    it
+//                )
+//            }
+//            facility.value = saved.genDetails?.facilityName
+//            otherPlaceOfDelivery.value = saved.genDetails?.otherLastDeliveryConducted
+//            whoConductedDelivery.value = saved.genDetails?.whoConductedDeliveryId?.let {
+//                whoConductedDelivery.getStringFromPosition(
+//                    it
+//                )
+//            }
+//            otherWhoConductedDelivery.value = saved.genDetails?.otherWhoConductedDelivery
         }
         when (reproductiveStatus.value) {
-            reproductiveStatus.entries!![1], reproductiveStatus.entries!![2] -> {
-                lastMenstrualPeriod.required = true
-                list.addAll(listOf(expectedDateOfDelivery, numPrevLiveBirthOrPregnancy))
-            }
+//            reproductiveStatus.entries!![1]/*, reproductiveStatus.entries!![2] */-> {
+//                lastMenstrualPeriod.required = true
+//                list.addAll(listOf(expectedDateOfDelivery, numPrevLiveBirthOrPregnancy))
+//            }
+//
+//            reproductiveStatus.entries!![3] -> {
+//                list.remove(lastMenstrualPeriod)
+//                list.add(dateOfDelivery)
+//            }
 
-            reproductiveStatus.entries!![3] -> {
-                list.remove(lastMenstrualPeriod)
-                list.add(dateOfDelivery)
-            }
-
-            reproductiveStatus.entries!![6] -> list.add(reproductiveStatusOther)
+            reproductiveStatus.entries?.last()-> list.add(otherReproductiveStatus)
             else -> {}
         }
-        if (nishchayKitDeliveryStatus.value?.isNotEmpty() == true) {
-            list.add(nishchayKitDeliveryStatus)
-        }
-        if (pregnancyTestResult.value?.isNotEmpty() == true) {
-            list.add(pregnancyTestResult)
-        }
+//        if (nishchayKitDeliveryStatus.value?.isNotEmpty() == true) {
+//            list.add(nishchayKitDeliveryStatus)
+//        }
+//        if (pregnancyTestResult.value?.isNotEmpty() == true) {
+//            list.add(pregnancyTestResult)
+//        }
 //        if (numPrevLiveBirthOrPregnancy.value?.isDigitsOnly() == true) {
 //            if (numPrevLiveBirthOrPregnancy.value!!.toInt() > 0) list.addAll(
 //                listOf(
@@ -914,10 +913,10 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                         )
                     }
                     else -> {
-                        reproductiveStatusOther.value = benCache.genDetails?.reproductiveStatus
+                        otherReproductiveStatus.value = benCache.genDetails?.reproductiveStatus
                         viewList.addAll(
                             listOf(
-                                reproductiveStatusOther
+                                otherReproductiveStatus
                             )
                         )
                     }
@@ -1306,50 +1305,57 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
 
             aadharNo.id -> validateAadharNoOnEditText(aadharNo)
             rchId.id -> validateRchIdOnEditText(rchId)
-            lastMenstrualPeriod.id -> {
-                lastMenstrualPeriod.value?.let {
-                    val day = it.substring(0, 2).toInt()
-                    val month = it.substring(3, 5).toInt() - 1
-                    val year = it.substring(6).toInt()
-                    val calLmp = Calendar.getInstance()
-                    calLmp.set(year, month, day)
-                    val calNow = Calendar.getInstance()
-                    val monthsDiff = getDiffMonths(calLmp, calNow)
-                    if (reproductiveStatus.value == reproductiveStatus.entries!!.first()) {
-                        if (monthsDiff >= 1) {
-                            triggerDependants(
-                                source = lastMenstrualPeriod,
-                                addItems = listOf(nishchayKitDeliveryStatus),
-                                removeItems = listOf(pregnancyTestResult)
-                            )
-                        } else {
-                            triggerDependants(
-                                source = lastMenstrualPeriod,
-                                addItems = emptyList(),
-                                removeItems = listOf(nishchayKitDeliveryStatus, pregnancyTestResult)
-                            )
-                        }
-                    } else if (reproductiveStatus.value == reproductiveStatus.entries!![1] || reproductiveStatus.value == reproductiveStatus.entries!![2]) {
-                        val calEdd = Calendar.getInstance()
-                        calEdd.timeInMillis = calLmp.timeInMillis
-                        calEdd.add(Calendar.DAY_OF_YEAR, 270)
-                        expectedDateOfDelivery.value = getDateFromLong(calEdd.timeInMillis)
-                        -1
-                    } else
-                        -1
-                } ?: -1
-            }
+//            lastMenstrualPeriod.id -> {
+//                lastMenstrualPeriod.value?.let {
+//                    val day = it.substring(0, 2).toInt()
+//                    val month = it.substring(3, 5).toInt() - 1
+//                    val year = it.substring(6).toInt()
+//                    val calLmp = Calendar.getInstance()
+//                    calLmp.set(year, month, day)
+//                    val calNow = Calendar.getInstance()
+//                    val monthsDiff = getDiffMonths(calLmp, calNow)
+//                    if (reproductiveStatus.value == reproductiveStatus.entries!!.first()) {
+//                        if (monthsDiff >= 1) {
+//                            triggerDependants(
+//                                source = lastMenstrualPeriod,
+//                                addItems = listOf(nishchayKitDeliveryStatus),
+//                                removeItems = listOf(pregnancyTestResult)
+//                            )
+//                        } else {
+//                            triggerDependants(
+//                                source = lastMenstrualPeriod,
+//                                addItems = emptyList(),
+//                                removeItems = listOf(nishchayKitDeliveryStatus, pregnancyTestResult)
+//                            )
+//                        }
+//                    } else if (reproductiveStatus.value == reproductiveStatus.entries!![1] || reproductiveStatus.value == reproductiveStatus.entries!![2]) {
+//                        val calEdd = Calendar.getInstance()
+//                        calEdd.timeInMillis = calLmp.timeInMillis
+//                        calEdd.add(Calendar.DAY_OF_YEAR, 270)
+//                        expectedDateOfDelivery.value = getDateFromLong(calEdd.timeInMillis)
+//                        -1
+//                    } else
+//                        -1
+//                } ?: -1
+//            }
 
-            nishchayKitDeliveryStatus.id -> {
+//            nishchayKitDeliveryStatus.id -> {
+//                triggerDependants(
+//                    source = nishchayKitDeliveryStatus,
+//                    passedIndex = index,
+//                    triggerIndex = 0,
+//                    target = pregnancyTestResult
+//                )
+//            }
+
+            reproductiveStatus.id ->
                 triggerDependants(
-                    source = nishchayKitDeliveryStatus,
+                    source = reproductiveStatus,
                     passedIndex = index,
-                    triggerIndex = 0,
-                    target = pregnancyTestResult
+                    triggerIndex = reproductiveStatus.entries!!.lastIndex,
+                    target = otherReproductiveStatus
                 )
-            }
-
-            reproductiveStatus.id -> {
+                /*{
                 lastMenstrualPeriod.value = null
                 when (index) {
                     0 -> {
@@ -1369,7 +1375,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                                 otherPlaceOfDelivery,
                                 facility,
                                 numPrevLiveBirthOrPregnancy,
-                                reproductiveStatusOther
+                                otherReproductiveStatus
                             )
                         )
                     }
@@ -1390,7 +1396,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                                 otherPlaceOfDelivery,
                                 facility,
                                 numPrevLiveBirthOrPregnancy,
-                                reproductiveStatusOther
+                                otherReproductiveStatus
                             )
                         )
                     }
@@ -1412,7 +1418,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                                 lastDeliveryConducted,
                                 otherPlaceOfDelivery,
                                 facility,
-                                reproductiveStatusOther
+                                otherReproductiveStatus
                             )
                         )
                     }
@@ -1431,7 +1437,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                                 otherPlaceOfDelivery,
                                 expectedDateOfDelivery,
                                 facility,
-                                reproductiveStatusOther
+                                otherReproductiveStatus
                             )
                         )
                     }
@@ -1440,7 +1446,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                         lastMenstrualPeriod.required = false
                         triggerDependants(
                             source = reproductiveStatus,
-                            addItems = listOf(lastMenstrualPeriod, reproductiveStatusOther),
+                            addItems = listOf(lastMenstrualPeriod, otherReproductiveStatus),
                             removeItems = listOf(
                                 nishchayKitDeliveryStatus,
                                 pregnancyTestResult,
@@ -1458,7 +1464,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
 
                     else -> -1
                 }
-            }
+            }*/
 
             /*numPrevLiveBirthOrPregnancy.id -> {
                 numPrevLiveBirthOrPregnancy.value?.takeIf { it.isNotEmpty() }?.toInt()?.let {
@@ -1480,35 +1486,35 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     )
                 } ?: -1
             }*/
-
-            lastDeliveryConducted.id -> {
-                when (index) {
-                    0, 1, 2, 3, 4 -> triggerDependants(
-                        source = lastDeliveryConducted,
-                        addItems = listOf(facility),
-                        removeItems = listOf(otherPlaceOfDelivery)
-                    )
-
-                    else -> triggerDependants(
-                        source = lastDeliveryConducted,
-                        addItems = listOf(otherPlaceOfDelivery),
-                        removeItems = listOf(facility)
-                    )
-                }
-            }
-
-            facility.id -> validateEmptyOnEditText(facility)
-            otherPlaceOfDelivery.id -> validateEmptyOnEditText(otherPlaceOfDelivery)
-            whoConductedDelivery.id -> {
-                triggerDependants(
-                    source = whoConductedDelivery,
-                    passedIndex = index,
-                    triggerIndex = whoConductedDelivery.entries!!.lastIndex,
-                    target = otherWhoConductedDelivery
-                )
-            }
-
-            otherWhoConductedDelivery.id -> validateEmptyOnEditText(otherWhoConductedDelivery)
+//
+//            lastDeliveryConducted.id -> {
+//                when (index) {
+//                    0, 1, 2, 3, 4 -> triggerDependants(
+//                        source = lastDeliveryConducted,
+//                        addItems = listOf(facility),
+//                        removeItems = listOf(otherPlaceOfDelivery)
+//                    )
+//
+//                    else -> triggerDependants(
+//                        source = lastDeliveryConducted,
+//                        addItems = listOf(otherPlaceOfDelivery),
+//                        removeItems = listOf(facility)
+//                    )
+//                }
+//            }
+//
+//            facility.id -> validateEmptyOnEditText(facility)
+//            otherPlaceOfDelivery.id -> validateEmptyOnEditText(otherPlaceOfDelivery)
+//            whoConductedDelivery.id -> {
+//                triggerDependants(
+//                    source = whoConductedDelivery,
+//                    passedIndex = index,
+//                    triggerIndex = whoConductedDelivery.entries!!.lastIndex,
+//                    target = otherWhoConductedDelivery
+//                )
+//            }
+//
+//            otherWhoConductedDelivery.id -> validateEmptyOnEditText(otherWhoConductedDelivery)
 
 
             else -> -1
@@ -1538,7 +1544,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                 3 -> Gender.TRANSGENDER
                 else -> null
             }
-            ben.registrationType = TypeOfList.GENERAL
+//            ben.registrationType = TypeOfList.GENERAL
             ben.genDetails?.maritalStatusId = maritalStatus.getPosition()
             ben.genDetails?.maritalStatus =
                 maritalStatus.getStringFromPosition(ben.genDetails?.maritalStatusId ?: 0)
@@ -1586,52 +1592,52 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
 
             //Page 003
             ben.genDetails?.let { gen ->
-                gen.reproductiveStatus = reproductiveStatus.value
                 gen.reproductiveStatusId = reproductiveStatus.getPosition()
-                gen.lastMenstrualPeriod =
-                    lastMenstrualPeriod.value?.let {
-                        getLongFromDate(
-                            it
-                        )
-                    }
-                ben.nishchayDeliveryStatus =
-                    nishchayKitDeliveryStatus.value
-                ben.nishchayDeliveryStatusPosition =
-                    (nishchayKitDeliveryStatus.entries?.indexOf(
-                        ben.nishchayDeliveryStatus
-                    ))?.let { it + 1 } ?: 0
-                ben.nishchayPregnancyStatus = pregnancyTestResult.value
-                ben.nishchayPregnancyStatusPosition =
-                    (pregnancyTestResult.entries?.indexOf(
-                        ben.nishchayPregnancyStatus
-                    ))?.let { it + 1 } ?: 0
-                gen.expectedDateOfDelivery =
-                    expectedDateOfDelivery.value?.let {
-                        getLongFromDate(
-                            it
-                        )
-                    }
-                gen.deliveryDate = dateOfDelivery.value
-                gen.numPreviousLiveBirth =
-                    numPrevLiveBirthOrPregnancy.value?.toInt() ?: 0
-                gen.lastDeliveryConducted = lastDeliveryConducted.value
-                gen.lastDeliveryConductedId = lastDeliveryConducted.getPosition()
-                gen.otherLastDeliveryConducted =
-                    otherPlaceOfDelivery.value
-                gen.facilityName = facility.value
-                gen.whoConductedDelivery = whoConductedDelivery.value
-                gen.whoConductedDeliveryId = whoConductedDelivery.getPosition()
-                gen.otherWhoConductedDelivery =
-                    otherWhoConductedDelivery.value
-                ben.registrationType = when (reproductiveStatus.value) {
-                    "Eligible Couple" -> TypeOfList.ELIGIBLE_COUPLE
-                    "Antenatal Mother" -> TypeOfList.ANTENATAL_MOTHER
-                    "Delivery Stage" -> TypeOfList.DELIVERY_STAGE
-                    "Postnatal Mother-Lactating Mother" -> TypeOfList.POSTNATAL_MOTHER
-                    "Menopause Stage" -> TypeOfList.MENOPAUSE
-                    "Teenager" -> TypeOfList.TEENAGER
-                    else -> TypeOfList.OTHER
-                }
+                gen.reproductiveStatus = reproductiveStatus.value
+//                gen.lastMenstrualPeriod =
+//                    lastMenstrualPeriod.value?.let {
+//                        getLongFromDate(
+//                            it
+//                        )
+//                    }
+//                ben.nishchayDeliveryStatus =
+//                    nishchayKitDeliveryStatus.value
+//                ben.nishchayDeliveryStatusPosition =
+//                    (nishchayKitDeliveryStatus.entries?.indexOf(
+//                        ben.nishchayDeliveryStatus
+//                    ))?.let { it + 1 } ?: 0
+//                ben.nishchayPregnancyStatus = pregnancyTestResult.value
+//                ben.nishchayPregnancyStatusPosition =
+//                    (pregnancyTestResult.entries?.indexOf(
+//                        ben.nishchayPregnancyStatus
+//                    ))?.let { it + 1 } ?: 0
+//                gen.expectedDateOfDelivery =
+//                    expectedDateOfDelivery.value?.let {
+//                        getLongFromDate(
+//                            it
+//                        )
+//                    }
+//                gen.deliveryDate = dateOfDelivery.value
+//                gen.numPreviousLiveBirth =
+//                    numPrevLiveBirthOrPregnancy.value?.toInt() ?: 0
+//                gen.lastDeliveryConducted = lastDeliveryConducted.value
+//                gen.lastDeliveryConductedId = lastDeliveryConducted.getPosition()
+//                gen.otherLastDeliveryConducted =
+//                    otherPlaceOfDelivery.value
+//                gen.facilityName = facility.value
+//                gen.whoConductedDelivery = whoConductedDelivery.value
+//                gen.whoConductedDeliveryId = whoConductedDelivery.getPosition()
+//                gen.otherWhoConductedDelivery =
+//                    otherWhoConductedDelivery.value
+//                ben.registrationType = when (reproductiveStatus.value) {
+//                    "Eligible Couple" -> TypeOfList.ELIGIBLE_COUPLE
+//                    "Antenatal Mother" -> TypeOfList.ANTENATAL_MOTHER
+//                    "Delivery Stage" -> TypeOfList.DELIVERY_STAGE
+//                    "Postnatal Mother-Lactating Mother" -> TypeOfList.POSTNATAL_MOTHER
+//                    "Menopause Stage" -> TypeOfList.MENOPAUSE
+//                    "Teenager" -> TypeOfList.TEENAGER
+//                    else -> TypeOfList.OTHER
+//                }
             }
 
 

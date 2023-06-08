@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.database.room.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 import org.piramalswasthya.sakhi.model.ChildImmunizationCategory
@@ -23,6 +24,7 @@ interface ImmunizationDao {
     suspend fun getImmunizationRecord(benId: Long, vaccineId: Int): ImmunizationCache?
 
     @Transaction
+    @RewriteQueriesToDropUnusedColumns
     @Query(
         "SELECT * FROM BEN_BASIC_CACHE ben LEFT OUTER JOIN IMMUNIZATION imm WHERE( ben.dob BETWEEN :minDob AND :maxDob) "
     )

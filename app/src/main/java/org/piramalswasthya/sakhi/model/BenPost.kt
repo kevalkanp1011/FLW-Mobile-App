@@ -46,7 +46,7 @@ data class BenPost(
     @Json(name = "expectedDateOfDelivery")
     val expectedDateOfDelivery: String? = null,
     @Json(name = "facilitySelection")
-    val facilitySelection: String,
+    val facilitySelection: String = "",
     @Json(name = "familyHeadRelation")
     val familyHeadRelation: String,
     @Json(name = "familyHeadRelationPosition")
@@ -62,7 +62,7 @@ data class BenPost(
     @Json(name = "id")
     val dummyIdMayBe: Int = 1,
     @Json(name = "immunizationStatus")
-    val isImmunizationStatus: Boolean,
+    val isImmunizationStatus: Boolean = false,
     @Json(name = "lastDeliveryConducted")
     val lastDeliveryConducted: String? = null,
     @Json(name = "lastDeliveryConductedID")
@@ -94,17 +94,17 @@ data class BenPost(
     @Json(name = "need_opcareId")
     val needOpCareId: Int = 0,
     @Json(name = "nishchayPregnancyStatus")
-    val nishchayPregnancyStatus: String,
+    val nishchayPregnancyStatus: String = "",
     @Json(name = "nishchayPregnancyStatusPosition")
-    val nishchayPregnancyStatusPosition: Int,
+    val nishchayPregnancyStatusPosition: Int = 0,
     @Json(name = "nishchayDeliveryStatus")
-    val nishchayDeliveryStatus: String,
+    val nishchayDeliveryStatus: String = "",
     @Json(name = "nishchayDeliveryStatusPosition")
-    val nishchayDeliveryStatusPosition: Int,
+    val nishchayDeliveryStatusPosition: Int = 0,
     @Json(name = "noOfDaysForDelivery")
-    val noOfDaysForDelivery: Int?,
+    val noOfDaysForDelivery: Int? = null,
     @Json(name = "previousLiveBirth")
-    val previousLiveBirth: String,
+    val previousLiveBirth: String = "",
     @Json(name = "rchid")
     val rchId: String,
     @Json(name = "registrationDate")

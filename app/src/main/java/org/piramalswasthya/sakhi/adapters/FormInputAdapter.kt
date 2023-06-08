@@ -401,9 +401,9 @@ class FormInputAdapter(
                                             )
                                         } $it"
                                     )
-                                    formValueListener?.onValueChanged(
-                                        item, item.entries!!.indexOf(it)
-                                    )
+//                                    formValueListener?.onValueChanged(
+//                                        item, item.entries!!.indexOf(it)
+//                                    )
                                 }
                             } else {
                                 if (item.value?.contains(it) == true) {
@@ -411,7 +411,7 @@ class FormInputAdapter(
                                 }
                             }
                             formValueListener?.onValueChanged(
-                                item, index + 1 * (if (b) 1 else -1)
+                                item, index * (if (b) 1 else -1)
                             )
                             if (item.value.isNullOrBlank()) {
                                 item.value = null

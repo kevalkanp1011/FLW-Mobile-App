@@ -22,8 +22,6 @@ import org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT
 import org.piramalswasthya.sakhi.model.InputType.IMAGE_VIEW
 import org.piramalswasthya.sakhi.model.InputType.RADIO
 import org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW
-import org.piramalswasthya.sakhi.model.TypeOfList
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -845,14 +843,14 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         setUpPage(list)
     }
 
-    private fun getTypeFromAge(age: Int, ageUnit: AgeUnit?): TypeOfList? {
-        Timber.d("Values Here $age $ageUnit")
-        return if (ageUnit == AgeUnit.DAYS || ageUnit == AgeUnit.MONTHS || (ageUnit == AgeUnit.YEARS && age < 2)) TypeOfList.INFANT
-        else if (ageUnit == AgeUnit.YEARS && age < 6) TypeOfList.CHILD
-        else if (ageUnit == AgeUnit.YEARS && age <= 15) TypeOfList.ADOLESCENT
-        else null
-
-    }
+//    private fun getTypeFromAge(age: Int, ageUnit: AgeUnit?): TypeOfList? {
+//        Timber.d("Values Here $age $ageUnit")
+//        return if (ageUnit == AgeUnit.DAYS || ageUnit == AgeUnit.MONTHS || (ageUnit == AgeUnit.YEARS && age < 2)) TypeOfList.INFANT
+//        else if (ageUnit == AgeUnit.YEARS && age < 6) TypeOfList.CHILD
+//        else if (ageUnit == AgeUnit.YEARS && age <= 15) TypeOfList.ADOLESCENT
+//        else null
+//
+//    }
 
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
@@ -1170,7 +1168,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                 1 -> AgeUnit.DAYS
                 else -> null
             }
-            ben.registrationType = getTypeFromAge(ben.age, ben.ageUnit)
+//            ben.registrationType = getTypeFromAge(ben.age, ben.ageUnit)
             ben.genderId = when (gender.value) {
                 gender.entries!![0] -> 1
                 gender.entries!![1] -> 2

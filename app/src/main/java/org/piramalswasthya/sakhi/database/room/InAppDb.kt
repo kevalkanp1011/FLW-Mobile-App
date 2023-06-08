@@ -16,6 +16,7 @@ import org.piramalswasthya.sakhi.database.room.dao.FpotDao
 import org.piramalswasthya.sakhi.database.room.dao.HbncDao
 import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
 import org.piramalswasthya.sakhi.database.room.dao.ImmunizationDao
+import org.piramalswasthya.sakhi.database.room.dao.MaternalHealthDao
 import org.piramalswasthya.sakhi.database.room.dao.MdsrDao
 import org.piramalswasthya.sakhi.database.room.dao.PmjayDao
 import org.piramalswasthya.sakhi.database.room.dao.PmsmaDao
@@ -31,6 +32,7 @@ import org.piramalswasthya.sakhi.model.ImmunizationCache
 import org.piramalswasthya.sakhi.model.MDSRCache
 import org.piramalswasthya.sakhi.model.PMJAYCache
 import org.piramalswasthya.sakhi.model.PMSMACache
+import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import org.piramalswasthya.sakhi.model.UserCache
 import org.piramalswasthya.sakhi.model.Vaccine
 import timber.log.Timber
@@ -49,10 +51,11 @@ import timber.log.Timber
         FPOTCache::class,
         HBNCCache::class,
         Vaccine::class,
-        ImmunizationCache::class
+        ImmunizationCache::class,
+        PregnantWomanRegistrationCache::class
     ],
     views = [BenBasicCache::class],
-    version = 2, exportSchema = false
+    version = 3, exportSchema = false
 )
 
 @TypeConverters(LocationEntityListConverter::class, SyncStateConverter::class)
@@ -71,6 +74,7 @@ abstract class InAppDb : RoomDatabase() {
     abstract val fpotDao: FpotDao
     abstract val hbncDao: HbncDao
     abstract val vaccineDao: ImmunizationDao
+    abstract val maternalHealthDao : MaternalHealthDao
 
     companion object {
         @Volatile

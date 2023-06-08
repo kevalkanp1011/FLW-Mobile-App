@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.eligible_couple
+package org.piramalswasthya.sakhi.ui.home_activity.mother_care.pregnant_women_registration.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,11 +11,10 @@ import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import javax.inject.Inject
 
 @HiltViewModel
-class EligibleCoupleViewModel @Inject constructor(
+class PwRegistrationListViewModel @Inject constructor(
     recordsRepo: RecordsRepo
 ) : ViewModel() {
-
-    private val allBenList = recordsRepo.getEligibleCoupleList()
+    private val allBenList = recordsRepo.getPregnantWomenList()
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter) { list, filter ->
         filterBenList(list, filter)
@@ -27,6 +26,5 @@ class EligibleCoupleViewModel @Inject constructor(
         }
 
     }
-
 
 }

@@ -1,7 +1,11 @@
 package org.piramalswasthya.sakhi.ui.home_activity.mother_care.pmsma
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
@@ -10,12 +14,16 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.configuration.PMSMAFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
-import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.FormInputOld
+import org.piramalswasthya.sakhi.model.HouseholdCache
+import org.piramalswasthya.sakhi.model.PMSMACache
+import org.piramalswasthya.sakhi.model.UserCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.PmsmaRepo
 import timber.log.Timber
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 
@@ -154,9 +162,9 @@ class PmsmaViewModel @Inject constructor(
         form.address.value.value = it
         form.mobileNumber.value.value = ben.contactNumber.toString()
         form.husbandName.value.value = ben.genDetails?.spouseName
-        form.lastMenstrualPeriod.value.value = getDateFromLong(ben.genDetails?.lastMenstrualPeriod)
-        form.expectedDateOfDelivery.value.value = getDateFromLong(ben.genDetails?.lastMenstrualPeriod?.plus(
-            280 * 24 * 60 * 60 * 1000L))
+//        form.lastMenstrualPeriod.value.value = getDateFromLong(ben.genDetails?.lastMenstrualPeriod)
+//        form.expectedDateOfDelivery.value.value = getDateFromLong(ben.genDetails?.lastMenstrualPeriod?.plus(
+//            280 * 24 * 60 * 60 * 1000L))
         adapter.notifyItemChanged(adapter.currentList.indexOf(form.address))
         adapter.notifyItemChanged(adapter.currentList.indexOf(form.mobileNumber))
         adapter.notifyItemChanged(adapter.currentList.indexOf(form.husbandName))
