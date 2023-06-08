@@ -9,22 +9,22 @@ import javax.inject.Inject
 
 @ActivityRetainedScoped
 class RecordsRepo @Inject constructor(
-    householdDao: HouseholdDao,
-    benDao: BenDao,
+    private val householdDao: HouseholdDao,
+    private val benDao: BenDao,
     preferenceDao: PreferenceDao
 ) {
     private val selectedVillage = preferenceDao.getLocationRecord()!!.village.id
 
-    val hhList = householdDao.getAllHouseholds(selectedVillage)
+    fun getHhList() = householdDao.getAllHouseholds(selectedVillage)
         .map { list -> list.map { it.asBasicDomainModel() } }
-    val hhCount = hhList.map { it.size }
+    fun getHhListCount() = householdDao.getAllHouseholdsCount(selectedVillage)
 
-    val benList = benDao.getAllBen(selectedVillage).map { list -> list.map { it.asBasicDomainModel() } }
-    val benListCount = benList.map { it.size }
+    fun getBenList() = benDao.getAllBen(selectedVillage).map { list -> list.map { it.asBasicDomainModel() } }
+    fun getBenListCount() = benDao.getAllBenCount(selectedVillage)
 
-    val eligibleCoupleList = benDao.getAllEligibleCoupleList(selectedVillage)
+    fun getEligibleCoupleList() = benDao.getAllEligibleCoupleList(selectedVillage)
         .map { list -> list.map { it.asBasicDomainModel() } }
-    val eligibleCoupleListCount = eligibleCoupleList.map { it.size }
+    fun getEligibleCoupleListCount() = benDao.getAllEligibleCoupleListCount(selectedVillage)
 
     val pregnantList = benDao.getAllPregnancyWomenList(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForPmsmaForm() } }
@@ -97,4 +97,7 @@ class RecordsRepo @Inject constructor(
     val motherImmunizationList = benDao.getAllMotherImmunizationList(selectedVillage)
         .map { list -> list.map { it.asBasicDomainModel() } }
     val motherImmunizationListCount = motherImmunizationList.map { it.size }
+
+    fun getPregnantWomenList() = benDao.getAllPregnancyWomenList(selectedVillage)
+        .map { list -> list.map { it.asBenBasicDomainModelForPregnantWomanRegistrationForm() } }
 }

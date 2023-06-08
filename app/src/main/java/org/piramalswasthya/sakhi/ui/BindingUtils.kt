@@ -17,20 +17,54 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.custom_views.VaccinationElement
+import org.piramalswasthya.sakhi.custom_views.VaccinationListHeader
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.FormInputOld
+import org.piramalswasthya.sakhi.model.ImmunizationDetailsDomain
+import org.piramalswasthya.sakhi.model.ImmunizationDetailsHeader
+import org.piramalswasthya.sakhi.model.VaccineClickListener
+import org.piramalswasthya.sakhi.model.VaccineState
+import org.piramalswasthya.sakhi.model.VaccineState.*
 import timber.log.Timber
 
 
-@BindingAdapter("scope","recordCount")
-fun TextView.setRecordCount(scope : CoroutineScope, count : Flow<Int>?) {
-   count?.let {
-       scope.launch {
-           it.collect{
-               text = it.toString()
-           }
-       }
-   }
+@BindingAdapter("vaccine_items","vaccine_click")
+fun VaccinationElement.setItems(data: ImmunizationDetailsDomain?, clickListener: VaccineClickListener?) {
+    setData(data, clickListener)
+}
+
+
+@BindingAdapter("vaccine_headers")
+fun VaccinationListHeader.setItems(data: ImmunizationDetailsHeader?) {
+    data?.let { setData(it) }
+}
+
+@BindingAdapter("vaccineState")
+fun ImageView.setVaccineState(syncState: VaccineState?) {
+    syncState?.let {
+//        visibility = View.VISIBLE
+        val drawable = when (it) {
+            DONE -> R.drawable.ic_check_circle
+            MISSED -> R.drawable.ic_close
+            PENDING -> R.drawable.ic_add_circle
+            OVERDUE -> R.drawable.ic_overdue
+            UNAVAILABLE -> null
+        }
+        drawable?.let { it1 -> setImageResource(it1) }
+    }
+}
+
+
+@BindingAdapter("scope", "recordCount")
+fun TextView.setRecordCount(scope: CoroutineScope, count: Flow<Int>?) {
+    count?.let {
+        scope.launch {
+            it.collect {
+                text = it.toString()
+            }
+        }
+    }
 }
 
 @BindingAdapter("listItems")
@@ -41,8 +75,8 @@ fun AutoCompleteTextView.setSpinnerItems(list: Array<String>?) {
 }
 
 @BindingAdapter("allCaps")
-fun TextInputEditText.setAllAlphabetCaps(allCaps : Boolean){
-    if(allCaps) {
+fun TextInputEditText.setAllAlphabetCaps(allCaps: Boolean) {
+    if (allCaps) {
         isAllCaps = true
         inputType = InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
     }
@@ -97,7 +131,7 @@ fun ConstraintLayout.setItemsCheckBox(form: FormInputOld?) {
 //        return
     val ll = this.findViewById<LinearLayout>(R.id.ll_checks)
     ll.removeAllViews()
-    ll.apply{
+    ll.apply {
         form?.entries?.let { items ->
             orientation = form.orientation ?: LinearLayout.VERTICAL
             weightSum = items.size.toFloat()
@@ -106,20 +140,17 @@ fun ConstraintLayout.setItemsCheckBox(form: FormInputOld?) {
                 cbx.layoutParams =
                     LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1.0F)
                 cbx.id = View.generateViewId()
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-                    cbx.setTextAppearance(context, android.R.style.TextAppearance_Material_Medium)
-                else
-                    cbx.setTextAppearance(android.R.style.TextAppearance_Material_Subhead)
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) cbx.setTextAppearance(
+                    context, android.R.style.TextAppearance_Material_Medium
+                )
+                else cbx.setTextAppearance(android.R.style.TextAppearance_Material_Subhead)
                 cbx.text = it
                 addView(cbx)
-                if (form.value.value?.contains(it) == true)
-                    cbx.isChecked = true
+                if (form.value.value?.contains(it) == true) cbx.isChecked = true
                 cbx.setOnCheckedChangeListener { _, b ->
                     if (b) {
-                        if (form.value.value != null)
-                            form.value.value = form.value.value + it
-                        else
-                            form.value.value = it
+                        if (form.value.value != null) form.value.value = form.value.value + it
+                        else form.value.value = it
                     } else {
                         if (form.value.value?.contains(it) == true) {
                             form.value.value = form.value.value?.replace(it, "")
@@ -142,17 +173,14 @@ fun ConstraintLayout.setItemsCheckBox(form: FormInputOld?) {
 @BindingAdapter("required")
 fun TextView.setRequired(required: Boolean? = true) {
     required?.let {
-        visibility = if (it)
-            View.VISIBLE
-        else
-            View.INVISIBLE
+        visibility = if (it) View.VISIBLE
+        else View.INVISIBLE
     }
 }
 
 
 private val rotate = RotateAnimation(
-    360F,
-    0F, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
+    360F, 0F, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
 ).apply {
     duration = 1000
     interpolator = LinearInterpolator()
@@ -171,9 +199,8 @@ fun ImageView.setSyncState(syncState: SyncState?) {
         }
         setImageResource(drawable)
         isClickable = it == SyncState.UNSYNCED
-        if (it == SyncState.SYNCING)
-            startAnimation(rotate)
-    }?:run{
+        if (it == SyncState.SYNCING) startAnimation(rotate)
+    } ?: run {
         visibility = View.INVISIBLE
     }
 }
@@ -181,15 +208,9 @@ fun ImageView.setSyncState(syncState: SyncState?) {
 
 @BindingAdapter("benImage")
 fun ImageView.setBenImage(uriString: String?) {
-    if (uriString == null)
-        setImageResource(R.drawable.ic_person)
-    else
-    {
-        Glide
-            .with(this)
-            .load(Uri.parse(uriString))
-            .placeholder(R.drawable.ic_person)
-            .circleCrop()
+    if (uriString == null) setImageResource(R.drawable.ic_person)
+    else {
+        Glide.with(this).load(Uri.parse(uriString)).placeholder(R.drawable.ic_person).circleCrop()
             .into(this)
     }
 }

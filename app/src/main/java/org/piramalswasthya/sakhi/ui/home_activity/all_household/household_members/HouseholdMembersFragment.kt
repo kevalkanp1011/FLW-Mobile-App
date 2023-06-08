@@ -47,7 +47,8 @@ class HouseholdMembersFragment : Fragment() {
                 },
                 {
 
-                }
+                },
+                {_,_ ->}
             ))
         binding.rvAny.adapter = benAdapter
 

@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.immunization_due.child_immunization
+package org.piramalswasthya.sakhi.ui.home_activity.mother_care.pregnant_women_registration.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,14 +11,13 @@ import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import javax.inject.Inject
 
 @HiltViewModel
-class ChildImmunizationViewModel @Inject constructor(
+class PwRegistrationListViewModel @Inject constructor(
     recordsRepo: RecordsRepo
 ) : ViewModel() {
-
-    private val allBenList = recordsRepo.childrenImmunizationList
+    private val allBenList = recordsRepo.getPregnantWomenList()
     private val filter = MutableStateFlow("")
-    val benList = allBenList.combine(filter){
-            list, filter -> filterBenList(list, filter)
+    val benList = allBenList.combine(filter) { list, filter ->
+        filterBenList(list, filter)
     }
 
     fun filterText(text: String) {
@@ -27,4 +26,5 @@ class ChildImmunizationViewModel @Inject constructor(
         }
 
     }
+
 }

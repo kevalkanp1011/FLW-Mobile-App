@@ -15,6 +15,8 @@ import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.CbacDao
 import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
+import org.piramalswasthya.sakhi.database.room.dao.ImmunizationDao
+import org.piramalswasthya.sakhi.database.room.dao.MaternalHealthDao
 import org.piramalswasthya.sakhi.database.room.dao.UserDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.network.AbhaApiService
@@ -163,6 +165,14 @@ object AppModule {
     @Singleton
     @Provides
     fun provideCbacDao(database : InAppDb) : CbacDao = database.cbacDao
+
+    @Singleton
+    @Provides
+    fun provideVaccineDao(database : InAppDb) : ImmunizationDao = database.vaccineDao
+
+    @Singleton
+    @Provides
+    fun provideMaternalHealthDao(database : InAppDb) : MaternalHealthDao = database.maternalHealthDao
 
     @Singleton
     @Provides

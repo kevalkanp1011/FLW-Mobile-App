@@ -7,7 +7,7 @@ data class FormElement(
     val inputType: InputType,
     var title: String,
     val subtitle: String? = null,
-    @ArrayRes var arrayId : Int,
+    @ArrayRes var arrayId : Int = -1,
     var entries: Array<String>? = null,
     var required: Boolean,
     val hasDependants: Boolean = false,

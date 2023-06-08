@@ -44,7 +44,7 @@ class NewBenRegG15Fragment : Fragment() {
     private val viewModel: NewBenRegG15ViewModel by viewModels()
     private  var micClickedElementId : Int = -1
     private val sttContract = registerForActivityResult(SpeechToTextContract()){ value ->
-        val formattedValue = value.substring(0,50).uppercase()
+        val formattedValue = value/*.substring(0,50)*/.uppercase()
         val listIndex = viewModel.updateValueByIdAndReturnListIndex(micClickedElementId, formattedValue)
         listIndex.takeIf { it>=0 }?.let {
             binding.inputForm.rvInputForm.adapter?.notifyItemChanged(it)
@@ -332,10 +332,10 @@ class NewBenRegG15Fragment : Fragment() {
 
                 }
 
-                27 ->
-                    viewModel.getIndexOfExpectedDateOfDelivery().takeIf { it > 0 }?.let {
-                        notifyItemChanged(it)
-                    }
+//                27 ->
+//                    viewModel.getIndexOfExpectedDateOfDelivery().takeIf { it > 0 }?.let {
+//                        notifyItemChanged(it)
+//                    }
 
                 28 -> notifyItemChanged(1)
 

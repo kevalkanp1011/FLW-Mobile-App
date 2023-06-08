@@ -6,7 +6,16 @@ import android.text.InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.helpers.Languages
-import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.FormElement
+import org.piramalswasthya.sakhi.model.HBNCCache
+import org.piramalswasthya.sakhi.model.HbncHomeVisit
+import org.piramalswasthya.sakhi.model.HbncPartI
+import org.piramalswasthya.sakhi.model.HbncPartII
+import org.piramalswasthya.sakhi.model.HbncVisitCard
+import org.piramalswasthya.sakhi.model.InputType
+import org.piramalswasthya.sakhi.model.LocationRecord
+import org.piramalswasthya.sakhi.model.UserDomain
 import timber.log.Timber
 
 
@@ -34,9 +43,9 @@ class HBNCFormDataset(
             gender.value = gender.entries?.get(childBen.genderId)
             typeOfDelivery.value =
                 childBen.kidDetails?.deliveryTypeId?.let { typeOfDelivery.getStringFromPosition(it) }
-            motherBen?.let {
-                dateOfDelivery.value = it.genDetails?.deliveryDate
-            }
+//            motherBen?.let {
+//                dateOfDelivery.value = it.genDetails?.deliveryDate
+//            }
         }
 //        Timber.d("list before adding $list")
         setUpPage(cardPage)

@@ -3,12 +3,12 @@ package org.piramalswasthya.sakhi.ui.home_activity.death_reports.cdr
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -20,9 +20,9 @@ import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBindin
 @AndroidEntryPoint
 class CdrListFragment : Fragment() {
 
-    private val binding: FragmentDisplaySearchRvButtonBinding by lazy {
-        FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater)
-    }
+    private var _binding: FragmentDisplaySearchRvButtonBinding? = null
+    private val binding : FragmentDisplaySearchRvButtonBinding
+        get() = _binding!!
 
     private val viewModel: CdrListViewModel by viewModels()
 
@@ -30,6 +30,8 @@ class CdrListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding =  FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false )
+
         return binding.root
     }
 
@@ -78,6 +80,11 @@ class CdrListFragment : Fragment() {
                 (searchView as EditText).removeTextChangedListener(searchTextWatcher)
 
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }

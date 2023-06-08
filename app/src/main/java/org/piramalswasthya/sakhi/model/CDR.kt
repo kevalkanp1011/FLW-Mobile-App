@@ -10,12 +10,12 @@ import org.piramalswasthya.sakhi.database.room.SyncState
     tableName = "CDR",
     foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
-        parentColumns = arrayOf("beneficiaryId", "householdId"),
-        childColumns = arrayOf("benId", "hhId"),
+        parentColumns = arrayOf("beneficiaryId",/* "householdId"*/),
+        childColumns = arrayOf("benId", /*"hhId"*/),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "cdrInd", value = ["benId", "hhId"])]
+    indices = [Index(name = "ind_cdr", value = ["benId",/* "hhId"*/])]
 )
 
 data class CDRCache (

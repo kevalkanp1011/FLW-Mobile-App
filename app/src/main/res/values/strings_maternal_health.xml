@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string-array name="maternal_health_pregnancy_week">
+        <item>12 weeks</item>
+        <item>14 – 22 weeks</item>
+        <item>28 – 34 weeks</item>
+        <item>36 – 40 weeks</item>
+    </string-array>
+    <string-array name="maternal_health_blood_group">
+        <item>A +Ve</item>
+        <item>A -Ve</item>
+        <item>B+Ve</item>
+        <item>B -Ve</item>
+        <item>AB+Ve</item>
+        <item>AB -Ve</item>
+        <item>O+Ve</item>
+        <item>O -Ve</item>
+    </string-array>
+
+    <string-array name="maternal_health_test_result">
+        <item>Reactive</item>
+        <item>Non - Reactive</item>
+        <item>Test Not Done</item>
+    </string-array>
+
+
+    <string-array name="maternal_health_past_illness">
+        <item>None</item>
+        <item>TB</item>
+        <item>Diabetes</item>
+        <item>Hypertension</item>
+        <item>Heart Disease</item>
+        <item>Epileptic</item>
+        <item>STI/RTI</item>
+        <item>Hepatites-B</item>
+        <item>Asthama</item>
+        <item>Any Other</item>
+
+    </string-array>
+
+    <string-array name="maternal_health_past_del_complications">
+        <item>None</item>
+        <item>CONVULSIONS</item>
+        <item>APH</item>
+        <item>PREGNANCY INDUCED HYPERTENSION (PIH)</item>
+        <item>REPEATED ABORTION</item>
+        <item>STILLBIRTH</item>
+        <item>CONGENITAL ANOMALY</item>
+        <item>CAESAREAN SECTION</item>
+        <item>BLOOD TRANSFUSION</item>
+        <item>TWINS</item>
+        <item>OBSTRUCTED LABOUR</item>
+        <item>PPH</item>
+        <item>Any Other</item>
+    </string-array>
+</resources>

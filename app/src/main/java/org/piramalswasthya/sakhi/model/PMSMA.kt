@@ -6,20 +6,19 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.squareup.moshi.JsonClass
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 
 @Entity(
     tableName = "PMSMA",
     foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
-        parentColumns = arrayOf("beneficiaryId", "householdId"),
-        childColumns = arrayOf("benId", "hhId"),
+        parentColumns = arrayOf("beneficiaryId",/* "householdId"*/),
+        childColumns = arrayOf("benId", /*"hhId"*/),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "pmsmaInd", value = ["benId", "hhId"])]
-)
+    indices = [Index(name = "ind_pmsma", value = ["benId",/* "hhId"*/])])
 
 data class PMSMACache(
     @PrimaryKey(autoGenerate = true)

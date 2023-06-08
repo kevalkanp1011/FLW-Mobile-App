@@ -3,11 +3,13 @@ package org.piramalswasthya.sakhi.configuration
 import android.content.res.Resources
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.model.ChildImmunizationCategory
 import org.piramalswasthya.sakhi.model.Icon
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import org.piramalswasthya.sakhi.ui.home_activity.child_care.ChildCareFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.immunization_due.ImmunizationDueTypeFragmentDirections
+import org.piramalswasthya.sakhi.ui.home_activity.immunization_due.child_immunization.categories.ChildImmunizationCategoriesFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.mother_care.MotherCareFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.NcdFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.village_level_forms.VillageLevelFormsFragmentDirections
@@ -16,23 +18,23 @@ import javax.inject.Inject
 @ActivityRetainedScoped
 class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
 
-    fun getIconDataset(resources: Resources) = listOf(
+    fun getHomeIconDataset(resources: Resources) = listOf(
         Icon(
             R.drawable.ic__hh,
             resources.getString(R.string.icon_title_household),
-            recordsRepo.hhCount,
+            recordsRepo.getHhListCount(),
             HomeFragmentDirections.actionNavHomeToAllHouseholdFragment()
         ),
         Icon(
             R.drawable.ic__ben,
             resources.getString(R.string.icon_title_ben),
-            recordsRepo.benListCount,
+            recordsRepo.getBenListCount(),
             HomeFragmentDirections.actionNavHomeToAllBenFragment()
         ),
         Icon(
             R.drawable.ic__eligible_couple,
             resources.getString(R.string.icon_title_ec),
-            recordsRepo.eligibleCoupleListCount,
+            recordsRepo.getEligibleCoupleListCount(),
             HomeFragmentDirections.actionNavHomeToEligibleCoupleFragment()
         ),
         Icon(
@@ -93,7 +95,7 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
 
     fun getChildCareDataset(resources: Resources) = listOf(
         Icon(
-            R.drawable.ic_infant,
+            R.drawable.ic__infant,
             resources.getString(R.string.icon_title_icc),
             recordsRepo.infantListCount,
             ChildCareFragmentDirections.actionChildCareFragmentToInfantListFragment()
@@ -113,25 +115,34 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
     fun getMotherCareDataset(resources: Resources) = listOf(
         Icon(
             R.drawable.ic__pregnancy,
-            resources.getString(R.string.icon_title_pmc),
-            recordsRepo.pregnantListCount,
-            MotherCareFragmentDirections.actionMotherCareFragmentToPregnancyListFragment()
-        ), Icon(
-            R.drawable.ic__delivery,
-            resources.getString(R.string.icon_title_dmc),
-            recordsRepo.deliveryListCount,
-            MotherCareFragmentDirections.actionMotherCareFragmentToDeliveryStageListFragment()
-        ), Icon(
-            R.drawable.ic__pnc,
-            resources.getString(R.string.icon_title_pncmc),
-            recordsRepo.pncMotherListCount,
-            MotherCareFragmentDirections.actionMotherCareFragmentToPncMotherListFragment()
-        ), Icon(
-            R.drawable.ic__reproductive_age,
-            resources.getString(R.string.icon_title_rmc),
-            recordsRepo.reproductiveAgeListCount,
-            MotherCareFragmentDirections.actionMotherCareFragmentToReproductiveAgeListFragment()
-        )
+            resources.getString(R.string.icon_title_pmr),
+//            recordsRepo.pregnantListCount,
+            null,
+            MotherCareFragmentDirections.actionMotherCareFragmentToPwRegistrationFragment()
+        ),
+        Icon(
+            R.drawable.ic__pregnancy,
+            resources.getString(R.string.icon_title_pmt),
+//            recordsRepo.pregnantListCount,
+            null,
+            MotherCareFragmentDirections.actionMotherCareFragmentToPwAncVisitsFragment()
+        ),
+//        , Icon(
+//            R.drawable.ic__delivery,
+//            resources.getString(R.string.icon_title_dmc),
+//            recordsRepo.deliveryListCount,
+//            MotherCareFragmentDirections.actionMotherCareFragmentToDeliveryStageListFragment()
+//        ), Icon(
+//            R.drawable.ic__pnc,
+//            resources.getString(R.string.icon_title_pncmc),
+//            recordsRepo.pncMotherListCount,
+//            MotherCareFragmentDirections.actionMotherCareFragmentToPncMotherListFragment()
+//        ), Icon(
+//            R.drawable.ic__reproductive_age,
+//            resources.getString(R.string.icon_title_rmc),
+//            recordsRepo.reproductiveAgeListCount,
+//            MotherCareFragmentDirections.actionMotherCareFragmentToReproductiveAgeListFragment()
+//        )
     )
 
     fun getNCDDataset(resources: Resources) = listOf(
@@ -181,6 +192,89 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             resources.getString(R.string.icon_title_sr),
             null,
             VillageLevelFormsFragmentDirections.actionVillageLevelFormsFragmentToSurveyRegisterFragment()
+        )
+    )
+
+    fun getChildImmunizationCategories(resources: Resources) = listOf(
+        Icon(
+            R.drawable.ic__infant,
+            "Birth Dose Vaccines Babies",
+            null,
+            ChildImmunizationCategoriesFragmentDirections.actionChildImmunizationFragmentToChildImmunizationListFragment(
+                ChildImmunizationCategory.BIRTH
+            )
+        ),
+        Icon(
+            R.drawable.ic__infant,
+            "6 Weeks Vaccines Children",
+            null,
+            ChildImmunizationCategoriesFragmentDirections.actionChildImmunizationFragmentToChildImmunizationListFragment(
+                ChildImmunizationCategory.WEEK_6
+            )
+        ),
+        Icon(
+            R.drawable.ic__infant,
+            "10 Weeks Vaccines Children",
+            null,
+            ChildImmunizationCategoriesFragmentDirections.actionChildImmunizationFragmentToChildImmunizationListFragment(
+                ChildImmunizationCategory.WEEK_10
+            ),
+        ),
+        Icon(
+            R.drawable.ic__infant,
+            "14 Weeks Vaccines Children",
+            null,
+            ChildImmunizationCategoriesFragmentDirections.actionChildImmunizationFragmentToChildImmunizationListFragment(
+                ChildImmunizationCategory.WEEK_14
+            )
+        ),
+        Icon(
+            R.drawable.ic__infant,
+            "9-12 Months Vaccines Children",
+            null,
+            ChildImmunizationCategoriesFragmentDirections.actionChildImmunizationFragmentToChildImmunizationListFragment(
+                ChildImmunizationCategory.MONTH_9_12
+            )
+        ),
+        Icon(
+            R.drawable.ic__infant,
+            "16-24 Months Vaccines Children",
+            null,
+            ChildImmunizationCategoriesFragmentDirections.actionChildImmunizationFragmentToChildImmunizationListFragment(
+                ChildImmunizationCategory.MONTH_16_24
+            )
+        ),
+        Icon(
+            R.drawable.ic__infant,
+            "5-6 Years Vaccine Children",
+            null,
+            ChildImmunizationCategoriesFragmentDirections.actionChildImmunizationFragmentToChildImmunizationListFragment(
+                ChildImmunizationCategory.YEAR_5_6
+            )
+        ),
+        Icon(
+            R.drawable.ic__infant,
+            "10 Years Vaccine Children",
+            null,
+            ChildImmunizationCategoriesFragmentDirections.actionChildImmunizationFragmentToChildImmunizationListFragment(
+                ChildImmunizationCategory.YEAR_10
+            )
+        ),
+        Icon(
+            R.drawable.ic__infant,
+            "16 Years Vaccine Children",
+            null,
+            ChildImmunizationCategoriesFragmentDirections.actionChildImmunizationFragmentToChildImmunizationListFragment(
+                ChildImmunizationCategory.YEAR_16
+            )
+        ),
+        Icon(
+            R.drawable.ic__infant,
+            "Catch-Up Vaccines (Missing Vaccines)",
+            null,
+            ChildImmunizationCategoriesFragmentDirections.actionChildImmunizationFragmentToChildImmunizationListFragment(
+                ChildImmunizationCategory.CATCH_UP
+            )
         )
     )
 

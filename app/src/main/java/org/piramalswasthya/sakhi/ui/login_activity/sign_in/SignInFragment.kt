@@ -12,13 +12,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.logEvent
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.databinding.FragmentSignInBinding
-import org.piramalswasthya.sakhi.helpers.Languages.*
+import org.piramalswasthya.sakhi.helpers.Languages.ASSAMESE
+import org.piramalswasthya.sakhi.helpers.Languages.ENGLISH
+import org.piramalswasthya.sakhi.helpers.Languages.HINDI
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
 import org.piramalswasthya.sakhi.ui.login_activity.sign_in.SignInViewModel.State
 import org.piramalswasthya.sakhi.work.WorkerUtils
@@ -143,12 +143,6 @@ class SignInFragment : Fragment() {
                     binding.tvError.visibility = View.VISIBLE
                 }
                 State.SUCCESS -> {
-                    val firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext())
-                    firebaseAnalytics.logEvent("Click_Dice_track_2") {
-                        param(
-                            "LOG STATE", "${binding.etUsername.text} logged in!"
-                        ) // send predefined parameters
-                    }
                     if (binding.cbRemember.isChecked) {
                         val username = binding.etUsername.text.toString()
                         val password = binding.etPassword.text.toString()

@@ -30,7 +30,7 @@ class AllHouseholdViewModel @Inject constructor(
     val navigateToNewHouseholdRegistration: LiveData<Boolean>
         get() = _navigateToNewHouseholdRegistration
 
-    val householdList = recordsRepo.hhList.combine(filter) { list, filter ->
+    val householdList = recordsRepo.getHhList().combine(filter) { list, filter ->
         filterHH(list, filter)
     }
 
