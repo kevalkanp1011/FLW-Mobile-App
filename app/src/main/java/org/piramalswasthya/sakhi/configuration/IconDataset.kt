@@ -22,19 +22,19 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
         Icon(
             R.drawable.ic__hh,
             resources.getString(R.string.icon_title_household),
-            recordsRepo.hhCount,
+            recordsRepo.getHhListCount(),
             HomeFragmentDirections.actionNavHomeToAllHouseholdFragment()
         ),
         Icon(
             R.drawable.ic__ben,
             resources.getString(R.string.icon_title_ben),
-            recordsRepo.benListCount,
+            recordsRepo.getBenListCount(),
             HomeFragmentDirections.actionNavHomeToAllBenFragment()
         ),
         Icon(
             R.drawable.ic__eligible_couple,
             resources.getString(R.string.icon_title_ec),
-            recordsRepo.eligibleCoupleListCount,
+            recordsRepo.getEligibleCoupleListCount(),
             HomeFragmentDirections.actionNavHomeToEligibleCoupleFragment()
         ),
         Icon(
@@ -115,25 +115,34 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
     fun getMotherCareDataset(resources: Resources) = listOf(
         Icon(
             R.drawable.ic__pregnancy,
-            resources.getString(R.string.icon_title_pmc),
-            recordsRepo.pregnantListCount,
-            MotherCareFragmentDirections.actionMotherCareFragmentToPregnancyListFragment()
-        ), Icon(
-            R.drawable.ic__delivery,
-            resources.getString(R.string.icon_title_dmc),
-            recordsRepo.deliveryListCount,
-            MotherCareFragmentDirections.actionMotherCareFragmentToDeliveryStageListFragment()
-        ), Icon(
-            R.drawable.ic__pnc,
-            resources.getString(R.string.icon_title_pncmc),
-            recordsRepo.pncMotherListCount,
-            MotherCareFragmentDirections.actionMotherCareFragmentToPncMotherListFragment()
-        ), Icon(
-            R.drawable.ic__reproductive_age,
-            resources.getString(R.string.icon_title_rmc),
-            recordsRepo.reproductiveAgeListCount,
-            MotherCareFragmentDirections.actionMotherCareFragmentToReproductiveAgeListFragment()
-        )
+            resources.getString(R.string.icon_title_pmr),
+//            recordsRepo.pregnantListCount,
+            null,
+            MotherCareFragmentDirections.actionMotherCareFragmentToPwRegistrationFragment()
+        ),
+        Icon(
+            R.drawable.ic__pregnancy,
+            resources.getString(R.string.icon_title_pmt),
+//            recordsRepo.pregnantListCount,
+            null,
+            MotherCareFragmentDirections.actionMotherCareFragmentToPwAncVisitsFragment()
+        ),
+//        , Icon(
+//            R.drawable.ic__delivery,
+//            resources.getString(R.string.icon_title_dmc),
+//            recordsRepo.deliveryListCount,
+//            MotherCareFragmentDirections.actionMotherCareFragmentToDeliveryStageListFragment()
+//        ), Icon(
+//            R.drawable.ic__pnc,
+//            resources.getString(R.string.icon_title_pncmc),
+//            recordsRepo.pncMotherListCount,
+//            MotherCareFragmentDirections.actionMotherCareFragmentToPncMotherListFragment()
+//        ), Icon(
+//            R.drawable.ic__reproductive_age,
+//            resources.getString(R.string.icon_title_rmc),
+//            recordsRepo.reproductiveAgeListCount,
+//            MotherCareFragmentDirections.actionMotherCareFragmentToReproductiveAgeListFragment()
+//        )
     )
 
     fun getNCDDataset(resources: Resources) = listOf(

@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import org.piramalswasthya.sakhi.configuration.FormDataModel
 
 enum class ChildImmunizationCategory {
     BIRTH, WEEK_6, WEEK_10, WEEK_14, MONTH_9_12, MONTH_16_24, YEAR_5_6, YEAR_10, YEAR_16, CATCH_UP
@@ -47,7 +48,7 @@ data class ImmunizationCache(
     var place: String="",
     var byWhoId: Int=0,
     var byWho: String="",
-)
+) : FormDataModel
 
 data class ImmunizationDetailsCache(
     @ColumnInfo(name = "benId") val benId: Long,

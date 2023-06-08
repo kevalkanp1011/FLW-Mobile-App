@@ -20,7 +20,7 @@ class AllBenViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    private val allBenList = recordsRepo.benList
+    private val allBenList = recordsRepo.getBenList()
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter){
        list, filter -> filterBenList(list, filter)

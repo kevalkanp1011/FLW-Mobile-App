@@ -20,14 +20,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.BuildConfig
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentInputFormPageHhBinding
 import org.piramalswasthya.sakhi.helpers.Konstants
-import org.piramalswasthya.sakhi.model.TypeOfList
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_less_15.NewBenRegL15ViewModel.State
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
@@ -102,16 +100,16 @@ class NewBenRegL15Fragment : Fragment() {
     }
 
 
-    private val errorAlert by lazy {
-        MaterialAlertDialogBuilder(requireContext()).setTitle("Error Input")
-            //.setMessage("Do you want to continue with previous form, or create a new form and discard the previous form?")
-            .setPositiveButton("OK") { dialog, _ ->
-                dialog.dismiss()
-            }
-
-            .create()
-    }
-
+//    private val errorAlert by lazy {
+//        MaterialAlertDialogBuilder(requireContext()).setTitle("Error Input")
+//            //.setMessage("Do you want to continue with previous form, or create a new form and discard the previous form?")
+//            .setPositiveButton("OK") { dialog, _ ->
+//                dialog.dismiss()
+//            }
+//
+//            .create()
+//    }
+//
 //    private val pageChangeCallback: ViewPager2.OnPageChangeCallback by lazy {
 //        object : ViewPager2.OnPageChangeCallback() {
 //            override fun onPageSelected(i: Int) {
@@ -231,29 +229,33 @@ class NewBenRegL15Fragment : Fragment() {
             when (state!!) {
                 State.IDLE -> {
                 }
+
                 State.SAVING -> {
                     binding.clContent.visibility = View.GONE
                     binding.rlSaving.visibility = View.VISIBLE
                 }
+
                 State.SAVE_SUCCESS -> {
                     binding.clContent.visibility = View.VISIBLE
                     binding.rlSaving.visibility = View.GONE
                     Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
                     WorkerUtils.triggerAmritSyncWorker(requireContext())
 
-                    when (viewModel.getNavPath()) {
-                        TypeOfList.INFANT -> findNavController().navigate(
-                            NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToInfantListFragment()
-                        )
-                        TypeOfList.CHILD -> findNavController().navigate(
-                            NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToChildListFragment()
-                        )
-                        TypeOfList.ADOLESCENT -> findNavController().navigate(
-                            NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToAdolescentListFragment()
-                        )
-                        else -> {}
-                    }
+//                    when (viewModel.getNavPath()) {
+//                        TypeOfList.INFANT -> findNavController().navigate(
+//                            NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToInfantListFragment()
+//                        )
+//                        TypeOfList.CHILD -> findNavController().navigate(
+//                            NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToChildListFragment()
+//                        )
+//                        TypeOfList.ADOLESCENT -> findNavController().navigate(
+//                            NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToAdolescentListFragment()
+//                        )
+//                        else -> {}
+//                    }
+                    findNavController().navigate(viewModel.getNavDirection())
                 }
+
                 State.SAVE_FAILED -> {
                     Toast.makeText(
                         context, "Something wend wong! Contact testing!", Toast.LENGTH_LONG
@@ -282,15 +284,18 @@ class NewBenRegL15Fragment : Fragment() {
                     notifyItemChanged(5)
                     notifyItemChanged(6)
                 }
+
                 7 -> {
                     notifyItemChanged(4)
                 }
+
                 5 -> {
 
                     notifyItemChanged(4)
                     notifyItemChanged(5)
 
                 }
+
                 9 -> {
                     notifyItemChanged(10)
                 }
@@ -309,10 +314,11 @@ class NewBenRegL15Fragment : Fragment() {
 
     private fun getTmpFileUri(): Uri {
         val tmpFile =
-            File.createTempFile(Konstants.tempBenImagePrefix,null, requireActivity().cacheDir).apply {
-                createNewFile()
+            File.createTempFile(Konstants.tempBenImagePrefix, null, requireActivity().cacheDir)
+                .apply {
+                    createNewFile()
 //                deleteOnExit()
-            }
+                }
         return FileProvider.getUriForFile(
             requireContext(),
             "${BuildConfig.APPLICATION_ID}.provider",

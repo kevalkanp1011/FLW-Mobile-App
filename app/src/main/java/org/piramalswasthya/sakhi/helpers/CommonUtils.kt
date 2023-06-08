@@ -23,7 +23,7 @@ fun filterBenList(list: List<BenBasicDomain> ,text: String): List<BenBasicDomain
         ben.benName.lowercase().contains(filterText) ||
         ben.familyHeadName.lowercase().contains(filterText) ||
         ben.benSurname?.lowercase()?.contains(filterText) ?: false ||
-        ben.typeOfList.lowercase().contains(filterText) ||
+//        ben.typeOfList.lowercase().contains(filterText) ||
         ben.mobileNo.lowercase().contains(filterText) ||
         ben.gender.lowercase().contains(filterText) ||
         ben.fatherName?.lowercase()?.contains(filterText) ?: false
@@ -42,7 +42,7 @@ fun filterBenList(list: List<BenBasicDomainForForm>, text: String): List<BenBasi
                     it.benName.lowercase().contains(filterText) ||
                     it.familyHeadName.lowercase().contains(filterText) ||
                     it.benSurname?.lowercase()?.contains(filterText) ?: false ||
-                    it.typeOfList.lowercase().contains(filterText) ||
+//                    it.typeOfList.lowercase().contains(filterText) ||
                     it.mobileNo.lowercase().contains(filterText) ||
                     it.gender.lowercase().contains(filterText) ||
                     it.fatherName?.lowercase()?.contains(filterText) ?: false

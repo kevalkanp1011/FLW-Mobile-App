@@ -18,7 +18,7 @@
     <string name="icon_title_household">All\nHousehold</string>
     <string name="icon_title_ben">All\nBeneficiaries</string>
     <string name="icon_title_ec">Eligible\nCouple List</string>
-    <string name="icon_title_mc">Mother Care</string>
+    <string name="icon_title_mc">Maternal Health</string>
     <string name="icon_title_cc">Child Care</string>
     <string name="icon_title_ncd">NCD</string>
     <string name="icon_title_imm">Immunization Due List</string>
@@ -31,7 +31,8 @@
     <string name="icon_title_icc">Infant List</string>
     <string name="icon_title_ccc">Child List</string>
     <string name="icon_title_acc">Adolescent List</string>
-    <string name="icon_title_pmc">Pregnancy List</string>
+    <string name="icon_title_pmr">Pregnant Women Registration</string>
+    <string name="icon_title_pmt">ANC Visits</string>
     <string name="icon_title_dmc">Delivery Stage List</string>
     <string name="icon_title_pncmc">PNC Mother List</string>
     <string name="icon_title_rmc">Reproductive Age List</string>

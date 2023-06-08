@@ -172,12 +172,12 @@
 
 
 
-                    <include
-                        android:id="@+id/rl_type_of_list"
-                        style="@style/rv_item_ben_fields"
-                        layout="@layout/rv_item_ben_element"
-                        app:field="@{ben.typeOfList}"
-                        app:fieldTitle="@{@string/tv_type_of_list}" />
+<!--                    <include-->
+<!--                        android:id="@+id/rl_type_of_list"-->
+<!--                        style="@style/rv_item_ben_fields"-->
+<!--                        layout="@layout/rv_item_ben_element"-->
+<!--                        app:field="@{ben.typeOfList}"-->
+<!--                        app:fieldTitle="@{@string/tv_type_of_list}" />-->
 
                     <include
                         android:id="@+id/rl_father_name"

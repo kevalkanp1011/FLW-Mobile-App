@@ -2,7 +2,12 @@ package org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.
 
 import android.content.Context
 import android.net.Uri
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavDirections
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +19,12 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.BenKidRegFormDataset
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.helpers.Konstants
+import org.piramalswasthya.sakhi.model.AgeUnit
+import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.BenRegKid
+import org.piramalswasthya.sakhi.model.HouseholdCache
+import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.UserRepo
 import timber.log.Timber
@@ -76,7 +86,7 @@ class NewBenRegL15ViewModel @Inject constructor(
     private lateinit var household: HouseholdCache
     private lateinit var ben: BenRegCache
 
-    private var lastImageFormId : Int = 0
+    private var lastImageFormId: Int = 0
 
     init {
         viewModelScope.launch {
@@ -97,7 +107,7 @@ class NewBenRegL15ViewModel @Inject constructor(
                 currentPage.collect {
                     when (it) {
                         1 -> dataset.setFirstPage(ben, household.family?.familyHeadPhoneNo)
-                        2-> {
+                        2 -> {
                             dataset.setSecondPage(ben)
 //                            dataset.mapValues(household, 1)
 //                            householdRepo.persistRecord(household)
@@ -666,16 +676,31 @@ class NewBenRegL15ViewModel @Inject constructor(
 //        _errorMessage.value = null
 //    }
 
-    fun getNavPath(): TypeOfList? {
-        return ben.registrationType
-    }
+//    fun getNavPath(): TypeOfList {
+//        return if (ben.ageUnit in arrayOf(AgeUnit.DAYS, AgeUnit.MONTHS))
+//            TypeOfList.INFANT
+//        else if(ben.age<Konstants.maxAgeForChild)
+//            TypeOfList.CHILD
+//        else
+//            TypeOfList.ADOLESCENT
+//    }
 
-    fun setCurrentImageFormId(id : Int) {
+    fun setCurrentImageFormId(id: Int) {
         lastImageFormId = id
     }
+
     fun setImageUriToFormElement(dpUri: Uri) {
         dataset.setImageUriToFormElement(lastImageFormId, dpUri)
 
+    }
+
+    fun getNavDirection(): NavDirections {
+        return if (ben.ageUnit in arrayOf(AgeUnit.DAYS, AgeUnit.MONTHS))
+            NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToInfantListFragment()
+        else if(ben.age<Konstants.maxAgeForChild)
+            NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToChildListFragment()
+        else
+            NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToAdolescentListFragment()
     }
 
 

@@ -333,6 +333,14 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         return TimeUnit.MILLISECONDS.toDays(millisDiff).toInt()
     }
 
+    protected fun getEddFromLmp(lmp: Long) =
+
+        Calendar.getInstance().apply {
+            timeInMillis = lmp
+            add(Calendar.WEEK_OF_YEAR, 40)
+        }.timeInMillis
+
+
     protected suspend fun emitAlertErrorMessage(
         @StringRes errorMessage: Int
     ) {
@@ -442,8 +450,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
                         resources.getString(
                             R.string.form_input_max_limit_error, formElement.title, max
                         )
-                    } else
-                        null
+                    } else null
                 }
             }
         }
@@ -467,8 +474,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
 
     protected fun validateAadharNoOnEditText(formElement: FormElement): Int {
         formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.let {
-            if (it.length < 12 || (it.isNotEmpty() && it.first() == '0'))
-                resources.getString(R.string.form_input_error_invalid_aadhar) else null
+            if (it.length < 12 || (it.isNotEmpty() && it.first() == '0')) resources.getString(R.string.form_input_error_invalid_aadhar) else null
         }
         return -1
     }
@@ -479,8 +485,8 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         } ?: -1
     }
 
-    fun setValueById(id : Int, value : String? ){
-        list.find { it.id==id }?.let {
+    fun setValueById(id: Int, value: String?) {
+        list.find { it.id == id }?.let {
             it.value = value
         }
     }

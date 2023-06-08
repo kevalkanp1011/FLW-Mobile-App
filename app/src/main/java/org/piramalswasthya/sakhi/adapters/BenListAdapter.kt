@@ -6,22 +6,20 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.piramalswasthya.sakhi.databinding.RvItemBenBinding
+import org.piramalswasthya.sakhi.helpers.Konstants
+import org.piramalswasthya.sakhi.model.AgeUnit
 import org.piramalswasthya.sakhi.model.BenBasicDomain
-import org.piramalswasthya.sakhi.model.TypeOfList
 
 
 class BenListAdapter(private val clickListener: BenClickListener? = null) :
-    ListAdapter<BenBasicDomain, BenListAdapter.BenViewHolder>
-        (BenDiffUtilCallBack) {
+    ListAdapter<BenBasicDomain, BenListAdapter.BenViewHolder>(BenDiffUtilCallBack) {
     private object BenDiffUtilCallBack : DiffUtil.ItemCallback<BenBasicDomain>() {
         override fun areItemsTheSame(
-            oldItem: BenBasicDomain,
-            newItem: BenBasicDomain
+            oldItem: BenBasicDomain, newItem: BenBasicDomain
         ) = oldItem.benId == newItem.benId
 
         override fun areContentsTheSame(
-            oldItem: BenBasicDomain,
-            newItem: BenBasicDomain
+            oldItem: BenBasicDomain, newItem: BenBasicDomain
         ) = oldItem == newItem
 
     }
@@ -37,8 +35,7 @@ class BenListAdapter(private val clickListener: BenClickListener? = null) :
         }
 
         fun bind(
-            item: BenBasicDomain,
-            clickListener: BenClickListener?
+            item: BenBasicDomain, clickListener: BenClickListener?
         ) {
             binding.ben = item
             binding.clickListener = clickListener
@@ -48,10 +45,8 @@ class BenListAdapter(private val clickListener: BenClickListener? = null) :
     }
 
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ) =
-        BenViewHolder.from(parent)
+        parent: ViewGroup, viewType: Int
+    ) = BenViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: BenViewHolder, position: Int) {
         holder.bind(getItem(position), clickListener)
@@ -63,7 +58,12 @@ class BenListAdapter(private val clickListener: BenClickListener? = null) :
         private val clickedHousehold: (hhId: Long) -> Unit,
         private val clickedABHA: (benId: Long, hhId: Long) -> Unit
     ) {
-        fun onClickedBen(item: BenBasicDomain) = clickedBen(item.hhId, item.benId, item.typeOfList==TypeOfList.CHILD.name || item.typeOfList == TypeOfList.INFANT.name || item.typeOfList==TypeOfList.ADOLESCENT.name)
+        fun onClickedBen(item: BenBasicDomain) = clickedBen(
+            item.hhId,
+            item.benId,
+            (item.ageUnit != AgeUnit.YEARS || item.ageInt < Konstants.maxAgeForAdolescent)
+        )
+
         fun onClickedHouseHold(item: BenBasicDomain) = clickedHousehold(item.hhId)
 
         fun onClickABHA(item: BenBasicDomain) = clickedABHA(item.benId, item.hhId)

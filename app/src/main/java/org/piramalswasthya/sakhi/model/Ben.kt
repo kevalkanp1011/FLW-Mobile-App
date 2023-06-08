@@ -20,20 +20,20 @@ import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
-enum class TypeOfList {
-    INFANT,
-    CHILD,
-    ADOLESCENT,
-    GENERAL,
-    ELIGIBLE_COUPLE,
-    ANTENATAL_MOTHER,
-    DELIVERY_STAGE,
-    POSTNATAL_MOTHER,
-    MENOPAUSE,
-    TEENAGER,
-    OTHER,
-
-}
+//enum class TypeOfList {
+//    INFANT,
+//    CHILD,
+//    ADOLESCENT,
+//    GENERAL,
+//    ELIGIBLE_COUPLE,
+//    ANTENATAL_MOTHER,
+//    DELIVERY_STAGE,
+//    POSTNATAL_MOTHER,
+//    MENOPAUSE,
+//    TEENAGER,
+//    OTHER,
+//
+//}
 
 enum class AgeUnit {
     DAYS,
@@ -50,14 +50,15 @@ enum class Gender {
 @DatabaseView(
     viewName = "BEN_BASIC_CACHE",
     value = "SELECT b.beneficiaryId as benId, b.householdId as hhId, b.regDate, b.firstName as benName, b.lastName as benSurname, b.gender, b.dob as dob" +
-            ", b.contactNumber as mobileNo, b.fatherName, h.fam_familyHeadName as familyHeadName, b.registrationType as typeOfList, b.rchId" +
+            ", b.contactNumber as mobileNo, b.fatherName, h.fam_familyHeadName as familyHeadName, b.rchId" +
             ", b.isHrpStatus as hrpStatus, b.syncState, b.gen_reproductiveStatusId as reproductiveStatusId, b.isKid, b.immunizationStatus," +
-            " b.loc_village_id as villageId,"+
+            " b.loc_village_id as villageId," +
             " cbac.benId is not null as cbacFilled, cbac.syncState as cbacSyncState," +
             " cdr.benId is not null as cdrFilled, cdr.syncState as cdrSyncState, " +
             " mdsr.benId is not null as mdsrFilled, mdsr.syncState as mdsrSyncState," +
             " pmsma.benId is not null as pmsmaFilled, " +//" pmsma.sync as mdsrSyncState, " +
-            " hbnc.benId is not null as hbncFilled " +
+            " hbnc.benId is not null as hbncFilled,  " +
+            " pwr.benId is not null as pwrFilled " +
             "from BENEFICIARY b " +
             "JOIN HOUSEHOLD h ON b.householdId = h.householdId " +
             "LEFT OUTER JOIN CBAC cbac on b.beneficiaryId = cbac.benId " +
@@ -65,6 +66,7 @@ enum class Gender {
             "LEFT OUTER JOIN MDSR mdsr on b.beneficiaryId = mdsr.benId " +
             "LEFT OUTER JOIN PMSMA pmsma on b.beneficiaryId = pmsma.benId " +
             "LEFT OUTER JOIN HBNC hbnc on b.beneficiaryId = hbnc.benId " +
+            "LEFT OUTER JOIN PREGNANCY_REGISTER pwr on b.beneficiaryId = pwr.benId " +
             "where b.isDraft = 0 GROUP BY b.beneficiaryId ORDER BY b.updatedDate DESC"
 )
 data class BenBasicCache(
@@ -78,14 +80,14 @@ data class BenBasicCache(
     val mobileNo: Long,
     val fatherName: String? = null,
     val familyHeadName: String? = null,
-    val typeOfList: TypeOfList,
+//    val typeOfList: TypeOfList,
     val rchId: String? = null,
     val hrpStatus: Boolean,
     val syncState: SyncState?,
     val reproductiveStatusId: Int,
     val isKid: Boolean,
     val immunizationStatus: Boolean,
-    val villageId : Int,
+    val villageId: Int,
     val cbacFilled: Boolean,
     val cbacSyncState: SyncState?,
     val cdrFilled: Boolean,
@@ -94,6 +96,7 @@ data class BenBasicCache(
     val mdsrSyncState: SyncState?,
     val pmsmaFilled: Boolean,
     val hbncFilled: Boolean,
+    val pwrFilled : Boolean
 ) {
     companion object {
         private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
@@ -140,7 +143,7 @@ data class BenBasicCache(
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
-            typeOfList = typeOfList.name,
+//            typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             syncState = syncState
@@ -159,7 +162,7 @@ data class BenBasicCache(
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
-            typeOfList = typeOfList.name,
+//            typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             form1Filled = cbacFilled,
@@ -180,7 +183,7 @@ data class BenBasicCache(
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
-            typeOfList = typeOfList.name,
+//            typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             form1Filled = cdrFilled,
@@ -201,7 +204,7 @@ data class BenBasicCache(
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
-            typeOfList = typeOfList.name,
+//            typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             form1Filled = mdsrFilled,
@@ -222,7 +225,7 @@ data class BenBasicCache(
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
-            typeOfList = typeOfList.name,
+//            typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             form1Filled = pmsmaFilled,
@@ -242,7 +245,7 @@ data class BenBasicCache(
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
-            typeOfList = typeOfList.name,
+//            typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             form1Filled = false,
@@ -262,13 +265,33 @@ data class BenBasicCache(
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
-            typeOfList = typeOfList.name,
+//            typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             form1Filled = false,
             form1Enabled = hbncFilled || dob > (System.currentTimeMillis() - TimeUnit.DAYS.toMillis(
                 42
             )),
+            syncState = syncState
+        )
+    }
+
+    fun asBenBasicDomainModelForPregnantWomanRegistrationForm(): BenBasicDomainForForm {
+        return BenBasicDomainForForm(
+            benId = benId,
+            hhId = hhId,
+            regDate = dateFormat.format(Date(regDate)),
+            benName = benName,
+            benSurname = benSurname ?: "Not Available",
+            gender = gender.name,
+            dob = dob,
+            mobileNo = mobileNo.toString(),
+            fatherName = fatherName,
+            familyHeadName = familyHeadName ?: "Not Available",
+//            typeOfList = typeOfList.name,
+            rchId = rchId ?: "Not Available",
+            hrpStatus = hrpStatus,
+            form1Filled = pwrFilled,
             syncState = syncState
         )
     }
@@ -285,7 +308,7 @@ data class BenBasicCache(
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
-            typeOfList = typeOfList.name,
+//            typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             form1Filled = false,
@@ -310,7 +333,7 @@ data class BenBasicDomain(
     val mobileNo: String,
     val fatherName: String? = null,
     val familyHeadName: String,
-    val typeOfList: String,
+//    val typeOfList: String,
     val rchId: String,
     val hrpStatus: Boolean = false,
     var syncState: SyncState?
@@ -330,7 +353,7 @@ data class BenBasicDomainForForm(
     val mobileNo: String,
     val fatherName: String? = null,
     val familyHeadName: String,
-    val typeOfList: String,
+//    val typeOfList: String,
     val rchId: String,
     val hrpStatus: Boolean = false,
     val form1Filled: Boolean = false,
@@ -492,39 +515,39 @@ data class BenRegGen(
     var maritalStatusId: Int = 0,
     var spouseName: String? = null,
     var ageAtMarriage: Int = 0,
-    var dateOfMarriage: Long = 0,
+//    var dateOfMarriage: Long = 0,
     var marriageDate: Long? = null,
     //Menstrual details
-    var menstrualStatus: String? = null,
-    var menstrualStatusId: Int? = 0,
-    var regularityOfMenstrualCycle: String? = null,
-    var regularityOfMenstrualCycleId: Int = 0,
-    var lengthOfMenstrualCycle: String? = null,
-    var lengthOfMenstrualCycleId: Int = 0,
-    var menstrualBFD: String? = null,
-    var menstrualBFDId: Int = 0,
-    var menstrualProblem: String? = null,
-    var menstrualProblemId: Int = 0,
-    var lastMenstrualPeriod: Long? = null,
+//    var menstrualStatus: String? = null,
+//    var menstrualStatusId: Int? = 0,
+//    var regularityOfMenstrualCycle: String? = null,
+//    var regularityOfMenstrualCycleId: Int = 0,
+//    var lengthOfMenstrualCycle: String? = null,
+//    var lengthOfMenstrualCycleId: Int = 0,
+//    var menstrualBFD: String? = null,
+//    var menstrualBFDId: Int = 0,
+//    var menstrualProblem: String? = null,
+//    var menstrualProblemId: Int = 0,
+//    var lastMenstrualPeriod: Long? = null,
     var reproductiveStatus: String? = null,
     var reproductiveStatusId: Int = 0,
-    var lastDeliveryConducted: String? = null,
-    var lastDeliveryConductedId: Int = 0,
-    var otherLastDeliveryConducted: String? = null,
-    var facilityName: String? = null,
-    var whoConductedDelivery: String? = null,
-    var whoConductedDeliveryId: Int = 0,
-    var noOfDaysForDelivery: Int? = null,
-    var otherWhoConductedDelivery: String? = null,
-    var deliveryDate: String? = null,
-    var expectedDateOfDelivery: Long? = null,
-    var numPreviousLiveBirth: Int = 0,
+//    var lastDeliveryConducted: String? = null,
+//    var lastDeliveryConductedId: Int = 0,
+//    var otherLastDeliveryConducted: String? = null,
+//    var facilityName: String? = null,
+//    var whoConductedDelivery: String? = null,
+//    var whoConductedDeliveryId: Int = 0,
+//    var noOfDaysForDelivery: Int? = null,
+//    var otherWhoConductedDelivery: String? = null,
+//    var deliveryDate: String? = null,
+//    var expectedDateOfDelivery: Long? = null,
+//    var numPreviousLiveBirth: Int = 0,
 //    var formStatus: String? = null,
 //    var formType: String? = null,
-    var ancCount: Int = 0,
-    var hrpCount: Int = 0,
-    var hrpSuspected: Boolean = false,
-    var isDeathStatus: Boolean = false,
+//    var ancCount: Int = 0,
+//    var hrpCount: Int = 0,
+//    var hrpSuspected: Boolean = false,
+//    var isDeathStatus: Boolean = false,
 )
 
 @Entity(
@@ -621,7 +644,7 @@ data class BenRegCache(
 
     var rchId: String? = null,
 
-    var registrationType: TypeOfList? = null,
+//    var registrationType: TypeOfList? = null,
 
     var latitude: Double = 0.0,
 
@@ -664,18 +687,6 @@ data class BenRegCache(
     var hrpIdentificationDate: String? = null,
 
     var hrpLastVisitDate: String? = null,
-
-    var nishchayPregnancyStatus: String? = null,
-
-    var nishchayPregnancyStatusPosition: Int = 0,
-
-    var nishchayDeliveryStatus: String? = null,
-
-    var nishchayDeliveryStatusPosition: Int = 0,
-
-    var nayiPahalDeliveryStatus: String? = null,
-
-    var nayiPahalDeliveryStatusPosition: Int = 0,
 
     var suspectedNcd: String? = null,
 
@@ -765,7 +776,8 @@ data class BenRegCache(
             literacyId = literacyId,
             religionOthers = religionOthers ?: "",
             rchId = rchId ?: "",
-            registrationType = when (registrationType) {
+            registrationType = if (kidDetails == null) "General Beneficiary" else "NewBorn"
+            /*when (registrationType) {
                 TypeOfList.INFANT,
                 TypeOfList.CHILD,
                 TypeOfList.ADOLESCENT -> "NewBorn"
@@ -777,32 +789,32 @@ data class BenRegCache(
                 TypeOfList.MENOPAUSE,
                 TypeOfList.TEENAGER -> "General Beneficiary"
                 else -> "Other"
-            },
+            }*/,
             latitude = latitude,
             longitude = longitude,
             needOpCare = needOpCare ?: "null",
             needOpCareId = needOpCareId,
-            menstrualStatusId = genDetails?.menstrualStatusId ?: 0,
-            regularityofMenstrualCycleId = genDetails?.regularityOfMenstrualCycleId ?: 0,
-            lengthofMenstrualCycleId = genDetails?.lengthOfMenstrualCycleId ?: 0,
-            menstrualBFDId = genDetails?.menstrualBFDId ?: 0,
-            menstrualProblemId = genDetails?.menstrualProblemId ?: 0,
-            lastMenstrualPeriod = getDateTimeStringFromLong(genDetails?.lastMenstrualPeriod),
+//            menstrualStatusId = 0,
+//            regularityofMenstrualCycleId = 0,
+//            lengthofMenstrualCycleId =  0,
+//            menstrualBFDId = 0,
+//            menstrualProblemId = 0,
+//            lastMenstrualPeriod = getDateTimeStringFromLong(genDetails?.lastMenstrualPeriod),
             reproductiveStatus = genDetails?.reproductiveStatus ?: "",
             reproductiveStatusId = genDetails?.reproductiveStatusId ?: 0,
-            noOfDaysForDelivery = if (registrationType == TypeOfList.DELIVERY_STAGE || registrationType == TypeOfList.ANTENATAL_MOTHER) getNumDaysForDeliveryFromLastMenstrualPeriod(
-                genDetails?.lastMenstrualPeriod
-            ) else null,
-            formStatus = null,
-            formType = null,
-            childRegisteredAWCID = kidDetails?.childRegisteredAWCId ?: 0,
+//            noOfDaysForDelivery = if (genDetails?.reproductiveStatusId ==2) getNumDaysForDeliveryFromLastMenstrualPeriod(
+//                genDetails?.lastMenstrualPeriod
+//            ) else null,
+//            formStatus = null,
+//            formType = null,
+//            childRegisteredAWCID = kidDetails?.childRegisteredAWCId ?: 0,
             childRegisteredSchoolID = kidDetails?.childRegisteredSchoolId ?: 0,
             typeOfSchoolId = kidDetails?.typeOfSchoolId ?: 0,
             childRegisteredSchool = kidDetails?.childRegisteredSchool,
             typeofSchool = kidDetails?.typeOfSchool,
-            previousLiveBirth = genDetails?.numPreviousLiveBirth?.toString() ?: "",
-            lastDeliveryConductedID = genDetails?.lastDeliveryConductedId ?: 0,
-            whoConductedDeliveryID = genDetails?.whoConductedDeliveryId ?: 0,
+//            previousLiveBirth = genDetails?.numPreviousLiveBirth?.toString() ?: "",
+//            lastDeliveryConductedID = genDetails?.lastDeliveryConductedId ?: 0,
+//            whoConductedDeliveryID = genDetails?.whoConductedDeliveryId ?: 0,
             familyHeadRelation = familyHeadRelation ?: "Other",
             familyHeadRelationPosition = familyHeadRelationPosition,
             firstName = firstName ?: "",
@@ -810,10 +822,10 @@ data class BenRegCache(
             fatherName = fatherName ?: "",
             motherName = motherName ?: "",
             spouseName = genDetails?.spouseName ?: "",
-            whoConductedDelivery = genDetails?.whoConductedDelivery,
-            lastDeliveryConducted = genDetails?.lastDeliveryConducted,
+//            whoConductedDelivery = genDetails?.whoConductedDelivery,
+//            lastDeliveryConducted = genDetails?.lastDeliveryConducted,
 
-            facilitySelection = genDetails?.facilityName ?: "",
+//            facilitySelection = genDetails?.facilityName ?: "",
             serverUpdatedStatus = serverUpdatedStatus,
             createdBy = createdBy!!,
             createdDate = getDateTimeStringFromLong(createdDate!!)!!,
@@ -822,30 +834,30 @@ data class BenRegCache(
             villageName = locationRecord.village.name,
             currSubDistrictId = locationRecord.block.id,
             villageId = locationRecord.village.id,
-            expectedDateOfDelivery = getDateTimeStringFromLong(genDetails?.expectedDateOfDelivery),
+//            expectedDateOfDelivery = getDateTimeStringFromLong(genDetails?.expectedDateOfDelivery),
             isHrpStatus = isHrpStatus,
-            menstrualStatus = genDetails?.menstrualStatus,
-            dateMarriage = genDetails?.dateOfMarriage?.let { getDateTimeStringFromLong(it) },
-            deliveryDate = genDetails?.deliveryDate,
-            suspected_hrp = genDetails?.hrpSuspected.toString(),
-            suspected_ncd = suspectedNcd,
-            suspected_tb = suspectedTb,
-            suspected_ncd_diseases = suspectedNcdDiseases,
-            confirmed_ncd = confirmed_Ncd,
-            confirmed_hrp = confirmedHrp,
-            confirmed_tb = confirmedTb,
-            confirmed_ncd_diseases = confirmedNcdDiseases,
-            diagnosis_status = diagnosisStatus,
-            nishchayPregnancyStatus = nishchayPregnancyStatus ?: "select",
-            nishchayPregnancyStatusPosition = nishchayPregnancyStatusPosition,
-            nishchayDeliveryStatus = nishchayDeliveryStatus ?: "select",
-            nishchayDeliveryStatusPosition = nishchayDeliveryStatusPosition,
-            nayiPahalDeliveryStatusPosition = nayiPahalDeliveryStatusPosition,
-            isImmunizationStatus = immunizationStatus,
+//            menstrualStatus = genDetails?.menstrualStatus,
+            dateMarriage = genDetails?.marriageDate?.let { getDateTimeStringFromLong(it) },
+//            deliveryDate = genDetails?.deliveryDate,
+//            suspected_hrp = genDetails?.hrpSuspected.toString(),
+//            suspected_ncd = suspectedNcd,
+//            suspected_tb = suspectedTb,
+//            suspected_ncd_diseases = suspectedNcdDiseases,
+//            confirmed_ncd = confirmed_Ncd,
+//            confirmed_hrp = confirmedHrp,
+//            confirmed_tb = confirmedTb,
+//            confirmed_ncd_diseases = confirmedNcdDiseases,
+//            diagnosis_status = diagnosisStatus,
+//            nishchayPregnancyStatus = nishchayPregnancyStatus ?: "select",
+//            nishchayPregnancyStatusPosition = nishchayPregnancyStatusPosition,
+//            nishchayDeliveryStatus = nishchayDeliveryStatus ?: "select",
+//            nishchayDeliveryStatusPosition = nishchayDeliveryStatusPosition,
+//            nayiPahalDeliveryStatusPosition = nayiPahalDeliveryStatusPosition,
+//            isImmunizationStatus = immunizationStatus,
             userImage = ImageUtils.getEncodedStringForBenImage(
                 context,
                 beneficiaryId
-            )?:""// Base64.encodeToString(userImageBlob, Base64.DEFAULT),
+            ) ?: ""// Base64.encodeToString(userImageBlob, Base64.DEFAULT),
         )
     }
 

@@ -2,7 +2,12 @@ package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_
 
 import android.app.Application
 import android.content.res.Configuration
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,7 +21,7 @@ import org.piramalswasthya.sakhi.model.CbacCache
 import org.piramalswasthya.sakhi.model.Gender
 import org.piramalswasthya.sakhi.repositories.CbacRepo
 import timber.log.Timber
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 
@@ -126,15 +131,19 @@ class CbacViewModel @Inject constructor(
                 in 0..29 -> {
                     _raAgeScore.value = 0
                 }
+
                 in 30..39 -> {
                     _raAgeScore.value = 1
                 }
+
                 in 40..49 -> {
                     _raAgeScore.value = 2
                 }
+
                 in 50..59 -> {
                     _raAgeScore.value = 3
                 }
+
                 else -> {
                     _raAgeScore.value = 4
                 }
@@ -143,7 +152,7 @@ class CbacViewModel @Inject constructor(
                 _raAgeScore.value!! + _raSmokeScore.value!! + _raAlcoholScore.value!! + _raWaistScore.value!! + _raPaScore.value!! + _raFhScore.value!!
             ben.gender?.let { _gender.value = it }
             _age.value = ben.age
-            _benName.value = "${ben.firstName} ${if(ben.lastName== null) "" else ben.lastName}"
+            _benName.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
 
         }
@@ -395,7 +404,7 @@ class CbacViewModel @Inject constructor(
 
     fun setUnsteady(i: Int) {
         cbac.cbac_feeling_unsteady_posi = i
-        if (i == 1 ) _astMoic.value = _astMoic.value?.plus(1)
+        if (i == 1) _astMoic.value = _astMoic.value?.plus(1)
         else if (i == 2 && _astMoic.value!! > 0) _astMoic.value = _astMoic.value?.minus(1)
     }
 
@@ -475,12 +484,13 @@ class CbacViewModel @Inject constructor(
             ) {
                 // hrp_displayTv.setVisibility(View.VISIBLE);
                 flagForHrp = when (ben.genDetails?.reproductiveStatusId) {
-                    1 -> {
-                        ben.nishchayPregnancyStatusPosition == 1
-                    }
+//                    1 -> {
+//                        ben.nishchayPregnancyStatusPosition == 1
+//                    }
                     5, 4 -> {
                         false
                     }
+
                     else -> {
                         true
                     }
@@ -780,8 +790,8 @@ class CbacViewModel @Inject constructor(
         cbac.cbac_sputemcollection = i.toString()
     }
 
-    fun getCollectSputum() : Int {
-        return cbac.cbac_sputemcollection?.toInt()?:0
+    fun getCollectSputum(): Int {
+        return cbac.cbac_sputemcollection?.toInt() ?: 0
     }
 
     fun setTraceAllMembers(i: Int) {

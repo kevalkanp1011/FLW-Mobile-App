@@ -23,7 +23,7 @@ import org.piramalswasthya.sakhi.network.*
 import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 class BenRepo @Inject constructor(
@@ -714,7 +714,7 @@ class BenRepo @Inject constructor(
                                             familyHeadName = houseDataObj.getString("familyHeadName"),
                                             rchId = benDataObj.getString("rchid"),
                                             hrpStatus = benDataObj.getBoolean("hrpStatus"),
-                                            typeOfList = benDataObj.getString("registrationType"),
+//                                            typeOfList = benDataObj.getString("registrationType"),
                                             syncState = if (benExists) SyncState.SYNCED else SyncState.SYNCING,
                                             dob = 0L,
                                         )
@@ -984,35 +984,35 @@ class BenRepo @Inject constructor(
                                 "religionOthers"
                             ) else null,
                             rchId = if (benDataObj.has("rchid")) benDataObj.getString("rchid") else null,
-                            registrationType = if (benDataObj.has("registrationType")) {
-                                when (benDataObj.getString("registrationType")) {
-                                    "NewBorn" -> {
-                                        if (benDataObj.getString("age_unit") != "Years" || benDataObj.getInt(
-                                                "age"
-                                            ) < 2
-                                        ) TypeOfList.INFANT
-                                        else if (benDataObj.getInt("age") < 6) TypeOfList.CHILD
-                                        else TypeOfList.ADOLESCENT
-                                    }
-                                    "General Beneficiary", "सामान्य लाभार्थी" -> if (benDataObj.has(
-                                            "reproductiveStatus"
-                                        )
-                                    ) {
-                                        with(benDataObj.getString("reproductiveStatus")) {
-                                            when {
-                                                contains("Eligible Couple") || contains("पात्र युगल") -> TypeOfList.ELIGIBLE_COUPLE
-                                                contains("Antenatal Mother") -> TypeOfList.ANTENATAL_MOTHER
-                                                contains("Delivery Stage") -> TypeOfList.DELIVERY_STAGE
-                                                contains("Postnatal Mother") -> TypeOfList.POSTNATAL_MOTHER
-                                                contains("Menopause Stage") -> TypeOfList.MENOPAUSE
-                                                contains("Teenager") || contains("किशोरी") -> TypeOfList.TEENAGER
-                                                else -> TypeOfList.GENERAL
-                                            }
-                                        }
-                                    } else TypeOfList.GENERAL
-                                    else -> TypeOfList.GENERAL
-                                }
-                            } else TypeOfList.OTHER,
+//                            registrationType = if (benDataObj.has("registrationType")) {
+//                                when (benDataObj.getString("registrationType")) {
+//                                    "NewBorn" -> {
+//                                        if (benDataObj.getString("age_unit") != "Years" || benDataObj.getInt(
+//                                                "age"
+//                                            ) < 2
+//                                        ) TypeOfList.INFANT
+//                                        else if (benDataObj.getInt("age") < 6) TypeOfList.CHILD
+//                                        else TypeOfList.ADOLESCENT
+//                                    }
+//                                    "General Beneficiary", "सामान्य लाभार्थी" -> if (benDataObj.has(
+//                                            "reproductiveStatus"
+//                                        )
+//                                    ) {
+//                                        with(benDataObj.getString("reproductiveStatus")) {
+//                                            when {
+//                                                contains("Eligible Couple") || contains("पात्र युगल") -> TypeOfList.ELIGIBLE_COUPLE
+//                                                contains("Antenatal Mother") -> TypeOfList.ANTENATAL_MOTHER
+//                                                contains("Delivery Stage") -> TypeOfList.DELIVERY_STAGE
+//                                                contains("Postnatal Mother") -> TypeOfList.POSTNATAL_MOTHER
+//                                                contains("Menopause Stage") -> TypeOfList.MENOPAUSE
+//                                                contains("Teenager") || contains("किशोरी") -> TypeOfList.TEENAGER
+//                                                else -> TypeOfList.GENERAL
+//                                            }
+//                                        }
+//                                    } else TypeOfList.GENERAL
+//                                    else -> TypeOfList.GENERAL
+//                                }
+//                            } else TypeOfList.OTHER,
                             latitude = benDataObj.getDouble("latitude"),
                             longitude = benDataObj.getDouble("longitude"),
                             aadharNum = if (benDataObj.has("aadhaNo")) benDataObj.getString("aadhaNo") else null,
@@ -1261,25 +1261,25 @@ class BenRepo @Inject constructor(
                                     benDataObj.getString("marriageDate")
                                 ) else null,
 //                                menstrualStatus = menstrualStatus,
-                                menstrualStatusId = if (benDataObj.has("menstrualStatusId")) benDataObj.getInt(
-                                    "menstrualStatusId"
-                                ) else null,
+//                                menstrualStatusId = if (benDataObj.has("menstrualStatusId")) benDataObj.getInt(
+//                                    "menstrualStatusId"
+//                                ) else null,
 //                                regularityOfMenstrualCycle = regularityofMenstrualCycle,
-                                regularityOfMenstrualCycleId = if (benDataObj.has("regularityofMenstrualCycleId")) benDataObj.getInt(
-                                    "regularityofMenstrualCycleId"
-                                ) else 0,
+//                                regularityOfMenstrualCycleId = if (benDataObj.has("regularityofMenstrualCycleId")) benDataObj.getInt(
+//                                    "regularityofMenstrualCycleId"
+//                                ) else 0,
 //                                lengthOfMenstrualCycle = lengthofMenstrualCycle,
-                                lengthOfMenstrualCycleId = if (benDataObj.has("lengthofMenstrualCycleId")) benDataObj.getInt(
-                                    "lengthofMenstrualCycleId"
-                                ) else 0,
+//                                lengthOfMenstrualCycleId = if (benDataObj.has("lengthofMenstrualCycleId")) benDataObj.getInt(
+//                                    "lengthofMenstrualCycleId"
+//                                ) else 0,
 //                                menstrualBFD = menstrualBFD,
-                                menstrualBFDId = if (benDataObj.has("menstrualBFDId")) benDataObj.getInt(
-                                    "menstrualBFDId"
-                                ) else 0,
+//                                menstrualBFDId = if (benDataObj.has("menstrualBFDId")) benDataObj.getInt(
+//                                    "menstrualBFDId"
+//                                ) else 0,
 //                                menstrualProblem = menstrualProblem,
-                                menstrualProblemId = if (benDataObj.has("menstrualProblemId")) benDataObj.getInt(
-                                    "menstrualProblemId"
-                                ) else 0,
+//                                menstrualProblemId = if (benDataObj.has("menstrualProblemId")) benDataObj.getInt(
+//                                    "menstrualProblemId"
+//                                ) else 0,
 //                                lastMenstrualPeriod = lastMenstrualPeriod,
                                 reproductiveStatus = if (benDataObj.has("reproductiveStatus")) benDataObj.getString(
                                     "reproductiveStatus"
@@ -1288,25 +1288,25 @@ class BenRepo @Inject constructor(
                                     "reproductiveStatusId"
                                 ) else 0,
 //                                lastDeliveryConducted = lastDeliveryConducted,
-                                lastDeliveryConductedId = if (benDataObj.has("lastDeliveryConductedID")) benDataObj.getInt(
-                                    "lastDeliveryConductedID"
-                                ) else 0,
+//                                lastDeliveryConductedId = if (benDataObj.has("lastDeliveryConductedID")) benDataObj.getInt(
+//                                    "lastDeliveryConductedID"
+//                                ) else 0,
 //                                facilityName = facilitySelection,
 //                                whoConductedDelivery = whoConductedDelivery,
-                                whoConductedDeliveryId = if (benDataObj.has("whoConductedDeliveryID")) benDataObj.getInt(
-                                    "whoConductedDeliveryID"
-                                ) else 0,
+//                                whoConductedDeliveryId = if (benDataObj.has("whoConductedDeliveryID")) benDataObj.getInt(
+//                                    "whoConductedDeliveryID"
+//                                ) else 0,
 //                                deliveryDate = deliveryDate,
-                                expectedDateOfDelivery = if (benDataObj.has("expectedDateOfDelivery")) getLongFromDate(
-                                    benDataObj.getString("expectedDateOfDelivery")
-                                ) else null,
+//                                expectedDateOfDelivery = if (benDataObj.has("expectedDateOfDelivery")) getLongFromDate(
+//                                    benDataObj.getString("expectedDateOfDelivery")
+//                                ) else null,
 //                                noOfDaysForDelivery = noOfDaysForDelivery,
                             ),
                             syncState = SyncState.SYNCED,
                             isDraft = false))
 
 
-                        val registrationType = if (benDataObj.has("registrationType")) {
+                        /*val registrationType = if (benDataObj.has("registrationType")) {
                             when (benDataObj.getString("registrationType")) {
                                 "NewBorn" -> {
                                     if (benDataObj.getString("age_unit") != "Years" || benDataObj.getInt(
@@ -1339,7 +1339,7 @@ class BenRepo @Inject constructor(
                                     "age"
                                 )
                             }, ${benDataObj.getString("reproductiveStatus")}"
-                        )
+                        )*/
                     } catch (e: JSONException) {
                         Timber.i("Beneficiary skipped: ${jsonObject.getLong("benficieryid")} with error $e")
                     } catch (e: NumberFormatException) {

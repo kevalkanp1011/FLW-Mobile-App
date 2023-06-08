@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.death_reports.cdr
+package org.piramalswasthya.sakhi.ui.home_activity.mother_care.pregnant_women_registration.list
 
 import android.os.Bundle
 import android.text.Editable
@@ -18,19 +18,19 @@ import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 
 @AndroidEntryPoint
-class CdrListFragment : Fragment() {
+class PwRegistrationListFragment : Fragment() {
 
     private var _binding: FragmentDisplaySearchRvButtonBinding? = null
-    private val binding : FragmentDisplaySearchRvButtonBinding
+    private val binding: FragmentDisplaySearchRvButtonBinding
         get() = _binding!!
 
-    private val viewModel: CdrListViewModel by viewModels()
+    private val viewModel: PwRegistrationListViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding =  FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false )
+        _binding = FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false)
 
         return binding.root
     }
@@ -44,14 +44,17 @@ class CdrListFragment : Fragment() {
                     Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
                 },
                 { hhId, benId ->
-                findNavController().navigate(
-                    CdrListFragmentDirections.actionCdrListFragmentToCdrObjectFragment(hhId, benId)
-                )
-            }), "CDR Form")
+                    findNavController().navigate(
+                        PwRegistrationListFragmentDirections.actionPwRegistrationFragmentToPregnancyRegistrationFormFragment(
+                            benId
+                        )
+                    )
+                }), "Register Pregnancy"
+        )
         binding.rvAny.adapter = benAdapter
 
         lifecycleScope.launch {
-            viewModel.benList.collect{
+            viewModel.benList.collect {
                 if (it.isEmpty())
                     binding.flEmpty.visibility = View.VISIBLE
                 else
@@ -86,5 +89,6 @@ class CdrListFragment : Fragment() {
         super.onDestroy()
         _binding = null
     }
+
 
 }
