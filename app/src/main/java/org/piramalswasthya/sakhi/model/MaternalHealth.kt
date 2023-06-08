@@ -54,5 +54,5 @@ data class PregnantWomanRegistrationCache(
     var otherComplication : String? = null,
     var isHrp : Boolean = false,
     var hrpIdBy : String? = null,
-    var hrpIdById : Int
+    var hrpIdById : Int = 0
 ) : FormDataModel
