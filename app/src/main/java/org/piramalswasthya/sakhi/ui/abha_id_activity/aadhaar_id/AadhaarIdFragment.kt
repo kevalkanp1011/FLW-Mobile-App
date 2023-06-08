@@ -1,15 +1,14 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id
 
-import android.app.AlertDialog
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
@@ -24,16 +23,13 @@ class AadhaarIdFragment : Fragment() {
     private val binding: FragmentAadhaarIdBinding
         get() = _binding!!
 
-    private val viewModel: AadhaarIdViewModel by viewModels()
+    private val viewModel: AadhaarIdViewModel by viewModels({requireActivity()})
 
     private lateinit var navController: NavController
-
-    private val aadharDisclaimer by lazy {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Individual’s consent for creation of ABHA Number.")
-            .setMessage(context?.getString(R.string.aadhar_disclaimer_consent_text))
-            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
-            .create()
+    private val aadhaarNavController by lazy {
+        val navHostFragment: NavHostFragment =
+            childFragmentManager.findFragmentById(R.id.nav_host_fragment_aadhaar_id) as NavHostFragment
+        navHostFragment.navController
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -46,32 +42,34 @@ class AadhaarIdFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = findNavController()
+        binding.viewModel = viewModel
 
-        var isValidAadhar = false
-        binding.btnGenerateOtp.setOnClickListener {
-            viewModel.generateOtpClicked(binding.tietAadhaarNumber.text.toString())
-
-        }
-        binding.aadharConsentCheckBox.setOnCheckedChangeListener{ _, ischecked ->
-            binding.btnGenerateOtp.isEnabled = isValidAadhar && ischecked
-        }
-        binding.aadharDisclaimer.setOnClickListener{
-            aadharDisclaimer.show()
-        }
-        binding.tietAadhaarNumber.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        binding.rgGovAsha.setOnCheckedChangeListener{
+                _, id ->
+            when(id) {
+                R.id.rb_asha -> {
+                    viewModel.setUserType("ASHA")
+                    aadhaarNavController.navigate(R.id.aadhaarNumberAshaFragment)
+                }
+                R.id.rb_gov -> {
+                    viewModel.setUserType("GOV")
+                    aadhaarNavController.navigate(R.id.aadhaarNumberGovFragment)
+                }
             }
+        }
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        binding.actvAadharVerificationDropdown.setOnItemClickListener { _, _, i, _ ->
+            when(i) {
+                0 -> {
+                    viewModel.setVerificationType("OTP")
+                    Toast.makeText(requireContext(), viewModel.verificationType.value, Toast.LENGTH_SHORT).show()
+                }
+                1 -> {
+                    viewModel.setVerificationType("FP")
+                    binding.rgGovAsha.visibility = View.INVISIBLE
+                }
             }
-
-            override fun afterTextChanged(s: Editable?) {
-                isValidAadhar = s != null && s.length == 12
-                binding.btnGenerateOtp.isEnabled = isValidAadhar
-                        && binding.aadharConsentCheckBox.isChecked
-            }
-
-        })
+        }
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state!!) {
@@ -82,31 +80,44 @@ class AadhaarIdFragment : Fragment() {
                     binding.clError.visibility = View.INVISIBLE
                 }
                 State.SUCCESS -> {
-                    viewModel.resetState()
-                    findNavController().navigate(
-                        AadhaarIdFragmentDirections.actionAadhaarIdFragmentToAadhaarOtpFragment(
-                            viewModel.txnId, viewModel.mobileNumber
-                        )
-                    )
+                    if (viewModel.userType.value == "ASHA") {
+                        viewModel.resetState()
+                        if (viewModel.verificationType.value == "OTP") {
+                            findNavController().navigate(
+                                AadhaarIdFragmentDirections.actionAadhaarIdFragmentToAadhaarOtpFragment(
+                                    viewModel.txnId, viewModel.mobileNumber
+                                )
+                            )
+                        } else if (viewModel.verificationType.value == "FP") {
+                            findNavController().navigate(
+                                AadhaarIdFragmentDirections.actionAadhaarIdFragmentToGenerateMobileOtpFragment(
+                                    viewModel.txnId
+                                )
+                            )
+                        }
+                    }
                 }
                 State.ERROR_SERVER -> {
                     binding.pbLoadingAadharId.visibility = View.INVISIBLE
                     binding.clContentAadharId.visibility = View.VISIBLE
                     binding.clError.visibility = View.INVISIBLE
-                    binding.tvErrorText.visibility = View.VISIBLE
                 }
                 State.ERROR_NETWORK -> {
                     binding.clContentAadharId.visibility = View.INVISIBLE
                     binding.pbLoadingAadharId.visibility = View.INVISIBLE
                     binding.clError.visibility = View.VISIBLE
                 }
-            }
-        }
-
-        viewModel.errorMessage.observe(viewLifecycleOwner) {
-            it?.let {
-                binding.tvErrorText.text = it
-                viewModel.resetErrorMessage()
+                State.STATE_DETAILS_SUCCESS -> {
+                    binding.clContentAadharId.visibility = View.VISIBLE
+                    binding.pbLoadingAadharId.visibility = View.INVISIBLE
+                }
+                State.ABHA_GENERATED_SUCCESS -> {
+                    findNavController().navigate(
+                        AadhaarIdFragmentDirections.actionAadhaarIdFragmentToCreateAbhaFragment(
+                            viewModel.txnId
+                        )
+                    )
+                }
             }
         }
     }

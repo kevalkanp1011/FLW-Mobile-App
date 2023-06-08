@@ -51,7 +51,7 @@ class NcdListFragment : Fragment() {
                 },
                 {
 
-                }
+                },{_,_ ->}
             ))
         binding.rvAny.adapter = benAdapter
 

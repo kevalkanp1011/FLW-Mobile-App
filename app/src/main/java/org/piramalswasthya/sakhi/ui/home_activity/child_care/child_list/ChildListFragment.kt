@@ -51,7 +51,7 @@ class ChildListFragment : Fragment() {
                 },
                 {
 
-                }
+                },{_,_ ->}
             ))
         binding.rvAny.adapter = benAdapter
 

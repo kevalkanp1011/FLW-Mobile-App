@@ -1,108 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.abha_id_activity.aadhaar_id.AadhaarIdFragment">
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdViewModel" />
+    </data>
 
     <FrameLayout
+        tools:background="@color/green"
         android:id="@+id/fl_aadhaar_id"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:context=".ui.abha_id_activity.aadhaar_id.AadhaarIdFragment">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/padding_normal">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_content_aadhar_id"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/textView3"
+                android:paddingTop="@dimen/padding_normal">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:orientation="vertical"
+                app:layout_constraintHeight_percent=".75"
+                >
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_aadhaar_verify_dropdown"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="8dp"
-                    android:text="Enter Aadhaar Number "
-                    android:textAppearance="?attr/textAppearanceHeadline6"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_gravity="center"
+                    app:layout_constraintTop_toTopOf="@id/cl_content_aadhar_id"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.35" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_aadhaar_number"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="8dp"
-                    android:hint="Aadhaar Number"
-                    android:paddingTop="@dimen/padding_normal"
-                    android:paddingBottom="@dimen/padding_normal"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView3">
+                    android:hint="Aadhaar">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/tiet_aadhaar_number"
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/actv_aadhar_verification_dropdown"
+                        listItems="@{viewModel.aadhaarVerificationTypeValues}"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:inputType="number"
-                        android:maxLength="12"
-                        android:singleLine="true"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
-
-                    <TextView
-                        android:id="@+id/tv_error_text"
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_small"
-                        android:layout_weight="1"
-                        android:text="TextView"
-                        android:textColor="@color/red"
-                        android:visibility="gone" />
-
-
+                        android:gravity="center"
+                        android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <CheckBox
-                    android:id="@+id/aadharConsentCheckBox"
+                <RadioGroup
+                    android:id="@+id/rg_gov_asha"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_normal"
-                    android:buttonTint="?attr/colorPrimary"
-                    android:gravity="start|top"
-                    android:text="@string/aadhar_consent_text"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                    app:layout_constraintTop_toBottomOf="@+id/til_aadhaar_number" />
-
-                <TextView
-                    android:id="@+id/aadharDisclaimer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/aadhar_disclaimer_consent_disclaimer"
-                    android:textColor="?attr/colorPrimary"
-                    android:layout_margin="@dimen/margin_normal"
-                    android:padding="@dimen/padding_normal"
-                    app:layout_constraintTop_toBottomOf="@id/aadharConsentCheckBox" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_generate_otp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="@dimen/padding_normal"
-                    android:clickable="false"
-                    android:enabled="false"
-                    android:padding="@dimen/padding_normal"
-                    android:text="Generate OTP"
-                    android:textAllCaps="false"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                    android:textColor="?attr/colorSecondary"
+                    android:orientation="horizontal"
+                    android:textAppearance="?attr/textAppearanceHeadline6"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/aadharDisclaimer" />
+                    app:layout_constraintTop_toBottomOf="@id/til_aadhaar_verify_dropdown">
+
+                    <RadioButton
+                        android:id="@+id/rb_asha"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="ASHA" />
+
+                    <RadioButton
+                        android:id="@+id/rb_gov"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="GOV" />
+                </RadioGroup>
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/nav_host_fragment_aadhaar_id"
+                    android:name="androidx.navigation.fragment.NavHostFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Hello World!"
+                    app:defaultNavHost="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rg_gov_asha"
+                    app:navGraph="@navigation/nav_aadhaar_id"
+                    tools:layout="@layout/fragment_aadhaar_number_asha" />
+</LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -145,10 +138,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.7" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
         </androidx.cardview.widget.CardView>
 
     </FrameLayout>
-
-
 </layout>

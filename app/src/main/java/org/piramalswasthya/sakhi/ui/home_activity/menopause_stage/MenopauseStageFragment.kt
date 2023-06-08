@@ -48,7 +48,7 @@ class MenopauseStageFragment : Fragment() {
                 },
                 {
 
-                }
+                },{_,_ ->}
             ))
         binding.rvAny.adapter = benAdapter
 
