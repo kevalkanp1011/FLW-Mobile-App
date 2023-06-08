@@ -2,6 +2,7 @@ package org.piramalswasthya.sakhi.repositories
 
 import android.util.Base64
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.ResponseBody
@@ -20,6 +21,8 @@ import javax.inject.Inject
 
 class AbhaIdRepo @Inject constructor(
     private val abhaApiService: AbhaApiService,
+    private val amritApiService: AmritApiService,
+    private val userRepo: UserRepo,
     private val prefDao: PreferenceDao
 ) {
     suspend fun getAccessToken(): NetworkResult<AbhaTokenResponse> {
@@ -57,6 +60,32 @@ class AbhaIdRepo @Inject constructor(
                     key = key.replace("-----END PUBLIC KEY-----", "")
                     key = key.trim()
                     NetworkResult.Success(key)
+                } else {
+                    sendErrorResponse(response)
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
+            }
+        }
+    }
+
+
+    suspend fun getStateAndDistricts(): NetworkResult<List<StateCodeResponse>> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = abhaApiService.getStateAndDistricts()
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val typeToken = object : TypeToken<List<StateCodeResponse>>() {}.type
+                    val stateCodes = Gson().fromJson<List<StateCodeResponse>>(responseBody, typeToken)
+                    NetworkResult.Success(stateCodes)
                 } else {
                     sendErrorResponse(response)
                 }
@@ -265,4 +294,180 @@ class AbhaIdRepo @Inject constructor(
         }
     }
 
+    suspend fun generateAbhaIdGov(request: CreateAbhaIdGovRequest): NetworkResult<CreateAbhaIdResponse> {
+        return withContext((Dispatchers.IO)) {
+            try {
+                val response = abhaApiService.createAbhaIdGov(request)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val result = Gson().fromJson(responseBody, CreateAbhaIdResponse::class.java)
+                    NetworkResult.Success(result)
+                } else {
+                    sendErrorResponse(response)
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
+            } catch (e: java.lang.Exception) {
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
+            }
+        }
+    }
+
+    suspend fun verifyBio(aadhaarVerifyBioRequest: AadhaarVerifyBioRequest): NetworkResult<CreateAbhaIdResponse> {
+        return withContext((Dispatchers.IO)) {
+            try {
+                val response = abhaApiService.verifyBio(aadhaarVerifyBioRequest)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()?.string()
+                    val result = Gson().fromJson(responseBody, CreateAbhaIdResponse::class.java)
+                    NetworkResult.Success(result)
+                } else {
+                    sendErrorResponse(response)
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
+            } catch (e: java.lang.Exception) {
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
+            }
+        }
+    }
+
+    suspend fun createHealthIdWithUid(createHealthIdRequest: CreateHealthIdRequest): NetworkResult<CreateHIDResponse> {
+        return withContext((Dispatchers.IO)) {
+            try {
+                val response = amritApiService.createHid(createHealthIdRequest)
+                val responseBody = response.body()?.string()
+                when (responseBody?.let { JSONObject(it).getInt("statusCode") }) {
+                    200 -> {
+                        val data = responseBody.let { JSONObject(it).getString("data") }
+                        val result = Gson().fromJson(data, CreateHIDResponse::class.java)
+                        NetworkResult.Success(result)
+                    }
+                    5000 -> {
+                        if (JSONObject(responseBody).getString("errorMessage")
+                                .contentEquals("Invalid login key or session is expired")) {
+                            val user = userRepo.getLoggedInUser()!!
+                            userRepo.refreshTokenTmc(user.userName, user.password)
+                            createHealthIdWithUid(createHealthIdRequest)
+                        } else {
+                            NetworkResult.Error(0,JSONObject(responseBody).getString("errorMessage"))
+                        }
+                    }
+                    else -> {
+                        NetworkResult.Error(0, responseBody.toString())
+                    }
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
+            } catch (e: java.lang.Exception) {
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
+            }
+        }
+    }
+
+    suspend fun mapHealthIDToBeneficiary(mapHIDtoBeneficiary: MapHIDtoBeneficiary): NetworkResult<String> {
+        return withContext((Dispatchers.IO)) {
+            try {
+                val response = amritApiService.mapHealthIDToBeneficiary(mapHIDtoBeneficiary)
+                val responseBody = response.body()?.string()
+                when(responseBody?.let { JSONObject(it).getInt("statusCode") }) {
+                    200 -> NetworkResult.Success(responseBody)
+                    5000 -> {
+                        if (JSONObject(responseBody).getString("errorMessage")
+                                .contentEquals("Invalid login key or session is expired")){
+                            val user = userRepo.getLoggedInUser()!!
+                            userRepo.refreshTokenTmc(user.userName, user.password)
+                            mapHealthIDToBeneficiary(mapHIDtoBeneficiary)
+                        } else {
+                            NetworkResult.Error(0, JSONObject(responseBody).getString("errorMessage"))
+                        }
+                    }
+                    else -> NetworkResult.Error(0, responseBody.toString())
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
+            } catch (e: java.lang.Exception) {
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
+            }
+        }
+    }
+
+    suspend fun generateOtpHid(generateOtpHid: GenerateOtpHid): NetworkResult<String> {
+        return withContext((Dispatchers.IO)) {
+            try {
+                val response = amritApiService.generateOtpHealthId(generateOtpHid)
+                val responseBody = response.body()?.string()
+                when(responseBody?.let { JSONObject(it).getInt("statusCode") }) {
+                    200 -> NetworkResult.Success(JSONObject(responseBody).getJSONObject("data").getString("txnId"))
+                    5000 -> {
+                        val error = JSONObject(responseBody).getString("errorMessage")
+                        if ( error.contentEquals("Invalid login key or session is expired")){
+                            val user = userRepo.getLoggedInUser()!!
+                            userRepo.refreshTokenTmc(user.userName, user.password)
+                            generateOtpHid(generateOtpHid)
+                        } else {
+                            NetworkResult.Error(0,error)
+                        }
+                    }
+                    else -> NetworkResult.Error(0, responseBody.toString())
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
+            } catch (e: java.lang.Exception) {
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
+            }
+        }
+    }
+
+    suspend fun verifyOtpAndGenerateHealthCard(validateOtpHid: ValidateOtpHid): NetworkResult<String> {
+        return withContext((Dispatchers.IO)) {
+            try {
+                val response = amritApiService.verifyOtpAndGenerateHealthCard(validateOtpHid)
+                val responseBody = response.body()?.string()
+                when(responseBody?.let { JSONObject(it).getInt("statusCode") }) {
+                    200 -> NetworkResult.Success(JSONObject(responseBody).getJSONObject("data").getString("data"))
+                    5000 -> {
+                        if (JSONObject(responseBody).getString("errorMessage")
+                                .contentEquals("Invalid login key or session is expired")){
+                            val user = userRepo.getLoggedInUser()!!
+                            userRepo.refreshTokenTmc(user.userName, user.password)
+                            verifyOtpAndGenerateHealthCard(validateOtpHid)
+                        } else {
+                            NetworkResult.Error(0, JSONObject(responseBody).getString("errorMessage"))
+                        }
+                    }
+                    else -> NetworkResult.Error(0, responseBody.toString())
+
+                }
+            } catch (e: IOException) {
+                NetworkResult.Error(-1, "Unable to connect to Internet!")
+            } catch (e: JSONException) {
+                NetworkResult.Error(-2, "Invalid response! Please try again!")
+            } catch (e: SocketTimeoutException) {
+                NetworkResult.Error(-3, "Request Timed out! Please try again!")
+            } catch (e: java.lang.Exception) {
+                NetworkResult.Error(-4, e.message ?: "Unknown Error")
+            }
+        }
+    }
 }

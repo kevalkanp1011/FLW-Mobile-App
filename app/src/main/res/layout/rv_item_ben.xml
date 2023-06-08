@@ -87,6 +87,23 @@
                     app:layout_constraintTop_toTopOf="@+id/tv_hh_id"
                     app:strokeColor="?attr/colorPrimary" />
 
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_abha"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_toEndOf="@id/tv_hh_id"
+                    android:onClick="@{()-> clickListener.onClickABHA(ben)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                    app:cornerRadius="@dimen/padding_normal"
+                    android:text="ABHA"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_hh_id"
+                    android:textColor="?attr/colorPrimary"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_sync_state"
+                    app:layout_constraintStart_toEndOf="@+id/btn_new_ben"
+                    app:layout_constraintTop_toTopOf="@+id/tv_hh_id"
+                    app:strokeColor="?attr/colorPrimary" />
                 <ImageView
                     android:id="@+id/iv_sync_state"
                     android:layout_width="24dp"

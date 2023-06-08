@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentGenerateMobileOtpBinding
@@ -101,7 +102,7 @@ class GenerateMobileOtpFragment : Fragment() {
                     if (viewModel.apiResponse.mobileLinked) {
                         navController.navigate(
                             GenerateMobileOtpFragmentDirections.actionGenerateMobileOtpFragmentToCreateAbhaFragment(
-                                viewModel.apiResponse.txnId
+                                viewModel.txnIdFromArgs
                             )
                         )
                     } else {
@@ -124,6 +125,13 @@ class GenerateMobileOtpFragment : Fragment() {
                     binding.progressBarGmotp.visibility = View.INVISIBLE
                     binding.clGenerateMobileOtp.visibility = View.INVISIBLE
                     binding.clError.visibility = View.VISIBLE
+                }
+                State.ABHA_GENERATED_SUCCESS -> {
+                    navController.navigate(
+                        GenerateMobileOtpFragmentDirections.actionGenerateMobileOtpFragmentToCreateAbhaFragment(
+                             viewModel.txnIdFromArgs
+                        )
+                    )
                 }
             }
         }
