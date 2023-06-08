@@ -36,7 +36,7 @@ class AllBenFragment : Fragment() {
 
     private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
 
-    val aadhaarDisclaimer by lazy {
+    val abhaDisclaimer by lazy {
         AlertDialog.Builder(requireContext())
             .setTitle("Beneficiary ABHA Number.")
             .setMessage("it")
@@ -123,8 +123,8 @@ class AllBenFragment : Fragment() {
         viewModel.abha.observe(viewLifecycleOwner) {
             it.let {
                 if (it != null){
-                    aadhaarDisclaimer.setMessage(it)
-                    aadhaarDisclaimer.show()
+                    abhaDisclaimer.setMessage(it)
+                    abhaDisclaimer.show()
                 }
             }
         }

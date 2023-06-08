@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity.create_abha_id
 
+import android.app.AlertDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -9,6 +10,7 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
@@ -49,6 +51,20 @@ class CreateAbhaFragment : Fragment() {
 
     private val channelId = "download abha card"
 
+
+    private var timer = object : CountDownTimer(30000, 1000) {
+        override fun onTick(millisUntilFinished: Long) {
+            val sec = millisUntilFinished / 1000 % 60
+            binding.timerResendOtp.text = sec.toString()
+        }
+
+        // When the task is over it will print 00:00:00 there
+        override fun onFinish() {
+            binding.resendOtp.isEnabled = true
+            binding.timerResendOtp.visibility = View.INVISIBLE
+        }
+    }
+
     private val onBackPressedCallback by lazy {
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -72,6 +88,15 @@ class CreateAbhaFragment : Fragment() {
             .create()
     }
 
+    private val beneficiaryDisclaimer by lazy {
+        AlertDialog.Builder(requireContext())
+            .setTitle("beneficiary abha mapping.")
+            .setMessage("linking abha to beneficiary")
+            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
+            .create()
+    }
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -91,11 +116,19 @@ class CreateAbhaFragment : Fragment() {
 
         val intent = requireActivity().intent
 
-        viewModel.createHID(
-            intent.getLongExtra("benId", 0),
-            intent.getLongExtra("benRegId", 0)
-        )
+        val benId = intent.getLongExtra("benId", 0)
+        val benRegId = intent.getLongExtra("benRegId", 0)
 
+        viewModel.createHID(benId, benRegId)
+
+        viewModel.showDisclaimer.observe(viewLifecycleOwner) {
+            it?.let {
+                if (it) {
+                    beneficiaryDisclaimer.setMessage("mapping abha id to beneficiary $benId")
+                    beneficiaryDisclaimer.show()
+                }
+            }
+        }
         binding.tietAadhaarOtp.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -148,8 +181,12 @@ class CreateAbhaFragment : Fragment() {
                 State.OTP_GENERATE_SUCCESS -> {
                     binding.clVerifyMobileOtp.visibility = View.VISIBLE
                     binding.clError.visibility = View.INVISIBLE
+                    startResendTimer()
                 }
                 State.OTP_VERIFY_SUCCESS -> {
+                    binding.pbCai.visibility = View.INVISIBLE
+                    binding.clCreateAbhaId.visibility = View.VISIBLE
+                    binding.clDownloadAbha.visibility = View.INVISIBLE
                     binding.clVerifyMobileOtp.visibility = View.INVISIBLE
                     binding.clError.visibility = View.INVISIBLE
                 }
@@ -158,12 +195,21 @@ class CreateAbhaFragment : Fragment() {
                     binding.clCreateAbhaId.visibility = View.VISIBLE
                     binding.clError.visibility = View.INVISIBLE
                 }
+                State.DOWNLOAD_ERROR -> {
+                    binding.pbCai.visibility = View.INVISIBLE
+                    binding.clCreateAbhaId.visibility = View.VISIBLE
+                    binding.clDownloadAbha.visibility = View.INVISIBLE
+                    binding.clVerifyMobileOtp.visibility = View.VISIBLE
+                    binding.tvErrorTextVerify.visibility = View.VISIBLE
+                    startResendTimer()
+                }
                 State.ERROR_INTERNAL -> {}
             }
         }
 
         viewModel.errorMessage.observe(viewLifecycleOwner) {
             it?.let {
+                binding.tvErrorTextVerify.text = it
                 binding.tvErrorText.text = it
                 viewModel.resetErrorMessage()
             }
@@ -177,6 +223,11 @@ class CreateAbhaFragment : Fragment() {
         binding.btnDownloadAbhaYes.setOnClickListener {
             viewModel.generateOtp()
             binding.clDownloadAbha.visibility = View.GONE
+        }
+
+        binding.resendOtp.setOnClickListener {
+            viewModel.generateOtp()
+            startResendTimer()
         }
     }
 
@@ -250,7 +301,7 @@ class CreateAbhaFragment : Fragment() {
                     requireContext(),
                     0,
                     Intent(Intent.ACTION_VIEW).apply {
-                        setDataAndType(uri, "application/pdf")
+                        setDataAndType(uri, "application/png")
                         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     },
                     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
@@ -258,6 +309,12 @@ class CreateAbhaFragment : Fragment() {
             )
         notificationManager.notify(1, notificationBuilder.build())
 
+    }
+
+    private fun startResendTimer() {
+        binding.resendOtp.isEnabled = false
+        binding.timerResendOtp.visibility = View.VISIBLE
+        timer.start()
     }
 
     fun notifydownload() {
