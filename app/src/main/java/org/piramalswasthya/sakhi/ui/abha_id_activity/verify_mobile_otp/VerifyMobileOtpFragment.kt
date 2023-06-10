@@ -8,12 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.databinding.FragmentVerifyMobileOtpBinding
 import org.piramalswasthya.sakhi.ui.abha_id_activity.verify_mobile_otp.VerifyMobileOtpViewModel.State
@@ -84,9 +82,12 @@ class VerifyMobileOtpFragment : Fragment() {
                     binding.clError.visibility = View.INVISIBLE
                 }
                 State.OTP_VERIFY_SUCCESS -> {
-                    VerifyMobileOtpFragmentDirections.actionVerifyMobileOtpFragmentToCreateAbhaFragment(
-                        viewModel.txnID
+                    findNavController().navigate(
+                        VerifyMobileOtpFragmentDirections.actionVerifyMobileOtpFragmentToCreateAbhaFragment(
+                            viewModel.txnID
+                        )
                     )
+                    viewModel.resetState()
                 }
                 State.ERROR_NETWORK -> {
                     binding.clVerifyMobileOtp.visibility = View.INVISIBLE

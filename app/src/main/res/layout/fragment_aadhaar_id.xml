@@ -50,6 +50,7 @@
                     <com.google.android.material.textfield.MaterialAutoCompleteTextView
                         android:id="@+id/actv_aadhar_verification_dropdown"
                         listItems="@{viewModel.aadhaarVerificationTypeValues}"
+                        android:text="@{viewModel.aadhaarVerificationTypeValues[0]}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"

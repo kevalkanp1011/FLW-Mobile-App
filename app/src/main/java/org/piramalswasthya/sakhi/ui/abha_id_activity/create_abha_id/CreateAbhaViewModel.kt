@@ -13,7 +13,7 @@ class CreateAbhaViewModel @Inject constructor(
     private val abhaIdRepo: AbhaIdRepo, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     enum class State {
-        IDLE, LOADING, ERROR_NETWORK, ERROR_SERVER, ERROR_INTERNAL, DOWNLOAD_SUCCESS, ABHA_GENERATE_SUCCESS, OTP_GENERATE_SUCCESS, OTP_VERIFY_SUCCESS
+        IDLE, LOADING, ERROR_NETWORK, ERROR_SERVER, ERROR_INTERNAL, DOWNLOAD_SUCCESS, ABHA_GENERATE_SUCCESS, OTP_GENERATE_SUCCESS, OTP_VERIFY_SUCCESS, DOWNLOAD_ERROR
     }
 
     private val _state = MutableLiveData<State>()
@@ -23,6 +23,8 @@ class CreateAbhaViewModel @Inject constructor(
     var abha = MutableLiveData<CreateAbhaIdResponse?>(null)
 
     var hidResponse = MutableLiveData<CreateHIDResponse?>(null)
+
+    var showDisclaimer = MutableLiveData<Boolean?>(null)
 
     private val txnId =
         CreateAbhaFragmentArgs.fromSavedStateHandle(savedStateHandle).txnId
@@ -49,6 +51,7 @@ class CreateAbhaViewModel @Inject constructor(
                 is NetworkResult.Success -> {
                     hidResponse.value = result.data
                     if ((benId != 0L) and (benRegId != 0L)) {
+                        showDisclaimer.value = true
                         mapBeneficiary(benId, benRegId, result.data.hID.toString(), result.data.healthIdNumber)
                     } else {
                         _state.value = State.ABHA_GENERATE_SUCCESS
@@ -105,8 +108,13 @@ class CreateAbhaViewModel @Inject constructor(
                     _state.value = State.OTP_GENERATE_SUCCESS
                 }
                 is NetworkResult.Error -> {
-                    _errorMessage.value = result.message
-                    _state.value = State.ERROR_SERVER
+                    if (result.code == 0) {
+                        _errorMessage.value = result.message
+                        _state.value = State.DOWNLOAD_ERROR
+                    } else {
+                        _errorMessage.value = result.message
+                        _state.value = State.ERROR_SERVER
+                    }
                 }
                 is NetworkResult.NetworkError -> {
                     Timber.i(result.toString())
@@ -117,6 +125,7 @@ class CreateAbhaViewModel @Inject constructor(
     }
 
     fun verifyOtp(otp: String?) {
+        _state.value = State.LOADING
         viewModelScope.launch {
             when (val result =
                 abhaIdRepo.verifyOtpAndGenerateHealthCard(ValidateOtpHid(otp,otpTxnID.value,"AADHAAR_OTP"))) {
@@ -125,8 +134,13 @@ class CreateAbhaViewModel @Inject constructor(
                     _state.value = State.OTP_VERIFY_SUCCESS
                 }
                 is NetworkResult.Error -> {
-                    _errorMessage.value = result.message
-                    _state.value = State.ERROR_SERVER
+                    if (result.code == 0) {
+                        _errorMessage.value = result.message
+                        _state.value = State.DOWNLOAD_ERROR
+                    } else {
+                        _errorMessage.value = result.message
+                        _state.value = State.ERROR_SERVER
+                    }
                 }
                 is NetworkResult.NetworkError -> {
                     Timber.i(result.toString())

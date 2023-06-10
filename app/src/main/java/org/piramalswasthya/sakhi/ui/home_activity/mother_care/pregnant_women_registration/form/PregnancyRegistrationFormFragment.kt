@@ -11,6 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
+import timber.log.Timber
 
 @AndroidEntryPoint
 class PregnancyRegistrationFormFragment : Fragment() {
@@ -55,7 +56,31 @@ class PregnancyRegistrationFormFragment : Fragment() {
         viewModel.benAgeGender.observe(viewLifecycleOwner) {
             binding.tvAgeGender.text = it
         }
+        binding.btnSubmit.setOnClickListener {
+            submitHouseholdForm()
+        }
     }
+
+    private fun submitHouseholdForm() {
+        if (validateCurrentPage()) {
+            viewModel.saveForm()
+        }
+    }
+
+    private fun validateCurrentPage(): Boolean {
+        val result = binding.form.rvInputForm.adapter?.let {
+            (it as FormInputAdapter).validateInput(resources)
+        }
+        Timber.d("Validation : $result")
+        return if (result == -1) true
+        else {
+            if (result != null) {
+                binding.form.rvInputForm.scrollToPosition(result)
+            }
+            false
+        }
+    }
+
 
     private fun hardCodedListUpdate(formId: Int) {
         binding.form.rvInputForm.adapter?.apply {

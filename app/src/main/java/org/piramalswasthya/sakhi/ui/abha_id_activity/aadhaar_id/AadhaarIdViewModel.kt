@@ -23,7 +23,8 @@ AadhaarIdViewModel @Inject constructor(
         ABHA_GENERATED_SUCCESS
     }
 
-    val aadhaarVerificationTypeValues = arrayOf("Aadhaar ID", "Fingerprint")
+//    val aadhaarVerificationTypeValues = arrayOf("Aadhaar ID", "Fingerprint")
+    val aadhaarVerificationTypeValues = arrayOf("Aadhaar ID")
     private val _aadhaarVerificationTypes = MutableLiveData(aadhaarVerificationTypeValues[0])
     val aadhaarVerificationTypes: LiveData<String>
         get() = _aadhaarVerificationTypes

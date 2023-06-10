@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
@@ -31,6 +31,14 @@ class AadhaarIdFragment : Fragment() {
             childFragmentManager.findFragmentById(R.id.nav_host_fragment_aadhaar_id) as NavHostFragment
         navHostFragment.navController
     }
+
+    private val onBackPressedCallback by lazy {
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -43,6 +51,10 @@ class AadhaarIdFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navController = findNavController()
         binding.viewModel = viewModel
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
 
         binding.rgGovAsha.setOnCheckedChangeListener{
                 _, id ->
@@ -58,11 +70,12 @@ class AadhaarIdFragment : Fragment() {
             }
         }
 
+        binding.actvAadharVerificationDropdown.id = 0
+
         binding.actvAadharVerificationDropdown.setOnItemClickListener { _, _, i, _ ->
             when(i) {
                 0 -> {
                     viewModel.setVerificationType("OTP")
-                    Toast.makeText(requireContext(), viewModel.verificationType.value, Toast.LENGTH_SHORT).show()
                 }
                 1 -> {
                     viewModel.setVerificationType("FP")
