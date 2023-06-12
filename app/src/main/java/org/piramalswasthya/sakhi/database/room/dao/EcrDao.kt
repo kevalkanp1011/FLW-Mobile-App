@@ -10,20 +10,14 @@ interface EcrDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(vararg ecrCache: EligibleCoupleRegCache)
 
-    @Query("SELECT * FROM EligibleCoupleReg WHERE processed = 'N'")
+    @Query("SELECT * FROM ELIGIBLE_COUPLE_REG WHERE processed = 'N'")
     suspend fun getAllUnprocessedECR(): List<EligibleCoupleRegCache>
 
-    @Query("select count(*) from EligibleCoupleReg")
+    @Query("select count(*) from ELIGIBLE_COUPLE_REG")
     suspend fun ecrCount(): Int
 
-    @Query("SELECT * FROM EligibleCoupleReg WHERE benId =:benId AND hhId = :hhId")
-    suspend fun getECR(hhId: Long, benId: Long): EligibleCoupleRegCache?
-
-    @Update
-    suspend fun setSynced(it: EligibleCoupleRegCache)
-
-    @Query("SELECT * FROM EligibleCoupleReg WHERE processed = 'N'")
-    suspend fun getAllUnprocessedEcr(): List<EligibleCoupleRegCache>
+    @Query("SELECT * FROM ELIGIBLE_COUPLE_REG WHERE benId =:benId limit 1")
+    suspend fun getSavedECR(benId: Long): EligibleCoupleRegCache?
 
     @Update
     suspend fun update(it: EligibleCoupleRegCache)

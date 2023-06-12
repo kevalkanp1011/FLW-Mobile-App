@@ -6,11 +6,10 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.*
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EligibleCoupleRegistrationFormDataset(context: Context, language: Languages) : Dataset(context, language) {
+class EligibleCoupleRegistrationDataset(context: Context, language: Languages) : Dataset(context, language) {
 
     companion object {
         private fun getCurrentDateString(): String {
@@ -175,7 +174,7 @@ class EligibleCoupleRegistrationFormDataset(context: Context, language: Language
         arrayId = -1,
         required = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
-        etMaxLength = 2,
+        etMaxLength = 1,
         max = 9,
         min = 0,
     )
@@ -187,7 +186,7 @@ class EligibleCoupleRegistrationFormDataset(context: Context, language: Language
         arrayId = -1,
         required = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
-        etMaxLength = 2,
+        etMaxLength = 1,
         max = 9,
         min = 0,
     )
@@ -195,11 +194,11 @@ class EligibleCoupleRegistrationFormDataset(context: Context, language: Language
     private val numMale = FormElement(
         id = 14,
         inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
-        title = "Total No. of Children Born",
+        title = "Male",
         arrayId = -1,
         required = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
-        etMaxLength = 2,
+        etMaxLength = 1,
         max = 9,
         min = 0,
     )
@@ -207,11 +206,11 @@ class EligibleCoupleRegistrationFormDataset(context: Context, language: Language
     private val numFemale = FormElement(
         id = 15,
         inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
-        title = "Total No. of Children Born",
+        title = "Female",
         arrayId = -1,
         required = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
-        etMaxLength = 2,
+        etMaxLength = 1,
         max = 9,
         min = 0,
     )
@@ -243,6 +242,7 @@ class EligibleCoupleRegistrationFormDataset(context: Context, language: Language
         required = true,
         hasDependants = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 2,
         max = Konstants.maxAgeForAdolescent.toLong(),
         min = 1,
     )
@@ -296,6 +296,7 @@ class EligibleCoupleRegistrationFormDataset(context: Context, language: Language
         required = true,
         hasDependants = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 2,
         max = Konstants.maxAgeForAdolescent.toLong(),
         min = 1,
     )
@@ -322,7 +323,28 @@ class EligibleCoupleRegistrationFormDataset(context: Context, language: Language
         min = 0,
     )
 
+    suspend fun setUpPage(ben: BenRegCache?, saved: EligibleCoupleRegCache?) {
+        val list = mutableListOf(
+            dateOfReg, rchId, name, husbandName, age, ageAtMarriage, womanDetails, aadharNo, bankAccount, bankName, branchName, ifsc,
+            noOfChildren, noOfLiveChildren, numMale, numFemale, firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap
+        )
+        dateOfReg.value = getDateFromLong(System.currentTimeMillis())
+//        dateOfReg.value?.let {
+//            val long = Dataset.getLongFromDate(it)
+//            dateOfhivTestDone.min = long
+//        }
 
+        ben?.let {
+            dateOfReg.min = it.regDate
+            rchId.value = ben.rchId
+            name.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
+            husbandName.value = ben.genDetails?.spouseName
+            age.value = BenBasicCache.getAgeFromDob(ben.dob).toString()
+        }
+        setUpPage(list)
+
+    }
 
     private val firstPage by lazy {
         listOf(
@@ -341,61 +363,132 @@ class EligibleCoupleRegistrationFormDataset(context: Context, language: Language
 
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
-//            firstNameHeadOfFamily.id -> {
-//                validateEmptyOnEditText(firstNameHeadOfFamily)
-//                validateAllCapsOrSpaceOnEditText(firstNameHeadOfFamily)
-//            }
-//            lastNameHeadOfFamily.id -> validateAllCapsOrSpaceOnEditText(lastNameHeadOfFamily)
-//            mobileNoHeadOfFamily.id -> {
-//                validateEmptyOnEditText(mobileNoHeadOfFamily)
-//                validateMobileNumberOnEditText(mobileNoHeadOfFamily)
-//            }
-//            residentialArea.id -> triggerDependants(
-//                source = residentialArea,
-//                passedIndex = index,
-//                triggerIndex = residentialArea.entries!!.size - 1,
-//                target = otherResidentialArea
-//            )
+            ageAtMarriage.id -> {
+                if (ageAtMarriage.value.isNullOrEmpty()) {
+                    validateEmptyOnEditText(ageAtMarriage)
+                    return -1
+                }
+                ageAtMarriage.min = 14
+                ageAtMarriage.max = age.value?.toLong()
+                validateIntMinMax(ageAtMarriage)
+
+//                dob1.min = System.currentTimeMillis() -
+                -1
+            }
+            dob1.id -> {
+                assignValuesToAgeFromDob(getLongFromDate(dob1.value), age1)
+                setMarriageAndFirstChildGap()
+                -1
+            }
+            age1.id -> {
+
+                if (age1.value.isNullOrEmpty()) {
+                    validateEmptyOnEditText(age1)
+                    return -1
+                }
+                age1.min = 1
+                age1.max = 15
+                validateIntMinMax(age1)
+                if (age1.errorText == null) {
+                    val cal = Calendar.getInstance()
+                    cal.add(
+                        Calendar.YEAR, -1 * age1.value!!.toInt()
+                    )
+                    val year = cal.get(Calendar.YEAR)
+                    val month = cal.get(Calendar.MONTH) + 1
+                    val day = cal.get(Calendar.DAY_OF_MONTH)
+                    val newDob =
+                        "${if (day > 9) day else "0$day"}-${if (month > 9) month else "0$month"}-$year"
+                    if (dob1.value != newDob) {
+                        dob1.value = newDob
+                        dob1.errorText = null
+                    }
+                }
+                -1
+            }
+            dob2.id -> {
+                assignValuesToAgeFromDob(getLongFromDate(dob2.value), age2)
+                setFirstChildAndSecondChildGap()
+                -1
+            }
+            age2.id -> {
+
+                if (age2.value.isNullOrEmpty()) {
+                    validateEmptyOnEditText(age2)
+                    return -1
+                }
+                age2.min = 1
+                age2.max = 15
+                validateIntMinMax(age2)
+                if (age2.errorText == null) {
+                    val cal = Calendar.getInstance()
+                    cal.add(
+                        Calendar.YEAR, -1 * age2.value!!.toInt()
+                    )
+                    val year = cal.get(Calendar.YEAR)
+                    val month = cal.get(Calendar.MONTH) + 1
+                    val day = cal.get(Calendar.DAY_OF_MONTH)
+                    val newDob =
+                        "${if (day > 9) day else "0$day"}-${if (month > 9) month else "0$month"}-$year"
+                    if (dob2.value != newDob) {
+                        dob2.value = newDob
+                        dob2.errorText = null
+                    }
+                }
+//                ageAtMarriage.value = null
+//                age.value?.toLong()?.let {
+//                    ageAtMarriage.min = it
+//                }
+                -1
+            }
             else -> -1
         }
     }
 
-    override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
-        TODO("Not yet implemented")
-    }
+    private fun setMarriageAndFirstChildGap() {
+        marriageFirstChildGap.value =
+            (age1.value?.let { age1 ->
+                (ageAtMarriage.value?.toInt()?.let { age.value?.toInt()?.minus(it) })?.minus(
+                    age1.toInt())
+            }).toString() }
 
-    fun mapValues(ecr: EligibleCoupleRegCache) {
-        ecr.dateOfReg = getLongFromDate(dateOfReg.value!!)
-        ecr.rchId = rchId.value?.toLong()
-        ecr.name = name.value
-        ecr.husbandName = husbandName.value
-        ecr.age = age.value?.toInt()
-        ecr.ageAtMarriage = ageAtMarriage.value?.toInt()
-        ecr.aadharNo = aadharNo.value?.toLong()
-        ecr.bankAccount = bankAccount.value?.toLong()
-        ecr.bankName = bankName.value
-        ecr.branchName = branchName.value
-        ecr.ifsc = ifsc.value
-        ecr.noOfChildren = noOfChildren.value?.toInt()
-        ecr.noOfLiveChildren = noOfLiveChildren.value?.toInt()
-        ecr.noOfMaleChildren = numMale.value?.toInt()
-        ecr.noOfFemaleChildren = numFemale.value?.toInt()
-        ecr.dob1 = getLongFromDate(dob1.value)
-        ecr.age1 = age1.value?.toInt()
-        ecr.gender1 = when (gender1.value) {
-            gender1.entries!![0] -> Gender.MALE
-            gender1.entries!![1] -> Gender.FEMALE
-            else -> null
+    private fun setFirstChildAndSecondChildGap() {
+        firstAndSecondChildGap.value =
+            (age2.value?.toInt()?.let { age1.value?.toInt()?.minus(it) }).toString() }
+
+    override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
+        (cacheModel as EligibleCoupleRegCache).let { ecr ->
+            ecr.dateOfReg = getLongFromDate(dateOfReg.value!!)
+            ecr.rchId = rchId.value?.toLong()
+            ecr.name = name.value
+            ecr.husbandName = husbandName.value
+            ecr.age = age.value?.toInt()
+            ecr.ageAtMarriage = ageAtMarriage.value?.toInt()
+            ecr.aadharNo = aadharNo.value?.toLong()
+            ecr.bankAccount = bankAccount.value?.toLong()
+            ecr.bankName = bankName.value
+            ecr.branchName = branchName.value
+            ecr.ifsc = ifsc.value
+            ecr.noOfChildren = noOfChildren.value?.toInt()
+            ecr.noOfLiveChildren = noOfLiveChildren.value?.toInt()
+            ecr.noOfMaleChildren = numMale.value?.toInt()
+            ecr.noOfFemaleChildren = numFemale.value?.toInt()
+            ecr.dob1 = getLongFromDate(dob1.value)
+            ecr.age1 = age1.value?.toInt()
+            ecr.gender1 = when (gender1.value) {
+                gender1.entries!![0] -> Gender.MALE
+                gender1.entries!![1] -> Gender.FEMALE
+                else -> null
+            }
+            ecr.marriageFirstChildGap = marriageFirstChildGap.value?.toInt()
+            ecr.dob2 = getLongFromDate(dob2.value)
+            ecr.age2 = age2.value?.toInt()
+            ecr.gender2 = when (gender2.value) {
+                gender2.entries!![0] -> Gender.MALE
+                gender2.entries!![1] -> Gender.FEMALE
+                else -> null
+            }
+            ecr.firstAndSecondChildGap = firstAndSecondChildGap.value?.toInt()
         }
-        ecr.marriageFirstChildGap = marriageFirstChildGap.value?.toInt()
-        ecr.dob2 = getLongFromDate(dob2.value)
-        ecr.age2 = age2.value?.toInt()
-        ecr.gender2 = when (gender2.value) {
-            gender2.entries!![0] -> Gender.MALE
-            gender2.entries!![1] -> Gender.FEMALE
-            else -> null
-        }
-        ecr.firstAndSecondChildGap = firstAndSecondChildGap.value?.toInt()
-//        (cacheModel as HouseholdCache).family = family
     }
 }

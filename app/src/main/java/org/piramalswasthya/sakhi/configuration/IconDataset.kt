@@ -7,6 +7,7 @@ import org.piramalswasthya.sakhi.model.ChildImmunizationCategory
 import org.piramalswasthya.sakhi.model.Icon
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import org.piramalswasthya.sakhi.ui.home_activity.child_care.ChildCareFragmentDirections
+import org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.EligibleCoupleFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.immunization_due.ImmunizationDueTypeFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.immunization_due.child_immunization.categories.ChildImmunizationCategoriesFragmentDirections
@@ -109,6 +110,21 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             resources.getString(R.string.icon_title_acc),
             recordsRepo.adolescentListCount,
             ChildCareFragmentDirections.actionChildCareFragmentToAdolescentListFragment()
+        )
+    )
+
+    fun getEligibleCoupleDataset(resources: Resources) = listOf(
+        Icon(
+            R.drawable.ic__eligible_couple,
+            resources.getString(R.string.icon_title_ecr),
+            null,
+            EligibleCoupleFragmentDirections.actionEligibleCoupleFragmentToEligibleCoupleListFragment()
+        ),
+        Icon(
+            R.drawable.ic__eligible_couple,
+            resources.getString(R.string.icon_title_ect),
+            null,
+            EligibleCoupleFragmentDirections.actionEligibleCoupleFragmentToEligibleTrackingFragment()
         )
     )
 

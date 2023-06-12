@@ -4,24 +4,25 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
 
 @Entity(
-    tableName = "EligibleCoupleReg",
+    tableName = "ELIGIBLE_COUPLE_REG",
     foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
-        parentColumns = arrayOf("beneficiaryId", "householdId"),
-        childColumns = arrayOf("benId", "hhId"),
+        parentColumns = arrayOf("beneficiaryId",/* "householdId"*/),
+        childColumns = arrayOf("benId", /*"hhId"*/),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "ecrInd", value = ["benId", "hhId"])]
-)
+    indices = [Index(name = "ecrInd", value = ["benId",/* "hhId"*/])])
+
 data class EligibleCoupleRegCache (
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val benId: Long,
-    val hhId: Long,
+//    val hhId: Long,
     var dateOfReg: Long = 0L,
     var rchId: Long? = 0L,
     var name: String? = null,
@@ -47,4 +48,4 @@ data class EligibleCoupleRegCache (
     var firstAndSecondChildGap: Int? = 0,
     var processed: String? = null,
     var syncState: SyncState
-)
+): FormDataModel

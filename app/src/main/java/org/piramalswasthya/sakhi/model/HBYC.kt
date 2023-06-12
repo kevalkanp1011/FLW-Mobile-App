@@ -11,13 +11,12 @@ import org.piramalswasthya.sakhi.database.room.SyncState
     tableName = "HBYC",
     foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
-        parentColumns = arrayOf("beneficiaryId", "householdId"),
-        childColumns = arrayOf("benId", "hhId"),
+        parentColumns = arrayOf("beneficiaryId",/* "householdId"*/),
+        childColumns = arrayOf("benId", /*"hhId"*/),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "hbycInd", value = ["benId", "hhId"])]
-)
+    indices = [Index(name = "hbycInd", value = ["benId",/* "hhId"*/])])
 
 data class HBYCCache (
     @PrimaryKey(autoGenerate = true)
@@ -71,7 +70,7 @@ data class HBYCCache (
             deadNameChild = ben.firstName,
             deathCause = deathCause,
             delayConstraint = delayInDevelopment,
-            districtName = household.district,
+            districtName = household.locationRecord.district.name,
             gender = ben.genderId,
             hbycByAge = hbycAgeCategory,
             houseoldId = hhId.toString(),
@@ -96,7 +95,7 @@ data class HBYCCache (
             updatedBy = user.userName,
             updatedDate = System.currentTimeMillis()/1000L,
             villagePopulation = villagePopulation,
-            villageid = household.villageId,
+            villageid = household.locationRecord.village.id,
             vistDate = getDateTimeStringFromLong(visitdate),
             vitaminASupplements = vitaminASupplementsGiven,
             weightAccordingToChildAge = weightAccordingToAge,

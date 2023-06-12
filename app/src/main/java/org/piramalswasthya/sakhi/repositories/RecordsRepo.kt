@@ -22,8 +22,8 @@ class RecordsRepo @Inject constructor(
     fun getBenList() = benDao.getAllBen(selectedVillage).map { list -> list.map { it.asBasicDomainModel() } }
     fun getBenListCount() = benDao.getAllBenCount(selectedVillage)
 
-    fun getEligibleCoupleList() = benDao.getAllEligibleCoupleList(selectedVillage)
-        .map { list -> list.map { it.asBasicDomainModel() } }
+    val getEligibleCoupleList = benDao.getAllEligibleCoupleList(selectedVillage)
+        .map { list -> list.map { it.asBenBasicDomainModelForPmsmaForm() } }
     fun getEligibleCoupleListCount() = benDao.getAllEligibleCoupleListCount(selectedVillage)
 
     val pregnantList = benDao.getAllPregnancyWomenList(selectedVillage)
@@ -100,4 +100,10 @@ class RecordsRepo @Inject constructor(
 
     fun getPregnantWomenList() = benDao.getAllPregnancyWomenList(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForPregnantWomanRegistrationForm() } }
+
+    fun getEligibleCoupleList() = benDao.getAllEligibleCoupleList(selectedVillage)
+        .map { list -> list.map { it.asBenBasicDomainModelForEligibleCoupleRegistrationForm() } }
+
+    fun getEligibleTrackingList() = benDao.getAllEligibleTrackingList(selectedVillage)
+        .map { list -> list.map { it.asBenBasicDomainModelForEligibleCoupleRegistrationForm() } }
 }

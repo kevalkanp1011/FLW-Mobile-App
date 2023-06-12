@@ -58,7 +58,9 @@ enum class Gender {
             " mdsr.benId is not null as mdsrFilled, mdsr.syncState as mdsrSyncState," +
             " pmsma.benId is not null as pmsmaFilled, " +//" pmsma.sync as mdsrSyncState, " +
             " hbnc.benId is not null as hbncFilled,  " +
-            " pwr.benId is not null as pwrFilled " +
+            " hbyc.benId is not null as hbycFilled,  " +
+            " pwr.benId is not null as pwrFilled, " +
+            " ecr.benId is not null as ecrFilled " +
             "from BENEFICIARY b " +
             "JOIN HOUSEHOLD h ON b.householdId = h.householdId " +
             "LEFT OUTER JOIN CBAC cbac on b.beneficiaryId = cbac.benId " +
@@ -66,7 +68,9 @@ enum class Gender {
             "LEFT OUTER JOIN MDSR mdsr on b.beneficiaryId = mdsr.benId " +
             "LEFT OUTER JOIN PMSMA pmsma on b.beneficiaryId = pmsma.benId " +
             "LEFT OUTER JOIN HBNC hbnc on b.beneficiaryId = hbnc.benId " +
+            "LEFT OUTER JOIN HBYC hbyc on b.beneficiaryId = hbyc.benId " +
             "LEFT OUTER JOIN PREGNANCY_REGISTER pwr on b.beneficiaryId = pwr.benId " +
+            "LEFT OUTER JOIN ELIGIBLE_COUPLE_REG ecr on b.beneficiaryId = ecr.benId " +
             "where b.isDraft = 0 GROUP BY b.beneficiaryId ORDER BY b.updatedDate DESC"
 )
 data class BenBasicCache(
@@ -96,7 +100,9 @@ data class BenBasicCache(
     val mdsrSyncState: SyncState?,
     val pmsmaFilled: Boolean,
     val hbncFilled: Boolean,
-    val pwrFilled : Boolean
+    val hbycFilled: Boolean,
+    val pwrFilled : Boolean,
+    val ecrFilled: Boolean
 ) {
     companion object {
         private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
@@ -287,11 +293,14 @@ data class BenBasicCache(
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
-            typeOfList = typeOfList.name,
+//            typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             syncState = syncState,
-            form1Filled = false
+            form1Filled = false,
+            form1Enabled = hbycFilled || dob > (System.currentTimeMillis() - TimeUnit.DAYS.toMillis(
+                490
+            )),
         )
     }
 
@@ -311,6 +320,26 @@ data class BenBasicCache(
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             form1Filled = pwrFilled,
+            syncState = syncState
+        )
+    }
+
+    fun asBenBasicDomainModelForEligibleCoupleRegistrationForm(): BenBasicDomainForForm {
+        return BenBasicDomainForForm(
+            benId = benId,
+            hhId = hhId,
+            regDate = dateFormat.format(Date(regDate)),
+            benName = benName,
+            benSurname = benSurname ?: "Not Available",
+            gender = gender.name,
+            dob = dob,
+            mobileNo = mobileNo.toString(),
+            fatherName = fatherName,
+            familyHeadName = familyHeadName ?: "Not Available",
+//            typeOfList = typeOfList.name,
+            rchId = rchId ?: "Not Available",
+            hrpStatus = hrpStatus,
+            form1Filled = ecrFilled,
             syncState = syncState
         )
     }

@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.ui.home_activity.death_reports.mdsr.MdsrObjectViewModel
@@ -40,69 +41,43 @@ class EligibleCoupleRegFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        viewModel.benName.observe(viewLifecycleOwner) {
-//            binding.tvBenName.text = it
-//        }
-//        viewModel.benAgeGender.observe(viewLifecycleOwner) {
-//            binding.tvAgeGender.text = it
-//        }
-//        binding.btnSubmit.setOnClickListener{
-//            if(validate()) viewModel.submitForm()
-//        }
-//        viewModel.exists.observe(viewLifecycleOwner) { exists ->
-//            val adapter = FormInputAdapterOld(isEnabled = !exists)
-//            binding.form.rvInputForm.adapter = adapter
-//            if (exists) {
-//                binding.btnSubmit.visibility = View.GONE
-////                binding.mdsrForm.inputForm.rvInputForm.apply {
-////                    isClickable = false
-////                    isFocusable = false
-////                }
-//                viewModel.setExistingValues()
-//            } else {
-//
-//                viewModel.address.observe(viewLifecycleOwner) {
-//                    viewModel.setAddress(it, adapter)
-//                }
-//            }
-//            lifecycleScope.launch{
-//                adapter.submitList(viewModel.getFirstPage(adapter))
-//            }
-//        }
-//        viewModel.state.observe(viewLifecycleOwner) {
-//            when(it) {
-//                MdsrObjectViewModel.State.LOADING -> {
-//                    binding.cvPatientInformation.visibility = View.GONE
-//                    binding.form.rvInputForm.visibility = View.GONE
-//                    binding.btnSubmit.visibility = View.GONE
-//                    binding.pbForm.visibility = View.VISIBLE
-//                }
-//                MdsrObjectViewModel.State.SUCCESS -> {
-//                    findNavController().navigateUp()
-//                    WorkerUtils.triggerD2dSyncWorker(requireContext())
-//                }
-//                MdsrObjectViewModel.State.FAIL -> {
-//                    binding.cvPatientInformation.visibility = View.VISIBLE
-//                    binding.form.rvInputForm.visibility = View.VISIBLE
-//                    binding.btnSubmit.visibility = View.VISIBLE
-//                    binding.pbForm.visibility = View.GONE
-//                    Toast.makeText(context, "Saving Mdsr to database Failed!", Toast.LENGTH_LONG).show()
-//                }
-//                else -> {
-//                    binding.cvPatientInformation.visibility = View.VISIBLE
-//                    binding.form.rvInputForm.visibility = View.VISIBLE
-//                    binding.btnSubmit.visibility = View.VISIBLE
-//                    binding.pbForm.visibility = View.GONE
-//                }
-//            }
-//        }
+        viewModel.recordExists.observe(viewLifecycleOwner) { notIt ->
+            notIt?.let { recordExists ->
+//                binding.fabEdit.visibility = if(recordExists) View.VISIBLE else View.GONE
+                val adapter = FormInputAdapter(
+                    formValueListener = FormInputAdapter.FormValueListener { formId, index ->
+                        viewModel.updateListOnValueChanged(formId, index)
+                    }, isEnabled = !recordExists
+                )
+                binding.form.rvInputForm.adapter = adapter
+                lifecycleScope.launch {
+                    viewModel.formList.collect {
+                        adapter.submitList(it)
+
+                    }
+                }
+            }
+        }
+        viewModel.benName.observe(viewLifecycleOwner) {
+            binding.tvBenName.text = it
+        }
+        viewModel.benAgeGender.observe(viewLifecycleOwner) {
+            binding.tvAgeGender.text = it
+        }
+        binding.btnSubmit.setOnClickListener {
+            submitEligibleCoupleForm()
+        }
     }
 
-
+    private fun submitEligibleCoupleForm() {
+        if (validate()) {
+            viewModel.saveForm()
+        }
+    }
 
     fun validate(): Boolean {
         val result = binding.form.rvInputForm.adapter?.let {
-            (it as FormInputAdapterOld).validateInput()
+            (it as FormInputAdapter).validateInput(resources)
         }
         Timber.d("Validation : $result")
         return if (result == -1)
