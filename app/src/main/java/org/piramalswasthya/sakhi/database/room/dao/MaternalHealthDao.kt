@@ -3,7 +3,7 @@ package org.piramalswasthya.sakhi.database.room.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import org.piramalswasthya.sakhi.model.EligibleCoupleTracking
+import org.piramalswasthya.sakhi.model.EligibleCoupleTrackingCache
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 
 @Dao
@@ -13,12 +13,12 @@ interface MaternalHealthDao {
     fun getSavedRecord(benId : Long) : PregnantWomanRegistrationCache?
 
     @Query("select * from eligible_couple_tracking where benId = :benId order by visitDate limit 1")
-    fun getEct(benId : Long) : EligibleCoupleTracking?
+    fun getEct(benId : Long) : EligibleCoupleTrackingCache?
 
     @Insert
     suspend fun saveRecord(pregnancyRegistrationForm: PregnantWomanRegistrationCache)
 
     @Insert
-    suspend fun saveRecord(eligibleCoupleTracking: EligibleCoupleTracking)
+    suspend fun saveRecord(eligibleCoupleTrackingCache: EligibleCoupleTrackingCache)
 
 }

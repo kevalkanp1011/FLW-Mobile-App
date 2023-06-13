@@ -4,9 +4,6 @@ import android.content.Context
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.*
-import java.text.DateFormat
-import java.util.Date
-import java.util.concurrent.TimeUnit
 
 class EligibleCoupleTrackingDataset (
     context: Context, currentLanguage: Languages
@@ -94,7 +91,7 @@ class EligibleCoupleTrackingDataset (
     )
 
 
-    suspend fun setUpPage(ben: BenRegCache?, saved: EligibleCoupleTracking?) {
+    suspend fun setUpPage(ben: BenRegCache?, saved: EligibleCoupleTrackingCache?) {
         val list = mutableListOf(
             dateOfVisit,
             financialYear,
@@ -111,10 +108,6 @@ class EligibleCoupleTrackingDataset (
 
         ben?.let {
             dateOfVisit.min = it.regDate
-//            rchId.value = ben.rchId
-//            name.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
-//            husbandName.value = ben.genDetails?.spouseName
-//            age.value = BenBasicCache.getAgeFromDob(ben.dob).toString()
         }
         setUpPage(list)
 
@@ -159,7 +152,7 @@ class EligibleCoupleTrackingDataset (
     }
 
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
-        (cacheModel as EligibleCoupleTracking).let { form ->
+        (cacheModel as EligibleCoupleTrackingCache).let { form ->
             form.visitDate = getLongFromDate(dateOfVisit.value)
             form.isPregnancyTestDone = isPregnancyTestDone.value
             form.pregnancyTestResult= pregnancyTestResult.value

@@ -5,7 +5,6 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import org.piramalswasthya.sakhi.configuration.FormDataModel
-import java.util.Date
 
 @Entity(
     tableName = "ELIGIBLE_COUPLE_TRACKING",
@@ -19,7 +18,7 @@ import java.util.Date
     indices = [Index(name = "ind_ect", value = ["benId",/* "hhId"*/])]
 )
 
-data class EligibleCoupleTracking (
+data class EligibleCoupleTrackingCache (
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val benId : Long,

@@ -9,9 +9,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.EligibleCoupleTrackingDataset
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.model.EligibleCoupleTracking
+import org.piramalswasthya.sakhi.model.EligibleCoupleTrackingCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
-import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
+import org.piramalswasthya.sakhi.repositories.EcrRepo
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -20,7 +20,7 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     preferenceDao: PreferenceDao,
     @ApplicationContext context: Context,
-    private val maternalHealthRepo: MaternalHealthRepo,
+    private val ecrRepo: EcrRepo,
     private val benRepo: BenRepo
 ) : ViewModel() {
     val benId =
@@ -50,20 +50,20 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
 
     var isPregnant: Boolean = false
 
-    private lateinit var eligibleCoupleTracking: EligibleCoupleTracking
+    private lateinit var eligibleCoupleTracking: EligibleCoupleTrackingCache
 
     init {
         viewModelScope.launch {
-            val ben = maternalHealthRepo.getBenFromId(benId)?.also { ben ->
+            val ben = ecrRepo.getBenFromId(benId)?.also { ben ->
                 _benName.value =
                     "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
                 _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
-                eligibleCoupleTracking = EligibleCoupleTracking(
+                eligibleCoupleTracking = EligibleCoupleTrackingCache(
                     benId = ben.beneficiaryId,
                 )
             }
 
-            maternalHealthRepo.getEct(benId)?.let {
+            ecrRepo.getEct(benId)?.let {
                 eligibleCoupleTracking = it
                 _recordExists.value = true
             } ?: run {
@@ -97,11 +97,11 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
                     _state.postValue(State.SAVING)
 
                     dataset.mapValues(eligibleCoupleTracking, 1)
-                    maternalHealthRepo.saveEct(eligibleCoupleTracking)
+                    ecrRepo.saveEct(eligibleCoupleTracking)
                     isPregnant = (eligibleCoupleTracking.isPregnant == "Yes") ||
                         (eligibleCoupleTracking.pregnancyTestResult == "Positive")
                     if (isPregnant) {
-                        maternalHealthRepo.getBenFromId(benId)?.let{
+                        ecrRepo.getBenFromId(benId)?.let{
                             dataset.updateBen(it)
                             benRepo.persistRecord(it)
                         }
