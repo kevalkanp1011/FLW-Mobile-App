@@ -13,6 +13,10 @@
             name="clickListener"
             type="org.piramalswasthya.sakhi.adapters.BenListAdapter.BenClickListener" />
 
+        <variable
+            name="showAbha"
+            type="Boolean" />
+
     </data>
 
     <androidx.cardview.widget.CardView
@@ -245,6 +249,7 @@
                     android:baselineAligned="false"
                     android:orientation="horizontal"
                     android:weightSum="3"
+                    showLayout="@{showAbha}"
                     android:layout_below="@id/ll_row_4">
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_abha"

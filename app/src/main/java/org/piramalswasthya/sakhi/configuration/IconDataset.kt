@@ -7,6 +7,8 @@ import org.piramalswasthya.sakhi.model.ChildImmunizationCategory
 import org.piramalswasthya.sakhi.model.Icon
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import org.piramalswasthya.sakhi.ui.home_activity.child_care.ChildCareFragmentDirections
+import org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.EligibleCoupleFragment
+import org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.EligibleCoupleFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.immunization_due.ImmunizationDueTypeFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.immunization_due.child_immunization.categories.ChildImmunizationCategoriesFragmentDirections
@@ -110,6 +112,23 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             recordsRepo.adolescentListCount,
             ChildCareFragmentDirections.actionChildCareFragmentToAdolescentListFragment()
         )
+    )
+
+    fun getEligibleCoupleDataset(resources: Resources) = listOf(
+        Icon(
+            R.drawable.ic__eligible_couple,
+            resources.getString(R.string.icon_title_ecr),
+//            recordsRepo.pregnantListCount,
+            null,
+            MotherCareFragmentDirections.actionMotherCareFragmentToPwAncVisitsFragment()
+        ),
+        Icon(
+            R.drawable.ic__eligible_couple,
+            resources.getString(R.string.icon_title_ect),
+//            recordsRepo.pregnantListCount,
+            null,
+            EligibleCoupleFragmentDirections.actionEligibleCoupleFragmentToEligibleCoupleTrackingListFragment()
+        ),
     )
 
     fun getMotherCareDataset(resources: Resources) = listOf(

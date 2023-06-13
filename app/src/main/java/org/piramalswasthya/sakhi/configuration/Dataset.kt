@@ -53,6 +53,24 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
             return date?.time ?: 0L
         }
 
+        fun getFinancialYear(dateString: String?) : String? {
+            val f = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+            val date = dateString?.let { f.parse(it) }
+            return date?.let {
+                if (it.month >=3) {
+                    "" + (it.year + 1900) + " - " + (it.year + 1902)
+                } else {
+                    "" + (it.year + 1899) + " - " + (it.year + 1901)
+                }
+            }
+        }
+
+        fun getMonth(dateString: String?) : Int? {
+            val f = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+            val date = dateString?.let { f.parse(it) }
+            return (date?.month?.minus(1))
+        }
+
         fun getDateFromLong(dateLong: Long): String? {
             if (dateLong == 0L) return null
             val cal = Calendar.getInstance()

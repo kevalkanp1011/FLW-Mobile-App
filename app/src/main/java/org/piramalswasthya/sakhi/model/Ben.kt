@@ -233,6 +233,26 @@ data class BenBasicCache(
         )
     }
 
+    fun asBenBasicDomainModelECTForm(): BenBasicDomainForForm {
+        return BenBasicDomainForForm(
+            benId = benId,
+            hhId = hhId,
+            regDate = dateFormat.format(Date(regDate)),
+            benName = benName,
+            benSurname = benSurname ?: "Not Available",
+            gender = gender.name,
+            dob = dob,
+            mobileNo = mobileNo.toString(),
+            fatherName = fatherName,
+            familyHeadName = familyHeadName ?: "Not Available",
+//            typeOfList = typeOfList.name,
+            rchId = rchId ?: "Not Available",
+            hrpStatus = hrpStatus,
+            form1Filled = pmsmaFilled,
+            syncState = syncState
+        )
+    }
+
     fun asBasicDomainModelForPmjayForm(): BenBasicDomainForForm {
         return BenBasicDomainForForm(
             benId = benId,

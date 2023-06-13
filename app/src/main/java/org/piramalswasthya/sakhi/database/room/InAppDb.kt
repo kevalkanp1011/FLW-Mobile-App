@@ -21,20 +21,7 @@ import org.piramalswasthya.sakhi.database.room.dao.MdsrDao
 import org.piramalswasthya.sakhi.database.room.dao.PmjayDao
 import org.piramalswasthya.sakhi.database.room.dao.PmsmaDao
 import org.piramalswasthya.sakhi.database.room.dao.UserDao
-import org.piramalswasthya.sakhi.model.BenBasicCache
-import org.piramalswasthya.sakhi.model.BenRegCache
-import org.piramalswasthya.sakhi.model.CDRCache
-import org.piramalswasthya.sakhi.model.CbacCache
-import org.piramalswasthya.sakhi.model.FPOTCache
-import org.piramalswasthya.sakhi.model.HBNCCache
-import org.piramalswasthya.sakhi.model.HouseholdCache
-import org.piramalswasthya.sakhi.model.ImmunizationCache
-import org.piramalswasthya.sakhi.model.MDSRCache
-import org.piramalswasthya.sakhi.model.PMJAYCache
-import org.piramalswasthya.sakhi.model.PMSMACache
-import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
-import org.piramalswasthya.sakhi.model.UserCache
-import org.piramalswasthya.sakhi.model.Vaccine
+import org.piramalswasthya.sakhi.model.*
 import timber.log.Timber
 
 @Database(
@@ -52,7 +39,8 @@ import timber.log.Timber
         HBNCCache::class,
         Vaccine::class,
         ImmunizationCache::class,
-        PregnantWomanRegistrationCache::class
+        PregnantWomanRegistrationCache::class,
+        EligibleCoupleTracking::class
     ],
     views = [BenBasicCache::class],
     version = 3, exportSchema = false

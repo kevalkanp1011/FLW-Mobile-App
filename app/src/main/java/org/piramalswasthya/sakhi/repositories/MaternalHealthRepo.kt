@@ -5,6 +5,7 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.MaternalHealthDao
 import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.EligibleCoupleTracking
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import javax.inject.Inject
 
@@ -19,6 +20,11 @@ class MaternalHealthRepo @Inject constructor(
         }
     }
 
+    suspend fun getEct(benId: Long): EligibleCoupleTracking? {
+        return withContext(Dispatchers.IO) {
+            maternalHealthDao.getEct(benId)
+        }
+    }
     suspend fun getBenFromId(benId: Long): BenRegCache? {
         return withContext(Dispatchers.IO){
             benDao.getBen(benId)
@@ -28,6 +34,12 @@ class MaternalHealthRepo @Inject constructor(
     suspend fun persistRecord(pregnancyRegistrationForm: PregnantWomanRegistrationCache) {
         withContext(Dispatchers.IO){
             maternalHealthDao.saveRecord(pregnancyRegistrationForm)
+        }
+    }
+
+    suspend fun saveEct(eligibleCoupleTracking: EligibleCoupleTracking) {
+        withContext(Dispatchers.IO){
+            maternalHealthDao.saveRecord(eligibleCoupleTracking)
         }
     }
 

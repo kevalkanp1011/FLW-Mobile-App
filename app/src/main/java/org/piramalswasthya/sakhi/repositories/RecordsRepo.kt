@@ -23,7 +23,7 @@ class RecordsRepo @Inject constructor(
     fun getBenListCount() = benDao.getAllBenCount(selectedVillage)
 
     fun getEligibleCoupleList() = benDao.getAllEligibleCoupleList(selectedVillage)
-        .map { list -> list.map { it.asBasicDomainModel() } }
+        .map { list -> list.map { it.asBenBasicDomainModelECTForm() } }
     fun getEligibleCoupleListCount() = benDao.getAllEligibleCoupleListCount(selectedVillage)
 
     val pregnantList = benDao.getAllPregnancyWomenList(selectedVillage)

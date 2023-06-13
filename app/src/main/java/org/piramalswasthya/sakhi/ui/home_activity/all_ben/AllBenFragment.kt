@@ -78,8 +78,9 @@ class AllBenFragment : Fragment() {
             },
             { benId, hhId ->
                 checkAndGenerateABHA(benId)
-            }
-        ))
+            },
+
+        ),true)
         binding.rvAny.adapter = benAdapter
         lifecycleScope.launch {
             viewModel.benList.collect{

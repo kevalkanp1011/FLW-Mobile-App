@@ -87,7 +87,11 @@
         android:id="@+id/eligibleCoupleFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.EligibleCoupleFragment"
         android:label="@string/icon_title_ec"
-        tools:layout="@layout/fragment_eligible_couple" />
+        tools:layout="@layout/rv_icon_grid">
+        <action
+            android:id="@+id/action_eligibleCoupleFragment_to_eligibleCoupleTrackingListFragment"
+            app:destination="@id/eligibleCoupleTrackingListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/childCareFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.child_care.ChildCareFragment"
@@ -596,6 +600,28 @@
         <argument
             android:name="benId"
             app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/eligibleCoupleTrackingListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.tracking.list.EligibleCoupleTrackingListFragment"
+        android:label="EligibleCoupleTrackingListFragment" >
+        <action
+            android:id="@+id/action_eligibleCoupleTrackingListFragment_to_eligibleCoupleTrackingFormFragment"
+            app:destination="@id/eligibleCoupleTrackingFormFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/eligibleCoupleTrackingFormFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.tracking.form.EligibleCoupleTrackingFormFragment"
+        android:label="EligibleCoupleTrackingFormFragment">
+    <argument
+        android:name="benId"
+        app:argType="long" />
+        <action
+            android:id="@+id/action_eligibleCoupleTrackingFormFragment_to_pregnancyRegistrationFormFragment"
+            app:destination="@id/pregnancyRegistrationFormFragment" />
+        <action
+            android:id="@+id/action_eligibleCoupleTrackingFormFragment_to_eligibleCoupleTrackingListFragment"
+            app:destination="@id/eligibleCoupleTrackingListFragment" />
     </fragment>
 
 </navigation>

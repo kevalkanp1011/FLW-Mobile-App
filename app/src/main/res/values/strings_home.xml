@@ -33,6 +33,8 @@
     <string name="icon_title_acc">Adolescent List</string>
     <string name="icon_title_pmr">Pregnant Women Registration</string>
     <string name="icon_title_pmt">ANC Visits</string>
+    <string name="icon_title_ecr">Eligible Couple Registration</string>
+    <string name="icon_title_ect">Eligible Couple Tracking</string>
     <string name="icon_title_dmc">Delivery Stage List</string>
     <string name="icon_title_pncmc">PNC Mother List</string>
     <string name="icon_title_rmc">Reproductive Age List</string>

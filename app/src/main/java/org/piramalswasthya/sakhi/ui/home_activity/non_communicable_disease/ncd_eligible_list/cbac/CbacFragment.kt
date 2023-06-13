@@ -23,6 +23,12 @@ class CbacFragment : Fragment() {
 
     private val viewModel: CbacViewModel by viewModels()
 
+    private var totalScorePopupShown: Boolean = false
+
+    private var ed1PopupShown: Boolean = false
+
+    private var ed2PopupShown: Boolean = false
+
     private val alertDialog by lazy {
         AlertDialog.Builder(requireContext())
             .setTitle("MISSING FIELD")
@@ -135,7 +141,11 @@ class CbacFragment : Fragment() {
             if (it.substring(it.lastIndexOf(' ') + 1).toInt() >= 4) {
                 binding.ncdSusValidDisplay.visibility = View.VISIBLE
                 viewModel.setFlagForNcd(true)
-                raAlertDialog.show()
+                if (!totalScorePopupShown) {
+                    raAlertDialog.show()
+                    totalScorePopupShown = true
+                }
+
             } else {
                 if (binding.ncdSusValidDisplay.visibility != View.GONE) {
                     binding.ncdSusValidDisplay.visibility = View.GONE
@@ -158,7 +168,10 @@ class CbacFragment : Fragment() {
             if (it > 0) {
                 binding.tvTbSputumCollect.visibility = View.VISIBLE
                 viewModel.setCollectSputum(1)
-                ast1AlertDialog.show()
+                if (!ed1PopupShown) {
+                    ast1AlertDialog.show()
+                    ed1PopupShown = true
+                }
             } else {
                 binding.tvTbSputumCollect.visibility = View.GONE
                 viewModel.setCollectSputum(1)
@@ -168,7 +181,10 @@ class CbacFragment : Fragment() {
             if (it > 0) {
                 binding.tbSusValidDisplay.visibility = View.VISIBLE
                 viewModel.setTraceAllMembers(1)
-                ast2AlertDialog.show()
+                if (!ed2PopupShown) {
+                    ast2AlertDialog.show()
+                    ed2PopupShown = true
+                }
             } else {
                 binding.tbSusValidDisplay.visibility = View.GONE
                 viewModel.setTraceAllMembers(0)
@@ -187,7 +203,6 @@ class CbacFragment : Fragment() {
             when (id) {
                 R.id.rb_yes -> viewModel.setFhTb(1)
                 R.id.rb_no -> viewModel.setFhTb(2)
-
             }
         }
         binding.cbacTakingTbDrug.cbacEdRg.setOnCheckedChangeListener { _, id ->

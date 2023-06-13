@@ -82,6 +82,13 @@ fun TextInputEditText.setAllAlphabetCaps(allCaps: Boolean) {
     }
 }
 
+@BindingAdapter("showLayout")
+fun LinearLayout.setVisibilityOfLayout(show: Boolean?) {
+    show?.let {
+        visibility = if (it) View.VISIBLE else View.GONE
+    }
+}
+
 @BindingAdapter("radioForm")
 fun ConstraintLayout.setItems(form: FormInputOld?) {
 //    if(this.childCount!=0)
