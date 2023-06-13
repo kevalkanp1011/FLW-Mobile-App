@@ -31,7 +31,8 @@ import timber.log.Timber
         Vaccine::class,
         ImmunizationCache::class,
         PregnantWomanRegistrationCache::class,
-        EligibleCoupleTrackingCache::class
+        EligibleCoupleTrackingCache::class,
+        TBScreeningCache::class
     ],
     views = [BenBasicCache::class],
     version = 3, exportSchema = false

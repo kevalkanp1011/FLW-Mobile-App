@@ -191,6 +191,12 @@
         <action
             android:id="@+id/action_ncdFragment_to_ncdPriorityListFragment"
             app:destination="@id/ncdPriorityListFragment" />
+        <action
+            android:id="@+id/action_ncdFragment_to_TBScreeningListFragment"
+            app:destination="@id/TBScreeningListFragment" />
+        <action
+            android:id="@+id/action_ncdFragment_to_TBSuspectedListFragment"
+            app:destination="@id/TBSuspectedListFragment" />
     </fragment>
     <fragment
         android:id="@+id/villageLevelFormsFragment"
@@ -675,4 +681,12 @@
             android:id="@+id/action_eligibleCoupleTrackingFormFragment_to_eligibleCoupleTrackingListFragment"
             app:destination="@id/eligibleCoupleTrackingListFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/TBScreeningListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.tb_screening.list.TBScreeningListFragment"
+        android:label="TBScreeningListFragment" />
+    <fragment
+        android:id="@+id/TBSuspectedListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.tb_suspected.list.TBSuspectedListFragment"
+        android:label="TBSuspectedListFragment" />
 </navigation>
