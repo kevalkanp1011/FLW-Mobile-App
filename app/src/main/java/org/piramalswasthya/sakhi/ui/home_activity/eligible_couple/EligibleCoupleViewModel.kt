@@ -12,7 +12,22 @@ import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import javax.inject.Inject
 
 @HiltViewModel
-class EligibleCoupleViewModel @Inject constructor() : ViewModel() {
+class EligibleCoupleViewModel @Inject constructor(
+    recordsRepo: RecordsRepo
+) : ViewModel() {
+
+    private val allBenList = recordsRepo.getEligibleCoupleList()
+    private val filter = MutableStateFlow("")
+    val benList = allBenList.combine(filter) { list, filter ->
+        filterBenList(list, filter)
+    }
+
+    fun filterText(text: String) {
+        viewModelScope.launch {
+            filter.emit(text)
+        }
+
+    }
 
     val scope : CoroutineScope
         get() = viewModelScope

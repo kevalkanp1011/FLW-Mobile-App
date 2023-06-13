@@ -35,6 +35,7 @@
         <item name="nbr_gender_3">Transgender</item>
     </string-array>
 
+    <string name="tracking_date">Date of Visit</string>
 
     <!--    BEN GEN-->
     <string-array name="nbr_reproductive_status_array">

@@ -92,8 +92,8 @@
             android:id="@+id/action_eligibleCoupleFragment_to_eligibleCoupleListFragment"
             app:destination="@id/eligibleCoupleListFragment" />
         <action
-            android:id="@+id/action_eligibleCoupleFragment_to_eligibleTrackingFragment"
-            app:destination="@id/eligibleTrackingFragment" />
+            android:id="@+id/action_eligibleCoupleFragment_to_eligibleCoupleTrackingListFragment"
+            app:destination="@id/eligibleCoupleTrackingListFragment" />
     </fragment>
     <fragment
         android:id="@+id/childCareFragment"
@@ -654,8 +654,25 @@
             app:argType="long" />
     </fragment>
     <fragment
-        android:id="@+id/eligibleTrackingFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.eligible_tracking.EligibleTrackingFragment"
-        android:label="EligibleTrackingFragment" />
-
+        android:id="@+id/eligibleCoupleTrackingListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.tracking.list.EligibleCoupleTrackingListFragment"
+        android:label="EligibleCoupleTrackingListFragment" >
+        <action
+            android:id="@+id/action_eligibleCoupleTrackingListFragment_to_eligibleCoupleTrackingFormFragment"
+            app:destination="@id/eligibleCoupleTrackingFormFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/eligibleCoupleTrackingFormFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.tracking.form.EligibleCoupleTrackingFormFragment"
+        android:label="EligibleCoupleTrackingFormFragment">
+        <argument
+            android:name="benId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_eligibleCoupleTrackingFormFragment_to_pregnancyRegistrationFormFragment"
+            app:destination="@id/pregnancyRegistrationFormFragment" />
+        <action
+            android:id="@+id/action_eligibleCoupleTrackingFormFragment_to_eligibleCoupleTrackingListFragment"
+            app:destination="@id/eligibleCoupleTrackingListFragment" />
+    </fragment>
 </navigation>

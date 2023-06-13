@@ -1,34 +1,30 @@
-package org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.eligible_tracking
+package org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.tracking.list
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
-import org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.eligible_couple_list.EligibleCoupleListFragmentDirections
-import org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.eligible_couple_list.EligibleCoupleListViewModel
 
 @AndroidEntryPoint
-class EligibleTrackingFragment : Fragment() {
+class EligibleCoupleTrackingListFragment : Fragment() {
 
     private var _binding: FragmentDisplaySearchRvButtonBinding? = null
     private val binding: FragmentDisplaySearchRvButtonBinding
         get() = _binding!!
 
-    private val viewModel: EligibleTrackingViewModel by viewModels()
+    private val viewModel: EligibleCoupleTrackingListViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +37,7 @@ class EligibleTrackingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.btnNextPage.visibility = View.GONE
         val benAdapter = BenListAdapterForForm(
             BenListAdapterForForm.ClickListener(
@@ -48,11 +45,11 @@ class EligibleTrackingFragment : Fragment() {
                     Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
                 },
                 { hhId, benId ->
-//                    findNavController().navigate(
-//                        EligibleCoupleListFragmentDirections.actionEligibleCoupleListFragmentToEligibleCoupleRegFragment(
-//                            benId
-//                        )
-//                    )
+                    findNavController().navigate(
+                        EligibleCoupleTrackingListFragmentDirections.actionEligibleCoupleTrackingListFragmentToEligibleCoupleTrackingFormFragment(
+                            benId
+                        )
+                    )
                 }), "Track"
         )
         binding.rvAny.adapter = benAdapter
@@ -63,6 +60,7 @@ class EligibleTrackingFragment : Fragment() {
                     binding.flEmpty.visibility = View.VISIBLE
                 else
                     binding.flEmpty.visibility = View.GONE
+//                viewModel.updateFilledStatus(it)
                 benAdapter.submitList(it)
             }
         }
@@ -93,6 +91,4 @@ class EligibleTrackingFragment : Fragment() {
         super.onDestroy()
         _binding = null
     }
-
-
 }

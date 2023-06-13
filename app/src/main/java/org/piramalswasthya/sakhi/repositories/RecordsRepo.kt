@@ -105,5 +105,5 @@ class RecordsRepo @Inject constructor(
         .map { list -> list.map { it.asBenBasicDomainModelForEligibleCoupleRegistrationForm() } }
 
     fun getEligibleTrackingList() = benDao.getAllEligibleTrackingList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForEligibleCoupleRegistrationForm() } }
+        .map { list -> list.map { it.asBenBasicDomainModelECTForm() } }
 }

@@ -123,8 +123,9 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
         Icon(
             R.drawable.ic__eligible_couple,
             resources.getString(R.string.icon_title_ect),
+//            recordsRepo.pregnantListCount,
             null,
-            EligibleCoupleFragmentDirections.actionEligibleCoupleFragmentToEligibleTrackingFragment()
+            EligibleCoupleFragmentDirections.actionEligibleCoupleFragmentToEligibleCoupleTrackingListFragment()
         )
     )
 

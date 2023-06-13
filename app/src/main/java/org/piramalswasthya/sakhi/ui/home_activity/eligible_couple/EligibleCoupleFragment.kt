@@ -59,6 +59,24 @@ class EligibleCoupleFragment : Fragment() {
         binding.rvIconGrid.adapter = rvAdapter
         rvAdapter.submitList(iconDataset.getEligibleCoupleDataset(resources))
 
+    setUpEligibleCouple()
+    }
+
+    private fun setUpEligibleCouple() {
+        val rvLayoutManager = GridLayoutManager(
+            context,
+            requireContext().resources.getInteger(R.integer.icon_grid_span)
+        )
+        binding.rvIconGrid.layoutManager = rvLayoutManager
+        val rvAdapter = IconGridAdapter(
+            IconGridAdapter.GridIconClickListener {
+                findNavController().navigate(it)
+            },
+            viewModel.scope
+        )
+        binding.rvIconGrid.adapter = rvAdapter
+        rvAdapter.submitList(iconDataset.getEligibleCoupleDataset(resources))
+
     }
 
     override fun onStart() {
