@@ -5,11 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
-import org.piramalswasthya.sakhi.helpers.filterBenList
-import org.piramalswasthya.sakhi.model.BenBasicDomain
-import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
-import org.piramalswasthya.sakhi.repositories.BenRepo
+import org.piramalswasthya.sakhi.helpers.filterPregnantWomanList
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import javax.inject.Inject
 
@@ -21,7 +17,7 @@ class InfantListViewModel @Inject constructor(
     private val allBenList = recordsRepo.infantList
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter){
-            list, filter -> filterBenList(list, filter)
+            list, filter -> filterPregnantWomanList(list, filter)
     }
 
     fun filterText(text: String) {

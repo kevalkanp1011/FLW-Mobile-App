@@ -1,60 +1,86 @@
 package org.piramalswasthya.sakhi.ui.home_activity.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import org.piramalswasthya.sakhi.R
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.databinding.FragmentSchedulerBinding
+import org.piramalswasthya.sakhi.ui.home_activity.home.SchedulerViewModel.State.LOADED
+import org.piramalswasthya.sakhi.ui.home_activity.home.SchedulerViewModel.State.LOADING
+import java.util.Calendar
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [SchedulerFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+@AndroidEntryPoint
 class SchedulerFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+
+    private var _binding: FragmentSchedulerBinding? = null
+    private val binding: FragmentSchedulerBinding
+        get() = _binding!!
+
+
+    private val viewModel: SchedulerViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_scheduler, container, false)
+    ): View {
+        _binding = FragmentSchedulerBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SchedulerFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SchedulerFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.state.observe(viewLifecycleOwner) {
+            when (it) {
+                LOADING -> {
+                    binding.llContent.visibility = View.GONE
+                    binding.pbLoading.visibility = View.VISIBLE
+                }
+
+                LOADED -> {
+                    binding.pbLoading.visibility = View.GONE
+                    binding.llContent.visibility = View.VISIBLE
                 }
             }
+        }
+        viewModel.date.observe(viewLifecycleOwner) {
+            binding.calendarView.date = it
+        }
+        lifecycleScope.launch {
+            viewModel.ancDueCount.collect{
+                binding.tvAnc.text = it.toString()
+            }
+        }
+        binding.cvAnc.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToPwAncVisitsFragment())
+        }
+        binding.cvHrp.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionNavHomeToHrpCasesFragment())
+        }
+        lifecycleScope.launch {
+            viewModel.hrpDueCount.collect{
+                binding.tvHrp.text = it.toString()
+            }
+        }
+        binding.calendarView.setOnDateChangeListener { a, b, c, d ->
+            val calLong = Calendar.getInstance().apply {
+                set(Calendar.YEAR, b)
+                set(Calendar.MONTH, c)
+                set(Calendar.DAY_OF_MONTH, d)
+            }.timeInMillis
+            viewModel.setDate(calLong)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

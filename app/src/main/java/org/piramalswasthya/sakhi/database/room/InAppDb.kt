@@ -11,6 +11,9 @@ import org.piramalswasthya.sakhi.database.converters.LocationEntityListConverter
 import org.piramalswasthya.sakhi.database.converters.SyncStateConverter
 import org.piramalswasthya.sakhi.database.room.dao.*
 import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.model.BenBasicCache
+import org.piramalswasthya.sakhi.model.HBNCCache
+import org.piramalswasthya.sakhi.model.PregnantWomanAncCache
 import timber.log.Timber
 
 @Database(
@@ -31,10 +34,11 @@ import timber.log.Timber
         Vaccine::class,
         ImmunizationCache::class,
         PregnantWomanRegistrationCache::class,
-        EligibleCoupleTracking::class
+        EligibleCoupleTracking::class,
+        PregnantWomanAncCache::class
     ],
     views = [BenBasicCache::class],
-    version = 3, exportSchema = false
+    version = 1, exportSchema = false
 )
 
 @TypeConverters(LocationEntityListConverter::class, SyncStateConverter::class)

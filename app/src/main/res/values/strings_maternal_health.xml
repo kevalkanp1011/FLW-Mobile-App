@@ -2,6 +2,8 @@
 <resources>
 
 
+    <string name="anc_visit_number">ANC Visit %1d</string>
+
     <string-array name="maternal_health_pregnancy_week">
         <item>12 weeks</item>
         <item>14 – 22 weeks</item>

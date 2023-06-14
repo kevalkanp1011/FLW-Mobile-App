@@ -229,7 +229,7 @@ class NewHouseholdViewModel @Inject constructor(
 //            withContext(Dispatchers.IO) {
 //                household?.let {
 //                    dataset.mapValues(it, mTabPosition)
-//                    householdRepo.persistRecord(it)
+//                    householdRepo.persistRegisterRecord(it)
 //                }
 //
 //            }

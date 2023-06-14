@@ -16,7 +16,6 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
-import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 
 @AndroidEntryPoint
 class HrpCasesFragment : Fragment() {
@@ -27,7 +26,6 @@ class HrpCasesFragment : Fragment() {
 
     private val viewModel: HrpCasesViewModel by viewModels()
 
-    private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
