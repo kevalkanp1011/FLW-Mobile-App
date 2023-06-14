@@ -46,7 +46,7 @@ class TBSuspectedListFragment: Fragment() {
                 },
                 { hhId, benId ->
                     findNavController().navigate(
-                        EligibleCoupleListFragmentDirections.actionEligibleCoupleListFragmentToEligibleCoupleRegFragment(
+                        TBSuspectedListFragmentDirections.actionTBSuspectedListFragmentToTBSuspectedFragment(
                             benId
                         )
                     )

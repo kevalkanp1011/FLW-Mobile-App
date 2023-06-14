@@ -694,11 +694,23 @@
     <fragment
         android:id="@+id/TBSuspectedListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.tb_suspected.list.TBSuspectedListFragment"
-        android:label="TBSuspectedListFragment" />
+        android:label="TBSuspectedListFragment" >
+        <action
+            android:id="@+id/action_TBSuspectedListFragment_to_TBSuspectedFragment"
+            app:destination="@id/TBSuspectedFragment" />
+    </fragment>
     <fragment
         android:id="@+id/TBScreeningFormFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.tb_screening.form.TBScreeningFormFragment"
         android:label="TBScreeningFormFragment">
+        <argument
+            android:name="benId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/TBSuspectedFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.tb_suspected.form.TBSuspectedFragment"
+        android:label="TBSuspectedFragment" >
         <argument
             android:name="benId"
             app:argType="long" />

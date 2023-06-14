@@ -323,6 +323,384 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         min = 0,
     )
 
+    private val thirdChildDetails = FormElement(
+        id = 26,
+        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        title = "Details of 3rd Child",
+        arrayId = -1,
+        required = false
+    )
+
+    private val dob3 = FormElement(
+        id = 27,
+        inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
+        title = "3rd Child Date of Birth",
+        arrayId = -1,
+        required = true,
+        hasDependants = true,
+        max = getMaxDobMillis(),
+        min = getMinDobMillis(),
+    )
+
+    private val age3 = FormElement(
+        id = 28,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        title = "3rd Child Age",
+        arrayId = -1,
+        required = true,
+        hasDependants = true,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 2,
+        max = Konstants.maxAgeForAdolescent.toLong(),
+        min = 1,
+    )
+
+    private val gender3 = FormElement(
+        id = 29,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        title = "3rd Child Sex",
+        arrayId = -1,
+        entries = resources.getStringArray(R.array.ecr_gender_array),
+        required = true,
+        hasDependants = true,
+    )
+
+    private val SecondAndThirdChildGap = FormElement(
+        id = 30,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        title = "Gap between 2nd child and 3rd Child",
+        arrayId = -1,
+        required = true,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 2,
+        max = 99,
+        min = 0,
+    )
+
+    private val fourthChildDetails = FormElement(
+        id = 31,
+        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        title = "Details of 4th Child",
+        arrayId = -1,
+        required = false
+    )
+
+    private val dob4 = FormElement(
+        id = 32,
+        inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
+        title = "4th Child Date of Birth",
+        arrayId = -1,
+        required = true,
+        hasDependants = true,
+        max = getMaxDobMillis(),
+        min = getMinDobMillis(),
+    )
+
+    private val age4 = FormElement(
+        id = 33,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        title = "4th Child Age",
+        arrayId = -1,
+        required = true,
+        hasDependants = true,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 2,
+        max = Konstants.maxAgeForAdolescent.toLong(),
+        min = 1,
+    )
+
+    private val gender4 = FormElement(
+        id = 34,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        title = "4th Child Sex",
+        arrayId = -1,
+        entries = resources.getStringArray(R.array.ecr_gender_array),
+        required = true,
+        hasDependants = true,
+    )
+
+    private val thirdAndFourthChildGap = FormElement(
+        id = 35,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        title = "Gap between 3rd Child and 4th Child",
+        arrayId = -1,
+        required = true,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 2,
+        max = 99,
+        min = 0,
+    )
+
+    private val fifthChildDetails = FormElement(
+        id = 36,
+        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        title = "Details of 2nd Child",
+        arrayId = -1,
+        required = false
+    )
+
+    private val dob5 = FormElement(
+        id = 37,
+        inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
+        title = "5th Child Date of Birth",
+        arrayId = -1,
+        required = true,
+        hasDependants = true,
+        max = getMaxDobMillis(),
+        min = getMinDobMillis(),
+    )
+
+    private val age5 = FormElement(
+        id = 38,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        title = "5th Child Age",
+        arrayId = -1,
+        required = true,
+        hasDependants = true,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 2,
+        max = Konstants.maxAgeForAdolescent.toLong(),
+        min = 1,
+    )
+
+    private val gender5 = FormElement(
+        id = 39,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        title = "5th Child Sex",
+        arrayId = -1,
+        entries = resources.getStringArray(R.array.ecr_gender_array),
+        required = true,
+        hasDependants = true,
+    )
+
+    private val fourthAndFifthChildGap = FormElement(
+        id = 40,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        title = "Gap between 4th child and 5th Child",
+        arrayId = -1,
+        required = true,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 2,
+        max = 99,
+        min = 0,
+    )
+
+    private val sixthChildDetails = FormElement(
+        id = 41,
+        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        title = "Details of 6th Child",
+        arrayId = -1,
+        required = false
+    )
+
+    private val dob6 = FormElement(
+        id = 42,
+        inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
+        title = "6th Child Date of Birth",
+        arrayId = -1,
+        required = true,
+        hasDependants = true,
+        max = getMaxDobMillis(),
+        min = getMinDobMillis(),
+    )
+
+    private val age6 = FormElement(
+        id = 43,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        title = "6th Child Age",
+        arrayId = -1,
+        required = true,
+        hasDependants = true,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 2,
+        max = Konstants.maxAgeForAdolescent.toLong(),
+        min = 1,
+    )
+
+    private val gender6 = FormElement(
+        id = 44,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        title = "6th Child Sex",
+        arrayId = -1,
+        entries = resources.getStringArray(R.array.ecr_gender_array),
+        required = true,
+        hasDependants = true,
+    )
+
+    private val fifthAndSixthChildGap = FormElement(
+        id = 45,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        title = "Gap between 5th child and 6th Child",
+        arrayId = -1,
+        required = true,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 2,
+        max = 99,
+        min = 0,
+    )
+
+    private val seventhChildDetails = FormElement(
+        id = 46,
+        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        title = "Details of 7th Child",
+        arrayId = -1,
+        required = false
+    )
+
+    private val dob7 = FormElement(
+        id = 47,
+        inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
+        title = "7th Child Date of Birth",
+        arrayId = -1,
+        required = true,
+        hasDependants = true,
+        max = getMaxDobMillis(),
+        min = getMinDobMillis(),
+    )
+
+    private val age7 = FormElement(
+        id = 48,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        title = "7th Child Age",
+        arrayId = -1,
+        required = true,
+        hasDependants = true,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 2,
+        max = Konstants.maxAgeForAdolescent.toLong(),
+        min = 1,
+    )
+
+    private val gender7 = FormElement(
+        id = 49,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        title = "7th Child Sex",
+        arrayId = -1,
+        entries = resources.getStringArray(R.array.ecr_gender_array),
+        required = true,
+        hasDependants = true,
+    )
+
+    private val sixthAndSeventhChildGap = FormElement(
+        id = 50,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        title = "Gap between 6th child and 7th Child",
+        arrayId = -1,
+        required = true,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 2,
+        max = 99,
+        min = 0,
+    )
+
+    private val eighthChildDetails = FormElement(
+        id = 51,
+        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        title = "Details of 8th Child",
+        arrayId = -1,
+        required = false
+    )
+
+    private val dob8 = FormElement(
+        id = 52,
+        inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
+        title = "8th Child Date of Birth",
+        arrayId = -1,
+        required = true,
+        hasDependants = true,
+        max = getMaxDobMillis(),
+        min = getMinDobMillis(),
+    )
+
+    private val age8 = FormElement(
+        id = 53,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        title = "8th Child Age",
+        arrayId = -1,
+        required = true,
+        hasDependants = true,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 2,
+        max = Konstants.maxAgeForAdolescent.toLong(),
+        min = 1,
+    )
+
+    private val gender8 = FormElement(
+        id = 54,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        title = "8th Child Sex",
+        arrayId = -1,
+        entries = resources.getStringArray(R.array.ecr_gender_array),
+        required = true,
+        hasDependants = true,
+    )
+
+    private val seventhAndEighthChildGap = FormElement(
+        id = 55,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        title = "Gap between 7th child and 8th Child",
+        arrayId = -1,
+        required = true,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 2,
+        max = 99,
+        min = 0,
+    )
+
+    private val ninthChildDetails = FormElement(
+        id = 56,
+        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        title = "Details of 9th Child",
+        arrayId = -1,
+        required = false
+    )
+
+    private val dob9 = FormElement(
+        id = 57,
+        inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
+        title = "9th Child Date of Birth",
+        arrayId = -1,
+        required = true,
+        hasDependants = true,
+        max = getMaxDobMillis(),
+        min = getMinDobMillis(),
+    )
+
+    private val age9 = FormElement(
+        id = 58,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        title = "9th Child Age",
+        arrayId = -1,
+        required = true,
+        hasDependants = true,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 2,
+        max = Konstants.maxAgeForAdolescent.toLong(),
+        min = 1,
+    )
+
+    private val gender9 = FormElement(
+        id = 59,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        title = "9th Child Sex",
+        arrayId = -1,
+        entries = resources.getStringArray(R.array.ecr_gender_array),
+        required = true,
+        hasDependants = true,
+    )
+
+    private val eighthAndNinthChildGap = FormElement(
+        id = 60,
+        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        title = "Gap between 8th child and 9th Child",
+        arrayId = -1,
+        required = true,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 2,
+        max = 99,
+        min = 0,
+    )
+
     suspend fun setUpPage(ben: BenRegCache?, saved: EligibleCoupleRegCache?) {
         val list = mutableListOf(
             dateOfReg, rchId, name, husbandName, age, ageAtMarriage, womanDetails, aadharNo, bankAccount, bankName, branchName, ifsc,
