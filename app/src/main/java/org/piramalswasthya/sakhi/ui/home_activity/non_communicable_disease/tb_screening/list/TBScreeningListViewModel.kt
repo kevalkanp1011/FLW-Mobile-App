@@ -15,7 +15,7 @@ class TBScreeningListViewModel @Inject constructor(
     recordsRepo: RecordsRepo
 ) : ViewModel() {
 
-    private val allBenList = recordsRepo.ncdEligibleList
+    private val allBenList = recordsRepo.tbScreeningList
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter){
             list, filter -> filterBenList(list, filter)

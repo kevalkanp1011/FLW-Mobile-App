@@ -181,6 +181,27 @@ data class BenBasicCache(
         )
     }
 
+    fun asBenBasicDomainModelForTbsnForm(): BenBasicDomainForForm {
+        return BenBasicDomainForForm(
+            benId = benId,
+            hhId = hhId,
+            regDate = dateFormat.format(Date(regDate)),
+            benName = benName,
+            benSurname = benSurname ?: "Not Available",
+            gender = gender.name,
+            dob = dob,
+            mobileNo = mobileNo.toString(),
+            fatherName = fatherName,
+            familyHeadName = familyHeadName ?: "Not Available",
+//            typeOfList = typeOfList.name,
+            rchId = rchId ?: "Not Available",
+            hrpStatus = hrpStatus,
+            form1Filled = tbsnFilled,
+            syncState = cbacSyncState
+                ?: throw IllegalStateException("Sync state for cbac is null!!")
+        )
+    }
+
     fun asBenBasicDomainModelForCdrForm(): BenBasicDomainForForm {
         return BenBasicDomainForForm(
             benId = benId,

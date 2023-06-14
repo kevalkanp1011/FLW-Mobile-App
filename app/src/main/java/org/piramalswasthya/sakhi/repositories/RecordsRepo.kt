@@ -50,6 +50,10 @@ class RecordsRepo @Inject constructor(
         .map { list -> list.map { it.asBenBasicDomainModelForCbacForm() } }
     val ncdNonEligibleListCount = ncdNonEligibleList.map { it.size }
 
+    val tbScreeningList = benDao.getAllBen(selectedVillage)
+        .map { list -> list.map { it.asBenBasicDomainModelForTbsnForm() } }
+    val tbScreeningListCount = tbScreeningList.map { it.size }
+
     val menopauseList = benDao.getAllMenopauseStageList(selectedVillage)
         .map { list -> list.map { it.asBasicDomainModel() } }
     val menopauseListCount = menopauseList.map { it.size }

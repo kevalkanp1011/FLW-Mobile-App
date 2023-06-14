@@ -16,7 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
-import org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.eligible_couple_list.EligibleCoupleListFragmentDirections
 
 @AndroidEntryPoint
 class TBScreeningListFragment: Fragment() {
@@ -45,9 +44,10 @@ class TBScreeningListFragment: Fragment() {
                     Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
                 },
                 { hhId, benId ->
-//                    findNavController().navigate(
-                        // navigate to form
-//                    )
+                    findNavController().navigate(
+                        TBScreeningListFragmentDirections
+                            .actionTBScreeningListFragmentToTBScreeningFormFragment(benId = benId)
+                    )
                 }), "Screen"
         )
         binding.rvAny.adapter = benAdapter

@@ -23,15 +23,12 @@ data class TBScreeningCache (
     val id: Int = 0,
     val benId : Long,
     var visitDate: Long = System.currentTimeMillis(),
-    var name: String?,
-    var age: Int?,
-    var sex: String?,
-    var coughMoreThan2Weeks: Boolean?,
-    var bloodInSputum: Boolean?,
-    var feverMoreThan2Weeks: Boolean?,
-    var lossOfWeight: Boolean?,
-    var nightSweats: Boolean?,
-    var historyOfTb: Boolean?,
-    var takingAntiTBDrugs: Boolean?,
-    var familySufferingFromTB: Boolean?
+    var coughMoreThan2Weeks: Boolean? = null,
+    var bloodInSputum: Boolean? = null,
+    var feverMoreThan2Weeks: Boolean? = null,
+    var lossOfWeight: Boolean? = null,
+    var nightSweats: Boolean? = null,
+    var historyOfTb: Boolean? = null,
+    var takingAntiTBDrugs: Boolean? = null,
+    var familySufferingFromTB: Boolean? = null
 ) : FormDataModel

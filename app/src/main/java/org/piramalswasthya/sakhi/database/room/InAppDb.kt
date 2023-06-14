@@ -57,6 +57,7 @@ abstract class InAppDb : RoomDatabase() {
     abstract val ecrDao : EcrDao
     abstract val vaccineDao: ImmunizationDao
     abstract val maternalHealthDao : MaternalHealthDao
+    abstract val tbDao : TBDao
 
     companion object {
         @Volatile

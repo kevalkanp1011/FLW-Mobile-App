@@ -152,6 +152,10 @@
     <string name="cbac_nhop">Needing help from others to perform everyday activities such as eating, getting dressed, grooming, bathing, walking, or using the toilet</string>
     <string name="cbac_forget_names">Forgetting the names of your near ones or your own home address </string>
 
+    <!--TB Screening-->
+    <string name="tb_suspected_alert">Refer to MO and collect the Sputum sample</string>
+    <string name="tb_suspected_family_alert">Refer to MO or inform ANM/MPW to tracing of all family members</string>
+
 
     <!--Valdiateion mesages-->
 
