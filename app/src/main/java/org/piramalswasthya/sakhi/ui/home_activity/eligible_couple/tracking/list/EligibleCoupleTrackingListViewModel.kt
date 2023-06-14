@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.helpers.filterBenList
+import org.piramalswasthya.sakhi.helpers.filterBenFormList
 import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
 import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
@@ -25,7 +25,7 @@ class EligibleCoupleTrackingListViewModel @Inject constructor(
     private val allBenList = recordsRepo.getEligibleTrackingList()
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter) { list, filter ->
-        filterBenList(list, filter)
+        filterBenFormList(list, filter)
     }
 
     suspend fun updateFilledStatus(benBasicDomainForForms: List<BenBasicDomainForForm>) {

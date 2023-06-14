@@ -35,7 +35,7 @@ fun filterForBen(
         ben.fatherName?.lowercase()?.contains(filterText) ?: false
 
 
-fun filterPregnantWomanList(
+fun filterBenFormList(
     list: List<PregnantWomenVisitDomain>,
     filterText: String
 ) =
@@ -48,7 +48,7 @@ fun filterPregnantWomanList(
     }
 
 @JvmName("filterBenList1")
-fun filterPregnantWomanList(
+fun filterBenFormList(
     list: List<BenBasicDomainForForm>,
     text: String
 ): List<BenBasicDomainForForm> {

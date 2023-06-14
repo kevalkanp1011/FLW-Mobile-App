@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.helpers.filterPregnantWomanList
+import org.piramalswasthya.sakhi.helpers.filterBenFormList
 import org.piramalswasthya.sakhi.helpers.getAncStatusList
 import org.piramalswasthya.sakhi.model.AncStatus
 import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
@@ -23,7 +23,7 @@ class PwAncVisitsListViewModel @Inject constructor(
     private val allBenList = recordsRepo.getRegisteredPregnantWomanList()
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter) { list, filter ->
-        filterPregnantWomanList(list, filter)
+        filterBenFormList(list, filter)
     }
 
     private val _bottomSheetList = MutableStateFlow<List<AncStatus>>(emptyList())

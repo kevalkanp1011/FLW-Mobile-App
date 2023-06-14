@@ -5,7 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.helpers.filterPregnantWomanList
+import org.piramalswasthya.sakhi.helpers.filterBenFormList
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import javax.inject.Inject
 
@@ -16,7 +16,7 @@ recordsRepo: RecordsRepo
     private val allBenList = recordsRepo.ncdPriorityList
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter){
-            list, filter -> filterPregnantWomanList(list, filter)
+            list, filter -> filterBenFormList(list, filter)
     }
 
     fun filterText(text: String) {

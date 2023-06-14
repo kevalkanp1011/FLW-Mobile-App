@@ -5,10 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
-import org.piramalswasthya.sakhi.model.AncFormState
-import org.piramalswasthya.sakhi.model.AncStatus
-import org.piramalswasthya.sakhi.model.PregnantWomanAncCache
-import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
+import org.piramalswasthya.sakhi.model.*
 
 @Dao
 interface MaternalHealthDao {
@@ -19,7 +16,6 @@ interface MaternalHealthDao {
     @Query("select * from pregnancy_anc where benId = :benId and visitNumber = :visitNumber limit 1")
     fun getSavedRecord(benId: Long, visitNumber: Int): PregnantWomanAncCache?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     @Query("select * from eligible_couple_tracking where benId = :benId order by visitDate limit 1")
     fun getEct(benId : Long) : EligibleCoupleTracking?
 
