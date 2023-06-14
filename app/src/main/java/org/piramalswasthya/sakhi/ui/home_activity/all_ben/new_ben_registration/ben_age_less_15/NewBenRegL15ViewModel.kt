@@ -110,7 +110,7 @@ class NewBenRegL15ViewModel @Inject constructor(
                         2 -> {
                             dataset.setSecondPage(ben)
 //                            dataset.mapValues(household, 1)
-//                            householdRepo.persistRecord(household)
+//                            householdRepo.persistRegisterRecord(household)
                         }
                     }
                 }

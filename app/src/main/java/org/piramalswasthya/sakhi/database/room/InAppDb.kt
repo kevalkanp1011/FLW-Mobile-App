@@ -32,6 +32,7 @@ import org.piramalswasthya.sakhi.model.ImmunizationCache
 import org.piramalswasthya.sakhi.model.MDSRCache
 import org.piramalswasthya.sakhi.model.PMJAYCache
 import org.piramalswasthya.sakhi.model.PMSMACache
+import org.piramalswasthya.sakhi.model.PregnantWomanAncCache
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import org.piramalswasthya.sakhi.model.UserCache
 import org.piramalswasthya.sakhi.model.Vaccine
@@ -52,10 +53,11 @@ import timber.log.Timber
         HBNCCache::class,
         Vaccine::class,
         ImmunizationCache::class,
-        PregnantWomanRegistrationCache::class
+        PregnantWomanRegistrationCache::class,
+        PregnantWomanAncCache::class
     ],
     views = [BenBasicCache::class],
-    version = 3, exportSchema = false
+    version = 1, exportSchema = false
 )
 
 @TypeConverters(LocationEntityListConverter::class, SyncStateConverter::class)

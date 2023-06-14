@@ -10,7 +10,7 @@ import org.piramalswasthya.sakhi.ui.home_activity.child_care.ChildCareFragmentDi
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.immunization_due.ImmunizationDueTypeFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.immunization_due.child_immunization.categories.ChildImmunizationCategoriesFragmentDirections
-import org.piramalswasthya.sakhi.ui.home_activity.mother_care.MotherCareFragmentDirections
+import org.piramalswasthya.sakhi.ui.home_activity.maternal_health.MotherCareFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.NcdFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.village_level_forms.VillageLevelFormsFragmentDirections
 import javax.inject.Inject

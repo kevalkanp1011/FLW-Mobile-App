@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="visit"
+            type="org.piramalswasthya.sakhi.model.PregnantWomenVisitDomain" />
+
+        <variable
+            name="clickListener"
+            type="org.piramalswasthya.sakhi.adapters.PregnancyVisitListAdapter.PregnancyVisitClickListener" />
+
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_normal"
+        android:backgroundTint="?attr/colorPrimary"
+        android:elevation="@dimen/padding_normal"
+        android:padding="@dimen/padding_wide"
+        app:cardCornerRadius="@dimen/padding_normal"
+        app:cardElevation="@dimen/padding_normal">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="@dimen/padding_normal"
+                    android:text="@{visit.name}"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                    tools:text="TextView" />
+
+                <TextView
+                    android:id="@+id/tv_spouse_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="@dimen/padding_normal"
+                    android:text="@{visit.spouseName}"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                    tools:text="TextView" />
+
+                <TextView
+                    android:id="@+id/tv_age"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="@dimen/padding_normal"
+                    android:text="@{visit.age}"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                    tools:text="TextView" />
+
+                <TextView
+                    android:id="@+id/tv_weeks_of_pregnancy"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="@dimen/padding_normal"
+                    android:text="@{@string/long_to_string(visit.weeksOfPregnancy)}"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                    tools:text="TextView" />
+
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_visit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_normal"
+                android:backgroundTint="?attr/colorSecondary"
+                android:onClick="@{() -> clickListener.onClickedVisit(visit)}"
+                android:text="ANC VISITS"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>
