@@ -36,7 +36,7 @@ class AllBenFragment : Fragment() {
 
     private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
 
-    val abhaDisclaimer by lazy {
+    private val abhaDisclaimer by lazy {
         AlertDialog.Builder(requireContext())
             .setTitle("Beneficiary ABHA Number.")
             .setMessage("it")
@@ -116,10 +116,6 @@ class AllBenFragment : Fragment() {
                 (searchView as EditText).removeTextChangedListener(searchTextWatcher)
 
         }
-    }
-
-    private fun checkAndGenerateABHA(benId: Long) {
-        viewModel.fetchAbha(benId)
 
         viewModel.abha.observe(viewLifecycleOwner) {
             it.let {
@@ -133,13 +129,17 @@ class AllBenFragment : Fragment() {
         viewModel.benRegId.observe(viewLifecycleOwner) {
             if (it != null) {
                 val intent = Intent (requireActivity(), AbhaIdActivity::class.java)
-                intent.putExtra("benId", benId)
+                intent.putExtra("benId", viewModel.benId.value)
                 intent.putExtra("benRegId", it)
                 requireActivity().startActivity(intent)
                 viewModel.resetBenRegId()
             }
 
         }
+    }
+
+    private fun checkAndGenerateABHA(benId: Long) {
+        viewModel.fetchAbha(benId)
     }
 
     override fun onStart() {

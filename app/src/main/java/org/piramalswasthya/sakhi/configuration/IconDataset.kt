@@ -186,7 +186,7 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
         ), Icon(
             R.drawable.ic__ncd_eligibility,
             resources.getString(R.string.icon_title_ncd_tb_screening),
-            recordsRepo.ncdNonEligibleListCount,
+            recordsRepo.tbScreeningListCount,
             NcdFragmentDirections.actionNcdFragmentToTBScreeningListFragment()
         ), Icon(
             R.drawable.ic__death,
