@@ -34,7 +34,7 @@ interface MaternalHealthDao {
     @Query("select * from pregnancy_register reg left outer join pregnancy_anc anc on reg.benId=anc.benId ")
     fun getAllPregnancyRecords(): Flow<Map<PregnantWomanRegistrationCache, List<PregnantWomanAncCache>>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveRecord(eligibleCoupleTracking: EligibleCoupleTracking)
 
 }
