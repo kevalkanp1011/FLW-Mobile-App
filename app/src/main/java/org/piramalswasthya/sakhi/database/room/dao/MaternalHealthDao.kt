@@ -17,9 +17,6 @@ interface MaternalHealthDao {
     @Query("select * from pregnancy_anc where benId = :benId and visitNumber = :visitNumber limit 1")
     fun getSavedRecord(benId: Long, visitNumber: Int): PregnantWomanAncCache?
 
-    @Query("select * from eligible_couple_tracking where benId = :benId order by visitDate limit 1")
-    fun getEct(benId : Long) : EligibleCoupleTracking?
-
     @Insert
     suspend fun saveRecord(pregnancyRegistrationForm: PregnantWomanRegistrationCache)
 
@@ -34,8 +31,5 @@ interface MaternalHealthDao {
 
     @Query("select * from pregnancy_register reg left outer join pregnancy_anc anc on reg.benId=anc.benId ")
     fun getAllPregnancyRecords(): Flow<Map<PregnantWomanRegistrationCache, List<PregnantWomanAncCache>>>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveRecord(eligibleCoupleTracking: EligibleCoupleTracking)
 
 }

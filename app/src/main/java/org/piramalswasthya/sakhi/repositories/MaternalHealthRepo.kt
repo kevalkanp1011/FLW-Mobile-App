@@ -8,14 +8,9 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.MaternalHealthDao
 import org.piramalswasthya.sakhi.helpers.hasPendingAncVisit
-import org.piramalswasthya.sakhi.model.AncFormState
-import org.piramalswasthya.sakhi.model.AncStatus
-import org.piramalswasthya.sakhi.model.BenRegCache
-import org.piramalswasthya.sakhi.model.EligibleCoupleTracking
-import org.piramalswasthya.sakhi.model.PregnantWomanAncCache
-import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
+import org.piramalswasthya.sakhi.model.*
 import timber.log.Timber
-import java.util.Calendar
+import java.util.*
 import javax.inject.Inject
 
 class MaternalHealthRepo @Inject constructor(
@@ -29,11 +24,6 @@ class MaternalHealthRepo @Inject constructor(
         }
     }
 
-    suspend fun getEct(benId: Long): EligibleCoupleTracking? {
-        return withContext(Dispatchers.IO) {
-            maternalHealthDao.getEct(benId)
-        }
-    }
     suspend fun getSavedAncRecord(benId: Long, visitNumber: Int): PregnantWomanAncCache? {
         return withContext(Dispatchers.IO) {
             maternalHealthDao.getSavedRecord(benId, visitNumber)
@@ -52,11 +42,6 @@ class MaternalHealthRepo @Inject constructor(
         }
     }
 
-    suspend fun saveEct(eligibleCoupleTracking: EligibleCoupleTracking) {
-        withContext(Dispatchers.IO){
-            maternalHealthDao.saveRecord(eligibleCoupleTracking)
-        }
-    }
 
     suspend fun getAllAncRecords(benId: Long): List<AncStatus> {
         return withContext(Dispatchers.IO) {
