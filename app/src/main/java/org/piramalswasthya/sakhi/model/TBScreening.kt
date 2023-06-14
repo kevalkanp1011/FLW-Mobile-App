@@ -5,10 +5,9 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import org.piramalswasthya.sakhi.configuration.FormDataModel
-import java.util.Date
 
 @Entity(
-    tableName = "ELIGIBLE_COUPLE_TRACKING",
+    tableName = "TB_SCREENING",
     foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
         parentColumns = arrayOf("beneficiaryId",/* "householdId"*/),
@@ -16,18 +15,20 @@ import java.util.Date
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "ind_ect", value = ["benId",/* "hhId"*/])]
+    indices = [Index(name = "ind_tbsn", value = ["benId",/* "hhId"*/])]
 )
 
-data class EligibleCoupleTracking (
+data class TBScreeningCache (
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val benId : Long,
     var visitDate: Long = System.currentTimeMillis(),
-    var isPregnancyTestDone: String? = null,
-    var pregnancyTestResult: String? = null,
-    var isPregnant: String? = null,
-    var usingFamilyPlanning: Boolean? = null,
-    var methodOfContraception: String? = null
-
+    var coughMoreThan2Weeks: Boolean? = null,
+    var bloodInSputum: Boolean? = null,
+    var feverMoreThan2Weeks: Boolean? = null,
+    var lossOfWeight: Boolean? = null,
+    var nightSweats: Boolean? = null,
+    var historyOfTb: Boolean? = null,
+    var takingAntiTBDrugs: Boolean? = null,
+    var familySufferingFromTB: Boolean? = null
 ) : FormDataModel

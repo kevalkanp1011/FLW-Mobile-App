@@ -121,12 +121,10 @@ class CreateAbhaFragment : Fragment() {
 
         viewModel.createHID(benId, benRegId)
 
-        viewModel.showDisclaimer.observe(viewLifecycleOwner) {
+        viewModel.benMapped.observe(viewLifecycleOwner) {
             it?.let {
-                if (it) {
-                    beneficiaryDisclaimer.setMessage("mapping abha id to beneficiary $benId")
-                    beneficiaryDisclaimer.show()
-                }
+                binding.abhBenMappedTxt.text = "Linked to Beneficiary: $it"
+                binding.llAbhaBenMapped.visibility = View.VISIBLE
             }
         }
         binding.tietAadhaarOtp.addTextChangedListener(object : TextWatcher {
@@ -198,7 +196,7 @@ class CreateAbhaFragment : Fragment() {
                 State.DOWNLOAD_ERROR -> {
                     binding.pbCai.visibility = View.INVISIBLE
                     binding.clCreateAbhaId.visibility = View.VISIBLE
-                    binding.clDownloadAbha.visibility = View.INVISIBLE
+                    binding.clDownloadAbha.visibility = View.GONE
                     binding.clVerifyMobileOtp.visibility = View.VISIBLE
                     binding.tvErrorTextVerify.visibility = View.VISIBLE
                     startResendTimer()
@@ -301,7 +299,7 @@ class CreateAbhaFragment : Fragment() {
                     requireContext(),
                     0,
                     Intent(Intent.ACTION_VIEW).apply {
-                        setDataAndType(uri, "application/png")
+                        setDataAndType(uri, "image/png")
                         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     },
                     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE

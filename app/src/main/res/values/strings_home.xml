@@ -43,6 +43,8 @@
     <string name="icon_title_ncd_eligible_list">NCD Eligible List</string>
     <string name="icon_title_ncd_non_eligible_list">NCD Non-Eligible List</string>
     <string name="icon_title_ncd_priority_list">NCD Priority List</string>
+    <string name="icon_title_ncd_tb_screening">TB Screening</string>
+    <string name="icon_title_ncd_tb_suspected">Suspected TB cases</string>
 
     <string name="icon_title_sr">Survey Register</string>
 

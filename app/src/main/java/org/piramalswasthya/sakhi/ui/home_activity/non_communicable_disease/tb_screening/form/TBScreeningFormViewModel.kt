@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.tracking.form
+package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.tb_screening.form
 
 import android.content.Context
 import androidx.lifecycle.*
@@ -7,27 +7,29 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.configuration.EligibleCoupleTrackingDataset
+import org.piramalswasthya.sakhi.configuration.TBScreeningDataset
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.model.EligibleCoupleTrackingCache
+import org.piramalswasthya.sakhi.model.TBScreeningCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
-import org.piramalswasthya.sakhi.repositories.EcrRepo
+import org.piramalswasthya.sakhi.repositories.TBRepo
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class EligibleCoupleTrackingFormViewModel @Inject constructor(
+class TBScreeningFormViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     preferenceDao: PreferenceDao,
     @ApplicationContext context: Context,
-    private val ecrRepo: EcrRepo,
+    private val tbRepo: TBRepo,
     private val benRepo: BenRepo
 ) : ViewModel() {
     val benId =
-        EligibleCoupleTrackingFormFragmentArgs.fromSavedStateHandle(savedStateHandle).benId
+        TBScreeningFormFragmentArgs.fromSavedStateHandle(savedStateHandle).benId
+
     enum class State {
         IDLE, SAVING, SAVE_SUCCESS, SAVE_FAILED
     }
+
     private val _state = MutableLiveData(State.IDLE)
     val state: LiveData<State>
         get() = _state
@@ -45,26 +47,28 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
 
     //    private lateinit var user: UserDomain
     private val dataset =
-        EligibleCoupleTrackingDataset(context, preferenceDao.getCurrentLanguage())
+        TBScreeningDataset(context, preferenceDao.getCurrentLanguage())
     val formList = dataset.listFlow
 
-    var isPregnant: Boolean = false
+    var suspectedTB: String? = null
 
-    private lateinit var eligibleCoupleTracking: EligibleCoupleTrackingCache
+    var suspectedTBFamily: String? = null
+
+    private lateinit var tbScreeningCache: TBScreeningCache
 
     init {
         viewModelScope.launch {
-            val ben = ecrRepo.getBenFromId(benId)?.also { ben ->
+            val ben = benRepo.getBenFromId(benId)?.also { ben ->
                 _benName.value =
                     "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
                 _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
-                eligibleCoupleTracking = EligibleCoupleTrackingCache(
+                tbScreeningCache = TBScreeningCache(
                     benId = ben.beneficiaryId,
                 )
             }
 
-            ecrRepo.getEct(benId)?.let {
-                eligibleCoupleTracking = it
+            tbRepo.getTbsn(benId)?.let {
+                tbScreeningCache = it
                 _recordExists.value = true
             } ?: run {
                 _recordExists.value = false
@@ -72,9 +76,8 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
 
             dataset.setUpPage(
                 ben,
-                if (recordExists.value == true) eligibleCoupleTracking else null
+                if (recordExists.value == true) tbScreeningCache else null
             )
-
 
         }
     }
@@ -86,27 +89,18 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
 
     }
 
-//    fun getIndexOfEdd(): Int = dataset.getIndexOfEdd()
-//    fun getIndexOfWeeksOfPregnancy(): Int = dataset.getIndexOfWeeksPregnancy()
-//    fun getIndexOfPastIllness(): Int = dataset.getIndexOfPastIllness()
 
+    fun getAlerts() {
+        suspectedTB = dataset.isTbSuspected()
+        suspectedTBFamily = dataset.isTbSuspectedFamily()
+    }
     fun saveForm() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 try {
                     _state.postValue(State.SAVING)
-
-                    dataset.mapValues(eligibleCoupleTracking, 1)
-                    ecrRepo.saveEct(eligibleCoupleTracking)
-                    isPregnant = (eligibleCoupleTracking.isPregnant == "Yes") ||
-                        (eligibleCoupleTracking.pregnancyTestResult == "Positive")
-                    if (isPregnant) {
-                        ecrRepo.getBenFromId(benId)?.let{
-                            dataset.updateBen(it)
-                            benRepo.persistRecord(it)
-                        }
-                    }
-
+                    dataset.mapValues(tbScreeningCache, 1)
+                    tbRepo.saveTbsn(tbScreeningCache)
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
                     Timber.d("saving PWR data failed!!")
@@ -121,3 +115,4 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
     }
 
 }
+

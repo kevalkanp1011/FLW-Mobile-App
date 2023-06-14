@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 
 @Dao
 interface MaternalHealthDao {

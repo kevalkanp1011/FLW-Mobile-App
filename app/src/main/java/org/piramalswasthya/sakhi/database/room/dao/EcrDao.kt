@@ -1,8 +1,8 @@
 package org.piramalswasthya.sakhi.database.room.dao
 
 import androidx.room.*
-import kotlinx.coroutines.flow.Flow
 import org.piramalswasthya.sakhi.model.EligibleCoupleRegCache
+import org.piramalswasthya.sakhi.model.EligibleCoupleTrackingCache
 
 @Dao
 interface EcrDao {
@@ -22,4 +22,9 @@ interface EcrDao {
     @Update
     suspend fun update(it: EligibleCoupleRegCache)
 
+    @Query("select * from eligible_couple_tracking where benId = :benId order by visitDate limit 1")
+    fun getEct(benId : Long) : EligibleCoupleTrackingCache?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveRecord(eligibleCoupleTrackingCache: EligibleCoupleTrackingCache)
 }

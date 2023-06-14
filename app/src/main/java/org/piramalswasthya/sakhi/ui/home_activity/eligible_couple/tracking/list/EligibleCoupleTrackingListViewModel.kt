@@ -9,14 +9,14 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.helpers.filterBenFormList
 import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
-import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
+import org.piramalswasthya.sakhi.repositories.EcrRepo
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import javax.inject.Inject
 
 @HiltViewModel
 class EligibleCoupleTrackingListViewModel @Inject constructor(
     recordsRepo: RecordsRepo,
-    private var maternalHealthRepo: MaternalHealthRepo
+    private var ecrRepo: EcrRepo
 ) : ViewModel() {
 
     val scope : CoroutineScope
@@ -31,7 +31,7 @@ class EligibleCoupleTrackingListViewModel @Inject constructor(
     suspend fun updateFilledStatus(benBasicDomainForForms: List<BenBasicDomainForForm>) {
         viewModelScope.launch {
             benBasicDomainForForms.forEach { ben ->
-                val ect = maternalHealthRepo.getEct(ben.benId)
+                val ect = ecrRepo.getEct(ben.benId)
                 ect?.let {
                     if ((System.currentTimeMillis() - ect.visitDate) < 30 * 86400000L) {
 //                        ben.form1Filled = true

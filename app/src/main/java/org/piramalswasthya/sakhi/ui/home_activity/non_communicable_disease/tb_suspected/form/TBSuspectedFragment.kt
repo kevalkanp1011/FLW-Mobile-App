@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.eligible_couple_reg
+package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.tb_suspected.form
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -15,34 +15,47 @@ import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import timber.log.Timber
 
 @AndroidEntryPoint
-class EligibleCoupleRegFragment : Fragment() {
+class TBSuspectedFragment : Fragment() {
 
-    private var _binding : FragmentNewFormBinding? = null
-    private val binding : FragmentNewFormBinding
+    private var _binding: FragmentNewFormBinding? = null
+    private val binding: FragmentNewFormBinding
         get() = _binding!!
 
+    private val viewModel : TBSuspectedViewModel by viewModels()
 
-    private val viewModel: EligibleCoupleRegViewModel by viewModels()
+//    private val tbSuspectedAlert by lazy {
+//        AlertDialog.Builder(requireContext())
+//            .setTitle("TB Screening")
+//            .setMessage("it")
+//            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
+//            .create()
+//    }
+//
+//    private val tbSuspectedFamilyAlert by lazy {
+//        AlertDialog.Builder(requireContext())
+//            .setTitle("TB Screening")
+//            .setMessage("it")
+//            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
+//            .create()
+//    }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentNewFormBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentNewFormBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel.recordExists.observe(viewLifecycleOwner) { notIt ->
             notIt?.let { recordExists ->
-//                binding.fabEdit.visibility = if(recordExists) View.VISIBLE else View.GONE
                 val adapter = FormInputAdapter(
                     formValueListener = FormInputAdapter.FormValueListener { formId, index ->
                         viewModel.updateListOnValueChanged(formId, index)
                     }, isEnabled = !recordExists
                 )
+                binding.btnSubmit.isEnabled = !recordExists
                 binding.form.rvInputForm.adapter = adapter
                 lifecycleScope.launch {
                     viewModel.formList.collect {
@@ -59,11 +72,12 @@ class EligibleCoupleRegFragment : Fragment() {
             binding.tvAgeGender.text = it
         }
         binding.btnSubmit.setOnClickListener {
-            submitEligibleCoupleForm()
+            submitTBSuspectedForm()
         }
+
         viewModel.state.observe(viewLifecycleOwner) {
             when(it) {
-                EligibleCoupleRegViewModel.State.SAVE_SUCCESS -> {
+                TBSuspectedViewModel.State.SAVE_SUCCESS -> {
                     findNavController().navigateUp()
                 }
                 else -> {}
@@ -71,30 +85,39 @@ class EligibleCoupleRegFragment : Fragment() {
         }
     }
 
-    private fun submitEligibleCoupleForm() {
-        if (validate()) {
+    private fun submitTBSuspectedForm() {
+        if (validateCurrentPage()) {
+//            showAlerts()
             viewModel.saveForm()
         }
     }
 
-    fun validate(): Boolean {
+//    private fun showAlerts() {
+//        viewModel.getAlerts()
+//        viewModel.suspectedTB?.let {
+//            tbSuspectedAlert.setMessage(it)
+//            tbSuspectedAlert.show()
+//        }
+//
+//        viewModel.suspectedTBFamily?.let {
+//            tbSuspectedFamilyAlert.setMessage(it)
+//            tbSuspectedFamilyAlert.show()
+//        }
+//
+//    }
+
+    private fun validateCurrentPage(): Boolean {
         val result = binding.form.rvInputForm.adapter?.let {
             (it as FormInputAdapter).validateInput(resources)
         }
         Timber.d("Validation : $result")
-        return if (result == -1)
-            true
+        return if (result == -1) true
         else {
             if (result != null) {
                 binding.form.rvInputForm.scrollToPosition(result)
             }
             false
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 
 }
