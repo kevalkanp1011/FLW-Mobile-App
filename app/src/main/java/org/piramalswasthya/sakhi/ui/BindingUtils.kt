@@ -183,10 +183,9 @@ fun ConstraintLayout.setItemsCheckBox(form: FormInputOld?) {
 }
 
 @BindingAdapter("required")
-fun TextView.setRequired(required: Boolean? = true) {
+fun TextView.setRequired(required: Boolean?) {
     required?.let {
-        visibility = if (it) View.VISIBLE
-        else View.INVISIBLE
+        visibility = if (it) View.VISIBLE else View.INVISIBLE
     }
 }
 
@@ -280,19 +279,21 @@ fun Button.setAncState(ancFormState: AncFormState?) {
 @BindingAdapter("anc_state_icon")
 fun ImageView.setAncState(ancFormState: AncFormState?) {
     ancFormState?.let {
-        setImageResource(when (it) {
-            ALLOW_FILL -> {
-               R.drawable.ic_pending_actions
-            }
+        setImageResource(
+            when (it) {
+                ALLOW_FILL -> {
+                    R.drawable.ic_pending_actions
+                }
 
-            ALREADY_FILLED -> {
-                R.drawable.ic_check_circle
-            }
+                ALREADY_FILLED -> {
+                    R.drawable.ic_check_circle
+                }
 
-            NO_FILL -> {
-                R.drawable.ic_close
+                NO_FILL -> {
+                    R.drawable.ic_close
+                }
             }
-        })
+        )
     }
 }
 

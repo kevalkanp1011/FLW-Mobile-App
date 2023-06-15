@@ -1,10 +1,10 @@
 package org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.eligible_couple_reg
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,8 +17,8 @@ import timber.log.Timber
 @AndroidEntryPoint
 class EligibleCoupleRegFragment : Fragment() {
 
-    private var _binding : FragmentNewFormBinding? = null
-    private val binding : FragmentNewFormBinding
+    private var _binding: FragmentNewFormBinding? = null
+    private val binding: FragmentNewFormBinding
         get() = _binding!!
 
 
@@ -46,7 +46,9 @@ class EligibleCoupleRegFragment : Fragment() {
                 binding.form.rvInputForm.adapter = adapter
                 lifecycleScope.launch {
                     viewModel.formList.collect {
-                        adapter.submitList(it)
+                        if (it.isNotEmpty())
+
+                            adapter.submitList(it)
 
                     }
                 }
@@ -62,10 +64,11 @@ class EligibleCoupleRegFragment : Fragment() {
             submitEligibleCoupleForm()
         }
         viewModel.state.observe(viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 EligibleCoupleRegViewModel.State.SAVE_SUCCESS -> {
                     findNavController().navigateUp()
                 }
+
                 else -> {}
             }
         }

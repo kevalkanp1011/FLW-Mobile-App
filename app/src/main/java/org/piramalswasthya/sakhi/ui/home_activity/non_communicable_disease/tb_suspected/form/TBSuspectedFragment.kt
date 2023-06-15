@@ -1,10 +1,10 @@
 package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.tb_suspected.form
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -21,7 +21,7 @@ class TBSuspectedFragment : Fragment() {
     private val binding: FragmentNewFormBinding
         get() = _binding!!
 
-    private val viewModel : TBSuspectedViewModel by viewModels()
+    private val viewModel: TBSuspectedViewModel by viewModels()
 
 //    private val tbSuspectedAlert by lazy {
 //        AlertDialog.Builder(requireContext())
@@ -59,7 +59,9 @@ class TBSuspectedFragment : Fragment() {
                 binding.form.rvInputForm.adapter = adapter
                 lifecycleScope.launch {
                     viewModel.formList.collect {
-                        adapter.submitList(it)
+                        if (it.isNotEmpty())
+
+                            adapter.submitList(it)
 
                     }
                 }
@@ -76,10 +78,11 @@ class TBSuspectedFragment : Fragment() {
         }
 
         viewModel.state.observe(viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 TBSuspectedViewModel.State.SAVE_SUCCESS -> {
                     findNavController().navigateUp()
                 }
+
                 else -> {}
             }
         }

@@ -34,6 +34,15 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
             return mdFormat.format(calendar.time)
         }
 
+        private fun getMinDateOfReg(): Long {
+            return Calendar.getInstance().apply {
+                set(Calendar.YEAR, 2020)
+                set(Calendar.MONTH, 0)
+                set(Calendar.DAY_OF_MONTH, 1)
+            }.timeInMillis
+
+        }
+
         private fun getMinDobMillis(): Long {
             val cal = Calendar.getInstance()
             cal.add(Calendar.YEAR, -1 * maxAgeForGenBen)
@@ -60,11 +69,12 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
     )
     private val dateOfReg = FormElement(
         id = 2,
-        inputType = TEXT_VIEW,
+        inputType = DATE_PICKER,
         title = context.getString(R.string.nbr_dor),
         arrayId = -1,
         required = true,
-        value = getCurrentDateString()
+        min = getMinDateOfReg(),
+        max = System.currentTimeMillis()
     )
     private val firstName = FormElement(
         id = 3,
@@ -148,6 +158,8 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         arrayId = -1,
         required = true,
         allCaps = true,
+        hasSpeechToText = true,
+
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
     )
     private val wifeName = FormElement(
@@ -157,6 +169,8 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         arrayId = -1,
         required = true,
         allCaps = true,
+        hasSpeechToText = true,
+
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
     )
     private val spouseName = FormElement(
@@ -166,6 +180,8 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         arrayId = -1,
         required = true,
         allCaps = true,
+        hasSpeechToText = true,
+
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
     )
     private val ageAtMarriage = FormElement(
@@ -197,6 +213,8 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         arrayId = -1,
         required = true,
         allCaps = true,
+        hasSpeechToText = true,
+
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
     )
     private val motherName = FormElement(
@@ -206,6 +224,8 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         arrayId = -1,
         required = true,
         allCaps = true,
+        hasSpeechToText = true,
+
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
     )
 
@@ -542,12 +562,13 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         reproductiveStatus,
 //        lastMenstrualPeriod,
 
-        )
+    )
 
     suspend fun setFirstPage(ben: BenRegCache?, familyHeadPhoneNo: Long?) {
         val list = firstPage.toMutableList()
         contactNumberFamilyHead.value = familyHeadPhoneNo?.toString()
         this.familyHeadPhoneNo = familyHeadPhoneNo?.toString()
+        dateOfReg.value = getCurrentDateString()
         ben?.takeIf { !it.isDraft }?.let { saved ->
             pic.value = saved.userImage
             dateOfReg.value = getDateFromLong(saved.regDate)
@@ -622,10 +643,12 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
     fun getIndexOfRelationToHead() = getIndexOfElement(relationToHead)
     fun getIndexOfAgeAtMarriage() = getIndexOfElement(ageAtMarriage)
 
-    fun getIndexOfFatherName() = getIndexOfElement(fatherName)
-    fun getIndexOfMotherName() = getIndexOfElement(motherName)
-    fun getIndexOfSpouseName() = getIndexOfElement(husbandName).takeIf { it != -1 }
-        ?: getIndexOfElement(wifeName).takeIf { it != -1 } ?: getIndexOfElement(spouseName)
+    fun getIndexOfFatherName() = getIndexById(fatherName.id)
+    fun getIndexOfMotherName() = getIndexById(motherName.id)
+    fun getIndexOfSpouseName() = getIndexById(husbandName.id).takeIf { it != -1 }
+        ?: getIndexById(wifeName.id).takeIf { it != -1 } ?: getIndexById(spouseName.id)
+
+    fun getIndexOfMaritalStatus() = getIndexById(maritalStatus.id)
 
 //    fun getIndexOfExpectedDateOfDelivery() = getIndexOfElement(expectedDateOfDelivery)
 
@@ -807,7 +830,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
 //                list.add(dateOfDelivery)
 //            }
 
-            reproductiveStatus.entries?.last()-> list.add(otherReproductiveStatus)
+            reproductiveStatus.entries?.last() -> list.add(otherReproductiveStatus)
             else -> {}
         }
 //        if (nishchayKitDeliveryStatus.value?.isNotEmpty() == true) {
@@ -1165,59 +1188,80 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
 
             gender.id, maritalStatus.id -> {
                 relationToHead.value = null
-                maritalStatus.entries = when (index) {
-                    0 -> maritalStatusMale
-                    else -> maritalStatusFemale
-                }
-                relationToHead.entries = when (index) {
-                    0 -> relationToHeadListMale
-                    1 -> relationToHeadListFemale
-                    else -> relationToHeadListDefault
-                }
-                triggerDependants(
-                    source = gender,
-                    removeItems = listOf(otherRelationToHead),
-                    addItems = emptyList()
-                )
-                when (maritalStatus.value) {
-                    maritalStatus.entries!![0] -> {
-                        fatherName.required = true
-                        motherName.required = true
-                        triggerDependants(
-                            source = maritalStatus,
-                            addItems = emptyList(),//listOf(fatherName, motherName),
-                            removeItems = listOf(spouseName, husbandName, wifeName, ageAtMarriage)
-                        )
+                if (formId == gender.id) {
+                    maritalStatus.entries = when (index) {
+                        1 -> maritalStatusFemale
+                        else -> maritalStatusMale
+                    }
+                    relationToHead.entries = when (index) {
+                        0 -> relationToHeadListMale
+                        1 -> relationToHeadListFemale
+                        else -> relationToHeadListDefault
+                    }
+                    maritalStatus.value = null
+                    return triggerDependants(
+                        source = gender,
+                        removeItems = listOf(otherRelationToHead),
+                        addItems = emptyList()
+                    )
+                } else {
+                    when (maritalStatus.value) {
+                        maritalStatus.entries!![0] -> {
+                            fatherName.required = true
+                            motherName.required = true
+                            return triggerDependants(
+                                source = maritalStatus,
+                                addItems = emptyList(),//listOf(fatherName, motherName),
+                                removeItems = listOf(
+                                    spouseName,
+                                    husbandName,
+                                    wifeName,
+                                    ageAtMarriage
+                                )
+                            )
+                        }
+
+                        else -> {
+                            fatherName.required = false
+                            motherName.required = false
+                            spouseName.required = maritalStatus.value != maritalStatus.entries!![2]
+//                            ().let {
+////                            wifeName.required = it
+////                            husbandName.required = it
+//                                spouseName.required = it
+//                            }
+                            return triggerDependants(
+                                source = maritalStatus, addItems = when (gender.value) {
+                                    gender.entries!![0] -> listOf(wifeName, ageAtMarriage)
+                                    gender.entries!![1] -> listOf(husbandName, ageAtMarriage)
+                                    else -> listOf(spouseName, ageAtMarriage)
+                                }, removeItems = listOf(
+                                    wifeName,
+                                    husbandName,
+                                    spouseName,
+                                    ageAtMarriage
+                                )
+                            )
+                        }
                     }
 
-                    else -> {
-                        fatherName.required = false
-                        motherName.required = false
-                        (maritalStatus.value != maritalStatus.entries!![2]).let {
-//                            wifeName.required = it
-//                            husbandName.required = it
-                            spouseName.required = it
-                        }
-                        triggerDependants(
-                            source = maritalStatus, addItems = when (gender.value) {
-                                gender.entries!![0] -> listOf(wifeName, ageAtMarriage)
-                                gender.entries!![1] -> listOf(husbandName, ageAtMarriage)
-                                else -> listOf(spouseName, ageAtMarriage)
-                            }, removeItems = listOf(
-                                wifeName,
-                                husbandName,
-                                spouseName,
-                                ageAtMarriage
-                            )
-                        )
-                    }
                 }
+
             }
 
             ageAtMarriage.id -> age.value?.takeIf { it.isNotEmpty() && it.isDigitsOnly() && !ageAtMarriage.value.isNullOrEmpty() }
                 ?.toInt()?.let {
                     validateEmptyOnEditText(ageAtMarriage)
                     validateIntMinMax(ageAtMarriage)
+                    if(it==ageAtMarriage.value?.toInt()){
+                        val cal = Calendar.getInstance().apply {
+                            add(Calendar.YEAR, -1*it)
+                        }
+                        dateOfMarriage.max = cal.timeInMillis
+                        cal.add(Calendar.YEAR, -1)
+                        dateOfMarriage.min = cal.timeInMillis
+
+                    }
                     triggerDependants(
                         source = ageAtMarriage,
                         passedIndex = ageAtMarriage.value!!.toInt(),
@@ -1355,116 +1399,116 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     triggerIndex = reproductiveStatus.entries!!.lastIndex,
                     target = otherReproductiveStatus
                 )
-                /*{
-                lastMenstrualPeriod.value = null
-                when (index) {
-                    0 -> {
+            /*{
+            lastMenstrualPeriod.value = null
+            when (index) {
+                0 -> {
 
-                        lastMenstrualPeriod.required = false
-                        triggerDependants(
-                            source = reproductiveStatus,
-                            addItems = listOf(lastMenstrualPeriod),
-                            removeItems = listOf(
-                                nishchayKitDeliveryStatus,
-                                pregnancyTestResult,
-                                expectedDateOfDelivery,
-                                dateOfDelivery,
-                                whoConductedDelivery,
-                                otherWhoConductedDelivery,
-                                lastDeliveryConducted,
-                                otherPlaceOfDelivery,
-                                facility,
-                                numPrevLiveBirthOrPregnancy,
-                                otherReproductiveStatus
-                            )
+                    lastMenstrualPeriod.required = false
+                    triggerDependants(
+                        source = reproductiveStatus,
+                        addItems = listOf(lastMenstrualPeriod),
+                        removeItems = listOf(
+                            nishchayKitDeliveryStatus,
+                            pregnancyTestResult,
+                            expectedDateOfDelivery,
+                            dateOfDelivery,
+                            whoConductedDelivery,
+                            otherWhoConductedDelivery,
+                            lastDeliveryConducted,
+                            otherPlaceOfDelivery,
+                            facility,
+                            numPrevLiveBirthOrPregnancy,
+                            otherReproductiveStatus
                         )
-                    }
-
-                    4, 5 -> {
-                        lastMenstrualPeriod.required = false
-                        triggerDependants(
-                            source = reproductiveStatus,
-                            addItems = listOf(lastMenstrualPeriod),
-                            removeItems = listOf(
-                                nishchayKitDeliveryStatus,
-                                pregnancyTestResult,
-                                expectedDateOfDelivery,
-                                dateOfDelivery,
-                                whoConductedDelivery,
-                                otherWhoConductedDelivery,
-                                lastDeliveryConducted,
-                                otherPlaceOfDelivery,
-                                facility,
-                                numPrevLiveBirthOrPregnancy,
-                                otherReproductiveStatus
-                            )
-                        )
-                    }
-
-                    1, 2 -> {
-                        lastMenstrualPeriod.required = true
-                        triggerDependants(
-                            source = reproductiveStatus, addItems = listOf(
-                                lastMenstrualPeriod,
-                                expectedDateOfDelivery,
-                                numPrevLiveBirthOrPregnancy
-
-                            ), removeItems = listOf(
-                                nishchayKitDeliveryStatus,
-                                pregnancyTestResult,
-                                dateOfDelivery,
-                                whoConductedDelivery,
-                                otherWhoConductedDelivery,
-                                lastDeliveryConducted,
-                                otherPlaceOfDelivery,
-                                facility,
-                                otherReproductiveStatus
-                            )
-                        )
-                    }
-
-                    3 -> {
-                        triggerDependants(
-                            source = reproductiveStatus,
-                            addItems = listOf(dateOfDelivery, numPrevLiveBirthOrPregnancy),
-                            removeItems = listOf(
-                                nishchayKitDeliveryStatus,
-                                pregnancyTestResult,
-                                lastMenstrualPeriod,
-                                whoConductedDelivery,
-                                otherWhoConductedDelivery,
-                                lastDeliveryConducted,
-                                otherPlaceOfDelivery,
-                                expectedDateOfDelivery,
-                                facility,
-                                otherReproductiveStatus
-                            )
-                        )
-                    }
-
-                    6 -> {
-                        lastMenstrualPeriod.required = false
-                        triggerDependants(
-                            source = reproductiveStatus,
-                            addItems = listOf(lastMenstrualPeriod, otherReproductiveStatus),
-                            removeItems = listOf(
-                                nishchayKitDeliveryStatus,
-                                pregnancyTestResult,
-                                dateOfDelivery,
-                                numPrevLiveBirthOrPregnancy,
-                                lastMenstrualPeriod,
-                                whoConductedDelivery,
-                                otherWhoConductedDelivery,
-                                lastDeliveryConducted,
-                                otherPlaceOfDelivery,
-                                facility,
-                            )
-                        )
-                    }
-
-                    else -> -1
+                    )
                 }
-            }*/
+
+                4, 5 -> {
+                    lastMenstrualPeriod.required = false
+                    triggerDependants(
+                        source = reproductiveStatus,
+                        addItems = listOf(lastMenstrualPeriod),
+                        removeItems = listOf(
+                            nishchayKitDeliveryStatus,
+                            pregnancyTestResult,
+                            expectedDateOfDelivery,
+                            dateOfDelivery,
+                            whoConductedDelivery,
+                            otherWhoConductedDelivery,
+                            lastDeliveryConducted,
+                            otherPlaceOfDelivery,
+                            facility,
+                            numPrevLiveBirthOrPregnancy,
+                            otherReproductiveStatus
+                        )
+                    )
+                }
+
+                1, 2 -> {
+                    lastMenstrualPeriod.required = true
+                    triggerDependants(
+                        source = reproductiveStatus, addItems = listOf(
+                            lastMenstrualPeriod,
+                            expectedDateOfDelivery,
+                            numPrevLiveBirthOrPregnancy
+
+                        ), removeItems = listOf(
+                            nishchayKitDeliveryStatus,
+                            pregnancyTestResult,
+                            dateOfDelivery,
+                            whoConductedDelivery,
+                            otherWhoConductedDelivery,
+                            lastDeliveryConducted,
+                            otherPlaceOfDelivery,
+                            facility,
+                            otherReproductiveStatus
+                        )
+                    )
+                }
+
+                3 -> {
+                    triggerDependants(
+                        source = reproductiveStatus,
+                        addItems = listOf(dateOfDelivery, numPrevLiveBirthOrPregnancy),
+                        removeItems = listOf(
+                            nishchayKitDeliveryStatus,
+                            pregnancyTestResult,
+                            lastMenstrualPeriod,
+                            whoConductedDelivery,
+                            otherWhoConductedDelivery,
+                            lastDeliveryConducted,
+                            otherPlaceOfDelivery,
+                            expectedDateOfDelivery,
+                            facility,
+                            otherReproductiveStatus
+                        )
+                    )
+                }
+
+                6 -> {
+                    lastMenstrualPeriod.required = false
+                    triggerDependants(
+                        source = reproductiveStatus,
+                        addItems = listOf(lastMenstrualPeriod, otherReproductiveStatus),
+                        removeItems = listOf(
+                            nishchayKitDeliveryStatus,
+                            pregnancyTestResult,
+                            dateOfDelivery,
+                            numPrevLiveBirthOrPregnancy,
+                            lastMenstrualPeriod,
+                            whoConductedDelivery,
+                            otherWhoConductedDelivery,
+                            lastDeliveryConducted,
+                            otherPlaceOfDelivery,
+                            facility,
+                        )
+                    )
+                }
+
+                else -> -1
+            }
+        }*/
 
             /*numPrevLiveBirthOrPregnancy.id -> {
                 numPrevLiveBirthOrPregnancy.value?.takeIf { it.isNotEmpty() }?.toInt()?.let {

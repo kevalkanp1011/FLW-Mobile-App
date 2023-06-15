@@ -82,6 +82,7 @@ class FormInputAdapter(
                 return
             }
             binding.form = item
+            Timber.d("Bound EditText item ${item.title} with ${item.required}")
             binding.tilEditText.error = item.errorText
             handleHintLength(item)
             if(item.hasSpeechToText){
@@ -89,8 +90,10 @@ class FormInputAdapter(
                 binding.tilEditText.setEndIconOnClickListener {
                     formValueListener?.onValueChanged(item, Konstants.micClickIndex)
                 }
-            }else
+            }else {
                 binding.tilEditText.endIconDrawable = null
+                binding.tilEditText.setEndIconOnClickListener(null)
+            }
 
 
             //binding.et.setText(item.value.value)

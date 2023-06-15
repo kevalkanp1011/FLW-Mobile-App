@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_more_15
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -42,11 +43,12 @@ class NewBenRegG15Fragment : Fragment() {
         get() = _binding!!
 
     private val viewModel: NewBenRegG15ViewModel by viewModels()
-    private  var micClickedElementId : Int = -1
-    private val sttContract = registerForActivityResult(SpeechToTextContract()){ value ->
+    private var micClickedElementId: Int = -1
+    private val sttContract = registerForActivityResult(SpeechToTextContract()) { value ->
         val formattedValue = value/*.substring(0,50)*/.uppercase()
-        val listIndex = viewModel.updateValueByIdAndReturnListIndex(micClickedElementId, formattedValue)
-        listIndex.takeIf { it>=0 }?.let {
+        val listIndex =
+            viewModel.updateValueByIdAndReturnListIndex(micClickedElementId, formattedValue)
+        listIndex.takeIf { it >= 0 }?.let {
             binding.inputForm.rvInputForm.adapter?.notifyItemChanged(it)
         }
     }
@@ -236,11 +238,12 @@ class NewBenRegG15Fragment : Fragment() {
                         viewModel.setCurrentImageFormId(it)
                         takeImage()
                     }, formValueListener = FormInputAdapter.FormValueListener { formId, index ->
-                        when(index){
+                        when (index) {
                             Konstants.micClickIndex -> {
                                 micClickedElementId = formId
                                 sttContract.launch(Unit)
                             }
+
                             else -> {
                                 viewModel.updateListOnValueChanged(formId, index)
                                 hardCodedListUpdate(formId)
@@ -253,7 +256,8 @@ class NewBenRegG15Fragment : Fragment() {
                 lifecycleScope.launch {
                     viewModel.formList.collect {
                         Timber.d("Collecting $it")
-                        adapter.submitList(it)
+                        if (it.isNotEmpty())
+                            adapter.submitList(it)
                     }
                 }
             }
@@ -304,6 +308,7 @@ class NewBenRegG15Fragment : Fragment() {
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun hardCodedListUpdate(formId: Int) {
         binding.inputForm.rvInputForm.adapter?.apply {
             when (formId) {
@@ -317,18 +322,24 @@ class NewBenRegG15Fragment : Fragment() {
                 }
 
                 7 -> {
+                    notifyItemChanged(viewModel.getIndexOfMaritalStatus())
                     notifyItemChanged(viewModel.getIndexOfRelationToHead())
                 }
-                8 ->{
-                    viewModel.getIndexOfFatherName().takeIf { it > 0 }?.let {
+
+                8 -> {
+                    notifyDataSetChanged()
+                    /*viewModel.getIndexOfFatherName().takeIf { it > 0 }?.let {
+                        Timber.d("Update Father index called! $it")
                         notifyItemChanged(it)
                     }
                     viewModel.getIndexOfMotherName().takeIf { it > 0 }?.let {
+                        Timber.d("Update Mother index called! $it")
                         notifyItemChanged(it)
                     }
                     viewModel.getIndexOfSpouseName().takeIf { it > 0 }?.let {
+                        Timber.d("Update Spouse index called! $it")
                         notifyItemChanged(it)
-                    }
+                    }*/
 
                 }
 

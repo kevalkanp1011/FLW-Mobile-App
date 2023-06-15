@@ -22,7 +22,7 @@ class TBScreeningFormFragment : Fragment() {
     private val binding: FragmentNewFormBinding
         get() = _binding!!
 
-    private val viewModel : TBScreeningFormViewModel by viewModels()
+    private val viewModel: TBScreeningFormViewModel by viewModels()
 
     private val tbSuspectedAlert by lazy {
         AlertDialog.Builder(requireContext())
@@ -60,7 +60,9 @@ class TBScreeningFormFragment : Fragment() {
                 binding.form.rvInputForm.adapter = adapter
                 lifecycleScope.launch {
                     viewModel.formList.collect {
-                        adapter.submitList(it)
+                        if (it.isNotEmpty())
+
+                            adapter.submitList(it)
 
                     }
                 }
@@ -77,10 +79,11 @@ class TBScreeningFormFragment : Fragment() {
         }
 
         viewModel.state.observe(viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 TBScreeningFormViewModel.State.SAVE_SUCCESS -> {
                     findNavController().navigateUp()
                 }
+
                 else -> {}
             }
         }

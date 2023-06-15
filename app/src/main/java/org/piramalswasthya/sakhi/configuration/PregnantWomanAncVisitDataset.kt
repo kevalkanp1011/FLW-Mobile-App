@@ -61,7 +61,7 @@ class PregnantWomanAncVisitDataset(
     private val abortionDate = FormElement(
         id = 7,
         inputType = InputType.DATE_PICKER,
-        title = "LMP Date",
+        title = "Abortion Date",
         required = true,
         max = System.currentTimeMillis(),
     )
@@ -85,7 +85,7 @@ class PregnantWomanAncVisitDataset(
         etMaxLength = 3,
         required = false,
         min = 50,
-        max = 200
+        max = 300
     )
     private val bpDiastolic = FormElement(
         id = 10,
@@ -94,7 +94,7 @@ class PregnantWomanAncVisitDataset(
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 3,
         required = false,
-        min = 50,
+        min = 30,
         max = 200
     )
 
@@ -231,7 +231,7 @@ class PregnantWomanAncVisitDataset(
             "PHC – MO",
             "Specialist at Higher Facility",
         ),
-        required = false,
+        required = true,
     )
     private val maternalDeath = FormElement(
         id = 27, inputType = InputType.RADIO, title = "Maternal Death", entries = arrayOf(
@@ -314,6 +314,10 @@ class PregnantWomanAncVisitDataset(
             weeks.toString()
         }
         ancVisit.value = visitNumber.toString()
+        if(visitNumber==1) {
+            list.remove(fundalHeight)
+            list.remove(numIfaAcidTabGiven)
+        }
         saved?.let {
             ancDate.value = getDateFromLong(it.ancDate)
             weekOfPregnancy.value = getWeeksOfPregnancy(it.ancDate, regis.lmpDate).toString()
@@ -390,9 +394,35 @@ class PregnantWomanAncVisitDataset(
                 source = isAborted,
                 passedIndex = index,
                 triggerIndex = 1,
-                target = listOf(abortionType, abortionFacility, abortionDate)
+                target = listOf(abortionType, abortionDate),
+                targetSideEffect = listOf(abortionFacility)
             )
 
+            abortionType.id -> triggerDependants(
+                source = abortionType,
+                passedIndex = index,
+                triggerIndex = 0,
+                target = abortionFacility,
+            )
+
+            weight.id -> validateIntMinMax(weight)
+            bpSystolic.id, bpDiastolic.id -> {
+                validateIntMinMax(bpSystolic)
+                validateIntMinMax(bpDiastolic)
+                if(bpSystolic.value?.isNotEmpty() == true || bpDiastolic.value?.isNotEmpty() == true){
+                    validateEmptyOnEditText(bpSystolic)
+                    validateEmptyOnEditText(bpDiastolic)
+                }
+                -1
+            }
+            pulseRate.id -> {
+                validateAllAlphabetsSpaceOnEditText(pulseRate)
+            }
+            hb.id -> {
+                validateDoubleMinMax(hb)
+            }
+            numFolicAcidTabGiven.id -> validateIntMinMax(numFolicAcidTabGiven)
+            numIfaAcidTabGiven.id -> validateIntMinMax(numIfaAcidTabGiven)
             anyHighRisk.id -> triggerDependants(
                 source = anyHighRisk,
                 passedIndex = index,
@@ -407,6 +437,10 @@ class PregnantWomanAncVisitDataset(
                 triggerIndex = highRiskCondition.entries!!.lastIndex,
                 target = otherHighRiskCondition,
             )
+            otherHighRiskCondition.id -> {
+                validateEmptyOnEditText(otherHighRiskCondition)
+                validateAllAlphabetsSpaceOnEditText(otherHighRiskCondition)
+            }
 
             hrpConfirm.id -> triggerDependants(
                 source = hrpConfirm,
@@ -429,6 +463,10 @@ class PregnantWomanAncVisitDataset(
                 triggerIndex = maternalDeathProbableCause.entries!!.lastIndex,
                 target = otherMaternalDeathProbableCause,
             )
+            otherMaternalDeathProbableCause.id -> {
+                validateEmptyOnEditText(otherMaternalDeathProbableCause)
+                validateAllAlphabetsSpaceOnEditText(otherMaternalDeathProbableCause)
+            }
 
             else -> -1
         }

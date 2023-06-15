@@ -23,8 +23,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.contracts.SpeechToTextContract
 import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
 import org.piramalswasthya.sakhi.databinding.FragmentInputFormPageHhBinding
+import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_registration.NewHouseholdViewModel.State
 import timber.log.Timber
 
@@ -47,6 +49,17 @@ class NewHouseholdFragment : Fragment() {
             } else
                 findNavController().navigateUp()
         }
+
+    private var micClickedElementId: Int = -1
+    private val sttContract = registerForActivityResult(SpeechToTextContract()) { value ->
+        val formattedValue = value/*.substring(0,50)*/.uppercase()
+        val listIndex =
+            viewModel.updateValueByIdAndReturnListIndex(micClickedElementId, formattedValue)
+        listIndex.takeIf { it >= 0 }?.let {
+            binding.inputForm.rvInputForm.adapter?.notifyItemChanged(it)
+        }
+    }
+
 
     private fun showSettingsAlert() {
         val alertDialog: AlertDialog.Builder = AlertDialog.Builder(requireContext())
@@ -195,10 +208,10 @@ class NewHouseholdFragment : Fragment() {
 //        }
         lifecycleScope.launch {
             viewModel.currentPage.collect {
-                binding.tvTitle.text = when(it){
+                binding.tvTitle.text = when (it) {
                     1 -> getString(R.string.nhhr_title_page_1)
                     2 -> getString(R.string.nhhr_title_page_2)
-                    3 -> getString(R.string.nhhr_title_page_2)
+                    3 -> getString(R.string.nhhr_title_page_3)
                     else -> null
                 }
 //                binding.tlNhhr.selectTab(binding.tlNhhr.getTabAt(it - 1), true)
@@ -241,17 +254,29 @@ class NewHouseholdFragment : Fragment() {
         }
         viewModel.recordExists.observe(viewLifecycleOwner) { notIt ->
             notIt?.let { recordExists ->
-                binding.fabEdit.visibility = if(recordExists) View.VISIBLE else View.GONE
+                binding.fabEdit.visibility = if (recordExists) View.VISIBLE else View.GONE
                 val adapter = FormInputAdapter(
                     formValueListener = FormInputAdapter.FormValueListener { formId, index ->
-                        viewModel.updateListOnValueChanged(formId, index)
+                        when (index) {
+                            Konstants.micClickIndex -> {
+                                micClickedElementId = formId
+                                sttContract.launch(Unit)
+                            }
+
+                            else -> {
+                                viewModel.updateListOnValueChanged(formId, index)
+//                                hardCodedListUpdate(formId)
+                            }
+                        }
                     },
                     isEnabled = !recordExists
                 )
                 binding.inputForm.rvInputForm.adapter = adapter
                 lifecycleScope.launch {
                     viewModel.formList.collect {
-                        adapter.submitList(it)
+                        if (it.isNotEmpty())
+
+                            adapter.submitList(it)
                     }
                 }
             }
@@ -316,10 +341,12 @@ class NewHouseholdFragment : Fragment() {
             when (state!!) {
                 State.IDLE -> {
                 }
+
                 State.SAVING -> {
                     binding.clContent.visibility = View.GONE
                     binding.rlSaving.visibility = View.VISIBLE
                 }
+
                 State.SAVE_SUCCESS -> {
                     binding.clContent.visibility = View.VISIBLE
                     binding.rlSaving.visibility = View.GONE
@@ -330,6 +357,7 @@ class NewHouseholdFragment : Fragment() {
                         )
                     )
                 }
+
                 State.SAVE_FAILED -> {
                     Toast.makeText(
                         context,

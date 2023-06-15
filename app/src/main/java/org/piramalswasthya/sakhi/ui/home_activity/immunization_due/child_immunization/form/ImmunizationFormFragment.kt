@@ -53,7 +53,9 @@ class ImmunizationFormFragment : Fragment() {
                 binding.form.rvInputForm.adapter = adapter
                 lifecycleScope.launch {
                     viewModel.formList.collect {
-                        adapter.submitList(it)
+                        if (it.isNotEmpty())
+
+                            adapter.submitList(it)
                     }
                 }
             }

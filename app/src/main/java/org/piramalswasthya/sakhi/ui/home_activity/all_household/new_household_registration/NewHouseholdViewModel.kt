@@ -1,7 +1,11 @@
 package org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_registration
 
 import android.content.Context
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -156,6 +160,11 @@ class NewHouseholdViewModel @Inject constructor(
     fun setRecordExists(b: Boolean) {
         _recordExists.value = b
 
+    }
+
+    fun updateValueByIdAndReturnListIndex(id: Int, value: String): Int {
+        dataset.setValueById(id, value)
+        return dataset.getIndexById(id )
     }
 
 

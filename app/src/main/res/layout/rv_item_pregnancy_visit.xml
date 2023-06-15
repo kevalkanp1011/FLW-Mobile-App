@@ -38,46 +38,102 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/tv_name"
+                <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="@dimen/padding_normal"
-                    android:text="@{visit.name}"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                    tools:text="TextView" />
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/tv_name_ph"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Beneficiary Name"
+                        android:padding="@dimen/padding_normal"
+                        android:textColor="?attr/colorSecondary"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding_normal"
+                        android:text="@{visit.name}"
+                        android:textColor="?attr/colorSecondary"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:layout_below="@id/tv_name_ph"
+                        tools:text="TextView" />
 
-                <TextView
-                    android:id="@+id/tv_spouse_name"
+
+                </RelativeLayout>
+                <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="@dimen/padding_normal"
-                    android:text="@{visit.spouseName}"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                    tools:text="TextView" />
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/tv_spouse_name_ph"
+                        android:padding="@dimen/padding_normal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Husband's Name"
+                        android:textColor="?attr/colorSecondary"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
+                    <TextView
+                        android:id="@+id/tv_spouse_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding_normal"
+                        android:text="@{visit.spouseName}"
+                        android:textColor="?attr/colorSecondary"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:layout_below="@id/tv_spouse_name_ph"
+                        tools:text="TextView" />
 
-                <TextView
-                    android:id="@+id/tv_age"
+                </RelativeLayout>
+                <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="@dimen/padding_normal"
-                    android:text="@{visit.age}"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                    tools:text="TextView" />
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/tv_age_ph"
+                        android:padding="@dimen/padding_normal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Age"
+                        android:textColor="?attr/colorSecondary"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
+                    <TextView
+                        android:id="@+id/ttv_age_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding_normal"
+                        android:text="@{visit.age}"
+                        android:textColor="?attr/colorSecondary"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:layout_below="@id/tv_age_ph"
+                        tools:text="TextView" />
+                </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/tv_weeks_of_pregnancy"
+                <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="@dimen/padding_normal"
-                    android:text="@{@string/long_to_string(visit.weeksOfPregnancy)}"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                    tools:text="TextView" />
-
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/tv_weeks_of_pregnancy_ph"
+                        android:padding="@dimen/padding_normal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Weeks Of Pregnancy"
+                        android:textColor="?attr/colorSecondary"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
+                    <TextView
+                        android:id="@+id/tv_weeks_of_pregnancy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding_normal"
+                        android:text="@{@string/long_to_string(visit.weeksOfPregnancy)}"
+                        android:textColor="?attr/colorSecondary"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:layout_below="@id/tv_weeks_of_pregnancy_ph"
+                        tools:text="TextView" />
+                </RelativeLayout>
 
             </LinearLayout>
 
