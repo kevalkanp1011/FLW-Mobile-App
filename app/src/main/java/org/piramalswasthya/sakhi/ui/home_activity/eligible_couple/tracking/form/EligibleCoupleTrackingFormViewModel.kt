@@ -120,4 +120,6 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
         _state.value = State.IDLE
     }
 
+    fun getIndexOfIsPregnant() = dataset.getIndexOfIsPregnant()
+
 }

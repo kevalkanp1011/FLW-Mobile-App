@@ -16,7 +16,7 @@ class EligibleCoupleViewModel @Inject constructor(
     recordsRepo: RecordsRepo
 ) : ViewModel() {
 
-    private val allBenList = recordsRepo.getEligibleCoupleList()
+    private val allBenList = recordsRepo.eligibleCoupleList
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter) { list, filter ->
         filterBenFormList(list, filter)

@@ -35,7 +35,7 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
         Icon(
             R.drawable.ic__eligible_couple,
             resources.getString(R.string.icon_title_ec),
-            recordsRepo.getEligibleCoupleListCount(),
+            recordsRepo.eligibleCoupleListCount,
             HomeFragmentDirections.actionNavHomeToEligibleCoupleFragment()
         ),
         Icon(
@@ -117,14 +117,13 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
         Icon(
             R.drawable.ic__eligible_couple,
             resources.getString(R.string.icon_title_ecr),
-            null,
+            recordsRepo.eligibleCoupleListCount,
             EligibleCoupleFragmentDirections.actionEligibleCoupleFragmentToEligibleCoupleListFragment()
         ),
         Icon(
             R.drawable.ic__eligible_couple,
             resources.getString(R.string.icon_title_ect),
-//            recordsRepo.pregnantListCount,
-            null,
+            recordsRepo.eligibleCoupleTrackingListCount,
             EligibleCoupleFragmentDirections.actionEligibleCoupleFragmentToEligibleCoupleTrackingListFragment()
         )
     )
@@ -191,7 +190,7 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
         ), Icon(
             R.drawable.ic__death,
             resources.getString(R.string.icon_title_ncd_tb_suspected),
-            recordsRepo.ncdNonEligibleListCount,
+            recordsRepo.tbSuspectedListCount,
             NcdFragmentDirections.actionNcdFragmentToTBSuspectedListFragment()
         )
     )

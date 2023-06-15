@@ -22,25 +22,12 @@ class EligibleCoupleTrackingListViewModel @Inject constructor(
     val scope : CoroutineScope
         get() = viewModelScope
 
-    private val allBenList = recordsRepo.getEligibleTrackingList()
+    private val allBenList = recordsRepo.eligibleCoupleTrackingList
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter) { list, filter ->
         filterBenFormList(list, filter)
     }
 
-    suspend fun updateFilledStatus(benBasicDomainForForms: List<BenBasicDomainForForm>) {
-        viewModelScope.launch {
-            benBasicDomainForForms.forEach { ben ->
-                val ect = ecrRepo.getEct(ben.benId)
-                ect?.let {
-                    if ((System.currentTimeMillis() - ect.visitDate) < 30 * 86400000L) {
-//                        ben.form1Filled = true
-                    }
-                }
-            }
-        }
-
-    }
     fun filterText(text: String) {
         viewModelScope.launch {
             filter.emit(text)

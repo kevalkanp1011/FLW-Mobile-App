@@ -34,7 +34,7 @@ class SuspectedTBDataset(
         inputType = InputType.RADIO,
         title = "Sputum sample submitted at",
         entries = arrayOf("DMC", "SC", "PHC"),
-        required = true,
+        required = false,
         hasDependants = false
     )
 
@@ -42,7 +42,7 @@ class SuspectedTBDataset(
         id = 4,
         inputType = InputType.EDIT_TEXT,
         title = "Nikshay ID",
-        required = true,
+        required = false,
         hasDependants = false
     )
 
@@ -51,7 +51,7 @@ class SuspectedTBDataset(
         inputType = InputType.RADIO,
         title = "Sputum Test Result",
         entries = arrayOf("Positive", "Negative"),
-        required = true,
+        required = false,
         hasDependants = false
     )
 
@@ -69,23 +69,32 @@ class SuspectedTBDataset(
         inputType = InputType.EDIT_TEXT,
         title = "Facility Referral follow-ups",
         entries = arrayOf("Yes", "No"),
-        required = true,
+        required = false,
         hasDependants = false
     )
 
     suspend fun setUpPage(ben: BenRegCache?, saved: TBSuspectedCache?) {
-        val list = mutableListOf(
+        var list = mutableListOf(
             dateOfVisit,
             isSputumCollected,
-            sputumSubmittedAt,
-            nikshayId,
-            sputumTestResult,
+//            sputumSubmittedAt,
+//            nikshayId,
+//            sputumTestResult,
             referred,
             followUps
         )
         if (saved == null) {
             dateOfVisit.value = getDateFromLong(System.currentTimeMillis())
         } else {
+            list = mutableListOf(
+                dateOfVisit,
+                isSputumCollected,
+                sputumSubmittedAt,
+                nikshayId,
+                sputumTestResult,
+                referred,
+                followUps
+            )
             dateOfVisit.value = getDateFromLong(saved.visitDate)
             isSputumCollected.value = if (saved.isSputumCollected == true) "Yes" else "No"
             sputumSubmittedAt.value = saved.sputumSubmittedAt
@@ -103,9 +112,29 @@ class SuspectedTBDataset(
 
     }
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
-        return -1
-//        return when (formId) {
-//        }
+        return when (formId) {
+            isSputumCollected.id -> {
+                triggerDependants(
+                    source = isSputumCollected,
+                    passedIndex = index,
+                    triggerIndex = 0,
+                    target = sputumSubmittedAt
+                )
+                triggerDependants(
+                    source = isSputumCollected,
+                    passedIndex = index,
+                    triggerIndex = 0,
+                    target = sputumTestResult
+                )
+                triggerDependants(
+                    source = isSputumCollected,
+                    passedIndex = index,
+                    triggerIndex = 0,
+                    target = nikshayId
+                )
+            }
+            else -> -1
+        }
     }
 
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {

@@ -42,6 +42,7 @@ class EligibleCoupleTrackingFormFragment : Fragment() {
                         hardCodedListUpdate(formId)
                     }, isEnabled = !recordExists
                 )
+                binding.btnSubmit.isEnabled = !recordExists
                 binding.form.rvInputForm.adapter = adapter
                 lifecycleScope.launch {
                     viewModel.formList.collect {
@@ -106,11 +107,9 @@ class EligibleCoupleTrackingFormFragment : Fragment() {
     private fun hardCodedListUpdate(formId: Int) {
         binding.form.rvInputForm.adapter?.apply {
             when (formId) {
-                7 -> {
-//                    notifyItemChanged(viewModel.getIndexOfEdd())
-//                    notifyItemChanged(viewModel.getIndexOfWeeksOfPregnancy())
+                5 -> {
+                    notifyItemChanged(viewModel.getIndexOfIsPregnant())
                 }
-//                19 -> notifyItemChanged(viewModel.getIndexOfPastIllness())
             }
         }
     }

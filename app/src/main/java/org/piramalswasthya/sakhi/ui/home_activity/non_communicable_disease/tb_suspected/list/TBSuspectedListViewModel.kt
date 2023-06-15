@@ -15,7 +15,7 @@ class TBSuspectedListViewModel @Inject constructor(
     recordsRepo: RecordsRepo
 ) : ViewModel() {
 
-    private val allBenList = recordsRepo.ncdEligibleList
+    private val allBenList = recordsRepo.tbSuspectedList
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter){
             list, filter -> filterBenFormList(list, filter)

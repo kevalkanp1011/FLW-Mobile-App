@@ -174,5 +174,8 @@ interface BenDao {
     @Query("select ben.* from ben_basic_cache ben inner join  pregnancy_register pwr on ben.benId = pwr.benId inner join pregnancy_anc pwa on ben.benId = pwa.benId where ben.villageId = :villageId and pwr.isHrp =1 or pwa.hrpConfirmed = 1 order by pwa.visitNumber desc ")
     fun getHrpCases(villageId : Int) : Flow<List<BenBasicCache>>
 
+    @Query("select * from BEN_BASIC_CACHE where villageId = :villageId and tbsnFilled = 1" )
+    fun getScreeningList(villageId: Int): Flow<List<BenBasicCache>>
+
 
 }

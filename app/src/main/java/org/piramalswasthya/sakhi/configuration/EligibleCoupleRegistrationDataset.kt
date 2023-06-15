@@ -52,7 +52,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "RCH ID No. of Woman",
         arrayId = -1,
-        required = true,
+        required = false,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         isMobileNumber = true,
         etMaxLength = 12,
