@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.helpers.filterBenList
+import org.piramalswasthya.sakhi.helpers.filterBenFormList
 import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
 import org.piramalswasthya.sakhi.repositories.EcrRepo
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
@@ -22,25 +22,12 @@ class EligibleCoupleTrackingListViewModel @Inject constructor(
     val scope : CoroutineScope
         get() = viewModelScope
 
-    private val allBenList = recordsRepo.getEligibleTrackingList()
+    private val allBenList = recordsRepo.eligibleCoupleTrackingList
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter) { list, filter ->
-        filterBenList(list, filter)
+        filterBenFormList(list, filter)
     }
 
-    suspend fun updateFilledStatus(benBasicDomainForForms: List<BenBasicDomainForForm>) {
-        viewModelScope.launch {
-            benBasicDomainForForms.forEach { ben ->
-                val ect = ecrRepo.getEct(ben.benId)
-                ect?.let {
-                    if ((System.currentTimeMillis() - ect.visitDate) < 30 * 86400000L) {
-//                        ben.form1Filled = true
-                    }
-                }
-            }
-        }
-
-    }
     fun filterText(text: String) {
         viewModelScope.launch {
             filter.emit(text)

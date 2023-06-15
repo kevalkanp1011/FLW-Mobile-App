@@ -4,7 +4,7 @@ import androidx.annotation.ArrayRes
 
 data class FormElement(
     val id: Int,
-    val inputType: InputType,
+    var inputType: InputType,
     var title: String,
     val subtitle: String? = null,
     @ArrayRes var arrayId : Int = -1,
@@ -25,5 +25,6 @@ data class FormElement(
     var minDecimal: Double? = null,
     var maxDecimal: Double? = null,
     val orientation: Int? = null,
-    var hasSpeechToText: Boolean = false
+    var hasSpeechToText: Boolean = false,
+    var isEnabled: Boolean = true
 )

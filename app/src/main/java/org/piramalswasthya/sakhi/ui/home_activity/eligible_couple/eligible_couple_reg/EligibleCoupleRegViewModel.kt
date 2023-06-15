@@ -8,17 +8,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.EligibleCoupleRegistrationDataset
-import org.piramalswasthya.sakhi.configuration.PregnantWomanRegistrationDataset
-import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.EligibleCoupleRegCache
-import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
-import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.EcrRepo
-import org.piramalswasthya.sakhi.repositories.HbycRepo
-import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
-import org.piramalswasthya.sakhi.ui.home_activity.mother_care.pregnant_women_registration.form.PregnancyRegistrationFormFragmentArgs
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -91,10 +84,6 @@ class EligibleCoupleRegViewModel @Inject constructor(
         }
 
     }
-
-//    fun getIndexOfEdd(): Int = dataset.getIndexOfEdd()
-//    fun getIndexOfWeeksOfPregnancy(): Int = dataset.getIndexOfWeeksPregnancy()
-//    fun getIndexOfPastIllness(): Int = dataset.getIndexOfPastIllness()
 
     fun saveForm() {
         viewModelScope.launch {

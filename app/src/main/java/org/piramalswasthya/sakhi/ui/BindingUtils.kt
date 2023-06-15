@@ -20,6 +20,8 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.custom_views.VaccinationElement
 import org.piramalswasthya.sakhi.custom_views.VaccinationListHeader
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.model.AncFormState
+import org.piramalswasthya.sakhi.model.AncFormState.*
 import org.piramalswasthya.sakhi.model.FormInputOld
 import org.piramalswasthya.sakhi.model.ImmunizationDetailsDomain
 import org.piramalswasthya.sakhi.model.ImmunizationDetailsHeader
@@ -29,8 +31,11 @@ import org.piramalswasthya.sakhi.model.VaccineState.*
 import timber.log.Timber
 
 
-@BindingAdapter("vaccine_items","vaccine_click")
-fun VaccinationElement.setItems(data: ImmunizationDetailsDomain?, clickListener: VaccineClickListener?) {
+@BindingAdapter("vaccine_items", "vaccine_click")
+fun VaccinationElement.setItems(
+    data: ImmunizationDetailsDomain?,
+    clickListener: VaccineClickListener?
+) {
     setData(data, clickListener)
 }
 
@@ -236,3 +241,59 @@ fun ImageView.setBenImage(uriString: String?) {
 //        }
 //    })
 //}
+
+@BindingAdapter("anc_state")
+fun Button.setAncState(ancFormState: AncFormState?) {
+    ancFormState?.let {
+        visibility = View.VISIBLE
+        when (it) {
+            ALLOW_FILL -> {
+                text = "FILL"
+//                setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pending_actions, 0,0, 0)
+//                setBackgroundColor(
+//                    MaterialColors.getColor(
+//                        context,
+//                        androidx.appcompat.R.attr.colorPrimary,
+//                        Color.BLACK
+//                    )
+//                )
+            }
+
+            ALREADY_FILLED -> {
+                text = "VIEW"
+//                setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_circle, 0,0, 0)
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    setBackgroundColor(resources.getColor(R.color.green, context.theme))
+//                } else
+//                    setBackgroundColor(resources.getColor(R.color.green))
+            }
+
+            NO_FILL -> {
+//
+//                setCompoundDrawablesWithIntrinsicBounds(0, 0,0, 0)
+                visibility = View.INVISIBLE
+            }
+        }
+    }
+}
+
+@BindingAdapter("anc_state_icon")
+fun ImageView.setAncState(ancFormState: AncFormState?) {
+    ancFormState?.let {
+        setImageResource(when (it) {
+            ALLOW_FILL -> {
+               R.drawable.ic_pending_actions
+            }
+
+            ALREADY_FILLED -> {
+                R.drawable.ic_check_circle
+            }
+
+            NO_FILL -> {
+                R.drawable.ic_close
+            }
+        })
+    }
+}
+
+

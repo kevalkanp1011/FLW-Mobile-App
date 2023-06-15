@@ -57,7 +57,7 @@ class VaccineListAdapter(private val clickListener: VaccineClickListener) :
 //        private val clickedBen: (hhId: Long, benId : Long, isKid : Boolean) -> Unit,
 //        private val clickedHousehold: (hhId: Long) -> Unit
 //    ) {
-//        fun onClickedBen(item: BenBasicDomain) = clickedBen(item.hhId, item.benId, item.typeOfList== TypeOfList.CHILD.name || item.typeOfList == TypeOfList.INFANT.name || item.typeOfList== TypeOfList.ADOLESCENT.name)
+//        fun onClickedVisit(item: BenBasicDomain) = clickedBen(item.hhId, item.benId, item.typeOfList== TypeOfList.CHILD.name || item.typeOfList == TypeOfList.INFANT.name || item.typeOfList== TypeOfList.ADOLESCENT.name)
 //        fun onClickedHouseHold(item: BenBasicDomain) = clickedHousehold(item.hhId)
 //    }
 

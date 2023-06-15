@@ -617,6 +617,7 @@ class FormInputAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
+        val isEnabled = if (isEnabled) item.isEnabled else false
         when (item.inputType) {
             EDIT_TEXT -> (holder as EditTextInputViewHolder).bind(
                 item, isEnabled, formValueListener

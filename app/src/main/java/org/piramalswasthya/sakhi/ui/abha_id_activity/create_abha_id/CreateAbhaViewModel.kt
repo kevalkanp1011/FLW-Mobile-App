@@ -5,12 +5,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.network.*
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
+import org.piramalswasthya.sakhi.repositories.BenRepo
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateAbhaViewModel @Inject constructor(
-    private val abhaIdRepo: AbhaIdRepo, savedStateHandle: SavedStateHandle
+    private val abhaIdRepo: AbhaIdRepo,
+    private val benRepo: BenRepo,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     enum class State {
         IDLE, LOADING, ERROR_NETWORK, ERROR_SERVER, ERROR_INTERNAL, DOWNLOAD_SUCCESS, ABHA_GENERATE_SUCCESS, OTP_GENERATE_SUCCESS, OTP_VERIFY_SUCCESS, DOWNLOAD_ERROR
@@ -24,7 +27,9 @@ class CreateAbhaViewModel @Inject constructor(
 
     var hidResponse = MutableLiveData<CreateHIDResponse?>(null)
 
-    var showDisclaimer = MutableLiveData<Boolean?>(null)
+    private val _benMapped = MutableLiveData<String?>(null)
+    val benMapped: LiveData<String?>
+        get() = _benMapped
 
     private val txnId =
         CreateAbhaFragmentArgs.fromSavedStateHandle(savedStateHandle).txnId
@@ -51,7 +56,6 @@ class CreateAbhaViewModel @Inject constructor(
                 is NetworkResult.Success -> {
                     hidResponse.value = result.data
                     if ((benId != 0L) and (benRegId != 0L)) {
-                        showDisclaimer.value = true
                         mapBeneficiary(benId, benRegId, result.data.hID.toString(), result.data.healthIdNumber)
                     } else {
                         _state.value = State.ABHA_GENERATE_SUCCESS
@@ -77,13 +81,18 @@ class CreateAbhaViewModel @Inject constructor(
         _errorMessage.value = null
     }
 
-    private fun mapBeneficiary(benId: Long, benRegId: Long, healthId: String, healthIdNumber: String?) {
+    private suspend fun mapBeneficiary(benId: Long, benRegId: Long, healthId: String, healthIdNumber: String?) {
+        val ben = benRepo.getBenFromId(benId)
+
         val req = MapHIDtoBeneficiary(benRegId, benId, healthId, healthIdNumber,34, "")
 
         viewModelScope.launch {
             when (val result =
                 abhaIdRepo.mapHealthIDToBeneficiary(req)) {
                 is NetworkResult.Success -> {
+                    ben?.let {
+                        _benMapped.value = ben.firstName + " " + ben.lastName
+                    }
                     _state.value = State.ABHA_GENERATE_SUCCESS
                 }
                 is NetworkResult.Error -> {

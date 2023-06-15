@@ -34,6 +34,16 @@ object Konstants {
     const val hbncPart1Day = -1
     const val hbncPart2Day = -2
 
+    //PW-ANC
+    const val minAnc1Week = 5
+    const val maxAnc1Week = 12
+    const val minAnc2Week = 14
+    const val maxAnc2Week = 27
+    const val minAnc3Week = 28
+    const val maxAnc3Week = 35
+    const val minAnc4Week = 36
+    const val maxAnc4Week = 40
+
 
     const val defaultTimeStamp = 1603132200000L
 }

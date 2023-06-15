@@ -37,6 +37,10 @@ class AllBenViewModel @Inject constructor(
     val abha: LiveData<String?>
         get() = _abha
 
+    private val _benId = MutableLiveData<Long?>()
+    val benId: LiveData<Long?>
+        get() = _benId
+
     private val _benRegId = MutableLiveData<Long?>()
     val benRegId: LiveData<Long?>
         get() = _benRegId
@@ -51,6 +55,7 @@ class AllBenViewModel @Inject constructor(
     fun fetchAbha(benId: Long) {
         _abha.value = null
         _benRegId.value = null
+        _benId.value = benId
         viewModelScope.launch {
             val result = benRepo.getBeneficiaryWithId(benId)
             result?.let {

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home_activity.mother_care.delivery_stage_list.DeliveryStageListFragment">
+    tools:context=".ui.home_activity.maternal_health.delivery_stage_list.DeliveryStageListFragment">
 
     <TextView
         android:layout_width="match_parent"

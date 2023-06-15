@@ -25,6 +25,6 @@ interface EcrDao {
     @Query("select * from eligible_couple_tracking where benId = :benId order by visitDate limit 1")
     fun getEct(benId : Long) : EligibleCoupleTrackingCache?
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveRecord(eligibleCoupleTrackingCache: EligibleCoupleTrackingCache)
 }

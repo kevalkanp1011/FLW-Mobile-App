@@ -4,28 +4,19 @@ import android.content.Context
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.helpers.Languages
+import org.piramalswasthya.sakhi.helpers.getWeeksOfPregnancy
 import org.piramalswasthya.sakhi.model.BenBasicCache
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.InputType
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
-import java.util.concurrent.TimeUnit
 
 class PregnantWomanRegistrationDataset(
     context: Context, currentLanguage: Languages
 ) : Dataset(context, currentLanguage) {
 
     companion object {
-
-        private fun getCurrentDateString(): String {
-            val calendar = Calendar.getInstance()
-            val mdFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
-            return mdFormat.format(calendar.time)
-        }
-
         private fun getMinLmpMillis(): Long {
             val cal = Calendar.getInstance()
             cal.add(Calendar.DAY_OF_YEAR, -1 * 280)
@@ -46,7 +37,7 @@ class PregnantWomanRegistrationDataset(
 
     private val rchId = FormElement(
         id = 2,
-        inputType = InputType.EDIT_TEXT,
+        inputType = InputType.TEXT_VIEW,
         title = "RCH ID",
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -109,14 +100,14 @@ class PregnantWomanRegistrationDataset(
         id = 8,
         inputType = InputType.TEXT_VIEW,
         title = "Weeks of Pregnancy at the time of Registration",
-        required = true,
+        required = false,
     )
     private val edd = FormElement(
         id = 9,
         inputType = InputType.TEXT_VIEW,
         title = "EDD",
         arrayId = -1,
-        required = true,
+        required = false,
     )
     private val bloodGroup = FormElement(
         id = 10,
@@ -219,7 +210,6 @@ class PregnantWomanRegistrationDataset(
         inputType = InputType.EDIT_TEXT,
         title = "other",
         required = true,
-        etMaxLength = 12
     )
 
     private val isFirstPregnancy = FormElement(
@@ -256,7 +246,6 @@ class PregnantWomanRegistrationDataset(
         inputType = InputType.EDIT_TEXT,
         title = "other",
         required = true,
-        etMaxLength = 12
     )
 
     private val isHrpCase = FormElement(
@@ -315,6 +304,52 @@ class PregnantWomanRegistrationDataset(
             husbandName.value = ben.genDetails?.spouseName
             age.value = BenBasicCache.getAgeFromDob(ben.dob).toString()
         }
+        saved?.let {
+            dateOfReg.value = getDateFromLong(it.dateOfRegistration)
+            mcpCardNumber.value = it.mcpCardNumber.toString()
+            lmp.value = getDateFromLong(it.lmpDate)
+            weekOfPregnancy.value = getWeeksOfPregnancy(it.dateOfRegistration, it.lmpDate).toString()
+            edd.value = getEddFromLmp(it.lmpDate).toString()
+            bloodGroup.value = bloodGroup.getStringFromPosition(it.bloodGroupId)
+            weight.value = it.weight?.toString()
+            height.value = it.height?.toString()
+            vdrlrprTestResult.value = vdrlrprTestResult.getStringFromPosition(it.vdrlRprTestResultId)
+            dateOfVdrlTestDone.value = it.dateOfVdrlRprTest?.let { it1 -> getDateFromLong(it1) }
+            hivTestResult.value = hivTestResult.getStringFromPosition(it.hivTestResultId)
+            dateOfhivTestDone.value = it.dateOfHivTest?.let { it1 -> getDateFromLong(it1) }
+            hbsAgTestResult.value = hbsAgTestResult.getStringFromPosition(it.hbsAgTestResultId)
+            dateOfhbsAgTestDone.value = it.dateOfHbsAgTest?.let { it1 -> getDateFromLong(it1) }
+            pastIllness.value = it.pastIllness
+            if(pastIllness.value==pastIllness.entries!!.last())
+                list.add(list.indexOf(pastIllness)+1, otherPastIllness)
+            otherPastIllness.value = it.otherPastIllness
+            isFirstPregnancy.value = isFirstPregnancy.getStringFromPosition(if(it.is1st) 1 else 2)
+            if(isFirstPregnancy.value==pastIllness.entries!!.last()) {
+                totalNumberOfPreviousPregnancy.value = it.numPrevPregnancy?.toString()
+                complicationsDuringLastPregnancy.value = it.complicationPrevPregnancyId?.let { it1 ->
+                    complicationsDuringLastPregnancy.getStringFromPosition(
+                        it1
+                    )
+                }
+                list.addAll(
+                    list.indexOf(isFirstPregnancy) + 1,
+                    listOf(totalNumberOfPreviousPregnancy, complicationsDuringLastPregnancy)
+                )
+                otherComplicationsDuringLastPregnancy.value = it.otherComplication
+                if(complicationsDuringLastPregnancy.value == complicationsDuringLastPregnancy.entries!!.last())
+                    list.add(list.indexOf(complicationsDuringLastPregnancy)+1, otherComplicationsDuringLastPregnancy)
+            }
+            isHrpCase.value = isHrpCase.getStringFromPosition(if(it.isHrp) 1 else 2)
+            if(it.isHrp) {
+                assignedAsHrpBy.value = assignedAsHrpBy.getStringFromPosition(it.hrpIdById)
+                list.add(assignedAsHrpBy)
+            }
+
+            
+
+
+
+        }
         setUpPage(list)
 
     }
@@ -337,8 +372,8 @@ class PregnantWomanRegistrationDataset(
                 lmpLong?.let {
                     regLong?.let {
                         val bracket =
-                            (TimeUnit.MILLISECONDS.toDays(regLong - lmpLong) / 7).toString()
-                        weekOfPregnancy.value = bracket
+                            getWeeksOfPregnancy(regLong, lmpLong)
+                        weekOfPregnancy.value = bracket.toString()
                     }
                 }
                 edd.value = eddLong?.let { getDateFromLong(it) }
@@ -443,6 +478,8 @@ class PregnantWomanRegistrationDataset(
         }
 
     }
+
+
 
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
         (cacheModel as PregnantWomanRegistrationCache).let {form ->

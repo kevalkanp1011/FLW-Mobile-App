@@ -61,8 +61,10 @@ enum class Gender {
             " hbyc.benId is not null as hbycFilled,  " +
             " pwr.benId is not null as pwrFilled, " +
             " ecr.benId is not null as ecrFilled, " +
-//            " ((CAST((strftime('%s','now') - e.visitDate/1000)/60/60/24 AS INTEGER)) < 30 ) as ectFilled" +
-            " tbsn.benId is not null as tbsnFilled " +
+            " ect.benId is not null as ectFilled, " +
+            " ect.benId is not null as ectFilled, " +
+            " tbsn.benId is not null as tbsnFilled, " +
+            " tbsp.benId is not null as tbspFilled " +
             "from BENEFICIARY b " +
             "JOIN HOUSEHOLD h ON b.householdId = h.householdId " +
             "LEFT OUTER JOIN CBAC cbac on b.beneficiaryId = cbac.benId " +
@@ -73,7 +75,9 @@ enum class Gender {
             "LEFT OUTER JOIN HBYC hbyc on b.beneficiaryId = hbyc.benId " +
             "LEFT OUTER JOIN PREGNANCY_REGISTER pwr on b.beneficiaryId = pwr.benId " +
             "LEFT OUTER JOIN ELIGIBLE_COUPLE_REG ecr on b.beneficiaryId = ecr.benId " +
+            "LEFT OUTER JOIN ELIGIBLE_COUPLE_TRACKING ect on (b.beneficiaryId = ect.benId  and CAST((strftime('%s','now') - ect.visitDate/1000)/60/60/24 AS INTEGER) < 30 )" +
             "LEFT OUTER JOIN TB_SCREENING tbsn on b.beneficiaryId = tbsn.benId " +
+            "LEFT OUTER JOIN TB_SUSPECTED tbsp on b.beneficiaryId = tbsp.benId " +
             "where b.isDraft = 0 GROUP BY b.beneficiaryId ORDER BY b.updatedDate DESC"
 )
 data class BenBasicCache(
@@ -106,7 +110,9 @@ data class BenBasicCache(
     val hbycFilled: Boolean,
     val pwrFilled : Boolean,
     val ecrFilled: Boolean,
-    val tbsnFilled: Boolean
+    val ectFilled: Boolean,
+    val tbsnFilled: Boolean,
+    val tbspFilled: Boolean
 ) {
     companion object {
         private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
@@ -202,6 +208,27 @@ data class BenBasicCache(
         )
     }
 
+    fun asBenBasicDomainModelForTbspForm(): BenBasicDomainForForm {
+        return BenBasicDomainForForm(
+            benId = benId,
+            hhId = hhId,
+            regDate = dateFormat.format(Date(regDate)),
+            benName = benName,
+            benSurname = benSurname ?: "Not Available",
+            gender = gender.name,
+            dob = dob,
+            mobileNo = mobileNo.toString(),
+            fatherName = fatherName,
+            familyHeadName = familyHeadName ?: "Not Available",
+//            typeOfList = typeOfList.name,
+            rchId = rchId ?: "Not Available",
+            hrpStatus = hrpStatus,
+            form1Filled = tbspFilled,
+            syncState = cbacSyncState
+                ?: throw IllegalStateException("Sync state for cbac is null!!")
+        )
+    }
+
     fun asBenBasicDomainModelForCdrForm(): BenBasicDomainForForm {
         return BenBasicDomainForForm(
             benId = benId,
@@ -279,7 +306,7 @@ data class BenBasicCache(
 //            typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
-            form1Filled = pmsmaFilled,
+            form1Filled = ectFilled,
             syncState = syncState
         )
     }

@@ -9,7 +9,7 @@ class EligibleCoupleTrackingDataset (
     context: Context, currentLanguage: Languages
     ) : Dataset(context, currentLanguage) {
 
-    private val dateOfVisit = FormElement(
+    private var dateOfVisit = FormElement(
         id = 1,
         inputType = InputType.DATE_PICKER,
         title = context.getString(R.string.tracking_date),
@@ -51,7 +51,7 @@ class EligibleCoupleTrackingDataset (
         title = "Pregnancy Test Result",
         entries = arrayOf("Positive", "Negative"),
         required = true,
-        hasDependants = false
+        hasDependants = true
     )
 
     private val isPregnant = FormElement(
@@ -59,7 +59,7 @@ class EligibleCoupleTrackingDataset (
         inputType = InputType.RADIO,
         title = "Is the woman pregnant?",
         entries = arrayOf("Yes", "No", "Don't Know"),
-        required = true,
+        required = false,
         hasDependants = true
     )
 
@@ -68,7 +68,7 @@ class EligibleCoupleTrackingDataset (
         inputType = InputType.RADIO,
         title = "Are you using Family Planning Method?",
         entries = arrayOf("Yes", "No"),
-        required = true,
+        required = false,
         hasDependants = true
     )
 
@@ -78,7 +78,7 @@ class EligibleCoupleTrackingDataset (
         title = "Method of Contraception",
         arrayId = R.array.method_of_contraception,
         entries = resources.getStringArray(R.array.method_of_contraception),
-        required = true,
+        required = false,
         hasDependants = true
 
     )
@@ -88,26 +88,51 @@ class EligibleCoupleTrackingDataset (
         inputType = InputType.EDIT_TEXT,
         title = "Any Other Method",
         required = true,
+        etInputType = android.text.InputType.TYPE_CLASS_TEXT,
+        etMaxLength = 50
     )
 
+
+    fun getIndexOfIsPregnant() = getIndexById(isPregnant.id)
 
     suspend fun setUpPage(ben: BenRegCache?, saved: EligibleCoupleTrackingCache?) {
         val list = mutableListOf(
             dateOfVisit,
             financialYear,
-            month,
+//            month,
             isPregnancyTestDone,
             isPregnant,
-            usingFamilyPlanning,
+//            usingFamilyPlanning,
         )
-        dateOfVisit.value = getDateFromLong(System.currentTimeMillis())
-        dateOfVisit.value?.let {
-            financialYear.value = getFinancialYear(it)
-            month.value = resources.getStringArray(R.array.visit_months)[Companion.getMonth(it)!!]
-        }
+        if (saved == null) {
+            dateOfVisit.value = getDateFromLong(System.currentTimeMillis())
+            dateOfVisit.value?.let {
+                financialYear.value = getFinancialYear(it)
+                month.value = resources.getStringArray(R.array.visit_months)[Companion.getMonth(it)!!]
+            }
 
-        ben?.let {
-            dateOfVisit.min = it.regDate
+            ben?.let {
+                dateOfVisit.min = it.regDate
+            }
+        } else {
+            dateOfVisit.value = getDateFromLong(saved.visitDate)
+            isPregnancyTestDone.value = saved.isPregnancyTestDone
+            if (isPregnancyTestDone.value == "Yes") {
+                list.add(pregnancyTestResult)
+                pregnancyTestResult.value = saved.pregnancyTestResult
+            }
+            isPregnant.value = saved.isPregnant
+            if (isPregnant.value == "No") {
+                list.add(usingFamilyPlanning)
+                usingFamilyPlanning.value = if (saved.usingFamilyPlanning == true) "Yes" else "No"
+                if (saved.methodOfContraception in resources.getStringArray(R.array.method_of_contraception)) {
+                    list.add(methodOfContraception)
+                    methodOfContraception.value = saved.methodOfContraception
+                } else if (saved.methodOfContraception != null) {
+                    list.add(anyOtherMethod)
+                    anyOtherMethod.value = saved.methodOfContraception
+                }
+            }
         }
         setUpPage(list)
 
@@ -128,6 +153,27 @@ class EligibleCoupleTrackingDataset (
                 )
             }
 
+            pregnancyTestResult.id -> {
+                if (pregnancyTestResult.value == "Positive") {
+                    isPregnant.value = "Yes"
+                    isPregnant.isEnabled = false
+                } else {
+                    isPregnant.value = null
+                    isPregnant.isEnabled = true
+                }
+                handleListOnValueChanged(isPregnant.id,0)
+
+            }
+
+            isPregnant.id -> {
+                triggerDependants(
+                    source = isPregnant,
+                    passedIndex = index,
+                    triggerIndex = 1,
+                    target = usingFamilyPlanning,
+                    targetSideEffect = listOf(methodOfContraception, anyOtherMethod)
+                )
+            }
             usingFamilyPlanning.id -> {
                 triggerDependants(
                     source = usingFamilyPlanning,

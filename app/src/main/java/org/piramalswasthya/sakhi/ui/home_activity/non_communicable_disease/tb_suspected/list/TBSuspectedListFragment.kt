@@ -16,7 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
-import org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.eligible_couple_list.EligibleCoupleListFragmentDirections
 
 @AndroidEntryPoint
 class TBSuspectedListFragment: Fragment() {
@@ -50,7 +49,7 @@ class TBSuspectedListFragment: Fragment() {
                             benId
                         )
                     )
-                }), "Register"
+                }), "Track"
         )
         binding.rvAny.adapter = benAdapter
 
