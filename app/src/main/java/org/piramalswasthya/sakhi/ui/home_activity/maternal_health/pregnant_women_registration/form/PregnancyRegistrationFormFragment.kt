@@ -37,8 +37,8 @@ class PregnancyRegistrationFormFragment : Fragment() {
 
         viewModel.recordExists.observe(viewLifecycleOwner) { notIt ->
             notIt?.let { recordExists ->
-                binding.fabEdit.visibility = if(recordExists) View.VISIBLE else View.GONE
-                binding.btnSubmit.visibility = if(recordExists) View.GONE else View.VISIBLE
+                binding.fabEdit.visibility = if (recordExists) View.VISIBLE else View.GONE
+                binding.btnSubmit.visibility = if (recordExists) View.GONE else View.VISIBLE
                 val adapter = FormInputAdapter(
                     formValueListener = FormInputAdapter.FormValueListener { formId, index ->
                         viewModel.updateListOnValueChanged(formId, index)
@@ -48,7 +48,9 @@ class PregnancyRegistrationFormFragment : Fragment() {
                 binding.form.rvInputForm.adapter = adapter
                 lifecycleScope.launch {
                     viewModel.formList.collect {
-                        adapter.submitList(it)
+                        if (it.isNotEmpty())
+
+                            adapter.submitList(it)
 
                     }
                 }
@@ -63,7 +65,7 @@ class PregnancyRegistrationFormFragment : Fragment() {
         binding.btnSubmit.setOnClickListener {
             submitHouseholdForm()
         }
-        binding.fabEdit.setOnClickListener{
+        binding.fabEdit.setOnClickListener {
             viewModel.setRecordExist(false)
         }
 
@@ -125,6 +127,7 @@ class PregnancyRegistrationFormFragment : Fragment() {
                     notifyItemChanged(viewModel.getIndexOfEdd())
                     notifyItemChanged(viewModel.getIndexOfWeeksOfPregnancy())
                 }
+
                 19 -> notifyItemChanged(viewModel.getIndexOfPastIllness())
             }
         }

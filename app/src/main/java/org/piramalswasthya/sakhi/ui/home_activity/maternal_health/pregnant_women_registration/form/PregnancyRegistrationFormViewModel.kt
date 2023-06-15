@@ -14,6 +14,7 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.PregnantWomanRegistrationDataset
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
+import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
 import timber.log.Timber
 import javax.inject.Inject
@@ -23,7 +24,8 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     preferenceDao: PreferenceDao,
     @ApplicationContext context: Context,
-    private val maternalHealthRepo: MaternalHealthRepo
+    private val maternalHealthRepo: MaternalHealthRepo,
+    private val benRepo: BenRepo
 //    private val householdRepo: HouseholdRepo,
 //    userRepo: UserRepo
 ) : ViewModel() {
@@ -103,6 +105,11 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
 
                     dataset.mapValues(pregnancyRegistrationForm, 1)
                     maternalHealthRepo.persistRegisterRecord(pregnancyRegistrationForm)
+                    maternalHealthRepo.getBenFromId(benId)?.let {
+                        val hasBenUpdated = dataset.mapValueToBenRegId(it)
+                        if (hasBenUpdated)
+                            benRepo.persistRecord(it)
+                    }
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
                     Timber.d("saving PWR data failed!!")

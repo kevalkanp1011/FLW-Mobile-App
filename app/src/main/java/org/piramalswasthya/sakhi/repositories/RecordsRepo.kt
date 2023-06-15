@@ -112,8 +112,10 @@ class RecordsRepo @Inject constructor(
 
     fun getPregnantWomenList() = benDao.getAllPregnancyWomenList(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForPregnantWomanRegistrationForm() } }
+    fun getPregnantWomenListCount() = benDao.getAllPregnancyWomenListCount(selectedVillage)
     fun getRegisteredPregnantWomanList() = benDao.getAllRegisteredPregnancyWomenList(selectedVillage)
         .map { list -> list.map { it.asDomainModel() } }
+    fun getRegisteredPregnantWomanListCount() = benDao.getAllRegisteredPregnancyWomenListCount(selectedVillage)
 
     fun getHrpCases() = benDao.getHrpCases(selectedVillage)
         .map { list -> list.distinctBy { it.benId }.map { it.asBasicDomainModel() }}

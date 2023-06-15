@@ -39,7 +39,7 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             HomeFragmentDirections.actionNavHomeToEligibleCoupleFragment()
         ),
         Icon(
-            R.drawable.ic__mother_care,
+            R.drawable.ic_maternal_health,
             resources.getString(R.string.icon_title_mc),
             null,
             HomeFragmentDirections.actionNavHomeToMotherCareFragment()
@@ -132,15 +132,13 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
         Icon(
             R.drawable.ic__pregnancy,
             resources.getString(R.string.icon_title_pmr),
-//            recordsRepo.pregnantListCount,
-            null,
+            recordsRepo.getPregnantWomenListCount(),
             MotherCareFragmentDirections.actionMotherCareFragmentToPwRegistrationFragment()
         ),
         Icon(
             R.drawable.ic__pregnancy,
             resources.getString(R.string.icon_title_pmt),
-//            recordsRepo.pregnantListCount,
-            null,
+            recordsRepo.getRegisteredPregnantWomanListCount(),
             MotherCareFragmentDirections.actionMotherCareFragmentToPwAncVisitsFragment()
         ),
 //        , Icon(

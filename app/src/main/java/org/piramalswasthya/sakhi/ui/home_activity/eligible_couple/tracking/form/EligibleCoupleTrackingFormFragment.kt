@@ -46,7 +46,9 @@ class EligibleCoupleTrackingFormFragment : Fragment() {
                 binding.form.rvInputForm.adapter = adapter
                 lifecycleScope.launch {
                     viewModel.formList.collect {
-                        adapter.submitList(it)
+                        if (it.isNotEmpty())
+
+                            adapter.submitList(it)
 
                     }
                 }
@@ -63,21 +65,28 @@ class EligibleCoupleTrackingFormFragment : Fragment() {
         }
 
         viewModel.state.observe(viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 EligibleCoupleTrackingFormViewModel.State.SAVE_SUCCESS -> {
                     if (viewModel.isPregnant) {
                         findNavController().navigate(
-                            EligibleCoupleTrackingFormFragmentDirections.actionEligibleCoupleTrackingFormFragmentToPregnancyRegistrationFormFragment(benId = viewModel.benId)
+                            EligibleCoupleTrackingFormFragmentDirections.actionEligibleCoupleTrackingFormFragmentToPregnancyRegistrationFormFragment(
+                                benId = viewModel.benId
+                            )
                         )
                         viewModel.resetState()
                     } else {
                         findNavController().navigate(
                             EligibleCoupleTrackingFormFragmentDirections.actionEligibleCoupleTrackingFormFragmentToEligibleCoupleTrackingListFragment()
                         )
-                        Toast.makeText(requireContext(), "Tracking form filled successfully", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Tracking form filled successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         viewModel.resetState()
                     }
                 }
+
                 else -> {}
             }
         }

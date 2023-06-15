@@ -122,6 +122,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
 //                updateUIForCurrentElement = false
 //            }
             Timber.d("Emitting ${newList}}")
+//            _listFlow.emit(emptyList())
             _listFlow.emit(newList)
         }
     }
@@ -458,6 +459,25 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
 
     protected fun validateIntMinMax(formElement: FormElement): Int {
         formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.toLong()?.let {
+            formElement.min?.let { min ->
+                formElement.max?.let { max ->
+                    if (it < min) {
+                        resources.getString(
+                            R.string.form_input_min_limit_error, formElement.title, min
+                        )
+                    } else if (it > max) {
+                        resources.getString(
+                            R.string.form_input_max_limit_error, formElement.title, max
+                        )
+                    } else null
+                }
+            }
+        }
+        return -1
+    }
+
+    protected fun validateDoubleMinMax(formElement: FormElement): Int {
+        formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.toDouble()?.let {
             formElement.min?.let { min ->
                 formElement.max?.let { max ->
                     if (it < min) {

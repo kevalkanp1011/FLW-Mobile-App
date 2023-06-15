@@ -26,6 +26,11 @@
         <item>Non - Reactive</item>
         <item>Test Not Done</item>
     </string-array>
+    <string-array name="maternal_health_test_result_2">
+        <item>Positive</item>
+        <item>Negative</item>
+        <item>Test Not Done</item>
+    </string-array>
 
 
     <string-array name="maternal_health_past_illness">
@@ -56,6 +61,12 @@
         <item>OBSTRUCTED LABOUR</item>
         <item>PPH</item>
         <item>Any Other</item>
+    </string-array>
+    <string-array name="maternal_health_reg_hrp_confirm_by">
+        <item>ANM</item>
+        <item>CHO</item>
+        <item>PHC – MO</item>
+        <item>Specialist at Higher Facility</item>
     </string-array>
 
     <string-array name="visit_months">

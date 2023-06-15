@@ -131,6 +131,8 @@ class NewBenRegG15ViewModel @Inject constructor(
     fun getIndexOfFatherName() = dataset.getIndexOfFatherName()
     fun getIndexOfMotherName() = dataset.getIndexOfMotherName()
     fun getIndexOfSpouseName() = dataset.getIndexOfSpouseName()
+    fun getIndexOfMaritalStatus() = dataset.getIndexOfMaritalStatus()
+    fun getIndexOfElement(id : Int)  = dataset.getIndexById(id)
 
     fun updateValueByIdAndReturnListIndex ( id : Int, value : String?)  : Int{
         dataset.setValueById(id, value)
@@ -740,6 +742,8 @@ class NewBenRegG15ViewModel @Inject constructor(
     fun resetErrorMessage() {
         _errorMessage.value = null
     }
+
+
 
 
 }

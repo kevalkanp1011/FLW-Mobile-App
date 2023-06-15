@@ -5,11 +5,19 @@ import android.content.Context
 import android.text.InputType
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Languages
-import org.piramalswasthya.sakhi.model.*
-import org.piramalswasthya.sakhi.model.InputType.*
+import org.piramalswasthya.sakhi.model.FormElement
+import org.piramalswasthya.sakhi.model.HouseholdAmenities
+import org.piramalswasthya.sakhi.model.HouseholdCache
+import org.piramalswasthya.sakhi.model.HouseholdDetails
+import org.piramalswasthya.sakhi.model.HouseholdFamily
+import org.piramalswasthya.sakhi.model.InputType.DROPDOWN
+import org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT
+import org.piramalswasthya.sakhi.model.InputType.RADIO
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class HouseholdFormDataset(context: Context, language: Languages) : Dataset(context, language) {
     companion object {
@@ -41,6 +49,7 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
         arrayId = -1,
         required = true,
         allCaps = true,
+        hasSpeechToText = true,
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
     )
 
@@ -51,6 +60,7 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
         arrayId = -1,
         required = false,
         allCaps = true,
+        hasSpeechToText = true,
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
     )
     private val mobileNoHeadOfFamily = FormElement(

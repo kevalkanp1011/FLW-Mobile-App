@@ -87,10 +87,14 @@ interface BenDao {
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 2 and villageId=:selectedVillage")
     fun getAllPregnancyWomenList(selectedVillage: Int): Flow<List<BenBasicCache>>
+    @Query("SELECT COUNT(*) FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 2 and villageId=:selectedVillage")
+    fun getAllPregnancyWomenListCount(selectedVillage: Int): Flow<Int>
 
 
     @Query("SELECT pr.benId as benId, ben.firstName || ' ' || ben.lastName as name, ben.dob as dob, ben.gen_spouseName as spouseName, pr.lmpDate as lmp FROM PREGNANCY_REGISTER pr INNER JOIN BENEFICIARY  ben ON pr.benId=ben.beneficiaryId where ben.loc_village_id=:selectedVillage and pr.active=1")
     fun getAllRegisteredPregnancyWomenList(selectedVillage: Int): Flow<List<PregnantWomenVisitCache>>
+    @Query("SELECT count(*) FROM PREGNANCY_REGISTER pr INNER JOIN BENEFICIARY  ben ON pr.benId=ben.beneficiaryId where ben.loc_village_id=:selectedVillage and pr.active=1")
+    fun getAllRegisteredPregnancyWomenListCount(selectedVillage: Int): Flow<Int>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 3 and villageId=:selectedVillage")
     fun getAllDeliveryStageWomenList(selectedVillage: Int): Flow<List<BenBasicCache>>
@@ -171,7 +175,7 @@ interface BenDao {
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 4 and villageId=:selectedVillage")
     fun getAllMotherImmunizationList(selectedVillage: Int): Flow<List<BenBasicCache>>
 
-    @Query("select ben.* from ben_basic_cache ben inner join  pregnancy_register pwr on ben.benId = pwr.benId inner join pregnancy_anc pwa on ben.benId = pwa.benId where ben.villageId = :villageId and pwr.isHrp =1 or pwa.hrpConfirmed = 1 order by pwa.visitNumber desc ")
+    @Query("select ben.* from ben_basic_cache ben inner join  pregnancy_register pwr on ben.benId = pwr.benId left  outer join pregnancy_anc pwa on ben.benId = pwa.benId where ben.villageId = :villageId and pwr.isHrp =1 or pwa.hrpConfirmed = 1 order by pwa.visitNumber desc ")
     fun getHrpCases(villageId : Int) : Flow<List<BenBasicCache>>
 
     @Query("select * from BEN_BASIC_CACHE where villageId = :villageId and tbsnFilled = 1" )

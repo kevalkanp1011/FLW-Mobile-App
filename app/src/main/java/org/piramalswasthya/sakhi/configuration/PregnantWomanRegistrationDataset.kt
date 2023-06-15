@@ -37,7 +37,7 @@ class PregnantWomanRegistrationDataset(
 
     private val rchId = FormElement(
         id = 2,
-        inputType = InputType.TEXT_VIEW,
+        inputType = InputType.EDIT_TEXT,
         title = "RCH ID",
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -160,7 +160,7 @@ class PregnantWomanRegistrationDataset(
     private val hivTestResult = FormElement(
         id = 15,
         inputType = InputType.DROPDOWN,
-        title = "hiv Test result",
+        title = "HIV Test result",
         arrayId = R.array.maternal_health_test_result,
         entries = resources.getStringArray(R.array.maternal_health_test_result),
         required = false,
@@ -178,9 +178,9 @@ class PregnantWomanRegistrationDataset(
     private val hbsAgTestResult = FormElement(
         id = 17,
         inputType = InputType.DROPDOWN,
-        title = "IhbsAg Test result",
-        arrayId = R.array.maternal_health_test_result,
-        entries = resources.getStringArray(R.array.maternal_health_test_result),
+        title = "HBsAg Test result",
+        arrayId = R.array.maternal_health_test_result_2,
+        entries = resources.getStringArray(R.array.maternal_health_test_result_2),
         required = false,
         hasDependants = true
     )
@@ -200,7 +200,7 @@ class PregnantWomanRegistrationDataset(
         title = "Past Illness",
         arrayId = R.array.maternal_health_past_illness,
         entries = resources.getStringArray(R.array.maternal_health_past_illness),
-        required = false,
+        required = true,
         value = resources.getStringArray(R.array.maternal_health_past_illness).first(),
         hasDependants = true
     )
@@ -234,7 +234,7 @@ class PregnantWomanRegistrationDataset(
     private val complicationsDuringLastPregnancy = FormElement(
         id = 23,
         inputType = InputType.DROPDOWN,
-        title = "Complication in last Pregnancy",
+        title = "Any complications in Last Pregnancy",
         arrayId = R.array.maternal_health_past_del_complications,
         entries = resources.getStringArray(R.array.maternal_health_past_del_complications),
         required = false,
@@ -251,7 +251,7 @@ class PregnantWomanRegistrationDataset(
     private val isHrpCase = FormElement(
         id = 25,
         inputType = InputType.RADIO,
-        title = "Is HRP Case",
+        title = "Is Identified as HRP cases?",
         entries = arrayOf("Yes", "No"),
         hasDependants = true,
         required = false
@@ -259,9 +259,9 @@ class PregnantWomanRegistrationDataset(
     private val assignedAsHrpBy = FormElement(
         id = 26,
         inputType = InputType.DROPDOWN,
-        title = "Assigned HRP by ",
-        arrayId = R.array.maternal_health_past_del_complications,
-        entries = resources.getStringArray(R.array.maternal_health_past_del_complications),
+        title = "Who had identified as HRP?",
+        arrayId = R.array.maternal_health_reg_hrp_confirm_by,
+        entries = resources.getStringArray(R.array.maternal_health_reg_hrp_confirm_by),
         required = true
     )
 
@@ -309,11 +309,17 @@ class PregnantWomanRegistrationDataset(
             mcpCardNumber.value = it.mcpCardNumber.toString()
             lmp.value = getDateFromLong(it.lmpDate)
             weekOfPregnancy.value = getWeeksOfPregnancy(it.dateOfRegistration, it.lmpDate).toString()
-            edd.value = getEddFromLmp(it.lmpDate).toString()
+            edd.value = getDateFromLong(getEddFromLmp(it.lmpDate))
             bloodGroup.value = bloodGroup.getStringFromPosition(it.bloodGroupId)
             weight.value = it.weight?.toString()
             height.value = it.height?.toString()
             vdrlrprTestResult.value = vdrlrprTestResult.getStringFromPosition(it.vdrlRprTestResultId)
+            if(it.vdrlRprTestResultId == 1 ||it.vdrlRprTestResultId == 2)
+                list.add(list.indexOf(vdrlrprTestResult)+1, dateOfVdrlTestDone)  
+            if(it.hivTestResultId == 1 ||it.hivTestResultId == 2)
+                list.add(list.indexOf(hivTestResult)+1, dateOfVdrlTestDone)
+            if(it.hbsAgTestResultId == 1 ||it.hbsAgTestResultId == 2)
+                list.add(list.indexOf(hbsAgTestResult)+1, dateOfVdrlTestDone)
             dateOfVdrlTestDone.value = it.dateOfVdrlRprTest?.let { it1 -> getDateFromLong(it1) }
             hivTestResult.value = hivTestResult.getStringFromPosition(it.hivTestResultId)
             dateOfhivTestDone.value = it.dateOfHivTest?.let { it1 -> getDateFromLong(it1) }
@@ -324,7 +330,7 @@ class PregnantWomanRegistrationDataset(
                 list.add(list.indexOf(pastIllness)+1, otherPastIllness)
             otherPastIllness.value = it.otherPastIllness
             isFirstPregnancy.value = isFirstPregnancy.getStringFromPosition(if(it.is1st) 1 else 2)
-            if(isFirstPregnancy.value==pastIllness.entries!!.last()) {
+            if(isFirstPregnancy.value==isFirstPregnancy.entries!!.last()) {
                 totalNumberOfPreviousPregnancy.value = it.numPrevPregnancy?.toString()
                 complicationsDuringLastPregnancy.value = it.complicationPrevPregnancyId?.let { it1 ->
                     complicationsDuringLastPregnancy.getStringFromPosition(
@@ -439,7 +445,10 @@ class PregnantWomanRegistrationDataset(
                     target = otherPastIllness
                 )
             }
-
+            otherPastIllness.id ->{
+                validateEmptyOnEditText(otherPastIllness)
+                validateAllAlphabetsSpaceOnEditText(otherPastIllness)
+            }
             isFirstPregnancy.id -> {
                 complicationsDuringLastPregnancy.apply {
                     value = entries!!.first()
@@ -463,6 +472,10 @@ class PregnantWomanRegistrationDataset(
                     triggerIndex = complicationsDuringLastPregnancy.entries!!.lastIndex,
                     target = otherComplicationsDuringLastPregnancy
                 )
+            }
+            otherComplicationsDuringLastPregnancy.id -> {
+                validateEmptyOnEditText(otherComplicationsDuringLastPregnancy)
+                validateAllAlphabetsSpaceOnEditText(otherComplicationsDuringLastPregnancy)
             }
 
             isHrpCase.id -> {
@@ -513,5 +526,16 @@ class PregnantWomanRegistrationDataset(
 
             
         }
+    }
+
+    fun mapValueToBenRegId( ben: BenRegCache?): Boolean {
+        val rchIdFromBen = ben?.rchId?.toLong()
+        rchId.value?.toLong()?.takeIf { rchIdFromBen!=null }?.let {
+            if(it!=rchIdFromBen){
+                ben?.rchId = it.toString()
+                return true
+            }
+        }
+        return false
     }
 }

@@ -218,7 +218,9 @@ class NewBenRegL15Fragment : Fragment() {
                 lifecycleScope.launch {
                     viewModel.formList.collect {
                         Timber.d("Collecting $it")
-                        adapter.submitList(it)
+                        if (it.isNotEmpty())
+
+                            adapter.submitList(it)
                     }
                 }
             }

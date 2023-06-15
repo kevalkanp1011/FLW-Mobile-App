@@ -6,7 +6,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import org.piramalswasthya.sakhi.model.*
-import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 
 @Dao
 interface MaternalHealthDao {
@@ -17,7 +16,7 @@ interface MaternalHealthDao {
     @Query("select * from pregnancy_anc where benId = :benId and visitNumber = :visitNumber limit 1")
     fun getSavedRecord(benId: Long, visitNumber: Int): PregnantWomanAncCache?
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveRecord(pregnancyRegistrationForm: PregnantWomanRegistrationCache)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
