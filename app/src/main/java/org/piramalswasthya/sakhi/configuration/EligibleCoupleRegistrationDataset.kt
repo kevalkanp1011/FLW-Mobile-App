@@ -62,7 +62,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val name = FormElement(
         id = 2,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Name of Woman",
         arrayId = -1,
         required = true,
@@ -84,7 +84,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age = FormElement(
         id = 4,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Current Age of Woman",
         arrayId = -1,
         required = true,
@@ -188,7 +188,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 1,
         max = 9,
-        min = 0,
+        min = 0
     )
 
     private val numMale = FormElement(
@@ -236,7 +236,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age1 = FormElement(
         id = 18,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "1st Child Age",
         arrayId = -1,
         required = true,
@@ -290,7 +290,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age2 = FormElement(
         id = 23,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "2nd Child Age",
         arrayId = -1,
         required = true,
@@ -344,7 +344,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age3 = FormElement(
         id = 28,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "3rd Child Age",
         arrayId = -1,
         required = true,
@@ -365,7 +365,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         hasDependants = true,
     )
 
-    private val SecondAndThirdChildGap = FormElement(
+    private val secondAndThirdChildGap = FormElement(
         id = 30,
         inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "Gap between 2nd child and 3rd Child",
@@ -398,7 +398,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age4 = FormElement(
         id = 33,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "4th Child Age",
         arrayId = -1,
         required = true,
@@ -452,7 +452,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age5 = FormElement(
         id = 38,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "5th Child Age",
         arrayId = -1,
         required = true,
@@ -506,7 +506,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age6 = FormElement(
         id = 43,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "6th Child Age",
         arrayId = -1,
         required = true,
@@ -560,7 +560,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age7 = FormElement(
         id = 48,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "7th Child Age",
         arrayId = -1,
         required = true,
@@ -614,7 +614,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age8 = FormElement(
         id = 53,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "8th Child Age",
         arrayId = -1,
         required = true,
@@ -668,7 +668,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age9 = FormElement(
         id = 58,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "9th Child Age",
         arrayId = -1,
         required = true,
@@ -704,8 +704,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     suspend fun setUpPage(ben: BenRegCache?, saved: EligibleCoupleRegCache?) {
         val list = mutableListOf(
             dateOfReg, rchId, name, husbandName, age, ageAtMarriage, womanDetails, aadharNo, bankAccount, bankName, branchName, ifsc,
-            noOfChildren, noOfLiveChildren, numMale, numFemale, firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
-            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap
+            noOfChildren, noOfLiveChildren, numMale, numFemale
         )
         dateOfReg.value = getDateFromLong(System.currentTimeMillis())
 //        dateOfReg.value?.let {
@@ -719,25 +718,26 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             name.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
             husbandName.value = ben.genDetails?.spouseName
             age.value = BenBasicCache.getAgeFromDob(ben.dob).toString()
+            ageAtMarriage.value = ben.genDetails?.ageAtMarriage.toString()
         }
         setUpPage(list)
 
     }
 
-    private val firstPage by lazy {
-        listOf(
-            dateOfReg, rchId, name, husbandName, age, ageAtMarriage, womanDetails, aadharNo, bankAccount, bankName, branchName, ifsc,
-            noOfChildren, noOfLiveChildren, numMale, numFemale, firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
-            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap
-        )
-    }
-
-    suspend fun setPage(ecr: EligibleCoupleRegCache?) {
-        setUpPage(firstPage)
-        ecr?.let { saved ->
-            dateOfReg.value = getDateFromLong(saved.dateOfReg)
-        }
-    }
+//    private val firstPage by lazy {
+//        listOf(
+//            dateOfReg, rchId, name, husbandName, age, ageAtMarriage, womanDetails, aadharNo, bankAccount, bankName, branchName, ifsc,
+//            noOfChildren, noOfLiveChildren, numMale, numFemale, firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+//            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap
+//        )
+//    }
+//
+//    suspend fun setPage(ecr: EligibleCoupleRegCache?) {
+//        setUpPage(firstPage)
+//        ecr?.let { saved ->
+//            dateOfReg.value = getDateFromLong(saved.dateOfReg)
+//        }
+//    }
 
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
@@ -758,66 +758,255 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                 setMarriageAndFirstChildGap()
                 -1
             }
-            age1.id -> {
-
-                if (age1.value.isNullOrEmpty()) {
-                    validateEmptyOnEditText(age1)
-                    return -1
-                }
-                age1.min = 1
-                age1.max = 15
-                validateIntMinMax(age1)
-                if (age1.errorText == null) {
-                    val cal = Calendar.getInstance()
-                    cal.add(
-                        Calendar.YEAR, -1 * age1.value!!.toInt()
-                    )
-                    val year = cal.get(Calendar.YEAR)
-                    val month = cal.get(Calendar.MONTH) + 1
-                    val day = cal.get(Calendar.DAY_OF_MONTH)
-                    val newDob =
-                        "${if (day > 9) day else "0$day"}-${if (month > 9) month else "0$month"}-$year"
-                    if (dob1.value != newDob) {
-                        dob1.value = newDob
-                        dob1.errorText = null
-                    }
-                }
-                -1
-            }
+//            age1.id -> {
+//
+//                if (age1.value.isNullOrEmpty()) {
+//                    validateEmptyOnEditText(age1)
+//                    return -1
+//                }
+//                age1.min = 1
+//                age1.max = 15
+//                validateIntMinMax(age1)
+//                if (age1.errorText == null) {
+//                    val cal = Calendar.getInstance()
+//                    cal.add(
+//                        Calendar.YEAR, -1 * age1.value!!.toInt()
+//                    )
+//                    val year = cal.get(Calendar.YEAR)
+//                    val month = cal.get(Calendar.MONTH) + 1
+//                    val day = cal.get(Calendar.DAY_OF_MONTH)
+//                    val newDob =
+//                        "${if (day > 9) day else "0$day"}-${if (month > 9) month else "0$month"}-$year"
+//                    if (dob1.value != newDob) {
+//                        dob1.value = newDob
+//                        dob1.errorText = null
+//                    }
+//                }
+//                -1
+//            }
             dob2.id -> {
                 assignValuesToAgeFromDob(getLongFromDate(dob2.value), age2)
                 setFirstChildAndSecondChildGap()
                 -1
             }
-            age2.id -> {
-
-                if (age2.value.isNullOrEmpty()) {
-                    validateEmptyOnEditText(age2)
-                    return -1
-                }
-                age2.min = 1
-                age2.max = 15
-                validateIntMinMax(age2)
-                if (age2.errorText == null) {
-                    val cal = Calendar.getInstance()
-                    cal.add(
-                        Calendar.YEAR, -1 * age2.value!!.toInt()
-                    )
-                    val year = cal.get(Calendar.YEAR)
-                    val month = cal.get(Calendar.MONTH) + 1
-                    val day = cal.get(Calendar.DAY_OF_MONTH)
-                    val newDob =
-                        "${if (day > 9) day else "0$day"}-${if (month > 9) month else "0$month"}-$year"
-                    if (dob2.value != newDob) {
-                        dob2.value = newDob
-                        dob2.errorText = null
-                    }
-                }
-//                ageAtMarriage.value = null
-//                age.value?.toLong()?.let {
-//                    ageAtMarriage.min = it
-//                }
+            dob3.id -> {
+                assignValuesToAgeFromDob(getLongFromDate(dob3.value), age3)
+                setSecondAndThirdChildGap()
                 -1
+            }
+            dob4.id -> {
+                assignValuesToAgeFromDob(getLongFromDate(dob4.value), age4)
+                setThirdAndFourthChildGap()
+                -1
+            }
+            dob5.id -> {
+                assignValuesToAgeFromDob(getLongFromDate(dob5.value), age5)
+                setFourthAndFifthChildGap()
+                -1
+            }
+            dob6.id -> {
+                assignValuesToAgeFromDob(getLongFromDate(dob6.value), age6)
+                setFifthAndSixthChildGap()
+                -1
+            }
+            dob7.id -> {
+                assignValuesToAgeFromDob(getLongFromDate(dob7.value), age7)
+                setSixthAndSeventhChildGap()
+                -1
+            }
+            dob8.id -> {
+                assignValuesToAgeFromDob(getLongFromDate(dob8.value), age8)
+                setSeventhAndEighthChildGap()
+                -1
+            }
+            dob9.id -> {
+                assignValuesToAgeFromDob(getLongFromDate(dob9.value), age9)
+                setEighthAndNinthChildGap()
+                -1
+            }
+
+            noOfLiveChildren.id -> {
+            when(noOfLiveChildren.value.takeIf { !it.isNullOrEmpty() }?.toInt()?:0) {
+                    0 -> triggerDependants(
+                        source = numFemale,
+                        addItems = listOf(),
+                        removeItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
+                            thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap,
+                            fourthChildDetails, dob4, age4, gender4, thirdAndFourthChildGap,
+                            fifthChildDetails, dob5, age5, gender5, fourthAndFifthChildGap,
+                            sixthChildDetails, dob6, age6, gender6, fifthAndSixthChildGap,
+                            seventhChildDetails, dob7, age7, gender7, sixthAndSeventhChildGap,
+                            eighthChildDetails, dob8, age8, gender8, seventhAndEighthChildGap,
+                            ninthChildDetails, dob9, age9, gender9, eighthAndNinthChildGap)
+                    )
+                1 -> triggerDependants(
+                        source = numFemale,
+                        addItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap),
+                        removeItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
+                            thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap,
+                            fourthChildDetails, dob4, age4, gender4, thirdAndFourthChildGap,
+                            fifthChildDetails, dob5, age5, gender5, fourthAndFifthChildGap,
+                            sixthChildDetails, dob6, age6, gender6, fifthAndSixthChildGap,
+                            seventhChildDetails, dob7, age7, gender7, sixthAndSeventhChildGap,
+                            eighthChildDetails, dob8, age8, gender8, seventhAndEighthChildGap,
+                            ninthChildDetails, dob9, age9, gender9, eighthAndNinthChildGap)
+                    )
+                    2 -> triggerDependants(
+                        source = numFemale,
+                        addItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap),
+                        removeItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
+                            thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap,
+                            fourthChildDetails, dob4, age4, gender4, thirdAndFourthChildGap,
+                            fifthChildDetails, dob5, age5, gender5, fourthAndFifthChildGap,
+                            sixthChildDetails, dob6, age6, gender6, fifthAndSixthChildGap,
+                            seventhChildDetails, dob7, age7, gender7, sixthAndSeventhChildGap,
+                            eighthChildDetails, dob8, age8, gender8, seventhAndEighthChildGap,
+                            ninthChildDetails, dob9, age9, gender9, eighthAndNinthChildGap)
+                    )
+                    3 -> triggerDependants(
+                        source = numFemale,
+                        addItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
+                            thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap),
+                        removeItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
+                            thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap,
+                            fourthChildDetails, dob4, age4, gender4, thirdAndFourthChildGap,
+                            fifthChildDetails, dob5, age5, gender5, fourthAndFifthChildGap,
+                            sixthChildDetails, dob6, age6, gender6, fifthAndSixthChildGap,
+                            seventhChildDetails, dob7, age7, gender7, sixthAndSeventhChildGap,
+                            eighthChildDetails, dob8, age8, gender8, seventhAndEighthChildGap,
+                            ninthChildDetails, dob9, age9, gender9, eighthAndNinthChildGap)
+                    )
+                    4 -> triggerDependants(
+                        source = numFemale,
+                        addItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
+                            thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap,
+                            fourthChildDetails, dob4, age4, gender4, thirdAndFourthChildGap),
+                        removeItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
+                            thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap,
+                            fourthChildDetails, dob4, age4, gender4, thirdAndFourthChildGap,
+                            fifthChildDetails, dob5, age5, gender5, fourthAndFifthChildGap,
+                            sixthChildDetails, dob6, age6, gender6, fifthAndSixthChildGap,
+                            seventhChildDetails, dob7, age7, gender7, sixthAndSeventhChildGap,
+                            eighthChildDetails, dob8, age8, gender8, seventhAndEighthChildGap,
+                            ninthChildDetails, dob9, age9, gender9, eighthAndNinthChildGap)
+                    )
+                    5 -> triggerDependants(
+                        source = numFemale,
+                        addItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
+                            thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap,
+                            fourthChildDetails, dob4, age4, gender4, thirdAndFourthChildGap,
+                            fifthChildDetails, dob5, age5, gender5, fourthAndFifthChildGap),
+                        removeItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
+                            thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap,
+                            fourthChildDetails, dob4, age4, gender4, thirdAndFourthChildGap,
+                            fifthChildDetails, dob5, age5, gender5, fourthAndFifthChildGap,
+                            sixthChildDetails, dob6, age6, gender6, fifthAndSixthChildGap,
+                            seventhChildDetails, dob7, age7, gender7, sixthAndSeventhChildGap,
+                            eighthChildDetails, dob8, age8, gender8, seventhAndEighthChildGap,
+                            ninthChildDetails, dob9, age9, gender9, eighthAndNinthChildGap)
+                    )
+                    6 -> triggerDependants(
+                        source = numFemale,
+                        addItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
+                            thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap,
+                            fourthChildDetails, dob4, age4, gender4, thirdAndFourthChildGap,
+                            fifthChildDetails, dob5, age5, gender5, fourthAndFifthChildGap,
+                            sixthChildDetails, dob6, age6, gender6, fifthAndSixthChildGap),
+                        removeItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
+                            thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap,
+                            fourthChildDetails, dob4, age4, gender4, thirdAndFourthChildGap,
+                            fifthChildDetails, dob5, age5, gender5, fourthAndFifthChildGap,
+                            sixthChildDetails, dob6, age6, gender6, fifthAndSixthChildGap,
+                            seventhChildDetails, dob7, age7, gender7, sixthAndSeventhChildGap,
+                            eighthChildDetails, dob8, age8, gender8, seventhAndEighthChildGap,
+                            ninthChildDetails, dob9, age9, gender9, eighthAndNinthChildGap)
+                    )
+                    7 -> triggerDependants(
+                        source = numFemale,
+                        addItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
+                            thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap,
+                            fourthChildDetails, dob4, age4, gender4, thirdAndFourthChildGap,
+                            fifthChildDetails, dob5, age5, gender5, fourthAndFifthChildGap,
+                            sixthChildDetails, dob6, age6, gender6, fifthAndSixthChildGap,
+                            seventhChildDetails, dob7, age7, gender7, sixthAndSeventhChildGap),
+                        removeItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
+                            thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap,
+                            fourthChildDetails, dob4, age4, gender4, thirdAndFourthChildGap,
+                            fifthChildDetails, dob5, age5, gender5, fourthAndFifthChildGap,
+                            sixthChildDetails, dob6, age6, gender6, fifthAndSixthChildGap,
+                            seventhChildDetails, dob7, age7, gender7, sixthAndSeventhChildGap,
+                            eighthChildDetails, dob8, age8, gender8, seventhAndEighthChildGap,
+                            ninthChildDetails, dob9, age9, gender9, eighthAndNinthChildGap)
+                    )
+                    8 -> triggerDependants(
+                        source = numFemale,
+                        addItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
+                            thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap,
+                            fourthChildDetails, dob4, age4, gender4, thirdAndFourthChildGap,
+                            fifthChildDetails, dob5, age5, gender5, fourthAndFifthChildGap,
+                            sixthChildDetails, dob6, age6, gender6, fifthAndSixthChildGap,
+                            seventhChildDetails, dob7, age7, gender7, sixthAndSeventhChildGap,
+                            eighthChildDetails, dob8, age8, gender8, seventhAndEighthChildGap),
+                        removeItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
+                            thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap,
+                            fourthChildDetails, dob4, age4, gender4, thirdAndFourthChildGap,
+                            fifthChildDetails, dob5, age5, gender5, fourthAndFifthChildGap,
+                            sixthChildDetails, dob6, age6, gender6, fifthAndSixthChildGap,
+                            seventhChildDetails, dob7, age7, gender7, sixthAndSeventhChildGap,
+                            eighthChildDetails, dob8, age8, gender8, seventhAndEighthChildGap,
+                            ninthChildDetails, dob9, age9, gender9, eighthAndNinthChildGap)
+                    )
+                    9 -> triggerDependants(
+                        source = numFemale,
+                        addItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
+                            thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap,
+                            fourthChildDetails, dob4, age4, gender4, thirdAndFourthChildGap,
+                            fifthChildDetails, dob5, age5, gender5, fourthAndFifthChildGap,
+                            sixthChildDetails, dob6, age6, gender6, fifthAndSixthChildGap,
+                            seventhChildDetails, dob7, age7, gender7, sixthAndSeventhChildGap,
+                            eighthChildDetails, dob8, age8, gender8, seventhAndEighthChildGap,
+                            ninthChildDetails, dob9, age9, gender9, eighthAndNinthChildGap),
+                        removeItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
+                            thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap,
+                            fourthChildDetails, dob4, age4, gender4, thirdAndFourthChildGap,
+                            fifthChildDetails, dob5, age5, gender5, fourthAndFifthChildGap,
+                            sixthChildDetails, dob6, age6, gender6, fifthAndSixthChildGap,
+                            seventhChildDetails, dob7, age7, gender7, sixthAndSeventhChildGap,
+                            eighthChildDetails, dob8, age8, gender8, seventhAndEighthChildGap,
+                            ninthChildDetails, dob9, age9, gender9, eighthAndNinthChildGap)
+                    )
+                    else -> triggerDependants(
+                        source = numFemale,
+                        addItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap),
+                        removeItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
+                            thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap,
+                            fourthChildDetails, dob4, age4, gender4, thirdAndFourthChildGap,
+                            fifthChildDetails, dob5, age5, gender5, fourthAndFifthChildGap,
+                            sixthChildDetails, dob6, age6, gender6, fifthAndSixthChildGap,
+                            seventhChildDetails, dob7, age7, gender7, sixthAndSeventhChildGap,
+                            eighthChildDetails, dob8, age8, gender8, seventhAndEighthChildGap,
+                            ninthChildDetails, dob9, age9, gender9, eighthAndNinthChildGap))
+                }
+                return 1
             }
             else -> -1
         }
@@ -833,6 +1022,34 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private fun setFirstChildAndSecondChildGap() {
         firstAndSecondChildGap.value =
             (age2.value?.toInt()?.let { age1.value?.toInt()?.minus(it) }).toString() }
+
+    private fun setSecondAndThirdChildGap() {
+        secondAndThirdChildGap.value =
+            (age3.value?.toInt()?.let { age2.value?.toInt()?.minus(it) }).toString() }
+
+    private fun setThirdAndFourthChildGap() {
+        thirdAndFourthChildGap.value =
+            (age4.value?.toInt()?.let { age3.value?.toInt()?.minus(it) }).toString() }
+
+    private fun setFourthAndFifthChildGap() {
+        fourthAndFifthChildGap.value =
+            (age5.value?.toInt()?.let { age4.value?.toInt()?.minus(it) }).toString() }
+
+    private fun setFifthAndSixthChildGap() {
+        fifthAndSixthChildGap.value =
+            (age6.value?.toInt()?.let { age5.value?.toInt()?.minus(it) }).toString() }
+
+    private fun setSixthAndSeventhChildGap() {
+        sixthAndSeventhChildGap.value =
+            (age7.value?.toInt()?.let { age6.value?.toInt()?.minus(it) }).toString() }
+
+    private fun setSeventhAndEighthChildGap() {
+        seventhAndEighthChildGap.value =
+            (age8.value?.toInt()?.let { age7.value?.toInt()?.minus(it) }).toString() }
+
+    private fun setEighthAndNinthChildGap() {
+        eighthAndNinthChildGap.value =
+            (age9.value?.toInt()?.let { age8.value?.toInt()?.minus(it) }).toString() }
 
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
         (cacheModel as EligibleCoupleRegCache).let { ecr ->
@@ -859,14 +1076,86 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                 else -> null
             }
             ecr.marriageFirstChildGap = marriageFirstChildGap.value?.toInt()
-            ecr.dob2 = getLongFromDate(dob2.value)
-            ecr.age2 = age2.value?.toInt()
-            ecr.gender2 = when (gender2.value) {
-                gender2.entries!![0] -> Gender.MALE
-                gender2.entries!![1] -> Gender.FEMALE
-                else -> null
+            if(noOfLiveChildren.value?.toInt()!! > 1) {
+                ecr.dob2 = getLongFromDate(dob2.value)
+                ecr.age2 = age2.value?.toInt()
+                ecr.gender2 = when (gender2.value) {
+                    gender2.entries!![0] -> Gender.MALE
+                    gender2.entries!![1] -> Gender.FEMALE
+                    else -> null
+                }
+                ecr.firstAndSecondChildGap = firstAndSecondChildGap.value?.toInt()
             }
-            ecr.firstAndSecondChildGap = firstAndSecondChildGap.value?.toInt()
+            if(noOfLiveChildren.value?.toInt()!! > 2) {
+                ecr.dob3 = getLongFromDate(dob3.value)
+                ecr.age3 = age3.value?.toInt()
+                ecr.gender3 = when (gender3.value) {
+                    gender3.entries!![0] -> Gender.MALE
+                    gender3.entries!![1] -> Gender.FEMALE
+                    else -> null
+                }
+                ecr.secondAndThirdChildGap = secondAndThirdChildGap.value?.toInt()
+            }
+            if(noOfLiveChildren.value?.toInt()!! > 3) {
+                ecr.dob4 = getLongFromDate(dob4.value)
+                ecr.age4 = age4.value?.toInt()
+                ecr.gender4 = when (gender4.value) {
+                    gender4.entries!![0] -> Gender.MALE
+                    gender4.entries!![1] -> Gender.FEMALE
+                    else -> null
+                }
+                ecr.thirdAndFourthChildGap = thirdAndFourthChildGap.value?.toInt()
+            }
+            if(noOfLiveChildren.value?.toInt()!! > 4) {
+                ecr.dob5 = getLongFromDate(dob5.value)
+                ecr.age5 = age5.value?.toInt()
+                ecr.gender5 = when (gender5.value) {
+                    gender5.entries!![0] -> Gender.MALE
+                    gender5.entries!![1] -> Gender.FEMALE
+                    else -> null
+                }
+                ecr.fourthAndFifthChildGap = fourthAndFifthChildGap.value?.toInt()
+            }
+            if(noOfLiveChildren.value?.toInt()!! > 5) {
+                ecr.dob6 = getLongFromDate(dob6.value)
+                ecr.age6 = age6.value?.toInt()
+                ecr.gender6 = when (gender6.value) {
+                    gender6.entries!![0] -> Gender.MALE
+                    gender6.entries!![1] -> Gender.FEMALE
+                    else -> null
+                }
+                ecr.fifthANdSixthChildGap = fifthAndSixthChildGap.value?.toInt()
+            }
+            if(noOfLiveChildren.value?.toInt()!! > 6) {
+                ecr.dob7 = getLongFromDate(dob7.value)
+                ecr.age7 = age7.value?.toInt()
+                ecr.gender7 = when (gender7.value) {
+                    gender7.entries!![0] -> Gender.MALE
+                    gender7.entries!![1] -> Gender.FEMALE
+                    else -> null
+                }
+                ecr.sixthAndSeventhChildGap = sixthAndSeventhChildGap.value?.toInt()
+            }
+            if(noOfLiveChildren.value?.toInt()!! > 7) {
+                ecr.dob8 = getLongFromDate(dob8.value)
+                ecr.age8 = age8.value?.toInt()
+                ecr.gender8 = when (gender8.value) {
+                    gender8.entries!![0] -> Gender.MALE
+                    gender8.entries!![1] -> Gender.FEMALE
+                    else -> null
+                }
+                ecr.seventhAndEighthChildGap = seventhAndEighthChildGap.value?.toInt()
+            }
+            if(noOfLiveChildren.value?.toInt()!! > 8) {
+                ecr.dob9 = getLongFromDate(dob9.value)
+                ecr.age9 = age9.value?.toInt()
+                ecr.gender9 = when (gender9.value) {
+                    gender9.entries!![0] -> Gender.MALE
+                    gender9.entries!![1] -> Gender.FEMALE
+                    else -> null
+                }
+                ecr.eighthAndNinthChildGap = eighthAndNinthChildGap.value?.toInt()
+            }
         }
     }
 }

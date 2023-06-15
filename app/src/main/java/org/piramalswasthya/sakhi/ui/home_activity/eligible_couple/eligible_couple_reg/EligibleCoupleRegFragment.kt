@@ -41,6 +41,7 @@ class EligibleCoupleRegFragment : Fragment() {
                 val adapter = FormInputAdapter(
                     formValueListener = FormInputAdapter.FormValueListener { formId, index ->
                         viewModel.updateListOnValueChanged(formId, index)
+                        hardCodedListUpdate(formId)
                     }, isEnabled = !recordExists
                 )
                 binding.form.rvInputForm.adapter = adapter
@@ -89,6 +90,49 @@ class EligibleCoupleRegFragment : Fragment() {
                 binding.form.rvInputForm.scrollToPosition(result)
             }
             false
+        }
+    }
+
+    private fun hardCodedListUpdate(formId: Int) {
+        binding.form.rvInputForm.adapter?.apply {
+            when (formId) {
+                17 -> {
+                    notifyItemChanged(18)
+                    notifyItemChanged(20)
+                }
+                22 -> {
+                    notifyItemChanged(23)
+                    notifyItemChanged(25)
+                }
+                27 -> {
+                    notifyItemChanged(28)
+                    notifyItemChanged(30)
+                }
+                32 -> {
+                    notifyItemChanged(33)
+                    notifyItemChanged(35)
+                }
+                37 -> {
+                    notifyItemChanged(38)
+                    notifyItemChanged(40)
+                }
+                42 -> {
+                    notifyItemChanged(43)
+                    notifyItemChanged(44)
+                }
+                47 -> {
+                    notifyItemChanged(48)
+                    notifyItemChanged(50)
+                }
+                52 -> {
+                    notifyItemChanged(53)
+                    notifyItemChanged(55)
+                }
+                57 -> {
+                    notifyItemChanged(58)
+                    notifyItemChanged(60)
+                }
+            }
         }
     }
 
