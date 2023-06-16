@@ -25,6 +25,5 @@ class TBScreeningListViewModel @Inject constructor(
         viewModelScope.launch {
             filter.emit(text)
         }
-
     }
 }

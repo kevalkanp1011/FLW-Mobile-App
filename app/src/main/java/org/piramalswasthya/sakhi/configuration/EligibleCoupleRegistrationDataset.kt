@@ -68,7 +68,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         required = true,
         allCaps = true,
         hasSpeechToText = true,
-        etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
+        etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS,
+        isEnabled = false
     )
 
     private val husbandName = FormElement(
@@ -79,7 +80,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         required = true,
         allCaps = true,
         hasSpeechToText = true,
-        etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
+        etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS,
+        isEnabled = false
     )
 
     private val age = FormElement(
