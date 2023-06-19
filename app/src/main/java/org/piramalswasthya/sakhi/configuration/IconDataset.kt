@@ -39,7 +39,7 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             HomeFragmentDirections.actionNavHomeToEligibleCoupleFragment()
         ),
         Icon(
-            R.drawable.ic_maternal_health,
+            R.drawable.ic__maternal_health,
             resources.getString(R.string.icon_title_mc),
             null,
             HomeFragmentDirections.actionNavHomeToMotherCareFragment()

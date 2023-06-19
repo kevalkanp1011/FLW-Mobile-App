@@ -1254,9 +1254,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     validateEmptyOnEditText(ageAtMarriage)
                     validateIntMinMax(ageAtMarriage)
                     if(it==ageAtMarriage.value?.toInt()){
-                        val cal = Calendar.getInstance().apply {
-                            add(Calendar.YEAR, -1*it)
-                        }
+                        val cal = Calendar.getInstance()
                         dateOfMarriage.max = cal.timeInMillis
                         cal.add(Calendar.YEAR, -1)
                         dateOfMarriage.min = cal.timeInMillis

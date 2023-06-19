@@ -82,7 +82,7 @@ class EligibleCoupleFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__mother_care)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__maternal_health)
         }
     }
 }

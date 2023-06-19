@@ -202,7 +202,7 @@ class PregnantWomanAncVisitDataset(
         id = 23,
         inputType = InputType.EDIT_TEXT,
         title = "Any other High Risk conditions",
-        required = false,
+        required = true,
     )
     private val highRiskReferralFacility = FormElement(
         id = 24,
@@ -317,6 +317,8 @@ class PregnantWomanAncVisitDataset(
         if(visitNumber==1) {
             list.remove(fundalHeight)
             list.remove(numIfaAcidTabGiven)
+        }else{
+            list.remove(numFolicAcidTabGiven)
         }
         saved?.let {
             ancDate.value = getDateFromLong(it.ancDate)
