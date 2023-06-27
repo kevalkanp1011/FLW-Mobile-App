@@ -175,6 +175,14 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideDeliveryOutcomeDao(database : InAppDb) : DeliveryOutcomeDao = database.deliveryOutcomeDao
+
+    @Singleton
+    @Provides
+    fun provideInfantRegDao(database : InAppDb) : InfantRegDao = database.infantRegDao
+
+    @Singleton
+    @Provides
     fun providePreferenceDao(@ApplicationContext context: Context) = PreferenceDao(context)
 
 

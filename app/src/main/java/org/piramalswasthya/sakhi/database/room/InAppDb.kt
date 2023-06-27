@@ -37,7 +37,9 @@ import timber.log.Timber
         EligibleCoupleTrackingCache::class,
         TBScreeningCache::class,
         TBSuspectedCache::class,
-        PregnantWomanAncCache::class
+        PregnantWomanAncCache::class,
+        DeliveryOutcomeCache::class,
+        InfantRegCache::class
     ],
     views = [BenBasicCache::class],
     version = 1, exportSchema = false
@@ -63,6 +65,8 @@ abstract class InAppDb : RoomDatabase() {
     abstract val vaccineDao: ImmunizationDao
     abstract val maternalHealthDao : MaternalHealthDao
     abstract val tbDao : TBDao
+    abstract val deliveryOutcomeDao: DeliveryOutcomeDao
+    abstract val infantRegDao: InfantRegDao
 
     companion object {
         @Volatile
