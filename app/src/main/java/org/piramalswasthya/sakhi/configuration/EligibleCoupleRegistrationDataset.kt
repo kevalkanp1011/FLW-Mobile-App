@@ -65,21 +65,21 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Name of Woman",
         arrayId = -1,
-        required = true,
+        required = false,
         allCaps = true,
-        hasSpeechToText = true,
+        hasSpeechToText = false,
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS,
         isEnabled = false
     )
 
     private val husbandName = FormElement(
         id = 3,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Name of Husband",
         arrayId = -1,
-        required = true,
+        required = false,
         allCaps = true,
-        hasSpeechToText = true,
+        hasSpeechToText = false,
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS,
         isEnabled = false
     )
@@ -89,7 +89,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Current Age of Woman",
         arrayId = -1,
-        required = true,
+        required = false,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 2,
         max = Konstants.maxAgeForGenBen.toLong(),
@@ -98,10 +98,10 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val ageAtMarriage = FormElement(
         id = 5,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Age of Woman at Marriage",
         arrayId = -1,
-        required = true,
+        required = false,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 2,
         max = Konstants.maxAgeForGenBen.toLong(),
@@ -121,7 +121,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "Aadhaar Number of Woman",
         arrayId = -1,
-        required = true,
+        required = false,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         isMobileNumber = true,
         etMaxLength = 12,
@@ -134,7 +134,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "Bank AC No or Post Office AC No",
         arrayId = -1,
-        required = true,
+        required = false,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         isMobileNumber = true,
         etMaxLength = 18,
@@ -703,6 +703,10 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         min = 0,
     )
 
+    private var maleChild = 0
+
+    private var femaleChild = 0
+
     suspend fun setUpPage(ben: BenRegCache?, saved: EligibleCoupleRegCache?) {
         val list = mutableListOf(
             dateOfReg, rchId, name, husbandName, age, ageAtMarriage, womanDetails, aadharNo, bankAccount, bankName, branchName, ifsc,
@@ -1010,6 +1014,25 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                 }
                 return 1
             }
+
+//            gender1.id, gender2.id, gender3.id, gender4.id, gender5.id,
+//            gender6.id, gender7.id, gender8.id, gender9.id -> {
+//                maleChild = 0
+//                femaleChild = 0
+//
+//                if (gender1.value == "Male") {
+//                    maleChild += 1
+//                } else if (gender1.value == "Female") {
+//                    femaleChild += 1
+//                }
+//
+//                if (gender1.value == "Male") {
+//                    maleChild += 1
+//                } else if (gender1.value == "Female") {
+//                    femaleChild += 1
+//                }
+//                -1
+//            }
             else -> -1
         }
     }

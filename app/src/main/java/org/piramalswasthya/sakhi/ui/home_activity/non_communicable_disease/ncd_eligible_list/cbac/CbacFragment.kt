@@ -45,14 +45,14 @@ class CbacFragment : Fragment() {
     private val ast1AlertDialog by lazy {
         AlertDialog.Builder(requireContext())
             .setTitle("SUSPECTED HRP AND NCD CASE!")
-            .setMessage(context?.getString(R.string.hrpncd_sus_valid))
+            .setMessage(context?.getString(R.string.tb_suspected_alert))
             .setPositiveButton("Ok"){dialog,_ -> dialog.dismiss() }
             .create()
     }
     private val ast2AlertDialog by lazy {
         AlertDialog.Builder(requireContext())
             .setTitle("SUSPECTED HRP CASE!")
-            .setMessage(context?.getString(R.string.hrp_sug_valid))
+            .setMessage(context?.getString(R.string.tb_suspected_family_alert))
             .setPositiveButton("Ok"){dialog,_ -> dialog.dismiss() }
             .create()
     }
@@ -136,16 +136,22 @@ class CbacFragment : Fragment() {
         }
         viewModel.raFhScore.observe(viewLifecycleOwner) {
             binding.ddFhScore.text = it
+            viewModel.raTotalScore.value?.let {
+                    total ->
+                run {
+                    if (total.substring(total.lastIndexOf(' ') + 1).toInt() >= 4) {
+                        if (!totalScorePopupShown) {
+                            raAlertDialog.show()
+                            totalScorePopupShown = true
+                        }
+                    }
+                }
+            }
         }
         viewModel.raTotalScore.observe(viewLifecycleOwner) {
             if (it.substring(it.lastIndexOf(' ') + 1).toInt() >= 4) {
                 binding.ncdSusValidDisplay.visibility = View.VISIBLE
                 viewModel.setFlagForNcd(true)
-                if (!totalScorePopupShown) {
-                    raAlertDialog.show()
-                    totalScorePopupShown = true
-                }
-
             } else {
                 if (binding.ncdSusValidDisplay.visibility != View.GONE) {
                     binding.ncdSusValidDisplay.visibility = View.GONE
@@ -168,10 +174,6 @@ class CbacFragment : Fragment() {
             if (it > 0) {
                 binding.tvTbSputumCollect.visibility = View.VISIBLE
                 viewModel.setCollectSputum(1)
-                if (!ed1PopupShown) {
-                    ast1AlertDialog.show()
-                    ed1PopupShown = true
-                }
             } else {
                 binding.tvTbSputumCollect.visibility = View.GONE
                 viewModel.setCollectSputum(1)
@@ -181,10 +183,6 @@ class CbacFragment : Fragment() {
             if (it > 0) {
                 binding.tbSusValidDisplay.visibility = View.VISIBLE
                 viewModel.setTraceAllMembers(1)
-                if (!ed2PopupShown) {
-                    ast2AlertDialog.show()
-                    ed2PopupShown = true
-                }
             } else {
                 binding.tbSusValidDisplay.visibility = View.GONE
                 viewModel.setTraceAllMembers(0)
@@ -209,7 +207,14 @@ class CbacFragment : Fragment() {
             when (id) {
                 R.id.rb_yes -> viewModel.setTakingTbDrug(1)
                 R.id.rb_no -> viewModel.setTakingTbDrug(2)
-
+            }
+            viewModel.ast2.value?.let {
+                if (it > 0) {
+                    if (!ed2PopupShown) {
+                        ast2AlertDialog.show()
+                        ed2PopupShown = true
+                    }
+                }
             }
         }
         binding.cbacHistb.cbacEdRg.setOnCheckedChangeListener { _, id ->
@@ -246,6 +251,15 @@ class CbacFragment : Fragment() {
             when (id) {
                 R.id.rb_yes -> viewModel.setNtSwets(1)
                 R.id.rb_no -> viewModel.setNtSwets(2)
+            }
+
+            viewModel.ast1.value?.let {
+                if (it > 0) {
+                    if (!ed1PopupShown) {
+                        ast1AlertDialog.show()
+                        ed1PopupShown = true
+                    }
+                }
             }
         }
         binding.cbacRecurrentUlceration.cbacEdRg.setOnCheckedChangeListener { _, id ->
