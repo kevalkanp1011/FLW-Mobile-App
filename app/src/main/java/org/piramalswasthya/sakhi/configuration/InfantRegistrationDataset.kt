@@ -224,25 +224,33 @@ class InfantRegistrationDataset(
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
             babyCriedAtBirth.id -> {
-                triggerDependants(
-                    source = babyCriedAtBirth,
-                    passedIndex = index,
-                    triggerIndex = 1,
-                    target = resuscitation
-                )
-                triggerDependants(
-                    source = resuscitation,
-                    passedIndex = index,
-                    triggerIndex = 1,
-                    target = referred
-                )
+                if(index == 1) {
+                    triggerDependants(
+                        source = babyCriedAtBirth,
+                        addItems = listOf(resuscitation, referred),
+                        removeItems = listOf()
+                    )
+                } else {
+                    triggerDependants(
+                        source = babyCriedAtBirth,
+                        addItems = listOf(),
+                        removeItems = listOf(resuscitation, referred),
+                    )
+                }
+//                triggerDependants(
+//                    source = resuscitation,
+//                    passedIndex = index,
+//                    triggerIndex = 1,
+//                    target = referred
+//                )
             }
             hadBirthDefect.id -> {
                 triggerDependants(
                     source = hadBirthDefect,
                     passedIndex = index,
                     triggerIndex = 0,
-                    target = birthDefect
+                    target = birthDefect,
+                    targetSideEffect = listOf(otherDefect, birthDefect)
                 )
             }
             birthDefect.id -> {

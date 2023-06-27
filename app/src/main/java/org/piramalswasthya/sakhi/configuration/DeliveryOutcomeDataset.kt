@@ -226,23 +226,32 @@ class DeliveryOutcomeDataset(
                     source = hadComplications,
                     passedIndex = index,
                     triggerIndex = 0,
-                    target = complication
+                    target = complication,
+                    targetSideEffect = listOf(causeOfDeath, otherComplication, otherCauseOfDeath)
                 )
             }
             complication.id -> {
-                triggerDependants(
-                    source = complication,
-                    passedIndex = index,
-                    triggerIndex = 6,
-                    target = causeOfDeath
-                )
-                triggerDependants(
-                    source = complication,
-                    passedIndex = index,
-                    triggerIndex = 7,
-                    target = otherComplication
-                )
+                if(index == 6) {
+                    triggerDependants(
+                        source = complication,
+                        addItems = listOf(causeOfDeath),
+                        removeItems = listOf(otherComplication, otherCauseOfDeath)
+                    )
+                } else if(index == 7) {
+                    triggerDependants(
+                        source = complication,
+                        addItems = listOf(otherComplication),
+                        removeItems = listOf(causeOfDeath, otherCauseOfDeath)
+                    )
+                } else {
+                    triggerDependants(
+                        source = complication,
+                        addItems = listOf(),
+                        removeItems = listOf(otherComplication, otherCauseOfDeath, causeOfDeath)
+                    )
+                }
             }
+
             causeOfDeath.id -> {
                 triggerDependants(
                     source = causeOfDeath,

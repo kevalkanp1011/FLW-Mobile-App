@@ -42,7 +42,7 @@ import timber.log.Timber
         InfantRegCache::class
     ],
     views = [BenBasicCache::class],
-    version = 1, exportSchema = false
+    version = 2, exportSchema = false
 )
 
 @TypeConverters(LocationEntityListConverter::class, SyncStateConverter::class)
