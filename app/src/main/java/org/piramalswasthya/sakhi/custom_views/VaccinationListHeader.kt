@@ -1,13 +1,6 @@
 package org.piramalswasthya.sakhi.custom_views
 
-import android.content.Context
-import android.util.AttributeSet
-import android.view.Gravity
-import android.widget.LinearLayout
-import android.widget.TextView
-import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.model.ImmunizationDetailsHeader
-import timber.log.Timber
+/*
 
 
 class VaccinationListHeader : LinearLayout {
@@ -56,4 +49,4 @@ class VaccinationListHeader : LinearLayout {
 
     }
 
-}
+}*/

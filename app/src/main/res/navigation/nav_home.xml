@@ -166,11 +166,11 @@
         android:label="@string/icon_title_imm"
         tools:layout="@layout/fragment_immunization_due">
         <action
-            android:id="@+id/action_immunizationDueTypeFragment_to_childImmunizationFragment"
-            app:destination="@id/childImmunizationFragment" />
+            android:id="@+id/action_immunizationDueTypeFragment_to_childImmunizationListFragment"
+            app:destination="@id/childImmunizationListFragment" />
         <action
-            android:id="@+id/action_immunizationDueTypeFragment_to_motherImmunizationFragment"
-            app:destination="@id/motherImmunizationFragment" />
+            android:id="@+id/action_immunizationDueTypeFragment_to_motherImmunizationListFragment"
+            app:destination="@id/motherImmunizationListFragment" />
     </fragment>
     <fragment
         android:id="@+id/menopauseStageFragment"
@@ -587,23 +587,9 @@
             app:argType="long" />
     </fragment>
     <fragment
-        android:id="@+id/childImmunizationFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.immunization_due.child_immunization.categories.ChildImmunizationCategoriesFragment"
-        android:label="fragment_child_immunization" >
-        <action
-            android:id="@+id/action_childImmunizationFragment_to_childImmunizationListFragment"
-            app:destination="@id/childImmunizationListFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/motherImmunizationFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.immunization_due.mother_immunization.MotherImmunizationFragment"
-        android:label="fragment_mother_immunization"
-        tools:layout="@layout/fragment_mother_immunization" />
-    <fragment
         android:id="@+id/immunizationFormFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.immunization_due.child_immunization.form.ImmunizationFormFragment"
-        android:label="fragment_immunization_form"
-        tools:layout="@layout/fragment_immunization_form" >
+        android:label="fragment_immunization_form">
         <argument
             android:name="vaccineId"
             app:argType="integer" />
@@ -619,15 +605,12 @@
         <action
             android:id="@+id/action_childImmunizationListFragment_to_immunizationFormFragment"
             app:destination="@id/immunizationFormFragment" />
-        <argument
-            android:name="category"
-            app:argType="org.piramalswasthya.sakhi.model.ChildImmunizationCategory" />
     </fragment>
     <fragment
         android:id="@+id/pwRegistrationFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pregnant_women_registration.list.PwRegistrationListFragment"
         android:label="@string/icon_title_pmr"
-        tools:layout="@layout/fragment_pw_registration" >
+        tools:layout="@layout/fragment_display_search_rv_button" >
         <action
             android:id="@+id/action_pwRegistrationFragment_to_pregnancyRegistrationFormFragment"
             app:destination="@id/pregnancyRegistrationFormFragment" />
@@ -636,7 +619,7 @@
         android:id="@+id/pwAncVisitsFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pregnant_woment_anc_visits.list.PwAncVisitsListFragment"
         android:label="@string/icon_title_pmt"
-        tools:layout="@layout/fragment_pw_anc_visits" >
+        tools:layout="@layout/fragment_display_search_rv_button" >
         <action
             android:id="@+id/action_pwAncVisitsFragment_to_pwAncFormFragment"
             app:destination="@id/pwAncFormFragment" />
@@ -645,7 +628,7 @@
         android:id="@+id/pregnancyRegistrationFormFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pregnant_women_registration.form.PregnancyRegistrationFormFragment"
         android:label="fragment_pregnancy_registration_form"
-        tools:layout="@layout/fragment_pregnancy_registration_form" >
+        tools:layout="@layout/fragment_new_form" >
         <argument
             android:name="benId"
             app:argType="long" />
@@ -734,6 +717,14 @@
         <argument
             android:name="benId"
             app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/motherImmunizationListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.immunization_due.mother_immunization.list.MotherImmunizationListFragment"
+        android:label="MotherImmunizationListFragment" >
+        <action
+            android:id="@+id/action_motherImmunizationListFragment_to_immunizationFormFragment"
+            app:destination="@id/immunizationFormFragment" />
     </fragment>
 
 </navigation>

@@ -127,8 +127,8 @@ data class BenBasicCache(
             val calDob = Calendar.getInstance()
             calDob.timeInMillis = dob
             val calNow = Calendar.getInstance()
-            return calNow.get(Calendar.YEAR) * 12 + calNow.get(Calendar.MONTH) - calDob.get(Calendar.YEAR) * 12 + calDob.get(
-                Calendar.MONTH
+            return (calNow.get(Calendar.YEAR) * 12 + calNow.get(Calendar.MONTH) )- (calDob.get(Calendar.YEAR) * 12 + calDob.get(
+                Calendar.MONTH)
             )
 
 

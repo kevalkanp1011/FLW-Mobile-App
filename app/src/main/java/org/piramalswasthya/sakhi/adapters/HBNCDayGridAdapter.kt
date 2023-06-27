@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.RvItemIconHbncBinding
 import org.piramalswasthya.sakhi.model.HbncIcon
-import org.piramalswasthya.sakhi.model.ImmunizationIcon
 
 class HBNCDayGridAdapter(private val clickListener: HbncIconClickListener) :
     ListAdapter<HbncIcon, HBNCDayGridAdapter.IconViewHolder>(HbncIconDiffCallback) {

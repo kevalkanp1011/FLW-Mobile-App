@@ -11,8 +11,10 @@ import org.piramalswasthya.sakhi.model.AgeUnit
 import org.piramalswasthya.sakhi.model.BenBasicDomain
 
 
-class BenListAdapter(private val clickListener: BenClickListener? = null,
-                     private val showAbha: Boolean = false) :
+class BenListAdapter(
+    private val clickListener: BenClickListener? = null,
+    private val showAbha: Boolean = false
+) :
     ListAdapter<BenBasicDomain, BenListAdapter.BenViewHolder>(BenDiffUtilCallBack) {
     private object BenDiffUtilCallBack : DiffUtil.ItemCallback<BenBasicDomain>() {
         override fun areItemsTheSame(

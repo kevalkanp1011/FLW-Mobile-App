@@ -63,7 +63,7 @@ class PwAncFormFragment : Fragment() {
             binding.tvAgeGender.text = it
         }
         binding.btnSubmit.setOnClickListener {
-            submitHouseholdForm()
+            submitAncForm()
         }
         binding.fabEdit.setOnClickListener {
             viewModel.setRecordExist(false)
@@ -98,7 +98,7 @@ class PwAncFormFragment : Fragment() {
         }
     }
 
-    private fun submitHouseholdForm() {
+    private fun submitAncForm() {
         if (validateCurrentPage()) {
             viewModel.saveForm()
         }

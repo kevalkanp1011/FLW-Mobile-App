@@ -1,4 +1,5 @@
 package org.piramalswasthya.sakhi.custom_views
+/*
 
 import android.content.Context
 import android.util.AttributeSet
@@ -56,4 +57,4 @@ class VaccinationElement : LinearLayout {
 
     }
 
-}
+}*/

@@ -36,7 +36,7 @@ class HouseHoldListAdapter(private val clickListener: HouseholdClickListener) :
             }
         }
 
-        fun bind(item : HouseHoldBasicDomain, clickListener: HouseholdClickListener){
+        fun bind(item: HouseHoldBasicDomain, clickListener: HouseholdClickListener) {
             binding.household = item
             binding.clickListener = clickListener
             binding.executePendingBindings()
@@ -55,9 +55,9 @@ class HouseHoldListAdapter(private val clickListener: HouseholdClickListener) :
 
 
     class HouseholdClickListener(
-        val hhDetails: (hhId : Long) -> Unit,
-        val showMember : (hhId : Long) -> Unit,
-        val newBen: (hhId : Long) -> Unit
+        val hhDetails: (hhId: Long) -> Unit,
+        val showMember: (hhId: Long) -> Unit,
+        val newBen: (hhId: Long) -> Unit
     ) {
         fun onClickedForHHDetails(item: HouseHoldBasicDomain) = hhDetails(item.hhId)
         fun onClickedForMembers(item: HouseHoldBasicDomain) = showMember(item.hhId)

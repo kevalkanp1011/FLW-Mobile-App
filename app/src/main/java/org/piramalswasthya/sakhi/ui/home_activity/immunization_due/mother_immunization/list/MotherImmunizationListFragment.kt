@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.immunization_due.child_immunization.list
+package org.piramalswasthya.sakhi.ui.home_activity.immunization_due.mother_immunization.list
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,16 +14,16 @@ import org.piramalswasthya.sakhi.databinding.FragmentChildImmunizationListBindin
 import timber.log.Timber
 
 @AndroidEntryPoint
-class ChildImmunizationListFragment : Fragment() {
+class MotherImmunizationListFragment : Fragment() {
 
     private var _binding: FragmentChildImmunizationListBinding? = null
     private val binding: FragmentChildImmunizationListBinding
         get() = _binding!!
 
 
-    private val viewModel: ChildImmunizationListViewModel by viewModels()
+    private val viewModel: MotherImmunizationListViewModel by viewModels()
 
-    private val bottomSheet: ChildImmunizationVaccineBottomSheetFragment by lazy { ChildImmunizationVaccineBottomSheetFragment() }
+    private val bottomSheet: MotherImmunizationVaccineBottomSheetFragment by lazy { MotherImmunizationVaccineBottomSheetFragment() }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
