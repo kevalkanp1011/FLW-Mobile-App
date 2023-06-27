@@ -9,12 +9,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
+import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
 class SchedulerViewModel @Inject constructor(
-    maternalHealthRepo: MaternalHealthRepo
+    maternalHealthRepo: MaternalHealthRepo,
+    recordsRepo: RecordsRepo
 ) : ViewModel() {
     enum class State{
         LOADING,
@@ -25,7 +27,7 @@ class SchedulerViewModel @Inject constructor(
         get() = _state
 
     val ancDueCount : Flow<Int> = maternalHealthRepo.getAncDueCount()
-    val hrpDueCount : Flow<Int> = maternalHealthRepo.getHrpCount()
+    val hrpDueCount : Flow<Int> = recordsRepo.getHrpCount()
 
     private val _date = MutableLiveData(
         Calendar.getInstance().apply {

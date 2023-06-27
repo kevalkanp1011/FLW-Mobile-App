@@ -1,6 +1,6 @@
 package org.piramalswasthya.sakhi.model
 
-import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
@@ -12,15 +12,23 @@ enum class ChildImmunizationCategory {
     BIRTH, WEEK_6, WEEK_10, WEEK_14, MONTH_9_12, MONTH_16_24, YEAR_5_6, YEAR_10, YEAR_16, CATCH_UP
 }
 
+enum class ImmunizationCategory {
+    CHILD,
+    MOTHER
+}
+
 @Entity(tableName = "VACCINE")
 data class Vaccine(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey
+    val id: Int,
     val name: String,
-    val dosage: Int,
-    val category: ChildImmunizationCategory,
-    val dueDuration: Long,
-    val overdueDuration: Long,
-    val dependantDose: Int? = null,
+    val minAllowedAgeInMillis : Long,
+    val maxAllowedAgeInMillis : Long,
+    val category: ImmunizationCategory,
+    val childCategory: ChildImmunizationCategory,
+//    val dueDuration: Long,
+    val overdueDurationSinceMinInMillis: Long = maxAllowedAgeInMillis,
+    val dependantVaccineId: Int? = null,
     val dependantCoolDuration: Long? = null,
 )
 
@@ -43,32 +51,52 @@ data class Vaccine(
 data class ImmunizationCache(
     val beneficiaryId: Long,
     val vaccineId: Int,
-    var date: Long=0L,
+    var date: Long? = null,
     var placeId: Int=0,
     var place: String="",
     var byWhoId: Int=0,
     var byWho: String="",
 ) : FormDataModel
 
-data class ImmunizationDetailsCache(
-    @ColumnInfo(name = "benId") val benId: Long,
-    @ColumnInfo(name = "benName") val benName : String,
+data class ChildImmunizationDetailsCache(
+//    @ColumnInfo(name = "benId")
+    @Embedded
+    val ben: BenBasicCache,
+//    @ColumnInfo(name = "benName") val benName : String,
     @Relation(
         parentColumn = "benId", entityColumn = "beneficiaryId"
-    ) val vaccineList: List<ImmunizationCache>
+    ) val givenVaccines: List<ImmunizationCache>
+)
+
+data class MotherImmunizationDetailsCache(
+//    @ColumnInfo(name = "benId")
+    @Embedded
+    val ben: BenBasicCache,
+
+    val lmp : Long,
+//    @ColumnInfo(name = "benName") val benName : String,
+    @Relation(
+        parentColumn = "benId", entityColumn = "beneficiaryId"
+    ) val givenVaccines: List<ImmunizationCache>
 )
 
 data class ImmunizationDetailsDomain(
-    val benId: Long,
-    val name: String,
+    val ben : BenBasicDomain,
     val vaccineStateList: List<VaccineDomain>,
 //    val onClick: (Long, Int) -> Unit
 )
 
-
+data class VaccineCategoryDomain(
+    val category : ChildImmunizationCategory,
+    val categoryString : String = category.name,
+    val vaccineStateList: List<VaccineDomain>,
+//    val onClick: (Long, Int) -> Unit
+)
 data class VaccineDomain(
 //    val benId: Long,
     val vaccineId: Int,
+    val vaccineName : String,
+    val vaccineCategory : ChildImmunizationCategory,
     val state: VaccineState,
 )
 

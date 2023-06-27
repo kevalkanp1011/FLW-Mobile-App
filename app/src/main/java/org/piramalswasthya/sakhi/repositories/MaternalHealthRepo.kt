@@ -55,19 +55,7 @@ class MaternalHealthRepo @Inject constructor(
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    fun getHrpCount(): Flow<Int> {
-        return maternalHealthDao.getAllPregnancyRecords().transformLatest {
-            var count = 0
-            it.map {
-                val regis = it.key
-                val anc = it.value
-                if (regis.isHrp || anc.any { it.hrpConfirmed == true })
-                    count++
-            }
-            emit(count)
-        }
-    }
+
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getAncDueCount(): Flow<Int> {

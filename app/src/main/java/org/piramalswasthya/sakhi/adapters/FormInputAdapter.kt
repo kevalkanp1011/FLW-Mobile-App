@@ -85,12 +85,13 @@ class FormInputAdapter(
             Timber.d("Bound EditText item ${item.title} with ${item.required}")
             binding.tilEditText.error = item.errorText
             handleHintLength(item)
-            if(item.hasSpeechToText){
-                binding.tilEditText.endIconDrawable = AppCompatResources.getDrawable(binding.root.context,R.drawable.ic_mic)
+            if (item.hasSpeechToText) {
+                binding.tilEditText.endIconDrawable =
+                    AppCompatResources.getDrawable(binding.root.context, R.drawable.ic_mic)
                 binding.tilEditText.setEndIconOnClickListener {
                     formValueListener?.onValueChanged(item, Konstants.micClickIndex)
                 }
-            }else {
+            } else {
                 binding.tilEditText.endIconDrawable = null
                 binding.tilEditText.setEndIconOnClickListener(null)
             }
@@ -625,16 +626,24 @@ class FormInputAdapter(
             EDIT_TEXT -> (holder as EditTextInputViewHolder).bind(
                 item, isEnabled, formValueListener
             )
+
             DROPDOWN -> (holder as DropDownInputViewHolder).bind(item, isEnabled, formValueListener)
             RADIO -> (holder as RadioInputViewHolder).bind(item, isEnabled, formValueListener)
             DATE_PICKER -> (holder as DatePickerInputViewHolder).bind(
                 item, isEnabled, formValueListener
             )
+
             TEXT_VIEW -> (holder as TextViewInputViewHolder).bind(item)
             IMAGE_VIEW -> (holder as ImageViewInputViewHolder).bind(
                 item, imageClickListener, isEnabled
             )
-            CHECKBOXES -> (holder as CheckBoxesInputViewHolder).bind(item, isEnabled, formValueListener)
+
+            CHECKBOXES -> (holder as CheckBoxesInputViewHolder).bind(
+                item,
+                isEnabled,
+                formValueListener
+            )
+
             TIME_PICKER -> (holder as TimePickerInputViewHolder).bind(item, isEnabled)
             HEADLINE -> (holder as HeadlineViewHolder).bind(item)
         }
@@ -646,7 +655,7 @@ class FormInputAdapter(
      * Validation Result : -1 -> all good
      * else index of element creating trouble
      */
-    fun validateInput(resources : Resources): Int {
+    fun validateInput(resources: Resources): Int {
         var retVal = -1
         if (!isEnabled) return retVal
         currentList.forEach {
@@ -667,10 +676,10 @@ class FormInputAdapter(
                     if (retVal == -1) retVal = currentList.indexOf(it)
                 }
             }
-/*            if(it.regex!=null){
-                Timber.d("Regex not null")
-                retVal= false
-            }*/
+            /*            if(it.regex!=null){
+                            Timber.d("Regex not null")
+                            retVal= false
+                        }*/
         }
         return retVal
     }

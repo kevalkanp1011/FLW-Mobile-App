@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
+import org.piramalswasthya.sakhi.ui.home_activity.immunization_due.child_immunization.form.ImmunizationFormViewModel.State
+import timber.log.Timber
 
 @AndroidEntryPoint
 class ImmunizationFormFragment : Fragment() {
@@ -41,9 +45,48 @@ class ImmunizationFormFragment : Fragment() {
         viewModel.benAgeGender.observe(viewLifecycleOwner) {
             binding.tvAgeGender.text = it
         }
+        binding.btnSubmit.setOnClickListener {
+            submitImmForm()
+        }
+
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            when (state!!) {
+                State.IDLE -> {
+                }
+
+                State.SAVING -> {
+                    binding.llContent.visibility = View.GONE
+                    binding.pbForm.visibility = View.VISIBLE
+                }
+
+                State.SAVE_SUCCESS -> {
+                    binding.llContent.visibility = View.VISIBLE
+                    binding.pbForm.visibility = View.GONE
+                    Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
+//                    WorkerUtils.triggerAmritSyncWorker(requireContext())
+                    findNavController().navigateUp()
+                }
+
+                State.SAVE_FAILED -> {
+                    Toast.makeText(
+
+                        context, "Something wend wong! Contact testing!", Toast.LENGTH_LONG
+                    ).show()
+                    binding.llContent.visibility = View.VISIBLE
+                    binding.pbForm.visibility = View.GONE
+                }
+            }
+        }
+
+        binding.fabEdit.setOnClickListener {
+            viewModel.updateRecordExists(false)
+        }
+
+
         viewModel.recordExists.observe(viewLifecycleOwner) { notIt ->
             notIt?.let { recordExists ->
-//                binding.fabEdit.visibility = if(recordExists) View.VISIBLE else View.GONE
+                binding.btnSubmit.visibility = if (recordExists) View.GONE else View.VISIBLE
+                binding.fabEdit.visibility = if (recordExists) View.VISIBLE else View.GONE
                 val adapter = FormInputAdapter(
                     formValueListener = FormInputAdapter.FormValueListener { formId, index ->
                         viewModel.updateListOnValueChanged(formId, index)
@@ -59,6 +102,26 @@ class ImmunizationFormFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun submitImmForm() {
+        if (validateCurrentPage()) {
+            viewModel.saveForm()
+        }
+    }
+
+    private fun validateCurrentPage(): Boolean {
+        val result = binding.form.rvInputForm.adapter?.let {
+            (it as FormInputAdapter).validateInput(resources)
+        }
+        Timber.d("Validation : $result")
+        return if (result == -1) true
+        else {
+            if (result != null) {
+                binding.form.rvInputForm.scrollToPosition(result)
+            }
+            false
         }
     }
 

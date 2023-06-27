@@ -10,7 +10,10 @@ import kotlinx.coroutines.CoroutineScope
 import org.piramalswasthya.sakhi.databinding.RvItemIconGridBinding
 import org.piramalswasthya.sakhi.model.Icon
 
-class IconGridAdapter(private val clickListener: GridIconClickListener,private val scope: CoroutineScope) :
+class IconGridAdapter(
+    private val clickListener: GridIconClickListener,
+    private val scope: CoroutineScope
+) :
     ListAdapter<Icon, IconGridAdapter.IconViewHolder>(IconDiffCallback) {
     object IconDiffCallback : DiffUtil.ItemCallback<Icon>() {
         override fun areItemsTheSame(oldItem: Icon, newItem: Icon) =
@@ -26,14 +29,14 @@ class IconGridAdapter(private val clickListener: GridIconClickListener,private v
         RecyclerView.ViewHolder(binding.root) {
 
         companion object {
-            fun from(parent: ViewGroup) : IconViewHolder {
+            fun from(parent: ViewGroup): IconViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RvItemIconGridBinding.inflate(layoutInflater,parent,false)
+                val binding = RvItemIconGridBinding.inflate(layoutInflater, parent, false)
                 return IconViewHolder(binding)
             }
         }
 
-        fun bind(item: Icon, clickListener: GridIconClickListener, scope: CoroutineScope){
+        fun bind(item: Icon, clickListener: GridIconClickListener, scope: CoroutineScope) {
             binding.homeIcon = item
             binding.clickListener = clickListener
             binding.scope = scope
@@ -46,11 +49,11 @@ class IconGridAdapter(private val clickListener: GridIconClickListener,private v
         IconViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: IconViewHolder, position: Int) {
-        holder.bind(getItem(position), clickListener, scope )
+        holder.bind(getItem(position), clickListener, scope)
     }
 
-    class GridIconClickListener(val selectedListener: (dest : NavDirections) -> Unit) {
-        fun onClicked(icon : Icon) = selectedListener(icon.navAction)
+    class GridIconClickListener(val selectedListener: (dest: NavDirections) -> Unit) {
+        fun onClicked(icon: Icon) = selectedListener(icon.navAction)
 
     }
 }

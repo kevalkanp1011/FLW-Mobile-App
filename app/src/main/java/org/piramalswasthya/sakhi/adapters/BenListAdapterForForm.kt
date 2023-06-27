@@ -65,14 +65,17 @@ class BenListAdapterForForm(
                     hasForm = item.form1Filled
                     formEnabled = item.form1Enabled
                 }
+
                 2 -> binding.btnForm2.also {
                     hasForm = item.form2Filled
                     formEnabled = item.form1Enabled
                 }
+
                 3 -> binding.btnForm3.also {
                     hasForm = item.form3Filled
                     formEnabled = item.form1Enabled
                 }
+
                 else -> throw IllegalStateException("FormNumber>3")
             }
             formButton.visibility = if (formEnabled) View.VISIBLE else View.GONE

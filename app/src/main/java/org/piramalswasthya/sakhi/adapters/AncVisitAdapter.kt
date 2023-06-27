@@ -53,7 +53,7 @@ class AncVisitAdapter(private val clickListener: AncVisitClickListener) :
 
 
     class AncVisitClickListener(
-        private val clickedForm: (benId: Long, visitNumber : Int) -> Unit,
+        private val clickedForm: (benId: Long, visitNumber: Int) -> Unit,
 
         ) {
         fun onClickedVisit(item: AncStatus) = clickedForm(

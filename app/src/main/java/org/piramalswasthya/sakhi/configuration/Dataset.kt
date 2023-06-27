@@ -359,6 +359,14 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
             add(Calendar.WEEK_OF_YEAR, 40)
         }.timeInMillis
 
+    protected fun getMinFromMaxForLmp(lmp: Long) =
+
+        Calendar.getInstance().apply {
+            timeInMillis = lmp
+            add(Calendar.WEEK_OF_YEAR, -40)
+        }.timeInMillis
+
+
 
     protected suspend fun emitAlertErrorMessage(
         @StringRes errorMessage: Int
@@ -388,7 +396,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
                 return -1
             } else {
                 val dayDiff = getDiffDays(calDob, calNow)
-                if (dayDiff > 0) {
+                if (dayDiff >= 0) {
                     ageUnitElement.value = ageUnitElement.entries?.get(0)
                     ageElement.value = dayDiff.toString()
                     return -1

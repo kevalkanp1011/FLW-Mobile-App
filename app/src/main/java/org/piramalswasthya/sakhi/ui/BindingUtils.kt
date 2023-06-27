@@ -17,33 +17,28 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.custom_views.VaccinationElement
-import org.piramalswasthya.sakhi.custom_views.VaccinationListHeader
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.AncFormState
 import org.piramalswasthya.sakhi.model.AncFormState.*
 import org.piramalswasthya.sakhi.model.FormInputOld
-import org.piramalswasthya.sakhi.model.ImmunizationDetailsDomain
-import org.piramalswasthya.sakhi.model.ImmunizationDetailsHeader
-import org.piramalswasthya.sakhi.model.VaccineClickListener
 import org.piramalswasthya.sakhi.model.VaccineState
 import org.piramalswasthya.sakhi.model.VaccineState.*
 import timber.log.Timber
 
 
-@BindingAdapter("vaccine_items", "vaccine_click")
-fun VaccinationElement.setItems(
-    data: ImmunizationDetailsDomain?,
-    clickListener: VaccineClickListener?
-) {
-    setData(data, clickListener)
-}
-
-
-@BindingAdapter("vaccine_headers")
-fun VaccinationListHeader.setItems(data: ImmunizationDetailsHeader?) {
-    data?.let { setData(it) }
-}
+//@BindingAdapter("vaccine_items", "vaccine_click")
+//fun VaccinationElement.setItems(
+//    data: ImmunizationDetailsDomain?,
+//    clickListener: VaccineClickListener?
+//) {
+//    setData(data, clickListener)
+//}
+//
+//
+//@BindingAdapter("vaccine_headers")
+//fun VaccinationListHeader.setItems(data: ImmunizationDetailsHeader?) {
+//    data?.let { setData(it) }
+//}
 
 @BindingAdapter("vaccineState")
 fun ImageView.setVaccineState(syncState: VaccineState?) {
@@ -57,6 +52,23 @@ fun ImageView.setVaccineState(syncState: VaccineState?) {
             UNAVAILABLE -> null
         }
         drawable?.let { it1 -> setImageResource(it1) }
+    }
+}
+
+@BindingAdapter("vaccineState")
+fun Button.setVaccineState(syncState: VaccineState?) {
+
+    syncState?.let {
+        visibility = View.VISIBLE
+        when (it) {
+            PENDING,
+            OVERDUE -> { text = "FILL" }
+            DONE -> { text = "VIEW" }
+            MISSED,
+            UNAVAILABLE -> {
+                visibility = View.GONE
+            }
+        }
     }
 }
 
@@ -248,28 +260,13 @@ fun Button.setAncState(ancFormState: AncFormState?) {
         when (it) {
             ALLOW_FILL -> {
                 text = "FILL"
-//                setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pending_actions, 0,0, 0)
-//                setBackgroundColor(
-//                    MaterialColors.getColor(
-//                        context,
-//                        androidx.appcompat.R.attr.colorPrimary,
-//                        Color.BLACK
-//                    )
-//                )
             }
 
             ALREADY_FILLED -> {
                 text = "VIEW"
-//                setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_circle, 0,0, 0)
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                    setBackgroundColor(resources.getColor(R.color.green, context.theme))
-//                } else
-//                    setBackgroundColor(resources.getColor(R.color.green))
             }
 
             NO_FILL -> {
-//
-//                setCompoundDrawablesWithIntrinsicBounds(0, 0,0, 0)
                 visibility = View.INVISIBLE
             }
         }
