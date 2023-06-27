@@ -636,7 +636,7 @@
     <fragment
         android:id="@+id/pwAncFormFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pregnant_woment_anc_visits.form.PwAncFormFragment"
-        android:label="fragment_pw_anc_form"
+        android:label="ANC Visit"
         tools:layout="@layout/fragment_pw_anc_form" >
         <argument
             android:name="benId"
@@ -649,7 +649,7 @@
     <fragment
         android:id="@+id/eligibleCoupleListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.eligible_couple_list.EligibleCoupleListFragment"
-        android:label="EligibleCoupleListFragment" >
+        android:label="Eligible Couple List" >
         <action
             android:id="@+id/action_eligibleCoupleListFragment_to_eligibleCoupleRegFragment"
             app:destination="@id/eligibleCoupleRegFragment" />
@@ -657,7 +657,7 @@
     <fragment
         android:id="@+id/eligibleCoupleRegFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.eligible_couple_reg.EligibleCoupleRegFragment"
-        android:label="EligibleCoupleRegFragment" >
+        android:label="Eligible Couple Registration" >
         <argument
             android:name="benId"
             app:argType="long" />
@@ -665,7 +665,7 @@
     <fragment
         android:id="@+id/eligibleCoupleTrackingListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.tracking.list.EligibleCoupleTrackingListFragment"
-        android:label="EligibleCoupleTrackingListFragment" >
+        android:label="Eligible Couple Tracking List" >
         <action
             android:id="@+id/action_eligibleCoupleTrackingListFragment_to_eligibleCoupleTrackingFormFragment"
             app:destination="@id/eligibleCoupleTrackingFormFragment" />
@@ -673,7 +673,7 @@
     <fragment
         android:id="@+id/eligibleCoupleTrackingFormFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.tracking.form.EligibleCoupleTrackingFormFragment"
-        android:label="EligibleCoupleTrackingFormFragment">
+        android:label="Eligible Couple Tracking Form">
         <argument
             android:name="benId"
             app:argType="long" />
@@ -689,7 +689,7 @@
     <fragment
         android:id="@+id/TBScreeningListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.tb_screening.list.TBScreeningListFragment"
-        android:label="TBScreeningListFragment" >
+        android:label="TB Screening List" >
         <action
             android:id="@+id/action_TBScreeningListFragment_to_TBScreeningFormFragment"
             app:destination="@id/TBScreeningFormFragment" />
@@ -697,7 +697,7 @@
     <fragment
         android:id="@+id/TBSuspectedListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.tb_suspected.list.TBSuspectedListFragment"
-        android:label="TBSuspectedListFragment" >
+        android:label="TB Suspected List" >
         <action
             android:id="@+id/action_TBSuspectedListFragment_to_TBSuspectedFragment"
             app:destination="@id/TBSuspectedFragment" />
@@ -705,7 +705,7 @@
     <fragment
         android:id="@+id/TBScreeningFormFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.tb_screening.form.TBScreeningFormFragment"
-        android:label="TBScreeningFormFragment">
+        android:label="TB Screening Form">
         <argument
             android:name="benId"
             app:argType="long" />
@@ -713,7 +713,7 @@
     <fragment
         android:id="@+id/TBSuspectedFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.tb_suspected.form.TBSuspectedFragment"
-        android:label="TBSuspectedFragment" >
+        android:label="TB Suspected Form" >
         <argument
             android:name="benId"
             app:argType="long" />
