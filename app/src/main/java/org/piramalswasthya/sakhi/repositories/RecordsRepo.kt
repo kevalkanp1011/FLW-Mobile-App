@@ -115,6 +115,10 @@ class RecordsRepo @Inject constructor(
         .map { list -> list.map { it.asBenBasicDomainModelECTForm() } }
     val eligibleCoupleTrackingListCount = eligibleCoupleTrackingList.map { it.size }
 
+    val deliveredWomenList = benDao.getAllEligibleTrackingList(selectedVillage)
+        .map { list -> list.map { it.asBenBasicDomainModelECTForm() } }
+    val deliveredWomenListCount = deliveredWomenList.map { it.size }
+
     fun getPregnantWomenList() = benDao.getAllPregnancyWomenList(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForPregnantWomanRegistrationForm() } }
     fun getPregnantWomenListCount() = benDao.getAllPregnancyWomenListCount(selectedVillage)
