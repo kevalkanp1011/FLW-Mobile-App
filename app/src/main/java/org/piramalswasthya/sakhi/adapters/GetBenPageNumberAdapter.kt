@@ -5,7 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.piramalswasthya.sakhi.databinding.RvItemPageNumBinding
 
-class GetBenPageNumberAdapter(private val maxPageNumber: Int, private val clickListener: PageClickListener) :
+class GetBenPageNumberAdapter(
+    private val maxPageNumber: Int,
+    private val clickListener: PageClickListener
+) :
     RecyclerView.Adapter<GetBenPageNumberAdapter.PageNumberViewHolder>() {
 
     class PageNumberViewHolder private constructor(private val binding: RvItemPageNumBinding) :
@@ -36,7 +39,7 @@ class GetBenPageNumberAdapter(private val maxPageNumber: Int, private val clickL
         PageNumberViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: PageNumberViewHolder, position: Int) {
-        holder.bind(position+1, clickListener)
+        holder.bind(position + 1, clickListener)
     }
 
 

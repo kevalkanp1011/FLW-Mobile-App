@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.RvItemIconHbycBinding
-import org.piramalswasthya.sakhi.model.HbncIcon
 import org.piramalswasthya.sakhi.model.HbycIcon
 
 class HbycMonthGridAdapter(private val clickListener: HbycIconClickListener) :

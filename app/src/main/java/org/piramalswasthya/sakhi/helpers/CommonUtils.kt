@@ -6,6 +6,7 @@ import org.piramalswasthya.sakhi.model.BenBasicDomain
 import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
 import org.piramalswasthya.sakhi.model.PregnantWomenVisitDomain
 import timber.log.Timber
+import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 fun filterBenList(list: List<BenBasicDomain>, text: String): List<BenBasicDomain> {
@@ -107,5 +108,12 @@ fun hasPendingAncVisit(
         return l.contains(AncFormState.ALLOW_FILL)
 
 }
+
+fun getTodayMillis() = Calendar.getInstance().apply {
+    set(Calendar.HOUR_OF_DAY, 0)
+    set(Calendar.MINUTE, 0)
+    set(Calendar.SECOND, 0)
+    set(Calendar.MILLISECOND, 0)
+}.timeInMillis
 
 

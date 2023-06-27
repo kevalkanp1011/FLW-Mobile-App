@@ -370,7 +370,13 @@ class PregnantWomanRegistrationDataset(
         return when (formId) {
             rchId.id -> validateRchIdOnEditText(rchId)
             mcpCardNumber.id -> validateRchIdOnEditText(mcpCardNumber)
-            dateOfReg.id,
+            dateOfReg.id ->{
+                dateOfReg.value?.let {
+                    lmp.max = getLongFromDate(it)
+                    lmp.min = getMinFromMaxForLmp(lmp.max!!)
+                }
+                -1
+            }
             lmp.id -> {
                 val lmpLong = lmp.value?.let { getLongFromDate(it) }
                 val regLong = dateOfReg.value?.let { getLongFromDate(it) }
@@ -529,8 +535,10 @@ class PregnantWomanRegistrationDataset(
     }
 
     fun mapValueToBenRegId( ben: BenRegCache?): Boolean {
-        val rchIdFromBen = ben?.rchId?.toLong()
-        rchId.value?.toLong()?.takeIf { rchIdFromBen!=null }?.let {
+        val rchIdFromBen = ben?.rchId?.takeIf{it.isNotEmpty()}?.toLong()
+        rchId.value?.takeIf {
+            it.isNotEmpty()
+        }?.toLong()?.let {
             if(it!=rchIdFromBen){
                 ben?.rchId = it.toString()
                 return true

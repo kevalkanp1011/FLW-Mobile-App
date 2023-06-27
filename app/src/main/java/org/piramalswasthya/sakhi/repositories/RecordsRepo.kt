@@ -1,9 +1,13 @@
 package org.piramalswasthya.sakhi.repositories
 
 import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.transformLatest
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
+import org.piramalswasthya.sakhi.database.room.dao.MaternalHealthDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import javax.inject.Inject
 
@@ -11,6 +15,7 @@ import javax.inject.Inject
 class RecordsRepo @Inject constructor(
     private val householdDao: HouseholdDao,
     private val benDao: BenDao,
+    private val maternalHealthDao: MaternalHealthDao,
     preferenceDao: PreferenceDao
 ) {
     private val selectedVillage = preferenceDao.getLocationRecord()!!.village.id
@@ -123,5 +128,19 @@ class RecordsRepo @Inject constructor(
 
     fun getHrpCases() = benDao.getHrpCases(selectedVillage)
         .map { list -> list.distinctBy { it.benId }.map { it.asBasicDomainModel() }}
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun getHrpCount(): Flow<Int> {
+        return maternalHealthDao.getAllPregnancyRecords().transformLatest {
+            var count = 0
+            it.map {
+                val regis = it.key
+                val anc = it.value
+                if (regis.isHrp || anc.any { it.hrpConfirmed == true })
+                    count++
+            }
+            emit(count)
+        }
+    }
 
 }

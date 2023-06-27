@@ -195,13 +195,13 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     )
     private val highRiskPregnant = FormInputOld(
         inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
-        title = "Pregnant in high risk category treated",
+        title = "Pregnant in high risk childCategory treated",
         entries = arrayOf("Yes", "No"),
         required = false
     )
     private val highRiskPregnancyReferred = FormInputOld(
         inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
-        title = "Pregnant in high risk category was referred",
+        title = "Pregnant in high risk childCategory was referred",
         entries = arrayOf("Yes", "No"),
         required = false
     )

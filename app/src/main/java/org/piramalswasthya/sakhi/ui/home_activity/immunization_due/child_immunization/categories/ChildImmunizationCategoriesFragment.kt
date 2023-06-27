@@ -65,7 +65,7 @@ class ChildImmunizationCategoriesFragment : Fragment() {
             findNavController().navigate(it)
         }, viewModel.scope)
         binding.rvIconGrid.adapter = rvAdapter
-        rvAdapter.submitList(iconDataset.getChildImmunizationCategories(resources))
+//        rvAdapter.submitList(iconDataset.getChildImmunizationCategories(resources))
     }
 
 }

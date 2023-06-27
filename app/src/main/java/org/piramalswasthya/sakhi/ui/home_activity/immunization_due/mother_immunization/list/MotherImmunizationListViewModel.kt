@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.immunization_due.child_immunization.list
+package org.piramalswasthya.sakhi.ui.home_activity.immunization_due.mother_immunization.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,34 +17,19 @@ import org.piramalswasthya.sakhi.model.Vaccine
 import org.piramalswasthya.sakhi.model.VaccineDomain
 import org.piramalswasthya.sakhi.model.VaccineState
 import timber.log.Timber
-import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
-class ChildImmunizationListViewModel @Inject constructor(
+class MotherImmunizationListViewModel @Inject constructor(
     vaccineDao: ImmunizationDao
 
 ) : ViewModel() {
-    private val pastRecords = vaccineDao.getBenWithImmunizationRecords(
-        minDob = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
-            add(Calendar.YEAR, -16)
-        }.timeInMillis,
-        maxDob = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
-        }.timeInMillis,
-    )
+    private val pastRecords = vaccineDao.getBenWithImmunizationRecords()
     private lateinit var vaccinesList: List<Vaccine>
 
     val benWithVaccineDetails = pastRecords.map { vaccineIdList ->
         vaccineIdList.map { cache ->
-            val ageMillis = getTodayMillis() - cache.ben.dob
+            val ageMillis = getTodayMillis() - cache.lmp
             ImmunizationDetailsDomain(ben = cache.ben.asBasicDomainModel(),
                 vaccineStateList = vaccinesList.filter {
                     it.minAllowedAgeInMillis < ageMillis
@@ -82,7 +67,7 @@ class ChildImmunizationListViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                vaccinesList = vaccineDao.getVaccinesForCategory(ImmunizationCategory.CHILD)
+                vaccinesList = vaccineDao.getVaccinesForCategory(ImmunizationCategory.MOTHER)
             }
         }
     }
