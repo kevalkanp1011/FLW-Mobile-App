@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_non_eligible_list
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -14,10 +15,10 @@ class NcdNonEligibleListViewModel @Inject constructor(
     recordsRepo: RecordsRepo
 ) : ViewModel() {
 
-    private val allBenList = recordsRepo.ncdNonEligibleList
+    private val allBenList = recordsRepo.getNcdNonEligibleList()
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter){
-            list, filter -> filterBenFormList(list, filter)
+            list, filter -> filterBenFormList(list.map { it.ben.asBenBasicDomainModelForCbacForm() }, filter)
     }
 
     fun filterText(text: String) {

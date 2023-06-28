@@ -13,10 +13,9 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.adapters.BenListAdapter
+import org.piramalswasthya.sakhi.adapters.NcdCbacBenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
-import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 
 @AndroidEntryPoint
 class NcdListFragment : Fragment() {
@@ -25,9 +24,6 @@ class NcdListFragment : Fragment() {
     private val binding: FragmentDisplaySearchRvButtonBinding by lazy {
         FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater)
     }
-
-    private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
-
 
     private val viewModel: NcdListViewModel by viewModels()
 
@@ -43,20 +39,13 @@ class NcdListFragment : Fragment() {
 
         binding.btnNextPage.visibility = View.GONE
 
-        val benAdapter = BenListAdapter(
-            BenListAdapter.BenClickListener(
-                { hhId, benId, isKid ->
-
-
-                },
-                {
-
-                },{_,_ ->}
-            ))
+        val benAdapter = NcdCbacBenListAdapter(clickListener = NcdCbacBenListAdapter.CbacFormClickListener {
+            viewModel.setSelectedBenId(it)
+        })
         binding.rvAny.adapter = benAdapter
 
         lifecycleScope.launch {
-            viewModel.benList.collect{
+            viewModel.benList.collect {
                 if (it.isEmpty())
                     binding.flEmpty.visibility = View.VISIBLE
                 else
@@ -86,9 +75,10 @@ class NcdListFragment : Fragment() {
 
         }
     }
+
     override fun onStart() {
         super.onStart()
-        activity?.let{
+        activity?.let {
             (it as HomeActivity).updateActionBar(R.drawable.ic__ncd_list)
         }
     }

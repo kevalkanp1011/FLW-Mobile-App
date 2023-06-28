@@ -2,10 +2,12 @@ package org.piramalswasthya.sakhi.model
 
 import android.content.res.Resources
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.room.SyncState
 
@@ -581,4 +583,14 @@ data class CbacPost(
     val cbac_needing_help_posi: Int,
     val cbac_forgetting_names: String,
     val cbac_forgetting_names_posi: Int,
+)
+
+data class BenWithCbacCache(
+//    @ColumnInfo(name = "benId")
+    @Embedded
+    val ben: BenBasicCache,
+    @Relation(
+        parentColumn = "benId", entityColumn = "benId"
+    )
+    val savedCbacRecords: List<CbacCache>
 )

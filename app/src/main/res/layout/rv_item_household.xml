@@ -137,17 +137,17 @@
                 app:layout_constraintStart_toEndOf="@+id/button3"
                 app:layout_constraintTop_toBottomOf="@+id/rv_item_hh_3" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button3"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic__ben"
+                android:layout_height="0dp"
                 android:onClick="@{()->clickListener.onClickedForMembers(household)}"
                 android:text="@string/hh_members_text"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 android:textColor="?attr/colorPrimary"
                 app:backgroundTint="?attr/colorSecondary"
                 app:drawableTint="@color/primaryColor"
+                app:icon="@drawable/ic__ben"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/button4"
                 app:layout_constraintHorizontal_bias="0.5"

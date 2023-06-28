@@ -1,7 +1,11 @@
 package org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.tracking.form
 
 import android.content.Context
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -25,9 +29,11 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
 ) : ViewModel() {
     val benId =
         EligibleCoupleTrackingFormFragmentArgs.fromSavedStateHandle(savedStateHandle).benId
+
     enum class State {
         IDLE, SAVING, SAVE_SUCCESS, SAVE_FAILED
     }
+
     private val _state = MutableLiveData(State.IDLE)
     val state: LiveData<State>
         get() = _state
@@ -99,9 +105,9 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
                     dataset.mapValues(eligibleCoupleTracking, 1)
                     ecrRepo.saveEct(eligibleCoupleTracking)
                     isPregnant = (eligibleCoupleTracking.isPregnant == "Yes") ||
-                        (eligibleCoupleTracking.pregnancyTestResult == "Positive")
+                            (eligibleCoupleTracking.pregnancyTestResult == "Positive")
                     if (isPregnant) {
-                        ecrRepo.getBenFromId(benId)?.let{
+                        ecrRepo.getBenFromId(benId)?.let {
                             dataset.updateBen(it)
                             benRepo.persistRecord(it)
                         }

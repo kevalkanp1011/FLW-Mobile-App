@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_priority_list
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -13,10 +14,10 @@ import javax.inject.Inject
 class NcdPriorityListViewModel @Inject constructor(
 recordsRepo: RecordsRepo
 ) : ViewModel() {
-    private val allBenList = recordsRepo.ncdPriorityList
+    private val allBenList = recordsRepo.getNcdPriorityList()
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter){
-            list, filter -> filterBenFormList(list, filter)
+            list, filter -> filterBenFormList(list.map { it.ben.asBenBasicDomainModelForCbacForm() }, filter)
     }
 
     fun filterText(text: String) {
