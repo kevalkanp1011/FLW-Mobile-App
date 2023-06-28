@@ -66,7 +66,7 @@ class SuspectedTBDataset(
 
     private var followUps = FormElement(
         id = 7,
-        inputType = InputType.EDIT_TEXT,
+        inputType = InputType.RADIO,
         title = "Facility Referral follow-ups",
         entries = arrayOf("Yes", "No"),
         required = false,

@@ -248,6 +248,15 @@
                             <option name="y" value="3693" />
                           </Point>
                         </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_TBSuspectedListFragment_to_TBSuspectedFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
                       </LayoutPositions>
                     </value>
                   </entry>
@@ -502,6 +511,39 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="deliveryOutcomeFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="108" />
+                            <option name="y" value="2896" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="deliveryOutcomeListFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="393" />
+                            <option name="y" value="2883" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_deliveryOutcomeListFragment_to_deliveryOutcomeFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="deliveryStageListFragment">
                     <value>
                       <LayoutPositions>
@@ -587,8 +629,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="256" />
-                            <option name="y" value="12" />
+                            <option name="x" value="200" />
+                            <option name="y" value="-31" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -613,8 +655,8 @@
                       <LayoutPositions>
                         <option name="myPosition">
                           <Point>
-                            <option name="x" value="500" />
-                            <option name="y" value="12" />
+                            <option name="x" value="497" />
+                            <option name="y" value="49" />
                           </Point>
                         </option>
                         <option name="myPositions">
@@ -803,6 +845,11 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
+                            <entry key="action_homeFragment_to_pwAncVisitsFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_nav_home_to_allBenFragment">
                               <value>
                                 <LayoutPositions />
@@ -960,6 +1007,39 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="infantRegFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="90" />
+                            <option name="y" value="2514" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="infantRegListFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="360" />
+                            <option name="y" value="2498" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_infantRegListFragment_to_infantRegFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="mdsrListFragment">
                     <value>
                       <LayoutPositions>
@@ -1016,6 +1096,16 @@
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_motherCareFragment_to_deliveryOutcomeListFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_motherCareFragment_to_infantRegListFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_motherCareFragment_to_pwAncVisitsFragment">
                               <value>
                                 <LayoutPositions />
@@ -1323,6 +1413,18 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="pwAncFormFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="192" />
+                            <option name="y" value="-438" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="pwAncVisitsFragment">
                     <value>
                       <LayoutPositions>
@@ -1331,6 +1433,15 @@
                             <option name="x" value="12" />
                             <option name="y" value="12" />
                           </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_pwAncVisitsFragment_to_pwAncFormFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
                         </option>
                       </LayoutPositions>
                     </value>

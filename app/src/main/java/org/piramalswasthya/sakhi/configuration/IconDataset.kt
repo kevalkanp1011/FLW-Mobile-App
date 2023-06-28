@@ -139,6 +139,18 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             recordsRepo.getRegisteredPregnantWomanListCount(),
             MotherCareFragmentDirections.actionMotherCareFragmentToPwAncVisitsFragment()
         ),
+        Icon(
+            R.drawable.ic__pregnancy,
+            resources.getString(R.string.icon_title_pmdo),
+            recordsRepo.getRegisteredPregnantWomanListCount(),
+            MotherCareFragmentDirections.actionMotherCareFragmentToDeliveryOutcomeListFragment()
+        ),
+        Icon(
+            R.drawable.ic__pregnancy,
+            resources.getString(R.string.icon_title_pmir),
+            recordsRepo.getRegisteredPregnantWomanListCount(),
+            MotherCareFragmentDirections.actionMotherCareFragmentToInfantRegListFragment()
+        ),
 //        , Icon(
 //            R.drawable.ic__delivery,
 //            resources.getString(R.string.icon_title_dmc),

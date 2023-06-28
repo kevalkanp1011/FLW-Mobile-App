@@ -60,6 +60,7 @@ enum class Gender {
             " hbnc.benId is not null as hbncFilled,  " +
             " hbyc.benId is not null as hbycFilled,  " +
             " pwr.benId is not null as pwrFilled, " +
+            " pwa.pregnantWomanDelivered as isDelivered, " +
             " ecr.benId is not null as ecrFilled, " +
             " ect.benId is not null as ectFilled, " +
             " ect.benId is not null as ectFilled, " +
@@ -74,6 +75,7 @@ enum class Gender {
             "LEFT OUTER JOIN HBNC hbnc on b.beneficiaryId = hbnc.benId " +
             "LEFT OUTER JOIN HBYC hbyc on b.beneficiaryId = hbyc.benId " +
             "LEFT OUTER JOIN PREGNANCY_REGISTER pwr on b.beneficiaryId = pwr.benId " +
+            "LEFT OUTER JOIN PREGNANCY_ANC pwa on b.beneficiaryId = pwr.benId " +
             "LEFT OUTER JOIN ELIGIBLE_COUPLE_REG ecr on b.beneficiaryId = ecr.benId " +
             "LEFT OUTER JOIN ELIGIBLE_COUPLE_TRACKING ect on (b.beneficiaryId = ect.benId  and CAST((strftime('%s','now') - ect.visitDate/1000)/60/60/24 AS INTEGER) < 30 )" +
             "LEFT OUTER JOIN TB_SCREENING tbsn on b.beneficiaryId = tbsn.benId " +
@@ -112,7 +114,8 @@ data class BenBasicCache(
     val ecrFilled: Boolean,
     val ectFilled: Boolean,
     val tbsnFilled: Boolean,
-    val tbspFilled: Boolean
+    val tbspFilled: Boolean,
+    val isDelivered: Boolean
 ) {
     companion object {
         private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
