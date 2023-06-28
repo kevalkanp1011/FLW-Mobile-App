@@ -195,7 +195,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val numMale = FormElement(
         id = 14,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Male",
         arrayId = -1,
         required = true,
@@ -207,7 +207,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val numFemale = FormElement(
         id = 15,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Female",
         arrayId = -1,
         required = true,
@@ -759,9 +759,18 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 //                dob1.min = System.currentTimeMillis() -
                 -1
             }
+            noOfChildren.id -> {
+                if (noOfChildren.value?.toInt() == 0) {
+                    noOfLiveChildren.value = "0"
+                    numMale.value = "0"
+                    numFemale.value = "0"
+                }
+                -1
+            }
             dob1.id -> {
                 assignValuesToAgeFromDob(getLongFromDate(dob1.value), age1)
                 setMarriageAndFirstChildGap()
+                dob2.min = getLongFromDate(dob1.value)
                 -1
             }
 //            age1.id -> {
@@ -793,36 +802,43 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             dob2.id -> {
                 assignValuesToAgeFromDob(getLongFromDate(dob2.value), age2)
                 setFirstChildAndSecondChildGap()
+                dob3.min = getLongFromDate(dob2.value)
                 -1
             }
             dob3.id -> {
                 assignValuesToAgeFromDob(getLongFromDate(dob3.value), age3)
                 setSecondAndThirdChildGap()
+                dob4.min = getLongFromDate(dob3.value)
                 -1
             }
             dob4.id -> {
                 assignValuesToAgeFromDob(getLongFromDate(dob4.value), age4)
                 setThirdAndFourthChildGap()
+                dob5.min = getLongFromDate(dob4.value)
                 -1
             }
             dob5.id -> {
                 assignValuesToAgeFromDob(getLongFromDate(dob5.value), age5)
                 setFourthAndFifthChildGap()
+                dob6.min = getLongFromDate(dob5.value)
                 -1
             }
             dob6.id -> {
                 assignValuesToAgeFromDob(getLongFromDate(dob6.value), age6)
                 setFifthAndSixthChildGap()
+                dob7.min = getLongFromDate(dob6.value)
                 -1
             }
             dob7.id -> {
                 assignValuesToAgeFromDob(getLongFromDate(dob7.value), age7)
                 setSixthAndSeventhChildGap()
+                dob8.min = getLongFromDate(dob7.value)
                 -1
             }
             dob8.id -> {
                 assignValuesToAgeFromDob(getLongFromDate(dob8.value), age8)
                 setSeventhAndEighthChildGap()
+                dob9.min = getLongFromDate(dob8.value)
                 -1
             }
             dob9.id -> {
@@ -1015,24 +1031,69 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                 return 1
             }
 
-//            gender1.id, gender2.id, gender3.id, gender4.id, gender5.id,
-//            gender6.id, gender7.id, gender8.id, gender9.id -> {
-//                maleChild = 0
-//                femaleChild = 0
-//
-//                if (gender1.value == "Male") {
-//                    maleChild += 1
-//                } else if (gender1.value == "Female") {
-//                    femaleChild += 1
-//                }
-//
-//                if (gender1.value == "Male") {
-//                    maleChild += 1
-//                } else if (gender1.value == "Female") {
-//                    femaleChild += 1
-//                }
-//                -1
-//            }
+            gender1.id, gender2.id, gender3.id, gender4.id, gender5.id,
+            gender6.id, gender7.id, gender8.id, gender9.id -> {
+                maleChild = 0
+                femaleChild = 0
+
+                if (gender1.value == "Male") {
+                    maleChild += 1
+                } else if (gender1.value == "Female") {
+                    femaleChild += 1
+                }
+
+                if (gender2.value == "Male") {
+                    maleChild += 1
+                } else if (gender2.value == "Female") {
+                    femaleChild += 1
+                }
+
+                if (gender3.value == "Male") {
+                    maleChild += 1
+                } else if (gender3.value == "Female") {
+                    femaleChild += 1
+                }
+
+                if (gender4.value == "Male") {
+                    maleChild += 1
+                } else if (gender4.value == "Female") {
+                    femaleChild += 1
+                }
+
+                if (gender5.value == "Male") {
+                    maleChild += 1
+                } else if (gender5.value == "Female") {
+                    femaleChild += 1
+                }
+
+                if (gender6.value == "Male") {
+                    maleChild += 1
+                } else if (gender6.value == "Female") {
+                    femaleChild += 1
+                }
+
+                if (gender7.value == "Male") {
+                    maleChild += 1
+                } else if (gender7.value == "Female") {
+                    femaleChild += 1
+                }
+
+                if (gender8.value == "Male") {
+                    maleChild += 1
+                } else if (gender8.value == "Female") {
+                    femaleChild += 1
+                }
+
+                if (gender9.value == "Male") {
+                    maleChild += 1
+                } else if (gender9.value == "Female") {
+                    femaleChild += 1
+                }
+
+                numFemale.value = femaleChild.toString()
+                numMale.value = maleChild.toString()
+                -1
+            }
             else -> -1
         }
     }
@@ -1079,7 +1140,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
         (cacheModel as EligibleCoupleRegCache).let { ecr ->
             ecr.dateOfReg = getLongFromDate(dateOfReg.value!!)
-            ecr.rchId = rchId.value?.toLong()
+            ecr.rchId = rchId.value?.takeIf { it.isNotEmpty() }?.toLong()
             ecr.name = name.value
             ecr.husbandName = husbandName.value
             ecr.age = age.value?.toInt()
@@ -1182,5 +1243,18 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                 ecr.eighthAndNinthChildGap = eighthAndNinthChildGap.value?.toInt()
             }
         }
+    }
+
+    fun mapValueToBenRegId( ben: BenRegCache?): Boolean {
+        val rchIdFromBen = ben?.rchId?.takeIf{it.isNotEmpty()}?.toLong()
+        rchId.value?.takeIf {
+            it.isNotEmpty()
+        }?.toLong()?.let {
+            if(it!=rchIdFromBen){
+                ben?.rchId = it.toString()
+                return true
+            }
+        }
+        return false
     }
 }

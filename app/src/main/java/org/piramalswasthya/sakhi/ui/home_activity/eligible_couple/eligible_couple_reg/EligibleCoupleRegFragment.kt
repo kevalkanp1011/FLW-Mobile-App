@@ -135,6 +135,11 @@ class EligibleCoupleRegFragment : Fragment() {
                     notifyItemChanged(58)
                     notifyItemChanged(60)
                 }
+                12 -> {
+                    notifyItemChanged(13)
+                    notifyItemChanged(14)
+                    notifyItemChanged(15)
+                }
             }
         }
     }

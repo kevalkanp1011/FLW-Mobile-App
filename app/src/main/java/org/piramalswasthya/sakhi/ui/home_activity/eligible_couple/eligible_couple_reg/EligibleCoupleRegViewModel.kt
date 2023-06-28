@@ -11,6 +11,7 @@ import org.piramalswasthya.sakhi.configuration.EligibleCoupleRegistrationDataset
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.EligibleCoupleRegCache
+import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.EcrRepo
 import timber.log.Timber
 import javax.inject.Inject
@@ -20,7 +21,8 @@ class EligibleCoupleRegViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     preferenceDao: PreferenceDao,
     @ApplicationContext context: Context,
-    private val ecrRepo: EcrRepo
+    private val ecrRepo: EcrRepo,
+    private val benRepo: BenRepo
 ) : ViewModel() {
 
     enum class State {
@@ -93,6 +95,11 @@ class EligibleCoupleRegViewModel @Inject constructor(
 
                     dataset.mapValues(ecrForm, 1)
                     ecrRepo.persistRecord(ecrForm)
+                    ecrRepo.getBenFromId(benId)?.let {
+                        val hasBenUpdated = dataset.mapValueToBenRegId(it)
+                        if (hasBenUpdated)
+                            benRepo.persistRecord(it)
+                    }
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
                     Timber.d("saving PWR data failed!!")
