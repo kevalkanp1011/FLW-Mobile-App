@@ -16,6 +16,7 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.NcdCbacBenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
+import timber.log.Timber
 
 @AndroidEntryPoint
 class NcdListFragment : Fragment() {
@@ -26,6 +27,8 @@ class NcdListFragment : Fragment() {
     }
 
     private val viewModel: NcdListViewModel by viewModels()
+
+    private val bottomSheet: NcdBottomSheetFragment by lazy { NcdBottomSheetFragment() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,9 +42,13 @@ class NcdListFragment : Fragment() {
 
         binding.btnNextPage.visibility = View.GONE
 
-        val benAdapter = NcdCbacBenListAdapter(clickListener = NcdCbacBenListAdapter.CbacFormClickListener {
-            viewModel.setSelectedBenId(it)
-        })
+        val benAdapter =
+            NcdCbacBenListAdapter(clickListener = NcdCbacBenListAdapter.CbacFormClickListener {
+                Timber.d("ClickListener Triggered!")
+                viewModel.setSelectedBenId(it)
+                if(!bottomSheet.isVisible)
+                    bottomSheet.show(childFragmentManager, "CBAC")
+            })
         binding.rvAny.adapter = benAdapter
 
         lifecycleScope.launch {
@@ -51,6 +58,11 @@ class NcdListFragment : Fragment() {
                 else
                     binding.flEmpty.visibility = View.GONE
                 benAdapter.submitList(it)
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.ncdDetails.collect {
+                Timber.d("Collecting Ncd Details : $it")
             }
         }
         val searchTextWatcher = object : TextWatcher {

@@ -36,6 +36,13 @@ class NewHouseholdViewModel @Inject constructor(
         IDLE, SAVING, SAVE_SUCCESS, SAVE_FAILED
     }
 
+    private var isConsentAgreed = false
+
+    fun setConsentAgreed() {
+        isConsentAgreed = true
+    }
+    fun getIsConsentAgreed() = isConsentAgreed
+
     private val hhIdFromArgs = NewHouseholdFragmentArgs.fromSavedStateHandle(savedStateHandle).hhId
 
     private val _currentPage = MutableStateFlow(1)

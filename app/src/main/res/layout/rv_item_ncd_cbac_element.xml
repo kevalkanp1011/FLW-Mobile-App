@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="cbac"
+            type="org.piramalswasthya.sakhi.model.CbacCache" />
+
+        <variable
+            name="clickListener"
+            type="org.piramalswasthya.sakhi.adapters.NcdCbacAdapter.NcdCbacElementClickListener" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_normal"
+        android:elevation="@dimen/padding_normal"
+        app:cardCornerRadius="@dimen/padding_normal"
+        app:cardElevation="@dimen/padding_normal"
+        tools:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/padding_normal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_normal"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:text="45-76-3465"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="?attr/colorPrimary"
+                android:text="VIEW"
+                android:textColor="?attr/colorSecondary"
+                android:onClick="@{()-> clickListener.onClicked(cbac)}" />
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+</layout>

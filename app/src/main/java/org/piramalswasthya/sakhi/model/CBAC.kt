@@ -31,10 +31,10 @@ data class CbacCache(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val benId: Long,
-    val hhId: Long,
+//    val hhId: Long,
     @ColumnInfo(index = true)
     val ashaId: Int,
-    var gender : Gender,
+//    var gender : Gender?,
     var cbac_age_posi: Int = 0,
     var cbac_smoke_posi: Int = 0,
     var cbac_alcohol_posi: Int = 0,
@@ -127,9 +127,9 @@ data class CbacCache(
 
 
 ) {
-    fun asPostModel(resources: Resources): CbacPost {
+    fun asPostModel(ben: BenRegCache, resources: Resources): CbacPost {
         return CbacPost(
-            houseoldId = hhId,
+            houseoldId = ben.householdId,
             benficieryid = benId,
             ashaid = ashaId,
             cbac_age = resources.getStringArray(R.array.cbac_age)[cbac_age_posi - 1],
@@ -138,7 +138,7 @@ data class CbacCache(
             cbac_smoke_posi = cbac_smoke_posi,
             cbac_alcohol = resources.getStringArray(R.array.cbac_alcohol)[cbac_alcohol_posi - 1],
             cbac_alcohol_posi = cbac_alcohol_posi,
-            cbac_waist = if (gender == Gender.MALE)
+            cbac_waist = if (ben.gender== Gender.MALE)
                 resources.getStringArray(R.array.cbac_waist_mes_male)[cbac_waist_posi - 1]
             else
                 resources.getStringArray(R.array.cbac_waist_mes_female)[cbac_waist_posi - 1],

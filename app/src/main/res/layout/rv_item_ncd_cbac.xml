@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
@@ -14,7 +15,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_content"
@@ -58,7 +59,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tv_name_ph"
-                            android:text="Name"
+                            tools:text="Name"
+                            android:text="@{ben.benName}"
                             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                             android:textColor="?attr/colorSecondary" />
                     </RelativeLayout>
@@ -73,7 +75,7 @@
                             android:id="@+id/tv_age_ph"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Name"
+                            android:text="Age"
                             android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
                             android:textColor="?attr/colorSecondary" />
 
@@ -82,7 +84,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tv_age_ph"
-                            android:text="Name"
+                            android:text="@{ben.age}"
                             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                             android:textColor="?attr/colorSecondary" />
                     </RelativeLayout>
@@ -97,7 +99,7 @@
                             android:id="@+id/tv_gender_ph"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Name"
+                            android:text="Gender"
                             android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
                             android:textColor="?attr/colorSecondary" />
 
@@ -106,7 +108,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tv_gender_ph"
-                            android:text="Name"
+                            android:text="@{ben.gender}"
                             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                             android:textColor="?attr/colorSecondary" />
                     </RelativeLayout>
@@ -118,6 +120,7 @@
                     app:layout_constraintTop_toBottomOf="@id/ll_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:backgroundTint="?attr/colorSecondary"
+                    android:onClick="@{() -> clickListener.onClickedBen(ben)}"
                     android:text="CBAC form" />
 
 

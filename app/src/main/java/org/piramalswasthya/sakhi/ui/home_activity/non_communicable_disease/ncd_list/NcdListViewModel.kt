@@ -5,18 +5,23 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.helpers.filterBenList
+import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
+import org.piramalswasthya.sakhi.repositories.UserRepo
 import javax.inject.Inject
 
 @HiltViewModel
 class NcdListViewModel @Inject constructor(
-    recordsRepo: RecordsRepo
+    recordsRepo: RecordsRepo,
+    userRepo: UserRepo,
 ) : ViewModel(
 
 ) {
+
+    private lateinit var asha : UserDomain
     private val allBenList = recordsRepo.getNcdList()
     private val filter = MutableStateFlow("")
     private val selectedBenId = MutableStateFlow(0L)
@@ -24,13 +29,18 @@ class NcdListViewModel @Inject constructor(
         filterBenList(list.map { it.ben.asBasicDomainModel() }, filter)
     }
 
-    val ncdDetails = allBenList.combine(selectedBenId) { list, benId ->
+    val ncdDetails = allBenList.combineTransform(selectedBenId) { list, benId ->
         if (benId > 0) {
-            list.first { it.ben.benId==benId }.savedCbacRecords
+            val list = list.firstOrNull { it.ben.benId == benId }?.savedCbacRecords
+            if (!list.isNullOrEmpty()) emit(list)
         }
-        else
-            null
-    }.flowOn(viewModelScope.coroutineContext)
+    }
+
+    init {
+        viewModelScope.launch {
+            asha = userRepo.getLoggedInUser()!!
+        }
+    }
 
     fun filterText(text: String) {
         viewModelScope.launch {
@@ -39,11 +49,14 @@ class NcdListViewModel @Inject constructor(
 
     }
 
-    fun setSelectedBenId(benId : Long){
+    fun setSelectedBenId(benId: Long) {
         viewModelScope.launch {
             selectedBenId.emit(benId)
         }
     }
+
+    fun getSelectedBenId(): Long = selectedBenId.value
+    fun getAshaId(): Int  = asha.userId
 
 
 }

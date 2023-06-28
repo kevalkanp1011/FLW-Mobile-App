@@ -182,7 +182,7 @@ interface BenDao {
     fun getScreeningList(villageId: Int): Flow<List<BenBasicCache>>
 
     @Transaction
-    @Query("SELECT * FROM BEN_BASIC_CACHE b LEFT OUTER JOIN CBAC c ON b.benId=c.benId where CAST((strftime('%s','now') - b.dob/1000)/60/60/24/365 AS INTEGER)  >= :min and b.villageId=:selectedVillage" )
+    @Query("SELECT * FROM BEN_BASIC_CACHE b LEFT OUTER JOIN CBAC c ON b.benId=c.benId where CAST((strftime('%s','now') - b.dob/1000)/60/60/24/365 AS INTEGER)  >= :min and b.villageId=:selectedVillage order by b.regDate desc, c.createdDate desc" )
     fun getBenWithCbac(
         selectedVillage: Int, min: Int = Konstants.minAgeForNcd
     ): Flow<List<BenWithCbacCache>>

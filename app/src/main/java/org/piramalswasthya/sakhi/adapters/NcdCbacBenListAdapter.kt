@@ -9,7 +9,7 @@ import org.piramalswasthya.sakhi.databinding.RvItemNcdCbacBinding
 import org.piramalswasthya.sakhi.model.BenBasicDomain
 
 class NcdCbacBenListAdapter(
-    private val clickListener: CbacFormClickListener? = null
+    private val clickListener: CbacFormClickListener
 ) : ListAdapter<BenBasicDomain, NcdCbacBenListAdapter.BenCbacViewHolder>(
     BenDiffUtilCallBack
 ) {
