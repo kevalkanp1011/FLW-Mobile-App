@@ -12,8 +12,8 @@ interface CbacDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(vararg cbacCache: CbacCache)
 
-    @Query("SELECT * FROM CBAC WHERE benId = :benId LIMIT 1")
-    suspend fun getCbacFromBenId(benId: Long): CbacCache?
+    @Query("SELECT * FROM CBAC WHERE id = :cbacId LIMIT 1")
+    suspend fun getCbacFromBenId(cbacId: Int): CbacCache?
 
 
     @Query("SELECT * FROM CBAC WHERE processed = 'N'")

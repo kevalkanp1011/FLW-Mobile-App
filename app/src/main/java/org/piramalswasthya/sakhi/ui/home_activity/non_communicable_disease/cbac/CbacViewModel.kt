@@ -16,6 +16,7 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.AgeUnit
+import org.piramalswasthya.sakhi.model.BenBasicCache
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.CbacCache
 import org.piramalswasthya.sakhi.model.Gender
@@ -74,16 +75,14 @@ class CbacViewModel @Inject constructor(
 
     val raAgeText = Transformations.map(_raAgeScore) {
         val text = resources.getStringArray(R.array.cbac_age)[it]
-        cbac.cbac_age_posi = it + 1
+        if (this::cbac.isInitialized)
+            cbac.cbac_age_posi = it + 1
         text
     }
     private val benId = CbacFragmentArgs.fromSavedStateHandle(state).benId
-    private val cbacId = CbacFragmentArgs.fromSavedStateHandle(state).cbacId
+    val cbacId = CbacFragmentArgs.fromSavedStateHandle(state).cbacId
     private val ashaId = CbacFragmentArgs.fromSavedStateHandle(state).ashaId
-    private val cbac = CbacCache(
-        benId = benId, ashaId = ashaId,
-        syncState = SyncState.UNSYNCED
-    )
+    private lateinit var cbac: CbacCache
     private lateinit var ben: BenRegCache
 
     private val _benName = MutableLiveData<String>()
@@ -109,10 +108,15 @@ class CbacViewModel @Inject constructor(
         get() = _ast1
 
 
+
     private val _state = MutableLiveData(State.IDLE)
     val state: LiveData<State>
         get() = _state
 
+
+    val _filledCbac = MutableLiveData<CbacCache>()
+    val filledCbac : LiveData<CbacCache>
+        get() = _filledCbac
 
     var missingFieldString: String? = null
     private var flagForPhq2 = false
@@ -121,11 +125,19 @@ class CbacViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                ben = database.benDao.getBen( benId)!!
+                cbac = if (cbacId > 0)
+                    cbacRepo.getCbacCacheFromId(cbacId).also {  _filledCbac.postValue(it)}
+                else
+                    CbacCache(
+                        benId = benId, ashaId = ashaId,
+                        syncState = SyncState.UNSYNCED
+                    )
+                ben = database.benDao.getBen(benId)!!
             }
             if (ben.ageUnit != AgeUnit.YEARS)
                 throw IllegalStateException("Age not in years for CBAC form!!")
-            when (ben.age) {
+            val age= if(cbacId==0) ben.age else BenBasicCache.getAgeFromDob(cbac.createdDate)
+            when (age) {
                 in 0..29 -> {
                     _raAgeScore.value = 0
                 }

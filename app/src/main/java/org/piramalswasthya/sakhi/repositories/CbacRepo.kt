@@ -54,5 +54,12 @@ class CbacRepo @Inject constructor(
         }
     }
 
+    suspend fun getCbacCacheFromId(cbacId: Int): CbacCache {
+        return withContext(Dispatchers.IO){
+            database.cbacDao.getCbacFromBenId(cbacId)  ?: throw IllegalStateException("No CBAC entry found!")
+        }
+
+    }
+
 
 }

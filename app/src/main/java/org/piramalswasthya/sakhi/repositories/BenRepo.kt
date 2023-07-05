@@ -784,7 +784,7 @@ class BenRepo @Inject constructor(
                         if (jsonObject.has("houseoldId")) jsonObject.getLong("houseoldId") else -1L
                     if (benId == -1L || hhId == -1L) continue
                     if (cbacDataObj.length() == 0) continue
-                    if (cbacDao.getCbacFromBenId(benId) != null) continue
+//                    if (cbacDao.getCbacFromBenId(benId) != null) continue
                     val ben = benDao.getBen(hhId, benId) ?: continue
                     val user = userDao.getLoggedInUser()!!
 

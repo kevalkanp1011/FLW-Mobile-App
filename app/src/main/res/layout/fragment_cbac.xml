@@ -43,7 +43,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:padding="@dimen/padding_normal"
-                            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                             android:textColor="@color/white"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/tv_age_gender"
@@ -58,7 +58,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:padding="@dimen/padding_normal"
-                            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                             android:textColor="@color/white"
                             app:layout_constraintEnd_toEndOf="parent"
                             tools:text="36 Years | Male" />
@@ -96,14 +96,14 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:text="@string/cbac_risk_assessment_tv"
-                                android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium" />
+                                android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
                                 android:text="@string/cbac_score"
-                                android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium" />
+                                android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
                         </LinearLayout>
 
@@ -150,7 +150,7 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerInParent="true"
                                 android:paddingHorizontal="@dimen/padding_wide"
-                                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                                 tools:text="0" />
 
 
@@ -199,7 +199,7 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerInParent="true"
                                 android:paddingHorizontal="@dimen/padding_wide"
-                                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                                 tools:text="0" />
 
 
@@ -247,7 +247,7 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerInParent="true"
                                 android:paddingHorizontal="@dimen/padding_wide"
-                                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                                 tools:text="0" />
 
 
@@ -295,7 +295,7 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerInParent="true"
                                 android:paddingHorizontal="@dimen/padding_wide"
-                                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                                 tools:text="0" />
 
 
@@ -343,7 +343,7 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerInParent="true"
                                 android:paddingHorizontal="@dimen/padding_wide"
-                                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                                 tools:text="0" />
 
 
@@ -391,7 +391,7 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerInParent="true"
                                 android:paddingHorizontal="@dimen/padding_wide"
-                                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                                 tools:text="0" />
 
 
@@ -441,7 +441,7 @@
                                 android:layout_height="match_parent"
                                 android:padding="@dimen/padding_normal"
                                 android:text="@string/cbac_early_detection"
-                                android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+                                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                                 android:textColor="@color/black" />
 
                             <TextView
@@ -801,7 +801,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/cbac_risk_Factors_COPD"
-                            android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium" />
+                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
 
                         <RelativeLayout
@@ -897,7 +897,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:text="@string/cbac_PHQ2"
-                            android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium" />
+                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -920,7 +920,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.8"
                                 android:text="@string/cbac_Question"
-                                android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall" />
+                                android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -928,7 +928,7 @@
                                 android:layout_weight="0.2"
                                 android:gravity="center"
                                 android:text="@string/cbac_score"
-                                android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall" />
+                                android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
                         </LinearLayout>
 
@@ -974,7 +974,7 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerInParent="true"
                                 android:paddingHorizontal="@dimen/padding_wide"
-                                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                                 tools:text="0" />
 
 
@@ -1021,7 +1021,7 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerInParent="true"
                                 android:paddingHorizontal="@dimen/padding_wide"
-                                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                                 tools:text="0" />
 
 
@@ -1055,7 +1055,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/cbac_remarks"
-                        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall" />
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
 
                     <!--                <TextView-->
@@ -1310,7 +1310,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_normal"
                     android:text="Save"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     android:textColor="?attr/colorSecondary" />
 
 

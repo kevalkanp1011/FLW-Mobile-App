@@ -35,9 +35,11 @@ class NcdBottomSheetFragment : BottomSheetDialogFragment() {
             val benId = viewModel.getSelectedBenId()
             findNavController().navigate(
 
-                NcdListFragmentDirections.actionNcdListFragmentToCbacFragment(benId,
-                    it,
-                    viewModel.getAshaId()
+                NcdListFragmentDirections.actionNcdListFragmentToCbacFragment(
+                    benId = benId,
+                    ashaId = viewModel.getAshaId(),
+                    cbacId = it
+
                 )
             )
             dismiss()
