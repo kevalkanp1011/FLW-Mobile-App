@@ -3,7 +3,9 @@ package org.piramalswasthya.sakhi.repositories
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.json.JSONObject
+import org.piramalswasthya.sakhi.crypt.CryptoUtil
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.ImmunizationDao
 import org.piramalswasthya.sakhi.database.room.dao.UserDao
@@ -35,8 +37,10 @@ import timber.log.Timber
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.security.Security
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
 
 class UserRepo @Inject constructor(
     private val userDao: UserDao,
@@ -50,7 +54,14 @@ class UserRepo @Inject constructor(
 
     private var user: UserNetwork? = null
 
+    private val ivSize = 128 // Size of the IV in bytes
+    private val keySize = 256 // Key size in bits
+
     val unProcessedRecordCount: Flow<Int> = benDao.getUnProcessedRecordCount()
+
+    init {
+        Security.addProvider(BouncyCastleProvider())
+    }
 
     suspend fun checkAndAddVaccines() {
         if (vaccineDao.vaccinesLoaded())
@@ -76,7 +87,7 @@ class UserRepo @Inject constructor(
                 maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
                 overdueDurationSinceMinInMillis = TimeUnit.DAYS.toMillis(1),
 
-            ),
+                ),
             Vaccine(
                 id = 3,
                 category = CHILD,
@@ -85,7 +96,7 @@ class UserRepo @Inject constructor(
                 minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(0),
                 maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(1),
 
-            ),
+                ),
             Vaccine(
                 id = 4,
                 category = CHILD,
@@ -100,8 +111,8 @@ class UserRepo @Inject constructor(
                 category = CHILD,
                 childCategory = WEEK_6,
                 name = "OPV 1",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(6*7),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*2),
+                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(6 * 7),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 2),
 //                overdueDurationSinceMinInMillis =
             ),
             Vaccine(
@@ -109,7 +120,7 @@ class UserRepo @Inject constructor(
                 category = CHILD,
                 childCategory = WEEK_6,
                 name = "Pentavalent 1",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(6*7),
+                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(6 * 7),
                 maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
             ),
             Vaccine(
@@ -117,7 +128,7 @@ class UserRepo @Inject constructor(
                 category = CHILD,
                 childCategory = WEEK_6,
                 name = "ROTA 1",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(6*7),
+                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(6 * 7),
                 maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
             ),
             Vaccine(
@@ -125,7 +136,7 @@ class UserRepo @Inject constructor(
                 category = CHILD,
                 childCategory = WEEK_6,
                 name = "IPV 1",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(6*7),
+                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(6 * 7),
                 maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
             ),
             //Week 10
@@ -134,8 +145,8 @@ class UserRepo @Inject constructor(
                 category = CHILD,
                 childCategory = WEEK_10,
                 name = "OPV 2",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(10*7),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*2),
+                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(10 * 7),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 2),
                 dependantVaccineId = 5,
                 dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
             ),
@@ -144,7 +155,7 @@ class UserRepo @Inject constructor(
                 category = CHILD,
                 childCategory = WEEK_10,
                 name = "Pentavalent 2",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(10*7),
+                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(10 * 7),
                 maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
                 dependantVaccineId = 5,
                 dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
@@ -154,8 +165,8 @@ class UserRepo @Inject constructor(
                 category = CHILD,
                 childCategory = WEEK_14,
                 name = "OPV 3",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(14*7),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*2),
+                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(14 * 7),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 2),
                 dependantVaccineId = 9,
                 dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
             ),
@@ -164,9 +175,9 @@ class UserRepo @Inject constructor(
                 category = CHILD,
                 childCategory = WEEK_14,
                 name = "Pentavalent 3",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(14*7),
+                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(14 * 7),
                 maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
-                dependantVaccineId =10,
+                dependantVaccineId = 10,
                 dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
             ),
             Vaccine(
@@ -174,8 +185,8 @@ class UserRepo @Inject constructor(
                 category = CHILD,
                 childCategory = WEEK_10,
                 name = "ROTA 2",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(10*7),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*1),
+                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(10 * 7),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 1),
                 dependantVaccineId = 7,
                 dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
             ),
@@ -184,8 +195,8 @@ class UserRepo @Inject constructor(
                 category = CHILD,
                 childCategory = WEEK_14,
                 name = "ROTA 3",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(14*7),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*1),
+                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(14 * 7),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 1),
                 dependantVaccineId = 7,
                 dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
             ),
@@ -194,8 +205,8 @@ class UserRepo @Inject constructor(
                 category = CHILD,
                 childCategory = WEEK_14,
                 name = "IPV 2",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(8*7),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*1),
+                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(8 * 7),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 1),
                 dependantVaccineId = 8,
                 dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
             ),
@@ -205,7 +216,7 @@ class UserRepo @Inject constructor(
                 childCategory = MONTH_16_24,
                 name = "OPV Booster 1",
                 minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(487),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*2),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 2),
             ),
             Vaccine(
                 id = 17,
@@ -213,15 +224,15 @@ class UserRepo @Inject constructor(
                 childCategory = MONTH_16_24,
                 name = "DPT Booster 1",
                 minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(487),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*7),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 7),
             ),
             Vaccine(
                 id = 18,
                 category = CHILD,
                 childCategory = YEAR_5_6,
                 name = "DPT Booster 2",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(356*5),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*7),
+                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(356 * 5),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 7),
             ),
 
             Vaccine(
@@ -230,7 +241,7 @@ class UserRepo @Inject constructor(
                 childCategory = MONTH_9_12,
                 name = "Measles 1",
                 minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(274),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*5),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
             ),
             Vaccine(
                 id = 20,
@@ -238,7 +249,7 @@ class UserRepo @Inject constructor(
                 childCategory = MONTH_16_24,
                 name = "Measles 2",
                 minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(487),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*5),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
             ),
             Vaccine(
                 id = 21,
@@ -254,7 +265,7 @@ class UserRepo @Inject constructor(
                 childCategory = MONTH_16_24,
                 name = "JE Vaccine – 2",
                 minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(487),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*5),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
             ),
             Vaccine(
                 id = 23,
@@ -262,7 +273,7 @@ class UserRepo @Inject constructor(
                 childCategory = MONTH_9_12,
                 name = "Vitamin A – 1",
                 minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(274),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*5),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
             ),
             Vaccine(
                 id = 24,
@@ -270,7 +281,7 @@ class UserRepo @Inject constructor(
                 childCategory = MONTH_16_24,
                 name = "Vitamin A – 2",
                 minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(487),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*5),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
                 dependantVaccineId = 23,
                 dependantCoolDuration = TimeUnit.DAYS.toMillis(274)
             ),
@@ -279,8 +290,8 @@ class UserRepo @Inject constructor(
                 category = CHILD,
                 childCategory = YEAR_5_6,
                 name = "Vitamin A – 3",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*2),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*5),
+                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 2),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
                 dependantVaccineId = 24,
                 dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
             ),
@@ -290,7 +301,7 @@ class UserRepo @Inject constructor(
                 childCategory = YEAR_5_6,
                 name = "Vitamin A – 4",
                 minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(913),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*5),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
                 dependantVaccineId = 25,
                 dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
             ),
@@ -300,7 +311,7 @@ class UserRepo @Inject constructor(
                 childCategory = YEAR_5_6,
                 name = "Vitamin A – 5",
                 minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(1095),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*5),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
                 dependantVaccineId = 26,
                 dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
             ),
@@ -310,7 +321,7 @@ class UserRepo @Inject constructor(
                 childCategory = YEAR_5_6,
                 name = "Vitamin A – 6",
                 minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(1278),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*5),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
                 dependantVaccineId = 27,
                 dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
             ),
@@ -320,7 +331,7 @@ class UserRepo @Inject constructor(
                 childCategory = YEAR_5_6,
                 name = "Vitamin A – 7",
                 minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(1460),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*5),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
                 dependantVaccineId = 28,
                 dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
             ),
@@ -330,7 +341,7 @@ class UserRepo @Inject constructor(
                 childCategory = YEAR_5_6,
                 name = "Vitamin A – 8",
                 minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(1643),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*5),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
                 dependantVaccineId = 29,
                 dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
             ),
@@ -339,8 +350,8 @@ class UserRepo @Inject constructor(
                 category = CHILD,
                 childCategory = YEAR_5_6,
                 name = "Vitamin A – 9",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*5),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365*7),
+                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 7),
                 dependantVaccineId = 30,
                 dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
             ),
@@ -351,17 +362,17 @@ class UserRepo @Inject constructor(
                 childCategory = YEAR_5_6,
                 name = "Td-1",
                 minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(0),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(36*7),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(36 * 7),
             ),
             Vaccine(
                 id = 33,
                 category = MOTHER,
                 childCategory = YEAR_5_6,
                 name = "Td-2",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(4*7),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(36*7),
+                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(4 * 7),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(36 * 7),
                 dependantVaccineId = 32,
-                dependantCoolDuration = TimeUnit.DAYS.toMillis(4*7)
+                dependantCoolDuration = TimeUnit.DAYS.toMillis(4 * 7)
             ),
             Vaccine(
                 id = 34,
@@ -369,7 +380,7 @@ class UserRepo @Inject constructor(
                 childCategory = YEAR_5_6,
                 name = "Td-Booster",
                 minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(0),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(36*7),
+                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(36 * 7),
             ),
 
             )
@@ -407,6 +418,7 @@ class UserRepo @Inject constructor(
 
             try {
                 if (getTokenD2D(userName, password)) {
+//                    val encryptedPassword = encrypt(password)
                     getTokenTmc(userName, password)
                     if (user != null) {
                         val result = getUserDetails(state)
@@ -436,6 +448,12 @@ class UserRepo @Inject constructor(
             }
         }
     }
+
+    private fun encrypt(password: String): String {
+        val util = CryptoUtil()
+        return util.encrypt(password)
+    }
+
 
     private suspend fun getUserDetails(stateToggle: String): Boolean {
         return withContext(Dispatchers.IO) {
@@ -776,8 +794,14 @@ class UserRepo @Inject constructor(
     private suspend fun getTokenTmc(userName: String, password: String) {
         withContext(Dispatchers.IO) {
             try {
+                val encryptedPassword = encrypt(password)
                 val response =
-                    tmcNetworkApiService.getJwtToken(TmcAuthUserRequest(userName, password))
+                    tmcNetworkApiService.getJwtToken(
+                        TmcAuthUserRequest(
+                            userName,
+                            encryptedPassword
+                        )
+                    )
                 Timber.d("JWT : $response")
                 if (!response.isSuccessful) {
                     return@withContext
@@ -804,7 +828,7 @@ class UserRepo @Inject constructor(
                     TokenInsertTmcInterceptor.setToken(token)
                     preferenceDao.registerPrimaryApiToken(token)
                 } else {
-                    val errorMessage = responseBody.getString("errorMessage")
+                    val errorMessage = responseBody.getString("status")
                     Timber.d("Error Message $errorMessage")
                 }
             } catch (e: retrofit2.HttpException) {
