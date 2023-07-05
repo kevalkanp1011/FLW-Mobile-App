@@ -360,17 +360,29 @@
         android:id="@+id/ncdListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_list.NcdListFragment"
         android:label="NCD List"
-        tools:layout="@layout/fragment_ncd_list" />
+        tools:layout="@layout/fragment_ncd_list" >
+        <action
+            android:id="@+id/action_ncdListFragment_to_cbacFragment"
+            app:destination="@id/cbacFragment" />
+    </fragment>
     <fragment
         android:id="@+id/ncdNonEligibleListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_non_eligible_list.NcdNonEligibleListFragment"
         android:label="NCD Non-Eligible List"
-        tools:layout="@layout/fragment_ncd_non_eligible_list" />
+        tools:layout="@layout/fragment_ncd_non_eligible_list" >
+        <action
+            android:id="@+id/action_ncdNonEligibleListFragment_to_cbacFragment"
+            app:destination="@id/cbacFragment" />
+    </fragment>
     <fragment
         android:id="@+id/ncdPriorityListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_priority_list.NcdPriorityListFragment"
         android:label="NCD Priority List"
-        tools:layout="@layout/fragment_ncd_priority_list" />
+        tools:layout="@layout/fragment_ncd_priority_list" >
+        <action
+            android:id="@+id/action_ncdPriorityListFragment_to_cbacFragment"
+            app:destination="@id/cbacFragment" />
+    </fragment>
     <fragment
         android:id="@+id/surveyRegisterFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.village_level_forms.survey_register.SurveyRegisterFragment"
@@ -383,16 +395,16 @@
         tools:layout="@layout/fragment_get_ben" />
     <fragment
         android:id="@+id/cbacFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_eligible_list.cbac.CbacFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.cbac.CbacFragment"
         android:label="CBAC Form">
-        <argument
-            android:name="hhId"
-            app:argType="long" />
         <argument
             android:name="benId"
             app:argType="long" />
         <argument
-            android:name="userId"
+            android:name="cbacId"
+            app:argType="integer" />
+        <argument
+            android:name="ashaId"
             app:argType="integer" />
 
     </fragment>

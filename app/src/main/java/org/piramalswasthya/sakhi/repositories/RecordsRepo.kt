@@ -35,21 +35,27 @@ class RecordsRepo @Inject constructor(
         .map { list -> list.map { it.asBenBasicDomainModelForPmsmaForm() } }
     val deliveryListCount = deliveryList.map { it.size }
 
-    val ncdList = benDao.getAllNCDList(selectedVillage)
-        .map { list -> list.map { it.asBasicDomainModel() } }
-    val ncdListCount = ncdList.map { it.size }
+    fun getNcdList() = benDao.getBenWithCbac(selectedVillage)
+    fun getNcdListCount() = benDao.getBenWithCbacCount(selectedVillage)
 
-    val ncdEligibleList = benDao.getAllNCDEligibleList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForCbacForm() } }
-    val ncdEligibleListCount = ncdEligibleList.map { it.size }
+    fun getNcdEligibleList() = getNcdList()
+    fun getNcdEligibleListCount() = getNcdListCount()
+    fun getNcdPriorityList() = getNcdList().map {
+        it.filter { it.savedCbacRecords.isNotEmpty() && it.savedCbacRecords.maxBy { it.id }.total_score>=4 }
+    }
+    fun getNcdPriorityListCount() = getNcdListCount()
+    fun getNcdNonEligibleList() = getNcdList().map {
+        it.filter { it.savedCbacRecords.isNotEmpty() && it.savedCbacRecords.maxBy { it.id }.total_score<4 }
+    }
+    fun getNcdNonEligibleListCount() = getNcdListCount()
 
-    val ncdPriorityList = benDao.getAllNCDPriorityList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForCbacForm() } }
-    val ncdPriorityListCount = ncdPriorityList.map { it.size }
+//    val ncdPriorityList = benDao.getAllNCDPriorityList(selectedVillage)
+//        .map { list -> list.map { it.asBenBasicDomainModelForCbacForm() } }
+//    val ncdPriorityListCount = ncdPriorityList.map { it.size }
 
-    val ncdNonEligibleList = benDao.getAllNCDNonEligibleList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForCbacForm() } }
-    val ncdNonEligibleListCount = ncdNonEligibleList.map { it.size }
+//    val ncdNonEligibleList = benDao.getAllNCDNonEligibleList(selectedVillage)
+//        .map { list -> list.map { it.asBenBasicDomainModelForCbacForm() } }
+//    val ncdNonEligibleListCount = ncdNonEligibleList.map { it.size }
 
     val tbScreeningList = benDao.getAllBen(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForTbsnForm() } }

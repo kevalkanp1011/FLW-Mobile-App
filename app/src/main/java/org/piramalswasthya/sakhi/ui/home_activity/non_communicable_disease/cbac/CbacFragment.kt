@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_eligible_list.cbac
+package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.cbac
 
 import android.app.AlertDialog
 import android.os.Bundle

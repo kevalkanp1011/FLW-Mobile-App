@@ -100,6 +100,7 @@ class NewHouseholdFragment : Fragment() {
         }
         alertBinding.btnPositive.setOnClickListener {
             if (alertBinding.checkBox.isChecked) {
+                viewModel.setConsentAgreed()
                 requestLocationPermission()
                 alertDialog.dismiss()
             } else
@@ -391,7 +392,7 @@ class NewHouseholdFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         viewModel.recordExists.observe(viewLifecycleOwner) {
-            if (!it) consentAlert.show()
+            if (!it && !viewModel.getIsConsentAgreed()) consentAlert.show()
         }
 
 

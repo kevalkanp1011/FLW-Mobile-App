@@ -173,22 +173,22 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
         Icon(
             R.drawable.ic__ncd_list,
             resources.getString(R.string.icon_title_ncd_list),
-            recordsRepo.ncdListCount,
+            recordsRepo.getNcdListCount(),
             NcdFragmentDirections.actionNcdFragmentToNcdListFragment()
         ), Icon(
             R.drawable.ic__ncd_eligibility,
             resources.getString(R.string.icon_title_ncd_eligible_list),
-            recordsRepo.ncdEligibleListCount,
+            recordsRepo.getNcdEligibleListCount(),
             NcdFragmentDirections.actionNcdFragmentToNcdEligibleListFragment()
         ), Icon(
             R.drawable.ic__ncd_priority,
             resources.getString(R.string.icon_title_ncd_non_eligible_list),
-            recordsRepo.ncdPriorityListCount,
+            recordsRepo.getNcdPriorityListCount(),
             NcdFragmentDirections.actionNcdFragmentToNcdPriorityListFragment()
         ), Icon(
             R.drawable.ic_ncd_noneligible,
             resources.getString(R.string.icon_title_ncd_priority_list),
-            recordsRepo.ncdNonEligibleListCount,
+            recordsRepo.getNcdNonEligibleListCount(),
             NcdFragmentDirections.actionNcdFragmentToNcdNonEligibleListFragment()
         ), Icon(
             R.drawable.ic__ncd_eligibility,
@@ -210,12 +210,12 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             recordsRepo.childrenImmunizationListCount,
             ImmunizationDueTypeFragmentDirections.actionImmunizationDueTypeFragmentToChildImmunizationListFragment()
         ),
-        Icon(
-            R.drawable.ic__immunization,
-            "Mother Immunization",
-            recordsRepo.motherImmunizationListCount,
-            ImmunizationDueTypeFragmentDirections.actionImmunizationDueTypeFragmentToMotherImmunizationListFragment()
-        ),
+//        Icon(
+//            R.drawable.ic__immunization,
+//            "Mother Immunization",
+//            recordsRepo.motherImmunizationListCount,
+//            ImmunizationDueTypeFragmentDirections.actionImmunizationDueTypeFragmentToMotherImmunizationListFragment()
+//        ),
 
         )
 

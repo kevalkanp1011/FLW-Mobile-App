@@ -51,9 +51,9 @@ class NcdEligibleListFragment : Fragment() {
                 }, { hhId, benId ->
                 findNavController().navigate(
                     NcdEligibleListFragmentDirections.actionNcdEligibleListFragmentToCbacFragment(
-                        hhId,
                         benId,
-                        homeViewModel.currentUser.value!!.userId
+                        -1,
+                        viewModel.getAshaId()
                     )
                 )
             }), "CBAC Form")

@@ -325,7 +325,8 @@ class BenRepo @Inject constructor(
                 )
             }
             cbacUnprocessedList.forEach {
-                cbacPostList.add(it.asPostModel(context.resources))
+                val ben = getBenFromId(it.benId)!!
+                cbacPostList.add( it.asPostModel(ben, context.resources))
             }
 
             val uploadDone = postDataToAmritServer(
@@ -471,9 +472,9 @@ class BenRepo @Inject constructor(
             }
             val cbac = cbacDao.getAllUnprocessedCbac()
             cbac.forEach {
-                cbacPostList.add(it.asPostModel(context.resources))
-                val ben = benDao.getBen(it.hhId, it.benId)
-                benNetworkPostList.add(ben!!.asNetworkPostModel(context, user))
+                val ben = getBenFromId(it.benId)!!
+                cbacPostList.add(it.asPostModel(ben,context.resources))
+                benNetworkPostList.add(ben.asNetworkPostModel(context, user))
             }
             cbac.takeIf { it.isNotEmpty() }?.map { it.benId }?.let {
                 cbacDao.setCbacSyncing(*it.toLongArray())
@@ -792,9 +793,9 @@ class BenRepo @Inject constructor(
                         result.add(
                             CbacCache(
                                 benId = ben.beneficiaryId,
-                                hhId = ben.householdId,
+//                                hhId = ben.householdId,
                                 ashaId = ben.ashaId,
-                                gender = ben.gender!!,
+//                                gender = ben.gender!!,
                                 cbac_age_posi = cbacDataObj.getInt("cbac_age_posi"),
                                 cbac_smoke_posi = cbacDataObj.getInt("cbac_smoke_posi"),
                                 cbac_alcohol_posi = cbacDataObj.getInt("cbac_alcohol_posi"),

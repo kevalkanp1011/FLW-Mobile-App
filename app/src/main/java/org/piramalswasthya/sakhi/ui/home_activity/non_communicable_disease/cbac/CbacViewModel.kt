@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_eligible_list.cbac
+package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.cbac
 
 import android.app.Application
 import android.content.res.Configuration
@@ -78,11 +78,10 @@ class CbacViewModel @Inject constructor(
         text
     }
     private val benId = CbacFragmentArgs.fromSavedStateHandle(state).benId
-    private val hhId = CbacFragmentArgs.fromSavedStateHandle(state).hhId
-    private val ashaId = CbacFragmentArgs.fromSavedStateHandle(state).userId
+    private val cbacId = CbacFragmentArgs.fromSavedStateHandle(state).cbacId
+    private val ashaId = CbacFragmentArgs.fromSavedStateHandle(state).ashaId
     private val cbac = CbacCache(
-        benId = benId, hhId = hhId, ashaId = ashaId,
-        gender = Gender.MALE,
+        benId = benId, ashaId = ashaId,
         syncState = SyncState.UNSYNCED
     )
     private lateinit var ben: BenRegCache
@@ -122,8 +121,7 @@ class CbacViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                ben = database.benDao.getBen(hhId, benId)!!
-                ben.gender?.let { cbac.gender = it }
+                ben = database.benDao.getBen( benId)!!
             }
             if (ben.ageUnit != AgeUnit.YEARS)
                 throw IllegalStateException("Age not in years for CBAC form!!")
