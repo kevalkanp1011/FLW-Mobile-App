@@ -54,12 +54,18 @@ class NcdCbacBenListAdapter(
 
 
     class CbacFormClickListener(
-        private val clickedBen: (benId: Long) -> Unit,
+        private val clickedView: (benId: Long) -> Unit,
+        private val clickedNew: (benId: Long) -> Unit,
 
         ) {
-        fun onClickedBen(item: BenBasicDomain) = clickedBen(
+        fun onClickedView(item: BenBasicDomain) = clickedView(
             item.benId
         )
+
+        fun onClickedNew(item: BenBasicDomain) = clickedNew(
+            item.benId
+        )
+
 
     }
 

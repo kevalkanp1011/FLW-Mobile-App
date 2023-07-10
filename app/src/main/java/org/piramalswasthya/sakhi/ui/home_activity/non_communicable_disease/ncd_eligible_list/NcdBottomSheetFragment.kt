@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_list
+package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_eligible_list
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,7 +20,7 @@ class NcdBottomSheetFragment : BottomSheetDialogFragment() {
     private val binding: BottomSheetNcdBinding
         get() = _binding!!
 
-    private val viewModel: NcdListViewModel by viewModels({ requireParentFragment() })
+    private val viewModel: NcdEligibleListViewModel by viewModels({ requireParentFragment() })
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -34,8 +34,7 @@ class NcdBottomSheetFragment : BottomSheetDialogFragment() {
         binding.rvImmCat.adapter = NcdCbacAdapter(NcdCbacAdapter.NcdCbacElementClickListener {
             val benId = viewModel.getSelectedBenId()
             findNavController().navigate(
-
-                NcdListFragmentDirections.actionNcdListFragmentToCbacFragment(
+                NcdEligibleListFragmentDirections.actionNcdEligibleListFragmentToCbacFragment(
                     benId = benId,
                     ashaId = viewModel.getAshaId(),
                     cbacId = it
@@ -45,9 +44,14 @@ class NcdBottomSheetFragment : BottomSheetDialogFragment() {
             dismiss()
         })
 
+
         lifecycleScope.launch {
             viewModel.ncdDetails.collect {
-                (_binding?.rvImmCat?.adapter as NcdCbacAdapter?)?.submitList(it)
+
+                (_binding?.rvImmCat?.adapter as NcdCbacAdapter?)?.apply {
+                    submitList(emptyList())
+                    submitList(it)
+                }
             }
         }
     }

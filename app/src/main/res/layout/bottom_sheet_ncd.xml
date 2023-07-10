@@ -7,29 +7,24 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/padding_normal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:orientation="vertical">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_imm_cat"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="4"
         tools:listitem="@layout/rv_item_ncd_cbac_element" />
 
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_add_circle"
-        android:layout_gravity="center_horizontal"
-        android:textColor="?attr/colorSecondary"
-        app:drawableTint="?attr/colorSecondary"
-        android:text="Add New"/>
-    </LinearLayout>
-
+<!--    <Button-->
+<!--        android:id="@+id/btn_add_new"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:drawableLeft="@drawable/ic_add_circle"-->
+<!--        android:layout_gravity="center_horizontal"-->
+<!--        android:backgroundTint="?attr/colorPrimary"-->
+<!--        android:textColor="?attr/colorSecondary"-->
+<!--        app:drawableTint="?attr/colorSecondary"-->
+<!--        android:text="Add New"/>-->
 
 </FrameLayout>

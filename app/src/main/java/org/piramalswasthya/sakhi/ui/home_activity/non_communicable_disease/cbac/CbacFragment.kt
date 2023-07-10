@@ -255,14 +255,18 @@ class CbacFragment : Fragment() {
                 R.id.rb_yes -> viewModel.setTakingTbDrug(1)
                 R.id.rb_no -> viewModel.setTakingTbDrug(2)
             }
-            viewModel.ast2.value?.let {
-                if (it > 0) {
-                    if (!ed2PopupShown) {
-                        ast2AlertDialog.show()
-                        ed2PopupShown = true
-                    }
-                }
+
+            if(binding.cbacFhTb.rbYes.isChecked || binding.cbacTakingTbDrug.rbYes.isChecked){
+                ast2AlertDialog.show()
             }
+//            viewModel.ast2.value?.let {
+//                if (it > 0) {
+//                    if (!ed2PopupShown) {
+//                        ast2AlertDialog.show()
+//                        ed2PopupShown = true
+//                    }
+//                }
+//            }
         }
         binding.cbacHistb.cbacEdRg.setOnCheckedChangeListener { _, id ->
             when (id) {
@@ -300,14 +304,27 @@ class CbacFragment : Fragment() {
                 R.id.rb_no -> viewModel.setNtSwets(2)
             }
 
-            viewModel.ast1.value?.let {
-                if (it > 0) {
-                    if (!ed1PopupShown) {
-                        ast1AlertDialog.show()
-                        ed1PopupShown = true
-                    }
-                }
+//            if(binding.cbacNtswets.rbYes.isChecked ||)
+
+            if(
+                binding.cbacHistb.rbYes.isChecked ||
+                binding.cbacCoughing.rbYes.isChecked ||
+                binding.cbacBlsputum.rbYes.isChecked ||
+                binding.cbacFeverwks.rbYes.isChecked ||
+                binding.cbacLsweight.rbYes.isChecked ||
+                binding.cbacNtswets.rbYes.isChecked
+                    ){
+                ast1AlertDialog.show()
             }
+
+//            viewModel.ast1.value?.let {
+//                if (it > 0) {
+//                    if (!ed1PopupShown) {
+//                        ast1AlertDialog.show()
+//                        ed1PopupShown = true
+//                    }
+//                }
+//            }
         }
         binding.cbacRecurrentUlceration.cbacEdRg.setOnCheckedChangeListener { _, id ->
             when (id) {
@@ -664,8 +681,7 @@ class CbacFragment : Fragment() {
         }
         binding.ddLiScore.text = cbac.cbac_little_interest_score.toString()
         binding.ddFdScore.text = cbac.cbac_feeling_down_score.toString()
-        binding.cbacPhq2TotalScore.text =
-            (cbac.cbac_little_interest_score + cbac.cbac_feeling_down_score).toString()
+        binding.cbacPhq2TotalScore.text = "Total Score : ${cbac.cbac_little_interest_score + cbac.cbac_feeling_down_score}"
     }
 
 

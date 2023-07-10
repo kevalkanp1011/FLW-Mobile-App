@@ -118,10 +118,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/ll_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:backgroundTint="?attr/colorSecondary"
+                    android:onClick="@{() -> clickListener.onClickedNew(ben)}"
+                    android:text="Add CBAC" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/ll_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:backgroundTint="?attr/colorSecondary"
-                    android:onClick="@{() -> clickListener.onClickedBen(ben)}"
-                    android:text="CBAC form" />
+                    android:onClick="@{() -> clickListener.onClickedView(ben)}"
+                    android:text="View Filled CBAC" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

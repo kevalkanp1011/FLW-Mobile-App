@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,21 +14,22 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
+import org.piramalswasthya.sakhi.adapters.NcdCbacBenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
-import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
+import timber.log.Timber
 
 @AndroidEntryPoint
 class NcdEligibleListFragment : Fragment() {
+
 
     private val binding: FragmentDisplaySearchRvButtonBinding by lazy {
         FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater)
     }
 
     private val viewModel: NcdEligibleListViewModel by viewModels()
-    private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
 
+    private val bottomSheet: NcdBottomSheetFragment by lazy { NcdBottomSheetFragment() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,29 +43,38 @@ class NcdEligibleListFragment : Fragment() {
 
         binding.btnNextPage.visibility = View.GONE
 
-        val benAdapter = BenListAdapterForForm(
-            BenListAdapterForForm.ClickListener(
-                {
-                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
-
-                }, { hhId, benId ->
-                findNavController().navigate(
-                    NcdEligibleListFragmentDirections.actionNcdEligibleListFragmentToCbacFragment(
-                        benId,
-                        -1,
-                        viewModel.getAshaId()
-                    )
-                )
-            }), "CBAC Form")
+        val benAdapter =
+            NcdCbacBenListAdapter(
+                clickListener = NcdCbacBenListAdapter.CbacFormClickListener(
+                    clickedView = {
+                        Timber.d("ClickListener Triggered!")
+                        viewModel.setSelectedBenId(it)
+                        if (!bottomSheet.isVisible)
+                            bottomSheet.show(childFragmentManager, "CBAC")
+                    },
+                    clickedNew = {
+                        findNavController().navigate(
+                            NcdEligibleListFragmentDirections.actionNcdEligibleListFragmentToCbacFragment(
+                                benId = it,
+                                ashaId = viewModel.getAshaId()
+                            )
+                        )
+                    })
+            )
         binding.rvAny.adapter = benAdapter
 
         lifecycleScope.launch {
-            viewModel.benList.collect{
+            viewModel.benList.collect {
                 if (it.isEmpty())
                     binding.flEmpty.visibility = View.VISIBLE
                 else
                     binding.flEmpty.visibility = View.GONE
                 benAdapter.submitList(it)
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.ncdDetails.collect {
+                Timber.d("Collecting Ncd Details : $it")
             }
         }
         val searchTextWatcher = object : TextWatcher {
@@ -90,10 +99,11 @@ class NcdEligibleListFragment : Fragment() {
 
         }
     }
+
     override fun onStart() {
         super.onStart()
-        activity?.let{
-            (it as HomeActivity).updateActionBar(R.drawable.ic__ncd_eligibility)
+        activity?.let {
+            (it as HomeActivity).updateActionBar(R.drawable.ic__ncd_list)
         }
     }
 

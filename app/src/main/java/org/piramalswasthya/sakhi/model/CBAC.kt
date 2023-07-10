@@ -439,7 +439,19 @@ data class CbacCache(
 
             )
     }
+
+    fun asDomainModel() : CbacDomain {
+        return CbacDomain(
+            cbacId = this.id,
+            date = getDateTimeStringFromLong(this.createdDate)?:"<Error in parsing created date>"
+        )
+    }
 }
+
+data class CbacDomain(
+    val cbacId : Int,
+    val date : String
+)
 
 data class CbacPost(
     val id: Int = 1,
@@ -590,7 +602,7 @@ data class BenWithCbacCache(
     @Embedded
     val ben: BenBasicCache,
     @Relation(
-        parentColumn = "benId", entityColumn = "benId"
+        parentColumn = "benId", entityColumn = "benId", entity = CbacCache::class
     )
     val savedCbacRecords: List<CbacCache>
 )
