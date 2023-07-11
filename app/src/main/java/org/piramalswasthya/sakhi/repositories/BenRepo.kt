@@ -796,6 +796,7 @@ class BenRepo @Inject constructor(
 //                                hhId = ben.householdId,
                                 ashaId = ben.ashaId,
 //                                gender = ben.gender!!,
+                                fillDate = getLongFromDate(cbacDataObj.getString("createdDate")),
                                 cbac_age_posi = cbacDataObj.getInt("cbac_age_posi"),
                                 cbac_smoke_posi = cbacDataObj.getInt("cbac_smoke_posi"),
                                 cbac_alcohol_posi = cbacDataObj.getInt("cbac_alcohol_posi"),

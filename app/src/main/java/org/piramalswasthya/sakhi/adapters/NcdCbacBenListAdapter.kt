@@ -6,20 +6,20 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.piramalswasthya.sakhi.databinding.RvItemNcdCbacBinding
-import org.piramalswasthya.sakhi.model.BenBasicDomain
+import org.piramalswasthya.sakhi.model.BenWithCbacDomain
 
 class NcdCbacBenListAdapter(
     private val clickListener: CbacFormClickListener
-) : ListAdapter<BenBasicDomain, NcdCbacBenListAdapter.BenCbacViewHolder>(
+) : ListAdapter<BenWithCbacDomain, NcdCbacBenListAdapter.BenCbacViewHolder>(
     BenDiffUtilCallBack
 ) {
-    private object BenDiffUtilCallBack : DiffUtil.ItemCallback<BenBasicDomain>() {
+    private object BenDiffUtilCallBack : DiffUtil.ItemCallback<BenWithCbacDomain>() {
         override fun areItemsTheSame(
-            oldItem: BenBasicDomain, newItem: BenBasicDomain
-        ) = oldItem.benId == newItem.benId
+            oldItem: BenWithCbacDomain, newItem: BenWithCbacDomain
+        ) = oldItem.ben.benId == newItem.ben.benId
 
         override fun areContentsTheSame(
-            oldItem: BenBasicDomain, newItem: BenBasicDomain
+            oldItem: BenWithCbacDomain, newItem: BenWithCbacDomain
         ) = oldItem == newItem
 
     }
@@ -35,9 +35,9 @@ class NcdCbacBenListAdapter(
         }
 
         fun bind(
-            item: BenBasicDomain, clickListener: CbacFormClickListener?
+            item: BenWithCbacDomain, clickListener: CbacFormClickListener?
         ) {
-            binding.ben = item
+            binding.benWithCbac = item
             binding.clickListener = clickListener
             binding.executePendingBindings()
 
@@ -58,12 +58,12 @@ class NcdCbacBenListAdapter(
         private val clickedNew: (benId: Long) -> Unit,
 
         ) {
-        fun onClickedView(item: BenBasicDomain) = clickedView(
-            item.benId
+        fun onClickedView(item: BenWithCbacDomain) = clickedView(
+            item.ben.benId
         )
 
-        fun onClickedNew(item: BenBasicDomain) = clickedNew(
-            item.benId
+        fun onClickedNew(item: BenWithCbacDomain) = clickedNew(
+            item.ben.benId
         )
 
 

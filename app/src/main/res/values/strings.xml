@@ -393,7 +393,7 @@
     <string name="cbac_score">Score</string>
     <string name="cbac_type_of_fuel">Type of fuel used for cooking</string>
     <string name="cbac_remarks">Remarks</string>
-    <string name="cbac_risk_assessment_tv">Risk Assessment</string>
+    <string name="cbac_risk_assessment_tv">Part A: Risk Assessment</string>
 
     <string name="evac_patient_info">Patient Information </string>
     <string name="cbac_tv_bl_menopause">Inform ASHA Facilitator</string>

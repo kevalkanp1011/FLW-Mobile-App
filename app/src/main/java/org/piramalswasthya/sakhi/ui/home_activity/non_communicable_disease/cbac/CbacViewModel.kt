@@ -122,6 +122,10 @@ class CbacViewModel @Inject constructor(
     private var flagForPhq2 = false
     private var flagForNcd = false
 
+    private val _minDate = MutableLiveData<Long>()
+    val minDate : LiveData<Long>
+        get() = _minDate
+
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -133,10 +137,11 @@ class CbacViewModel @Inject constructor(
                         syncState = SyncState.UNSYNCED
                     )
                 ben = database.benDao.getBen(benId)!!
+                _minDate.postValue(ben.regDate)
             }
             if (ben.ageUnit != AgeUnit.YEARS)
                 throw IllegalStateException("Age not in years for CBAC form!!")
-            val age= if(cbacId==0) ben.age else BenBasicCache.getAgeFromDob(cbac.createdDate)
+            val age= if(cbacId==0) ben.age else BenBasicCache.getAgeFromDob(ben.dob)
             when (age) {
                 in 0..29 -> {
                     _raAgeScore.value = 0
@@ -810,6 +815,10 @@ class CbacViewModel @Inject constructor(
 
     fun setReferMoic(i: Int) {
         cbac.cbac_referpatient_mo = i.toString()
+    }
+
+    fun setFillDate(date: Long) {
+        cbac.fillDate = date
     }
 
 

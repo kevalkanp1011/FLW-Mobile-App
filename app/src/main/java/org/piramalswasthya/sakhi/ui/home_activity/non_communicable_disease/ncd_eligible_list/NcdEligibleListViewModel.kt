@@ -25,8 +25,12 @@ class NcdEligibleListViewModel @Inject constructor(
     private val allBenList = recordsRepo.getNcdList()
     private val filter = MutableStateFlow("")
     private val selectedBenId = MutableStateFlow(0L)
-    val benList = allBenList.combine(filter) { list, filter ->
-        filterBenList(list.map { it.ben.asBasicDomainModel() }, filter)
+    val benList = allBenList.combine(filter) { cacheList, filter ->
+        val list = cacheList.map { it.asDomainModel() }
+        val benBasicDomainList = list.map { it.ben}
+        val filteredBenBasicDomainList = filterBenList(benBasicDomainList, filter)
+        list.filter { it.ben.benId in filteredBenBasicDomainList.map { it.benId } }
+
     }
 
     val ncdDetails = allBenList.combineTransform(selectedBenId) { list, benId ->

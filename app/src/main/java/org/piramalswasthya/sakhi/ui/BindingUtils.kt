@@ -272,6 +272,15 @@ fun Button.setAncState(ancFormState: AncFormState?) {
         }
     }
 }
+@BindingAdapter("cbac_list_avail")
+fun Button.setCbacListAvail(list: List<Any>?) {
+    list?.let {
+        if(list.isEmpty())
+            visibility = View.INVISIBLE
+        else
+            visibility = View.VISIBLE
+    }
+}
 
 @BindingAdapter("anc_state_icon")
 fun ImageView.setAncState(ancFormState: AncFormState?) {

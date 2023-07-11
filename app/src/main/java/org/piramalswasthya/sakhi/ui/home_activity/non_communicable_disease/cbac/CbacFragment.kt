@@ -1,11 +1,14 @@
 package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.cbac
 
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.RadioGroup
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -16,6 +19,9 @@ import org.piramalswasthya.sakhi.model.CbacCache
 import org.piramalswasthya.sakhi.model.Gender
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @AndroidEntryPoint
 class CbacFragment : Fragment() {
@@ -24,6 +30,10 @@ class CbacFragment : Fragment() {
     private val binding by lazy { FragmentCbacBinding.inflate(layoutInflater) }
 
     private val viewModel: CbacViewModel by viewModels()
+
+    private val isInFillMode : Boolean by lazy {
+        viewModel.cbacId == 0
+    }
 
     private var totalScorePopupShown: Boolean = false
 
@@ -99,9 +109,7 @@ class CbacFragment : Fragment() {
         viewModel.benAgeGender.observe(viewLifecycleOwner) {
             binding.tvAgeGender.text = it
         }
-        viewModel.raAgeText.observe(viewLifecycleOwner) {
-            binding.actvAgeDropdown.setText(it)
-        }
+
         viewModel.raAgeScore.observe(viewLifecycleOwner) {
             binding.ddAgeScore.text = it
         }
@@ -142,7 +150,7 @@ class CbacFragment : Fragment() {
             }
             binding.cbacTvRaTotalScore.text = it
         }
-        if (viewModel.cbacId == 0) setUpFill()
+        if (isInFillMode) setUpFill()
         else setUpView()
 
 
@@ -151,6 +159,7 @@ class CbacFragment : Fragment() {
     private fun setUpView() {
         binding.btnSave.visibility = View.GONE
         viewModel.filledCbac.observe(viewLifecycleOwner) { cbac ->
+            binding.etDate.setText(getDateFromLong(cbac.createdDate))
             setupRaView(cbac)
             setupEdView(cbac)
             setupRfCopdView(cbac)
@@ -159,10 +168,48 @@ class CbacFragment : Fragment() {
 
     }
 
+    fun getDateFromLong(dateLong: Long): String? {
+        if (dateLong == 0L) return null
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = dateLong
+        val f = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+        return f.format(cal.time)
+
+
+    }
+
+    fun getLongFromDate(dateString: String?): Long {
+        val f = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+        val date = dateString?.let { f.parse(it) }
+        return date?.time ?: 0L
+    }
 
     private fun setUpFill() {
         binding.btnSave.setOnClickListener {
+            viewModel.setFillDate(getLongFromDate(binding.etDate.text.toString()))
             viewModel.submitForm()
+        }
+        binding.etDate.setText(getDateFromLong(System.currentTimeMillis()))
+        val today = Calendar.getInstance()
+        val thisYear = today.get(Calendar.YEAR)
+        val thisMonth = today.get(Calendar.MONTH)
+        val thisDay = today.get(Calendar.DAY_OF_MONTH)
+        binding.etDate.setOnClickListener {
+
+            val datePickerDialog = DatePickerDialog(
+                it.context, { _, year, month, day ->
+                    binding.etDate.setText(
+                        "${if (day > 9) day else "0$day"}-${if (month > 8) month + 1 else "0${month + 1}"}-$year"
+                    )
+                }, thisYear, thisMonth, thisDay
+            )
+
+            datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
+            viewModel.minDate.observe(viewLifecycleOwner) {
+                datePickerDialog.datePicker.minDate = it
+
+            }
+            datePickerDialog.show()
         }
         setupRaFill()
         setupEdFill()
@@ -171,6 +218,7 @@ class CbacFragment : Fragment() {
     }
 
     private fun setupRaFill() {
+
         viewModel.gender.observe(viewLifecycleOwner) {
             when (it) {
                 Gender.MALE -> {
@@ -181,15 +229,43 @@ class CbacFragment : Fragment() {
                 else -> binding.actvWaistDropdown.setSimpleItems(R.array.cbac_waist_mes_female)
             }
         }
-        binding.actvSmokeDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setSmoke(i) }
-        binding.actvAlcoholDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setAlcohol(i) }
-        binding.actvWaistDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setWaist(i) }
-        binding.actvPaDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setPa(i) }
-        binding.actvFhDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setFh(i) }
+        viewModel.raAgeText.observe(viewLifecycleOwner) {
+            binding.actvAgeDropdown.setText(it)
+        }
+        binding.actvSmokeDropdown.setAdapter(
+            ArrayAdapter(
+                requireContext(),
+                R.layout.dropdown_item,
+                R.id.tv_dropdown_item_text ,
+                resources.getStringArray(R.array.cbac_smoke),
+
+
+            )
+        )
+        binding.actvPaDropdown.setAdapter(
+            ArrayAdapter(
+                requireContext(),
+                R.layout.dropdown_item,
+                R.id.tv_dropdown_item_text ,
+                resources.getStringArray(R.array.cbac_pa),
+
+
+                )
+        )
+        binding.actvSmokeDropdown.setOnItemClickListener { _, _, i, _ ->
+            viewModel.setSmoke(i) }
+        binding.actvAlcoholDropdown.setOnItemClickListener { _, _, i, _ ->
+            viewModel.setAlcohol(i) }
+        binding.actvWaistDropdown.setOnItemClickListener { _, _, i, _ ->
+            viewModel.setWaist(i) }
+        binding.actvPaDropdown.setOnItemClickListener { _, _, i, _ ->
+            viewModel.setPa(i) }
+        binding.actvFhDropdown.setOnItemClickListener { _, _, i, _ ->
+            viewModel.setFh(i) }
     }
 
     private fun setupRaView(cbac: CbacCache) {
-        binding.tilAgeDropdown.isEnabled = false
+//        binding.tilAgeDropdown.isEnabled = false
         binding.actvAgeDropdown.setText(resources.getStringArray(R.array.cbac_age)[cbac.cbac_age_posi - 1])
         binding.actvSmokeDropdown.setText(resources.getStringArray(R.array.cbac_smoke)[cbac.cbac_smoke_posi - 1])
         binding.actvAlcoholDropdown.setText(resources.getStringArray(R.array.cbac_alcohol)[cbac.cbac_alcohol_posi - 1])
@@ -212,7 +288,6 @@ class CbacFragment : Fragment() {
         viewModel.setWaist(cbac.cbac_waist_posi - 1)
         viewModel.setPa(cbac.cbac_pa_posi - 1)
         viewModel.setFh(cbac.cbac_familyhistory_posi - 1)
-
     }
 
     private fun setupEdFill() {
@@ -256,7 +331,7 @@ class CbacFragment : Fragment() {
                 R.id.rb_no -> viewModel.setTakingTbDrug(2)
             }
 
-            if(binding.cbacFhTb.rbYes.isChecked || binding.cbacTakingTbDrug.rbYes.isChecked){
+            if (binding.cbacFhTb.rbYes.isChecked || binding.cbacTakingTbDrug.rbYes.isChecked) {
                 ast2AlertDialog.show()
             }
 //            viewModel.ast2.value?.let {
@@ -306,14 +381,14 @@ class CbacFragment : Fragment() {
 
 //            if(binding.cbacNtswets.rbYes.isChecked ||)
 
-            if(
+            if (
                 binding.cbacHistb.rbYes.isChecked ||
                 binding.cbacCoughing.rbYes.isChecked ||
                 binding.cbacBlsputum.rbYes.isChecked ||
                 binding.cbacFeverwks.rbYes.isChecked ||
                 binding.cbacLsweight.rbYes.isChecked ||
                 binding.cbacNtswets.rbYes.isChecked
-                    ){
+            ) {
                 ast1AlertDialog.show()
             }
 
@@ -562,6 +637,9 @@ class CbacFragment : Fragment() {
                 }
             )
         }
+        rg.children.forEach {
+            it.isClickable = isInFillMode
+        }
     }
 
     private fun setupEdView(cbac: CbacCache) {
@@ -681,7 +759,8 @@ class CbacFragment : Fragment() {
         }
         binding.ddLiScore.text = cbac.cbac_little_interest_score.toString()
         binding.ddFdScore.text = cbac.cbac_feeling_down_score.toString()
-        binding.cbacPhq2TotalScore.text = "Total Score : ${cbac.cbac_little_interest_score + cbac.cbac_feeling_down_score}"
+        binding.cbacPhq2TotalScore.text =
+            "Total Score : ${cbac.cbac_little_interest_score + cbac.cbac_feeling_down_score}"
     }
 
 
