@@ -6,22 +6,22 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.piramalswasthya.sakhi.databinding.RvItemNcdCbacElementBinding
-import org.piramalswasthya.sakhi.model.CbacCache
+import org.piramalswasthya.sakhi.model.CbacDomain
 
 class NcdCbacAdapter(private val clickListener: NcdCbacElementClickListener) :
-    ListAdapter<CbacCache, NcdCbacAdapter.NcdCbacElementViewHolder>(
+    ListAdapter<CbacDomain, NcdCbacAdapter.NcdCbacElementViewHolder>(
         ImmunizationIconDiffCallback
     ) {
-    object ImmunizationIconDiffCallback : DiffUtil.ItemCallback<CbacCache>() {
+    object ImmunizationIconDiffCallback : DiffUtil.ItemCallback<CbacDomain>() {
         override fun areItemsTheSame(
-            oldItem: CbacCache,
-            newItem: CbacCache
+            oldItem: CbacDomain,
+            newItem: CbacDomain
         ) =
-            oldItem.id == newItem.id
+            oldItem.cbacId == newItem.cbacId
 
         override fun areContentsTheSame(
-            oldItem: CbacCache,
-            newItem: CbacCache
+            oldItem: CbacDomain,
+            newItem: CbacDomain
         ) =
             (oldItem == newItem)
 
@@ -39,7 +39,7 @@ class NcdCbacAdapter(private val clickListener: NcdCbacElementClickListener) :
             }
         }
 
-        fun bind(item: CbacCache, clickListener: NcdCbacElementClickListener) {
+        fun bind(item: CbacDomain, clickListener: NcdCbacElementClickListener) {
             binding.cbac = item
             binding.clickListener = clickListener
             binding.executePendingBindings()
@@ -55,7 +55,7 @@ class NcdCbacAdapter(private val clickListener: NcdCbacElementClickListener) :
     }
 
     class NcdCbacElementClickListener(val selectedListener: (cbacId: Int) -> Unit) {
-        fun onClicked(cbac: CbacCache) = selectedListener(cbac.id)
+        fun onClicked(cbac: CbacDomain) = selectedListener(cbac.cbacId)
 
     }
 }

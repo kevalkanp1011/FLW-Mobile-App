@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="ben"
-            type="org.piramalswasthya.sakhi.model.BenBasicDomain" />
+            name="benWithCbac"
+            type="org.piramalswasthya.sakhi.model.BenWithCbacDomain" />
         <variable
             name="clickListener"
             type="org.piramalswasthya.sakhi.adapters.NcdCbacBenListAdapter.CbacFormClickListener" />
@@ -60,7 +60,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tv_name_ph"
                             tools:text="Name"
-                            android:text="@{ben.benName}"
+                            android:text="@{benWithCbac.ben.benName}"
                             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                             android:textColor="?attr/colorSecondary" />
                     </RelativeLayout>
@@ -84,7 +84,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tv_age_ph"
-                            android:text="@{ben.age}"
+                            android:text="@{benWithCbac.ben.age}"
                             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                             android:textColor="?attr/colorSecondary" />
                     </RelativeLayout>
@@ -108,7 +108,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tv_gender_ph"
-                            android:text="@{ben.gender}"
+                            android:text="@{benWithCbac.ben.gender}"
                             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                             android:textColor="?attr/colorSecondary" />
                     </RelativeLayout>
@@ -118,10 +118,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/ll_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:backgroundTint="?attr/colorSecondary"
+                    android:onClick="@{() -> clickListener.onClickedNew(benWithCbac)}"
+                    android:text="Add CBAC" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/ll_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:backgroundTint="?attr/colorSecondary"
-                    android:onClick="@{() -> clickListener.onClickedBen(ben)}"
-                    android:text="CBAC form" />
+                    cbac_list_avail="@{benWithCbac.savedCbacRecords}"
+                    android:onClick="@{() -> clickListener.onClickedView(benWithCbac)}"
+                    android:text="View Filled CBAC" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

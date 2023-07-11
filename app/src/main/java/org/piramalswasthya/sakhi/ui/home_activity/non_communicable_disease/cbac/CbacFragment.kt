@@ -1,19 +1,27 @@
 package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.cbac
 
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.RadioGroup
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentCbacBinding
+import org.piramalswasthya.sakhi.model.CbacCache
 import org.piramalswasthya.sakhi.model.Gender
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @AndroidEntryPoint
 class CbacFragment : Fragment() {
@@ -23,6 +31,10 @@ class CbacFragment : Fragment() {
 
     private val viewModel: CbacViewModel by viewModels()
 
+    private val isInFillMode : Boolean by lazy {
+        viewModel.cbacId == 0
+    }
+
     private var totalScorePopupShown: Boolean = false
 
     private var ed1PopupShown: Boolean = false
@@ -30,36 +42,27 @@ class CbacFragment : Fragment() {
     private var ed2PopupShown: Boolean = false
 
     private val alertDialog by lazy {
-        AlertDialog.Builder(requireContext())
-            .setTitle("MISSING FIELD")
-            .create()
+        AlertDialog.Builder(requireContext()).setTitle("MISSING FIELD").create()
     }
 
     private val raAlertDialog by lazy {
-        AlertDialog.Builder(requireContext())
-            .setTitle("SUSPECTED NCD CASE!")
+        AlertDialog.Builder(requireContext()).setTitle("SUSPECTED NCD CASE!")
             .setMessage(context?.getString(R.string.ncd_sus_valid))
-            .setPositiveButton("Ok"){dialog,_ -> dialog.dismiss() }
-            .create()
+            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }.create()
     }
     private val ast1AlertDialog by lazy {
-        AlertDialog.Builder(requireContext())
-            .setTitle("SUSPECTED HRP AND NCD CASE!")
+        AlertDialog.Builder(requireContext()).setTitle("SUSPECTED HRP AND NCD CASE!")
             .setMessage(context?.getString(R.string.tb_suspected_alert))
-            .setPositiveButton("Ok"){dialog,_ -> dialog.dismiss() }
-            .create()
+            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }.create()
     }
     private val ast2AlertDialog by lazy {
-        AlertDialog.Builder(requireContext())
-            .setTitle("SUSPECTED HRP CASE!")
+        AlertDialog.Builder(requireContext()).setTitle("SUSPECTED HRP CASE!")
             .setMessage(context?.getString(R.string.tb_suspected_family_alert))
-            .setPositiveButton("Ok"){dialog,_ -> dialog.dismiss() }
-            .create()
+            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }.create()
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         return binding.root
     }
@@ -73,18 +76,21 @@ class CbacFragment : Fragment() {
                     binding.llContent.visibility = View.GONE
                     binding.pbCbac.visibility = View.VISIBLE
                 }
+
                 CbacViewModel.State.SAVE_FAIL -> {
                     binding.llContent.visibility = View.VISIBLE
                     binding.pbCbac.visibility = View.GONE
                     Timber.d("Ran into error! Cbac data not saved!")
                     viewModel.resetState()
                 }
+
                 CbacViewModel.State.SAVE_SUCCESS -> {
                     Timber.d("CBAC form saved successfully!")
                     viewModel.resetState()
                     WorkerUtils.triggerAmritSyncWorker(requireContext())
                     findNavController().navigateUp()
                 }
+
                 CbacViewModel.State.MISSING_FIELD -> {
                     binding.llContent.visibility = View.VISIBLE
                     binding.pbCbac.visibility = View.GONE
@@ -97,28 +103,13 @@ class CbacFragment : Fragment() {
                 }
             }
         }
-        binding.btnSave.setOnClickListener {
-            viewModel.submitForm()
-        }
         viewModel.benName.observe(viewLifecycleOwner) {
             binding.tvBenName.text = it
         }
         viewModel.benAgeGender.observe(viewLifecycleOwner) {
             binding.tvAgeGender.text = it
         }
-        //RA START
-        viewModel.gender.observe(viewLifecycleOwner) {
-            when (it) {
-                Gender.MALE -> {
-                    binding.actvWaistDropdown.setSimpleItems(R.array.cbac_waist_mes_male)
-                    binding.cbacLlEdWomen.visibility = View.GONE
-                }
-                else -> binding.actvWaistDropdown.setSimpleItems(R.array.cbac_waist_mes_female)
-            }
-        }
-        viewModel.raAgeText.observe(viewLifecycleOwner) {
-            binding.actvAgeDropdown.setText(it)
-        }
+
         viewModel.raAgeScore.observe(viewLifecycleOwner) {
             binding.ddAgeScore.text = it
         }
@@ -136,8 +127,7 @@ class CbacFragment : Fragment() {
         }
         viewModel.raFhScore.observe(viewLifecycleOwner) {
             binding.ddFhScore.text = it
-            viewModel.raTotalScore.value?.let {
-                    total ->
+            viewModel.raTotalScore.value?.let { total ->
                 run {
                     if (total.substring(total.lastIndexOf(' ') + 1).toInt() >= 4) {
                         if (!totalScorePopupShown) {
@@ -160,15 +150,147 @@ class CbacFragment : Fragment() {
             }
             binding.cbacTvRaTotalScore.text = it
         }
+        if (isInFillMode) setUpFill()
+        else setUpView()
 
-        binding.actvSmokeDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setSmoke(i) }
-        binding.actvAlcoholDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setAlcohol(i) }
-        binding.actvWaistDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setWaist(i) }
-        binding.actvPaDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setPa(i) }
-        binding.actvFhDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setFh(i) }
-        //RA END
 
-        //ED START
+    }
+
+    private fun setUpView() {
+        binding.btnSave.visibility = View.GONE
+        viewModel.filledCbac.observe(viewLifecycleOwner) { cbac ->
+            binding.etDate.setText(getDateFromLong(cbac.createdDate))
+            setupRaView(cbac)
+            setupEdView(cbac)
+            setupRfCopdView(cbac)
+            setupPhq2View(cbac)
+        }
+
+    }
+
+    fun getDateFromLong(dateLong: Long): String? {
+        if (dateLong == 0L) return null
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = dateLong
+        val f = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+        return f.format(cal.time)
+
+
+    }
+
+    fun getLongFromDate(dateString: String?): Long {
+        val f = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+        val date = dateString?.let { f.parse(it) }
+        return date?.time ?: 0L
+    }
+
+    private fun setUpFill() {
+        binding.btnSave.setOnClickListener {
+            viewModel.setFillDate(getLongFromDate(binding.etDate.text.toString()))
+            viewModel.submitForm()
+        }
+        binding.etDate.setText(getDateFromLong(System.currentTimeMillis()))
+        val today = Calendar.getInstance()
+        val thisYear = today.get(Calendar.YEAR)
+        val thisMonth = today.get(Calendar.MONTH)
+        val thisDay = today.get(Calendar.DAY_OF_MONTH)
+        binding.etDate.setOnClickListener {
+
+            val datePickerDialog = DatePickerDialog(
+                it.context, { _, year, month, day ->
+                    binding.etDate.setText(
+                        "${if (day > 9) day else "0$day"}-${if (month > 8) month + 1 else "0${month + 1}"}-$year"
+                    )
+                }, thisYear, thisMonth, thisDay
+            )
+
+            datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
+            viewModel.minDate.observe(viewLifecycleOwner) {
+                datePickerDialog.datePicker.minDate = it
+
+            }
+            datePickerDialog.show()
+        }
+        setupRaFill()
+        setupEdFill()
+        setupRfCopdFill()
+        setupPhq2Fill()
+    }
+
+    private fun setupRaFill() {
+
+        viewModel.gender.observe(viewLifecycleOwner) {
+            when (it) {
+                Gender.MALE -> {
+                    binding.actvWaistDropdown.setSimpleItems(R.array.cbac_waist_mes_male)
+                    binding.cbacLlEdWomen.visibility = View.GONE
+                }
+
+                else -> binding.actvWaistDropdown.setSimpleItems(R.array.cbac_waist_mes_female)
+            }
+        }
+        viewModel.raAgeText.observe(viewLifecycleOwner) {
+            binding.actvAgeDropdown.setText(it)
+        }
+        binding.actvSmokeDropdown.setAdapter(
+            ArrayAdapter(
+                requireContext(),
+                R.layout.dropdown_item,
+                R.id.tv_dropdown_item_text ,
+                resources.getStringArray(R.array.cbac_smoke),
+
+
+            )
+        )
+        binding.actvPaDropdown.setAdapter(
+            ArrayAdapter(
+                requireContext(),
+                R.layout.dropdown_item,
+                R.id.tv_dropdown_item_text ,
+                resources.getStringArray(R.array.cbac_pa),
+
+
+                )
+        )
+        binding.actvSmokeDropdown.setOnItemClickListener { _, _, i, _ ->
+            viewModel.setSmoke(i) }
+        binding.actvAlcoholDropdown.setOnItemClickListener { _, _, i, _ ->
+            viewModel.setAlcohol(i) }
+        binding.actvWaistDropdown.setOnItemClickListener { _, _, i, _ ->
+            viewModel.setWaist(i) }
+        binding.actvPaDropdown.setOnItemClickListener { _, _, i, _ ->
+            viewModel.setPa(i) }
+        binding.actvFhDropdown.setOnItemClickListener { _, _, i, _ ->
+            viewModel.setFh(i) }
+    }
+
+    private fun setupRaView(cbac: CbacCache) {
+//        binding.tilAgeDropdown.isEnabled = false
+        binding.actvAgeDropdown.setText(resources.getStringArray(R.array.cbac_age)[cbac.cbac_age_posi - 1])
+        binding.actvSmokeDropdown.setText(resources.getStringArray(R.array.cbac_smoke)[cbac.cbac_smoke_posi - 1])
+        binding.actvAlcoholDropdown.setText(resources.getStringArray(R.array.cbac_alcohol)[cbac.cbac_alcohol_posi - 1])
+        viewModel.gender.observe(viewLifecycleOwner) {
+            when (it) {
+                Gender.MALE -> {
+                    binding.actvWaistDropdown.setText(resources.getStringArray(R.array.cbac_waist_mes_male)[cbac.cbac_waist_posi - 1])
+                    binding.cbacLlEdWomen.visibility = View.GONE
+                }
+
+                else -> binding.actvWaistDropdown.setText(resources.getStringArray(R.array.cbac_waist_mes_female)[cbac.cbac_waist_posi - 1])
+
+            }
+        }
+        binding.actvPaDropdown.setText(resources.getStringArray(R.array.cbac_pa)[cbac.cbac_pa_posi - 1])
+        binding.actvFhDropdown.setText(resources.getStringArray(R.array.cbac_fh)[cbac.cbac_familyhistory_posi - 1])
+
+        viewModel.setSmoke(cbac.cbac_smoke_posi - 1)
+        viewModel.setAlcohol(cbac.cbac_alcohol_posi - 1)
+        viewModel.setWaist(cbac.cbac_waist_posi - 1)
+        viewModel.setPa(cbac.cbac_pa_posi - 1)
+        viewModel.setFh(cbac.cbac_familyhistory_posi - 1)
+    }
+
+    private fun setupEdFill() {
         viewModel.ast1.observe(viewLifecycleOwner) {
             Timber.d("value of ast1 : $it")
             if (it > 0) {
@@ -208,14 +330,18 @@ class CbacFragment : Fragment() {
                 R.id.rb_yes -> viewModel.setTakingTbDrug(1)
                 R.id.rb_no -> viewModel.setTakingTbDrug(2)
             }
-            viewModel.ast2.value?.let {
-                if (it > 0) {
-                    if (!ed2PopupShown) {
-                        ast2AlertDialog.show()
-                        ed2PopupShown = true
-                    }
-                }
+
+            if (binding.cbacFhTb.rbYes.isChecked || binding.cbacTakingTbDrug.rbYes.isChecked) {
+                ast2AlertDialog.show()
             }
+//            viewModel.ast2.value?.let {
+//                if (it > 0) {
+//                    if (!ed2PopupShown) {
+//                        ast2AlertDialog.show()
+//                        ed2PopupShown = true
+//                    }
+//                }
+//            }
         }
         binding.cbacHistb.cbacEdRg.setOnCheckedChangeListener { _, id ->
             when (id) {
@@ -253,14 +379,27 @@ class CbacFragment : Fragment() {
                 R.id.rb_no -> viewModel.setNtSwets(2)
             }
 
-            viewModel.ast1.value?.let {
-                if (it > 0) {
-                    if (!ed1PopupShown) {
-                        ast1AlertDialog.show()
-                        ed1PopupShown = true
-                    }
-                }
+//            if(binding.cbacNtswets.rbYes.isChecked ||)
+
+            if (
+                binding.cbacHistb.rbYes.isChecked ||
+                binding.cbacCoughing.rbYes.isChecked ||
+                binding.cbacBlsputum.rbYes.isChecked ||
+                binding.cbacFeverwks.rbYes.isChecked ||
+                binding.cbacLsweight.rbYes.isChecked ||
+                binding.cbacNtswets.rbYes.isChecked
+            ) {
+                ast1AlertDialog.show()
             }
+
+//            viewModel.ast1.value?.let {
+//                if (it > 0) {
+//                    if (!ed1PopupShown) {
+//                        ast1AlertDialog.show()
+//                        ed1PopupShown = true
+//                    }
+//                }
+//            }
         }
         binding.cbacRecurrentUlceration.cbacEdRg.setOnCheckedChangeListener { _, id ->
             when (id) {
@@ -437,6 +576,7 @@ class CbacFragment : Fragment() {
                     viewModel.setBlM(1)
                     binding.tvBlMenopause.visibility = View.VISIBLE
                 }
+
                 R.id.rb_no -> {
                     viewModel.setBlM(2)
                     binding.tvBlMenopause.visibility = View.GONE
@@ -454,6 +594,11 @@ class CbacFragment : Fragment() {
                 R.id.rb_yes -> viewModel.setFoulD(1)
                 R.id.rb_no -> viewModel.setFoulD(2)
             }
+        }
+        viewModel.age.observe(viewLifecycleOwner) {
+            if (it >= 60) binding.cbacLlEdElderly.visibility = View.VISIBLE
+            else if (binding.cbacLlEdElderly.visibility != View.GONE) binding.cbacLlEdElderly.visibility =
+                View.GONE
         }
         binding.cbacUnsteady.cbacEdRg.setOnCheckedChangeListener { _, id ->
             when (id) {
@@ -480,16 +625,107 @@ class CbacFragment : Fragment() {
             }
         }
         //ED END
+    }
 
-        //RF COPD START
-        binding.actvFuelDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setFuelType(i) }
-        binding.actvExposureDropdown.setOnItemClickListener { _, _, i, _ ->
-            viewModel.setOccExposure(
-                i
+    private fun setSelectedForRg(rg: RadioGroup, pos: Int) {
+        pos.takeIf { it > 0 }?.let {
+            rg.check(
+                when (it) {
+                    1 -> R.id.rb_yes
+                    2 -> R.id.rb_no
+                    else -> throw IllegalArgumentException("LALALLALALALALLALALALA")
+                }
             )
         }
-        //RF COPD END
+        rg.children.forEach {
+            it.isClickable = isInFillMode
+        }
+    }
 
+    private fun setupEdView(cbac: CbacCache) {
+        setSelectedForRg(binding.cbacFhTb.cbacEdRg, cbac.cbac_sufferingtb_pos)
+        setSelectedForRg(binding.cbacTakingTbDrug.cbacEdRg, cbac.cbac_antitbdrugs_pos)
+        setSelectedForRg(binding.cbacHistb.cbacEdRg, cbac.cbac_tbhistory_pos)
+        setSelectedForRg(binding.cbacCoughing.cbacEdRg, cbac.cbac_coughing_pos)
+        setSelectedForRg(binding.cbacBlsputum.cbacEdRg, cbac.cbac_bloodsputum_pos)
+        setSelectedForRg(binding.cbacFeverwks.cbacEdRg, cbac.cbac_fivermore_pos)
+        setSelectedForRg(binding.cbacLsweight.cbacEdRg, cbac.cbac_loseofweight_pos)
+        setSelectedForRg(binding.cbacNtswets.cbacEdRg, cbac.cbac_nightsweats_pos)
+        setSelectedForRg(binding.cbacRecurrentUlceration.cbacEdRg, cbac.cbac_uicers_pos)
+        setSelectedForRg(binding.cbacRecurrentCloudy.cbacEdRg, cbac.cbac_cloudy_posi)
+        setSelectedForRg(binding.cbacRecurrentDiffcultyReading.cbacEdRg, cbac.cbac_diffreading_posi)
+        setSelectedForRg(binding.cbacRecurrentPainEyes.cbacEdRg, cbac.cbac_pain_ineyes_posi)
+        setSelectedForRg(binding.cbacRecurrentRednessEyes.cbacEdRg, cbac.cbac_redness_ineyes_posi)
+        setSelectedForRg(binding.cbacRecurrentDiffHearing.cbacEdRg, cbac.cbac_diff_inhearing_posi)
+        setSelectedForRg(binding.cbacBreath.cbacEdRg, cbac.cbac_sortnesofbirth_pos)
+        setSelectedForRg(binding.cbacRecurrentTingling.cbacEdRg, cbac.cbac_tingling_palm_posi)
+        setSelectedForRg(binding.cbacHifits.cbacEdRg, cbac.cbac_historyoffits_pos)
+        setSelectedForRg(binding.cbacDifmouth.cbacEdRg, cbac.cbac_difficultyinmouth_pos)
+        setSelectedForRg(binding.cbacHeald.cbacEdRg, cbac.cbac_growth_in_mouth_posi)
+        setSelectedForRg(binding.cbacVoice.cbacEdRg, cbac.cbac_toneofvoice_pos)
+        setSelectedForRg(binding.cbacAnyGrowth.cbacEdRg, cbac.cbac_growth_in_mouth_posi)
+        setSelectedForRg(binding.cbacAnyWhite.cbacEdRg, cbac.cbac_white_or_red_patch_posi)
+        setSelectedForRg(binding.cbacPainWhileChewing.cbacEdRg, cbac.cbac_Pain_while_chewing_posi)
+        setSelectedForRg(
+            binding.cbacAnyHyperPigmented.cbacEdRg, cbac.cbac_hyper_pigmented_patch_posi
+        )
+        setSelectedForRg(binding.cbacAnyThickendSkin.cbacEdRg, cbac.cbac_any_thickend_skin_posi)
+        setSelectedForRg(binding.cbacAnyNodulesSkin.cbacEdRg, cbac.cbac_nodules_on_skin_posi)
+        setSelectedForRg(
+            binding.cbacRecurrentNumbness.cbacEdRg, cbac.cbac_tingling_or_numbness_posi
+        )
+        setSelectedForRg(binding.cbacClawingOfFingers.cbacEdRg, cbac.cbac_clawing_of_fingers_posi)
+        setSelectedForRg(
+            binding.cbacTinglingOrNumbness.cbacEdRg, cbac.cbac_tingling_or_numbness_posi
+        )
+        setSelectedForRg(
+            binding.cbacInabilityCloseEyelid.cbacEdRg, cbac.cbac_inability_close_eyelid_posi
+        )
+        setSelectedForRg(binding.cbacDiffHoldingObjects.cbacEdRg, cbac.cbac_diff_holding_obj_posi)
+        setSelectedForRg(binding.cbacWeeknessInFeet.cbacEdRg, cbac.cbac_weekness_in_feet_posi)
+        setSelectedForRg(binding.cbacLumpbrest.cbacEdRg, cbac.cbac_lumpinbreast_pos)
+        setSelectedForRg(binding.cbacNipple.cbacEdRg, cbac.cbac_blooddischage_pos)
+        setSelectedForRg(binding.cbacBreast.cbacEdRg, cbac.cbac_changeinbreast_pos)
+        setSelectedForRg(binding.cbacBlperiods.cbacEdRg, cbac.cbac_bleedingbtwnperiods_pos)
+        setSelectedForRg(
+            binding.cbacBlmenopause.cbacEdRg, cbac.cbac_bleedingaftermenopause_pos
+        ).also {
+            binding.tvBlMenopause.visibility =
+                if (cbac.cbac_bleedingaftermenopause_pos == 1) View.VISIBLE else View.GONE
+        }
+        setSelectedForRg(binding.cbacBlintercorse.cbacEdRg, cbac.cbac_bleedingafterintercourse_pos)
+        setSelectedForRg(binding.cbacFouldis.cbacEdRg, cbac.cbac_foulveginaldischarge_pos)
+        viewModel.age.observe(viewLifecycleOwner) {
+            if (it >= 60) binding.cbacLlEdElderly.visibility = View.VISIBLE
+            else if (binding.cbacLlEdElderly.visibility != View.GONE) binding.cbacLlEdElderly.visibility =
+                View.GONE
+        }
+        setSelectedForRg(binding.cbacUnsteady.cbacEdRg, cbac.cbac_feeling_unsteady_posi)
+        setSelectedForRg(binding.cbacPdRm.cbacEdRg, cbac.cbac_suffer_physical_disability_posi)
+        setSelectedForRg(binding.cbacNhop.cbacEdRg, cbac.cbac_needing_help_posi)
+        setSelectedForRg(binding.cbacForgetNames.cbacEdRg, cbac.cbac_forgetting_names_posi)
+    }
+
+
+    private fun setupRfCopdFill() {
+        binding.actvFuelDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setFuelType(i) }
+        binding.actvExposureDropdown.setOnItemClickListener { _, _, i, _ ->
+            viewModel.setOccExposure(i)
+        }
+    }
+
+    private fun setupRfCopdView(cbac: CbacCache) {
+        cbac.cbac_fuel_used_posi.takeIf { it > 0 }?.let {
+            binding.actvFuelDropdown.setText(resources.getStringArray(R.array.cbac_type_Cooking_fuel)[it - 1])
+        }
+        cbac.cbac_occupational_exposure_posi.takeIf { it > 0 }?.let {
+            binding.actvExposureDropdown.setText(resources.getStringArray(R.array.cbac_type_occupational_exposure)[it - 1])
+        }
+
+    }
+
+
+    private fun setupPhq2Fill() {
         //PHQ2 START
         binding.actvLiDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setLi(i) }
         binding.actvFdDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setFd(i) }
@@ -511,15 +747,21 @@ class CbacFragment : Fragment() {
             }
             binding.cbacPhq2TotalScore.text = it
         }
-        viewModel.age.observe(viewLifecycleOwner) {
-            if (it >= 60)
-                binding.cbacLlEdElderly.visibility = View.VISIBLE
-            else
-                if (binding.cbacLlEdElderly.visibility != View.GONE)
-                    binding.cbacLlEdElderly.visibility = View.GONE
-        }
-
-
     }
+
+
+    private fun setupPhq2View(cbac: CbacCache) {
+        cbac.cbac_little_interest_posi.takeIf { it > 0 }?.let {
+            binding.actvLiDropdown.setText(resources.getStringArray(R.array.cbac_li)[it - 1])
+        }
+        cbac.cbac_feeling_down_posi.takeIf { it > 0 }?.let {
+            binding.actvFdDropdown.setText(resources.getStringArray(R.array.cbac_fd)[it - 1])
+        }
+        binding.ddLiScore.text = cbac.cbac_little_interest_score.toString()
+        binding.ddFdScore.text = cbac.cbac_feeling_down_score.toString()
+        binding.cbacPhq2TotalScore.text =
+            "Total Score : ${cbac.cbac_little_interest_score + cbac.cbac_feeling_down_score}"
+    }
+
 
 }

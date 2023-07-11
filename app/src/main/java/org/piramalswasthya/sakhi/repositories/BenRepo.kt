@@ -784,7 +784,7 @@ class BenRepo @Inject constructor(
                         if (jsonObject.has("houseoldId")) jsonObject.getLong("houseoldId") else -1L
                     if (benId == -1L || hhId == -1L) continue
                     if (cbacDataObj.length() == 0) continue
-                    if (cbacDao.getCbacFromBenId(benId) != null) continue
+//                    if (cbacDao.getCbacFromBenId(benId) != null) continue
                     val ben = benDao.getBen(hhId, benId) ?: continue
                     val user = userDao.getLoggedInUser()!!
 
@@ -796,6 +796,7 @@ class BenRepo @Inject constructor(
 //                                hhId = ben.householdId,
                                 ashaId = ben.ashaId,
 //                                gender = ben.gender!!,
+                                fillDate = getLongFromDate(cbacDataObj.getString("createdDate")),
                                 cbac_age_posi = cbacDataObj.getInt("cbac_age_posi"),
                                 cbac_smoke_posi = cbacDataObj.getInt("cbac_smoke_posi"),
                                 cbac_alcohol_posi = cbacDataObj.getInt("cbac_alcohol_posi"),

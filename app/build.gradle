@@ -131,12 +131,12 @@ dependencies {
     //Flexbox
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
 
-    //Encryption
-//    implementation 'javax.xml.bind:jaxb-api:2.3.0'
-    implementation('javax.xml.bind:jaxb-api:2.3.0')
-    implementation('javax.activation:activation:1.1')
-    implementation('org.glassfish.jaxb:jaxb-runtime:2.3.0')
-    implementation 'org.bouncycastle:bcpkix-jdk15on:1.68'
+//    //Encryption
+////    implementation 'javax.xml.bind:jaxb-api:2.3.0'
+//    implementation('javax.xml.bind:jaxb-api:2.3.0')
+//    implementation('javax.activation:activation:1.1')
+//    implementation('org.glassfish.jaxb:jaxb-runtime:2.3.0')
+//    implementation 'org.bouncycastle:bcpkix-jdk15on:1.68'
 
 
     testImplementation "com.google.truth:truth:1.1.3"

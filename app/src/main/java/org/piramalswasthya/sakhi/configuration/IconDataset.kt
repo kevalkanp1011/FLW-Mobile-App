@@ -182,12 +182,12 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             NcdFragmentDirections.actionNcdFragmentToNcdEligibleListFragment()
         ), Icon(
             R.drawable.ic__ncd_priority,
-            resources.getString(R.string.icon_title_ncd_non_eligible_list),
+            resources.getString(R.string.icon_title_ncd_priority_list),
             recordsRepo.getNcdPriorityListCount(),
             NcdFragmentDirections.actionNcdFragmentToNcdPriorityListFragment()
         ), Icon(
             R.drawable.ic_ncd_noneligible,
-            resources.getString(R.string.icon_title_ncd_priority_list),
+            resources.getString(R.string.icon_title_ncd_non_eligible_list),
             recordsRepo.getNcdNonEligibleListCount(),
             NcdFragmentDirections.actionNcdFragmentToNcdNonEligibleListFragment()
         ), Icon(

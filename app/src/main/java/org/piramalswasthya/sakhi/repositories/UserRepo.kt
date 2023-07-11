@@ -3,7 +3,6 @@ package org.piramalswasthya.sakhi.repositories
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
-import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.json.JSONObject
 import org.piramalswasthya.sakhi.crypt.CryptoUtil
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
@@ -37,7 +36,6 @@ import timber.log.Timber
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-import java.security.Security
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -59,9 +57,6 @@ class UserRepo @Inject constructor(
 
     val unProcessedRecordCount: Flow<Int> = benDao.getUnProcessedRecordCount()
 
-    init {
-        Security.addProvider(BouncyCastleProvider())
-    }
 
     suspend fun checkAndAddVaccines() {
         if (vaccineDao.vaccinesLoaded())
@@ -418,7 +413,6 @@ class UserRepo @Inject constructor(
 
             try {
                 if (getTokenD2D(userName, password)) {
-//                    val encryptedPassword = encrypt(password)
                     getTokenTmc(userName, password)
                     if (user != null) {
                         val result = getUserDetails(state)

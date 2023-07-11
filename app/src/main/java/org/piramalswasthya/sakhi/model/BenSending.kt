@@ -5,7 +5,9 @@ import androidx.room.ColumnInfo
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.piramalswasthya.sakhi.helpers.ImageUtils
-import org.piramalswasthya.sakhi.model.Gender.*
+import org.piramalswasthya.sakhi.model.Gender.FEMALE
+import org.piramalswasthya.sakhi.model.Gender.MALE
+import org.piramalswasthya.sakhi.model.Gender.TRANSGENDER
 
 @JsonClass(generateAdapter = true)
 data class BeneficiaryDataSending(
@@ -297,8 +299,6 @@ fun BenRegCache.asNetworkSendingModel(
         vanID = user.vanId,
         parkingPlaceID = user.parkingPlaceId,
         createdBy = user.userName,
-
-
         )
 }
 

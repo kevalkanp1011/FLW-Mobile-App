@@ -1,5 +1,7 @@
 package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_list
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,49 +12,76 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.adapters.NcdCbacBenListAdapter
+import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
+import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdActivity
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
-import timber.log.Timber
+import org.piramalswasthya.sakhi.ui.home_activity.all_household.AllHouseholdFragmentDirections
 
 @AndroidEntryPoint
 class NcdListFragment : Fragment() {
 
+    private var _binding: FragmentDisplaySearchRvButtonBinding? = null
 
-    private val binding: FragmentDisplaySearchRvButtonBinding by lazy {
-        FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater)
-    }
+    private val binding: FragmentDisplaySearchRvButtonBinding
+        get() = _binding!!
+
 
     private val viewModel: NcdListViewModel by viewModels()
 
-    private val bottomSheet: NcdBottomSheetFragment by lazy { NcdBottomSheetFragment() }
-
+    private val abhaDisclaimer by lazy {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Beneficiary ABHA Number.")
+            .setMessage("it")
+            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
+            .create()
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding = FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.btnNextPage.visibility = View.GONE
+        val benAdapter = BenListAdapter(
+            BenListAdapter.BenClickListener(
+            { hhId, benId, isKid ->
 
-        val benAdapter =
-            NcdCbacBenListAdapter(clickListener = NcdCbacBenListAdapter.CbacFormClickListener {
-                Timber.d("ClickListener Triggered!")
-                viewModel.setSelectedBenId(it)
-                if(!bottomSheet.isVisible)
-                    bottomSheet.show(childFragmentManager, "CBAC")
-            })
+//                findNavController().navigate(
+//                    if (isKid) AllBenFragmentDirections.actionAllBenFragmentToNewBenRegL15Fragment(
+//                        hhId,
+//                        benId
+//                    )
+//                    else
+//                        AllBenFragmentDirections.actionAllBenFragmentToNewBenRegG15Fragment(
+//                            hhId,
+//                            benId
+//                        )
+//                )
+            },
+            {
+//                findNavController().navigate(
+//                    AllBenFragmentDirections.actionAllBenFragmentToNewBenRegTypeFragment(
+//                        it
+//                    )
+//                )
+            },
+            { benId, hhId ->
+                checkAndGenerateABHA(benId)
+            },
+
+            ),true)
         binding.rvAny.adapter = benAdapter
-
         lifecycleScope.launch {
-            viewModel.benList.collect {
+            viewModel.benList.collect{
                 if (it.isEmpty())
                     binding.flEmpty.visibility = View.VISIBLE
                 else
@@ -60,10 +89,9 @@ class NcdListFragment : Fragment() {
                 benAdapter.submitList(it)
             }
         }
-        lifecycleScope.launch {
-            viewModel.ncdDetails.collect {
-                Timber.d("Collecting Ncd Details : $it")
-            }
+
+        binding.btnNextPage.setOnClickListener {
+            findNavController().navigate(AllHouseholdFragmentDirections.actionAllHouseholdFragmentToNewHouseholdFragment())
         }
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -86,13 +114,41 @@ class NcdListFragment : Fragment() {
                 (searchView as EditText).removeTextChangedListener(searchTextWatcher)
 
         }
+
+        viewModel.abha.observe(viewLifecycleOwner) {
+            it.let {
+                if (it != null){
+                    abhaDisclaimer.setMessage(it)
+                    abhaDisclaimer.show()
+                }
+            }
+        }
+
+        viewModel.benRegId.observe(viewLifecycleOwner) {
+            if (it != null) {
+                val intent = Intent (requireActivity(), AbhaIdActivity::class.java)
+                intent.putExtra("benId", viewModel.benId.value)
+                intent.putExtra("benRegId", it)
+                requireActivity().startActivity(intent)
+                viewModel.resetBenRegId()
+            }
+
+        }
+    }
+
+    private fun checkAndGenerateABHA(benId: Long) {
+        viewModel.fetchAbha(benId)
     }
 
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__ncd_list)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__ben)
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 }

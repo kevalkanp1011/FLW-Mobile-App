@@ -360,29 +360,17 @@
         android:id="@+id/ncdListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_list.NcdListFragment"
         android:label="NCD List"
-        tools:layout="@layout/fragment_ncd_list" >
-        <action
-            android:id="@+id/action_ncdListFragment_to_cbacFragment"
-            app:destination="@id/cbacFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_ncd_list" />
     <fragment
         android:id="@+id/ncdNonEligibleListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_non_eligible_list.NcdNonEligibleListFragment"
         android:label="NCD Non-Eligible List"
-        tools:layout="@layout/fragment_ncd_non_eligible_list" >
-        <action
-            android:id="@+id/action_ncdNonEligibleListFragment_to_cbacFragment"
-            app:destination="@id/cbacFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_ncd_non_eligible_list" />
     <fragment
         android:id="@+id/ncdPriorityListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_priority_list.NcdPriorityListFragment"
         android:label="NCD Priority List"
-        tools:layout="@layout/fragment_ncd_priority_list" >
-        <action
-            android:id="@+id/action_ncdPriorityListFragment_to_cbacFragment"
-            app:destination="@id/cbacFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_ncd_priority_list" />
     <fragment
         android:id="@+id/surveyRegisterFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.village_level_forms.survey_register.SurveyRegisterFragment"
@@ -402,7 +390,8 @@
             app:argType="long" />
         <argument
             android:name="cbacId"
-            app:argType="integer" />
+            app:argType="integer"
+            android:defaultValue="0" />
         <argument
             android:name="ashaId"
             app:argType="integer" />

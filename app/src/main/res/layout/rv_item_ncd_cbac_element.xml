@@ -7,7 +7,7 @@
 
         <variable
             name="cbac"
-            type="org.piramalswasthya.sakhi.model.CbacCache" />
+            type="org.piramalswasthya.sakhi.model.CbacDomain" />
 
         <variable
             name="clickListener"
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_normal"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:text="45-76-3465"/>
+                android:text="@{cbac.date}"/>
 
             <com.google.android.material.button.MaterialButton
                 android:layout_width="wrap_content"

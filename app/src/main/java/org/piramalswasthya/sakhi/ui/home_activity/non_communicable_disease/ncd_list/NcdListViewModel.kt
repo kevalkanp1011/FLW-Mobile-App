@@ -1,46 +1,49 @@
 package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_list
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.helpers.filterBenList
-import org.piramalswasthya.sakhi.model.UserDomain
+import org.piramalswasthya.sakhi.network.AmritApiService
+import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
-import org.piramalswasthya.sakhi.repositories.UserRepo
 import javax.inject.Inject
 
 @HiltViewModel
 class NcdListViewModel @Inject constructor(
     recordsRepo: RecordsRepo,
-    userRepo: UserRepo,
 ) : ViewModel(
 
 ) {
-
-    private lateinit var asha : UserDomain
-    private val allBenList = recordsRepo.getNcdList()
+    private val allBenList = recordsRepo.getBenList()
     private val filter = MutableStateFlow("")
-    private val selectedBenId = MutableStateFlow(0L)
-    val benList = allBenList.combine(filter) { list, filter ->
-        filterBenList(list.map { it.ben.asBasicDomainModel() }, filter)
+    val benList = allBenList.combine(filter){
+            list, filter -> filterBenList(list, filter)
     }
 
-    val ncdDetails = allBenList.combineTransform(selectedBenId) { list, benId ->
-        if (benId > 0) {
-            val list = list.firstOrNull { it.ben.benId == benId }?.savedCbacRecords
-            if (!list.isNullOrEmpty()) emit(list)
-        }
-    }
 
-    init {
-        viewModelScope.launch {
-            asha = userRepo.getLoggedInUser()!!
-        }
-    }
+    @Inject
+    lateinit var benRepo: BenRepo
+
+    @Inject
+    lateinit var amritApiService: AmritApiService
+
+    private val _abha = MutableLiveData<String?>()
+    val abha: LiveData<String?>
+        get() = _abha
+
+    private val _benId = MutableLiveData<Long?>()
+    val benId: LiveData<Long?>
+        get() = _benId
+
+    private val _benRegId = MutableLiveData<Long?>()
+    val benRegId: LiveData<Long?>
+        get() = _benRegId
 
     fun filterText(text: String) {
         viewModelScope.launch {
@@ -49,14 +52,27 @@ class NcdListViewModel @Inject constructor(
 
     }
 
-    fun setSelectedBenId(benId: Long) {
+    fun fetchAbha(benId: Long) {
+        _abha.value = null
+        _benRegId.value = null
+        _benId.value = benId
         viewModelScope.launch {
-            selectedBenId.emit(benId)
+            val result = benRepo.getBeneficiaryWithId(benId)
+            result?.let {
+                if (it.abhaDetails != null) {
+                    if (it.abhaDetails.isNotEmpty()) {
+                        _abha.value = it.abhaDetails.first().HealthIDNumber
+                    } else {
+                        _benRegId.value = it.benRegId
+                    }
+                } else {
+                    _benRegId.value = it.benRegId
+                }
+            }
         }
     }
 
-    fun getSelectedBenId(): Long = selectedBenId.value
-    fun getAshaId(): Int  = asha.userId
-
-
+    fun resetBenRegId() {
+        _benRegId.value = null
+    }
 }
