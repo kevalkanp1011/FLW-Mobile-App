@@ -70,7 +70,7 @@ class HouseholdRepo @Inject constructor(
 //            blockId = locationRecord.blockId
 //            block = locationRecord.block
 //            villageId = locationRecord.villageId
-//            village = locationRecord.village
+//            villages = locationRecord.villages
 //            countyId = locationRecord.countryId
 //        }
 //        dao.upsert(household)

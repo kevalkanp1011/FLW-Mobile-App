@@ -682,12 +682,6 @@ data class BenRegGen(
             parentColumns = arrayOf("householdId"),
             childColumns = arrayOf("householdId"),
             onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = UserCache::class,
-            parentColumns = arrayOf("user_id"),
-            childColumns = arrayOf("ashaId"),
-            onDelete = ForeignKey.CASCADE
         )
     ],
     indices = [Index(name = "ind_ben", value = ["beneficiaryId"/*, "householdId"*/])]
@@ -864,14 +858,14 @@ data class BenRegCache(
 
     ) : FormDataModel {
 
-    fun asNetworkPostModel(context: Context, user: UserCache): BenPost {
+    fun asNetworkPostModel(context: Context, user: User): BenPost {
         return BenPost(
             householdId = householdId.toString(),
             benRegId = benRegId,
             countyid = locationRecord.country.id,
             processed = processed,
-            providerServiceMapID = user.serviceMapId,
-            vanID = user.vanId,
+//            providerServiceMapID = user.serviceMapId,
+//            vanID = user.vanId,
             aadhaNo = aadharNum ?: "",
             aadha_no = when (hasAadhar) {
                 true -> "Yes"
@@ -994,7 +988,7 @@ data class BenRegCache(
         return TimeUnit.MILLISECONDS.toDays(cal.timeInMillis - millisCurrent).toInt()
     }
 
-    fun asKidNetworkModel(user: UserCache): BenRegKidNetwork {
+    fun asKidNetworkModel(): BenRegKidNetwork {
         return BenRegKidNetwork(
             benficieryid = beneficiaryId,
             childName = firstName,
@@ -1043,8 +1037,8 @@ data class BenRegCache(
             updatedDate = getDateTimeStringFromLong(updatedDate),
             Processed = processed,
             serverUpdatedStatus = serverUpdatedStatus,
-            VanID = user.vanId,
-            ProviderServiceMapID = user.serviceMapId,
+//            VanID = user.vanId,
+//            ProviderServiceMapID = user.serviceMapId,
             Countyid = locationRecord.country.id,
             stateid = locationRecord.state.id,
             districtid = locationRecord.district.id,

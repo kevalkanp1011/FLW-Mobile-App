@@ -1,28 +1,26 @@
 package org.piramalswasthya.sakhi.ui.service_location_activity
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.helpers.Languages.*
+import org.piramalswasthya.sakhi.helpers.Languages.ASSAMESE
+import org.piramalswasthya.sakhi.helpers.Languages.ENGLISH
+import org.piramalswasthya.sakhi.helpers.Languages.HINDI
 import org.piramalswasthya.sakhi.model.LocationEntity
 import org.piramalswasthya.sakhi.model.LocationRecord
-import org.piramalswasthya.sakhi.model.UserDomain
-import org.piramalswasthya.sakhi.repositories.UserRepo
+import org.piramalswasthya.sakhi.model.User
 import javax.inject.Inject
 
 @HiltViewModel
 class ServiceTypeViewModel @Inject constructor(
     private val pref: PreferenceDao,
-    private val userRepo: UserRepo,
-    application: Application
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     enum class State {
         IDLE,
@@ -67,46 +65,46 @@ class ServiceTypeViewModel @Inject constructor(
 
 
     private var currentLocation: LocationRecord? = null
-    private lateinit var user : UserDomain
+    private lateinit var user : User
 
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                user = userRepo.getLoggedInUser()!!
-                _userName = user.userName
+                user = pref.getLoggedInUser()!!
+                _userName = user.name
                 currentLocation = pref.getLocationRecord()
                 _selectedVillage = currentLocation?.village
                 when (pref.getCurrentLanguage()) {
                     ENGLISH -> {
-                        stateDropdownEntry = user.states.first().name
-                        districtDropdownEntry = user.districts.first().name
-                        blockDropdownEntry = user.blocks.first().name
+                        stateDropdownEntry = user.state.name
+                        districtDropdownEntry = user.district.name
+                        blockDropdownEntry = user.block.name
                         villageDropdownEntries = user.villages.map { it.name }.toTypedArray()
 
                     }
                     HINDI -> {
                         stateDropdownEntry =
-                            user.states.first().let { it.nameHindi ?: it.name }
+                            user.state.let { it.nameHindi ?: it.name }
                         districtDropdownEntry =
-                            user.districts.first().let { it.nameHindi ?: it.name }
+                            user.district.let { it.nameHindi ?: it.name }
                         blockDropdownEntry =
-                            user.blocks.first().let { it.nameHindi ?: it.name }
+                            user.block.let { it.nameHindi ?: it.name }
                         villageDropdownEntries =
                             user.villages.map { it.nameHindi ?: it.name }.toTypedArray()
 //                        _selectedVillage =
-//                            currentLocation?.village?.let { it.nameHindi ?: it.name }
+//                            currentLocation?.villages?.let { it.nameHindi ?: it.name }
                     }
                     ASSAMESE -> {
                         stateDropdownEntry =
-                            user.states.first().let { it.nameAssamese ?: it.name }
+                            user.state.let { it.nameAssamese ?: it.name }
                         districtDropdownEntry =
-                            user.districts.first().let { it.nameAssamese ?: it.name }
+                            user.district.let { it.nameAssamese ?: it.name }
                         blockDropdownEntry =
-                            user.blocks.first().let { it.nameAssamese ?: it.name }
+                            user.block.let { it.nameAssamese ?: it.name }
                         villageDropdownEntries =
                             user.villages.map { it.nameAssamese ?: it.name }.toTypedArray()
 //                        _selectedVillage =
-//                            currentLocation?.village?.let { it.nameAssamese ?: it.name }
+//                            currentLocation?.villages?.let { it.nameAssamese ?: it.name }
                     }
                 }
 
@@ -129,10 +127,10 @@ class ServiceTypeViewModel @Inject constructor(
 
     fun saveCurrentLocation() {
         val locationRecord = LocationRecord(
-            user.country,
-            user.states.first(),
-            user.districts.first(),
-            user.blocks.first(),
+            LocationEntity(1, "India"),
+            user.state,
+            user.district,
+            user.block,
             selectedVillage!!
         )
         pref.saveLocationRecord(locationRecord)
@@ -240,7 +238,7 @@ class ServiceTypeViewModel @Inject constructor(
 //        setStateId(stateDefaultList.indexOf(name.state))
 //        setDistrictId(districtDefaultList.indexOf(name.district))
 //        setBlockId(blockDefaultList.indexOf(name.block))
-//        setVillageId(villageDefaultList.indexOf(name.village))
+//        setVillageId(villageDefaultList.indexOf(name.villages))
 //
 //    }
 //    fun loadDefaultLocation() {

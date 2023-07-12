@@ -9,6 +9,7 @@
     <string name="PREF_rem_me_pwd" translatable="false">password-local-saved</string>
     <string name="PREF_rem_me_state" translatable="false">state_user-local-saved</string>
     <string name="PREF_location_record_entry" translatable="false">location-record</string>
+    <string name="PREF_user_entry" translatable="false">logged-in-user</string>
     <string name="PREF_full_load_pull_progress" translatable="false">full_load_sync_pull_amrit</string>
     <string name="PREF_first_pull_amrit_last_synced_page" translatable="false">full_load_sync_pull_amrit_first_sync_last_saved_page</string>
     <string name="PREF_current_saved_language" translatable="false">Locale.Helper.Selected.Language</string>
@@ -344,8 +345,8 @@
 
 
     <string name="nav_item_1_text">Name : <b>%s</b></string>
-    <string name="nav_item_2_text">Role : <b>%s</b></string>
-    <string name="nav_item_3_text">ID :  <b>%d</b></string>
+    <string name="nav_item_2_text">Handle : <b>%s</b></string>
+    <string name="nav_item_3_text">User ID :  <b>%d</b></string>
     <string name="nav_item_4_text">Version : %s</string>
 
 

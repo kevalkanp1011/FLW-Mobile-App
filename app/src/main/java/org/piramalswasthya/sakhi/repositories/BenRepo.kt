@@ -9,18 +9,18 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.piramalswasthya.sakhi.configuration.BenGenRegFormDataset
 import org.piramalswasthya.sakhi.database.room.BeneficiaryIdsAvail
-import org.piramalswasthya.sakhi.database.room.BeneficiaryIdsAvailDao
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
+import org.piramalswasthya.sakhi.database.room.dao.BeneficiaryIdsAvailDao
 import org.piramalswasthya.sakhi.database.room.dao.CbacDao
 import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
-import org.piramalswasthya.sakhi.database.room.dao.UserDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.network.*
 import timber.log.Timber
+import java.lang.Long.min
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -29,7 +29,6 @@ import javax.inject.Inject
 class BenRepo @Inject constructor(
     private val context: Application,
     private val benDao: BenDao,
-    private val userDao: UserDao,
     private val householdDao: HouseholdDao,
     private val benIdGenDao: BeneficiaryIdsAvailDao,
     private val cbacDao: CbacDao,
@@ -62,7 +61,7 @@ class BenRepo @Inject constructor(
     suspend fun substituteBenIdForDraft(ben: BenRegCache) {
         val extract = extractBenId()
         ben.beneficiaryId = extract.benId
-        ben.benRegId = extract.benRegId
+//        ben.benRegId = extract.benRegId
 //        benDao.substituteBenId(ben.householdId, -2, ben.beneficiaryId, extract.benRegId)
         ben.isDraft = false
     }
@@ -115,7 +114,7 @@ class BenRepo @Inject constructor(
     ) {
 //        val draftBen = benDao.getDraftBenKidForHousehold(hhId)
 //            ?: throw IllegalStateException("no draft saved!!")
-        val user = userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
+        val user = preferenceDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
 //        val ben = form.getBenForSecondPage(user.userId, hhId)
 
 //        locationRecord?.let {
@@ -249,7 +248,7 @@ class BenRepo @Inject constructor(
     private suspend fun extractBenId(): BeneficiaryIdsAvail {
         return withContext(Dispatchers.IO) {
             val user =
-                userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
+                preferenceDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
 
             val benIdObj = benIdGenDao.getEntry(user.userId)
             benIdGenDao.delete(benIdObj)
@@ -259,12 +258,32 @@ class BenRepo @Inject constructor(
     }
 
     suspend fun getBenIdsGeneratedFromServer(maxCount: Int = Konstants.benIdCapacity) {
-        val user = userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
+        val user = preferenceDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
         val benIdCount = benIdGenDao.count()
         if (benIdCount > Konstants.benIdWorkerTriggerLimit) return
         val count = maxCount - benIdCount
+        getBenIdsFromLocal(count, user.userId)
+//        getBenIdsFromServer(count, user)
+
+
+
+    }
+
+    private suspend fun getBenIdsFromLocal(count: Int, userId: Int){
+        val minBenId = min(benDao.getMinBenId()?:-1L, -1L)
+        val benIdList = mutableListOf<BeneficiaryIdsAvail>()
+        for( benId in minBenId-count until minBenId){
+            benIdList.add(
+                BeneficiaryIdsAvail(
+                    userId = userId, benId = benId, benRegId = 0
+                )
+            )
+        }
+        benIdGenDao.insert(*benIdList.toTypedArray())
+    }
+    private suspend fun getBenIdsFromServer(count: Int, user: UserCache) {
         val response =
-            tmcNetworkApiService.generateBeneficiaryIDs(TmcGenerateBenIdsRequest(count, user.vanId))
+            tmcNetworkApiService.generateBeneficiaryIDs(TmcGenerateBenIdsRequest(count, user.userId))
         val statusCode = response.code()
         if (statusCode == 200) {
             val responseString = response.body()?.string()
@@ -293,14 +312,12 @@ class BenRepo @Inject constructor(
             }
 
         }
-
-
     }
 
     suspend fun syncUnprocessedRecords(): Boolean {
         return withContext(Dispatchers.IO) {
             val user =
-                userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
+                preferenceDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
 
             val benUnprocessedList = benDao.getAllUnsyncedBen()
             val hhUnprocessedList = householdDao.getAllUnprocessedHousehold()
@@ -313,15 +330,15 @@ class BenRepo @Inject constructor(
 
             benUnprocessedList.forEach {
                 benNetworkPostList.add(it.asNetworkPostModel(context,user))
-                val hh = householdDao.getHousehold(it.householdId)!!.asNetworkModel(user)
+                val hh = householdDao.getHousehold(it.householdId)!!.asNetworkModel()
                 householdNetworkPostList.add(hh)
                 benDao.setSyncState(it.householdId, it.beneficiaryId, SyncState.SYNCING)
-                if (it.isKid) kidNetworkPostList.add(it.asKidNetworkModel(user))
+                if (it.isKid) kidNetworkPostList.add(it.asKidNetworkModel())
             }
 
             hhUnprocessedList.forEach {
                 householdNetworkPostList.add(
-                    householdDao.getHousehold(it.householdId)!!.asNetworkModel(user)
+                    householdDao.getHousehold(it.householdId)!!.asNetworkModel()
                 )
             }
             cbacUnprocessedList.forEach {
@@ -373,7 +390,7 @@ class BenRepo @Inject constructor(
     }
 
     private suspend fun createBenIdAtServerByBeneficiarySending(
-        ben: BenRegCache, user: UserCache, locationRecord: LocationRecord
+        ben: BenRegCache, user: User, locationRecord: LocationRecord
     ): Boolean {
 
         val sendingData = ben.asNetworkSendingModel(user, locationRecord, context)
@@ -419,7 +436,7 @@ class BenRepo @Inject constructor(
     suspend fun processNewBen(): Boolean {
         return withContext(Dispatchers.IO) {
             val user =
-                userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
+                preferenceDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
 
             val benList = benDao.getAllUnprocessedBen()
             Timber.d("YTR 419 $benList")
@@ -465,9 +482,9 @@ class BenRepo @Inject constructor(
                 benDao.setSyncState(it.householdId, it.beneficiaryId, SyncState.SYNCING)
                 benNetworkPostList.add(it.asNetworkPostModel(context,user))
                 householdNetworkPostList.add(
-                    householdDao.getHousehold(it.householdId)!!.asNetworkModel(user)
+                    householdDao.getHousehold(it.householdId)!!.asNetworkModel()
                 )
-                if (it.isKid) kidNetworkPostList.add(it.asKidNetworkModel(user))
+                if (it.isKid) kidNetworkPostList.add(it.asKidNetworkModel())
 
             }
             val cbac = cbacDao.getAllUnprocessedCbac()
@@ -556,7 +573,7 @@ class BenRepo @Inject constructor(
                         //householdNetworkPostSet.map { it.householdId }
                         return true
                     } else if (responseStatusCode == 5002) {
-                        val user = userRepo.getLoggedInUser()
+                        val user = preferenceDao.getLoggedInUser()
                             ?: throw IllegalStateException("User not logged in according to db")
                         if (userRepo.refreshTokenTmc(
                                 user.userName, user.password
@@ -585,7 +602,7 @@ class BenRepo @Inject constructor(
     suspend fun getBeneficiariesFromServerForWorker(pageNumber: Int): Int {
         return withContext(Dispatchers.IO) {
             val user =
-                userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
+                preferenceDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
             val lastTimeStamp = preferenceDao.getLastSyncedTimeStamp()
             try {
                 val response = tmcNetworkApiService.getBeneficiaries(
@@ -663,7 +680,7 @@ class BenRepo @Inject constructor(
         return withContext(Dispatchers.IO) {
             val benDataList = mutableListOf<BenBasicDomain>()
             val user =
-                userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
+                preferenceDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
             try {
                 val response = tmcNetworkApiService.getBeneficiaries(
                     GetBenRequest(
@@ -786,7 +803,7 @@ class BenRepo @Inject constructor(
                     if (cbacDataObj.length() == 0) continue
 //                    if (cbacDao.getCbacFromBenId(benId) != null) continue
                     val ben = benDao.getBen(hhId, benId) ?: continue
-                    val user = userDao.getLoggedInUser()!!
+                    val user = preferenceDao.getLoggedInUser()!!
 
 
                     try {
@@ -851,7 +868,7 @@ class BenRepo @Inject constructor(
                                 createdBy = cbacDataObj.getString("createdBy"),
                                 createdDate = getLongFromDate(cbacDataObj.getString("createdDate")),
                                 ProviderServiceMapID = cbacDataObj.getInt("ProviderServiceMapID"),
-                                VanID = if (cbacDataObj.has("vanID")) cbacDataObj.getInt("vanID") else user.vanId,
+//                                VanID = if (cbacDataObj.has("vanID")) cbacDataObj.getInt("vanID") else user.vanId,
                                 Countyid = cbacDataObj.getInt("Countyid"),
                                 stateid = cbacDataObj.getInt("stateid"),
                                 districtid = cbacDataObj.getInt("districtid"),
@@ -1083,7 +1100,7 @@ class BenRepo @Inject constructor(
                                 "diagnosis_status"
                             ) else null,
                             locationRecord = LocationRecord(
-                                country = userDao.getCountry()!!,
+                                country = preferenceDao.getLocationRecord()!!.country,
                                 state = LocationEntity(
                                     benDataObj.getInt("stateId"),
                                     benDataObj.getString("stateName"),
@@ -1450,7 +1467,7 @@ class BenRepo @Inject constructor(
                                     "registrationType"
                                 ) else null,
                                 locationRecord = LocationRecord(
-                                    country = userDao.getCountry()!!,
+                                    country = preferenceDao.getLocationRecord()!!.country,
                                     state = LocationEntity(
                                         benDataObj.getInt("stateId"),
                                         benDataObj.getString("stateName"),

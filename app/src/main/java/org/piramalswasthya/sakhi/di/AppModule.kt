@@ -10,16 +10,13 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.piramalswasthya.sakhi.database.room.BeneficiaryIdsAvailDao
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.dao.*
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.network.AbhaApiService
 import org.piramalswasthya.sakhi.network.AmritApiService
-import org.piramalswasthya.sakhi.network.D2DApiService
 import org.piramalswasthya.sakhi.network.interceptors.ContentTypeInterceptor
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertAbhaInterceptor
-import org.piramalswasthya.sakhi.network.interceptors.TokenInsertD2DInterceptor
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertTmcInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -31,11 +28,9 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    private const val baseD2DUrl = "http://d2dapi.piramalswasthya.org:9090/api/"
-    //"http://117.245.141.41:9090/api/"
-
     private const val baseTmcUrl = // "http://assamtmc.piramalswasthya.org:8080/"
-    "http://uatamrit.piramalswasthya.org:8080/"
+    "http://192.168.1.233:8085/"
+    //"http://uatamrit.piramalswasthya.org:8080/"
 
     private const val baseAbhaUrl = "https://healthidsbx.abdm.gov.in/api/"
 
@@ -50,19 +45,6 @@ object AppModule {
     fun provideMoshiInstance(): Moshi {
         return Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
-            .build()
-    }
-
-    @Singleton
-    @Provides
-    @Named("logInClient")
-    fun provideD2DHttpClient(): OkHttpClient {
-        return baseClient
-            .newBuilder()
-            .connectTimeout(60, TimeUnit.SECONDS)
-            .readTimeout(60, TimeUnit.SECONDS)
-            .writeTimeout(60, TimeUnit.SECONDS)
-            .addInterceptor(TokenInsertD2DInterceptor())
             .build()
     }
 
@@ -92,20 +74,6 @@ object AppModule {
             .build()
     }
 
-    @Singleton
-    @Provides
-    fun provideD2DApiService(
-        moshi: Moshi,
-        @Named("logInClient") httpClient: OkHttpClient
-    ): D2DApiService {
-        return Retrofit.Builder()
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            //.addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(baseD2DUrl)
-            .client(httpClient)
-            .build()
-            .create(D2DApiService::class.java)
-    }
 
     @Singleton
     @Provides
@@ -149,9 +117,6 @@ object AppModule {
     @Provides
     fun provideBenDao(database : InAppDb) : BenDao = database.benDao
 
-    @Singleton
-    @Provides
-    fun provideUserDao(database : InAppDb) : UserDao = database.userDao
 
     @Singleton
     @Provides

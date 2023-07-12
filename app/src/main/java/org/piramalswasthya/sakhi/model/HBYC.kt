@@ -55,7 +55,7 @@ data class HBYCCache (
     var createdBy: String? = null,
     var createdDate: Long? = System.currentTimeMillis(),
 ) {
-    fun asPostModel(user: UserCache, household: HouseholdCache, ben: BenRegCache, hbycCount: Int): HbycPost {
+    fun asPostModel(user: User, household: HouseholdCache, ben: BenRegCache, hbycCount: Int): HbycPost {
         return HbycPost(
             anmNameNumber = user.userId.toString(),
             ashaWorkerNameNumber = user.userName,

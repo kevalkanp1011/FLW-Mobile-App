@@ -3,37 +3,32 @@ package org.piramalswasthya.sakhi.network
 import okhttp3.ResponseBody
 import org.piramalswasthya.sakhi.model.BeneficiaryDataSending
 import org.piramalswasthya.sakhi.model.SendingRMNCHData
+import org.piramalswasthya.sakhi.model.UserNetworkResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface AmritApiService {
 
     @Headers("No-Auth: true")
-    @POST("commonapi-v1.0/user/userAuthenticate/")
+    @POST("user/userAuthenticate/")
     suspend fun getJwtToken(@Body json: TmcAuthUserRequest): Response<ResponseBody>
 
-    @POST("commonapi-v1.0/doortodoorapp/getUserDetails")
-    suspend fun getUserDetailsById(@Body userDetail: TmcUserDetailsRequest) : Response<ResponseBody>
-
-
-    @POST("tmapi-v1.0/user/getUserVanSpDetails/")
-    suspend fun getTMVanSpDetails(
-        @Body vanServiceType: TmcUserVanSpDetailsRequest
-    ): Response<ResponseBody>
-
-    @POST("mmuapi-v1.0/location/getLocDetailsBasedOnSpIDAndPsmID/")
-    suspend fun getLocationDetails(
-        @Body locationDetails: TmcLocationDetailsRequest
-    ): Response<ResponseBody>
+    @GET
+    suspend fun getUserDetailsById(
+        @Url url: String = "http://192.168.1.233:8081/user/getUserRole",
+        @Query("userId") userId: Int,
+        @Query("roleId") roleId: Int = 527
+    ): UserNetworkResponse
 
     @POST("bengenapi-v1.0/generateBeneficiaryController/generateBeneficiaryIDs/")
     suspend fun generateBeneficiaryIDs(
         @Body obj: TmcGenerateBenIdsRequest
     ): Response<ResponseBody>
-
 
     @POST("tmapi-v1.0/registrar/registrarBeneficaryRegistrationNew")
     suspend fun getBenIdFromBeneficiarySending(@Body beneficiaryDataSending: BeneficiaryDataSending): Response<ResponseBody>
@@ -45,7 +40,7 @@ interface AmritApiService {
     suspend fun getBeneficiaries(@Body userDetail: GetBenRequest): Response<ResponseBody>
 
     @POST("identity-0.0.1/id/getByBenId")
-    suspend fun getBeneficiaryWithId(@Query("benId") benId: Long) : Response<ResponseBody>
+    suspend fun getBeneficiaryWithId(@Query("benId") benId: Long): Response<ResponseBody>
 
     @POST("fhirapi-v1.0/healthIDWithUID/createHealthIDWithUID")
     suspend fun createHid(@Body createHealthIdRequest: CreateHealthIdRequest): Response<ResponseBody>

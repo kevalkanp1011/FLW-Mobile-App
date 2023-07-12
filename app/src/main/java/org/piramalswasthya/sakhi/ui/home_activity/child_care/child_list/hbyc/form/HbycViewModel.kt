@@ -1,23 +1,31 @@
 package org.piramalswasthya.sakhi.ui.home_activity.child_care.child_list.hbyc.form
 
 import android.content.Context
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.configuration.HBYCFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
-import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.FormInputOld
+import org.piramalswasthya.sakhi.model.HBYCCache
+import org.piramalswasthya.sakhi.model.HouseholdCache
+import org.piramalswasthya.sakhi.model.User
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.HbycRepo
 import timber.log.Timber
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,7 +34,8 @@ class HbycViewModel @Inject constructor(
     @ApplicationContext context : Context,
     private val database: InAppDb,
     private val hbycRepo: HbycRepo,
-    private val benRepo: BenRepo
+    private val benRepo: BenRepo,
+    private val preferenceDao: PreferenceDao
 ) : ViewModel() {
 
     enum class State {
@@ -40,7 +49,7 @@ class HbycViewModel @Inject constructor(
     private val hhId = HbycFragmentArgs.fromSavedStateHandle(state).hhId
     private lateinit var ben: BenRegCache
     private lateinit var household: HouseholdCache
-    private lateinit var user: UserCache
+    private lateinit var user: User
     private var hbyc: HBYCCache? = null
 
     private val _benName = MutableLiveData<String>()
@@ -85,7 +94,7 @@ class HbycViewModel @Inject constructor(
                 Timber.d("benId : $benId hhId : $hhId")
                 ben = benRepo.getBeneficiaryRecord(benId, hhId)!!
                 household = benRepo.getHousehold(hhId)!!
-                user = database.userDao.getLoggedInUser()!!
+                user = preferenceDao.getLoggedInUser()!!
                 hbyc = database.hbycDao.getHbyc(hhId, benId)
             }
             _benName.value = "${ben.firstName} ${if(ben.lastName== null) "" else ben.lastName}"

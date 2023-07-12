@@ -19,12 +19,7 @@ import org.piramalswasthya.sakhi.database.room.SyncState
         childColumns = arrayOf("benId"/* "hhId"*/),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
-    ),
-        ForeignKey(
-            entity = UserCache::class,
-            parentColumns = arrayOf("user_id"),
-            childColumns = arrayOf("ashaId"),
-        )],
+    )],
     indices = [Index(name = "ind_cbac", value = ["benId"/* "hhId"*/])]
 )
 data class CbacCache(

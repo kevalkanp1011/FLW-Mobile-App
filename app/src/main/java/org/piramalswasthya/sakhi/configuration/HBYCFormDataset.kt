@@ -74,7 +74,7 @@ class HBYCFormDataset(context: Context, private val hbyc: HBYCCache? = null) {
     )
     private val infantPopulation = FormInputOld(
         inputType = InputType.EDIT_TEXT,
-        title = "Total number of children aged 3 to 15 months in village",
+        title = "Total number of children aged 3 to 15 months in villages",
         required = false
     )
     private val visitDate = FormInputOld(

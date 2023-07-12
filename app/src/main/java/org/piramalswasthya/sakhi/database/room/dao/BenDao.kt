@@ -192,7 +192,7 @@ interface BenDao {
         selectedVillage: Int, min: Int = Konstants.minAgeForNcd
     ): Flow<Int>
 
-
-
+    @Query("select min(beneficiaryId) from beneficiary")
+    suspend fun getMinBenId(): Long?
 
 }
