@@ -31,7 +31,7 @@ class CbacFragment : Fragment() {
 
     private val viewModel: CbacViewModel by viewModels()
 
-    private val isInFillMode : Boolean by lazy {
+    private val isInFillMode: Boolean by lazy {
         viewModel.cbacId == 0
     }
 
@@ -46,8 +46,8 @@ class CbacFragment : Fragment() {
     }
 
     private val raAlertDialog by lazy {
-        AlertDialog.Builder(requireContext()).setTitle("SUSPECTED NCD CASE!")
-            .setMessage(context?.getString(R.string.ncd_sus_valid))
+        AlertDialog.Builder(requireContext()).setTitle("Alert !")
+//            .setMessage(context?.getString(R.string.ncd_sus_valid))
             .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }.create()
     }
     private val ast1AlertDialog by lazy {
@@ -94,6 +94,7 @@ class CbacFragment : Fragment() {
                 CbacViewModel.State.MISSING_FIELD -> {
                     binding.llContent.visibility = View.VISIBLE
                     binding.pbCbac.visibility = View.GONE
+                    alertDialog.setTitle("MISSING FIELD")
                     alertDialog.setMessage(viewModel.missingFieldString)
                     alertDialog.show()
                 }
@@ -127,33 +128,127 @@ class CbacFragment : Fragment() {
         }
         viewModel.raFhScore.observe(viewLifecycleOwner) {
             binding.ddFhScore.text = it
-            viewModel.raTotalScore.value?.let { total ->
-                run {
-                    if (total.substring(total.lastIndexOf(' ') + 1).toInt() >= 4) {
-                        if (!totalScorePopupShown) {
-                            raAlertDialog.show()
-                            totalScorePopupShown = true
-                        }
-                    }
-                }
-            }
+//            viewModel.raTotalScore.value?.let { total ->
+//                run {
+//                    if (total.substring(total.lastIndexOf(' ') + 1).toInt() >= 4) {
+//                        if (!totalScorePopupShown) {
+//                            raAlertDialog.show()
+//                            totalScorePopupShown = true
+//                        }
+//                    }
+//                }
+//            }
         }
         viewModel.raTotalScore.observe(viewLifecycleOwner) {
-            if (it.substring(it.lastIndexOf(' ') + 1).toInt() >= 4) {
-                binding.ncdSusValidDisplay.visibility = View.VISIBLE
-                viewModel.setFlagForNcd(true)
-            } else {
-                if (binding.ncdSusValidDisplay.visibility != View.GONE) {
-                    binding.ncdSusValidDisplay.visibility = View.GONE
-                    viewModel.setFlagForNcd(false)
-                }
-            }
+            val score = it.substring(it.lastIndexOf(' ') + 1).toInt()
+            handleNcdSusBottomInfoDisplay(score)
+            handleRaScoreAlert(score)
             binding.cbacTvRaTotalScore.text = it
         }
         if (isInFillMode) setUpFill()
         else setUpView()
 
 
+    }
+
+    private fun handleRaScoreAlert(score: Int) {
+        if (
+            !binding.actvAgeDropdown.text.isNullOrBlank() &&
+            !binding.actvSmokeDropdown.text.isNullOrBlank() &&
+            !binding.actvAlcoholDropdown.text.isNullOrBlank() &&
+            !binding.actvWaistDropdown.text.isNullOrBlank() &&
+            !binding.actvPaDropdown.text.isNullOrBlank() &&
+            !binding.actvFhDropdown.text.isNullOrBlank()
+        ) {
+            if (score > 4) {
+                raAlertDialog.setMessage(
+                    "Refer to NCD screening day / VHSND/ HWC for NCD screening (Priority)"
+                )
+            } else {
+                raAlertDialog.setMessage(
+                    "Refer to NCD screening day / VHSND/ HWC for NCD screening (Less Priority)"
+                )
+            }
+//            if(!totalScorePopupShown)
+            raAlertDialog.show()
+//            totalScorePopupShown = true
+        }
+
+    }
+
+    private fun handleAst2Alert() {
+        if (
+            binding.cbacFhTb.cbacEdRg.checkedRadioButtonId != -1 &&
+            binding.cbacTakingTbDrug.cbacEdRg.checkedRadioButtonId != -1
+        ) {
+            if (binding.cbacFhTb.rbYes.isChecked || binding.cbacTakingTbDrug.rbYes.isChecked) {
+                ast2AlertDialog.setMessage(
+                    "Refer to MO or inform ANM/MPW to tracing of all family members"
+                )
+                ast2AlertDialog.show()
+            }
+        }
+
+    }
+    private fun handleOldPeopleItemsAlert() {
+        if (
+            binding.cbacUnsteady.cbacEdRg.checkedRadioButtonId != -1 &&
+            binding.cbacPdRm.cbacEdRg.checkedRadioButtonId != -1 &&
+            binding.cbacNhop.cbacEdRg.checkedRadioButtonId != -1 &&
+            binding.cbacForgetNames.cbacEdRg.checkedRadioButtonId != -1
+        ) {
+            if (
+                binding.cbacUnsteady.rbYes.isChecked ||
+                binding.cbacPdRm.rbYes.isChecked ||
+                binding.cbacNhop.rbYes.isChecked ||
+                binding.cbacForgetNames.rbYes.isChecked
+            ) {
+                alertDialog.setTitle("Alert!")
+                alertDialog.setMessage(
+                    "Send the patient to MOIC of nearest health center for treatment"
+                )
+                alertDialog.show()
+            }
+        }
+
+    }
+
+    private fun handleAst1Alert() {
+        if (
+            binding.cbacHistb.cbacEdRg.checkedRadioButtonId != -1 &&
+            binding.cbacCoughing.cbacEdRg.checkedRadioButtonId != -1 &&
+            binding.cbacBlsputum.cbacEdRg.checkedRadioButtonId != -1 &&
+            binding.cbacFeverwks.cbacEdRg.checkedRadioButtonId != -1 &&
+            binding.cbacLsweight.cbacEdRg.checkedRadioButtonId != -1 &&
+            binding.cbacNtswets.cbacEdRg.checkedRadioButtonId != -1
+        ) {
+            if (
+                binding.cbacHistb.rbYes.isChecked ||
+                binding.cbacCoughing.rbYes.isChecked ||
+                binding.cbacBlsputum.rbYes.isChecked ||
+                binding.cbacFeverwks.rbYes.isChecked ||
+                binding.cbacLsweight.rbYes.isChecked ||
+                binding.cbacNtswets.rbYes.isChecked
+            ) {
+                ast1AlertDialog.setMessage(
+                    "Refer to MO and collect the Sputum sample"
+                )
+                ast1AlertDialog.show()
+            }
+        }
+
+    }
+
+    private fun handleNcdSusBottomInfoDisplay(score: Int) {
+        if (score >= 4) {
+            binding.ncdSusValidDisplay.visibility = View.VISIBLE
+            viewModel.setFlagForNcd(true)
+        } else {
+            if (binding.ncdSusValidDisplay.visibility != View.GONE) {
+                binding.ncdSusValidDisplay.visibility = View.GONE
+                viewModel.setFlagForNcd(false)
+            }
+        }
     }
 
     private fun setUpView() {
@@ -236,32 +331,37 @@ class CbacFragment : Fragment() {
             ArrayAdapter(
                 requireContext(),
                 R.layout.dropdown_item,
-                R.id.tv_dropdown_item_text ,
+                R.id.tv_dropdown_item_text,
                 resources.getStringArray(R.array.cbac_smoke),
 
 
-            )
+                )
         )
         binding.actvPaDropdown.setAdapter(
             ArrayAdapter(
                 requireContext(),
                 R.layout.dropdown_item,
-                R.id.tv_dropdown_item_text ,
+                R.id.tv_dropdown_item_text,
                 resources.getStringArray(R.array.cbac_pa),
 
 
                 )
         )
         binding.actvSmokeDropdown.setOnItemClickListener { _, _, i, _ ->
-            viewModel.setSmoke(i) }
+            viewModel.setSmoke(i)
+        }
         binding.actvAlcoholDropdown.setOnItemClickListener { _, _, i, _ ->
-            viewModel.setAlcohol(i) }
+            viewModel.setAlcohol(i)
+        }
         binding.actvWaistDropdown.setOnItemClickListener { _, _, i, _ ->
-            viewModel.setWaist(i) }
+            viewModel.setWaist(i)
+        }
         binding.actvPaDropdown.setOnItemClickListener { _, _, i, _ ->
-            viewModel.setPa(i) }
+            viewModel.setPa(i)
+        }
         binding.actvFhDropdown.setOnItemClickListener { _, _, i, _ ->
-            viewModel.setFh(i) }
+            viewModel.setFh(i)
+        }
     }
 
     private fun setupRaView(cbac: CbacCache) {
@@ -291,6 +391,7 @@ class CbacFragment : Fragment() {
     }
 
     private fun setupEdFill() {
+
         viewModel.ast1.observe(viewLifecycleOwner) {
             Timber.d("value of ast1 : $it")
             if (it > 0) {
@@ -324,24 +425,14 @@ class CbacFragment : Fragment() {
                 R.id.rb_yes -> viewModel.setFhTb(1)
                 R.id.rb_no -> viewModel.setFhTb(2)
             }
+            handleAst2Alert()
         }
         binding.cbacTakingTbDrug.cbacEdRg.setOnCheckedChangeListener { _, id ->
             when (id) {
                 R.id.rb_yes -> viewModel.setTakingTbDrug(1)
                 R.id.rb_no -> viewModel.setTakingTbDrug(2)
             }
-
-            if (binding.cbacFhTb.rbYes.isChecked || binding.cbacTakingTbDrug.rbYes.isChecked) {
-                ast2AlertDialog.show()
-            }
-//            viewModel.ast2.value?.let {
-//                if (it > 0) {
-//                    if (!ed2PopupShown) {
-//                        ast2AlertDialog.show()
-//                        ed2PopupShown = true
-//                    }
-//                }
-//            }
+            handleAst2Alert()
         }
         binding.cbacHistb.cbacEdRg.setOnCheckedChangeListener { _, id ->
             when (id) {
@@ -379,7 +470,6 @@ class CbacFragment : Fragment() {
                 R.id.rb_no -> viewModel.setNtSwets(2)
             }
 
-//            if(binding.cbacNtswets.rbYes.isChecked ||)
 
             if (
                 binding.cbacHistb.rbYes.isChecked ||
@@ -392,14 +482,6 @@ class CbacFragment : Fragment() {
                 ast1AlertDialog.show()
             }
 
-//            viewModel.ast1.value?.let {
-//                if (it > 0) {
-//                    if (!ed1PopupShown) {
-//                        ast1AlertDialog.show()
-//                        ed1PopupShown = true
-//                    }
-//                }
-//            }
         }
         binding.cbacRecurrentUlceration.cbacEdRg.setOnCheckedChangeListener { _, id ->
             when (id) {
@@ -574,6 +656,9 @@ class CbacFragment : Fragment() {
             when (id) {
                 R.id.rb_yes -> {
                     viewModel.setBlM(1)
+                    alertDialog.setTitle("Alert!")
+                    alertDialog.setMessage("Inform ASHA Facilitator.")
+                    alertDialog.show()
                     binding.tvBlMenopause.visibility = View.VISIBLE
                 }
 
@@ -605,24 +690,28 @@ class CbacFragment : Fragment() {
                 R.id.rb_yes -> viewModel.setUnsteady(1)
                 R.id.rb_no -> viewModel.setUnsteady(2)
             }
+            handleOldPeopleItemsAlert()
         }
         binding.cbacPdRm.cbacEdRg.setOnCheckedChangeListener { _, id ->
             when (id) {
                 R.id.rb_yes -> viewModel.setPdRm(1)
                 R.id.rb_no -> viewModel.setPdRm(2)
             }
+            handleOldPeopleItemsAlert()
         }
         binding.cbacNhop.cbacEdRg.setOnCheckedChangeListener { _, id ->
             when (id) {
                 R.id.rb_yes -> viewModel.setNhop(1)
                 R.id.rb_no -> viewModel.setNhop(2)
             }
+            handleOldPeopleItemsAlert()
         }
         binding.cbacForgetNames.cbacEdRg.setOnCheckedChangeListener { _, id ->
             when (id) {
                 R.id.rb_yes -> viewModel.setForgetNames(1)
                 R.id.rb_no -> viewModel.setForgetNames(2)
             }
+            handleOldPeopleItemsAlert()
         }
         //ED END
     }

@@ -267,7 +267,7 @@
     </string-array>
     <string-array name="cbac_smoke">
         <item>Never</item>
-        <item>Used to consume in the past/sometimes now</item>
+        <item>Used to consume in the past sometime</item>
         <item>Daily</item>
     </string-array>
     <string-array name="cbac_alcohol">
