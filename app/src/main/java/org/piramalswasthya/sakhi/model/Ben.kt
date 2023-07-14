@@ -65,7 +65,9 @@ enum class Gender {
             " ect.benId is not null as ectFilled, " +
             " ect.benId is not null as ectFilled, " +
             " tbsn.benId is not null as tbsnFilled, " +
-            " tbsp.benId is not null as tbspFilled " +
+            " tbsp.benId is not null as tbspFilled, " +
+            " ir.benId is not null as irFilled, " +
+            " do.benId is not null as doFilled " +
             "from BENEFICIARY b " +
             "JOIN HOUSEHOLD h ON b.householdId = h.householdId " +
             "LEFT OUTER JOIN CBAC cbac on b.beneficiaryId = cbac.benId " +
@@ -80,6 +82,8 @@ enum class Gender {
             "LEFT OUTER JOIN ELIGIBLE_COUPLE_TRACKING ect on (b.beneficiaryId = ect.benId  and CAST((strftime('%s','now') - ect.visitDate/1000)/60/60/24 AS INTEGER) < 30 )" +
             "LEFT OUTER JOIN TB_SCREENING tbsn on b.beneficiaryId = tbsn.benId " +
             "LEFT OUTER JOIN TB_SUSPECTED tbsp on b.beneficiaryId = tbsp.benId " +
+            "LEFT OUTER JOIN DELIVERY_OUTCOME do on b.beneficiaryId = do.benId " +
+            "LEFT OUTER JOIN INFANT_REG ir on b.beneficiaryId = ir.benId " +
             "where b.isDraft = 0 GROUP BY b.beneficiaryId ORDER BY b.updatedDate DESC"
 )
 data class BenBasicCache(
@@ -115,7 +119,9 @@ data class BenBasicCache(
     val ectFilled: Boolean,
     val tbsnFilled: Boolean,
     val tbspFilled: Boolean,
-    val isDelivered: Boolean
+    val isDelivered: Boolean,
+    val irFilled: Boolean,
+    val doFilled: Boolean,
 ) {
     companion object {
         private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
@@ -395,6 +401,46 @@ data class BenBasicCache(
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             form1Filled = pwrFilled,
+            syncState = syncState
+        )
+    }
+
+    fun asBenBasicDomainModelForInfantRegistrationForm(): BenBasicDomainForForm {
+        return BenBasicDomainForForm(
+            benId = benId,
+            hhId = hhId,
+            regDate = dateFormat.format(Date(regDate)),
+            benName = benName,
+            benSurname = benSurname ?: "Not Available",
+            gender = gender.name,
+            dob = dob,
+            mobileNo = mobileNo.toString(),
+            fatherName = fatherName,
+            familyHeadName = familyHeadName ?: "Not Available",
+//            typeOfList = typeOfList.name,
+            rchId = rchId ?: "Not Available",
+            hrpStatus = hrpStatus,
+            form1Filled = irFilled,
+            syncState = syncState
+        )
+    }
+
+    fun asBenBasicDomainModelForDeliveryOutcomeForm(): BenBasicDomainForForm {
+        return BenBasicDomainForForm(
+            benId = benId,
+            hhId = hhId,
+            regDate = dateFormat.format(Date(regDate)),
+            benName = benName,
+            benSurname = benSurname ?: "Not Available",
+            gender = gender.name,
+            dob = dob,
+            mobileNo = mobileNo.toString(),
+            fatherName = fatherName,
+            familyHeadName = familyHeadName ?: "Not Available",
+//            typeOfList = typeOfList.name,
+            rchId = rchId ?: "Not Available",
+            hrpStatus = hrpStatus,
+            form1Filled = doFilled,
             syncState = syncState
         )
     }

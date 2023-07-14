@@ -1,13 +1,13 @@
 package org.piramalswasthya.sakhi.network
 
 import okhttp3.ResponseBody
-import org.piramalswasthya.sakhi.model.BeneficiaryDataSending
-import org.piramalswasthya.sakhi.model.SendingRMNCHData
+import org.piramalswasthya.sakhi.model.*
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface AmritApiService {
 
@@ -59,4 +59,21 @@ interface AmritApiService {
     @POST("fhirapi-v1.0/healthIDCard/verifyOTPAndGenerateHealthCard")
     suspend fun verifyOtpAndGenerateHealthCard(@Body validateOtpHid: ValidateOtpHid): Response<ResponseBody>
 
+    @POST
+    suspend fun postEcrForm(
+        @Body ecrPostList: List<EcrPost>,
+        @Url url: String = "http://amritdemo.piramalswasthya.org:8080/flw-0.0.1/eligibleCoupleRegister"
+    ): Response<ResponseBody>
+
+    @POST
+    suspend fun postEctForm(
+        @Body ecrPostList: List<EligibleCoupleTrackingCache>,
+        @Url url: String = "http://amritdemo.piramalswasthya.org:8080/flw-0.0.1/eligibleCoupleTrackingRegister"
+    ): Response<ResponseBody>
+
+    @POST
+    suspend fun postAncForm(
+        @Body ecrPostList: List<PregnantWomanAncCache>,
+        @Url url: String = "http://amritdemo.piramalswasthya.org:8080/flw-0.0.1/ancVisitRegister"
+    ): Response<ResponseBody>
 }

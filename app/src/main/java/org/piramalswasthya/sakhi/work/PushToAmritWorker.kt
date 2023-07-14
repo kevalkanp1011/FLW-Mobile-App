@@ -9,6 +9,8 @@ import dagger.assisted.AssistedInject
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertTmcInterceptor
 import org.piramalswasthya.sakhi.repositories.BenRepo
+import org.piramalswasthya.sakhi.repositories.EcrRepo
+import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
 import timber.log.Timber
 import java.net.SocketTimeoutException
 
@@ -17,6 +19,8 @@ class PushToAmritWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted params: WorkerParameters,
     private val benRepo: BenRepo,
+    private val ecrRepo: EcrRepo,
+    private val maternalHealthRepo: MaternalHealthRepo,
     private val preferenceDao: PreferenceDao,
 ) : CoroutineWorker(appContext, params) {
 
@@ -30,7 +34,9 @@ class PushToAmritWorker @AssistedInject constructor(
         try {
 //            val workerResult = benRepo.syncUnprocessedRecords()
             val workerResult = benRepo.processNewBen()
-            return if (workerResult) {
+            val workerResult1 = ecrRepo.processNewEcr()
+            val workerResult2 = maternalHealthRepo.processNewAncVisit()
+            return if (workerResult && workerResult1 && workerResult2) {
                 Timber.d("Worker completed")
                 Result.success()
             } else {

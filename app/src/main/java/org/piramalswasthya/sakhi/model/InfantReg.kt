@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import org.piramalswasthya.sakhi.configuration.FormDataModel
+import org.piramalswasthya.sakhi.database.room.SyncState
 
 @Entity(
     tableName = "INFANT_REG",
@@ -36,5 +37,7 @@ data class InfantRegCache (
     var opv0Dose: Long? = System.currentTimeMillis(),
     var bcgDose: Long? = System.currentTimeMillis(),
     var hepBDose: Long? = System.currentTimeMillis(),
-    var vitkDose: Long? = System.currentTimeMillis()
+    var vitkDose: Long? = System.currentTimeMillis(),
+    var processed: String? = "N",
+    var syncState: SyncState
 ):FormDataModel

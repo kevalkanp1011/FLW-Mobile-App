@@ -102,7 +102,7 @@ class EligibleCoupleRegViewModel @Inject constructor(
                     }
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
-                    Timber.d("saving PWR data failed!!")
+                    Timber.d("saving ecr data failed!!")
                     _state.postValue(State.SAVE_FAILED)
                 }
             }

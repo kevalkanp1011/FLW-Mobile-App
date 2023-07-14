@@ -115,10 +115,6 @@ class RecordsRepo @Inject constructor(
         .map { list -> list.map { it.asBenBasicDomainModelECTForm() } }
     val eligibleCoupleTrackingListCount = eligibleCoupleTrackingList.map { it.size }
 
-    val deliveredWomenList = benDao.getAllEligibleTrackingList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelECTForm() } }
-    val deliveredWomenListCount = deliveredWomenList.map { it.size }
-
     fun getPregnantWomenList() = benDao.getAllPregnancyWomenList(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForPregnantWomanRegistrationForm() } }
     fun getPregnantWomenListCount() = benDao.getAllPregnancyWomenListCount(selectedVillage)
@@ -128,6 +124,12 @@ class RecordsRepo @Inject constructor(
 
     fun getHrpCases() = benDao.getHrpCases(selectedVillage)
         .map { list -> list.distinctBy { it.benId }.map { it.asBasicDomainModel() }}
+
+    fun getDeliveredWomenList() = benDao.getAllDeliveredWomenList(selectedVillage)
+        .map { list -> list.map { it.asBenBasicDomainModelForDeliveryOutcomeForm() } }
+    fun getListForInfantReg() = benDao.getAllDeliveredWomenList(selectedVillage)
+        .map { list -> list.map { it.asBenBasicDomainModelForInfantRegistrationForm() } }
+    fun getDeliveredWomenListCount() = benDao.getAllDeliveredWomenListCount(selectedVillage)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getHrpCount(): Flow<Int> {

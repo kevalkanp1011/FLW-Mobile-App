@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.EligibleCoupleTrackingDataset
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.EligibleCoupleTrackingCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
@@ -60,6 +61,7 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
                 _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
                 eligibleCoupleTracking = EligibleCoupleTrackingCache(
                     benId = ben.beneficiaryId,
+                    syncState = SyncState.UNSYNCED
                 )
             }
 

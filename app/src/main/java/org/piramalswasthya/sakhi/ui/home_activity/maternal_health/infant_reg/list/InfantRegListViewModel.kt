@@ -14,7 +14,7 @@ import javax.inject.Inject
 class InfantRegListViewModel @Inject constructor(
     recordsRepo: RecordsRepo
 ) : ViewModel() {
-    private val allBenList = recordsRepo.getPregnantWomenList()
+    private val allBenList = recordsRepo.getListForInfantReg()
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter) { list, filter ->
         filterBenFormList(list, filter)

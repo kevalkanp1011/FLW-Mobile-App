@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import org.piramalswasthya.sakhi.crypt.CryptoUtil
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.ImmunizationDao
 import org.piramalswasthya.sakhi.database.room.dao.UserDao
@@ -777,7 +778,7 @@ class UserRepo @Inject constructor(
         withContext(Dispatchers.IO) {
             try {
                 val response =
-                    tmcNetworkApiService.getJwtToken(TmcAuthUserRequest(userName, password))
+                    tmcNetworkApiService.getJwtToken(TmcAuthUserRequest(userName, CryptoUtil().encrypt(password)))
                 Timber.d("JWT : $response")
                 if (!response.isSuccessful) {
                     return@withContext

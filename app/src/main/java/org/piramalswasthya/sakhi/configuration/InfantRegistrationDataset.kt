@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.configuration
 import android.content.Context
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Languages
+import org.piramalswasthya.sakhi.helpers.getWeeksOfPregnancy
 import org.piramalswasthya.sakhi.model.*
 
 class InfantRegistrationDataset(
@@ -40,7 +41,7 @@ class InfantRegistrationDataset(
         inputType = InputType.RADIO,
         title = "Sex of Infant",
         entries = resources.getStringArray(R.array.ecr_gender_array),
-        required = true,
+        required = false,
         hasDependants = true,
     )
 
@@ -121,7 +122,7 @@ class InfantRegistrationDataset(
         inputType = InputType.DATE_PICKER,
         title = "OPV0 Dose",
         arrayId = -1,
-        required = true,
+        required = false,
         max = System.currentTimeMillis(),
         hasDependants = true
     )
@@ -131,7 +132,7 @@ class InfantRegistrationDataset(
         inputType = InputType.DATE_PICKER,
         title = "BCG Dose",
         arrayId = -1,
-        required = true,
+        required = false,
         max = System.currentTimeMillis(),
         hasDependants = true
     )
@@ -141,7 +142,7 @@ class InfantRegistrationDataset(
         inputType = InputType.DATE_PICKER,
         title = "HEP B-0 Dose",
         arrayId = -1,
-        required = true,
+        required = false,
         max = System.currentTimeMillis(),
         hasDependants = true
     )
@@ -151,14 +152,15 @@ class InfantRegistrationDataset(
         inputType = InputType.DATE_PICKER,
         title = "VITK Dose",
         arrayId = -1,
-        required = true,
+        required = false,
         max = System.currentTimeMillis(),
         hasDependants = true
     )
 
 
 
-    suspend fun setUpPage(ben: BenRegCache?, saved: InfantRegCache?) {
+    suspend fun setUpPage(ben: BenRegCache?, deliveryOutcomeCache: DeliveryOutcomeCache?,
+                          pwrCache: PregnantWomanRegistrationCache?, saved: InfantRegCache?) {
         var list = mutableListOf(
             babyName,
             infantTerm,
@@ -177,6 +179,29 @@ class InfantRegistrationDataset(
             hepBDose,
             vitkDose
         )
+        if(deliveryOutcomeCache != null) {
+            opv0Dose.min = deliveryOutcomeCache.dateOfDelivery
+            bcgDose.min = deliveryOutcomeCache.dateOfDelivery
+            hepBDose.min = deliveryOutcomeCache.dateOfDelivery
+            vitkDose.min = deliveryOutcomeCache.dateOfDelivery
+            deliveryOutcomeCache.dateOfDelivery.let {
+                if(it + 15*24*60*60*1000 < System.currentTimeMillis())
+                    opv0Dose.max = it + 15*24*60*60*1000
+                if(it + 365*24*60*60*1000 < System.currentTimeMillis())
+                    bcgDose.max = it + 365*24*60*60*1000
+                if(it + 24*60*60*1000 < System.currentTimeMillis()) {
+                    hepBDose.max = it + 24*60*60*1000
+                    vitkDose.max = it + 24*60*60*1000
+                }
+            }
+        }
+        if(pwrCache != null && deliveryOutcomeCache != null) {
+            val weeksOfPregnancy = getWeeksOfPregnancy(deliveryOutcomeCache.dateOfDelivery, pwrCache.lmpDate);
+            if(weeksOfPregnancy < 42 || weeksOfPregnancy > 37 ) {
+                infantTerm.value = "Full Term"
+            } else if ( weeksOfPregnancy <= 37)
+                infantTerm.value = "Pre Trem"
+        }
         if (saved == null) {
             if (ben != null) {
                 babyName.value = "baby of ${ben.firstName}"
@@ -237,12 +262,6 @@ class InfantRegistrationDataset(
                         removeItems = listOf(resuscitation, referred),
                     )
                 }
-//                triggerDependants(
-//                    source = resuscitation,
-//                    passedIndex = index,
-//                    triggerIndex = 1,
-//                    target = referred
-//                )
             }
             hadBirthDefect.id -> {
                 triggerDependants(

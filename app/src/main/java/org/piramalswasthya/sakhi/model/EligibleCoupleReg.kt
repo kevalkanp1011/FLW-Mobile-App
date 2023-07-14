@@ -6,6 +6,8 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Entity(
     tableName = "ELIGIBLE_COUPLE_REG",
@@ -74,6 +76,130 @@ data class EligibleCoupleRegCache (
     var age9: Int? = 0,
     var gender9: Gender? = null,
     var eighthAndNinthChildGap: Int? = 0,
-    var processed: String? = null,
+    var processed: String? = "N",
     var syncState: SyncState
-): FormDataModel
+): FormDataModel {
+    fun asPostModel(): EcrPost {
+        return EcrPost(
+            benId = benId,
+            dateOfReg = getDateStringFromLong(dateOfReg),
+            rchId = rchId,
+            name = name,
+            husbandName = husbandName,
+            age = age,
+            ageAtMarriage = ageAtMarriage,
+            aadharNo = aadharNo,
+            bankAccount = bankAccount,
+            bankName = bankName,
+            branchName = branchName,
+            ifsc = ifsc,
+            noOfChildren = noOfChildren,
+            noOfLiveChildren = noOfLiveChildren,
+            noOfMaleChildren = noOfMaleChildren,
+            noOfFemaleChildren = noOfFemaleChildren,
+            dob1 = getDateStringFromLong(dob1),
+            age1 = age1,
+            gender1 = gender1,
+            marriageFirstChildGap = marriageFirstChildGap,
+            dob2 = getDateStringFromLong(dob2),
+            age2 = age2,
+            gender2 = gender2,
+            firstAndSecondChildGap = firstAndSecondChildGap,
+            dob3 = getDateStringFromLong(dob3),
+            age3 = age3,
+            gender3 = gender3,
+            secondAndThirdChildGap = secondAndThirdChildGap,
+            dob4 = getDateStringFromLong(dob4),
+            age4 = age4,
+            gender4 = gender4,
+            thirdAndFourthChildGap = thirdAndFourthChildGap,
+            dob5 = getDateStringFromLong(dob5),
+            age5 = age5,
+            gender5 = gender5,
+            fourthAndFifthChildGap = fourthAndFifthChildGap,
+            dob6 = getDateStringFromLong(dob6),
+            age6 = age6,
+            gender6 = gender6,
+            fifthANdSixthChildGap = fifthANdSixthChildGap,
+            dob7 = getDateStringFromLong(dob7),
+            age7 = age7,
+            gender7 = gender7,
+            sixthAndSeventhChildGap = sixthAndSeventhChildGap,
+            dob8 = getDateStringFromLong(dob8),
+            age8 = age8,
+            gender8 = gender8,
+            seventhAndEighthChildGap = seventhAndEighthChildGap,
+            dob9 = getDateStringFromLong(dob9),
+            age9 = age9,
+            gender9 = gender9,
+            eighthAndNinthChildGap = eighthAndNinthChildGap
+        )
+    }
+}
+
+private fun getDateStringFromLong(dateLong: Long?): String? {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+    dateLong?.let {
+        val dateString = dateFormat.format(dateLong)
+        return dateString
+    } ?: run {
+        return null
+    }
+
+}
+
+data class EcrPost(
+    val id: Int = 0,
+    val benId: Long = 0,
+    val dateOfReg: String? = null,
+    val rchId: Long? = 0L,
+    val name: String? = null,
+    val husbandName: String? = null,
+    val age: Int? = 0,
+    val ageAtMarriage: Int? = 0,
+    val aadharNo: Long? = 0L,
+    val bankAccount: Long? = null,
+    val bankName: String? = null,
+    val branchName: String? = null,
+    val ifsc: String? = null,
+    val noOfChildren: Int? = 0,
+    val noOfLiveChildren: Int? = 0,
+    val noOfMaleChildren: Int? = 0,
+    val noOfFemaleChildren: Int? = 0,
+    val dob1: String? = null,
+    val age1: Int? = 0,
+    val gender1: Gender? = null,
+    val marriageFirstChildGap: Int? = 0,
+    val dob2: String? = null,
+    val age2: Int? = 0,
+    val gender2: Gender? = null,
+    val firstAndSecondChildGap: Int? = 0,
+    val dob3: String? = null,
+    val age3: Int? = 0,
+    val gender3: Gender? = null,
+    val secondAndThirdChildGap: Int? = 0,
+    val dob4: String? = null,
+    val age4: Int? = 0,
+    val gender4: Gender? = null,
+    val thirdAndFourthChildGap: Int? = 0,
+    val dob5: String? = null,
+    val age5: Int? = 0,
+    val gender5: Gender? = null,
+    val fourthAndFifthChildGap: Int? = 0,
+    val dob6: String? = null,
+    val age6: Int? = 0,
+    val gender6: Gender? = null,
+    val fifthANdSixthChildGap: Int? = 0,
+    val dob7: String? = null,
+    val age7: Int? = 0,
+    val gender7: Gender? = null,
+    val sixthAndSeventhChildGap: Int? = 0,
+    val dob8: String? = null,
+    val age8: Int? = 0,
+    val gender8: Gender? = null,
+    val seventhAndEighthChildGap: Int? = 0,
+    val dob9: String? = null,
+    val age9: Int? = 0,
+    val gender9: Gender? = null,
+    val eighthAndNinthChildGap: Int? = 0
+)

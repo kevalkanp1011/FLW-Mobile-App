@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import org.piramalswasthya.sakhi.configuration.FormDataModel
+import org.piramalswasthya.sakhi.database.room.SyncState
 
 @Entity(
     tableName = "DELIVERY_OUTCOME",
@@ -35,5 +36,7 @@ data class DeliveryOutcomeCache (
     var stillBirth: Int? = 0,
     var dateOfDischarge: Long = System.currentTimeMillis(),
     var timeOfDischarge: String? = null,
-    var isJSYBenificiary: Boolean? = null
+    var isJSYBenificiary: Boolean? = null,
+    var processed: String? = "N",
+    var syncState: SyncState
 ) : FormDataModel
