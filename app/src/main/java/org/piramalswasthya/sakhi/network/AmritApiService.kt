@@ -10,17 +10,15 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
-import retrofit2.http.Url
 
 interface AmritApiService {
 
     @Headers("No-Auth: true")
-    @POST("user/userAuthenticate/")
+    @POST("commonapi-v1.0/user/userAuthenticate/")
     suspend fun getJwtToken(@Body json: TmcAuthUserRequest): Response<ResponseBody>
 
-    @GET
+    @GET("flw-0.0.1/user/getUserRole")
     suspend fun getUserDetailsById(
-        @Url url: String = "http://192.168.1.233:8081/user/getUserRole",
         @Query("userId") userId: Int,
         @Query("roleId") roleId: Int = 527
     ): UserNetworkResponse

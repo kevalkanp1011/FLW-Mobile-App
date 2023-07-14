@@ -462,13 +462,13 @@ class UserRepo @Inject constructor(
 
     private suspend fun getTokenAmrit(userName: String, password: String): Int {
         return withContext(Dispatchers.IO) {
-          //  val encryptedPassword = encrypt(password)
+            val encryptedPassword = encrypt(password)
             val response =
                 amritApiService.getJwtToken(
                     TmcAuthUserRequest(
                         userName,
-                        password,
-//                        encryptedPassword
+//                        password,
+                        encryptedPassword
                     )
                 )
             Timber.d("JWT : $response")
