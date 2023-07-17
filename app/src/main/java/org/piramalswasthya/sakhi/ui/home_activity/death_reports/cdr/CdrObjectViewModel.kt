@@ -1,7 +1,11 @@
 package org.piramalswasthya.sakhi.ui.home_activity.death_reports.cdr
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -10,11 +14,17 @@ import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.configuration.CDRFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
-import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.CDRCache
+import org.piramalswasthya.sakhi.model.FormInputOld
+import org.piramalswasthya.sakhi.model.Gender
+import org.piramalswasthya.sakhi.model.HouseholdCache
+import org.piramalswasthya.sakhi.model.User
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.CdrRepo
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,7 +33,8 @@ class CdrObjectViewModel @Inject constructor(
     context: Application,
     private val database: InAppDb,
     private val cdrRepo: CdrRepo,
-    private val benRepo: BenRepo
+    private val benRepo: BenRepo,
+    private val preferenceDao: PreferenceDao
 ) : ViewModel() {
 
     enum class State {
@@ -37,7 +48,7 @@ class CdrObjectViewModel @Inject constructor(
     private val hhId = CdrObjectFragmentArgs.fromSavedStateHandle(state).hhId
     private lateinit var ben: BenRegCache
     private lateinit var household: HouseholdCache
-    private lateinit var user: UserCache
+    private lateinit var user: User
     private var cdr: CDRCache? = null
 
     private val _benName = MutableLiveData<String>()
@@ -102,7 +113,7 @@ class CdrObjectViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 ben = benRepo.getBeneficiaryRecord(benId, hhId)!!
                 household = benRepo.getHousehold(hhId)!!
-                user = database.userDao.getLoggedInUser()!!
+                user = preferenceDao.getLoggedInUser()!!
                 cdr = database.cdrDao.getCDR(hhId, benId)
             }
             _benName.value = "${ben.firstName} ${if(ben.lastName== null) "" else ben.lastName}"

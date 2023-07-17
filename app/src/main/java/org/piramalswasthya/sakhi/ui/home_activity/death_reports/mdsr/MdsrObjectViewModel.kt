@@ -1,7 +1,11 @@
 package org.piramalswasthya.sakhi.ui.home_activity.death_reports.mdsr
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -10,12 +14,17 @@ import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.configuration.MDSRFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
-import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.FormInputOld
+import org.piramalswasthya.sakhi.model.HouseholdCache
+import org.piramalswasthya.sakhi.model.MDSRCache
+import org.piramalswasthya.sakhi.model.User
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.MdsrRepo
 import timber.log.Timber
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,7 +33,8 @@ class MdsrObjectViewModel @Inject constructor(
     context: Application,
     private val database: InAppDb,
     private val benRepo: BenRepo,
-    private val mdsrRepo: MdsrRepo
+    private val mdsrRepo: MdsrRepo,
+    private val preferenceDao: PreferenceDao
 ) : ViewModel() {
 
     enum class State {
@@ -38,7 +48,7 @@ class MdsrObjectViewModel @Inject constructor(
     private val hhId = MdsrObjectFragmentArgs.fromSavedStateHandle(state).hhId
     private lateinit var ben: BenRegCache
     private lateinit var household: HouseholdCache
-    private lateinit var user: UserCache
+    private lateinit var user: User
     private var mdsr: MDSRCache? = null
 
     private val _benName = MutableLiveData<String>()
@@ -104,7 +114,7 @@ class MdsrObjectViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 ben = benRepo.getBeneficiaryRecord(benId, hhId)!!
                 household = benRepo.getHousehold(hhId)!!
-                user = database.userDao.getLoggedInUser()!!
+                user = preferenceDao.getLoggedInUser()!!
                 mdsr = database.mdsrDao.getMDSR(hhId, benId)
             }
             _benName.value = "${ben.firstName} ${if(ben.lastName== null) "" else ben.lastName}"

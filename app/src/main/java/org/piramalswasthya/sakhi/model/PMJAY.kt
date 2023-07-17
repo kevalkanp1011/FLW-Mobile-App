@@ -39,7 +39,7 @@ data class PMJAYCache (
     var createdDate: Long? = System.currentTimeMillis(),
     var processed: String? = null,
 ){
-    fun asPostModel(user: UserCache, household: HouseholdCache, ben: BenRegCache, pmjayCount: Int): PMJAYPost {
+    fun asPostModel(user: User, household: HouseholdCache, ben: BenRegCache, pmjayCount: Int): PMJAYPost {
         return PMJAYPost(
             age = ben.age.toString(),
             beneficiaryid = benId,

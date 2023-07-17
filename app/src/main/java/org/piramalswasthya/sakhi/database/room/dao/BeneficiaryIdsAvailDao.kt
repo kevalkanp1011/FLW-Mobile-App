@@ -1,7 +1,8 @@
-package org.piramalswasthya.sakhi.database.room
+package org.piramalswasthya.sakhi.database.room.dao
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
+import org.piramalswasthya.sakhi.database.room.BeneficiaryIdsAvail
 
 @Dao
 interface BeneficiaryIdsAvailDao {
@@ -12,7 +13,7 @@ interface BeneficiaryIdsAvailDao {
     @Query("SELECT COUNT(*) FROM BEN_ID_LIST")
     suspend fun count(): Int
 
-    @Query("SELECT * FROM BEN_ID_LIST WHERE userId=:userId  LIMIT 1")
+    @Query("SELECT * FROM BEN_ID_LIST WHERE userId=:userId order by benId desc LIMIT 1")
     suspend fun getEntry(userId: Int): BeneficiaryIdsAvail
 
     @Delete

@@ -111,7 +111,7 @@ class HomeActivity : AppCompatActivity() {
     private val imagePickerActivityResult =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) {
             it?.let {
-                viewModel.saveProfilePicUri(it)
+                viewModel.profilePicUri = it
                 Glide.with(this).load(it).placeholder(R.drawable.ic_person).circleCrop()
                     .into(binding.navView.getHeaderView(0).findViewById(R.id.iv_profile_pic))
 //                binding.navView.getHeaderView(0).findViewById<ImageView>(R.id.iv_profile_pic).setImageURI(it)
@@ -176,6 +176,7 @@ class HomeActivity : AppCompatActivity() {
                         navController.popBackStack(R.id.homeFragment, false)
                         return true
                     }
+
                     R.id.toolbar_menu_language -> {
                         langChooseAlert.show()
                     }
@@ -195,6 +196,7 @@ class HomeActivity : AppCompatActivity() {
         binding.toolbar.setOnClickListener(onClickTitleBar)
         binding.toolbar.subtitle = "Tap to Change"
     }
+
     fun removeClickListenerToHomepageActionBarTitle() {
         binding.toolbar.setOnClickListener(null)
         binding.toolbar.subtitle = null
@@ -219,21 +221,18 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setUpNavHeader() {
         val headerView = binding.navView.getHeaderView(0)
-        viewModel.currentUser.observe(this) {
-            it?.let {
-                headerView.findViewById<TextView>(R.id.tv_nav_name).text =
-                    getString(R.string.nav_item_1_text, it.userName)
-                headerView.findViewById<TextView>(R.id.tv_nav_role).text =
-                    getString(R.string.nav_item_2_text, it.userType)
-                headerView.findViewById<TextView>(R.id.tv_nav_id).text =
-                    getString(R.string.nav_item_3_text, it.userId)
+        viewModel.currentUser?.let {
+            headerView.findViewById<TextView>(R.id.tv_nav_name).text =
+                getString(R.string.nav_item_1_text, it.name)
+            headerView.findViewById<TextView>(R.id.tv_nav_role).text =
+                getString(R.string.nav_item_2_text, it.userName)
+            headerView.findViewById<TextView>(R.id.tv_nav_id).text =
+                getString(R.string.nav_item_3_text, it.userId)
 
 //                headerView.findViewById<TextView>(R.id.tv_nav_version).text =
 //                    getString(R.string.version)
-            }
         }
-        val dpUri = viewModel.getProfilePicUri()
-        dpUri?.let {
+        viewModel.profilePicUri?.let {
             Glide.with(this).load(it).placeholder(R.drawable.ic_person).circleCrop()
                 .into(binding.navView.getHeaderView(0).findViewById(R.id.iv_profile_pic))
         }

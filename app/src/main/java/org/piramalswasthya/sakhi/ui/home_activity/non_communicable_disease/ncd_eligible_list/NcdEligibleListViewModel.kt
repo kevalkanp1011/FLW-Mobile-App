@@ -7,21 +7,21 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.filterBenList
-import org.piramalswasthya.sakhi.model.UserDomain
+import org.piramalswasthya.sakhi.model.User
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
-import org.piramalswasthya.sakhi.repositories.UserRepo
 import javax.inject.Inject
 
 @HiltViewModel
 class NcdEligibleListViewModel @Inject constructor(
     recordsRepo: RecordsRepo,
-    userRepo: UserRepo,
+    preferenceDao: PreferenceDao
 ) : ViewModel(
 
 ) {
 
-    private lateinit var asha : UserDomain
+    private lateinit var asha : User
     private val allBenList = recordsRepo.getNcdList()
     private val filter = MutableStateFlow("")
     private val selectedBenId = MutableStateFlow(0L)
@@ -42,7 +42,7 @@ class NcdEligibleListViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            asha = userRepo.getLoggedInUser()!!
+            asha = preferenceDao.getLoggedInUser()!!
         }
     }
 

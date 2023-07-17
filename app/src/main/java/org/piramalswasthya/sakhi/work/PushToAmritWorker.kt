@@ -49,7 +49,7 @@ class PushToAmritWorker @AssistedInject constructor(
 
     private fun init() {
         if (TokenInsertTmcInterceptor.getToken() == "")
-            preferenceDao.getPrimaryApiToken()?.let{
+            preferenceDao.getAmritToken()?.let{
                 TokenInsertTmcInterceptor.setToken(it)
             }
     }

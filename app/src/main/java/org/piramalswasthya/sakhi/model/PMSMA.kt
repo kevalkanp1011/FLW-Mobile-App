@@ -113,7 +113,7 @@ data class PMSMACache(
 
     }
 
-    fun asPostModel(user: UserCache , ben : BenRegCache): PmsmaPost {
+    fun asPostModel(user: User, ben: BenRegCache): PmsmaPost {
         return PmsmaPost(
             abdominalCheckUp = abdominalCheckUp,
             address = address,

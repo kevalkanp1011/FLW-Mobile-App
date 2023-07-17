@@ -48,7 +48,7 @@ data class CDRCache (
     var processed: String? = null,
     var syncState : SyncState
 ) {
-    fun asPostModel(user: UserCache, household: HouseholdCache, ben: BenRegCache, cdrCount: Int): CDRPost {
+    fun asPostModel(user: User, household: HouseholdCache, ben: BenRegCache, cdrCount: Int): CDRPost {
         return CDRPost(
             beneficiaryid = benId,
             houseoldId = hhId.toString(),

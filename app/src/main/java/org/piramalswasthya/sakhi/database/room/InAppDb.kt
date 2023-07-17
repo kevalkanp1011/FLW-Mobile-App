@@ -9,16 +9,48 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asExecutor
 import org.piramalswasthya.sakhi.database.converters.LocationEntityListConverter
 import org.piramalswasthya.sakhi.database.converters.SyncStateConverter
-import org.piramalswasthya.sakhi.database.room.dao.*
-import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.database.room.dao.BenDao
+import org.piramalswasthya.sakhi.database.room.dao.BeneficiaryIdsAvailDao
+import org.piramalswasthya.sakhi.database.room.dao.CbacDao
+import org.piramalswasthya.sakhi.database.room.dao.CdrDao
+import org.piramalswasthya.sakhi.database.room.dao.DeliveryOutcomeDao
+import org.piramalswasthya.sakhi.database.room.dao.EcrDao
+import org.piramalswasthya.sakhi.database.room.dao.FpotDao
+import org.piramalswasthya.sakhi.database.room.dao.HbncDao
+import org.piramalswasthya.sakhi.database.room.dao.HbycDao
+import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
+import org.piramalswasthya.sakhi.database.room.dao.ImmunizationDao
+import org.piramalswasthya.sakhi.database.room.dao.InfantRegDao
+import org.piramalswasthya.sakhi.database.room.dao.MaternalHealthDao
+import org.piramalswasthya.sakhi.database.room.dao.MdsrDao
+import org.piramalswasthya.sakhi.database.room.dao.PmjayDao
+import org.piramalswasthya.sakhi.database.room.dao.PmsmaDao
+import org.piramalswasthya.sakhi.database.room.dao.TBDao
 import org.piramalswasthya.sakhi.model.BenBasicCache
+import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.CDRCache
+import org.piramalswasthya.sakhi.model.CbacCache
+import org.piramalswasthya.sakhi.model.DeliveryOutcomeCache
+import org.piramalswasthya.sakhi.model.EligibleCoupleRegCache
+import org.piramalswasthya.sakhi.model.EligibleCoupleTrackingCache
+import org.piramalswasthya.sakhi.model.FPOTCache
 import org.piramalswasthya.sakhi.model.HBNCCache
+import org.piramalswasthya.sakhi.model.HBYCCache
+import org.piramalswasthya.sakhi.model.HouseholdCache
+import org.piramalswasthya.sakhi.model.ImmunizationCache
+import org.piramalswasthya.sakhi.model.InfantRegCache
+import org.piramalswasthya.sakhi.model.MDSRCache
+import org.piramalswasthya.sakhi.model.PMJAYCache
+import org.piramalswasthya.sakhi.model.PMSMACache
 import org.piramalswasthya.sakhi.model.PregnantWomanAncCache
+import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
+import org.piramalswasthya.sakhi.model.TBScreeningCache
+import org.piramalswasthya.sakhi.model.TBSuspectedCache
+import org.piramalswasthya.sakhi.model.Vaccine
 import timber.log.Timber
 
 @Database(
     entities = [
-        UserCache::class,
         HouseholdCache::class,
         BenRegCache::class,
         BeneficiaryIdsAvail::class,
@@ -49,7 +81,6 @@ import timber.log.Timber
 
 abstract class InAppDb : RoomDatabase() {
 
-    abstract val userDao: UserDao
     abstract val benIdGenDao: BeneficiaryIdsAvailDao
     abstract val householdDao: HouseholdDao
     abstract val benDao: BenDao

@@ -14,11 +14,12 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.configuration.PMSMAFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.FormInputOld
 import org.piramalswasthya.sakhi.model.HouseholdCache
 import org.piramalswasthya.sakhi.model.PMSMACache
-import org.piramalswasthya.sakhi.model.UserCache
+import org.piramalswasthya.sakhi.model.User
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.PmsmaRepo
 import timber.log.Timber
@@ -33,7 +34,8 @@ class PmsmaViewModel @Inject constructor(
     context: Application,
     private val database: InAppDb,
     private val pmsmaRepo: PmsmaRepo,
-    private val benRepo: BenRepo
+    private val benRepo: BenRepo,
+    private val preferenceDao: PreferenceDao
 ) : ViewModel() {
 
     enum class State {
@@ -47,7 +49,7 @@ class PmsmaViewModel @Inject constructor(
     private val hhId = PmsmaFragmentArgs.fromSavedStateHandle(state).hhId
     private lateinit var ben: BenRegCache
     private lateinit var household: HouseholdCache
-    private lateinit var user: UserCache
+    private lateinit var user: User
     private var pmsma: PMSMACache? = null
 
     private val _benName = MutableLiveData<String>()
@@ -118,7 +120,7 @@ class PmsmaViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 ben = benRepo.getBeneficiaryRecord(benId, hhId)!!
                 household = benRepo.getHousehold(hhId)!!
-                user = database.userDao.getLoggedInUser()!!
+                user = preferenceDao.getLoggedInUser()!!
                 Timber.d("pmsma ben: $ben")
                 pmsma = database.pmsmaDao.getPmsma(hhId,benId)
                 Timber.d("init after assigning pmsma ! ")

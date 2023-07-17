@@ -39,7 +39,7 @@ data class MDSRCache (
     var createdBy: String? = null,
     var createdDate: Long? = System.currentTimeMillis()
 ) {
-    fun asPostModel(user: UserCache, household: HouseholdCache, ben: BenRegCache, mdsrCount: Int): MdsrPost {
+    fun asPostModel(user: User, household: HouseholdCache, ben: BenRegCache, mdsrCount: Int): MdsrPost {
         return MdsrPost(
             beneficiaryid = benId,
             houseoldId = hhId.toString(),
