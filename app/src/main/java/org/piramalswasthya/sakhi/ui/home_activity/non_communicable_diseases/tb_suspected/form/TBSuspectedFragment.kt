@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.maternal_health.infant_reg.form
+package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_diseases.tb_suspected.form
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,13 +15,29 @@ import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import timber.log.Timber
 
 @AndroidEntryPoint
-class InfantRegFragment : Fragment() {
+class TBSuspectedFragment : Fragment() {
 
     private var _binding: FragmentNewFormBinding? = null
     private val binding: FragmentNewFormBinding
         get() = _binding!!
 
-    private val viewModel: InfantRegViewModel by viewModels()
+    private val viewModel: TBSuspectedViewModel by viewModels()
+
+//    private val tbSuspectedAlert by lazy {
+//        AlertDialog.Builder(requireContext())
+//            .setTitle("TB Screening")
+//            .setMessage("it")
+//            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
+//            .create()
+//    }
+//
+//    private val tbSuspectedFamilyAlert by lazy {
+//        AlertDialog.Builder(requireContext())
+//            .setTitle("TB Screening")
+//            .setMessage("it")
+//            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
+//            .create()
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -44,6 +60,7 @@ class InfantRegFragment : Fragment() {
                 lifecycleScope.launch {
                     viewModel.formList.collect {
                         if (it.isNotEmpty())
+
                             adapter.submitList(it)
 
                     }
@@ -57,12 +74,12 @@ class InfantRegFragment : Fragment() {
             binding.tvAgeGender.text = it
         }
         binding.btnSubmit.setOnClickListener {
-            submitInfantRegForm()
+            submitTBSuspectedForm()
         }
 
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
-                InfantRegViewModel.State.SAVE_SUCCESS -> {
+                TBSuspectedViewModel.State.SAVE_SUCCESS -> {
                     findNavController().navigateUp()
                 }
 
@@ -71,11 +88,26 @@ class InfantRegFragment : Fragment() {
         }
     }
 
-    private fun submitInfantRegForm() {
+    private fun submitTBSuspectedForm() {
         if (validateCurrentPage()) {
+//            showAlerts()
             viewModel.saveForm()
         }
     }
+
+//    private fun showAlerts() {
+//        viewModel.getAlerts()
+//        viewModel.suspectedTB?.let {
+//            tbSuspectedAlert.setMessage(it)
+//            tbSuspectedAlert.show()
+//        }
+//
+//        viewModel.suspectedTBFamily?.let {
+//            tbSuspectedFamilyAlert.setMessage(it)
+//            tbSuspectedFamilyAlert.show()
+//        }
+//
+//    }
 
     private fun validateCurrentPage(): Boolean {
         val result = binding.form.rvInputForm.adapter?.let {

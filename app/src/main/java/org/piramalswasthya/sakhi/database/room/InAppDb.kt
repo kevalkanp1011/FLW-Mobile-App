@@ -13,6 +13,7 @@ import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.BeneficiaryIdsAvailDao
 import org.piramalswasthya.sakhi.database.room.dao.CbacDao
 import org.piramalswasthya.sakhi.database.room.dao.CdrDao
+import org.piramalswasthya.sakhi.database.room.dao.ChildRegistrationDao
 import org.piramalswasthya.sakhi.database.room.dao.DeliveryOutcomeDao
 import org.piramalswasthya.sakhi.database.room.dao.EcrDao
 import org.piramalswasthya.sakhi.database.room.dao.FpotDao
@@ -30,6 +31,7 @@ import org.piramalswasthya.sakhi.model.BenBasicCache
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.CDRCache
 import org.piramalswasthya.sakhi.model.CbacCache
+import org.piramalswasthya.sakhi.model.ChildRegCache
 import org.piramalswasthya.sakhi.model.DeliveryOutcomeCache
 import org.piramalswasthya.sakhi.model.EligibleCoupleRegCache
 import org.piramalswasthya.sakhi.model.EligibleCoupleTrackingCache
@@ -71,7 +73,8 @@ import timber.log.Timber
         TBSuspectedCache::class,
         PregnantWomanAncCache::class,
         DeliveryOutcomeCache::class,
-        InfantRegCache::class
+        InfantRegCache::class,
+        ChildRegCache::class,
     ],
     views = [BenBasicCache::class],
     version = 2, exportSchema = false
@@ -98,6 +101,7 @@ abstract class InAppDb : RoomDatabase() {
     abstract val tbDao : TBDao
     abstract val deliveryOutcomeDao: DeliveryOutcomeDao
     abstract val infantRegDao: InfantRegDao
+    abstract val childRegistrationDao : ChildRegistrationDao
 
     companion object {
         @Volatile

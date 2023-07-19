@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.transformLatest
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
+import org.piramalswasthya.sakhi.database.room.dao.ChildRegistrationDao
 import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
 import org.piramalswasthya.sakhi.database.room.dao.MaternalHealthDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
@@ -16,6 +17,7 @@ class RecordsRepo @Inject constructor(
     private val householdDao: HouseholdDao,
     private val benDao: BenDao,
     private val maternalHealthDao: MaternalHealthDao,
+    private val childRegistrationDao: ChildRegistrationDao,
     preferenceDao: PreferenceDao
 ) {
     private val selectedVillage = preferenceDao.getLocationRecord()!!.village.id
@@ -121,12 +123,14 @@ class RecordsRepo @Inject constructor(
         .map { list -> list.map { it.asBenBasicDomainModelECTForm() } }
     val eligibleCoupleTrackingListCount = eligibleCoupleTrackingList.map { it.size }
 
-    val deliveredWomenList = benDao.getAllEligibleTrackingList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelECTForm() } }
-    val deliveredWomenListCount = deliveredWomenList.map { it.size }
+//    val deliveredWomenList = benDao.getAllEligibleTrackingList(selectedVillage)
+//        .map { list -> list.map { it.asBenBasicDomainModelECTForm() } }
+//    val deliveredWomenListCount = deliveredWomenList.map { it.size }
 
     fun getPregnantWomenList() = benDao.getAllPregnancyWomenList(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForPregnantWomanRegistrationForm() } }
+    fun getRegisteredInfants() = childRegistrationDao.getAllRegisteredInfants(selectedVillage)
+//        .map { list -> list.map { it.ben } }
     fun getPregnantWomenListCount() = benDao.getAllPregnancyWomenListCount(selectedVillage)
     fun getRegisteredPregnantWomanList() = benDao.getAllRegisteredPregnancyWomenList(selectedVillage)
         .map { list -> list.map { it.asDomainModel() } }

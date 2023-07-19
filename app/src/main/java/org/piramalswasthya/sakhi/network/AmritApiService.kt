@@ -23,6 +23,11 @@ interface AmritApiService {
         @Query("roleId") roleId: Int = 527
     ): UserNetworkResponse
 
+    @POST("tmapi-v1.0/user/getUserVanSpDetails/")
+    suspend fun getTMVanSpDetails(
+        @Body vanServiceType: TmcUserVanSpDetailsRequest
+    ): Response<ResponseBody>
+
     @POST("bengenapi-v1.0/generateBeneficiaryController/generateBeneficiaryIDs/")
     suspend fun generateBeneficiaryIDs(
         @Body obj: TmcGenerateBenIdsRequest

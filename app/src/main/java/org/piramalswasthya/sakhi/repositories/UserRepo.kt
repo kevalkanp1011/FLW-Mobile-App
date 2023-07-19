@@ -17,9 +17,11 @@ import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.WEEK_6
 import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.YEAR_5_6
 import org.piramalswasthya.sakhi.model.ImmunizationCategory.CHILD
 import org.piramalswasthya.sakhi.model.ImmunizationCategory.MOTHER
+import org.piramalswasthya.sakhi.model.User
 import org.piramalswasthya.sakhi.model.Vaccine
 import org.piramalswasthya.sakhi.network.AmritApiService
 import org.piramalswasthya.sakhi.network.TmcAuthUserRequest
+import org.piramalswasthya.sakhi.network.TmcUserVanSpDetailsRequest
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertTmcInterceptor
 import org.piramalswasthya.sakhi.ui.login_activity.sign_in.SignInViewModel.State
 import retrofit2.HttpException
@@ -373,9 +375,10 @@ class UserRepo @Inject constructor(
                 return@withContext State.SUCCESS
             try {
                 val userId = getTokenAmrit(userName, password)
-                if (userId>=0)
-                    setUserRole(userId, password)
-                else
+                if (userId >= 0) {
+                    val user = setUserRole(userId, password)
+                    setVanId(user)
+                } else
                     return@withContext State.ERROR_SERVER
 //            }
             } catch (se: SocketTimeoutException) {
@@ -394,11 +397,41 @@ class UserRepo @Inject constructor(
         }
     }
 
-    private suspend fun setUserRole(userId: Int, password : String): State {
+    private suspend fun setUserRole(userId: Int, password: String): User {
         val response = amritApiService.getUserDetailsById(userId = userId)
         val user = response.data.toUser(password)
         preferenceDao.registerUser(user)
-        return State.SUCCESS
+        return user
+    }
+
+    private suspend fun setVanId(user: User): State {
+        return withContext(Dispatchers.IO) {
+            val response = amritApiService.getTMVanSpDetails(
+                TmcUserVanSpDetailsRequest(
+                    user.userId,
+                    user.serviceMapId
+                )
+            )
+            Timber.d("User Van Sp Details : $response")
+            val statusCode = response.code()
+            if (statusCode == 200) {
+                val responseString = response.body()?.string()
+                    ?: return@withContext State.ERROR_SERVER
+                val responseJson = JSONObject(responseString)
+                val data = responseJson.getJSONObject("data")
+                val vanSpDetailsArray = data.getJSONArray("UserVanSpDetails")
+
+                for (i in 0 until vanSpDetailsArray.length()) {
+                    val vanSp = vanSpDetailsArray.getJSONObject(i)
+                    val vanId = vanSp.getInt("vanID")
+                    user.vanId = vanId
+                }
+                return@withContext State.SUCCESS
+
+            } else {
+                return@withContext State.ERROR_SERVER
+            }
+        }
     }
 
     private suspend fun offlineLogin(userName: String, password: String): Boolean {
@@ -481,7 +514,7 @@ class UserRepo @Inject constructor(
             )
             val data = responseBody.getJSONObject("data")
             val token = data.getString("key")
-            val userId  = data.getInt("userID")
+            val userId = data.getInt("userID")
             TokenInsertTmcInterceptor.setToken(token)
             preferenceDao.registerAmritToken(token)
             return@withContext userId

@@ -6,11 +6,12 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.model.Icon
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import org.piramalswasthya.sakhi.ui.home_activity.child_care.ChildCareFragmentDirections
+import org.piramalswasthya.sakhi.ui.home_activity.communicable_diseases.CdFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.EligibleCoupleFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.immunization_due.ImmunizationDueTypeFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.maternal_health.MotherCareFragmentDirections
-import org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.NcdFragmentDirections
+import org.piramalswasthya.sakhi.ui.home_activity.non_communicable_diseases.NcdFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.village_level_forms.VillageLevelFormsFragmentDirections
 import javax.inject.Inject
 
@@ -53,6 +54,12 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             resources.getString(R.string.icon_title_ncd),
             null,
             HomeFragmentDirections.actionNavHomeToNcdFragment()
+        ),
+        Icon(
+            R.drawable.ic__ncd,
+            resources.getString(R.string.icon_title_cd),
+            null,
+            HomeFragmentDirections.actionHomeFragmentToCdFragment()
         ),
         Icon(
             R.drawable.ic__immunization,
@@ -151,6 +158,12 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             recordsRepo.getRegisteredPregnantWomanListCount(),
             MotherCareFragmentDirections.actionMotherCareFragmentToInfantRegListFragment()
         ),
+        Icon(
+            R.drawable.ic__pregnancy,
+            resources.getString(R.string.icon_title_pmcr),
+            recordsRepo.getRegisteredPregnantWomanListCount(),
+            MotherCareFragmentDirections.actionMotherCareFragmentToChildRegListFragment()
+        ),
 //        , Icon(
 //            R.drawable.ic__delivery,
 //            resources.getString(R.string.icon_title_dmc),
@@ -190,17 +203,7 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             resources.getString(R.string.icon_title_ncd_non_eligible_list),
             recordsRepo.getNcdNonEligibleListCount(),
             NcdFragmentDirections.actionNcdFragmentToNcdNonEligibleListFragment()
-        ), Icon(
-            R.drawable.ic__ncd_eligibility,
-            resources.getString(R.string.icon_title_ncd_tb_screening),
-            recordsRepo.tbScreeningListCount,
-            NcdFragmentDirections.actionNcdFragmentToTBScreeningListFragment()
-        ), Icon(
-            R.drawable.ic__death,
-            resources.getString(R.string.icon_title_ncd_tb_suspected),
-            recordsRepo.tbSuspectedListCount,
-            NcdFragmentDirections.actionNcdFragmentToTBSuspectedListFragment()
-        )
+        ),
     )
 
     fun getImmunizationDataset() = listOf(
@@ -226,6 +229,21 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             resources.getString(R.string.icon_title_sr),
             null,
             VillageLevelFormsFragmentDirections.actionVillageLevelFormsFragmentToSurveyRegisterFragment()
+        )
+    )
+
+    fun getCDDataset(resources: Resources) = listOf(
+        Icon(
+            R.drawable.ic__ncd_eligibility,
+            resources.getString(R.string.icon_title_ncd_tb_screening),
+            recordsRepo.tbScreeningListCount,
+            CdFragmentDirections.actionCdFragmentToTBScreeningListFragment()
+        ), Icon(
+            R.drawable.ic__death,
+            resources.getString(R.string.icon_title_ncd_tb_suspected),
+            recordsRepo.tbSuspectedListCount,
+            CdFragmentDirections.actionCdFragmentToTBSuspectedListFragment()
+
         )
     )
 

@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.maternal_health.infant_reg.form
+package org.piramalswasthya.sakhi.ui.home_activity.maternal_health.child_reg.form
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,13 +15,13 @@ import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import timber.log.Timber
 
 @AndroidEntryPoint
-class InfantRegFragment : Fragment() {
+class ChildRegFragment : Fragment() {
 
     private var _binding: FragmentNewFormBinding? = null
     private val binding: FragmentNewFormBinding
         get() = _binding!!
 
-    private val viewModel: InfantRegViewModel by viewModels()
+    private val viewModel: ChildRegViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -62,7 +62,7 @@ class InfantRegFragment : Fragment() {
 
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
-                InfantRegViewModel.State.SAVE_SUCCESS -> {
+                ChildRegViewModel.State.SAVE_SUCCESS -> {
                     findNavController().navigateUp()
                 }
 

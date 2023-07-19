@@ -13,6 +13,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.core.view.MenuProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -305,11 +306,18 @@ class HomeActivity : AppCompatActivity() {
 //        }
 //    }
 
+
     fun updateActionBar(logoResource: Int, title: String? = null) {
         binding.toolbar.setLogo(logoResource)
         title?.let {
             binding.toolbar.title = it
         }
+    }
+
+    override fun onBackPressed() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START))
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        else super.onBackPressed()
     }
 
     override fun onDestroy() {

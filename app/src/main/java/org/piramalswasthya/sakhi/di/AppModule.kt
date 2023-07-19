@@ -148,6 +148,10 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideChildRegDao(database : InAppDb) : ChildRegistrationDao = database.childRegistrationDao
+
+    @Singleton
+    @Provides
     fun providePreferenceDao(@ApplicationContext context: Context) = PreferenceDao(context)
 
 

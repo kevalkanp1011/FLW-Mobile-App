@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home_activity.non_communicable_disease.ncd_priority_list.NcdPriorityListFragment">
+    tools:context=".ui.home_activity.non_communicable_diseases.ncd_priority_list.NcdPriorityListFragment">
 
     <TextView
         android:layout_width="match_parent"
