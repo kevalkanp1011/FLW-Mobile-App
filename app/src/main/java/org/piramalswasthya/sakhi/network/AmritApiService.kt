@@ -17,7 +17,7 @@ interface AmritApiService {
     @POST("commonapi-v1.0/user/userAuthenticate/")
     suspend fun getJwtToken(@Body json: TmcAuthUserRequest): Response<ResponseBody>
 
-    @GET("flw-0.0.1/user/getUserRole")
+    @GET("flw-0.0.1-24-07-2023/user/getUserRole")
     suspend fun getUserDetailsById(
         @Query("userId") userId: Int,
         @Query("roleId") roleId: Int = 527
@@ -39,7 +39,7 @@ interface AmritApiService {
     @POST("identity-0.0.1/rmnch/syncDataToAmrit")
     suspend fun submitRmnchDataAmrit(@Body sendingRMNCHData: SendingRMNCHData): Response<ResponseBody>
 
-    @POST("identity-0.0.1/rmnch/getBeneficiaryDataForAsha")
+    @POST("flw-0.0.1-24-07-2023/beneficiary/getBeneficiaryData")
     suspend fun getBeneficiaries(@Body userDetail: GetBenRequest): Response<ResponseBody>
 
     @POST("identity-0.0.1/id/getByBenId")

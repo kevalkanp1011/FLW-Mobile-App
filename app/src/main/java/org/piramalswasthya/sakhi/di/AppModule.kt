@@ -36,7 +36,7 @@ object AppModule {
 
     private val baseClient =
         OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS))
             .addInterceptor(ContentTypeInterceptor())
             .build()
 

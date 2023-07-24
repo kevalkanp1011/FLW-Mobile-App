@@ -62,7 +62,7 @@ data class TmcGenerateBenIdsRequest(
 
 @JsonClass(generateAdapter = true)
 data class GetBenRequest(
-    val AshaId: String,
+    val ashaId: Int,
     val pageNo: Int,
     val fromDate: String,
     val toDate: String
@@ -193,7 +193,7 @@ data class CreateAbhaIdGovRequest(
 
     val aadharNumber: Long,
     val benefitName: String,
-    val consentHealthId: Boolean ,
+    val consentHealthId: Boolean,
     val dateOfBirth: String,
     val gender: String,
     val name: String,
@@ -241,6 +241,7 @@ data class CreateHIDResponse(
     val createdBy: String?,
     val txnId: String?,
 )
+
 @JsonClass(generateAdapter = true)
 data class CreateAbhaIdResponse(
 
@@ -271,6 +272,7 @@ data class CreateAbhaIdResponse(
     val new: Boolean,
     var txnId: String
 )
+
 @JsonClass(generateAdapter = true)
 data class GenerateOtpHid(
     val authMethod: String?,
@@ -284,6 +286,7 @@ data class ValidateOtpHid(
     val txnId: String?,
     val authMethod: String?
 )
+
 @JsonClass(generateAdapter = true)
 data class CreateHealthIdRequest(
     val otp: String?,

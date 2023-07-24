@@ -82,7 +82,9 @@ data class HouseholdCache(
         return HouseHoldBasicDomain(
             hhId = householdId,
             headName = family?.familyHeadName ?: "Not Available",
-            headSurname = family?.familyName ?: "Not Available"
+            contactNumber = family?.familyHeadPhoneNo?.toString()?:"Not Available",
+            headSurname = family?.familyName ?: "Not Available",
+            headFullName = "${family?.familyHeadName} ${family?.familyName?:""}"
 
         )
     }
@@ -263,5 +265,9 @@ data class HouseholdNetwork(
     )
 
 data class HouseHoldBasicDomain(
-    val hhId: Long, val headName: String, val headSurname: String
+    val hhId: Long,
+    val headName: String,
+    val headSurname: String,
+    val contactNumber : String,
+    val headFullName: String = "$headName $headSurname"
 )

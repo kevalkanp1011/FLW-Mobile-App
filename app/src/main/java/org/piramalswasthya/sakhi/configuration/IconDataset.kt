@@ -29,7 +29,8 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             R.drawable.ic__ben,
             resources.getString(R.string.icon_title_ben),
             recordsRepo.allBenListCount,
-            HomeFragmentDirections.actionNavHomeToAllBenFragment()
+            HomeFragmentDirections.actionNavHomeToAllBenFragment(),
+            false
         ),
         Icon(
             R.drawable.ic__eligible_couple,
@@ -41,7 +42,8 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             R.drawable.ic__maternal_health,
             resources.getString(R.string.icon_title_mc),
             null,
-            HomeFragmentDirections.actionNavHomeToMotherCareFragment()
+            HomeFragmentDirections.actionNavHomeToMotherCareFragment(),
+            false
         ),
         Icon(
             R.drawable.ic__child_care,
@@ -53,7 +55,8 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             R.drawable.ic__ncd,
             resources.getString(R.string.icon_title_ncd),
             null,
-            HomeFragmentDirections.actionNavHomeToNcdFragment()
+            HomeFragmentDirections.actionNavHomeToNcdFragment(),
+            false
         ),
         Icon(
             R.drawable.ic__ncd,
@@ -65,7 +68,8 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             R.drawable.ic__immunization,
             resources.getString(R.string.icon_title_imm),
             null,
-            HomeFragmentDirections.actionNavHomeToImmunizationDueFragment()
+            HomeFragmentDirections.actionNavHomeToImmunizationDueFragment(),
+            false
         ),
         Icon(
             R.drawable.ic__hrp,
@@ -77,7 +81,8 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             R.drawable.ic__general_op,
             resources.getString(R.string.icon_title_gop),
             null,
-            HomeFragmentDirections.actionNavHomeToGeneralOpCareFragment()
+            HomeFragmentDirections.actionNavHomeToGeneralOpCareFragment(),
+            false
         ),
         Icon(
             R.drawable.ic__menopause,
@@ -89,7 +94,8 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             R.drawable.ic__death,
             resources.getString(R.string.icon_title_dr),
             null,
-            HomeFragmentDirections.actionNavHomeToDeathReportsFragment()
+            HomeFragmentDirections.actionNavHomeToDeathReportsFragment(),
+            false
         ),
         Icon(
             R.drawable.ic__village_level_form,

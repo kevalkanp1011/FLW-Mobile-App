@@ -607,7 +607,7 @@ class BenRepo @Inject constructor(
             try {
                 val response = tmcNetworkApiService.getBeneficiaries(
                     GetBenRequest(
-                        user.userId.toString(),
+                        user.userId,
                         pageNumber,
                         getCurrentDate(lastTimeStamp),
                         getCurrentDate()
@@ -640,8 +640,8 @@ class BenRepo @Inject constructor(
                                 }
                                 val benCacheList = getBenCacheFromServerResponse(responseString)
                                 benDao.upsert(*benCacheList.toTypedArray())
-                                val cbacCacheList = getCbacCacheFromServerResponse(responseString)
-                                cbacDao.upsert(*cbacCacheList.toTypedArray())
+//                                val cbacCacheList = getCbacCacheFromServerResponse(responseString)
+//                                cbacDao.upsert(*cbacCacheList.toTypedArray())
 
                                 Timber.d("GeTBenDataList: $pageSize")
                                 return@withContext pageSize
@@ -684,7 +684,7 @@ class BenRepo @Inject constructor(
             try {
                 val response = tmcNetworkApiService.getBeneficiaries(
                     GetBenRequest(
-                        user.userId.toString(),
+                        user.userId,
                         pageNumber,
                         "2020-10-20T15:50:45.000Z",
                         getCurrentDate()
@@ -909,7 +909,7 @@ class BenRepo @Inject constructor(
                     val jsonObject = jsonArray.getJSONObject(i)
                     val benDataObj = jsonObject.getJSONObject("beneficiaryDetails")
                     val houseDataObj = jsonObject.getJSONObject("householdDetails")
-                    val cbacDataObj = jsonObject.getJSONObject("cbacDetails")
+//                    val cbacDataObj = jsonObject.getJSONObject("cbacDetails")
                     val childDataObj = jsonObject.getJSONObject("bornbirthDeatils")
                     val benId =
                         if (jsonObject.has("benficieryid")) jsonObject.getLong("benficieryid") else -1L
@@ -1060,7 +1060,7 @@ class BenRepo @Inject constructor(
                             ncdPriority = if (benDataObj.has("ncd_priority")) benDataObj.getInt(
                                 "ncd_priority"
                             ) else 0,
-                            cbacAvailable = cbacDataObj.length() != 0,
+//                            cbacAvailable = cbacDataObj.length() != 0,
                             guidelineId = if (benDataObj.has("guidelineId")) benDataObj.getString(
                                 "guidelineId"
                             ) else null,
@@ -1075,30 +1075,30 @@ class BenRepo @Inject constructor(
 //                            nishchayDeliveryStatusPosition = nishchayDeliveryStatusPosition,
 //                            nayiPahalDeliveryStatus = nayiPahalDeliveryStatus,
 //                            nayiPahalDeliveryStatusPosition = nayiPahalDeliveryStatusPosition,
-                            suspectedNcd = if (cbacDataObj.has("suspected_ncd")) cbacDataObj.getString(
-                                "suspected_ncd"
-                            ) else null,
-                            suspectedNcdDiseases = if (cbacDataObj.has("suspected_ncd_diseases")) cbacDataObj.getString(
-                                "suspected_ncd_diseases"
-                            ) else null,
-                            suspectedTb = if (cbacDataObj.has("suspected_tb")) cbacDataObj.getString(
-                                "suspected_tb"
-                            ) else null,
-                            confirmed_Ncd = if (cbacDataObj.has("confirmed_ncd")) cbacDataObj.getString(
-                                "confirmed_ncd"
-                            ) else null,
-                            confirmedHrp = if (cbacDataObj.has("confirmed_hrp")) cbacDataObj.getString(
-                                "confirmed_hrp"
-                            ) else null,
-                            confirmedTb = if (cbacDataObj.has("confirmed_tb")) cbacDataObj.getString(
-                                "confirmed_tb"
-                            ) else null,
-                            confirmedNcdDiseases = if (cbacDataObj.has("confirmed_ncd_diseases")) cbacDataObj.getString(
-                                "confirmed_ncd_diseases"
-                            ) else null,
-                            diagnosisStatus = if (cbacDataObj.has("diagnosis_status")) cbacDataObj.getString(
-                                "diagnosis_status"
-                            ) else null,
+//                            suspectedNcd = if (cbacDataObj.has("suspected_ncd")) cbacDataObj.getString(
+//                                "suspected_ncd"
+//                            ) else null,
+//                            suspectedNcdDiseases = if (cbacDataObj.has("suspected_ncd_diseases")) cbacDataObj.getString(
+//                                "suspected_ncd_diseases"
+//                            ) else null,
+//                            suspectedTb = if (cbacDataObj.has("suspected_tb")) cbacDataObj.getString(
+//                                "suspected_tb"
+//                            ) else null,
+//                            confirmed_Ncd = if (cbacDataObj.has("confirmed_ncd")) cbacDataObj.getString(
+//                                "confirmed_ncd"
+//                            ) else null,
+//                            confirmedHrp = if (cbacDataObj.has("confirmed_hrp")) cbacDataObj.getString(
+//                                "confirmed_hrp"
+//                            ) else null,
+//                            confirmedTb = if (cbacDataObj.has("confirmed_tb")) cbacDataObj.getString(
+//                                "confirmed_tb"
+//                            ) else null,
+//                            confirmedNcdDiseases = if (cbacDataObj.has("confirmed_ncd_diseases")) cbacDataObj.getString(
+//                                "confirmed_ncd_diseases"
+//                            ) else null,
+//                            diagnosisStatus = if (cbacDataObj.has("diagnosis_status")) cbacDataObj.getString(
+//                                "diagnosis_status"
+//                            ) else null,
                             locationRecord = LocationRecord(
                                 country = preferenceDao.getLocationRecord()!!.country,
                                 state = LocationEntity(

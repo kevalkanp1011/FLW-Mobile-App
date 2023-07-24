@@ -20,19 +20,17 @@
 
     </data>
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/cv_icon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padding_small"
         android:background="?attr/selectableItemBackground"
-
         android:clickable="true"
-        android:elevation="@dimen/padding_normal"
         android:focusable="true"
         android:onClick="@{()-> clickListener.onClicked(homeIcon)}"
         app:cardCornerRadius="@dimen/padding_normal"
-        app:cardElevation="@dimen/padding_normal">
+        app:cardElevation="16dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -47,11 +45,15 @@
                 android:layout_marginHorizontal="@dimen/margin_normal"
                 android:contentDescription="@string/cd_icon_grid_icon"
                 android:paddingHorizontal="@dimen/padding_wide"
+                android:background="@{homeIcon.colorPrimary ?@drawable/bg_circular_1 : @drawable/bg_circular_2 }"
+
                 app:imageResource="@{homeIcon.icon}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="?attr/colorPrimary"
+                app:tint="?attr/colorOnPrimary"
+                android:scaleType="centerCrop"
+                android:padding="@dimen/padding_normal"
                 tools:src="@drawable/ic__hh" />
 
             <TextView
@@ -87,5 +89,5 @@
                 tools:text="2" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 </layout>
