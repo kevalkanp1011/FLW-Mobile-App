@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="?attr/colorPrimary"
                 android:text="VIEW"
-                android:textColor="?attr/colorSecondary"
+                android:textColor="?attr/colorOnPrimary"
                 android:onClick="@{()-> clickListener.onClicked(cbac)}" />
         </LinearLayout>
 

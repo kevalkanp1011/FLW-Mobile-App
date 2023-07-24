@@ -448,6 +448,7 @@ data class BenBasicDomain(
     val regDate: String,
     val benName: String,
     val benSurname: String? = null,
+    val benFullName : String  = "$benName $benSurname",
     val gender: String,
     val dob: Long,
     val ageInt: Int = getAgeFromDob(dob),
@@ -681,7 +682,8 @@ data class BenRegGen(
             entity = HouseholdCache::class,
             parentColumns = arrayOf("householdId"),
             childColumns = arrayOf("householdId"),
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
         )
     ],
     indices = [Index(name = "ind_ben", value = ["beneficiaryId"/*, "householdId"*/])]

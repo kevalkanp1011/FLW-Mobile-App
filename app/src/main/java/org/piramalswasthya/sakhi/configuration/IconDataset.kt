@@ -22,13 +22,13 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
         Icon(
             R.drawable.ic__hh,
             resources.getString(R.string.icon_title_household),
-            recordsRepo.getHhListCount(),
+            recordsRepo.hhListCount,
             HomeFragmentDirections.actionNavHomeToAllHouseholdFragment()
         ),
         Icon(
             R.drawable.ic__ben,
             resources.getString(R.string.icon_title_ben),
-            recordsRepo.getBenListCount(),
+            recordsRepo.allBenListCount,
             HomeFragmentDirections.actionNavHomeToAllBenFragment()
         ),
         Icon(
@@ -70,7 +70,7 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
         Icon(
             R.drawable.ic__hrp,
             resources.getString(R.string.icon_title_hrp),
-            recordsRepo.getHrpCount(),
+            recordsRepo.hrpCount,
             HomeFragmentDirections.actionNavHomeToHrpCasesFragment()
         ),
         Icon(
@@ -186,22 +186,22 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
         Icon(
             R.drawable.ic__ncd_list,
             resources.getString(R.string.icon_title_ncd_list),
-            recordsRepo.getNcdListCount(),
+            recordsRepo.ncdListCount,
             NcdFragmentDirections.actionNcdFragmentToNcdListFragment()
         ), Icon(
             R.drawable.ic__ncd_eligibility,
             resources.getString(R.string.icon_title_ncd_eligible_list),
-            recordsRepo.getNcdEligibleListCount(),
+            recordsRepo.getNcdEligibleListCount,
             NcdFragmentDirections.actionNcdFragmentToNcdEligibleListFragment()
         ), Icon(
             R.drawable.ic__ncd_priority,
             resources.getString(R.string.icon_title_ncd_priority_list),
-            recordsRepo.getNcdPriorityListCount(),
+            recordsRepo.getNcdPriorityListCount,
             NcdFragmentDirections.actionNcdFragmentToNcdPriorityListFragment()
         ), Icon(
             R.drawable.ic_ncd_noneligible,
             resources.getString(R.string.icon_title_ncd_non_eligible_list),
-            recordsRepo.getNcdNonEligibleListCount(),
+            recordsRepo.getNcdNonEligibleListCount,
             NcdFragmentDirections.actionNcdFragmentToNcdNonEligibleListFragment()
         ),
     )

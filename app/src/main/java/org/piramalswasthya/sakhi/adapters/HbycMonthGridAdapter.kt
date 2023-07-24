@@ -41,22 +41,22 @@ class HbycMonthGridAdapter(private val clickListener: HbycIconClickListener) :
                 if (item.isFilled)
                     binding.cvIcon.setBackgroundColor(
                         binding.root.resources.getColor(
-                            R.color.green,
+                            android.R.color.holo_green_light,
                             binding.root.context.theme
                         )
                     )
                 else
                     binding.cvIcon.setBackgroundColor(
                         binding.root.resources.getColor(
-                            R.color.red,
+                            android.R.color.holo_red_light,
                             binding.root.context.theme
                         )
                     )
             } else
                 if (item.isFilled)
-                    binding.cvIcon.setBackgroundColor(binding.root.resources.getColor(R.color.green))
+                    binding.cvIcon.setBackgroundColor(binding.root.resources.getColor(android.R.color.holo_green_light))
                 else
-                    binding.cvIcon.setBackgroundColor(binding.root.resources.getColor(R.color.red))
+                    binding.cvIcon.setBackgroundColor(binding.root.resources.getColor(android.R.color.holo_red_light))
             binding.executePendingBindings()
         }
 

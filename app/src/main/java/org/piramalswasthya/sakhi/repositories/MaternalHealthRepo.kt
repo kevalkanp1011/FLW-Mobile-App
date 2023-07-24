@@ -2,7 +2,6 @@ package org.piramalswasthya.sakhi.repositories
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
@@ -56,46 +55,43 @@ class MaternalHealthRepo @Inject constructor(
     }
 
 
-
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun getAncDueCount(): Flow<Int> {
-        return maternalHealthDao.getAllPregnancyRecords().transformLatest {
-            Timber.d("From DB : ${it.count()}")
-            var count = 0
-            it.map {
-                Timber.d(
-                    "Values emitted : ${
-                        it.value.map {
-                            AncStatus(
-                                it.benId,
-                                it.visitNumber,
-                                AncFormState.ALREADY_FILLED
-                            )
-                        }
-                    }"
-                )
-                val regis = it.key
-                val visitPending = hasPendingAncVisit(
+    val ancDueCount = maternalHealthDao.getAllPregnancyRecords().transformLatest {
+        Timber.d("From DB : ${it.count()}")
+        var count = 0
+        it.map {
+            Timber.d(
+                "Values emitted : ${
                     it.value.map {
                         AncStatus(
                             it.benId,
                             it.visitNumber,
                             AncFormState.ALREADY_FILLED
                         )
-                    },
-                    regis.lmpDate,
-                    regis.benId,
-                    Calendar.getInstance().apply {
-                        set(Calendar.SECOND, 0)
-                        set(Calendar.MINUTE, 0)
-                        set(Calendar.HOUR_OF_DAY, 0)
-                    }.timeInMillis
-                )
-                if (visitPending)
-                    count++
-            }
-            emit(count)
+                    }
+                }"
+            )
+            val regis = it.key
+            val visitPending = hasPendingAncVisit(
+                it.value.map {
+                    AncStatus(
+                        it.benId,
+                        it.visitNumber,
+                        AncFormState.ALREADY_FILLED
+                    )
+                },
+                regis.lmpDate,
+                regis.benId,
+                Calendar.getInstance().apply {
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.HOUR_OF_DAY, 0)
+                }.timeInMillis
+            )
+            if (visitPending)
+                count++
         }
+        emit(count)
     }
 
 }

@@ -49,7 +49,7 @@
         android:layout_gravity="center"
         android:layout_margin="@dimen/margin_normal"
         android:text="@string/btn_continue_text"
-        android:textColor="?attr/colorSecondary"
+        android:textColor="?attr/colorOnPrimary"
         app:layout_constraintTop_toBottomOf="@id/rg_death_type" />
 
 

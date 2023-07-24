@@ -15,7 +15,7 @@ class NcdNonEligibleListViewModel @Inject constructor(
     recordsRepo: RecordsRepo
 ) : ViewModel() {
 
-    private val allBenList = recordsRepo.getNcdNonEligibleList()
+    private val allBenList = recordsRepo.getNcdNonEligibleList
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter){
             list, filter -> filterBenFormList(list.map { it.ben.asBenBasicDomainModelForCbacForm() }, filter)

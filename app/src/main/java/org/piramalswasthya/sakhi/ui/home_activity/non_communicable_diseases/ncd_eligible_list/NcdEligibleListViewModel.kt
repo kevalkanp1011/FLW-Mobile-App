@@ -22,7 +22,7 @@ class NcdEligibleListViewModel @Inject constructor(
 ) {
 
     private lateinit var asha : User
-    private val allBenList = recordsRepo.getNcdList()
+    private val allBenList = recordsRepo.getNcdEligibleList
     private val filter = MutableStateFlow("")
     private val selectedBenId = MutableStateFlow(0L)
     val benList = allBenList.combine(filter) { cacheList, filter ->

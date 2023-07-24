@@ -36,11 +36,11 @@ class SignInViewModel @Inject constructor(
 
     }
 
-    fun authUser(username: String, password: String, state: String) {
+    fun authUser(username: String, password: String,/* state: String*/) {
         viewModelScope.launch {
             //Temporary Placement - need to move to  assets and load from there.
             userRepo.checkAndAddVaccines()
-            _state.value = userRepo.authenticateUser(username, password, state)
+            _state.value = userRepo.authenticateUser(username, password, /*state*/)
 
         }
     }
@@ -55,10 +55,10 @@ class SignInViewModel @Inject constructor(
         pref.getRememberedState()
 
 
-    fun rememberUser(username: String, password: String, state: String) {
+    fun rememberUser(username: String, password: String, /*state: String*/) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                pref.registerLoginCred(username, password, state)
+                pref.registerLoginCred(username, password,/* state*/)
             }
         }
     }

@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -101,7 +100,7 @@ class SignInFragment : Fragment() {
                 State.IDLE -> {
                     var hasRememberMeUsername = false
                     var hasRememberMePassword = false
-                    var hasRememberMeState = false
+//                    var hasRememberMeState = false
                     viewModel.fetchRememberedUserName()?.let {
                         binding.etUsername.setText(it)
                         hasRememberMeUsername = true
@@ -111,17 +110,17 @@ class SignInFragment : Fragment() {
                         binding.cbRemember.isChecked = true
                         hasRememberMePassword = true
                     }
-                    viewModel.fetchRememberedState()?.let {
-                        binding.toggleStates.check(
-                            when (it) {
-                                "Bihar" -> binding.tbtnBihar.id
-                                "Assam" -> binding.tbtnAssam.id
-                                else -> throw IllegalStateException("State unknown $it")
-                            }
-                        )
-                        hasRememberMeState = true
-                    }
-                    if (hasRememberMeUsername && hasRememberMePassword && hasRememberMeState) validateInput()
+//                    viewModel.fetchRememberedState()?.let {
+//                        binding.toggleStates.check(
+//                            when (it) {
+//                                "Bihar" -> binding.tbtnBihar.id
+//                                "Assam" -> binding.tbtnAssam.id
+//                                else -> throw IllegalStateException("State unknown $it")
+//                            }
+//                        )
+//                        hasRememberMeState = true
+//                    }
+                    if (hasRememberMeUsername && hasRememberMePassword/* && hasRememberMeState*/) validateInput()
                 }
                 State.LOADING -> validateInput()
                 State.ERROR_INPUT -> {
@@ -147,11 +146,11 @@ class SignInFragment : Fragment() {
                         val username = binding.etUsername.text.toString()
                         val password = binding.etPassword.text.toString()
                         viewModel.rememberUser(
-                            username, password, when (binding.toggleStates.checkedButtonId) {
+                            username, password, /*when (binding.toggleStates.checkedButtonId) {
                                 binding.tbtnBihar.id -> "Bihar"
                                 binding.tbtnAssam.id -> "Assam"
                                 else -> throw IllegalStateException("Unknown State!! !! !!")
-                            }
+                            }*/
                         )
                     } else {
                         viewModel.forgetUser()
@@ -172,22 +171,22 @@ class SignInFragment : Fragment() {
     }
 
     private fun validateInput() {
-        val state = when (binding.toggleStates.checkedButtonId) {
-            binding.tbtnBihar.id -> "Bihar"
-            binding.tbtnAssam.id -> "Assam"
-            View.NO_ID -> {
-                stateUnselectedAlert.show()
-                return
-            }
-            else -> throw IllegalStateException("Two States!!")
-        }
+//        val state = when (binding.toggleStates.checkedButtonId) {
+//            binding.tbtnBihar.id -> "Bihar"
+//            binding.tbtnAssam.id -> "Assam"
+//            View.NO_ID -> {
+//                stateUnselectedAlert.show()
+//                return
+//            }
+//            else -> throw IllegalStateException("Two States!!")
+//        }
         binding.clContent.visibility = View.INVISIBLE
         binding.pbSignIn.visibility = View.VISIBLE
         val username = binding.etUsername.text.toString()
         val password = binding.etPassword.text.toString()
 
         Timber.d("Username : $username \n Password : $password")
-        viewModel.authUser(username, password, state)
+        viewModel.authUser(username, password, /*state*/)
     }
 
 

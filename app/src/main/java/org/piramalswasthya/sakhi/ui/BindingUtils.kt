@@ -73,6 +73,9 @@ fun Button.setVaccineState(syncState: VaccineState?) {
 }
 
 
+
+
+
 @BindingAdapter("scope", "recordCount")
 fun TextView.setRecordCount(scope: CoroutineScope, count: Flow<Int>?) {
     count?.let {
@@ -82,6 +85,14 @@ fun TextView.setRecordCount(scope: CoroutineScope, count: Flow<Int>?) {
             }
         }
     }
+}
+
+@BindingAdapter("benId", "syncState")
+fun TextView.setBenIdText(benId: Long?, syncState: SyncState?) {
+    if(syncState!=SyncState.SYNCED)
+        text = "Pending Sync"
+    else
+        text = benId.toString()
 }
 
 @BindingAdapter("listItems")
@@ -100,7 +111,7 @@ fun TextInputEditText.setAllAlphabetCaps(allCaps: Boolean) {
 }
 
 @BindingAdapter("showLayout")
-fun LinearLayout.setVisibilityOfLayout(show: Boolean?) {
+fun Button.setVisibilityOfLayout(show: Boolean?) {
     show?.let {
         visibility = if (it) View.VISIBLE else View.GONE
     }

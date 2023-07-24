@@ -25,7 +25,6 @@ import java.util.Calendar
 import java.util.Locale
 
 class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(context, language) {
-
     companion object {
 
         private fun getCurrentDateString(): String {
@@ -1336,7 +1335,10 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
             otherRelationToHead.id -> validateEmptyOnEditText(otherRelationToHead)
             religion.id -> {
                 triggerDependants(
-                    source = religion, passedIndex = index, triggerIndex = 6, target = otherReligion
+                    source = religion,
+                    passedIndex = index,
+                    triggerIndex = 6,
+                    target = otherReligion
                 )
             }
 

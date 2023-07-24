@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import org.piramalswasthya.sakhi.model.HouseholdCache
 
@@ -12,6 +13,9 @@ interface HouseholdDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(vararg household : HouseholdCache)
+
+    @Update
+    suspend fun update(household : HouseholdCache)
 
     @Query("SELECT * FROM HOUSEHOLD WHERE isDraft = 1 LIMIT 1")
     suspend fun getDraftHousehold(): HouseholdCache?

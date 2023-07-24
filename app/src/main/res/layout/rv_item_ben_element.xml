@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{fieldTitle}"
-            android:textColor="?attr/colorSecondary"
+            android:textColor="?attr/colorOnPrimary"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             android:textStyle="italic"
             android:layout_alignParentTop="true" />
@@ -34,7 +34,7 @@
             android:id="@+id/tv_val"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/colorSecondary"
+            android:textColor="?attr/colorOnPrimary"
             android:text="@{field}"
             android:layout_below="@id/tv_ph"
             tools:text="01 Apr 2021" />

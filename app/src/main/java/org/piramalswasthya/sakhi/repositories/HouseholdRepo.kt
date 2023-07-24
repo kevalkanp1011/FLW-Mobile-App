@@ -25,7 +25,10 @@ class HouseholdRepo @Inject constructor(
     suspend fun persistRecord(householdCache: HouseholdCache?, isFinal : Boolean = false) {
         withContext(Dispatchers.IO) {
             householdCache?.let {
-                dao.upsert(it)
+                if(dao.getHousehold(it.householdId)==null)
+                    dao.upsert(it)
+                else
+                    dao.update(it)
             }
         }
     }

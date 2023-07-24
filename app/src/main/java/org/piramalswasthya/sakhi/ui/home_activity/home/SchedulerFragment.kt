@@ -25,7 +25,7 @@ class SchedulerFragment : Fragment() {
         get() = _binding!!
 
 
-    private val viewModel: SchedulerViewModel by viewModels()
+    private val viewModel: SchedulerViewModel by viewModels({ requireActivity() })
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

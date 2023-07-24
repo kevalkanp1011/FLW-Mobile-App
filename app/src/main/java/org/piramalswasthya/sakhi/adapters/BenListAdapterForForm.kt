@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.RvItemBenWithFormBinding
 import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
 
@@ -84,22 +83,26 @@ class BenListAdapterForForm(
                 if (hasForm)
                     formButton.setBackgroundColor(
                         binding.root.resources.getColor(
-                            R.color.green,
+                            android.R.color.holo_green_light,
                             binding.root.context.theme
                         )
                     )
                 else
                     formButton.setBackgroundColor(
                         binding.root.resources.getColor(
-                            R.color.red,
+                            android.R.color.holo_red_light,
                             binding.root.context.theme
                         )
                     )
             } else
                 if (hasForm)
-                    formButton.setBackgroundColor(binding.root.resources.getColor(R.color.green))
+                    formButton.setBackgroundColor(binding.root.resources.getColor(android.R.color.holo_green_light))
                 else
-                    formButton.setBackgroundColor(binding.root.resources.getColor(R.color.red))
+                    formButton.setBackgroundColor(
+                        binding.root.resources.getColor(
+                            android.R.color.holo_red_light,
+                        )
+                    )
         }
     }
 

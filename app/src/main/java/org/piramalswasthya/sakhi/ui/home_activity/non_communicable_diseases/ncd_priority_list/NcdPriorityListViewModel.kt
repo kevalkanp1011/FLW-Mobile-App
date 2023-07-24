@@ -14,7 +14,7 @@ import javax.inject.Inject
 class NcdPriorityListViewModel @Inject constructor(
 recordsRepo: RecordsRepo
 ) : ViewModel() {
-    private val allBenList = recordsRepo.getNcdPriorityList()
+    private val allBenList = recordsRepo.getNcdPriorityList
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter){
             list, filter -> filterBenFormList(list.map { it.ben.asBenBasicDomainModelForCbacForm() }, filter)

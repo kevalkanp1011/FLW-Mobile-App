@@ -23,8 +23,8 @@
 <!--        android:drawableLeft="@drawable/ic_add_circle"-->
 <!--        android:layout_gravity="center_horizontal"-->
 <!--        android:backgroundTint="?attr/colorPrimary"-->
-<!--        android:textColor="?attr/colorSecondary"-->
-<!--        app:drawableTint="?attr/colorSecondary"-->
+<!--        android:textColor="?attr/colorOnPrimary"-->
+<!--        app:drawableTint="?attr/colorOnPrimary"-->
 <!--        android:text="Add New"/>-->
 
 </FrameLayout>

@@ -1,6 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
-    <declare-styleable name="VaccinationElement">
-        <attr name="numberOfItems" format="integer"/>
-    </declare-styleable>
+    <attr name="colorQuartenary" format="color" />
+    <attr name="colorOnQuartenary" format="color" />
+    <attr name="colorQuartenaryContainer" format="color" />
+    <attr name="colorOnQuartenaryContainer" format="color" />
+    <attr name="harmonizeQuartenary" format="boolean" />
 </resources>

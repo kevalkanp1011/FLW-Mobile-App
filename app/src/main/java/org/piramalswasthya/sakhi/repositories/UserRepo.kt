@@ -368,7 +368,7 @@ class UserRepo @Inject constructor(
     }
 
 
-    suspend fun authenticateUser(userName: String, password: String, state: String): State {
+    suspend fun authenticateUser(userName: String, password: String): State {
         return withContext(Dispatchers.IO) {
             val offlineLoginResult = offlineLogin(userName, password)
             if (offlineLoginResult)

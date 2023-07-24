@@ -471,7 +471,7 @@
     <fragment
         android:id="@+id/householdMembersFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.all_household.household_members.HouseholdMembersFragment"
-        android:label="fragment_household_members"
+        android:label="Household Members"
         tools:layout="@layout/fragment_display_search_rv_button">
         <argument
             android:name="hhId"
@@ -479,6 +479,12 @@
         <action
             android:id="@+id/action_householdMembersFragment_to_newBenRegTypeFragment"
             app:destination="@id/newBenRegTypeFragment" />
+        <action
+            android:id="@+id/action_householdMembersFragment_to_newBenRegL15Fragment"
+            app:destination="@id/newBenRegL15Fragment" />
+        <action
+            android:id="@+id/action_householdMembersFragment_to_newBenRegG15Fragment"
+            app:destination="@id/newBenRegG15Fragment" />
     </fragment>
     <fragment
         android:id="@+id/fpotFragment"
@@ -788,5 +794,10 @@
             android:id="@+id/action_cdFragment_to_TBSuspectedListFragment"
             app:destination="@id/TBSuspectedListFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.dashboard.DashboardFragment"
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_dashboard" />
 
 </navigation>

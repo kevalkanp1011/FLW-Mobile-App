@@ -15,7 +15,7 @@ class HrpCasesViewModel @Inject constructor(
     recordsRepo: RecordsRepo
 ) : ViewModel() {
 
-    private val allBenList = recordsRepo.getHrpCases()
+    private val allBenList = recordsRepo.hrpCases
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter) { list, filter ->
         filterBenList(list, filter)

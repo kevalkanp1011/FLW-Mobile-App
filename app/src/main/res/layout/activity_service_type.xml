@@ -125,7 +125,7 @@
                     android:padding="@dimen/padding_normal"
                     android:text="@string/btn_continue_text"
                     android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                    android:textColor="?attr/colorSecondary" />
+                    android:textColor="?attr/colorOnPrimary" />
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
