@@ -54,7 +54,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_normal"
-            android:buttonTint="?attr/colorPrimary"
             android:gravity="start|top"
             android:text="@string/aadhar_consent_text"
             android:textAppearance="@style/TextAppearance.Material3.BodyLarge"

@@ -52,25 +52,25 @@ class NcdListViewModel @Inject constructor(
 
     }
 
-    fun fetchAbha(benId: Long) {
-        _abha.value = null
-        _benRegId.value = null
-        _benId.value = benId
-        viewModelScope.launch {
-            val result = benRepo.getBeneficiaryWithId(benId)
-            result?.let {
-                if (it.abhaDetails != null) {
-                    if (it.abhaDetails.isNotEmpty()) {
-                        _abha.value = it.abhaDetails.first().HealthIDNumber
-                    } else {
-                        _benRegId.value = it.benRegId
-                    }
-                } else {
-                    _benRegId.value = it.benRegId
-                }
-            }
-        }
-    }
+//    fun fetchAbha(benId: Long) {
+//        _abha.value = null
+//        _benRegId.value = null
+//        _benId.value = benId
+//        viewModelScope.launch {
+//            val result = benRepo.getBeneficiaryWithId(benId)
+//            result?.let {
+//                if (it.abhaDetails != null) {
+//                    if (it.abhaDetails.isNotEmpty()) {
+//                        _abha.value = it.abhaDetails.first().HealthIDNumber
+//                    } else {
+//                        _benRegId.value = it.benRegId
+//                    }
+//                } else {
+//                    _benRegId.value = it.benRegId
+//                }
+//            }
+//        }
+//    }
 
     fun resetBenRegId() {
         _benRegId.value = null

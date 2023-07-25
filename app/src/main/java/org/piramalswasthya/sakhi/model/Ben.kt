@@ -632,7 +632,10 @@ data class BenRegKidNetwork(
     val birthOPV: Boolean? = null,
 
     )
-
+data class  BenHealthIdDetails(
+    var healthId: String? = null,
+    var healthIdNumber: String? = null
+)
 data class BenRegGen(
 
     var maritalStatus: String? = null,
@@ -841,6 +844,9 @@ data class BenRegCache(
 
     @Embedded(prefix = "loc_")
     var locationRecord: LocationRecord,
+
+    @Embedded(prefix = "abha_")
+    var healthIdDetails: BenHealthIdDetails? = null,
 
     var processed: String? = null,
 

@@ -489,6 +489,11 @@
     <string name="form_input_error_invalid_mobile">Invalid Mobile Number !</string>
     <string name="form_input_error_invalid_rch">Invalid RCH ID !</string>
     <string name="form_input_error_invalid_aadhar">Invalid Aadhar Number</string>
+    <string name="verify_aadhaar_number">Verify Aadhaar Number</string>
+    <string name="enter_otp">Enter OTP</string>
+    <string name="verify_otp">Verify OTP</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="exit">Exit</string>
 
     <!-- Eligible couple registration -->
     <string-array name="ecr_gender_array">

@@ -231,6 +231,7 @@ class CreateAbhaFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        timer.cancel()
         onBackPressedCallback.remove()
         _binding = null
     }

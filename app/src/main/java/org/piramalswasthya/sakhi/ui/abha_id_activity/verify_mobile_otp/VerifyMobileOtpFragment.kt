@@ -73,6 +73,20 @@ class VerifyMobileOtpFragment : Fragment() {
             }
         })
 
+        viewModel.showExit.observe(viewLifecycleOwner) {
+            it?.let {
+                if (it) {
+                    binding.exit.visibility =  View.VISIBLE
+                } else {
+                    binding.exit.visibility =  View.GONE
+                }
+            }
+        }
+
+        binding.exit.setOnClickListener{
+            requireActivity().finish()
+        }
+
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state!!) {
                 State.IDLE -> {}

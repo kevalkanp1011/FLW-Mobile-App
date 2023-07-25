@@ -1,13 +1,19 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity.verify_mobile_otp
 
-import androidx.lifecycle.*
-import com.google.gson.Gson
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.network.*
+import org.piramalswasthya.sakhi.network.AbhaGenerateMobileOtpRequest
+import org.piramalswasthya.sakhi.network.AbhaVerifyMobileOtpRequest
+import org.piramalswasthya.sakhi.network.CreateAbhaIdRequest
+import org.piramalswasthya.sakhi.network.CreateAbhaIdResponse
+import org.piramalswasthya.sakhi.network.NetworkResult
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertAbhaInterceptor
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
-import org.piramalswasthya.sakhi.ui.abha_id_activity.create_abha_id.CreateAbhaViewModel
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,6 +49,10 @@ class VerifyMobileOtpViewModel @Inject constructor(
     val errorMessage: LiveData<String?>
         get() = _errorMessage
 
+    private val _showExit = MutableLiveData(false)
+    val showExit: LiveData<Boolean?>
+        get() = _showExit
+
     var abha = MutableLiveData<CreateAbhaIdResponse?>(null)
 
     fun verifyOtpClicked(otp: String) {
@@ -73,6 +83,9 @@ class VerifyMobileOtpViewModel @Inject constructor(
                 }
                 is NetworkResult.Error -> {
                     _errorMessage.value = result.message
+                    if (result.message.contains("exit your browser", true)){
+                        _showExit.value = true
+                    }
                     _state.value = State.ERROR_SERVER
                 }
                 is NetworkResult.NetworkError -> {

@@ -77,6 +77,14 @@ data class BenResponse(
 )
 
 @JsonClass(generateAdapter = true)
+data class BenHealthDetails(
+    val benHealthID: Int,
+    val healthIdNumber: String,
+    val beneficiaryRegID: Long,
+    val healthId: String
+)
+
+@JsonClass(generateAdapter = true)
 data class BenAbhaResponse(
     val BeneficiaryRegID: Long,
     val HealthID: String,
@@ -286,7 +294,11 @@ data class ValidateOtpHid(
     val txnId: String?,
     val authMethod: String?
 )
-
+@JsonClass(generateAdapter = true)
+data class GetBenHealthIdRequest(
+    val beneficiaryRegID: Long?,
+    val beneficiaryID: Long?,
+)
 @JsonClass(generateAdapter = true)
 data class CreateHealthIdRequest(
     val otp: String?,

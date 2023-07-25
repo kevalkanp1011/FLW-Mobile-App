@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +29,7 @@ class AbhaIdActivity : AppCompatActivity() {
         navHostFragment.navController
     }
 
+    private var countDownTimer: CountDownTimer? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.d("onCreate Called")
@@ -67,6 +69,16 @@ class AbhaIdActivity : AppCompatActivity() {
         binding.btnTryAgain.setOnClickListener {
             mainViewModel.generateAccessToken()
         }
+        countDownTimer = object : CountDownTimer(30*60*1000, 1000) {
+
+            override fun onTick(millisUntilFinished: Long) {
+                binding.sessionTimer.text = formatMilliseconds(millisUntilFinished)
+            }
+
+            override fun onFinish() {
+                finish()
+            }
+        }.start()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -125,5 +137,14 @@ class AbhaIdActivity : AppCompatActivity() {
         TokenInsertAbhaInterceptor.setToken("")
         intent.removeExtra("benId")
         intent.removeExtra("benRegId")
+        countDownTimer?.cancel()
+    }
+
+    fun formatMilliseconds(milliseconds: Long): String {
+        val seconds = milliseconds / 1000
+        val minutes = seconds / 60
+        val remainingSeconds = seconds % 60
+
+        return String.format("%02d:%02d", minutes, remainingSeconds)
     }
 }

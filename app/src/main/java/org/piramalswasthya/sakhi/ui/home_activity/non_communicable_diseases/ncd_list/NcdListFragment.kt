@@ -75,7 +75,7 @@ class NcdListFragment : Fragment() {
 //                )
             },
             { benId, hhId ->
-                checkAndGenerateABHA(benId)
+//                checkAndGenerateABHA(benId)
             },
 
             ),false)
@@ -137,7 +137,7 @@ class NcdListFragment : Fragment() {
     }
 
     private fun checkAndGenerateABHA(benId: Long) {
-        viewModel.fetchAbha(benId)
+//        viewModel.fetchAbha(benId)
     }
 
     override fun onStart() {
