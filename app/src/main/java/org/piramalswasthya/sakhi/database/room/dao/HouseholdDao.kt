@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import org.piramalswasthya.sakhi.model.HouseholdBasicCache
 import org.piramalswasthya.sakhi.model.HouseholdCache
 
 @Dao
@@ -22,6 +23,9 @@ interface HouseholdDao {
 
     @Query("SELECT * FROM HOUSEHOLD WHERE isDraft = 0 and loc_village_Id = :selectedVillage")
     fun getAllHouseholds(selectedVillage: Int): Flow<List<HouseholdCache>>
+
+    @Query("SELECT h.*, count(b.householdId) as numMembers FROM HOUSEHOLD as h left outer join BENEFICIARY b on b.householdId = h.householdId WHERE h.isDraft = 0 and h.loc_village_Id = :selectedVillage group by h.householdId")
+    fun getAllHouseholdWithNumMembers(selectedVillage: Int): Flow<List<HouseholdBasicCache>>
     @Query("SELECT COUNT(*) FROM HOUSEHOLD WHERE isDraft = 0 and loc_village_Id = :selectedVillage")
     fun getAllHouseholdsCount(selectedVillage: Int): Flow<Int>
 

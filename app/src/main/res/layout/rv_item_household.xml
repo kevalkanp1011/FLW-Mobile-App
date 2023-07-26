@@ -152,7 +152,7 @@
                 android:layout_marginHorizontal="@dimen/padding_normal"
                 android:drawableLeft="@drawable/ic__ben"
                 android:onClick="@{()->clickListener.onClickedForMembers(household)}"
-                android:text="@string/hh_members_text"
+                android:text="@{@string/hh_members_text(household.numMembers)}"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 android:textColor="?attr/colorPrimary"
                 app:backgroundTint="?attr/colorOnPrimary"

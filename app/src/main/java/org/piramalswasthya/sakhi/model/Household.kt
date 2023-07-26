@@ -78,16 +78,7 @@ data class HouseholdCache(
     var processed: String,
     var isDraft: Boolean
 ) : FormDataModel {
-    fun asBasicDomainModel(): HouseHoldBasicDomain {
-        return HouseHoldBasicDomain(
-            hhId = householdId,
-            headName = family?.familyHeadName ?: "Not Available",
-            contactNumber = family?.familyHeadPhoneNo?.toString()?:"Not Available",
-            headSurname = family?.familyName ?: "Not Available",
-            headFullName = "${family?.familyHeadName} ${family?.familyName?:""}"
 
-        )
-    }
 
     fun asNetworkModel(): HouseholdNetwork {
         return HouseholdNetwork(
@@ -264,10 +255,29 @@ data class HouseholdNetwork(
 
     )
 
+data class HouseholdBasicCache(
+    @Embedded
+    val household: HouseholdCache,
+    val numMembers: Int,
+) {
+    fun asBasicDomainModel(): HouseHoldBasicDomain {
+        return HouseHoldBasicDomain(
+            hhId = household.householdId,
+            headName = household.family?.familyHeadName ?: "Not Available",
+            contactNumber = household.family?.familyHeadPhoneNo?.toString() ?: "Not Available",
+            headSurname = household.family?.familyName ?: "Not Available",
+            headFullName = "${household.family?.familyHeadName} ${household.family?.familyName ?: ""}",
+            numMembers = numMembers
+
+        )
+    }
+}
+
 data class HouseHoldBasicDomain(
     val hhId: Long,
     val headName: String,
     val headSurname: String,
-    val contactNumber : String,
-    val headFullName: String = "$headName $headSurname"
+    val contactNumber: String,
+    val headFullName: String = "$headName $headSurname",
+    val numMembers : Int,
 )
