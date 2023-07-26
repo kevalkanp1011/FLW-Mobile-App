@@ -67,7 +67,7 @@ class TBSuspectedViewModel @Inject constructor(
                 )
             }
 
-            tbRepo.getTbSuscpected(benId)?.let {
+            tbRepo.getTBSuspected(benId)?.let {
                 tbSuspected = it
                 _recordExists.value = true
             } ?: run {
@@ -100,7 +100,7 @@ class TBSuspectedViewModel @Inject constructor(
                 try {
                     _state.postValue(State.SAVING)
                     dataset.mapValues(tbSuspected, 1)
-                    tbRepo.saveTbSuspected(tbSuspected)
+                    tbRepo.saveTBSuspected(tbSuspected)
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
                     Timber.d("saving PWR data failed!!")

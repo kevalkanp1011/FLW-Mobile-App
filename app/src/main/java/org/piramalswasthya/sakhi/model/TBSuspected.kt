@@ -5,6 +5,8 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import org.piramalswasthya.sakhi.configuration.FormDataModel
+import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.network.TBSuspectedDTO
 
 @Entity(
     tableName = "TB_SUSPECTED",
@@ -28,5 +30,20 @@ data class TBSuspectedCache (
     var nikshayId: String? = null,
     var sputumTestResult: String? = null,
     var referred: Boolean? = null,
-    var followUps: String? = null
-) : FormDataModel
+    var followUps: String? = null,
+    var syncState: SyncState = SyncState.UNSYNCED,
+    ) : FormDataModel {
+    fun toDTO(): TBSuspectedDTO {
+        return TBSuspectedDTO(
+            id = 0,
+            benId = benId,
+            visitDate = getDateTimeStringFromLong(visitDate),
+            isSputumCollected = isSputumCollected,
+            sputumSubmittedAt = sputumSubmittedAt,
+            nikshayId = nikshayId,
+            sputumTestResult = sputumTestResult,
+            referred = referred,
+            followUps = followUps
+        )
+    }
+}

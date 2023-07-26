@@ -67,7 +67,7 @@ class TBScreeningFormViewModel @Inject constructor(
                 )
             }
 
-            tbRepo.getTbsn(benId)?.let {
+            tbRepo.getTBScreening(benId)?.let {
                 tbScreeningCache = it
                 _recordExists.value = true
             } ?: run {
@@ -100,7 +100,7 @@ class TBScreeningFormViewModel @Inject constructor(
                 try {
                     _state.postValue(State.SAVING)
                     dataset.mapValues(tbScreeningCache, 1)
-                    tbRepo.saveTbsn(tbScreeningCache)
+                    tbRepo.saveTBScreening(tbScreeningCache)
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
                     Timber.d("saving PWR data failed!!")

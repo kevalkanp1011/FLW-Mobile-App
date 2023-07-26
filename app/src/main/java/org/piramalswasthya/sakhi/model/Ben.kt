@@ -64,8 +64,8 @@ enum class Gender {
             " ecr.benId is not null as ecrFilled, " +
             " ect.benId is not null as ectFilled, " +
             " ect.benId is not null as ectFilled, " +
-            " tbsn.benId is not null as tbsnFilled, " +
-            " tbsp.benId is not null as tbspFilled " +
+            " tbsn.benId is not null as tbsnFilled, tbsn.syncState as tbsnSyncState," +
+            " tbsp.benId is not null as tbspFilled, tbsp.syncState as tbspSyncState " +
             "from BENEFICIARY b " +
             "JOIN HOUSEHOLD h ON b.householdId = h.householdId " +
             "LEFT OUTER JOIN CBAC cbac on b.beneficiaryId = cbac.benId " +
@@ -114,7 +114,9 @@ data class BenBasicCache(
     val ecrFilled: Boolean,
     val ectFilled: Boolean,
     val tbsnFilled: Boolean,
+    val tbsnSyncState: SyncState?,
     val tbspFilled: Boolean,
+    val tbspSyncState: SyncState?,
     val isDelivered: Boolean
 ) {
     companion object {
@@ -206,8 +208,8 @@ data class BenBasicCache(
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             form1Filled = tbsnFilled,
-            syncState = cbacSyncState
-                ?: throw IllegalStateException("Sync state for cbac is null!!")
+            syncState = tbsnSyncState
+                ?: throw IllegalStateException("Sync state for tbsn is null!!")
         )
     }
 
@@ -227,8 +229,8 @@ data class BenBasicCache(
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             form1Filled = tbspFilled,
-            syncState = cbacSyncState
-                ?: throw IllegalStateException("Sync state for cbac is null!!")
+            syncState = tbspSyncState
+                ?: throw IllegalStateException("Sync state for tbsp is null!!")
         )
     }
 
