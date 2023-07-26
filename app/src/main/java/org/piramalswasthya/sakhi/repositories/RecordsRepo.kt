@@ -21,7 +21,7 @@ class RecordsRepo @Inject constructor(
 ) {
     private val selectedVillage = preferenceDao.getLocationRecord()!!.village.id
 
-    val hhList = householdDao.getAllHouseholds(selectedVillage)
+    val hhList = householdDao.getAllHouseholdWithNumMembers(selectedVillage)
         .map { list -> list.map { it.asBasicDomainModel() } }
     val hhListCount = householdDao.getAllHouseholdsCount(selectedVillage)
 

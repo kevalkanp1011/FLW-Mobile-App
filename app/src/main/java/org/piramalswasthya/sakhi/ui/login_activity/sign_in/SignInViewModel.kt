@@ -9,6 +9,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.helpers.NetworkResponse
+import org.piramalswasthya.sakhi.model.User
 import org.piramalswasthya.sakhi.repositories.UserRepo
 import javax.inject.Inject
 
@@ -18,30 +20,28 @@ class SignInViewModel @Inject constructor(
     private val userRepo: UserRepo,
     private val pref: PreferenceDao
 ) : ViewModel() {
-    enum class State {
-        IDLE,
-        LOADING,
-        ERROR_INPUT,
-        ERROR_SERVER,
-        ERROR_NETWORK,
-        SUCCESS
-    }
 
-    private val _state = MutableLiveData(State.IDLE)
-    val state: LiveData<State>
+    private val _state: MutableLiveData<NetworkResponse<User?>> =
+        MutableLiveData(NetworkResponse.Idle())
+    val state: LiveData<NetworkResponse<User?>>
         get() = _state
 
     fun loginInClicked() {
-        _state.value = State.LOADING
+        _state.value = NetworkResponse.Loading()
 
     }
 
-    fun authUser(username: String, password: String,/* state: String*/) {
+    fun authUser(username: String, password: String/* state: String*/) {
         viewModelScope.launch {
-            //Temporary Placement - need to move to  assets and load from there.
-            userRepo.checkAndAddVaccines()
-            _state.value = userRepo.authenticateUser(username, password, /*state*/)
-
+            try {   //Temporary Placement - need to move to  assets and load from there.
+                userRepo.checkAndAddVaccines()
+                _state.value = userRepo.authenticateUser(username, password /*state*/)
+            } catch (e: Exception) {
+                _state.value =
+                    NetworkResponse.Error("Network Call failed.\nUnknown error : ${e.message} stack-trace : ${e.stackTrace}")
+                pref.deleteLoginCred()
+                pref.deleteAmritToken()
+            }
         }
     }
 
@@ -55,10 +55,10 @@ class SignInViewModel @Inject constructor(
         pref.getRememberedState()
 
 
-    fun rememberUser(username: String, password: String, /*state: String*/) {
+    fun rememberUser(username: String, password: String /*state: String*/) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                pref.registerLoginCred(username, password,/* state*/)
+                pref.registerLoginCred(username, password/* state*/)
             }
         }
     }

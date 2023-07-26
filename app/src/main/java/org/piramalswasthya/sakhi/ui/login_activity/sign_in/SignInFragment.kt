@@ -12,14 +12,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.databinding.FragmentSignInBinding
 import org.piramalswasthya.sakhi.helpers.Languages.ASSAMESE
 import org.piramalswasthya.sakhi.helpers.Languages.ENGLISH
 import org.piramalswasthya.sakhi.helpers.Languages.HINDI
+import org.piramalswasthya.sakhi.helpers.NetworkResponse
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
-import org.piramalswasthya.sakhi.ui.login_activity.sign_in.SignInViewModel.State
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 import javax.inject.Inject
@@ -96,8 +95,8 @@ class SignInFragment : Fragment() {
 
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
-            when (state!!) {
-                State.IDLE -> {
+            when (state) {
+                is NetworkResponse.Idle -> {
                     var hasRememberMeUsername = false
                     var hasRememberMePassword = false
 //                    var hasRememberMeState = false
@@ -122,26 +121,26 @@ class SignInFragment : Fragment() {
 //                    }
                     if (hasRememberMeUsername && hasRememberMePassword/* && hasRememberMeState*/) validateInput()
                 }
-                State.LOADING -> validateInput()
-                State.ERROR_INPUT -> {
+                is NetworkResponse.Loading -> validateInput()
+                is NetworkResponse.Error -> {
                     binding.pbSignIn.visibility = View.GONE
                     binding.clContent.visibility = View.VISIBLE
-                    binding.tvError.text = getString(R.string.error_sign_in_invalid_u_p)
+                    binding.tvError.text = state.message
                     binding.tvError.visibility = View.VISIBLE
                 }
-                State.ERROR_SERVER -> {
-                    binding.pbSignIn.visibility = View.GONE
-                    binding.clContent.visibility = View.VISIBLE
-                    binding.tvError.text = getString(R.string.error_sign_in_timeout)
-                    binding.tvError.visibility = View.VISIBLE
-                }
-                State.ERROR_NETWORK -> {
-                    binding.pbSignIn.visibility = View.GONE
-                    binding.clContent.visibility = View.VISIBLE
-                    binding.tvError.text = getString(R.string.error_sign_in_disconnected_network)
-                    binding.tvError.visibility = View.VISIBLE
-                }
-                State.SUCCESS -> {
+//                State.ERROR_SERVER -> {
+//                    binding.pbSignIn.visibility = View.GONE
+//                    binding.clContent.visibility = View.VISIBLE
+//                    binding.tvError.text = getString(R.string.error_sign_in_timeout)
+//                    binding.tvError.visibility = View.VISIBLE
+//                }
+//                State.ERROR_NETWORK -> {
+//                    binding.pbSignIn.visibility = View.GONE
+//                    binding.clContent.visibility = View.VISIBLE
+//                    binding.tvError.text = getString(R.string.error_sign_in_disconnected_network)
+//                    binding.tvError.visibility = View.VISIBLE
+//                }
+                is NetworkResponse.Success -> {
                     if (binding.cbRemember.isChecked) {
                         val username = binding.etUsername.text.toString()
                         val password = binding.etPassword.text.toString()

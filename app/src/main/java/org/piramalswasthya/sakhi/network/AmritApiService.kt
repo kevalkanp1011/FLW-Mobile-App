@@ -20,7 +20,7 @@ interface AmritApiService {
     @GET("flw-0.0.1-24-07-2023/user/getUserRole")
     suspend fun getUserDetailsById(
         @Query("userId") userId: Int,
-        @Query("roleId") roleId: Int = 527
+        @Query("roleId") roleId: Int = 526
     ): UserNetworkResponse
 
     @POST("tmapi-v1.0/user/getUserVanSpDetails/")
