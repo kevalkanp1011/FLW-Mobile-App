@@ -30,7 +30,6 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             resources.getString(R.string.icon_title_ben),
             recordsRepo.allBenListCount,
             HomeFragmentDirections.actionNavHomeToAllBenFragment(),
-            false
         ),
         Icon(
             R.drawable.ic__eligible_couple,
@@ -43,7 +42,6 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             resources.getString(R.string.icon_title_mc),
             null,
             HomeFragmentDirections.actionNavHomeToMotherCareFragment(),
-            false
         ),
         Icon(
             R.drawable.ic__child_care,
@@ -56,7 +54,6 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             resources.getString(R.string.icon_title_ncd),
             null,
             HomeFragmentDirections.actionNavHomeToNcdFragment(),
-            false
         ),
         Icon(
             R.drawable.ic__ncd,
@@ -69,7 +66,6 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             resources.getString(R.string.icon_title_imm),
             null,
             HomeFragmentDirections.actionNavHomeToImmunizationDueFragment(),
-            false
         ),
         Icon(
             R.drawable.ic__hrp,
@@ -82,7 +78,6 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             resources.getString(R.string.icon_title_gop),
             null,
             HomeFragmentDirections.actionNavHomeToGeneralOpCareFragment(),
-            false
         ),
         Icon(
             R.drawable.ic__menopause,
@@ -95,7 +90,6 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             resources.getString(R.string.icon_title_dr),
             null,
             HomeFragmentDirections.actionNavHomeToDeathReportsFragment(),
-            false
         ),
         Icon(
             R.drawable.ic__village_level_form,
@@ -103,7 +97,11 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             null,
             HomeFragmentDirections.actionNavHomeToVillageLevelFormsFragment()
         ),
-    )
+    ).apply {
+        forEachIndexed { index, icon ->
+            icon.colorPrimary = index % 2 == 0
+        }
+    }
 
     fun getChildCareDataset(resources: Resources) = listOf(
         Icon(
@@ -122,7 +120,11 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             recordsRepo.adolescentListCount,
             ChildCareFragmentDirections.actionChildCareFragmentToAdolescentListFragment()
         )
-    )
+    ).apply {
+        forEachIndexed { index, icon ->
+            icon.colorPrimary = index % 2 == 0
+        }
+    }
 
     fun getEligibleCoupleDataset(resources: Resources) = listOf(
         Icon(
@@ -137,7 +139,11 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             recordsRepo.eligibleCoupleTrackingListCount,
             EligibleCoupleFragmentDirections.actionEligibleCoupleFragmentToEligibleCoupleTrackingListFragment()
         )
-    )
+    ).apply {
+        forEachIndexed { index, icon ->
+            icon.colorPrimary = index % 2 == 0
+        }
+    }
 
     fun getMotherCareDataset(resources: Resources) = listOf(
         Icon(
@@ -187,6 +193,11 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
 //            MotherCareFragmentDirections.actionMotherCareFragmentToReproductiveAgeListFragment()
 //        )
     )
+        .apply {
+            forEachIndexed { index, icon ->
+                icon.colorPrimary = index % 2 == 0
+            }
+        }
 
     fun getNCDDataset(resources: Resources) = listOf(
         Icon(
@@ -194,23 +205,31 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             resources.getString(R.string.icon_title_ncd_list),
             recordsRepo.ncdListCount,
             NcdFragmentDirections.actionNcdFragmentToNcdListFragment()
-        ), Icon(
+        ),
+        Icon(
             R.drawable.ic__ncd_eligibility,
             resources.getString(R.string.icon_title_ncd_eligible_list),
             recordsRepo.getNcdEligibleListCount,
             NcdFragmentDirections.actionNcdFragmentToNcdEligibleListFragment()
-        ), Icon(
+        ),
+        Icon(
             R.drawable.ic__ncd_priority,
             resources.getString(R.string.icon_title_ncd_priority_list),
             recordsRepo.getNcdPriorityListCount,
             NcdFragmentDirections.actionNcdFragmentToNcdPriorityListFragment()
-        ), Icon(
+        ),
+        Icon(
             R.drawable.ic_ncd_noneligible,
             resources.getString(R.string.icon_title_ncd_non_eligible_list),
             recordsRepo.getNcdNonEligibleListCount,
             NcdFragmentDirections.actionNcdFragmentToNcdNonEligibleListFragment()
         ),
     )
+        .apply {
+            forEachIndexed { index, icon ->
+                icon.colorPrimary = index % 2 == 0
+            }
+        }
 
     fun getImmunizationDataset() = listOf(
         Icon(
@@ -226,8 +245,12 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
 //            ImmunizationDueTypeFragmentDirections.actionImmunizationDueTypeFragmentToMotherImmunizationListFragment()
 //        ),
 
-        )
-
+    )
+        .apply {
+            forEachIndexed { index, icon ->
+                icon.colorPrimary = index % 2 == 0
+            }
+        }
 
     fun getVillageLevelFormsDataset(resources: Resources) = listOf(
         Icon(
@@ -236,7 +259,11 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             null,
             VillageLevelFormsFragmentDirections.actionVillageLevelFormsFragmentToSurveyRegisterFragment()
         )
-    )
+    ).apply {
+        forEachIndexed { index, icon ->
+            icon.colorPrimary = index % 2 == 0
+        }
+    }
 
     fun getCDDataset(resources: Resources) = listOf(
         Icon(
@@ -251,7 +278,11 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             CdFragmentDirections.actionCdFragmentToTBSuspectedListFragment()
 
         )
-    )
+    ).apply {
+        forEachIndexed { index, icon ->
+            icon.colorPrimary = index % 2 == 0
+        }
+    }
 
 //    fun getChildImmunizationCategories(resources: Resources) = listOf(
 //        Icon(

@@ -9,7 +9,7 @@ data class Icon(
     val title: String,
     val count: Flow<Int>?,
     val navAction: NavDirections,
-    val colorPrimary : Boolean = true
+    var colorPrimary : Boolean = true
 )
 data class ImmunizationIcon(
     val benId: Long,

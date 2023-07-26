@@ -40,7 +40,7 @@ class HBNCDayGridAdapter(private val clickListener: HbncIconClickListener) :
                 if (item.isFilled)
                     binding.cvIcon.setBackgroundColor(
                         binding.root.resources.getColor(
-                            android.R.color.holo_green_light,
+                            android.R.color.holo_green_dark,
                             binding.root.context.theme
                         )
                     )
@@ -53,7 +53,7 @@ class HBNCDayGridAdapter(private val clickListener: HbncIconClickListener) :
                     )
             } else
                 if (item.isFilled)
-                    binding.cvIcon.setBackgroundColor(binding.root.resources.getColor(android.R.color.holo_green_light))
+                    binding.cvIcon.setBackgroundColor(binding.root.resources.getColor(android.R.color.holo_green_dark))
                 else
                     binding.cvIcon.setBackgroundColor(binding.root.resources.getColor(android.R.color.holo_red_light))
             binding.executePendingBindings()

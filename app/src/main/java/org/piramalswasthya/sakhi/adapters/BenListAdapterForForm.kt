@@ -83,7 +83,7 @@ class BenListAdapterForForm(
                 if (hasForm)
                     formButton.setBackgroundColor(
                         binding.root.resources.getColor(
-                            android.R.color.holo_green_light,
+                            android.R.color.holo_green_dark,
                             binding.root.context.theme
                         )
                     )
@@ -96,7 +96,7 @@ class BenListAdapterForForm(
                     )
             } else
                 if (hasForm)
-                    formButton.setBackgroundColor(binding.root.resources.getColor(android.R.color.holo_green_light))
+                    formButton.setBackgroundColor(binding.root.resources.getColor(android.R.color.holo_green_dark))
                 else
                     formButton.setBackgroundColor(
                         binding.root.resources.getColor(

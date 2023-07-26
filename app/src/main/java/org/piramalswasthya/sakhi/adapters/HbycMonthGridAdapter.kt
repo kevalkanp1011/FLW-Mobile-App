@@ -7,7 +7,6 @@ import androidx.navigation.NavDirections
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.RvItemIconHbycBinding
 import org.piramalswasthya.sakhi.model.HbycIcon
 
@@ -41,7 +40,7 @@ class HbycMonthGridAdapter(private val clickListener: HbycIconClickListener) :
                 if (item.isFilled)
                     binding.cvIcon.setBackgroundColor(
                         binding.root.resources.getColor(
-                            android.R.color.holo_green_light,
+                            android.R.color.holo_green_dark,
                             binding.root.context.theme
                         )
                     )
@@ -54,7 +53,7 @@ class HbycMonthGridAdapter(private val clickListener: HbycIconClickListener) :
                     )
             } else
                 if (item.isFilled)
-                    binding.cvIcon.setBackgroundColor(binding.root.resources.getColor(android.R.color.holo_green_light))
+                    binding.cvIcon.setBackgroundColor(binding.root.resources.getColor(android.R.color.holo_green_dark))
                 else
                     binding.cvIcon.setBackgroundColor(binding.root.resources.getColor(android.R.color.holo_red_light))
             binding.executePendingBindings()
