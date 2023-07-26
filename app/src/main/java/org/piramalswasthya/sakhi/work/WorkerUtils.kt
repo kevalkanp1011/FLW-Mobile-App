@@ -17,13 +17,21 @@ object WorkerUtils {
         val pullWorkRequest = OneTimeWorkRequestBuilder<PullFromAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
+        val pullTBWorkRequest = OneTimeWorkRequestBuilder<PullTBFromAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
         val pushWorkRequest = OneTimeWorkRequestBuilder<PushToAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
+        val pushTBWorkRequest = OneTimeWorkRequestBuilder<PushTBToAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
         val workManager = WorkManager.getInstance(context)
         workManager
             .beginUniqueWork(syncWorkerUniqueName, ExistingWorkPolicy.APPEND_OR_REPLACE, pullWorkRequest)
+            .then(pullTBWorkRequest)
             .then(pushWorkRequest)
+            .then(pushTBWorkRequest)
             .enqueue()
     }
 

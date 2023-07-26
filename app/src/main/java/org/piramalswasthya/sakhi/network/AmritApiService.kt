@@ -17,7 +17,14 @@ interface AmritApiService {
     @POST("commonapi-v1.0/user/userAuthenticate/")
     suspend fun getJwtToken(@Body json: TmcAuthUserRequest): Response<ResponseBody>
 
+//    @Headers("No-Auth: true")
+//    @POST
+//    suspend fun getJwtToken(@Url url: String = "http://amritdemo.piramalswasthya.org:8080/commonapi-v1.0/user/userAuthenticate/",
+//                            @Body json: TmcAuthUserRequest): Response<ResponseBody>
+
+
     @GET("flw-0.0.1-24-07-2023/user/getUserRole")
+//    @GET("user/getUserRole")
     suspend fun getUserDetailsById(
         @Query("userId") userId: Int,
         @Query("roleId") roleId: Int = 526
@@ -39,8 +46,25 @@ interface AmritApiService {
     @POST("identity-0.0.1/rmnch/syncDataToAmrit")
     suspend fun submitRmnchDataAmrit(@Body sendingRMNCHData: SendingRMNCHData): Response<ResponseBody>
 
+//    @POST("beneficiary/getBeneficiaryData")
     @POST("flw-0.0.1-24-07-2023/beneficiary/getBeneficiaryData")
     suspend fun getBeneficiaries(@Body userDetail: GetBenRequest): Response<ResponseBody>
+
+//    @POST("tb/screening/getAll")
+    @POST("flw-0.0.1/tb/screening/getAll")
+    suspend fun getTBScreeningData(@Body userDetail: GetBenRequest): Response<ResponseBody>
+
+    @POST("flw-0.0.1/tb/suspected/getAll")
+//    @POST("tb/suspected/getAll")
+    suspend fun getTBSuspectedData(@Body userDetail: GetBenRequest): Response<ResponseBody>
+
+    @POST("flw-0.0.1/tb/screening/saveAll")
+//    @POST("tb/screening/saveAll")
+    suspend fun saveTBScreeningData(@Body tbScreeningRequestDTO: TBScreeningRequestDTO): Response<ResponseBody>
+
+    @POST("flw-0.0.1/tb/suspected/saveAll")
+//    @POST("tb/suspected/saveAll")
+    suspend fun saveTBSuspectedData(@Body tbSuspectedRequestDTO: TBSuspectedRequestDTO): Response<ResponseBody>
 
     @POST("identity-0.0.1/id/getByBenId")
     suspend fun getBeneficiaryWithId(@Query("benId") benId: Long): Response<ResponseBody>

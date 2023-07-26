@@ -79,7 +79,7 @@ class PullFromAmritWorker @AssistedInject constructor(
                     Timber.d("Full load took $timeTaken seconds for $numPages pages  $result1")
 
                     if (result1.all { it }) {
-                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
+//                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
 
                         return@withContext Result.success()
                     }

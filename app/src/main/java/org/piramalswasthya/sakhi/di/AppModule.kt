@@ -31,7 +31,7 @@ object AppModule {
     private const val baseTmcUrl = // "http://assamtmc.piramalswasthya.org:8080/"
 //    "http://192.168.1.233:8085/"
     "http://amritdemo.piramalswasthya.org:8080/"
-
+//        "http://192.168.1.94:8081/"
     private const val baseAbhaUrl = "https://healthidsbx.abdm.gov.in/api/"
 
     private val baseClient =

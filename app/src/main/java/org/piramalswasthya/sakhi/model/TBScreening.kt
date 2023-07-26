@@ -5,6 +5,8 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import org.piramalswasthya.sakhi.configuration.FormDataModel
+import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.network.TBScreeningDTO
 
 @Entity(
     tableName = "TB_SCREENING",
@@ -30,5 +32,22 @@ data class TBScreeningCache (
     var nightSweats: Boolean? = null,
     var historyOfTb: Boolean? = null,
     var takingAntiTBDrugs: Boolean? = null,
-    var familySufferingFromTB: Boolean? = null
-) : FormDataModel
+    var familySufferingFromTB: Boolean? = null,
+    var syncState: SyncState = SyncState.UNSYNCED,
+    ) : FormDataModel {
+        fun toDTO():TBScreeningDTO {
+            return TBScreeningDTO(
+                id = 0,
+                benId = benId,
+                visitDate = getDateTimeStringFromLong(visitDate),
+                coughMoreThan2Weeks = coughMoreThan2Weeks,
+                bloodInSputum = bloodInSputum,
+                feverMoreThan2Weeks = feverMoreThan2Weeks,
+                lossOfWeight = lossOfWeight,
+                nightSweats = nightSweats,
+                historyOfTb = historyOfTb,
+                takingAntiTBDrugs = takingAntiTBDrugs,
+                familySufferingFromTB = familySufferingFromTB
+            )
+        }
+    }
