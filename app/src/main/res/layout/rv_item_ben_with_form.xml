@@ -34,7 +34,7 @@
                 android:id="@+id/ll_title_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorSecondary"
+                android:background="?attr/colorOnPrimary"
                 android:paddingHorizontal="@dimen/padding_normal"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -237,7 +237,7 @@
                         android:layout_margin="@dimen/margin_small"
                         android:visibility="invisible"
                         android:onClick="@{()-> clickListener.onClickForm3(ben)}"
-                        android:textColor="?attr/colorSecondary"
+                        android:textColor="?attr/colorOnPrimary"
                         tools:text="CBAC Form" />
 
                     <com.google.android.material.button.MaterialButton
@@ -249,7 +249,7 @@
                         android:layout_margin="@dimen/margin_small"
                         android:visibility="invisible"
                         android:onClick="@{()-> clickListener.onClickForm2(ben)}"
-                        android:textColor="?attr/colorSecondary"
+                        android:textColor="?attr/colorOnPrimary"
                         tools:text="CBAC Form" />
 
 
@@ -263,7 +263,7 @@
                         android:onClick="@{()-> clickListener.onClickForm1(ben)}"
                         android:layout_margin="@dimen/margin_small"
                         android:visibility="invisible"
-                        android:textColor="?attr/colorSecondary"
+                        android:textColor="?attr/colorOnPrimary"
                         tools:text="CBAC Form" />
 
 

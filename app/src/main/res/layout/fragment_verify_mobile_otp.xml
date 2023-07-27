@@ -53,7 +53,7 @@
                     android:layout_marginTop="@dimen/margin_small"
                     android:layout_weight="1"
                     android:text="TextView"
-                    android:textColor="@color/red"
+                    android:textColor="@android:color/holo_red_light"
                     android:visibility="gone" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -70,7 +70,7 @@
                 android:text="Verify OTP"
                 android:textAllCaps="false"
                 android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                android:textColor="?attr/colorSecondary"
+                android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/til_verify_mobile_otp" />
@@ -84,7 +84,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="Resend OTP"
                 android:textAllCaps="false"
-                android:textColor="@color/secondaryColor"
+                android:textColor="?attr/colorOnPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btn_verify_OTP" />
             <com.google.android.material.button.MaterialButton
@@ -94,12 +94,24 @@
                 android:text="30"
                 android:padding="0dp"
                 app:cornerRadius="40dp"
-                android:textColor="@color/secondaryColor"
+                android:textColor="?attr/colorOnPrimary"
                 android:layout_marginTop="@dimen/margin_normal"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toStartOf="@+id/resend_otp"
                 app:layout_constraintTop_toBottomOf="@+id/btn_verify_OTP"/>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/exit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_normal"
+                android:layout_marginStart="@dimen/margin_big"
+                android:text="@string/exit"
+                android:textAllCaps="false"
+                android:textColor="?attr/colorOnPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_verify_OTP"
+                android:visibility="visible"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ProgressBar

@@ -13,42 +13,34 @@ import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.LocationRecord
-import org.piramalswasthya.sakhi.model.UserDomain
 import org.piramalswasthya.sakhi.repositories.UserRepo
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    database: InAppDb,
+    private val database: InAppDb,
     private val pref: PreferenceDao,
     private val userRepo: UserRepo,
 ) : ViewModel() {
 
 
-    val currentUser = database.userDao.getLoggedInUserLiveData()
+    val currentUser = pref.getLoggedInUser()
 
     val numBenIdsAvail = database.benIdGenDao.liveCount()
 
+    var profilePicUri : Uri?
+        get() = pref.getProfilePicUri()
+        set(value) = pref.saveProfilePicUri(value)
+
     val scope: CoroutineScope
         get() = viewModelScope
-    private var _unprocessedRecords : Int = 0
+    private var _unprocessedRecords: Int = 0
     val unprocessedRecords: Int
         get() = _unprocessedRecords
 
 
-
     val locationRecord: LocationRecord? = pref.getLocationRecord()
     val currentLanguage = pref.getCurrentLanguage()
-
-
-
-    fun isLocationSet(): Boolean {
-        return locationRecord != null
-    }
-
-    private lateinit var _user: UserDomain
-    val user: UserDomain
-        get() = _user
 
     private val _navigateToLoginPage = MutableLiveData(false)
     val navigateToLoginPage: MutableLiveData<Boolean>
@@ -56,7 +48,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _user = getUserFromRepo()
+//            _user = pref.getLoggedInUser()!!
             launch {
                 userRepo.unProcessedRecordCount.collect { value ->
                     _unprocessedRecords = value
@@ -64,40 +56,19 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-
-    private suspend fun getUserFromRepo(): UserDomain {
-        return withContext(Dispatchers.IO) {
-            userRepo.getLoggedInUser()
-                ?: throw IllegalStateException("No Logged in user found in DB!!")
-        }
-    }
-
     fun logout() {
         viewModelScope.launch {
-            userRepo.logout()
-            pref.setLastSyncedTimeStamp(Konstants.defaultTimeStamp)
+            withContext(Dispatchers.IO){
+                database.clearAllTables()
+            }
             pref.deleteForLogout()
-
-
+            pref.setLastSyncedTimeStamp(Konstants.defaultTimeStamp)
             _navigateToLoginPage.value = true
         }
     }
 
     fun navigateToLoginPageComplete() {
         _navigateToLoginPage.value = false
-    }
-
-    fun checkIfFullLoadCompletedBefore(): Long {
-        return pref.getLastSyncedTimeStamp()
-
-    }
-
-    fun saveProfilePicUri(imageUri: Uri) {
-        pref.saveProfilePicUri(imageUri)
-    }
-
-    fun getProfilePicUri(): Uri? {
-        return pref.getProfilePicUri()
     }
 
 

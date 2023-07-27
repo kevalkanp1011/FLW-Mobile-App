@@ -23,12 +23,9 @@ class PushToAmritWorker @AssistedInject constructor(
     private val maternalHealthRepo: MaternalHealthRepo,
     private val preferenceDao: PreferenceDao,
 ) : CoroutineWorker(appContext, params) {
-
     companion object {
         const val name = "PushToAmritWorker"
     }
-
-
     override suspend fun doWork(): Result {
         init()
         try {
@@ -47,15 +44,11 @@ class PushToAmritWorker @AssistedInject constructor(
             Timber.e("Caught Exception for push amrit worker $e")
             return Result.retry()
         }
-//        catch (e : java.lang.Exception) {
-//            Timber.e("Caught Exception for push amrit worker $e")
-//            return Result.failure()
-//        }
     }
 
     private fun init() {
         if (TokenInsertTmcInterceptor.getToken() == "")
-            preferenceDao.getPrimaryApiToken()?.let{
+            preferenceDao.getAmritToken()?.let{
                 TokenInsertTmcInterceptor.setToken(it)
             }
     }

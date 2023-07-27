@@ -1,6 +1,9 @@
 package org.piramalswasthya.sakhi.model
 
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.piramalswasthya.sakhi.configuration.FormDataModel
@@ -55,14 +58,7 @@ data class HouseholdAmenities(
     var otherMotorizedVehicle: String? = null,
 )
 
-@Entity(
-    tableName = "HOUSEHOLD", foreignKeys = [ForeignKey(
-        entity = UserCache::class,
-        parentColumns = arrayOf("user_id"),
-        childColumns = arrayOf("ashaId"),
-        onDelete = ForeignKey.CASCADE
-    )]
-)
+@Entity(tableName = "HOUSEHOLD")
 data class HouseholdCache(
 
     @PrimaryKey var householdId: Long,
@@ -82,55 +78,48 @@ data class HouseholdCache(
     var processed: String,
     var isDraft: Boolean
 ) : FormDataModel {
-    fun asBasicDomainModel(): HouseHoldBasicDomain {
-        return HouseHoldBasicDomain(
-            hhId = householdId,
-            headName = family?.familyHeadName ?: "Not Available",
-            headSurname = family?.familyName ?: "Not Available"
 
-        )
-    }
 
-    fun asNetworkModel(userCache: UserCache): HouseholdNetwork {
+    fun asNetworkModel(): HouseholdNetwork {
         return HouseholdNetwork(
             Countyid = locationRecord.country.id,
             Processed = processed,
-            ProviderServiceMapID = userCache.serviceMapId,
-            VanID = userCache.vanId,
+//            ProviderServiceMapID = userCache.serviceMapId,
+//            VanID = userCache.vanId,
             ashaId = ashaId,
             availabilityOfToilet = amenities?.availabilityOfToilet,
-            availabilityofToiletId = amenities?.availabilityOfToiletId?:0,
+            availabilityofToiletId = amenities?.availabilityOfToiletId ?: 0,
             availabilityOfElectricity = amenities?.availabilityOfElectricity,
-            avalabilityofElectricityId = amenities?.availabilityOfElectricityId?:0,
+            avalabilityofElectricityId = amenities?.availabilityOfElectricityId ?: 0,
             blockid = locationRecord.block.id,
-            povertyLineId = family?.povertyLineId?:0,
+            povertyLineId = family?.povertyLineId ?: 0,
             createdBy = createdBy,
             createdDate = getDateTimeStringFromLong(createdTimeStamp),
             districtid = locationRecord.district.id,
             familyHeadName = family?.familyHeadName,
             familyHeadPhoneNo = family?.familyHeadPhoneNo.toString(),
             fuelUsed = amenities?.fuelUsed,
-            fuelUsedId = amenities?.fuelUsedId?:0,
+            fuelUsedId = amenities?.fuelUsedId ?: 0,
             isHouseOwned = details?.isHouseOwned,
-            houseOwnerShipId = details?.isHouseOwnedId?:0,
+            houseOwnerShipId = details?.isHouseOwnedId ?: 0,
             houseType = details?.houseType,
-            houseTypeId = details?.houseTypeId?:0,
+            houseTypeId = details?.houseTypeId ?: 0,
             houseNo = family?.houseNo ?: "null",
             householdId = householdId.toString(),
             otherAvailabilityOfToilet = amenities?.otherAvailabilityOfToilet ?: "null",
             otherAvailabilityOfElectricity = amenities?.otherAvailabilityOfElectricity ?: "null",
             otherFuelUsed = amenities?.otherFuelUsed ?: "",
             otherHouseType = details?.otherHouseType ?: "",
-            otherMotorizedVehicle =  amenities?.otherMotorizedVehicle ?: "null",
+            otherMotorizedVehicle = amenities?.otherMotorizedVehicle ?: "null",
             otherResidentialArea = details?.otherResidentialArea ?: "",
             otherSourceOfDrinkingWater = amenities?.otherSourceOfDrinkingWater ?: "null",
             residentialArea = details?.residentialArea ?: "null",
-            residentialAreaId = details?.residentialAreaId?:0,
+            residentialAreaId = details?.residentialAreaId ?: 0,
             separateKitchen = amenities?.separateKitchen,
-            seperateKitchenId = amenities?.separateKitchenId?:0,
+            seperateKitchenId = amenities?.separateKitchenId ?: 0,
             serverUpdatedStatus = serverUpdatedStatus,
             sourceOfDrinkingWater = amenities?.sourceOfDrinkingWater,
-            sourceofDrinkingWaterId = amenities?.sourceOfDrinkingWaterId?:0,
+            sourceofDrinkingWaterId = amenities?.sourceOfDrinkingWaterId ?: 0,
             state = locationRecord.state.name,
             stateid = locationRecord.state.id,
             povertyLine = family?.povertyLine,
@@ -234,7 +223,7 @@ data class HouseholdNetwork(
 
     @Json(name = "block") val block: String? = null,
 
-    @Json(name = "village") val village: String? = null,
+    @Json(name = "villages") val village: String? = null,
 
     @Json(name = "serverUpdatedStatus") val serverUpdatedStatus: Int = 0,
 
@@ -246,9 +235,9 @@ data class HouseholdNetwork(
 
     @Json(name = "updatedDate") val updatedDate: String? = null,
 
-    @Json(name = "ProviderServiceMapID") val ProviderServiceMapID: Int,
+//    @Json(name = "ProviderServiceMapID") val ProviderServiceMapID: Int,
 
-    @Json(name = "VanID") val VanID: Int,
+//    @Json(name = "VanID") val VanID: Int,
 
     @Json(name = "Processed") val Processed: String,
 
@@ -266,6 +255,29 @@ data class HouseholdNetwork(
 
     )
 
+data class HouseholdBasicCache(
+    @Embedded
+    val household: HouseholdCache,
+    val numMembers: Int,
+) {
+    fun asBasicDomainModel(): HouseHoldBasicDomain {
+        return HouseHoldBasicDomain(
+            hhId = household.householdId,
+            headName = household.family?.familyHeadName ?: "Not Available",
+            contactNumber = household.family?.familyHeadPhoneNo?.toString() ?: "Not Available",
+            headSurname = household.family?.familyName ?: "Not Available",
+            headFullName = "${household.family?.familyHeadName} ${household.family?.familyName ?: ""}",
+            numMembers = numMembers
+
+        )
+    }
+}
+
 data class HouseHoldBasicDomain(
-    val hhId: Long, val headName: String, val headSurname: String
+    val hhId: Long,
+    val headName: String,
+    val headSurname: String,
+    val contactNumber: String,
+    val headFullName: String = "$headName $headSurname",
+    val numMembers : Int,
 )

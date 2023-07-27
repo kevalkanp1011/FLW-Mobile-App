@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
 
                 android:text="@string/btn_frag_nhhr_prev"
-                android:textColor="?attr/colorSecondary" />
+                android:textColor="?attr/colorOnPrimary" />
 
             <View
                 android:layout_width="0dp"
@@ -71,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/btn_frag_nhhr_next"
-                android:textColor="?attr/colorSecondary"
+                android:textColor="?attr/colorOnPrimary"
                 tools:visibility="gone" />
 
             <com.google.android.material.button.MaterialButton
@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/btn_frag_nhhr_to_ben"
-                android:textColor="?attr/colorSecondary"
+                android:textColor="?attr/colorOnPrimary"
                 android:visibility="gone"
                 tools:visibility="visible" />
         </LinearLayout>

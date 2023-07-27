@@ -9,6 +9,7 @@
     <string name="PREF_rem_me_pwd" translatable="false">password-local-saved</string>
     <string name="PREF_rem_me_state" translatable="false">state_user-local-saved</string>
     <string name="PREF_location_record_entry" translatable="false">location-record</string>
+    <string name="PREF_user_entry" translatable="false">logged-in-user</string>
     <string name="PREF_full_load_pull_progress" translatable="false">full_load_sync_pull_amrit</string>
     <string name="PREF_first_pull_amrit_last_synced_page" translatable="false">full_load_sync_pull_amrit_first_sync_last_saved_page</string>
     <string name="PREF_current_saved_language" translatable="false">Locale.Helper.Selected.Language</string>
@@ -267,7 +268,7 @@
     </string-array>
     <string-array name="cbac_smoke">
         <item>Never</item>
-        <item>Used to consume in the past/sometimes now</item>
+        <item>Used to consume in the past sometime</item>
         <item>Daily</item>
     </string-array>
     <string-array name="cbac_alcohol">
@@ -344,8 +345,8 @@
 
 
     <string name="nav_item_1_text">Name : <b>%s</b></string>
-    <string name="nav_item_2_text">Role : <b>%s</b></string>
-    <string name="nav_item_3_text">ID :  <b>%d</b></string>
+    <string name="nav_item_2_text">Handle : <b>%s</b></string>
+    <string name="nav_item_3_text">User ID :  <b>%d</b></string>
     <string name="nav_item_4_text">Version : %s</string>
 
 
@@ -393,7 +394,7 @@
     <string name="cbac_score">Score</string>
     <string name="cbac_type_of_fuel">Type of fuel used for cooking</string>
     <string name="cbac_remarks">Remarks</string>
-    <string name="cbac_risk_assessment_tv">Risk Assessment</string>
+    <string name="cbac_risk_assessment_tv">Part A: Risk Assessment</string>
 
     <string name="evac_patient_info">Patient Information </string>
     <string name="cbac_tv_bl_menopause">Inform ASHA Facilitator</string>
@@ -488,6 +489,11 @@
     <string name="form_input_error_invalid_mobile">Invalid Mobile Number !</string>
     <string name="form_input_error_invalid_rch">Invalid RCH ID !</string>
     <string name="form_input_error_invalid_aadhar">Invalid Aadhar Number</string>
+    <string name="verify_aadhaar_number">Verify Aadhaar Number</string>
+    <string name="enter_otp">Enter OTP</string>
+    <string name="verify_otp">Verify OTP</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="exit">Exit</string>
 
     <!-- Eligible couple registration -->
     <string-array name="ecr_gender_array">

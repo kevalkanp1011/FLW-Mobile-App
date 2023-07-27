@@ -3,20 +3,22 @@ package org.piramalswasthya.sakhi.repositories
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.CbacCache
 import timber.log.Timber
 import javax.inject.Inject
 
 class CbacRepo @Inject constructor(
-    private val database: InAppDb
+    private val database: InAppDb,
+    private val prefDao : PreferenceDao
 ) {
 
     suspend fun saveCbacData(cbacCache: CbacCache, ben: BenRegCache): Boolean {
         return withContext(Dispatchers.IO) {
 
             val user =
-                database.userDao.getLoggedInUser()
+                prefDao.getLoggedInUser()
                     ?: throw IllegalStateException("No user logged in!!")
             try {
                 cbacCache.apply {
@@ -39,8 +41,8 @@ class CbacRepo @Inject constructor(
                     else
                         "0"
                     Processed = "N"
-                    ProviderServiceMapID = user.serviceMapId
-                    VanID = user.vanId
+//                    ProviderServiceMapID = user.serviceMapId
+//                    VanID = user.vanId
 
                 }
 
@@ -52,6 +54,13 @@ class CbacRepo @Inject constructor(
                 false
             }
         }
+    }
+
+    suspend fun getCbacCacheFromId(cbacId: Int): CbacCache {
+        return withContext(Dispatchers.IO){
+            database.cbacDao.getCbacFromBenId(cbacId)  ?: throw IllegalStateException("No CBAC entry found!")
+        }
+
     }
 
 

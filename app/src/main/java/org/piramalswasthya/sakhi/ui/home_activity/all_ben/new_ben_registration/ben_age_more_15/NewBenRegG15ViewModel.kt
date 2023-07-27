@@ -21,7 +21,7 @@ import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.BenRegGen
 import org.piramalswasthya.sakhi.model.HouseholdCache
-import org.piramalswasthya.sakhi.model.UserDomain
+import org.piramalswasthya.sakhi.model.User
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.UserRepo
 import timber.log.Timber
@@ -81,7 +81,7 @@ class NewBenRegG15ViewModel @Inject constructor(
     val recordExists: LiveData<Boolean>
         get() = _recordExists
 
-    private lateinit var user: UserDomain
+    private lateinit var user: User
     private val dataset: BenGenRegFormDataset =
         BenGenRegFormDataset(context, preferenceDao.getCurrentLanguage())
     val formList = dataset.listFlow
@@ -94,7 +94,7 @@ class NewBenRegG15ViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                user = userRepo.getLoggedInUser()!!
+                user = preferenceDao.getLoggedInUser()!!
                 household = benRepo.getHousehold(hhId)!!
                 ben = benRepo.getBeneficiaryRecord(benIdFromArgs, hhId) ?: BenRegCache(
                     ashaId = user.userId,

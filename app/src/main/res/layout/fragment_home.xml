@@ -96,7 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btn_text_frag_home_nhhr"
-            android:textColor="?attr/colorSecondary"
+            android:textColor="?attr/colorOnPrimary"
             android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
             android:padding="@dimen/padding_wide"
             android:backgroundTint="?attr/colorPrimary"

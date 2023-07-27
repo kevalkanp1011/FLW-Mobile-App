@@ -9,7 +9,30 @@ import okhttp3.ResponseBody
 import org.json.JSONException
 import org.json.JSONObject
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.network.*
+import org.piramalswasthya.sakhi.network.AadhaarVerifyBioRequest
+import org.piramalswasthya.sakhi.network.AbhaApiService
+import org.piramalswasthya.sakhi.network.AbhaCheckAndGenerateMobileOtpResponse
+import org.piramalswasthya.sakhi.network.AbhaGenerateAadhaarOtpRequest
+import org.piramalswasthya.sakhi.network.AbhaGenerateAadhaarOtpResponse
+import org.piramalswasthya.sakhi.network.AbhaGenerateAadhaarOtpResponseV2
+import org.piramalswasthya.sakhi.network.AbhaGenerateMobileOtpRequest
+import org.piramalswasthya.sakhi.network.AbhaResendAadhaarOtpRequest
+import org.piramalswasthya.sakhi.network.AbhaTokenResponse
+import org.piramalswasthya.sakhi.network.AbhaVerifyAadhaarOtpRequest
+import org.piramalswasthya.sakhi.network.AbhaVerifyAadhaarOtpResponse
+import org.piramalswasthya.sakhi.network.AbhaVerifyMobileOtpRequest
+import org.piramalswasthya.sakhi.network.AbhaVerifyMobileOtpResponse
+import org.piramalswasthya.sakhi.network.AmritApiService
+import org.piramalswasthya.sakhi.network.CreateAbhaIdGovRequest
+import org.piramalswasthya.sakhi.network.CreateAbhaIdRequest
+import org.piramalswasthya.sakhi.network.CreateAbhaIdResponse
+import org.piramalswasthya.sakhi.network.CreateHIDResponse
+import org.piramalswasthya.sakhi.network.CreateHealthIdRequest
+import org.piramalswasthya.sakhi.network.GenerateOtpHid
+import org.piramalswasthya.sakhi.network.MapHIDtoBeneficiary
+import org.piramalswasthya.sakhi.network.NetworkResult
+import org.piramalswasthya.sakhi.network.StateCodeResponse
+import org.piramalswasthya.sakhi.network.ValidateOtpHid
 import retrofit2.Response
 import timber.log.Timber
 import java.io.IOException
@@ -354,7 +377,7 @@ class AbhaIdRepo @Inject constructor(
                     5000 -> {
                         if (JSONObject(responseBody).getString("errorMessage")
                                 .contentEquals("Invalid login key or session is expired")) {
-                            val user = userRepo.getLoggedInUser()!!
+                            val user = prefDao.getLoggedInUser()!!
                             userRepo.refreshTokenTmc(user.userName, user.password)
                             createHealthIdWithUid(createHealthIdRequest)
                         } else {
@@ -387,7 +410,7 @@ class AbhaIdRepo @Inject constructor(
                     5000 -> {
                         if (JSONObject(responseBody).getString("errorMessage")
                                 .contentEquals("Invalid login key or session is expired")){
-                            val user = userRepo.getLoggedInUser()!!
+                            val user = prefDao.getLoggedInUser()!!
                             userRepo.refreshTokenTmc(user.userName, user.password)
                             mapHealthIDToBeneficiary(mapHIDtoBeneficiary)
                         } else {
@@ -418,7 +441,7 @@ class AbhaIdRepo @Inject constructor(
                     5000 -> {
                         val error = JSONObject(responseBody).getString("errorMessage")
                         if ( error.contentEquals("Invalid login key or session is expired")){
-                            val user = userRepo.getLoggedInUser()!!
+                            val user = prefDao.getLoggedInUser()!!
                             userRepo.refreshTokenTmc(user.userName, user.password)
                             generateOtpHid(generateOtpHid)
                         } else {
@@ -449,7 +472,7 @@ class AbhaIdRepo @Inject constructor(
                     5000 -> {
                         if (JSONObject(responseBody).getString("errorMessage")
                                 .contentEquals("Invalid login key or session is expired")){
-                            val user = userRepo.getLoggedInUser()!!
+                            val user = prefDao.getLoggedInUser()!!
                             userRepo.refreshTokenTmc(user.userName, user.password)
                             verifyOtpAndGenerateHealthCard(validateOtpHid)
                         } else {

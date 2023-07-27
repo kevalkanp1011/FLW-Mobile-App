@@ -34,7 +34,7 @@
                 android:id="@+id/ll_title_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorSecondary"
+                android:background="?attr/colorOnPrimary"
                 android:paddingHorizontal="@dimen/padding_normal"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -235,7 +235,7 @@
                     android:layout_alignParentEnd="true"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:textColor="?attr/colorPrimary"
-                    android:backgroundTint="?attr/colorSecondary"
+                    android:backgroundTint="?attr/colorOnPrimary"
                     android:layout_marginHorizontal="@dimen/padding_small"
                     android:text="SYNC TO LOCAL" />
             </RelativeLayout>

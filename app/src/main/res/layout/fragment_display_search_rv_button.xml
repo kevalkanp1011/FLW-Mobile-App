@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/secondaryLightColor"
     tools:context=".ui.home_activity.all_household.AllHouseholdFragment">
 
 
@@ -48,12 +47,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_normal"
-        android:backgroundTint="@color/primaryColor"
-        android:backgroundTintMode="src_in"
         android:padding="@dimen/padding_normal"
         android:text="@string/btn_text_frag_home_nhhr"
         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-        android:textColor="?attr/colorSecondary"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

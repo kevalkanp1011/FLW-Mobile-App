@@ -57,7 +57,7 @@
                 android:backgroundTint="?attr/colorPrimary"
                 android:text="KCUF"
                 android:onClick="@{()-> clickListener.onClicked(vaccine)}"
-                android:textColor="?attr/colorSecondary"
+                android:textColor="?attr/colorOnPrimary"
                 vaccineState="@{vaccine.state}" />
 
 <!--            android:onClick="@{()-> clickListener.onClick(vaccine)}"-->

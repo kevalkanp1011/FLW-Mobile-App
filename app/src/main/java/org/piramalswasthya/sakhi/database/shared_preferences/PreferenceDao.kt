@@ -7,6 +7,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.LocationRecord
+import org.piramalswasthya.sakhi.model.User
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,53 +16,33 @@ import javax.inject.Singleton
 class PreferenceDao @Inject constructor(@ApplicationContext private val context: Context) {
 
     private val pref = PreferenceManager.getInstance(context)
-
-    fun getD2DApiToken(): String? {
-        val prefKey = context.getString(R.string.PREF_D2D_API_KEY)
-        return pref.getString(prefKey, null)
-    }
-
-    fun registerD2DApiToken(token: String) {
-        val editor = pref.edit()
-        val prefKey = context.getString(R.string.PREF_D2D_API_KEY)
-        editor.putString(prefKey, token)
-        editor.apply()
-    }
-
-    fun deletePrimaryApiToken() {
+    fun deleteAmritToken() {
         val editor = pref.edit()
         val prefKey = context.getString(R.string.PREF_D2D_API_KEY)
         editor.remove(prefKey)
         editor.apply()
     }
 
-    fun getPrimaryApiToken(): String? {
+    fun getAmritToken(): String? {
         val prefKey = context.getString(R.string.PREF_primary_API_KEY)
         return pref.getString(prefKey, null)
     }
 
-    fun registerPrimaryApiToken(token: String) {
+    fun registerAmritToken(token: String) {
         val editor = pref.edit()
         val prefKey = context.getString(R.string.PREF_primary_API_KEY)
         editor.putString(prefKey, token)
         editor.apply()
     }
 
-    fun deleteD2DApiToken() {
-        val editor = pref.edit()
-        val prefKey = context.getString(R.string.PREF_primary_API_KEY)
-        editor.remove(prefKey)
-        editor.apply()
-    }
-
-    fun registerLoginCred(userName: String, password: String, state : String) {
+    fun registerLoginCred(userName: String, password: String) {
         val editor = pref.edit()
         val prefUserKey = context.getString(R.string.PREF_rem_me_uname)
         val prefUserPwdKey = context.getString(R.string.PREF_rem_me_pwd)
-        val prefUserStateKey = context.getString(R.string.PREF_rem_me_state)
+//        val prefUserStateKey = context.getString(R.string.PREF_rem_me_state)
         editor.putString(prefUserKey, userName)
         editor.putString(prefUserPwdKey, password)
-        editor.putString(prefUserStateKey, state)
+//        editor.putString(prefUserStateKey, state)
         editor.apply()
     }
 
@@ -87,6 +68,7 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
         val key = context.getString(R.string.PREF_rem_me_pwd)
         return pref.getString(key, null)
     }
+
     fun getRememberedState(): String? {
         val key = context.getString(R.string.PREF_rem_me_state)
         return pref.getString(key, null)
@@ -148,11 +130,11 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
         }
     }
 
-    fun saveProfilePicUri(uri: Uri) {
-        val key = context.getString(R.string.PREF_current_dp_uri)
+    fun saveProfilePicUri(uri: Uri?) {
 
+        val key = context.getString(R.string.PREF_current_dp_uri)
         val editor = pref.edit()
-        editor.putString(key, uri.toString())
+        editor.putString(key, uri?.toString())
         editor.apply()
         Timber.d("Saving profile pic @ $uri")
     }
@@ -173,5 +155,19 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
     fun getPublicKeyForAbha(): String? {
         val key = "AUTH_CERT"
         return pref.getString(key, null)
+    }
+
+    fun registerUser(user: User) {
+        val editor = pref.edit()
+        val prefKey = context.getString(R.string.PREF_user_entry)
+        val userJson = Gson().toJson(user)
+        editor.putString(prefKey, userJson)
+        editor.apply()
+    }
+
+    fun getLoggedInUser(): User? {
+        val prefKey = context.getString(R.string.PREF_user_entry)
+        val json = pref.getString(prefKey, null)
+        return Gson().fromJson(json, User::class.java)
     }
 }

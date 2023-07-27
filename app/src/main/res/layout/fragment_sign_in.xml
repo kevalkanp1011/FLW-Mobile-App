@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_huge"
             android:elevation="@dimen/padding_normal"
-            app:cardBackgroundColor="?attr/colorSecondary"
+            app:cardBackgroundColor="?attr/colorOnPrimary"
             app:cardCornerRadius="@dimen/padding_wide"
             app:cardElevation="@dimen/padding_wide"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -106,31 +106,31 @@
 
                     </RadioGroup>
 
-                    <com.google.android.material.button.MaterialButtonToggleGroup
-                        android:id="@+id/toggleStates"
-                        style="?attr/materialButtonToggleGroupStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/rg_lang_select"
-                        app:selectionRequired="true"
-                        app:singleSelection="true">
+<!--                    <com.google.android.material.button.MaterialButtonToggleGroup-->
+<!--                        android:id="@+id/toggleStates"-->
+<!--                        style="?attr/materialButtonToggleGroupStyle"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toBottomOf="@+id/rg_lang_select"-->
+<!--                        app:selectionRequired="true"-->
+<!--                        app:singleSelection="true">-->
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/tbtn_bihar"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Bihar" />
+<!--                        <com.google.android.material.button.MaterialButton-->
+<!--                            android:id="@+id/tbtn_bihar"-->
+<!--                            style="?attr/materialButtonOutlinedStyle"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Bihar" />-->
 
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/tbtn_assam"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Assam" />
-                    </com.google.android.material.button.MaterialButtonToggleGroup>
+<!--                        <com.google.android.material.button.MaterialButton-->
+<!--                            android:id="@+id/tbtn_assam"-->
+<!--                            style="?attr/materialButtonOutlinedStyle"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Assam" />-->
+<!--                    </com.google.android.material.button.MaterialButtonToggleGroup>-->
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/til_username"
@@ -141,9 +141,9 @@
                         android:paddingTop="@dimen/padding_normal"
 
                         android:paddingBottom="@dimen/padding_normal"
-                        app:endIconTint="@color/primaryColor"
+                        app:endIconTint="?attr/colorOnPrimary"
 
-                        app:layout_constraintTop_toBottomOf="@id/toggleStates"
+                        app:layout_constraintTop_toBottomOf="@id/rg_lang_select"
                         tools:layout_editor_absoluteX="16dp">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -185,9 +185,9 @@
                         android:id="@+id/tv_error"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAlignment="center"
+                        android:gravity="center"
                         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                        android:textColor="@color/red"
+                        android:textColor="@android:color/holo_red_light"
                         android:visibility="gone"
                         app:layout_constraintTop_toBottomOf="@id/til_password"
                         tools:text="Hello"
@@ -199,7 +199,6 @@
                         android:id="@+id/cb_remember"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:buttonTint="?attr/colorPrimary"
                         android:text="@string/cb_login_remember_me_text"
                         app:layout_constraintTop_toBottomOf="@id/tv_error" />
 
@@ -208,7 +207,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/padding_normal"
-                        android:backgroundTint="@color/secondaryColor"
+                        android:backgroundTint="?attr/colorOnPrimary"
                         android:gravity="center"
                         android:padding="@dimen/padding_normal"
                         android:text="@string/btn_login_forgot_password_text"
@@ -226,7 +225,6 @@
                         android:padding="@dimen/padding_normal"
                         android:text="@string/btn_login_text"
                         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                        android:textColor="?attr/colorSecondary"
                         app:layout_constraintTop_toBottomOf="@id/tv_forgot_password" />
 
 

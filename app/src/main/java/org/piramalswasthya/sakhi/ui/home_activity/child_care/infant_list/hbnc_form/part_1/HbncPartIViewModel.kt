@@ -1,7 +1,11 @@
 package org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.part_1
 
 import android.content.Context
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +18,7 @@ import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.HBNCCache
 import org.piramalswasthya.sakhi.model.HouseholdCache
-import org.piramalswasthya.sakhi.model.UserDomain
+import org.piramalswasthya.sakhi.model.User
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.HbncRepo
 import org.piramalswasthya.sakhi.repositories.UserRepo
@@ -39,7 +43,7 @@ class HbncPartIViewModel @Inject constructor(
     private val hhId = HbncPartIFragmentArgs.fromSavedStateHandle(state).hhId
     private lateinit var ben: BenRegCache
     private lateinit var household: HouseholdCache
-    private lateinit var user: UserDomain
+    private lateinit var user: User
     private var hbnc: HBNCCache? = null
 
     private val _benName = MutableLiveData<String>()
@@ -88,7 +92,7 @@ class HbncPartIViewModel @Inject constructor(
                 Timber.d("benId : $benId hhId : $hhId")
                 ben = benRepo.getBeneficiaryRecord(benId, hhId)!!
                 household = benRepo.getHousehold(hhId)!!
-                user = userRepo.getLoggedInUser()!!
+                user = preferenceDao.getLoggedInUser()!!
                 hbnc = hbncRepo.getHbncRecord(benId, hhId, Konstants.hbncPart1Day)
             }
             _benName.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"

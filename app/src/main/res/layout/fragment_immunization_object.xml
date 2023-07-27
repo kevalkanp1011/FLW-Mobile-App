@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:card_view="http://schemas.android.com/tools"
-    android:background="@color/white"
+    android:background="@android:color/white"
     android:scrollbars="none">
 
 
@@ -47,7 +47,7 @@
                             android:gravity="center"
                             android:id="@+id/ben_nameTv"
                             android:layout_marginLeft="15dp"
-                            android:textColor="@color/white"
+                            android:textColor="@android:color/white"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -64,7 +64,7 @@
                             android:fontFamily="@font/opensans_regular"
                             android:gravity="center"
                             android:id="@+id/age_gender_tv"
-                            android:textColor="@color/white"
+                            android:textColor="@android:color/white"
                             android:layout_marginEnd="15dp"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -83,7 +83,7 @@
 <!--                            android:id="@+id/gender_tv"-->
 <!--                            android:text="Male"-->
 <!--                            android:layout_marginStart="5dp"-->
-<!--                            android:textColor="@color/white"-->
+<!--                            android:textColor="@android:color/white"-->
 <!--                            android:textSize="16sp"-->
 <!--                            android:textStyle="bold"-->
 <!--                            android:layout_marginLeft="5dp" />-->
@@ -120,7 +120,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
                             android:layout_marginTop="10dp"
-                            android:textColor="@color/primaryColor"
+                            android:textColor="?attr/colorOnPrimary"
                             android:fontFamily="@font/opensans_regular"
                             android:textSize="20sp"
                             android:text="Patient Information"
@@ -151,7 +151,7 @@
                                     android:focusable="false"
                                     android:maxLength="50"
                                     android:paddingLeft="7dp"
-                                    android:textColor="@color/black"
+                                    android:textColor="@android:color/black"
                                     android:fontFamily="@font/opensans_regular"
                                     android:textSize="18sp" />
 
@@ -192,7 +192,7 @@
                                     android:inputType="text|textMultiLine"
                                     android:maxLength="50"
                                     android:paddingLeft="7dp"
-                                    android:textColor="@color/black"
+                                    android:textColor="@android:color/black"
                                     android:fontFamily="@font/opensans_regular"
 
                                     android:textSize="18sp" />
@@ -251,7 +251,7 @@
                                 android:layout_marginBottom="5dp"
                                 android:paddingLeft="5dp"
                                 android:text="Previous Vaccine Details"
-                                android:textColor="@color/primaryColor"
+                                android:textColor="?attr/colorOnPrimary"
                                 android:fontFamily="@font/opensans_regular"
                                 android:textSize="20sp"
                                 android:textStyle="bold" />
@@ -281,7 +281,7 @@
                                     android:inputType="text"
                                     android:maxLength="15"
                                     android:paddingLeft="7dp"
-                                    android:textColor="@color/black"
+                                    android:textColor="@android:color/black"
                                     android:fontFamily="@font/opensans_regular"
                                     android:textSize="18sp" />
 
@@ -324,7 +324,7 @@
                                         android:drawablePadding="10dp"
                                         android:focusableInTouchMode="false"
                                         android:paddingLeft="7dp"
-                                        android:textColor="@color/black"
+                                        android:textColor="@android:color/black"
                                         android:fontFamily="@font/opensans_regular"
                                         android:imeOptions="actionNext"
                                         android:textSize="18sp" />
@@ -376,7 +376,7 @@
 
                                     android:maxLength="50"
                                     android:paddingLeft="7dp"
-                                    android:textColor="@color/black"
+                                    android:textColor="@android:color/black"
                                     android:fontFamily="@font/opensans_regular"
                                     android:textSize="18sp" />
 
@@ -420,7 +420,7 @@
 
                                     android:focusable="false"
                                     android:paddingLeft="7dp"
-                                    android:textColor="@color/black"
+                                    android:textColor="@android:color/black"
                                     android:fontFamily="@font/opensans_regular"
                                     android:textSize="18sp" />
 
@@ -475,7 +475,7 @@
                                 android:gravity="start"
                                 android:paddingLeft="5dp"
                                 android:text="Current Vaccine Details"
-                                android:textColor="@color/primaryColor"
+                                android:textColor="?attr/colorOnPrimary"
                                 android:fontFamily="@font/opensans_regular"
                                 android:textSize="20sp"
                                 android:textStyle="bold" />
@@ -506,7 +506,7 @@
                                     android:inputType="text|textMultiLine"
                                     android:maxLength="150"
                                     android:paddingLeft="7dp"
-                                    android:textColor="@color/black"
+                                    android:textColor="@android:color/black"
                                     android:fontFamily="@font/opensans_regular"
                                     android:textSize="18sp" />
 
@@ -548,7 +548,7 @@
                                     android:focusableInTouchMode="false"
                                     android:maxLength="50"
                                     android:paddingLeft="7dp"
-                                    android:textColor="@color/black"
+                                    android:textColor="@android:color/black"
                                     android:fontFamily="@font/opensans_regular"
                                     android:textSize="18sp" />
 
@@ -589,7 +589,7 @@
                                     android:inputType="text|textMultiLine"
                                     android:maxLength="50"
                                     android:paddingLeft="7dp"
-                                    android:textColor="@color/black"
+                                    android:textColor="@android:color/black"
                                     android:fontFamily="@font/opensans_regular"
                                     android:textSize="18sp" />
 
@@ -630,7 +630,7 @@
 
                                     android:maxLength="50"
                                     android:paddingLeft="7dp"
-                                    android:textColor="@color/black"
+                                    android:textColor="@android:color/black"
                                     android:fontFamily="@font/opensans_regular"
                                     android:textSize="18sp" />
 
@@ -670,7 +670,7 @@
                                     android:inputType="text|textMultiLine"
                                     android:maxLength="50"
                                     android:paddingLeft="7dp"
-                                    android:textColor="@color/black"
+                                    android:textColor="@android:color/black"
                                     android:fontFamily="@font/opensans_regular"
                                     android:textSize="18sp" />
 
@@ -711,7 +711,7 @@
                                     android:inputType="text|textMultiLine"
                                     android:maxLength="50"
                                     android:paddingLeft="7dp"
-                                    android:textColor="@color/black"
+                                    android:textColor="@android:color/black"
                                     android:fontFamily="@font/opensans_regular"
                                     android:textSize="18sp" />
 
@@ -739,7 +739,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="10dp"
                     android:text="Submit"
-                    android:textColor="@color/white"
+                    android:textColor="@android:color/white"
                     android:textStyle="bold" />
 
             </LinearLayout>

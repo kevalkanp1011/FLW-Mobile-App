@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
-import androidx.work.NetworkType
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -26,7 +25,7 @@ class GenerateBenIdsWorker @AssistedInject constructor(
     companion object {
         const val name = "GenBenIDWorker"
         val constraint = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
+//            .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
     }
@@ -48,6 +47,6 @@ class GenerateBenIdsWorker @AssistedInject constructor(
 
     private fun init() {
         if (TokenInsertTmcInterceptor.getToken() == "")
-            TokenInsertTmcInterceptor.setToken(preferenceDao.getPrimaryApiToken()!!)
+            TokenInsertTmcInterceptor.setToken(preferenceDao.getAmritToken()!!)
     }
 }

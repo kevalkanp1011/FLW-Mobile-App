@@ -1,6 +1,11 @@
 package org.piramalswasthya.sakhi.network
 
 import com.squareup.moshi.JsonClass
+import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.model.TBScreeningCache
+import org.piramalswasthya.sakhi.model.TBSuspectedCache
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @JsonClass(generateAdapter = true)
 data class D2DAuthUserRequest(
@@ -62,7 +67,7 @@ data class TmcGenerateBenIdsRequest(
 
 @JsonClass(generateAdapter = true)
 data class GetBenRequest(
-    val AshaId: String,
+    val ashaId: Int,
     val pageNo: Int,
     val fromDate: String,
     val toDate: String
@@ -74,6 +79,14 @@ data class BenResponse(
     val benRegId: Long,
     val abhaDetails: List<BenAbhaResponse>?,
     val toDate: String
+)
+
+@JsonClass(generateAdapter = true)
+data class BenHealthDetails(
+    val benHealthID: Int,
+    val healthIdNumber: String,
+    val beneficiaryRegID: Long,
+    val healthId: String
 )
 
 @JsonClass(generateAdapter = true)
@@ -193,7 +206,7 @@ data class CreateAbhaIdGovRequest(
 
     val aadharNumber: Long,
     val benefitName: String,
-    val consentHealthId: Boolean ,
+    val consentHealthId: Boolean,
     val dateOfBirth: String,
     val gender: String,
     val name: String,
@@ -241,6 +254,7 @@ data class CreateHIDResponse(
     val createdBy: String?,
     val txnId: String?,
 )
+
 @JsonClass(generateAdapter = true)
 data class CreateAbhaIdResponse(
 
@@ -271,6 +285,7 @@ data class CreateAbhaIdResponse(
     val new: Boolean,
     var txnId: String
 )
+
 @JsonClass(generateAdapter = true)
 data class GenerateOtpHid(
     val authMethod: String?,
@@ -283,6 +298,11 @@ data class ValidateOtpHid(
     val otp: String?,
     val txnId: String?,
     val authMethod: String?
+)
+@JsonClass(generateAdapter = true)
+data class GetBenHealthIdRequest(
+    val beneficiaryRegID: Long?,
+    val beneficiaryID: Long?,
 )
 @JsonClass(generateAdapter = true)
 data class CreateHealthIdRequest(
@@ -316,4 +336,72 @@ data class MapHIDtoBeneficiary(
     val createdBy: String?
 )
 
+data class TBScreeningRequestDTO(
+    val userId: Int,
+    val tbScreeningList: List<TBScreeningDTO>
+)
 
+data class TBScreeningDTO(
+    val id: Long,
+    val benId: Long,
+    val visitDate: String?,
+    var coughMoreThan2Weeks: Boolean?,
+    var bloodInSputum: Boolean?,
+    var feverMoreThan2Weeks: Boolean?,
+    var lossOfWeight: Boolean?,
+    var nightSweats: Boolean?,
+    var historyOfTb: Boolean?,
+    var takingAntiTBDrugs: Boolean?,
+    var familySufferingFromTB: Boolean?
+) {
+    fun toCache(): TBScreeningCache {
+        return TBScreeningCache(
+            benId = benId,
+            visitDate = getLongFromDate(visitDate),
+            coughMoreThan2Weeks = coughMoreThan2Weeks,
+            bloodInSputum = bloodInSputum,
+            feverMoreThan2Weeks = feverMoreThan2Weeks,
+            lossOfWeight = lossOfWeight,
+            nightSweats = nightSweats,
+            historyOfTb = historyOfTb,
+            takingAntiTBDrugs = takingAntiTBDrugs,
+            familySufferingFromTB = familySufferingFromTB,
+            syncState = SyncState.SYNCED
+        )
+    }
+}
+
+data class TBSuspectedDTO(
+    val id: Long,
+    val benId: Long,
+    val visitDate: String?,
+    val isSputumCollected: Boolean?,
+    val sputumSubmittedAt: String?,
+    val nikshayId: String?,
+    val sputumTestResult: String?,
+    val referred: Boolean?,
+    val followUps: String?
+) {
+    fun toCache() : TBSuspectedCache {
+        return TBSuspectedCache(
+            benId = benId,
+            visitDate = getLongFromDate(visitDate),
+            isSputumCollected = isSputumCollected,
+            sputumSubmittedAt = sputumSubmittedAt,
+            nikshayId = nikshayId,
+            sputumTestResult = sputumTestResult,
+            referred = referred,
+            followUps = followUps,
+            syncState = SyncState.SYNCED
+        )
+    }
+}
+data class TBSuspectedRequestDTO(
+    val userId: Int,
+    val tbSuspectedList: List<TBSuspectedDTO>
+)
+fun getLongFromDate(dateString: String?): Long {
+    val f = SimpleDateFormat("MMM d, yyyy h:mm:ss a", Locale.ENGLISH)
+    val date = dateString?.let { f.parse(it) }
+    return date?.time ?: 0L
+}

@@ -29,7 +29,7 @@
                 android:gravity="center"
                 android:padding="@dimen/padding_normal"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textColor="@color/white"
+                android:textColor="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/tv_age_gender"
                 app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +43,7 @@
                 android:gravity="center"
                 android:padding="@dimen/padding_normal"
                 android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
-                android:textColor="@color/white"
+                android:textColor="@android:color/white"
                 app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -63,7 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_small"
         android:text="SUBMIT"
-        android:textColor="@color/white" />
+        android:textColor="@android:color/white" />
 
     <ProgressBar
         android:id="@+id/pb_hbyc"

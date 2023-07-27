@@ -440,23 +440,23 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
             )
             otherResidentialArea.id -> {
                 validateEmptyOnEditText(otherResidentialArea)
-                validateAllAlphabetsSpaceOnEditText(otherResidentialArea)
+                //validateAllAlphabetsSpaceOnEditText(otherResidentialArea)
             }
             otherFuelForCooking.id -> {
                 validateEmptyOnEditText(otherFuelForCooking)
-                validateAllAlphabetsSpaceOnEditText(otherFuelForCooking)
+                //validateAllAlphabetsSpaceOnEditText(otherFuelForCooking)
             }
             otherSourceOfWater.id -> {
                 validateEmptyOnEditText(otherSourceOfWater)
-                validateAllAlphabetsSpaceOnEditText(otherSourceOfWater)
+               // validateAllAlphabetsSpaceOnEditText(otherSourceOfWater)
             }
             otherSourceOfElectricity.id -> {
                 validateEmptyOnEditText(otherSourceOfElectricity)
-                validateAllAlphabetsSpaceOnEditText(otherSourceOfElectricity)
+              //  validateAllAlphabetsSpaceOnEditText(otherSourceOfElectricity)
             }
             otherAvailOfToilet.id -> {
                 validateEmptyOnEditText(otherAvailOfToilet)
-                validateAllAlphabetsSpaceOnEditText(otherAvailOfToilet)
+               // validateAllAlphabetsSpaceOnEditText(otherAvailOfToilet)
             }
             else -> -1
         }

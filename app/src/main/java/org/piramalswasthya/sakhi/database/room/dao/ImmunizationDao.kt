@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 import org.piramalswasthya.sakhi.model.ChildImmunizationDetailsCache
 import org.piramalswasthya.sakhi.model.ImmunizationCache
@@ -26,6 +27,7 @@ interface ImmunizationDao {
     @Query("SELECT * FROM IMMUNIZATION WHERE beneficiaryId=:benId AND vaccineId =:vaccineId limit 1")
     suspend fun getImmunizationRecord(benId: Long, vaccineId: Int): ImmunizationCache?
 
+    @Transaction
     @Query(
         "SELECT * FROM BEN_BASIC_CACHE ben LEFT OUTER JOIN IMMUNIZATION imm WHERE ben.dob BETWEEN :minDob AND :maxDob "
     )
@@ -34,6 +36,7 @@ interface ImmunizationDao {
         maxDob: Long,
 //        vaccineIdList: List<Int>
     ): Flow<List<ChildImmunizationDetailsCache>>
+    @Transaction
     @Query(
         "SELECT ben.*, reg.lmpDate as lmp, imm.* FROM BEN_BASIC_CACHE ben inner join pregnancy_register reg on ben.benId = reg.benId LEFT OUTER JOIN IMMUNIZATION imm WHERE ben.reproductiveStatusId = :reproductiveStatusId "
     )

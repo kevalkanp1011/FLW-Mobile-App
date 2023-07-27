@@ -3,12 +3,12 @@
     <!-- HOUSEHOLD -->
     <string name="btn_text_frag_home_nhhr">New Household Registration</string>
     <string name="no_records_found">No beneficiaries to display. Please start registering beneficiaries.</string>
-    <string name="household_search">Household Search</string>
+    <string name="household_search">Search</string>
 
     <string name="rv_item_hh_ph_1">HHID : </string>
     <string name="rv_item_hh_ph_2">Family Head Name :</string>
     <string name="rv_item_hh_ph_3">Surname : </string>
-    <string name="hh_members_text">Members</string>
+    <string name="hh_members_text">Members : %1d</string>
     <string name="btn_rv_item_hh_add_ben">Add Beneficiary</string>
 
     <string name="frag_nhhr_title">New Household Registration</string>

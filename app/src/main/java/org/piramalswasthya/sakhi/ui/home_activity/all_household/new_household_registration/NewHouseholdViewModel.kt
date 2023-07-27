@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.HouseholdFormDataset
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.HouseholdCache
-import org.piramalswasthya.sakhi.model.UserDomain
+import org.piramalswasthya.sakhi.model.User
 import org.piramalswasthya.sakhi.repositories.HouseholdRepo
 import org.piramalswasthya.sakhi.repositories.UserRepo
 import timber.log.Timber
@@ -35,6 +35,13 @@ class NewHouseholdViewModel @Inject constructor(
     enum class State {
         IDLE, SAVING, SAVE_SUCCESS, SAVE_FAILED
     }
+
+    private var isConsentAgreed = false
+
+    fun setConsentAgreed() {
+        isConsentAgreed = true
+    }
+    fun getIsConsentAgreed() = isConsentAgreed
 
     private val hhIdFromArgs = NewHouseholdFragmentArgs.fromSavedStateHandle(savedStateHandle).hhId
 
@@ -59,7 +66,7 @@ class NewHouseholdViewModel @Inject constructor(
     val recordExists: LiveData<Boolean>
         get() = _recordExists
 
-    private lateinit var user: UserDomain
+    private lateinit var user: User
     private val dataset = HouseholdFormDataset(context, preferenceDao.getCurrentLanguage())
     val formList = dataset.listFlow
     private lateinit var household: HouseholdCache
@@ -68,7 +75,7 @@ class NewHouseholdViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                user = userRepo.getLoggedInUser()!!
+                user = preferenceDao.getLoggedInUser()!!
                 val locationRecord = preferenceDao.getLocationRecord()!!
                 household = householdRepo.getRecord(hhIdFromArgs) ?: householdRepo.getDraftRecord()
                         ?: HouseholdCache(

@@ -20,7 +20,7 @@ class AllBenViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    private val allBenList = recordsRepo.getBenList()
+    private val allBenList = recordsRepo.allBenList
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter){
        list, filter -> filterBenList(list, filter)
@@ -57,14 +57,10 @@ class AllBenViewModel @Inject constructor(
         _benRegId.value = null
         _benId.value = benId
         viewModelScope.launch {
-            val result = benRepo.getBeneficiaryWithId(benId)
-            result?.let {
-                if (it.abhaDetails != null) {
-                    if (it.abhaDetails.isNotEmpty()) {
-                        _abha.value = it.abhaDetails.first().HealthIDNumber
-                    } else {
-                        _benRegId.value = it.benRegId
-                    }
+            benRepo.getBenFromId(benId)?.let {
+                val result = benRepo.getBeneficiaryWithId(it.benRegId)
+                if (result != null) {
+                    _abha.value = result.healthIdNumber
                 } else {
                     _benRegId.value = it.benRegId
                 }

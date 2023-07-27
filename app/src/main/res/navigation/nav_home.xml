@@ -55,6 +55,9 @@
         <action
             android:id="@+id/action_homeFragment_to_pwAncVisitsFragment"
             app:destination="@id/pwAncVisitsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_cdFragment"
+            app:destination="@id/cdFragment" />
     </fragment>
     <fragment
         android:id="@+id/allHouseholdFragment"
@@ -143,6 +146,9 @@
         <action
             android:id="@+id/action_motherCareFragment_to_infantRegListFragment"
             app:destination="@id/infantRegListFragment" />
+        <action
+            android:id="@+id/action_motherCareFragment_to_childRegListFragment"
+            app:destination="@id/childRegListFragment" />
     </fragment>
     <fragment
         android:id="@+id/deathReportsFragment"
@@ -185,7 +191,7 @@
         tools:layout="@layout/fragment_menopause_stage" />
     <fragment
         android:id="@+id/ncdFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.NcdFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_diseases.NcdFragment"
         android:label="@string/icon_title_ncd"
         tools:layout="@layout/rv_icon_grid">
         <action
@@ -200,12 +206,6 @@
         <action
             android:id="@+id/action_ncdFragment_to_ncdPriorityListFragment"
             app:destination="@id/ncdPriorityListFragment" />
-        <action
-            android:id="@+id/action_ncdFragment_to_TBScreeningListFragment"
-            app:destination="@id/TBScreeningListFragment" />
-        <action
-            android:id="@+id/action_ncdFragment_to_TBSuspectedListFragment"
-            app:destination="@id/TBSuspectedListFragment" />
     </fragment>
     <fragment
         android:id="@+id/villageLevelFormsFragment"
@@ -349,7 +349,7 @@
     </fragment>
     <fragment
         android:id="@+id/ncdEligibleListFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_eligible_list.NcdEligibleListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_diseases.ncd_eligible_list.NcdEligibleListFragment"
         android:label="NCD Eligible List"
         tools:layout="@layout/fragment_ncd_eligible_list">
         <action
@@ -358,17 +358,17 @@
     </fragment>
     <fragment
         android:id="@+id/ncdListFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_list.NcdListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_diseases.ncd_list.NcdListFragment"
         android:label="NCD List"
         tools:layout="@layout/fragment_ncd_list" />
     <fragment
         android:id="@+id/ncdNonEligibleListFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_non_eligible_list.NcdNonEligibleListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_diseases.ncd_non_eligible_list.NcdNonEligibleListFragment"
         android:label="NCD Non-Eligible List"
         tools:layout="@layout/fragment_ncd_non_eligible_list" />
     <fragment
         android:id="@+id/ncdPriorityListFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_priority_list.NcdPriorityListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_diseases.ncd_priority_list.NcdPriorityListFragment"
         android:label="NCD Priority List"
         tools:layout="@layout/fragment_ncd_priority_list" />
     <fragment
@@ -383,16 +383,17 @@
         tools:layout="@layout/fragment_get_ben" />
     <fragment
         android:id="@+id/cbacFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.ncd_eligible_list.cbac.CbacFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_diseases.cbac.CbacFragment"
         android:label="CBAC Form">
-        <argument
-            android:name="hhId"
-            app:argType="long" />
         <argument
             android:name="benId"
             app:argType="long" />
         <argument
-            android:name="userId"
+            android:name="cbacId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="ashaId"
             app:argType="integer" />
 
     </fragment>
@@ -470,7 +471,7 @@
     <fragment
         android:id="@+id/householdMembersFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.all_household.household_members.HouseholdMembersFragment"
-        android:label="fragment_household_members"
+        android:label="Household Members"
         tools:layout="@layout/fragment_display_search_rv_button">
         <argument
             android:name="hhId"
@@ -478,6 +479,12 @@
         <action
             android:id="@+id/action_householdMembersFragment_to_newBenRegTypeFragment"
             app:destination="@id/newBenRegTypeFragment" />
+        <action
+            android:id="@+id/action_householdMembersFragment_to_newBenRegL15Fragment"
+            app:destination="@id/newBenRegL15Fragment" />
+        <action
+            android:id="@+id/action_householdMembersFragment_to_newBenRegG15Fragment"
+            app:destination="@id/newBenRegG15Fragment" />
     </fragment>
     <fragment
         android:id="@+id/fpotFragment"
@@ -694,7 +701,7 @@
     </fragment>
     <fragment
         android:id="@+id/TBScreeningListFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.tb_screening.list.TBScreeningListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_diseases.tb_screening.list.TBScreeningListFragment"
         android:label="TB Screening List" >
         <action
             android:id="@+id/action_TBScreeningListFragment_to_TBScreeningFormFragment"
@@ -702,7 +709,7 @@
     </fragment>
     <fragment
         android:id="@+id/TBSuspectedListFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.tb_suspected.list.TBSuspectedListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_diseases.tb_suspected.list.TBSuspectedListFragment"
         android:label="TB Suspected List" >
         <action
             android:id="@+id/action_TBSuspectedListFragment_to_TBSuspectedFragment"
@@ -710,7 +717,7 @@
     </fragment>
     <fragment
         android:id="@+id/TBScreeningFormFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.tb_screening.form.TBScreeningFormFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_diseases.tb_screening.form.TBScreeningFormFragment"
         android:label="TB Screening Form">
         <argument
             android:name="benId"
@@ -718,7 +725,7 @@
     </fragment>
     <fragment
         android:id="@+id/TBSuspectedFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_disease.tb_suspected.form.TBSuspectedFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_diseases.tb_suspected.form.TBSuspectedFragment"
         android:label="TB Suspected Form" >
         <argument
             android:name="benId"
@@ -764,5 +771,33 @@
             android:name="benId"
             app:argType="long" />
     </fragment>
+    <fragment
+        android:id="@+id/childRegListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.child_reg.list.ChildRegListFragment"
+        android:label="ChildRegListFragment" >
+        <action
+            android:id="@+id/action_childRegListFragment_to_childRegFragment"
+            app:destination="@id/childRegFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/childRegFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.child_reg.form.ChildRegFragment"
+        android:label="ChildRegFragment" />
+    <fragment
+        android:id="@+id/cdFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.communicable_diseases.CdFragment"
+        android:label="CdFragment" >
+        <action
+            android:id="@+id/action_cdFragment_to_TBScreeningListFragment"
+            app:destination="@id/TBScreeningListFragment" />
+        <action
+            android:id="@+id/action_cdFragment_to_TBSuspectedListFragment"
+            app:destination="@id/TBSuspectedListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.dashboard.DashboardFragment"
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_dashboard" />
 
 </navigation>

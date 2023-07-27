@@ -35,7 +35,7 @@
             android:layout_marginTop="@dimen/margin_small"
             android:layout_weight="1"
             android:text="TextView"
-            android:textColor="@color/red"
+            android:textColor="@android:color/holo_red_light"
             android:visibility="gone" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -66,7 +66,7 @@
             android:layout_marginTop="@dimen/margin_small"
             android:layout_weight="1"
             android:text="TextView"
-            android:textColor="@color/red"
+            android:textColor="@android:color/holo_red_light"
             android:visibility="gone" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -174,7 +174,7 @@
         android:text="Generate ABHA"
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-        android:textColor="?attr/colorSecondary"
+        android:textColor="?attr/colorOnPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/til_district_dn"/>

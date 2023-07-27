@@ -1,7 +1,11 @@
 package org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pmjay
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -9,12 +13,17 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.configuration.PMJAYFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
-import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.FormInputOld
+import org.piramalswasthya.sakhi.model.HouseholdCache
+import org.piramalswasthya.sakhi.model.PMJAYCache
+import org.piramalswasthya.sakhi.model.User
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.PmjayRepo
 import timber.log.Timber
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,7 +32,8 @@ class PmjayViewModel @Inject constructor(
     context: Application,
     private val database: InAppDb,
     private val pmjayRepo: PmjayRepo,
-    private val benRepo: BenRepo
+    private val benRepo: BenRepo,
+    private val preferenceDao: PreferenceDao
 ) : ViewModel() {
 
     enum class State {
@@ -37,7 +47,7 @@ class PmjayViewModel @Inject constructor(
     private val hhId = PmjayFragmentArgs.fromSavedStateHandle(state).hhId
     private lateinit var ben: BenRegCache
     private lateinit var household: HouseholdCache
-    private lateinit var user: UserCache
+    private lateinit var user: User
     private var pmjay: PMJAYCache? = null
 
     private val _benName = MutableLiveData<String>()
@@ -81,7 +91,7 @@ class PmjayViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 ben = benRepo.getBeneficiaryRecord(benId, hhId)!!
                 household = benRepo.getHousehold(hhId)!!
-                user = database.userDao.getLoggedInUser()!!
+                user = preferenceDao.getLoggedInUser()!!
                 pmjay = database.pmjayDao.getPmjay(hhId, benId)
             }
             _benName.value = "${ben.firstName} ${if(ben.lastName== null) "" else ben.lastName}"

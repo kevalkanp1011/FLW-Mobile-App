@@ -2,10 +2,12 @@ package org.piramalswasthya.sakhi.model
 
 import android.content.res.Resources
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.room.SyncState
 
@@ -13,26 +15,23 @@ import org.piramalswasthya.sakhi.database.room.SyncState
     tableName = "CBAC",
     foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
-        parentColumns = arrayOf("beneficiaryId",/* "householdId"*/),
-        childColumns = arrayOf("benId",/* "hhId"*/),
+        parentColumns = arrayOf("beneficiaryId"/* "householdId"*/),
+        childColumns = arrayOf("benId"/* "hhId"*/),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
-    ),
-        ForeignKey(
-            entity = UserCache::class,
-            parentColumns = arrayOf("user_id"),
-            childColumns = arrayOf("ashaId"),
-        )],
-    indices = [Index(name = "ind_cbac", value = ["benId",/* "hhId"*/])]
+    )],
+    indices = [Index(name = "ind_cbac", value = ["benId"/* "hhId"*/])]
 )
 data class CbacCache(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val benId: Long,
-    val hhId: Long,
+
+//    val hhId: Long,
     @ColumnInfo(index = true)
     val ashaId: Int,
-    var gender : Gender,
+//    var gender : Gender?,
+    var fillDate : Long = System.currentTimeMillis(),
     var cbac_age_posi: Int = 0,
     var cbac_smoke_posi: Int = 0,
     var cbac_alcohol_posi: Int = 0,
@@ -125,9 +124,9 @@ data class CbacCache(
 
 
 ) {
-    fun asPostModel(resources: Resources): CbacPost {
+    fun asPostModel(ben: BenRegCache, resources: Resources): CbacPost {
         return CbacPost(
-            houseoldId = hhId,
+            houseoldId = ben.householdId,
             benficieryid = benId,
             ashaid = ashaId,
             cbac_age = resources.getStringArray(R.array.cbac_age)[cbac_age_posi - 1],
@@ -136,7 +135,7 @@ data class CbacCache(
             cbac_smoke_posi = cbac_smoke_posi,
             cbac_alcohol = resources.getStringArray(R.array.cbac_alcohol)[cbac_alcohol_posi - 1],
             cbac_alcohol_posi = cbac_alcohol_posi,
-            cbac_waist = if (gender == Gender.MALE)
+            cbac_waist = if (ben.gender == Gender.MALE)
                 resources.getStringArray(R.array.cbac_waist_mes_male)[cbac_waist_posi - 1]
             else
                 resources.getStringArray(R.array.cbac_waist_mes_female)[cbac_waist_posi - 1],
@@ -280,12 +279,12 @@ data class CbacCache(
             districtid = districtid,
             districtname = districtname,
             villageid = villageid,
-            hrp_suspected = hrp_suspected?:false,
-            suspected_hrp = suspected_hrp?:"N",
-            ncd_suspected = ncd_suspected?:"N",
-            suspected_ncd = suspected_ncd?:"N",
-            suspected_tb = suspected_tb?:"N",
-            suspected_ncd_diseases = suspected_ncd_diseases?:"N",
+            hrp_suspected = hrp_suspected ?: false,
+            suspected_hrp = suspected_hrp ?: "N",
+            ncd_suspected = ncd_suspected ?: "N",
+            suspected_ncd = suspected_ncd ?: "N",
+            suspected_tb = suspected_tb ?: "N",
+            suspected_ncd_diseases = suspected_ncd_diseases ?: "N",
             cbac_reg_id = cbac_reg_id,
             ncd_suspected_cancer = false,
             ncd_suspected_hypertension = false,
@@ -417,13 +416,15 @@ data class CbacCache(
                 2 -> "No"
                 else -> resources.getString(R.string.cbac_nhop)
             },
-            cbac_fuel_used = if(cbac_fuel_used_posi>0) resources.getStringArray(R.array.cbac_type_Cooking_fuel)[cbac_fuel_used_posi - 1] else "",
+            cbac_fuel_used = if (cbac_fuel_used_posi > 0) resources.getStringArray(R.array.cbac_type_Cooking_fuel)[cbac_fuel_used_posi - 1] else "",
             cbac_fuel_used_posi = cbac_fuel_used_posi,
-            cbac_occupational_exposure = if(cbac_occupational_exposure_posi>0)resources.getStringArray(R.array.cbac_type_occupational_exposure)[cbac_occupational_exposure_posi - 1] else "",
+            cbac_occupational_exposure = if (cbac_occupational_exposure_posi > 0) resources.getStringArray(
+                R.array.cbac_type_occupational_exposure
+            )[cbac_occupational_exposure_posi - 1] else "",
             cbac_occupational_exposure_posi = cbac_occupational_exposure_posi,
-            cbac_little_interest = if(cbac_little_interest_posi>0)resources.getStringArray(R.array.cbac_li)[cbac_little_interest_posi - 1] else "",
+            cbac_little_interest = if (cbac_little_interest_posi > 0) resources.getStringArray(R.array.cbac_li)[cbac_little_interest_posi - 1] else "",
             cbac_little_interest_posi = cbac_little_interest_posi,
-            cbac_feeling_down = if(cbac_feeling_down_posi>0) resources.getStringArray(R.array.cbac_fd)[cbac_feeling_down_posi - 1]else "",
+            cbac_feeling_down = if (cbac_feeling_down_posi > 0) resources.getStringArray(R.array.cbac_fd)[cbac_feeling_down_posi - 1] else "",
             cbac_feeling_down_posi = cbac_feeling_down_posi,
             cbac_little_interest_score = cbac_little_interest_score,
             cbac_feeling_down_score = cbac_feeling_down_score,
@@ -437,7 +438,19 @@ data class CbacCache(
 
             )
     }
+
+    fun asDomainModel(): CbacDomain {
+        return CbacDomain(
+            cbacId = this.id,
+            date = getDateTimeStringFromLong(this.createdDate) ?: "<Error in parsing created date>"
+        )
+    }
 }
+
+data class CbacDomain(
+    val cbacId: Int,
+    val date: String
+)
 
 data class CbacPost(
     val id: Int = 1,
@@ -581,4 +594,27 @@ data class CbacPost(
     val cbac_needing_help_posi: Int,
     val cbac_forgetting_names: String,
     val cbac_forgetting_names_posi: Int,
+)
+
+data class BenWithCbacCache(
+//    @ColumnInfo(name = "benId")
+    @Embedded
+    val ben: BenBasicCache,
+    @Relation(
+        parentColumn = "benId", entityColumn = "benId", entity = CbacCache::class
+    )
+    val savedCbacRecords: List<CbacCache>
+) {
+
+    fun asDomainModel(): BenWithCbacDomain {
+        return BenWithCbacDomain(
+            ben.asBasicDomainModel(), savedCbacRecords
+        )
+    }
+}
+
+data class BenWithCbacDomain(
+//    @ColumnInfo(name = "benId")
+    val ben: BenBasicDomain,
+    val savedCbacRecords: List<CbacCache>,
 )

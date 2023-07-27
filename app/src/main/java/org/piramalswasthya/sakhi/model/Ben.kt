@@ -64,8 +64,8 @@ enum class Gender {
             " ecr.benId is not null as ecrFilled, " +
             " ect.benId is not null as ectFilled, " +
             " ect.benId is not null as ectFilled, " +
-            " tbsn.benId is not null as tbsnFilled, " +
-            " tbsp.benId is not null as tbspFilled, " +
+            " tbsn.benId is not null as tbsnFilled, tbsn.syncState as tbsnSyncState," +
+            " tbsp.benId is not null as tbspFilled, tbsp.syncState as tbspSyncState " +
             " ir.benId is not null as irFilled, " +
             " do.benId is not null as doFilled " +
             "from BENEFICIARY b " +
@@ -118,7 +118,9 @@ data class BenBasicCache(
     val ecrFilled: Boolean,
     val ectFilled: Boolean,
     val tbsnFilled: Boolean,
+    val tbsnSyncState: SyncState?,
     val tbspFilled: Boolean,
+    val tbspSyncState: SyncState?,
     val isDelivered: Boolean,
     val irFilled: Boolean,
     val doFilled: Boolean,
@@ -169,7 +171,7 @@ data class BenBasicCache(
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
 //            typeOfList = typeOfList.name,
-            rchId = rchId ?: "Not Available",
+            rchId = rchId?.takeIf { it.isNotEmpty() } ?: "Not Available",
             hrpStatus = hrpStatus,
             syncState = syncState
         )
@@ -212,8 +214,8 @@ data class BenBasicCache(
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             form1Filled = tbsnFilled,
-            syncState = cbacSyncState
-                ?: throw IllegalStateException("Sync state for cbac is null!!")
+            syncState = tbsnSyncState
+                ?: throw IllegalStateException("Sync state for tbsn is null!!")
         )
     }
 
@@ -233,8 +235,8 @@ data class BenBasicCache(
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             form1Filled = tbspFilled,
-            syncState = cbacSyncState
-                ?: throw IllegalStateException("Sync state for cbac is null!!")
+            syncState = tbspSyncState
+                ?: throw IllegalStateException("Sync state for tbsp is null!!")
         )
     }
 
@@ -494,6 +496,7 @@ data class BenBasicDomain(
     val regDate: String,
     val benName: String,
     val benSurname: String? = null,
+    val benFullName : String  = "$benName $benSurname",
     val gender: String,
     val dob: Long,
     val ageInt: Int = getAgeFromDob(dob),
@@ -677,7 +680,10 @@ data class BenRegKidNetwork(
     val birthOPV: Boolean? = null,
 
     )
-
+data class  BenHealthIdDetails(
+    var healthId: String? = null,
+    var healthIdNumber: String? = null
+)
 data class BenRegGen(
 
     var maritalStatus: String? = null,
@@ -727,13 +733,8 @@ data class BenRegGen(
             entity = HouseholdCache::class,
             parentColumns = arrayOf("householdId"),
             childColumns = arrayOf("householdId"),
-            onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = UserCache::class,
-            parentColumns = arrayOf("user_id"),
-            childColumns = arrayOf("ashaId"),
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
         )
     ],
     indices = [Index(name = "ind_ben", value = ["beneficiaryId"/*, "householdId"*/])]
@@ -892,6 +893,9 @@ data class BenRegCache(
     @Embedded(prefix = "loc_")
     var locationRecord: LocationRecord,
 
+    @Embedded(prefix = "abha_")
+    var healthIdDetails: BenHealthIdDetails? = null,
+
     var processed: String? = null,
 
     var serverUpdatedStatus: Int = 0,
@@ -910,14 +914,14 @@ data class BenRegCache(
 
     ) : FormDataModel {
 
-    fun asNetworkPostModel(context: Context, user: UserCache): BenPost {
+    fun asNetworkPostModel(context: Context, user: User): BenPost {
         return BenPost(
             householdId = householdId.toString(),
             benRegId = benRegId,
             countyid = locationRecord.country.id,
             processed = processed,
-            providerServiceMapID = user.serviceMapId,
-            vanID = user.vanId,
+//            providerServiceMapID = user.serviceMapId,
+//            vanID = user.vanId,
             aadhaNo = aadharNum ?: "",
             aadha_no = when (hasAadhar) {
                 true -> "Yes"
@@ -1040,7 +1044,7 @@ data class BenRegCache(
         return TimeUnit.MILLISECONDS.toDays(cal.timeInMillis - millisCurrent).toInt()
     }
 
-    fun asKidNetworkModel(user: UserCache): BenRegKidNetwork {
+    fun asKidNetworkModel(): BenRegKidNetwork {
         return BenRegKidNetwork(
             benficieryid = beneficiaryId,
             childName = firstName,
@@ -1089,8 +1093,8 @@ data class BenRegCache(
             updatedDate = getDateTimeStringFromLong(updatedDate),
             Processed = processed,
             serverUpdatedStatus = serverUpdatedStatus,
-            VanID = user.vanId,
-            ProviderServiceMapID = user.serviceMapId,
+//            VanID = user.vanId,
+//            ProviderServiceMapID = user.serviceMapId,
             Countyid = locationRecord.country.id,
             stateid = locationRecord.state.id,
             districtid = locationRecord.district.id,

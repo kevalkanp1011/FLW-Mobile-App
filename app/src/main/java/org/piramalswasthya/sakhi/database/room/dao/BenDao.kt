@@ -21,6 +21,7 @@ interface BenDao {
 
     @Query("SELECT * FROM BEN_BASIC_CACHE where villageId = :selectedVillage")
     fun getAllBen(selectedVillage: Int): Flow<List<BenBasicCache>>
+
     @Query("SELECT COUNT(*) FROM BEN_BASIC_CACHE where villageId = :selectedVillage")
     fun getAllBenCount(selectedVillage: Int): Flow<Int>
 
@@ -31,7 +32,7 @@ interface BenDao {
     suspend fun getBen(hhId: Long, benId: Long): BenRegCache?
 
     @Query("SELECT * FROM BENEFICIARY WHERE beneficiaryId =:benId LIMIT 1")
-    suspend fun getBen( benId: Long): BenRegCache?
+    suspend fun getBen(benId: Long): BenRegCache?
 
 
     @Query("UPDATE BENEFICIARY SET syncState = :syncState WHERE beneficiaryId =:benId AND householdId = :hhId")
@@ -87,6 +88,8 @@ interface BenDao {
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 2 and villageId=:selectedVillage")
     fun getAllPregnancyWomenList(selectedVillage: Int): Flow<List<BenBasicCache>>
+
+
     @Query("SELECT COUNT(*) FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 2 and villageId=:selectedVillage")
     fun getAllPregnancyWomenListCount(selectedVillage: Int): Flow<Int>
 
@@ -97,6 +100,7 @@ interface BenDao {
 
     @Query("SELECT pr.benId as benId, ben.firstName || ' ' || ben.lastName as name, ben.dob as dob, ben.gen_spouseName as spouseName, pr.lmpDate as lmp FROM PREGNANCY_REGISTER pr INNER JOIN BENEFICIARY  ben ON pr.benId=ben.beneficiaryId where ben.loc_village_id=:selectedVillage and pr.active=1")
     fun getAllRegisteredPregnancyWomenList(selectedVillage: Int): Flow<List<PregnantWomenVisitCache>>
+
     @Query("SELECT count(*) FROM PREGNANCY_REGISTER pr INNER JOIN BENEFICIARY  ben ON pr.benId=ben.beneficiaryId where ben.loc_village_id=:selectedVillage and pr.active=1")
     fun getAllRegisteredPregnancyWomenListCount(selectedVillage: Int): Flow<Int>
 
@@ -180,10 +184,24 @@ interface BenDao {
     fun getAllMotherImmunizationList(selectedVillage: Int): Flow<List<BenBasicCache>>
 
     @Query("select ben.* from ben_basic_cache ben inner join  pregnancy_register pwr on ben.benId = pwr.benId left  outer join pregnancy_anc pwa on ben.benId = pwa.benId where ben.villageId = :villageId and pwr.isHrp =1 or pwa.hrpConfirmed = 1 order by pwa.visitNumber desc ")
-    fun getHrpCases(villageId : Int) : Flow<List<BenBasicCache>>
+    fun getHrpCases(villageId: Int): Flow<List<BenBasicCache>>
 
-    @Query("select * from BEN_BASIC_CACHE where villageId = :villageId and tbsnFilled = 1" )
+    @Query("select * from BEN_BASIC_CACHE where villageId = :villageId and tbsnFilled = 1")
     fun getScreeningList(villageId: Int): Flow<List<BenBasicCache>>
 
+    @Transaction
+    @Query("SELECT * FROM BEN_BASIC_CACHE b where CAST((strftime('%s','now') - b.dob/1000)/60/60/24/365 AS INTEGER)  >= :min and b.reproductiveStatusId!=2 and b.villageId=:selectedVillage group by b.benId order by b.regDate desc")
+    fun getBenWithCbac(
+        selectedVillage: Int, min: Int = Konstants.minAgeForNcd
+    ): Flow<List<BenWithCbacCache>>
+
+    @Transaction
+    @Query("SELECT COUNT(*) FROM BEN_BASIC_CACHE b where CAST((strftime('%s','now') - b.dob/1000)/60/60/24/365 AS INTEGER)  >= :min and b.villageId=:selectedVillage")
+    fun getBenWithCbacCount(
+        selectedVillage: Int, min: Int = Konstants.minAgeForNcd
+    ): Flow<Int>
+
+    @Query("select min(beneficiaryId) from beneficiary")
+    suspend fun getMinBenId(): Long?
 
 }

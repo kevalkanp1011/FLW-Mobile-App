@@ -5,7 +5,9 @@ import androidx.room.ColumnInfo
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.piramalswasthya.sakhi.helpers.ImageUtils
-import org.piramalswasthya.sakhi.model.Gender.*
+import org.piramalswasthya.sakhi.model.Gender.FEMALE
+import org.piramalswasthya.sakhi.model.Gender.MALE
+import org.piramalswasthya.sakhi.model.Gender.TRANSGENDER
 
 @JsonClass(generateAdapter = true)
 data class BeneficiaryDataSending(
@@ -69,20 +71,20 @@ data class BeneficiaryDataSending(
     val titleId: String,
 
 
-    @Json(name = "parkingPlaceID")
-    val parkingPlaceID: Int = 0,
+//    @Json(name = "parkingPlaceID")
+//    val parkingPlaceID: Int = 0,
 
     @Json(name = "bankName")
     val bankName: String? = null,
-
-    @Json(name = "providerServiceMapID")
-    val providerServiceMapID: String,
+//
+//    @Json(name = "providerServiceMapID")
+//    val providerServiceMapID: String,
 
     @Json(name = "maritalStatusID")
     val maritalStatusID: String = "",
 
-    @Json(name = "vanID")
-    val vanID: Int = 0,
+//    @Json(name = "vanID")
+//    val vanID: Int = 0,
 
 
     @Json(name = "accountNo")
@@ -99,8 +101,8 @@ data class BeneficiaryDataSending(
     @Json(name = "branchName")
     val branchName: String? = null,
 
-    @Json(name = "providerServiceMapId")
-    val providerServiceMapId: String,
+//    @Json(name = "providerServiceMapId")
+//    val providerServiceMapId: String,
 
 
     @Json(name = "maritalStatusName")
@@ -135,10 +137,10 @@ data class BenDemographics(
 
     @Json(name = "districtID")
     var districtID: Int,
-    @Json(name = "parkingPlaceID")
-    var parkingPlaceID: Int,
-    @Json(name = "parkingPlaceName")
-    var parkingPlaceName: String,
+//    @Json(name = "parkingPlaceID")
+//    var parkingPlaceID: Int,
+//    @Json(name = "parkingPlaceName")
+//    var parkingPlaceName: String,
 
     @Json(name = "religionID")
     var religionID: String,
@@ -146,10 +148,10 @@ data class BenDemographics(
     @Json(name = "religionName")
     var religionName: String,
 
-    @Json(name = "servicePointID")
-    var servicePointID: String,
-    @Json(name = "servicePointName")
-    var servicePointName: String,
+//    @Json(name = "servicePointID")
+//    var servicePointID: String,
+//    @Json(name = "servicePointName")
+//    var servicePointName: String,
 
     @Json(name = "stateID")
     var stateID: Int,
@@ -157,11 +159,11 @@ data class BenDemographics(
     @Json(name = "stateName")
     var stateName: String,
 
-    @Json(name = "zoneID")
-    var zoneID: Int = 0,
-
-    @Json(name = "zoneName")
-    var zoneName: String,
+//    @Json(name = "zoneID")
+//    var zoneID: Int = 0,
+//
+//    @Json(name = "zoneName")
+//    var zoneName: String,
 
 //Nullable Fields, I think...
     @Json(name = "incomeStatusName")
@@ -218,9 +220,9 @@ data class BenPhoneMaps(
 )
 
 fun BenRegCache.asNetworkSendingModel(
-    user: UserCache,
+    user: User,
     locationRecord: LocationRecord,
-    context : Context
+    context: Context
 ): BeneficiaryDataSending {
 
     return BeneficiaryDataSending(
@@ -252,8 +254,8 @@ fun BenRegCache.asNetworkSendingModel(
         maritalStatusID = genDetails?.maritalStatusId?.toString() ?: "",
         maritalStatusName = genDetails?.maritalStatus ?: "",
         email = "",
-        providerServiceMapID = user.serviceMapId.toString(),
-        providerServiceMapId = user.serviceMapId.toString(),
+//        providerServiceMapID = user.serviceMapId.toString(),
+//        providerServiceMapId = user.serviceMapId.toString(),
         benDemographics = BenDemographics(
             communityID = communityId.toString(),
             communityName = community ?: "",
@@ -268,12 +270,12 @@ fun BenRegCache.asNetworkSendingModel(
             blockID = locationRecord.block.id,
             districtBranchID = locationRecord.village.id,
             districtBranchName = locationRecord.village.name,
-            zoneID = user.zoneId,
-            zoneName = user.zoneName,
-            parkingPlaceName = user.parkingPlaceName,
-            parkingPlaceID = user.parkingPlaceId,
-            servicePointID = user.servicePointId.toString(),
-            servicePointName = user.servicePointName,
+//            zoneID = user.zoneId,
+//            zoneName = user.zoneName,
+//            parkingPlaceName = user.parkingPlaceName,
+//            parkingPlaceID = user.parkingPlaceId,
+//            servicePointID = user.servicePointId.toString(),
+//            servicePointName = user.servicePointName,
             addressLine1 = "D.No 3-160E",
             addressLine2 = "ARS Road",
             addressLine3 = "Neggipudi",
@@ -294,8 +296,8 @@ fun BenRegCache.asNetworkSendingModel(
 
             )
         ),
-        vanID = user.vanId,
-        parkingPlaceID = user.parkingPlaceId,
+//        vanID = user.vanId,
+//        parkingPlaceID = user.parkingPlaceId,
         createdBy = user.userName,
 
 

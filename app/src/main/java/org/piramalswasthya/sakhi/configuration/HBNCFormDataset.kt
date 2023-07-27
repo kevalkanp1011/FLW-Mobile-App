@@ -15,7 +15,7 @@ import org.piramalswasthya.sakhi.model.HbncPartII
 import org.piramalswasthya.sakhi.model.HbncVisitCard
 import org.piramalswasthya.sakhi.model.InputType
 import org.piramalswasthya.sakhi.model.LocationRecord
-import org.piramalswasthya.sakhi.model.UserDomain
+import org.piramalswasthya.sakhi.model.User
 import timber.log.Timber
 
 
@@ -27,7 +27,7 @@ class HBNCFormDataset(
 
     suspend fun setCardPageToList(
         location: LocationRecord?,
-        asha: UserDomain,
+        asha: User,
         childBen: BenRegCache,
         motherBen: BenRegCache?,
         visitCard: HbncVisitCard?

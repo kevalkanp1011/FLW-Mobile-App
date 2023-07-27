@@ -8,20 +8,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.crypt.CryptoUtil
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.databinding.FragmentSignInBinding
 import org.piramalswasthya.sakhi.helpers.Languages.ASSAMESE
 import org.piramalswasthya.sakhi.helpers.Languages.ENGLISH
 import org.piramalswasthya.sakhi.helpers.Languages.HINDI
+import org.piramalswasthya.sakhi.helpers.NetworkResponse
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
-import org.piramalswasthya.sakhi.ui.login_activity.sign_in.SignInViewModel.State
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 import javax.inject.Inject
@@ -98,11 +95,11 @@ class SignInFragment : Fragment() {
 
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
-            when (state!!) {
-                State.IDLE -> {
+            when (state) {
+                is NetworkResponse.Idle -> {
                     var hasRememberMeUsername = false
                     var hasRememberMePassword = false
-                    var hasRememberMeState = false
+//                    var hasRememberMeState = false
                     viewModel.fetchRememberedUserName()?.let {
                         binding.etUsername.setText(it)
                         hasRememberMeUsername = true
@@ -112,47 +109,47 @@ class SignInFragment : Fragment() {
                         binding.cbRemember.isChecked = true
                         hasRememberMePassword = true
                     }
-                    viewModel.fetchRememberedState()?.let {
-                        binding.toggleStates.check(
-                            when (it) {
-                                "Bihar" -> binding.tbtnBihar.id
-                                "Assam" -> binding.tbtnAssam.id
-                                else -> throw IllegalStateException("State unknown $it")
-                            }
-                        )
-                        hasRememberMeState = true
-                    }
-                    if (hasRememberMeUsername && hasRememberMePassword && hasRememberMeState) validateInput()
+//                    viewModel.fetchRememberedState()?.let {
+//                        binding.toggleStates.check(
+//                            when (it) {
+//                                "Bihar" -> binding.tbtnBihar.id
+//                                "Assam" -> binding.tbtnAssam.id
+//                                else -> throw IllegalStateException("State unknown $it")
+//                            }
+//                        )
+//                        hasRememberMeState = true
+//                    }
+                    if (hasRememberMeUsername && hasRememberMePassword/* && hasRememberMeState*/) validateInput()
                 }
-                State.LOADING -> validateInput()
-                State.ERROR_INPUT -> {
+                is NetworkResponse.Loading -> validateInput()
+                is NetworkResponse.Error -> {
                     binding.pbSignIn.visibility = View.GONE
                     binding.clContent.visibility = View.VISIBLE
-                    binding.tvError.text = getString(R.string.error_sign_in_invalid_u_p)
+                    binding.tvError.text = state.message
                     binding.tvError.visibility = View.VISIBLE
                 }
-                State.ERROR_SERVER -> {
-                    binding.pbSignIn.visibility = View.GONE
-                    binding.clContent.visibility = View.VISIBLE
-                    binding.tvError.text = getString(R.string.error_sign_in_timeout)
-                    binding.tvError.visibility = View.VISIBLE
-                }
-                State.ERROR_NETWORK -> {
-                    binding.pbSignIn.visibility = View.GONE
-                    binding.clContent.visibility = View.VISIBLE
-                    binding.tvError.text = getString(R.string.error_sign_in_disconnected_network)
-                    binding.tvError.visibility = View.VISIBLE
-                }
-                State.SUCCESS -> {
+//                State.ERROR_SERVER -> {
+//                    binding.pbSignIn.visibility = View.GONE
+//                    binding.clContent.visibility = View.VISIBLE
+//                    binding.tvError.text = getString(R.string.error_sign_in_timeout)
+//                    binding.tvError.visibility = View.VISIBLE
+//                }
+//                State.ERROR_NETWORK -> {
+//                    binding.pbSignIn.visibility = View.GONE
+//                    binding.clContent.visibility = View.VISIBLE
+//                    binding.tvError.text = getString(R.string.error_sign_in_disconnected_network)
+//                    binding.tvError.visibility = View.VISIBLE
+//                }
+                is NetworkResponse.Success -> {
                     if (binding.cbRemember.isChecked) {
                         val username = binding.etUsername.text.toString()
                         val password = binding.etPassword.text.toString()
                         viewModel.rememberUser(
-                            username, password, when (binding.toggleStates.checkedButtonId) {
+                            username, password, /*when (binding.toggleStates.checkedButtonId) {
                                 binding.tbtnBihar.id -> "Bihar"
                                 binding.tbtnAssam.id -> "Assam"
                                 else -> throw IllegalStateException("Unknown State!! !! !!")
-                            }
+                            }*/
                         )
                     } else {
                         viewModel.forgetUser()
@@ -173,22 +170,22 @@ class SignInFragment : Fragment() {
     }
 
     private fun validateInput() {
-        val state = when (binding.toggleStates.checkedButtonId) {
-            binding.tbtnBihar.id -> "Bihar"
-            binding.tbtnAssam.id -> "Assam"
-            View.NO_ID -> {
-                stateUnselectedAlert.show()
-                return
-            }
-            else -> throw IllegalStateException("Two States!!")
-        }
+//        val state = when (binding.toggleStates.checkedButtonId) {
+//            binding.tbtnBihar.id -> "Bihar"
+//            binding.tbtnAssam.id -> "Assam"
+//            View.NO_ID -> {
+//                stateUnselectedAlert.show()
+//                return
+//            }
+//            else -> throw IllegalStateException("Two States!!")
+//        }
         binding.clContent.visibility = View.INVISIBLE
         binding.pbSignIn.visibility = View.VISIBLE
         val username = binding.etUsername.text.toString()
         val password = binding.etPassword.text.toString()
 
         Timber.d("Username : $username \n Password : $password")
-        viewModel.authUser(username, password, state)
+        viewModel.authUser(username, password, /*state*/)
     }
 
 

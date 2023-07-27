@@ -3,22 +3,21 @@ package org.piramalswasthya.sakhi.repositories
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.FPOTCache
-import org.piramalswasthya.sakhi.network.D2DApiService
 import timber.log.Timber
 import javax.inject.Inject
 
 class FpotRepo @Inject constructor(
     private val database: InAppDb,
-    private val userRepo: UserRepo,
-    private val d2DNetworkApiService: D2DApiService
+    private val preferenceDao: PreferenceDao
 ) {
 
     suspend fun saveFpotData(fpotCache: FPOTCache): Boolean {
         return withContext(Dispatchers.IO) {
 
             val user =
-                database.userDao.getLoggedInUser()
+                preferenceDao.getLoggedInUser()
                     ?: throw IllegalStateException("No user logged in!!")
             try {
                 fpotCache.apply {
