@@ -23,7 +23,7 @@ interface AmritApiService {
 //                            @Body json: TmcAuthUserRequest): Response<ResponseBody>
 
 
-    @GET("flw-0.0.1-24-07-2023/user/getUserRole")
+    @GET("flw-0.0.1/user/getUserRole")
 //    @GET("user/getUserRole")
     suspend fun getUserDetailsById(
         @Query("userId") userId: Int,
@@ -47,7 +47,7 @@ interface AmritApiService {
     suspend fun submitRmnchDataAmrit(@Body sendingRMNCHData: SendingRMNCHData): Response<ResponseBody>
 
 //    @POST("beneficiary/getBeneficiaryData")
-    @POST("flw-0.0.1-24-07-2023/beneficiary/getBeneficiaryData")
+    @POST("flw-0.0.1/beneficiary/getBeneficiaryData")
     suspend fun getBeneficiaries(@Body userDetail: GetBenRequest): Response<ResponseBody>
 
 //    @POST("tb/screening/getAll")
