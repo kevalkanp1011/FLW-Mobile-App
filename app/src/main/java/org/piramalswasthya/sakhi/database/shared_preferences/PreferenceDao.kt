@@ -5,6 +5,7 @@ import android.net.Uri
 import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.model.User
@@ -97,7 +98,7 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
 
     fun getLastSyncedTimeStamp(): Long {
         val prefKey = context.getString(R.string.PREF_full_load_pull_progress)
-        return pref.getLong(prefKey, 1603132200000)
+        return pref.getLong(prefKey, Konstants.defaultTimeStamp)
     }
 
     fun setFirstSyncLastSyncedPage(page: Int) {
@@ -170,4 +171,9 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
         val json = pref.getString(prefKey, null)
         return Gson().fromJson(json, User::class.java)
     }
+    var isFullPullComplete : Boolean
+        get() = pref.getBoolean("FIRST TIME FULL PULL DONE", false)
+        set(value) {
+            pref.edit().putBoolean("FIRST TIME FULL PULL DONE", value).apply()
+        }
 }

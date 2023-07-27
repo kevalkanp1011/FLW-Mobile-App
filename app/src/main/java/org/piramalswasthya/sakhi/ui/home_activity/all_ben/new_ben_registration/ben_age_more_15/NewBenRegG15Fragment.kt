@@ -277,7 +277,7 @@ class NewBenRegG15Fragment : Fragment() {
                     binding.clContent.visibility = View.VISIBLE
                     binding.rlSaving.visibility = View.GONE
                     Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
-                    WorkerUtils.triggerAmritSyncWorker(requireContext())
+                    WorkerUtils.triggerAmritPushWorker(requireContext())
                     findNavController().navigate(NewBenRegG15FragmentDirections.actionNewBenRegG15FragmentToHomeFragment())
                 }
 

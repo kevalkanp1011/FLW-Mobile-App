@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -85,13 +84,13 @@ class NewBenRegTypeFragment : Fragment() {
 
     private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
 
-    private val onBackPressedCallback by lazy {
-        object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                Toast.makeText(context, "Back Pressed", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
+//    private val onBackPressedCallback by lazy {
+//        object : OnBackPressedCallback(true) {
+//            override fun handleOnBackPressed() {
+//                Toast.makeText(context, "Back Pressed", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -106,9 +105,9 @@ class NewBenRegTypeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         if (!viewModel.isConsentAgreed)
             consentAlert.show()
-        activity?.onBackPressedDispatcher?.addCallback(
-            viewLifecycleOwner, onBackPressedCallback
-        )
+//        activity?.onBackPressedDispatcher?.addCallback(
+//            viewLifecycleOwner, onBackPressedCallback
+//        )
 
         viewModel.hasDraftForKid.observe(viewLifecycleOwner) {
             this.hasDraftKid = it

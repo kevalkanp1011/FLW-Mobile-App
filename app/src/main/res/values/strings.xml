@@ -494,6 +494,7 @@
     <string name="verify_otp">Verify OTP</string>
     <string name="resend_otp">Resend OTP</string>
     <string name="exit">Exit</string>
+    <string name="no_records_found_hh">No Household records found. Please start registering households by clicking on the button below.</string>
 
     <!-- Eligible couple registration -->
     <string-array name="ecr_gender_array">

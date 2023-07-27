@@ -256,6 +256,7 @@ class NewHouseholdFragment : Fragment() {
         viewModel.recordExists.observe(viewLifecycleOwner) { notIt ->
             notIt?.let { recordExists ->
                 binding.fabEdit.visibility = if (recordExists) View.VISIBLE else View.GONE
+                if (viewModel.currentPage.value == 3 && !recordExists) binding.btnSubmitForm.visibility = View.VISIBLE
                 val adapter = FormInputAdapter(
                     formValueListener = FormInputAdapter.FormValueListener { formId, index ->
                         when (index) {

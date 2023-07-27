@@ -69,6 +69,7 @@ class AllHouseholdFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnNextPage.text = getString(R.string.btn_text_frag_home_nhhr)
+        binding.tvEmptyContent.text = getString(R.string.no_records_found_hh)
         val householdAdapter = HouseHoldListAdapter(HouseHoldListAdapter.HouseholdClickListener(
             {
             findNavController().navigate(AllHouseholdFragmentDirections.actionAllHouseholdFragmentToNewHouseholdFragment(it))

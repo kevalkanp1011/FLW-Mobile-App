@@ -241,7 +241,7 @@ class NewBenRegL15Fragment : Fragment() {
                     binding.clContent.visibility = View.VISIBLE
                     binding.rlSaving.visibility = View.GONE
                     Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
-                    WorkerUtils.triggerAmritSyncWorker(requireContext())
+                    WorkerUtils.triggerAmritPushWorker(requireContext())
 
 //                    when (viewModel.getNavPath()) {
 //                        TypeOfList.INFANT -> findNavController().navigate(

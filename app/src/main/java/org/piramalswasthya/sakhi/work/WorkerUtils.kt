@@ -3,7 +3,13 @@ package org.piramalswasthya.sakhi.work
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.Operation
+import androidx.work.WorkManager
 
 object WorkerUtils {
 
@@ -32,6 +38,35 @@ object WorkerUtils {
             .then(pullTBWorkRequest)
             .then(pushWorkRequest)
             .then(pushTBWorkRequest)
+            .enqueue()
+    }
+    fun triggerAmritPushWorker(context : Context){
+        val pushWorkRequest = OneTimeWorkRequestBuilder<PushToAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
+        val pushTBWorkRequest = OneTimeWorkRequestBuilder<PushTBToAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
+        val workManager = WorkManager.getInstance(context)
+        workManager
+            .beginUniqueWork(syncWorkerUniqueName, ExistingWorkPolicy.APPEND_OR_REPLACE, pushWorkRequest)
+            .then(pushTBWorkRequest)
+            .enqueue()
+    }
+    fun triggerAmritPullWorker(context : Context){
+        val pullWorkRequest = OneTimeWorkRequestBuilder<PullFromAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
+        val pullTBWorkRequest = OneTimeWorkRequestBuilder<PullTBFromAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
+        val setSyncCompleteWorker = OneTimeWorkRequestBuilder<UpdatePrefForPullCompleteWorker>()
+            .build()
+        val workManager = WorkManager.getInstance(context)
+        workManager
+            .beginUniqueWork(syncWorkerUniqueName, ExistingWorkPolicy.APPEND_OR_REPLACE, pullWorkRequest)
+            .then(pullTBWorkRequest)
+            .then(setSyncCompleteWorker)
             .enqueue()
     }
 

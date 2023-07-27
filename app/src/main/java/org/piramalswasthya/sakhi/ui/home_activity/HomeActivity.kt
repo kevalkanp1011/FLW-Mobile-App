@@ -143,7 +143,7 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpActionBar()
         setUpNavHeader()
-        setUpSyncWorker()
+        setUpFirstTimePullWorker()
         setUpMenu()
 
 
@@ -215,9 +215,10 @@ class HomeActivity : AppCompatActivity() {
         invalidateOptionsMenu()
     }
 
-    private fun setUpSyncWorker() {
-        WorkerUtils.triggerAmritSyncWorker(this)
-        WorkerUtils.triggerD2dSyncWorker(this)
+    private fun setUpFirstTimePullWorker() {
+        if(!pref.isFullPullComplete)
+            WorkerUtils.triggerAmritPullWorker(this)
+//        WorkerUtils.triggerD2dSyncWorker(this)
     }
 
     private fun setUpNavHeader() {
@@ -268,7 +269,7 @@ class HomeActivity : AppCompatActivity() {
 
         }
         binding.navView.menu.findItem(R.id.sync_pending_records).setOnMenuItemClickListener {
-            setUpSyncWorker()
+            WorkerUtils.triggerAmritSyncWorker(this)
             binding.drawerLayout.close()
             true
 

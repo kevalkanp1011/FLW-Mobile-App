@@ -23,11 +23,11 @@ interface AmritApiService {
 //                            @Body json: TmcAuthUserRequest): Response<ResponseBody>
 
 
-    @GET("flw-0.0.1/user/getUserRole")
+    @GET("flw-0.0.1/user/getUserDetail")
 //    @GET("user/getUserRole")
     suspend fun getUserDetailsById(
         @Query("userId") userId: Int,
-        @Query("roleId") roleId: Int = 526
+//        @Query("roleId") roleId: Int = 526
     ): UserNetworkResponse
 
     @POST("tmapi-v1.0/user/getUserVanSpDetails/")

@@ -28,10 +28,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    private const val baseTmcUrl = // "http://assamtmc.piramalswasthya.org:8080/"
-//    "http://192.168.1.233:8085/"
-    "http://amritdemo.piramalswasthya.org:8080/"
-//        "http://192.168.1.94:8081/"
+    private const val baseTmcUrl = "http://amritdemo.piramalswasthya.org:8080/"
     private const val baseAbhaUrl = "https://healthidsbx.abdm.gov.in/api/"
 
     private val baseClient =
@@ -54,9 +51,9 @@ object AppModule {
     fun provideTmcHttpClient(): OkHttpClient {
         return baseClient
             .newBuilder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
             .addInterceptor(TokenInsertTmcInterceptor())
             .build()
     }

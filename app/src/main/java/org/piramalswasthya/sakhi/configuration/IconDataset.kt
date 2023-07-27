@@ -79,12 +79,12 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             null,
             HomeFragmentDirections.actionNavHomeToGeneralOpCareFragment(),
         ),
-        Icon(
-            R.drawable.ic__menopause,
-            resources.getString(R.string.icon_title_msl),
-            recordsRepo.menopauseListCount,
-            HomeFragmentDirections.actionNavHomeToMenopauseStageFragment()
-        ),
+//        Icon(
+//            R.drawable.ic__menopause,
+//            resources.getString(R.string.icon_title_msl),
+//            recordsRepo.menopauseListCount,
+//            HomeFragmentDirections.actionNavHomeToMenopauseStageFragment()
+//        ),
         Icon(
             R.drawable.ic__death,
             resources.getString(R.string.icon_title_dr),

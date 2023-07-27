@@ -876,7 +876,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                 /*val case2 = */triggerDependants(
                     age = age.value!!.toInt(),
                     ageUnit = ageUnit,
-                    ageTriggerRange = Range(3, 14),
+                    ageTriggerRange = Range(4, 14),
                     ageUnitTriggerIndex = 2,
                     target = childRegisteredAtSchool,
                     placeAfter = religion,

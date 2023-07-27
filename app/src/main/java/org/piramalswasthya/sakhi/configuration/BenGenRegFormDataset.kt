@@ -337,10 +337,10 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
     )
     private val community = FormElement(
         id = 21, inputType = DROPDOWN, title = "Community", arrayId = -1, entries = arrayOf(
-            "General", "SC", "ST", "BC", "OBC", "EBC", "Not given"
+            "General", "SC", "ST", "EBC", "OBC", "Not given"
         ), required = true
     )
-    private val religion = FormElement(
+    private val     religion = FormElement(
         id = 22, inputType = DROPDOWN, title = "Religion", arrayId = -1, entries = arrayOf(
             "Hindu",
             "Muslim",
@@ -1220,10 +1220,35 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                             )
                         }
 
+                        maritalStatus.entries!![1] -> {
+                            if (gender.value == gender.entries!![1]) {
+                                fatherName.required = false
+                                motherName.required = false
+                            } else {
+                                fatherName.required = true
+                                motherName.required = true
+                            }
+                            husbandName.required = true
+                            wifeName.required = true
+                            return triggerDependants(
+                                source = maritalStatus, addItems = when (gender.value) {
+                                    gender.entries!![0] -> listOf(wifeName, ageAtMarriage)
+                                    gender.entries!![1] -> listOf(husbandName, ageAtMarriage)
+                                    else -> listOf(spouseName, ageAtMarriage)
+                                }, removeItems = listOf(
+                                    wifeName,
+                                    husbandName,
+                                    spouseName,
+                                    ageAtMarriage
+                                )
+                            )
+                        }
+
                         else -> {
-                            fatherName.required = false
-                            motherName.required = false
-                            spouseName.required = maritalStatus.value != maritalStatus.entries!![2]
+                            husbandName.required = maritalStatus.value != maritalStatus.entries!![2]
+                            wifeName.required = maritalStatus.value != maritalStatus.entries!![2]
+                            fatherName.required = true
+                            motherName.required = true
 //                            ().let {
 ////                            wifeName.required = it
 ////                            husbandName.required = it
@@ -1252,7 +1277,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                 ?.toInt()?.let {
                     validateEmptyOnEditText(ageAtMarriage)
                     validateIntMinMax(ageAtMarriage)
-                    if(it==ageAtMarriage.value?.toInt()){
+                    if (it == ageAtMarriage.value?.toInt()) {
                         val cal = Calendar.getInstance()
                         dateOfMarriage.max = cal.timeInMillis
                         cal.add(Calendar.YEAR, -1)
@@ -1337,7 +1362,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                 triggerDependants(
                     source = religion,
                     passedIndex = index,
-                    triggerIndex = 6,
+                    triggerIndex = religion.entries!!.lastIndex,
                     target = otherReligion
                 )
             }
