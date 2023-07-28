@@ -114,5 +114,9 @@ class TBSuspectedViewModel @Inject constructor(
         _state.value = State.IDLE
     }
 
+    fun getAlerts():String? {
+        return dataset.isTestPositive()
+    }
+
 }
 

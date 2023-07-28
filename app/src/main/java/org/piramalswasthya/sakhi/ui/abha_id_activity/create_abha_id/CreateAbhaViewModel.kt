@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.ui.abha_id_activity.create_abha_id
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.model.BenHealthIdDetails
 import org.piramalswasthya.sakhi.network.*
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
 import org.piramalswasthya.sakhi.repositories.BenRepo
@@ -92,6 +93,8 @@ class CreateAbhaViewModel @Inject constructor(
                 is NetworkResult.Success -> {
                     ben?.let {
                         _benMapped.value = ben.firstName + " " + ben.lastName
+                        it.healthIdDetails = BenHealthIdDetails(healthId, healthIdNumber)
+                        benRepo.persistRecord(ben)
                     }
                     _state.value = State.ABHA_GENERATE_SUCCESS
                 }

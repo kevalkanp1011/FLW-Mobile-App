@@ -138,6 +138,7 @@ class TBScreeningDataset (
             form.bloodInSputum = bloodInSputum.value == "Yes"
             form.feverMoreThan2Weeks = isFever.value == "Yes"
             form.nightSweats = nightSweats.value == "Yes"
+            form.lossOfWeight = lossOfWeight.value == "Yes"
             form.historyOfTb = historyOfTB.value == "Yes"
             form.takingAntiTBDrugs = currentlyTakingDrugs.value == "Yes"
             form.familySufferingFromTB = familyHistoryTB.value == "Yes"
@@ -159,6 +160,7 @@ class TBScreeningDataset (
                 bloodInSputum.value == "Yes" ||
                 isFever.value == "Yes" ||
                 nightSweats.value == "Yes" ||
+                lossOfWeight.value == "Yes" ||
                 historyOfTB.value == "Yes")
             resources.getString(R.string.tb_suspected_alert) else null
     }

@@ -403,6 +403,9 @@ class AbhaIdRepo @Inject constructor(
     suspend fun mapHealthIDToBeneficiary(mapHIDtoBeneficiary: MapHIDtoBeneficiary): NetworkResult<String> {
         return withContext((Dispatchers.IO)) {
             try {
+                val user = prefDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
+                mapHIDtoBeneficiary.providerServiceMapId = user.serviceMapId
+                mapHIDtoBeneficiary.createdBy = user.userName
                 val response = amritApiService.mapHealthIDToBeneficiary(mapHIDtoBeneficiary)
                 val responseBody = response.body()?.string()
                 when(responseBody?.let { JSONObject(it).getInt("statusCode") }) {
@@ -410,7 +413,6 @@ class AbhaIdRepo @Inject constructor(
                     5000 -> {
                         if (JSONObject(responseBody).getString("errorMessage")
                                 .contentEquals("Invalid login key or session is expired")){
-                            val user = prefDao.getLoggedInUser()!!
                             userRepo.refreshTokenTmc(user.userName, user.password)
                             mapHealthIDToBeneficiary(mapHIDtoBeneficiary)
                         } else {

@@ -155,6 +155,7 @@
 
     <!--TB Screening-->
     <string name="tb_suspected_alert">Refer to MO and collect the Sputum sample</string>
+    <string name="tb_suspected_alert_positive">Refer to MO</string>
     <string name="tb_suspected_family_alert">Refer to MO or inform ANM/MPW to tracing of all family members</string>
 
 

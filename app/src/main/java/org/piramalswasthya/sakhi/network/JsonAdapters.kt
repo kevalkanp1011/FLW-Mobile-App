@@ -332,8 +332,8 @@ data class MapHIDtoBeneficiary(
     val beneficiaryID: Long?,
     val healthId: String?,
     val healthIdNumber: String?,
-    val providerServiceMapId: Int?,
-    val createdBy: String?
+    var providerServiceMapId: Int?,
+    var createdBy: String?
 )
 
 data class TBScreeningRequestDTO(
