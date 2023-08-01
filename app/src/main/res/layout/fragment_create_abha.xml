@@ -134,7 +134,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="Linked to Beneficiary : kalyan chokkam"
+                    android:text="Linked to Beneficary"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
