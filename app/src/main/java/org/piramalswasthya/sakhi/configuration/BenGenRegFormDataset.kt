@@ -33,14 +33,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
             return mdFormat.format(calendar.time)
         }
 
-        private fun getMinDateOfReg(): Long {
-            return Calendar.getInstance().apply {
-                set(Calendar.YEAR, 2020)
-                set(Calendar.MONTH, 0)
-                set(Calendar.DAY_OF_MONTH, 1)
-            }.timeInMillis
 
-        }
 
         private fun getMinDobMillis(): Long {
             val cal = Calendar.getInstance()
@@ -90,7 +83,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_nb_last_name),
         arrayId = -1,
-        required = false,
+        required = true,
         allCaps = true,
         hasSpeechToText = true,
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS,
@@ -340,17 +333,17 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
             "General", "SC", "ST", "EBC", "OBC", "Not given"
         ), required = true
     )
-    private val     religion = FormElement(
+    private val religion = FormElement(
         id = 22, inputType = DROPDOWN, title = "Religion", arrayId = -1, entries = arrayOf(
             "Hindu",
             "Muslim",
-            "Christian",
-            "Sikh",
+            "Christen",
+            "Sikhism",
             "Buddhism",
             "Jainism",
-            "Other",
             "Parsi",
-            "Not Disclosed"
+            "Other",
+            "Not disclosed",
         ), required = true, hasDependants = true
     )
     private val otherReligion = FormElement(
@@ -358,6 +351,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         inputType = EDIT_TEXT,
         title = "Other - Enter Religion",
         arrayId = -1,
+//        allCaps = true,
         required = true
     )
 
@@ -1360,10 +1354,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
             otherRelationToHead.id -> validateEmptyOnEditText(otherRelationToHead)
             religion.id -> {
                 triggerDependants(
-                    source = religion,
-                    passedIndex = index,
-                    triggerIndex = religion.entries!!.lastIndex,
-                    target = otherReligion
+                    source = religion, passedIndex = index, triggerIndex = 7, target = otherReligion
                 )
             }
 

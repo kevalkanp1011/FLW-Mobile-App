@@ -72,6 +72,20 @@ class CbacFragment : Fragment() {
 
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
+
+                CbacViewModel.State.LOADING -> {
+                    binding.llContent.visibility = View.GONE
+                    binding.pbCbac.visibility = View.VISIBLE
+                    Timber.d("IDLE!")
+                }
+
+                CbacViewModel.State.IDLE -> {
+                    binding.llContent.visibility = View.VISIBLE
+                    binding.pbCbac.visibility = View.GONE
+                    if (isInFillMode) setUpFill()
+                    else setUpView()
+                }
+
                 CbacViewModel.State.SAVING -> {
                     binding.llContent.visibility = View.GONE
                     binding.pbCbac.visibility = View.VISIBLE
@@ -145,8 +159,6 @@ class CbacFragment : Fragment() {
             handleRaScoreAlert(score)
             binding.cbacTvRaTotalScore.text = it
         }
-        if (isInFillMode) setUpFill()
-        else setUpView()
 
 
     }
@@ -190,6 +202,7 @@ class CbacFragment : Fragment() {
         }
 
     }
+
     private fun handleOldPeopleItemsAlert() {
         if (
             binding.cbacUnsteady.cbacEdRg.checkedRadioButtonId != -1 &&

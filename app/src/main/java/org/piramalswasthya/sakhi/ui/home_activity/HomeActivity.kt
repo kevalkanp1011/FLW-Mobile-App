@@ -34,6 +34,7 @@ import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.helpers.MyContextWrapper
 import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdActivity
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
+import org.piramalswasthya.sakhi.ui.home_activity.sync.SyncBottomSheetFragment
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
 import org.piramalswasthya.sakhi.ui.service_location_activity.ServiceLocationActivity
 import org.piramalswasthya.sakhi.work.WorkerUtils
@@ -64,6 +65,10 @@ class HomeActivity : AppCompatActivity() {
     private val binding: ActivityHomeBinding
         get() = _binding!!
 
+
+    private val syncBottomSheet : SyncBottomSheetFragment by lazy {
+        SyncBottomSheetFragment()
+    }
     private val viewModel: HomeViewModel by viewModels()
 
     private val langChooseAlert by lazy {
@@ -180,10 +185,13 @@ class HomeActivity : AppCompatActivity() {
 
                     R.id.toolbar_menu_language -> {
                         langChooseAlert.show()
+                        return true
                     }
-//                    R.id.change_service_location -> {
-//                        finishAndStartServiceLocationActivity()
-//                    }
+                    R.id.sync_status -> {
+                        if(!syncBottomSheet.isVisible)
+                            syncBottomSheet.show(supportFragmentManager, "SYNC")
+                        return true
+                    }
                 }
                 return false
             }
@@ -269,7 +277,7 @@ class HomeActivity : AppCompatActivity() {
 
         }
         binding.navView.menu.findItem(R.id.sync_pending_records).setOnMenuItemClickListener {
-            WorkerUtils.triggerAmritSyncWorker(this)
+            WorkerUtils.triggerAmritPushWorker(this)
             binding.drawerLayout.close()
             true
 

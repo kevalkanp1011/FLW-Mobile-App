@@ -10,7 +10,7 @@ import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.TBScreeningCache
 import org.piramalswasthya.sakhi.model.TBSuspectedCache
 import org.piramalswasthya.sakhi.network.AmritApiService
-import org.piramalswasthya.sakhi.network.GetBenRequest
+import org.piramalswasthya.sakhi.network.GetDataPaginatedRequest
 import org.piramalswasthya.sakhi.network.TBScreeningDTO
 import org.piramalswasthya.sakhi.network.TBScreeningRequestDTO
 import org.piramalswasthya.sakhi.network.TBSuspectedDTO
@@ -60,7 +60,7 @@ class TBRepo @Inject constructor(
             val lastTimeStamp = preferenceDao.getLastSyncedTimeStamp()
             try {
                 val response = tmcNetworkApiService.getTBScreeningData(
-                    GetBenRequest(
+                    GetDataPaginatedRequest(
                         user.userId,
                         0,
                         getCurrentDate(lastTimeStamp),
@@ -143,7 +143,7 @@ class TBRepo @Inject constructor(
             val lastTimeStamp = preferenceDao.getLastSyncedTimeStamp()
             try {
                 val response = tmcNetworkApiService.getTBSuspectedData(
-                    GetBenRequest(
+                    GetDataPaginatedRequest(
                         user.userId,
                         0,
                         getCurrentDate(lastTimeStamp),

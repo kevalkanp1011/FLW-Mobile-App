@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.helpers
 
+import androidx.core.text.isDigitsOnly
 import org.piramalswasthya.sakhi.model.AncFormState
 import org.piramalswasthya.sakhi.model.AncStatus
 import org.piramalswasthya.sakhi.model.BenBasicDomain
@@ -27,10 +28,10 @@ fun filterForBen(
         ben.benId.toString().lowercase().contains(filterText) ||
         ben.regDate.lowercase().contains((filterText)) ||
         ben.age.lowercase().contains(filterText) ||
-        ben.benName.lowercase().contains(filterText) ||
+        ben.benFullName.lowercase().contains(filterText) ||
         ben.familyHeadName.lowercase().contains(filterText) ||
         ben.benSurname?.lowercase()?.contains(filterText) ?: false ||
-//        ben.typeOfList.lowercase().contains(filterText) ||
+        ben.rchId.takeIf { it.isDigitsOnly() }?.contains(filterText) ?: false ||
         ben.mobileNo.lowercase().contains(filterText) ||
         ben.gender.lowercase().contains(filterText) ||
         ben.fatherName?.lowercase()?.contains(filterText) ?: false

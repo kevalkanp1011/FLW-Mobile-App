@@ -159,7 +159,7 @@ data class BenBasicCache(
             hhId = hhId,
             regDate = dateFormat.format(Date(regDate)),
             benName = benName,
-            benSurname = benSurname ?: "Not Available",
+            benSurname = benSurname ?: "",
             gender = gender.name,
             dob = dob,
             abhaId = abhaId,
@@ -1062,8 +1062,8 @@ data class BenRegCache(
 }
 
 fun getDateTimeStringFromLong(dateLong: Long?): String? {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-    val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
     dateLong?.let {
         val dateString = dateFormat.format(dateLong)
         val timeString = timeFormat.format(dateLong)

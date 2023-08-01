@@ -703,5 +703,10 @@ class NewBenRegL15ViewModel @Inject constructor(
             NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToAdolescentListFragment()
     }
 
+    fun updateValueByIdAndReturnListIndex ( id : Int, value : String?)  : Int{
+        dataset.setValueById(id, value)
+        return dataset.getIndexById(id )
+    }
+
 
 }

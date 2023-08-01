@@ -16,6 +16,7 @@
     <string name="PREF_current_dp_uri" translatable="false">DP_URI_cat</string>
 
 
+
     <!-- HOME -->
 
 
@@ -42,11 +43,10 @@
     <string-array name="nbr_reproductive_status_array">
         <item>Eligible Couple</item>
         <item>Pregnant Woman</item>
-<!--        <item>Delivery Stage</item>-->
-        <item>Postnatal Mother / Lactating Mother</item>
-        <item>Menopause Stage</item>
-        <item>Teenager</item>
-        <item>Other</item>
+        <item>Postnatal Mother</item>
+        <item>Elderly Woman</item>
+        <item>Adolescent Girl</item>
+        <item></item>
     </string-array>
 
 

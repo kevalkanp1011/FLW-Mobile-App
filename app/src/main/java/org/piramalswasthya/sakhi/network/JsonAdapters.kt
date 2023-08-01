@@ -66,7 +66,7 @@ data class TmcGenerateBenIdsRequest(
 )
 
 @JsonClass(generateAdapter = true)
-data class GetBenRequest(
+data class GetDataPaginatedRequest(
     val ashaId: Int,
     val pageNo: Int,
     val fromDate: String,

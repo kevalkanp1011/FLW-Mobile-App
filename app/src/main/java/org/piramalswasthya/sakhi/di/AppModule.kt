@@ -33,7 +33,7 @@ object AppModule {
 
     private val baseClient =
         OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS))
+            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .addInterceptor(ContentTypeInterceptor())
             .build()
 
@@ -146,6 +146,10 @@ object AppModule {
     @Singleton
     @Provides
     fun provideChildRegDao(database : InAppDb) : ChildRegistrationDao = database.childRegistrationDao
+
+    @Singleton
+    @Provides
+    fun provideSyncDao(database : InAppDb) : SyncDao = database.syncDao
 
     @Singleton
     @Provides

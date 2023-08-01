@@ -1,10 +1,20 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity.create_abha_id
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.model.BenHealthIdDetails
-import org.piramalswasthya.sakhi.network.*
+import org.piramalswasthya.sakhi.network.CreateAbhaIdResponse
+import org.piramalswasthya.sakhi.network.CreateHIDResponse
+import org.piramalswasthya.sakhi.network.CreateHealthIdRequest
+import org.piramalswasthya.sakhi.network.GenerateOtpHid
+import org.piramalswasthya.sakhi.network.MapHIDtoBeneficiary
+import org.piramalswasthya.sakhi.network.NetworkResult
+import org.piramalswasthya.sakhi.network.ValidateOtpHid
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import timber.log.Timber
@@ -94,7 +104,7 @@ class CreateAbhaViewModel @Inject constructor(
                     ben?.let {
                         _benMapped.value = ben.firstName + " " + ben.lastName
                         it.healthIdDetails = BenHealthIdDetails(healthId, healthIdNumber)
-                        benRepo.persistRecord(ben)
+                        benRepo.updateRecord(ben)
                     }
                     _state.value = State.ABHA_GENERATE_SUCCESS
                 }

@@ -7,14 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
+import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 
@@ -38,14 +37,9 @@ class NcdNonEligibleListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapterForForm(
-            BenListAdapterForForm.ClickListener(
-                {
-                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
-                },
-                { _, _ ->
-                Toast.makeText(context, "Yet to be implemented!", Toast.LENGTH_SHORT).show()
-            }),"CBAC FORM")
+        val benAdapter = BenListAdapter(
+            showAbha = false
+        )
         binding.rvAny.adapter = benAdapter
 
         lifecycleScope.launch {
