@@ -1341,9 +1341,9 @@ class BenRepo @Inject constructor(
 //                                ) else null,
 //                                noOfDaysForDelivery = noOfDaysForDelivery,
                                 ),
-                                healthIdDetails = if (benDataObj.has("healthId")) BenHealthIdDetails(
-                                    benDataObj.getString("healthId"),
-                                    benDataObj.getString("healthIdNumber")
+                                healthIdDetails = if (jsonObject.has("healthId")) BenHealthIdDetails(
+                                    jsonObject.getString("healthId"),
+                                    jsonObject.getString("healthIdNumber")
                                 ) else null,
                                 syncState = SyncState.SYNCED,
                                 isDraft = false
@@ -1534,13 +1534,31 @@ class BenRepo @Inject constructor(
                 .getBenHealthID(GetBenHealthIdRequest(benRegId, null))
             if (response.isSuccessful) {
                 val responseBody = response.body()?.string()
-                val jsonObj = responseBody?.let { obj -> JSONObject(obj) }
-                val data = jsonObj?.getJSONObject("data")?.getJSONArray("BenHealthDetails").toString()
-                val bens = Gson().fromJson(data, Array<BenHealthDetails>::class.java)
-                return if (bens.isNotEmpty()) {
-                    bens.last()
-                } else {
-                    null
+
+                when (responseBody?.let { JSONObject(it).getInt("statusCode") }) {
+                    200 -> {
+                        val jsonObj = JSONObject(responseBody)
+                        val data = jsonObj.getJSONObject("data").getJSONArray("BenHealthDetails").toString()
+                        val bens = Gson().fromJson(data, Array<BenHealthDetails>::class.java)
+                        return if (bens.isNotEmpty()) {
+                            bens.last()
+                        } else {
+                            null
+                        }
+                    }
+                    5000 -> {
+                        if (JSONObject(responseBody).getString("errorMessage")
+                                .contentEquals("Invalid login key or session is expired")) {
+                            val user = preferenceDao.getLoggedInUser()!!
+                            userRepo.refreshTokenTmc(user.userName, user.password)
+                            return getBeneficiaryWithId(benRegId)
+                        } else {
+                            NetworkResult.Error(0,JSONObject(responseBody).getString("errorMessage"))
+                        }
+                    }
+                    else -> {
+                        NetworkResult.Error(0, responseBody.toString())
+                    }
                 }
             }
         } catch (_: java.lang.Exception) {
