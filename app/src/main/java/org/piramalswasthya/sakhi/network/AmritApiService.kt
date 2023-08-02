@@ -11,7 +11,6 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
-import retrofit2.http.Url
 
 interface AmritApiService {
 
@@ -52,11 +51,11 @@ interface AmritApiService {
     @POST("flw-0.0.1/beneficiary/getBeneficiaryData")
     suspend fun getBeneficiaries(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
-    @POST/*("flw-0.0.1/cbac/getAll")*/
-    suspend fun getCbacs(@Url url : String = "http://192.168.1.94:8081/cbac/getAll",@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+    @POST("flw-0.0.1/cbac/getAll")
+    suspend fun getCbacs(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
-    @POST/*("flw-0.0.1/cbac/saveAll")*/
-    suspend fun postCbacs(@Url url : String = "http://192.168.1.94:8081/cbac/saveAll",@Body list : List<CbacPost>): Response<ResponseBody>
+    @POST("flw-0.0.1/cbac/saveAll")
+    suspend fun postCbacs(@Body list : List<CbacPost>): Response<ResponseBody>
 
 //    @POST("tb/screening/getAll")
     @POST("flw-0.0.1/tb/screening/getAll")
