@@ -1,22 +1,31 @@
 package org.piramalswasthya.sakhi.repositories
 
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.network.AmritApiService
+import org.piramalswasthya.sakhi.network.GetBenRequest
+import org.piramalswasthya.sakhi.network.TBScreeningRequestDTO
+import org.piramalswasthya.sakhi.network.TBSuspectedRequestDTO
 import timber.log.Timber
 import java.io.IOException
 import java.net.SocketTimeoutException
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 class EcrRepo @Inject constructor(
     private val amritApiService: AmritApiService,
     private val userRepo: UserRepo,
-    private val database: InAppDb
+    private val database: InAppDb,
+    private val preferenceDao: PreferenceDao,
+    private val tmcNetworkApiService: AmritApiService
 )  {
 
     suspend fun persistRecord(ecrForm: EligibleCoupleRegCache) {
@@ -49,9 +58,9 @@ class EcrRepo @Inject constructor(
         }
     }
 
-    suspend fun processNewEcr(): Boolean {
+    suspend fun processUnsyncedEcr(): Boolean {
         return withContext(Dispatchers.IO) {
-            val user = database.userDao.getLoggedInUser()
+            val user = preferenceDao.getLoggedInUser()
                 ?: throw IllegalStateException("No user logged in!!")
 
             val ecrList = database.ecrDao.getAllUnprocessedECR()
@@ -82,6 +91,10 @@ class EcrRepo @Inject constructor(
     private suspend fun postDataToAmritServer(ecrPostList: MutableSet<EcrPost>): Boolean {
         if (ecrPostList.isEmpty()) return false
 
+        val user =
+            preferenceDao.getLoggedInUser()
+                ?: throw IllegalStateException("No user logged in!!")
+
         try {
 
             val response = amritApiService.postEcrForm(ecrPostList.toList())
@@ -103,11 +116,8 @@ class EcrRepo @Inject constructor(
                                 return true
                             }
                             5002 -> {
-                                val user = userRepo.getLoggedInUser()
-                                    ?: throw IllegalStateException("User seems to be logged out!!")
-                                if (userRepo.refreshTokenD2d(
-                                        user.userName,
-                                        user.password
+                                if (userRepo.refreshTokenTmc(
+                                        user.userName, user.password
                                     )
                                 ) throw SocketTimeoutException()
                             }
@@ -137,7 +147,7 @@ class EcrRepo @Inject constructor(
 
     suspend fun processNewEct(): Boolean {
         return withContext(Dispatchers.IO) {
-            val user = database.userDao.getLoggedInUser()
+            val user = preferenceDao.getLoggedInUser()
                 ?: throw IllegalStateException("No user logged in!!")
 
             val ectList = database.ecrDao.getAllUnprocessedECT()
@@ -168,6 +178,8 @@ class EcrRepo @Inject constructor(
     private suspend fun postEctDataToAmritServer(ectPostList: MutableSet<EligibleCoupleTrackingCache>): Boolean {
         if (ectPostList.isEmpty()) return false
 
+        val user = preferenceDao.getLoggedInUser()
+            ?: throw IllegalStateException("No user logged in!!")
         try {
 
             val response = amritApiService.postEctForm(ectPostList.toList())
@@ -189,11 +201,8 @@ class EcrRepo @Inject constructor(
                                 return true
                             }
                             5002 -> {
-                                val user = userRepo.getLoggedInUser()
-                                    ?: throw IllegalStateException("User seems to be logged out!!")
-                                if (userRepo.refreshTokenD2d(
-                                        user.userName,
-                                        user.password
+                                if (userRepo.refreshTokenTmc(
+                                        user.userName, user.password
                                     )
                                 ) throw SocketTimeoutException()
                             }
@@ -218,6 +227,194 @@ class EcrRepo @Inject constructor(
         } catch (e: JSONException) {
             Timber.d("Caught exception $e here")
             return false
+        }
+    }
+
+    suspend fun getECRDetailsFromServer(): Int {
+        return withContext(Dispatchers.IO) {
+            val user =
+                preferenceDao.getLoggedInUser()
+                    ?: throw IllegalStateException("No user logged in!!")
+            val lastTimeStamp = preferenceDao.getLastSyncedTimeStamp()
+            try {
+                val response = tmcNetworkApiService.getEcrFormData(
+                    GetBenRequest(
+                        user.userId,
+                        0,
+                        getCurrentDate(lastTimeStamp),
+                        getCurrentDate()
+                    )
+                )
+                val statusCode = response.code()
+                if (statusCode == 200) {
+                    val responseString = response.body()?.string()
+                    if (responseString != null) {
+                        val jsonObj = JSONObject(responseString)
+
+                        val errorMessage = jsonObj.getString("errorMessage")
+                        val responseStatusCode = jsonObj.getInt("statusCode")
+                        Timber.d("Pull from amrit eligible couple register data : $responseStatusCode")
+                        when (responseStatusCode) {
+                            200 -> {
+                                try {
+                                    val dataObj = jsonObj.getString("data")
+                                    saveTBScreeningCacheFromResponse(dataObj)
+                                } catch (e: Exception) {
+                                    Timber.d("TB Screening entries not synced $e")
+                                    return@withContext 0
+                                }
+
+                                return@withContext 1
+                            }
+
+                            5002 -> {
+                                if (userRepo.refreshTokenTmc(
+                                        user.userName, user.password
+                                    )
+                                ) throw SocketTimeoutException("Refreshed Token!")
+                                else throw IllegalStateException("User Logged out!!")
+                            }
+
+                            5000 -> {
+                                if (errorMessage == "No record found") return@withContext 0
+                            }
+
+                            else -> {
+                                throw IllegalStateException("$responseStatusCode received, dont know what todo!?")
+                            }
+                        }
+                    }
+                }
+
+            } catch (e: SocketTimeoutException) {
+                Timber.d("get_tb error : $e")
+                return@withContext -2
+
+            } catch (e: java.lang.IllegalStateException) {
+                Timber.d("get_tb error : $e")
+                return@withContext -1
+            }
+            -1
+        }
+    }
+
+    private suspend fun saveTBScreeningCacheFromResponse(dataObj: String): MutableList<EligibleCoupleRegCache> {
+        val tbScreeningList = mutableListOf<TBScreeningCache>()
+        var requestDTO = Gson().fromJson(dataObj, TBScreeningRequestDTO::class.java)
+        requestDTO?.tbScreeningList?.forEach { tbScreeningDTO ->
+            tbScreeningDTO.visitDate?.let {
+                var tbScreeningCache: TBScreeningCache? =
+                    tbDao.getTbScreening(tbScreeningDTO.benId,
+                        TBRepo.getLongFromDate(tbScreeningDTO.visitDate)
+                    )
+                if (tbScreeningCache == null) {
+                    tbDao.saveTbScreening(tbScreeningDTO.toCache())
+                }
+            }
+        }
+        return tbScreeningList
+    }
+
+    suspend fun getTbSuspectedDetailsFromServer(): Int {
+        return withContext(Dispatchers.IO) {
+            val user =
+                preferenceDao.getLoggedInUser()
+                    ?: throw IllegalStateException("No user logged in!!")
+            val lastTimeStamp = preferenceDao.getLastSyncedTimeStamp()
+            try {
+                val response = tmcNetworkApiService.getTBSuspectedData(
+                    GetBenRequest(
+                        user.userId,
+                        0,
+                        TBRepo.getCurrentDate(lastTimeStamp),
+                        TBRepo.getCurrentDate()
+                    )
+                )
+                val statusCode = response.code()
+                if (statusCode == 200) {
+                    val responseString = response.body()?.string()
+                    if (responseString != null) {
+                        val jsonObj = JSONObject(responseString)
+
+                        val errorMessage = jsonObj.getString("errorMessage")
+                        val responseStatusCode = jsonObj.getInt("statusCode")
+                        Timber.d("Pull from amrit tb suspected data : $responseStatusCode")
+                        when (responseStatusCode) {
+                            200 -> {
+                                try {
+                                    val dataObj = jsonObj.getString("data")
+                                    saveTBSuspectedCacheFromResponse(dataObj)
+                                } catch (e: Exception) {
+                                    Timber.d("TB Suspected entries not synced $e")
+                                    return@withContext 0
+                                }
+
+                                return@withContext 1
+                            }
+
+                            5002 -> {
+                                if (userRepo.refreshTokenTmc(
+                                        user.userName, user.password
+                                    )
+                                ) throw SocketTimeoutException("Refreshed Token!")
+                                else throw IllegalStateException("User Logged out!!")
+                            }
+
+                            5000 -> {
+                                if (errorMessage == "No record found") return@withContext 0
+                            }
+
+                            else -> {
+                                throw IllegalStateException("$responseStatusCode received, don't know what todo!?")
+                            }
+                        }
+                    }
+                }
+
+            } catch (e: SocketTimeoutException) {
+                Timber.d("get_tb error : $e")
+                return@withContext -2
+
+            } catch (e: java.lang.IllegalStateException) {
+                Timber.d("get_tb error : $e")
+                return@withContext -1
+            }
+            -1
+        }
+    }
+
+    private suspend fun saveTBSuspectedCacheFromResponse(dataObj: String): MutableList<TBSuspectedCache> {
+        val tbSuspectedList = mutableListOf<TBSuspectedCache>()
+        val requestDTO = Gson().fromJson(dataObj, TBSuspectedRequestDTO::class.java)
+        requestDTO?.tbSuspectedList?.forEach { tbSuspectedDTO ->
+            tbSuspectedDTO.visitDate?.let {
+                val tbSuspectedCache: TBSuspectedCache? =
+                    tbDao.getTbSuspected(
+                        tbSuspectedDTO.benId,
+                        TBRepo.getLongFromDate(tbSuspectedDTO.visitDate)
+                    )
+                if (tbSuspectedCache == null) {
+                    tbDao.saveTbSuspected(tbSuspectedDTO.toCache())
+                }
+            }
+        }
+        return tbSuspectedList
+    }
+
+    companion object {
+        private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        private val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
+        private fun getCurrentDate(millis: Long = System.currentTimeMillis()): String {
+            val dateString = dateFormat.format(millis)
+            val timeString = timeFormat.format(millis)
+            return "${dateString}T${timeString}.000Z"
+        }
+
+        private fun getLongFromDate(dateString: String): Long {
+            //Jul 22, 2023 8:17:23 AM"
+            val f = SimpleDateFormat("MMM d, yyyy h:mm:ss a", Locale.ENGLISH)
+            val date = f.parse(dateString)
+            return date?.time ?: throw IllegalStateException("Invalid date for dateReg")
         }
     }
 }

@@ -9,7 +9,7 @@ import org.json.JSONObject
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.MaternalHealthDao
-import org.piramalswasthya.sakhi.database.room.dao.UserDao
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.hasPendingAncVisit
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.network.AmritApiService
@@ -24,7 +24,7 @@ class MaternalHealthRepo @Inject constructor(
     private val maternalHealthDao: MaternalHealthDao,
     private val userRepo: UserRepo,
     private val benDao: BenDao,
-    private val userDao: UserDao
+    private val preferenceDao: PreferenceDao,
 ) {
 
     suspend fun getSavedRegistrationRecord(benId: Long): PregnantWomanRegistrationCache? {
@@ -106,7 +106,7 @@ class MaternalHealthRepo @Inject constructor(
 
     suspend fun processNewAncVisit(): Boolean {
         return withContext(Dispatchers.IO) {
-            val user = userDao.getLoggedInUser()
+            val user = preferenceDao.getLoggedInUser()
                 ?: throw IllegalStateException("No user logged in!!")
 
             val ancList = maternalHealthDao.getAllUnprocessedAncVisits()
@@ -136,6 +136,9 @@ class MaternalHealthRepo @Inject constructor(
 
     private suspend fun postDataToAmritServer(ancPostList: MutableSet<PregnantWomanAncCache>): Boolean {
         if (ancPostList.isEmpty()) return false
+        val user =
+            preferenceDao.getLoggedInUser()
+                ?: throw IllegalStateException("No user logged in!!")
 
         try {
 
@@ -158,9 +161,7 @@ class MaternalHealthRepo @Inject constructor(
                                 return true
                             }
                             5002 -> {
-                                val user = userRepo.getLoggedInUser()
-                                    ?: throw IllegalStateException("User seems to be logged out!!")
-                                if (userRepo.refreshTokenD2d(
+                                if (userRepo.refreshTokenTmc(
                                         user.userName,
                                         user.password
                                     )
