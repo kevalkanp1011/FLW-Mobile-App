@@ -118,12 +118,6 @@ class SuspectedTBDataset(
                     source = isSputumCollected,
                     passedIndex = index,
                     triggerIndex = 0,
-                    target = sputumSubmittedAt
-                )
-                triggerDependants(
-                    source = isSputumCollected,
-                    passedIndex = index,
-                    triggerIndex = 0,
                     target = sputumTestResult
                 )
                 triggerDependants(
@@ -131,6 +125,12 @@ class SuspectedTBDataset(
                     passedIndex = index,
                     triggerIndex = 0,
                     target = nikshayId
+                )
+                triggerDependants(
+                    source = isSputumCollected,
+                    passedIndex = index,
+                    triggerIndex = 0,
+                    target = sputumSubmittedAt
                 )
             }
             else -> -1
@@ -150,26 +150,9 @@ class SuspectedTBDataset(
     }
 
 
-//    fun updateBen(benRegCache: BenRegCache) {
-//        benRegCache.genDetails?.let {
-//            it.reproductiveStatus =
-//                englishResources.getStringArray(R.array.nbr_reproductive_status_array)[1]
-//            it.reproductiveStatusId = 2
-//        }
-//        benRegCache.processed = "U"
-//    }
-//
-//    fun isTbSuspected(): String? {
-//        return if ( isCoughing.value == "Yes" ||
-//            bloodInSputum.value == "Yes" ||
-//            isFever.value == "Yes" ||
-//            nightSweats.value == "Yes" ||
-//            historyOfTB.value == "Yes")
-//            resources.getString(R.string.tb_suspected_alert) else null
-//    }
-//
-//    fun isTbSuspectedFamily(): String? {
-//        return if (currentlyTakingDrugs.value == "Yes" || familyHistoryTB.value == "Yes")
-//            resources.getString(R.string.tb_suspected_family_alert) else null
-//    }
+    fun isTestPositive(): String? {
+        return if ( sputumTestResult.value == "Positive" )
+            resources.getString(R.string.tb_suspected_alert_positive) else null
+    }
+
 }

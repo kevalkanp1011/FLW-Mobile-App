@@ -66,7 +66,7 @@ data class TmcGenerateBenIdsRequest(
 )
 
 @JsonClass(generateAdapter = true)
-data class GetBenRequest(
+data class GetDataPaginatedRequest(
     val ashaId: Int,
     val pageNo: Int,
     val fromDate: String,
@@ -332,8 +332,8 @@ data class MapHIDtoBeneficiary(
     val beneficiaryID: Long?,
     val healthId: String?,
     val healthIdNumber: String?,
-    val providerServiceMapId: Int?,
-    val createdBy: String?
+    var providerServiceMapId: Int?,
+    var createdBy: String?
 )
 
 data class TBScreeningRequestDTO(

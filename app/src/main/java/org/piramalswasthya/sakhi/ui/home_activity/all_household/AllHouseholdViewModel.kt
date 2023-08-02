@@ -15,8 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AllHouseholdViewModel @Inject constructor(
-    private val householdRepo: HouseholdRepo,
-    recordsRepo: RecordsRepo
+    private val householdRepo: HouseholdRepo, recordsRepo: RecordsRepo
 
 ) : ViewModel() {
 
@@ -43,8 +42,7 @@ class AllHouseholdViewModel @Inject constructor(
     fun navigateToNewHouseholdRegistration(delete: Boolean) {
 
         viewModelScope.launch {
-            if (delete)
-                householdRepo.deleteHouseholdDraft()
+            if (delete) householdRepo.deleteHouseholdDraft()
             _navigateToNewHouseholdRegistration.value = true
         }
     }
@@ -60,15 +58,15 @@ class AllHouseholdViewModel @Inject constructor(
 
     }
 
-    private fun filterHH(list: List<HouseHoldBasicDomain>, filter: String): List<HouseHoldBasicDomain> {
-        return if (filter == "")
-            list
+    private fun filterHH(
+        list: List<HouseHoldBasicDomain>, filter: String
+    ): List<HouseHoldBasicDomain> {
+        return if (filter == "") list
         else {
             val filterText = filter.lowercase()
             list.filter {
-                it.hhId.toString().contains(filterText) ||
-                        it.headName.lowercase().contains(filterText) ||
-                        it.headSurname.lowercase().contains((filterText))
+                it.hhId.toString().contains(filterText) || it.headFullName.lowercase()
+                    .contains(filterText) || it.contactNumber.lowercase().contains(filterText)
             }
         }
     }

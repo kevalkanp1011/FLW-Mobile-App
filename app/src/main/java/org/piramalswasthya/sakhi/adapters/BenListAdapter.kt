@@ -42,7 +42,7 @@ class BenListAdapter(
         ) {
             binding.ben = item
             binding.clickListener = clickListener
-            binding.showAbha = showAbha
+            binding.showAbha = showAbha && (item.abhaId.isNullOrEmpty())
             binding.executePendingBindings()
 
         }

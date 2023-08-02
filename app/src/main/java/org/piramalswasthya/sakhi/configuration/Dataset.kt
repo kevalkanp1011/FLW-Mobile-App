@@ -80,6 +80,15 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
 
 
         }
+
+        fun getMinDateOfReg(): Long {
+            return Calendar.getInstance().apply {
+                set(Calendar.YEAR, 2020)
+                set(Calendar.MONTH, 0)
+                set(Calendar.DAY_OF_MONTH, 1)
+            }.timeInMillis
+
+        }
     }
 
 

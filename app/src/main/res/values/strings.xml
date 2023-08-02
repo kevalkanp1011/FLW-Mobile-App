@@ -16,6 +16,7 @@
     <string name="PREF_current_dp_uri" translatable="false">DP_URI_cat</string>
 
 
+
     <!-- HOME -->
 
 
@@ -42,11 +43,10 @@
     <string-array name="nbr_reproductive_status_array">
         <item>Eligible Couple</item>
         <item>Pregnant Woman</item>
-<!--        <item>Delivery Stage</item>-->
-        <item>Postnatal Mother / Lactating Mother</item>
-        <item>Menopause Stage</item>
-        <item>Teenager</item>
-        <item>Other</item>
+        <item>Postnatal Mother</item>
+        <item>Elderly Woman</item>
+        <item>Adolescent Girl</item>
+        <item></item>
     </string-array>
 
 
@@ -155,6 +155,7 @@
 
     <!--TB Screening-->
     <string name="tb_suspected_alert">Refer to MO and collect the Sputum sample</string>
+    <string name="tb_suspected_alert_positive">Refer to MO</string>
     <string name="tb_suspected_family_alert">Refer to MO or inform ANM/MPW to tracing of all family members</string>
 
 
@@ -494,6 +495,7 @@
     <string name="verify_otp">Verify OTP</string>
     <string name="resend_otp">Resend OTP</string>
     <string name="exit">Exit</string>
+    <string name="no_records_found_hh">No Household records found. Please start registering households by clicking on the button below.</string>
 
     <!-- Eligible couple registration -->
     <string-array name="ecr_gender_array">

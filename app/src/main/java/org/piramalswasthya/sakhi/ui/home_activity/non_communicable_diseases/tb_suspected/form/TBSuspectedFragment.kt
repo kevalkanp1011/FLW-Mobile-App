@@ -1,9 +1,11 @@
 package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_diseases.tb_suspected.form
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -12,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
+import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -23,21 +26,13 @@ class TBSuspectedFragment : Fragment() {
 
     private val viewModel: TBSuspectedViewModel by viewModels()
 
-//    private val tbSuspectedAlert by lazy {
-//        AlertDialog.Builder(requireContext())
-//            .setTitle("TB Screening")
-//            .setMessage("it")
-//            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
-//            .create()
-//    }
-//
-//    private val tbSuspectedFamilyAlert by lazy {
-//        AlertDialog.Builder(requireContext())
-//            .setTitle("TB Screening")
-//            .setMessage("it")
-//            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
-//            .create()
-//    }
+    private val tbSuspectedAlert by lazy {
+        AlertDialog.Builder(requireContext())
+            .setTitle("TB Suspected Sputum Test")
+            .setMessage("it")
+            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }
+            .create()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -80,6 +75,9 @@ class TBSuspectedFragment : Fragment() {
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
                 TBSuspectedViewModel.State.SAVE_SUCCESS -> {
+                    Toast.makeText(requireContext(),
+                        "TB Tracking submitted", Toast.LENGTH_SHORT).show()
+                    WorkerUtils.triggerAmritPushWorker(requireContext())
                     findNavController().navigateUp()
                 }
 
@@ -90,24 +88,18 @@ class TBSuspectedFragment : Fragment() {
 
     private fun submitTBSuspectedForm() {
         if (validateCurrentPage()) {
-//            showAlerts()
+            showAlerts()
             viewModel.saveForm()
         }
     }
 
-//    private fun showAlerts() {
-//        viewModel.getAlerts()
-//        viewModel.suspectedTB?.let {
-//            tbSuspectedAlert.setMessage(it)
-//            tbSuspectedAlert.show()
-//        }
-//
-//        viewModel.suspectedTBFamily?.let {
-//            tbSuspectedFamilyAlert.setMessage(it)
-//            tbSuspectedFamilyAlert.show()
-//        }
-//
-//    }
+    private fun showAlerts() {
+        val alert = viewModel.getAlerts()
+        alert?.let {
+            tbSuspectedAlert.setMessage(it)
+            tbSuspectedAlert.show()
+        }
+    }
 
     private fun validateCurrentPage(): Boolean {
         val result = binding.form.rvInputForm.adapter?.let {

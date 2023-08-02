@@ -41,15 +41,21 @@ interface AmritApiService {
 
 //    @POST("beneficiary/getBeneficiaryData")
     @POST("flw-0.0.1/beneficiary/getBeneficiaryData")
-    suspend fun getBeneficiaries(@Body userDetail: GetBenRequest): Response<ResponseBody>
+    suspend fun getBeneficiaries(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+
+    @POST("flw-0.0.1/cbac/getAll")
+    suspend fun getCbacs(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+
+    @POST("flw-0.0.1/cbac/saveAll")
+    suspend fun postCbacs(@Body list : List<CbacPost>): Response<ResponseBody>
 
 //    @POST("tb/screening/getAll")
     @POST("flw-0.0.1/tb/screening/getAll")
-    suspend fun getTBScreeningData(@Body userDetail: GetBenRequest): Response<ResponseBody>
+    suspend fun getTBScreeningData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
     @POST("flw-0.0.1/tb/suspected/getAll")
 //    @POST("tb/suspected/getAll")
-    suspend fun getTBSuspectedData(@Body userDetail: GetBenRequest): Response<ResponseBody>
+    suspend fun getTBSuspectedData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
     @POST("flw-0.0.1/tb/screening/saveAll")
 //    @POST("tb/screening/saveAll")

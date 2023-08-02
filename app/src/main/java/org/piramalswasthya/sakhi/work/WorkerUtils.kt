@@ -3,7 +3,13 @@ package org.piramalswasthya.sakhi.work
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.Operation
+import androidx.work.WorkManager
 
 object WorkerUtils {
 
@@ -17,6 +23,9 @@ object WorkerUtils {
         val pullWorkRequest = OneTimeWorkRequestBuilder<PullFromAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
+        val pullCbacWorkRequest = OneTimeWorkRequestBuilder<CbacPullFromAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
         val pullTBWorkRequest = OneTimeWorkRequestBuilder<PullTBFromAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
@@ -24,6 +33,9 @@ object WorkerUtils {
             .setConstraints(networkOnlyConstraint)
             .build()
         val pushWorkRequest = OneTimeWorkRequestBuilder<PushToAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
+        val pushCbacWorkRequest = OneTimeWorkRequestBuilder<CbacPushToAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
         val pushTBWorkRequest = OneTimeWorkRequestBuilder<PushTBToAmritWorker>()
@@ -35,21 +47,83 @@ object WorkerUtils {
         val workManager = WorkManager.getInstance(context)
         workManager
             .beginUniqueWork(syncWorkerUniqueName, ExistingWorkPolicy.APPEND_OR_REPLACE, pullWorkRequest)
+            .then(pullCbacWorkRequest)
             .then(pullTBWorkRequest)
             .then(pullECWorkRequest)
             .then(pushWorkRequest)
+            .then(pushCbacWorkRequest)
             .then(pushTBWorkRequest)
             .then(pushECWorkRequest)
             .enqueue()
     }
+    fun triggerAmritPushWorker(context : Context){
+        val pushWorkRequest = OneTimeWorkRequestBuilder<PushToAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
+        val pushCbacWorkRequest = OneTimeWorkRequestBuilder<CbacPushToAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
+        val pushTBWorkRequest = OneTimeWorkRequestBuilder<PushTBToAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
+        val workManager = WorkManager.getInstance(context)
+        workManager
+            .beginUniqueWork(syncWorkerUniqueName, ExistingWorkPolicy.APPEND_OR_REPLACE, pushWorkRequest)
+            .then(pushCbacWorkRequest)
+            .then(pushTBWorkRequest)
+            .enqueue()
+    }
+    fun triggerAmritPullWorker(context : Context){
+        val pullWorkRequest = OneTimeWorkRequestBuilder<PullFromAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
+        val pullCbacWorkRequest = OneTimeWorkRequestBuilder<CbacPullFromAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
+        val pullTBWorkRequest = OneTimeWorkRequestBuilder<PullTBFromAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
+        val setSyncCompleteWorker = OneTimeWorkRequestBuilder<UpdatePrefForPullCompleteWorker>()
+            .build()
+        val workManager = WorkManager.getInstance(context)
+        workManager
+            .beginUniqueWork(syncWorkerUniqueName, ExistingWorkPolicy.APPEND_OR_REPLACE, pullWorkRequest)
+            .then(pullCbacWorkRequest)
+            .then(pullTBWorkRequest)
+            .then(setSyncCompleteWorker)
+            .enqueue()
+    }
 
     fun triggerD2dSyncWorker(context: Context) {
-        val workRequest = OneTimeWorkRequestBuilder<PushToD2DWorker>()
-            .setConstraints(PushToD2DWorker.constraint)
+//        val workRequest = OneTimeWorkRequestBuilder<PushToD2DWorker>()
+//            .setConstraints(PushToD2DWorker.constraint)
+//            .build()
+//        WorkManager.getInstance(context)
+//            .enqueueUniqueWork(
+//                PushToD2DWorker.name,
+//                ExistingWorkPolicy.APPEND_OR_REPLACE,
+//                workRequest
+//            )
+    }
+
+    fun triggerCbacPullWorker(context: Context){
+        val workRequest = OneTimeWorkRequestBuilder<CbacPullFromAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
             .build()
         WorkManager.getInstance(context)
             .enqueueUniqueWork(
-                PushToD2DWorker.name,
+                CbacPullFromAmritWorker.name,
+                ExistingWorkPolicy.APPEND_OR_REPLACE,
+                workRequest
+            )
+    }
+    fun triggerCbacPushWorker(context: Context){
+        val workRequest = OneTimeWorkRequestBuilder<CbacPushToAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
+        WorkManager.getInstance(context)
+            .enqueueUniqueWork(
+                CbacPushToAmritWorker.name,
                 ExistingWorkPolicy.APPEND_OR_REPLACE,
                 workRequest
             )

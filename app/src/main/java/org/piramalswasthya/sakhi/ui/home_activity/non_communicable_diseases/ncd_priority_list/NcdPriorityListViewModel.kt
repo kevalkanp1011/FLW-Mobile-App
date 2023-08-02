@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.helpers.filterBenFormList
+import org.piramalswasthya.sakhi.helpers.filterBenList
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import javax.inject.Inject
 
@@ -17,7 +17,7 @@ recordsRepo: RecordsRepo
     private val allBenList = recordsRepo.getNcdPriorityList
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter){
-            list, filter -> filterBenFormList(list.map { it.ben.asBenBasicDomainModelForCbacForm() }, filter)
+            list, filter -> filterBenList(list.map { it.ben.asBasicDomainModel() }, filter)
     }
 
     fun filterText(text: String) {

@@ -43,12 +43,12 @@ class RecordsRepo @Inject constructor(
     val getNcdEligibleList = ncdList
     val getNcdEligibleListCount = ncdListCount
     val getNcdPriorityList = ncdList.map {
-        it.filter { it.savedCbacRecords.isNotEmpty() && it.savedCbacRecords.maxBy { it.id }.total_score >= 4 }
+        it.filter { it.savedCbacRecords.isNotEmpty() && it.savedCbacRecords.maxBy { it.createdDate }.total_score > 4 }
     }
 
     val getNcdPriorityListCount = ncdListCount
     val getNcdNonEligibleList = ncdList.map {
-        it.filter { it.savedCbacRecords.isNotEmpty() && it.savedCbacRecords.maxBy { it.id }.total_score < 4 }
+        it.filter { it.savedCbacRecords.isNotEmpty() && it.savedCbacRecords.maxBy { it.createdDate }.total_score <= 4 }
     }
 
     val getNcdNonEligibleListCount = ncdListCount

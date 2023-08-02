@@ -52,7 +52,7 @@ enum class Gender {
     value = "SELECT b.beneficiaryId as benId, b.householdId as hhId, b.regDate, b.firstName as benName, b.lastName as benSurname, b.gender, b.dob as dob" +
             ", b.contactNumber as mobileNo, b.fatherName, h.fam_familyHeadName as familyHeadName, b.rchId" +
             ", b.isHrpStatus as hrpStatus, b.syncState, b.gen_reproductiveStatusId as reproductiveStatusId, b.isKid, b.immunizationStatus," +
-            " b.loc_village_id as villageId," +
+            " b.loc_village_id as villageId, b.abha_healthIdNumber as abhaId," +
             " cbac.benId is not null as cbacFilled, cbac.syncState as cbacSyncState," +
             " cdr.benId is not null as cdrFilled, cdr.syncState as cdrSyncState, " +
             " mdsr.benId is not null as mdsrFilled, mdsr.syncState as mdsrSyncState," +
@@ -105,6 +105,7 @@ data class BenBasicCache(
     val isKid: Boolean,
     val immunizationStatus: Boolean,
     val villageId: Int,
+    val abhaId: String?,
     val cbacFilled: Boolean,
     val cbacSyncState: SyncState?,
     val cdrFilled: Boolean,
@@ -164,9 +165,10 @@ data class BenBasicCache(
             hhId = hhId,
             regDate = dateFormat.format(Date(regDate)),
             benName = benName,
-            benSurname = benSurname ?: "Not Available",
+            benSurname = benSurname ?: "",
             gender = gender.name,
             dob = dob,
+            abhaId = abhaId,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
@@ -503,6 +505,7 @@ data class BenBasicDomain(
     val ageUnit: AgeUnit = getAgeUnitFromDob(dob),
     val age: String = "$ageInt $ageUnit",
     val mobileNo: String,
+    val abhaId: String? = null,
     val fatherName: String? = null,
     val familyHeadName: String,
 //    val typeOfList: String,
@@ -1105,8 +1108,8 @@ data class BenRegCache(
 }
 
 fun getDateTimeStringFromLong(dateLong: Long?): String? {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-    val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
     dateLong?.let {
         val dateString = dateFormat.format(dateLong)
         val timeString = timeFormat.format(dateLong)

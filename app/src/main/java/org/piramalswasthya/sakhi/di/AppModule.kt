@@ -28,15 +28,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    private const val baseTmcUrl = // "http://assamtmc.piramalswasthya.org:8080/"
-//    "http://192.168.1.233:8085/"
-    "http://amritdemo.piramalswasthya.org:8080/"
-//        "http://192.168.1.94:8081/"
+    private const val baseTmcUrl = "http://amritdemo.piramalswasthya.org:8080/"
     private const val baseAbhaUrl = "https://healthidsbx.abdm.gov.in/api/"
 
     private val baseClient =
         OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS))
+            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .addInterceptor(ContentTypeInterceptor())
             .build()
 
@@ -54,9 +51,9 @@ object AppModule {
     fun provideTmcHttpClient(): OkHttpClient {
         return baseClient
             .newBuilder()
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
             .addInterceptor(TokenInsertTmcInterceptor())
             .build()
     }
@@ -149,6 +146,10 @@ object AppModule {
     @Singleton
     @Provides
     fun provideChildRegDao(database : InAppDb) : ChildRegistrationDao = database.childRegistrationDao
+
+    @Singleton
+    @Provides
+    fun provideSyncDao(database : InAppDb) : SyncDao = database.syncDao
 
     @Singleton
     @Provides

@@ -103,7 +103,7 @@ class TBScreeningFormViewModel @Inject constructor(
                     tbRepo.saveTBScreening(tbScreeningCache)
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
-                    Timber.d("saving PWR data failed!!")
+                    Timber.d("saving tb screening data failed!!")
                     _state.postValue(State.SAVE_FAILED)
                 }
             }

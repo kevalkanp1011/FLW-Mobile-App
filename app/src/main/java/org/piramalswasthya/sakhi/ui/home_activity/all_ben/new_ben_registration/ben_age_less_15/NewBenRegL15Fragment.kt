@@ -24,6 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.BuildConfig
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
+import org.piramalswasthya.sakhi.contracts.SpeechToTextContract
 import org.piramalswasthya.sakhi.databinding.FragmentInputFormPageHhBinding
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_less_15.NewBenRegL15ViewModel.State
@@ -40,6 +41,16 @@ class NewBenRegL15Fragment : Fragment() {
         get() = _binding!!
 
     private val viewModel: NewBenRegL15ViewModel by viewModels()
+
+    private var micClickedElementId: Int = -1
+    private val sttContract = registerForActivityResult(SpeechToTextContract()) { value ->
+        val formattedValue = value/*.substring(0,50)*/.uppercase()
+        val listIndex =
+            viewModel.updateValueByIdAndReturnListIndex(micClickedElementId, formattedValue)
+        listIndex.takeIf { it >= 0 }?.let {
+            binding.inputForm.rvInputForm.adapter?.notifyItemChanged(it)
+        }
+    }
 
     private val requestLocationPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { b ->
@@ -210,8 +221,18 @@ class NewBenRegL15Fragment : Fragment() {
                         viewModel.setCurrentImageFormId(it)
                         takeImage()
                     }, formValueListener = FormInputAdapter.FormValueListener { formId, index ->
-                        viewModel.updateListOnValueChanged(formId, index)
-                        hardCodedListUpdate(formId)
+                        when (index) {
+                            Konstants.micClickIndex -> {
+                                micClickedElementId = formId
+                                sttContract.launch(Unit)
+                            }
+
+                            else -> {
+                                viewModel.updateListOnValueChanged(formId, index)
+                                hardCodedListUpdate(formId)
+                            }
+                        }
+
                     }, isEnabled = !recordExists
                     )
                 binding.inputForm.rvInputForm.adapter = adapter
@@ -241,7 +262,7 @@ class NewBenRegL15Fragment : Fragment() {
                     binding.clContent.visibility = View.VISIBLE
                     binding.rlSaving.visibility = View.GONE
                     Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
-                    WorkerUtils.triggerAmritSyncWorker(requireContext())
+                    WorkerUtils.triggerAmritPushWorker(requireContext())
 
 //                    when (viewModel.getNavPath()) {
 //                        TypeOfList.INFANT -> findNavController().navigate(

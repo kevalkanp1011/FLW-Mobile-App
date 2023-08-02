@@ -4,7 +4,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import org.piramalswasthya.sakhi.model.CbacCache
+import org.piramalswasthya.sakhi.model.CbacCachePush
 
 @Dao
 interface CbacDao {
@@ -12,12 +14,15 @@ interface CbacDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(vararg cbacCache: CbacCache)
 
+    @Update
+    suspend fun update(vararg cbacCache: CbacCache)
+
     @Query("SELECT * FROM CBAC WHERE id = :cbacId LIMIT 1")
     suspend fun getCbacFromBenId(cbacId: Int): CbacCache?
 
 
-    @Query("SELECT * FROM CBAC WHERE processed = 'N'")
-    suspend fun getAllUnprocessedCbac() : List<CbacCache>
+    @Query("SELECT c.*, b.householdId as hhId, b.gender as benGender FROM CBAC c join beneficiary b on c.benId= b.beneficiaryId WHERE c.processed = 'N' ")
+    suspend fun getAllUnprocessedCbac() : List<CbacCachePush>
 
     @Query("UPDATE CBAC SET syncState = 1 WHERE benId =:benId")
     suspend fun setCbacSyncing(vararg benId: Long)

@@ -41,6 +41,7 @@ class NewHouseholdViewModel @Inject constructor(
     fun setConsentAgreed() {
         isConsentAgreed = true
     }
+
     fun getIsConsentAgreed() = isConsentAgreed
 
     private val hhIdFromArgs = NewHouseholdFragmentArgs.fromSavedStateHandle(savedStateHandle).hhId
@@ -90,13 +91,18 @@ class NewHouseholdViewModel @Inject constructor(
                         1 -> dataset.setFirstPage(household.family)
                         2 -> {
                             dataset.setSecondPage(household.details)
-                            dataset.mapValues(household, 1)
-                            householdRepo.persistRecord(household)
+                            if (household.householdId == 0L) {
+                                dataset.mapValues(household, 1)
+                                householdRepo.persistRecord(household)
+                            }
                         }
+
                         3 -> {
                             dataset.setThirdPage(household.amenities)
-                            dataset.mapValues(household, 2)
-                            householdRepo.persistRecord(household)
+                            if (household.householdId == 0L) {
+                                dataset.mapValues(household, 2)
+                                householdRepo.persistRecord(household)
+                            }
                         }
                     }
                 }
@@ -110,6 +116,8 @@ class NewHouseholdViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 try {
                     _state.postValue(State.SAVING)
+                    dataset.mapValues(household, 1)
+                    dataset.mapValues(household, 2)
                     dataset.mapValues(household, 3)
                     household.apply {
                         if (householdId == 0L) {
@@ -167,11 +175,12 @@ class NewHouseholdViewModel @Inject constructor(
     fun setRecordExists(b: Boolean) {
         _recordExists.value = b
 
+
     }
 
     fun updateValueByIdAndReturnListIndex(id: Int, value: String): Int {
         dataset.setValueById(id, value)
-        return dataset.getIndexById(id )
+        return dataset.getIndexById(id)
     }
 
 

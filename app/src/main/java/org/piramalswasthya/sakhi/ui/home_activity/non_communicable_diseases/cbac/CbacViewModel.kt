@@ -13,8 +13,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.model.AgeUnit
 import org.piramalswasthya.sakhi.model.BenBasicCache
 import org.piramalswasthya.sakhi.model.BenRegCache
@@ -30,11 +30,12 @@ import javax.inject.Inject
 class CbacViewModel @Inject constructor(
     private val context: Application,
     state: SavedStateHandle,
-    private val database: InAppDb,
+    benDao: BenDao,
     private val cbacRepo: CbacRepo
 ) : ViewModel() {
 
     enum class State {
+        LOADING,
         IDLE,
         MISSING_FIELD,
         SAVING,
@@ -108,14 +109,13 @@ class CbacViewModel @Inject constructor(
         get() = _ast1
 
 
-
-    private val _state = MutableLiveData(State.IDLE)
+    private val _state = MutableLiveData(State.LOADING)
     val state: LiveData<State>
         get() = _state
 
 
     val _filledCbac = MutableLiveData<CbacCache>()
-    val filledCbac : LiveData<CbacCache>
+    val filledCbac: LiveData<CbacCache>
         get() = _filledCbac
 
     var missingFieldString: String? = null
@@ -123,25 +123,25 @@ class CbacViewModel @Inject constructor(
     private var flagForNcd = false
 
     private val _minDate = MutableLiveData<Long>()
-    val minDate : LiveData<Long>
+    val minDate: LiveData<Long>
         get() = _minDate
 
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 cbac = if (cbacId > 0)
-                    cbacRepo.getCbacCacheFromId(cbacId).also {  _filledCbac.postValue(it)}
+                    cbacRepo.getCbacCacheFromId(cbacId).also { _filledCbac.postValue(it) }
                 else
                     CbacCache(
                         benId = benId, ashaId = ashaId,
                         syncState = SyncState.UNSYNCED
                     )
-                ben = database.benDao.getBen(benId)!!
+                ben = benDao.getBen(benId)!!
                 _minDate.postValue(ben.regDate)
             }
             if (ben.ageUnit != AgeUnit.YEARS)
                 throw IllegalStateException("Age not in years for CBAC form!!")
-            val age= if(cbacId==0) ben.age else BenBasicCache.getAgeFromDob(ben.dob)
+            val age = if (cbacId == 0) ben.age else BenBasicCache.getAgeFromDob(ben.dob)
             when (age) {
                 in 0..29 -> {
                     _raAgeScore.value = 0
@@ -169,6 +169,9 @@ class CbacViewModel @Inject constructor(
             _age.value = ben.age
             _benName.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
+
+            _state.value = State.IDLE
+
 
         }
     }
@@ -805,8 +808,8 @@ class CbacViewModel @Inject constructor(
         cbac.cbac_sputemcollection = i.toString()
     }
 
-    fun getCollectSputum(): Int {
-        return cbac.cbac_sputemcollection?.toInt() ?: 0
+    fun getCollectSputum(): String {
+        return cbac.cbac_sputemcollection ?: "0"
     }
 
     fun setTraceAllMembers(i: Int) {

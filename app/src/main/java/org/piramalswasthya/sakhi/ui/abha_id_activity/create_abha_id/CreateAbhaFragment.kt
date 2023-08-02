@@ -178,13 +178,14 @@ class CreateAbhaFragment : Fragment() {
                 }
                 State.OTP_GENERATE_SUCCESS -> {
                     binding.clVerifyMobileOtp.visibility = View.VISIBLE
+                    binding.clDownloadAbha.visibility = View.GONE
                     binding.clError.visibility = View.INVISIBLE
                     startResendTimer()
                 }
                 State.OTP_VERIFY_SUCCESS -> {
                     binding.pbCai.visibility = View.INVISIBLE
                     binding.clCreateAbhaId.visibility = View.VISIBLE
-                    binding.clDownloadAbha.visibility = View.INVISIBLE
+                    binding.clDownloadAbha.visibility = View.GONE
                     binding.clVerifyMobileOtp.visibility = View.INVISIBLE
                     binding.clError.visibility = View.INVISIBLE
                 }

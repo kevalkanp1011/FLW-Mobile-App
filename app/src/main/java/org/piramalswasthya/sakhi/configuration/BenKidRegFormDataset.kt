@@ -62,11 +62,12 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
 
     private val dateOfReg = FormElement(
         id = 2,
-        inputType = TEXT_VIEW,
+        inputType = DATE_PICKER,
         title = context.getString(R.string.nbr_dor),
         arrayId = -1,
         required = true,
-        value = getCurrentDateString()
+        min = getMinDateOfReg(),
+        max = System.currentTimeMillis()
     )
     private val firstName = FormElement(
         id = 3,
@@ -75,6 +76,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         arrayId = -1,
         required = true,
         allCaps = true,
+        hasSpeechToText = true,
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
     )
     private val lastName = FormElement(
@@ -82,8 +84,9 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         inputType = EDIT_TEXT,
         title = context.getString(R.string.nbr_nb_last_name),
         arrayId = -1,
-        required = false,
+        required = true,
         allCaps = true,
+        hasSpeechToText = true,
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS,
     )
     val ageUnit = FormElement(
@@ -132,6 +135,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         arrayId = -1,
         required = true,
         allCaps = true,
+        hasSpeechToText = true,
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
     )
     private val motherName = FormElement(
@@ -141,6 +145,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         arrayId = -1,
         required = true,
         allCaps = true,
+        hasSpeechToText = true,
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
     )
 
@@ -150,7 +155,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         title = context.getString(R.string.nbr_mobile_number_of),
         arrayId = -1,
         entries = arrayOf(
-            "Mother", "Father", "Family Head", "Other"
+            "Self", "Husband", "Mother", "Father", "Family Head", "Other"
         ),
         required = true,
         hasDependants = true,
@@ -365,6 +370,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
     suspend fun setFirstPage(ben: BenRegCache?, familyHeadPhoneNo: Long?) {
         val list = firstPage.toMutableList()
         this.familyHeadPhoneNo = familyHeadPhoneNo?.toString()
+        dateOfReg.value = getCurrentDateString()
         contactNumberFamilyHead.value = familyHeadPhoneNo?.toString()
         ben?.takeIf { !it.isDraft }?.let { saved ->
             pic.value = saved.userImage
@@ -744,10 +750,12 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
     private val babyWeight = FormElement(
         id = 43,
         inputType = EDIT_TEXT,
-        title = "Weight at birth ( gram )",
+        title = "Weight at birth ( Kg )",
         arrayId = -1,
         required = false,
-        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        min = 0,
+        max = 10,
+        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL,
         etMaxLength = 4
     )
 
@@ -876,7 +884,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                 /*val case2 = */triggerDependants(
                     age = age.value!!.toInt(),
                     ageUnit = ageUnit,
-                    ageTriggerRange = Range(3, 14),
+                    ageTriggerRange = Range(4, 14),
                     ageUnitTriggerIndex = 2,
                     target = childRegisteredAtSchool,
                     placeAfter = religion,
@@ -1140,6 +1148,9 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     triggerIndex = 0,
                     target = corticosteroidGivenAtLabor,
                 )
+            }
+            babyWeight.id -> {
+                validateDoubleMinMax(babyWeight)
             }
 
 

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -13,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
+import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -81,6 +83,9 @@ class TBScreeningFormFragment : Fragment() {
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
                 TBScreeningFormViewModel.State.SAVE_SUCCESS -> {
+                    Toast.makeText(requireContext(),
+                        "TB Screening submitted", Toast.LENGTH_SHORT).show()
+                    WorkerUtils.triggerAmritPushWorker(requireContext())
                     findNavController().navigateUp()
                 }
 

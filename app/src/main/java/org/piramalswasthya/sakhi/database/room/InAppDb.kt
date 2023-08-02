@@ -26,6 +26,7 @@ import org.piramalswasthya.sakhi.database.room.dao.MaternalHealthDao
 import org.piramalswasthya.sakhi.database.room.dao.MdsrDao
 import org.piramalswasthya.sakhi.database.room.dao.PmjayDao
 import org.piramalswasthya.sakhi.database.room.dao.PmsmaDao
+import org.piramalswasthya.sakhi.database.room.dao.SyncDao
 import org.piramalswasthya.sakhi.database.room.dao.TBDao
 import org.piramalswasthya.sakhi.model.BenBasicCache
 import org.piramalswasthya.sakhi.model.BenRegCache
@@ -102,6 +103,8 @@ abstract class InAppDb : RoomDatabase() {
     abstract val deliveryOutcomeDao: DeliveryOutcomeDao
     abstract val infantRegDao: InfantRegDao
     abstract val childRegistrationDao : ChildRegistrationDao
+
+    abstract val syncDao : SyncDao
 
     companion object {
         @Volatile
