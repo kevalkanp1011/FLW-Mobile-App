@@ -26,6 +26,7 @@ class NcdNonEligibleListFragment : Fragment() {
     private val viewModel: NcdNonEligibleListViewModel by viewModels()
 
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,6 +42,7 @@ class NcdNonEligibleListFragment : Fragment() {
             showAbha = false
         )
         binding.rvAny.adapter = benAdapter
+
 
         lifecycleScope.launch {
             viewModel.benList.collect{

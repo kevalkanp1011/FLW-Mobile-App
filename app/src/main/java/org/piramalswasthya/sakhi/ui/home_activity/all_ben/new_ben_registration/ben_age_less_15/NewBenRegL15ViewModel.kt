@@ -695,9 +695,9 @@ class NewBenRegL15ViewModel @Inject constructor(
     }
 
     fun getNavDirection(): NavDirections {
-        return if (ben.ageUnit in arrayOf(AgeUnit.DAYS, AgeUnit.MONTHS))
+        return if (ben.ageUnit in arrayOf(AgeUnit.DAYS, AgeUnit.MONTHS) ||( ben.ageUnit == AgeUnit.YEARS && ben.age==1))
             NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToInfantListFragment()
-        else if(ben.age<Konstants.maxAgeForChild)
+        else if(ben.age<=Konstants.maxAgeForChild)
             NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToChildListFragment()
         else
             NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToAdolescentListFragment()

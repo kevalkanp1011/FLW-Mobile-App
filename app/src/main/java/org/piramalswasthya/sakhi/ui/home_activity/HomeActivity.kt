@@ -69,6 +69,9 @@ class HomeActivity : AppCompatActivity() {
     private val syncBottomSheet : SyncBottomSheetFragment by lazy {
         SyncBottomSheetFragment()
     }
+
+
+
     private val viewModel: HomeViewModel by viewModels()
 
     private val langChooseAlert by lazy {
@@ -231,6 +234,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setUpNavHeader() {
         val headerView = binding.navView.getHeaderView(0)
+
         viewModel.currentUser?.let {
             headerView.findViewById<TextView>(R.id.tv_nav_name).text =
                 getString(R.string.nav_item_1_text, it.name)

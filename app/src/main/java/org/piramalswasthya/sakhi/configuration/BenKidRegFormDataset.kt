@@ -86,6 +86,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         arrayId = -1,
         required = true,
         allCaps = true,
+        etMaxLength = 2,
         hasSpeechToText = true,
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS,
     )
@@ -1009,13 +1010,13 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
 
             mobileNoOfRelation.id -> {
                 when (index) {
-                    0, 1 -> triggerDependants(
+                    0, 1, 2, 3 -> triggerDependants(
                         source = mobileNoOfRelation,
                         removeItems = listOf(otherMobileNoOfRelation, contactNumberFamilyHead),
                         addItems = listOf(contactNumber)
                     )
 
-                    2 -> {
+                    4 -> {
                         contactNumberFamilyHead.value = familyHeadPhoneNo
                         triggerDependants(
                             source = mobileNoOfRelation,

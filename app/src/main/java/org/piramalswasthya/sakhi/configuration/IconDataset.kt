@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.configuration
 import android.content.res.Resources
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.Icon
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import org.piramalswasthya.sakhi.ui.home_activity.child_care.ChildCareFragmentDirections
@@ -13,93 +14,124 @@ import org.piramalswasthya.sakhi.ui.home_activity.immunization_due.ImmunizationD
 import org.piramalswasthya.sakhi.ui.home_activity.maternal_health.MotherCareFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.non_communicable_diseases.NcdFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.village_level_forms.VillageLevelFormsFragmentDirections
+import timber.log.Timber
 import javax.inject.Inject
 
 @ActivityRetainedScoped
-class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
+class IconDataset @Inject constructor(
+    private val recordsRepo: RecordsRepo,
+    private val preferenceDao: PreferenceDao
+    ) {
 
-    fun getHomeIconDataset(resources: Resources) = listOf(
-        Icon(
-            R.drawable.ic__hh,
-            resources.getString(R.string.icon_title_household),
-            recordsRepo.hhListCount,
-            HomeFragmentDirections.actionNavHomeToAllHouseholdFragment()
-        ),
-        Icon(
-            R.drawable.ic__ben,
-            resources.getString(R.string.icon_title_ben),
-            recordsRepo.allBenListCount,
-            HomeFragmentDirections.actionNavHomeToAllBenFragment(),
-        ),
-//        Icon(
-//            R.drawable.ic__eligible_couple,
-//            resources.getString(R.string.icon_title_ec),
-//            recordsRepo.eligibleCoupleListCount,
-//            HomeFragmentDirections.actionNavHomeToEligibleCoupleFragment()
-//        ),
-//        Icon(
-//            R.drawable.ic__maternal_health,
-//            resources.getString(R.string.icon_title_mc),
-//            null,
-//            HomeFragmentDirections.actionNavHomeToMotherCareFragment(),
-//        ),
-//        Icon(
-//            R.drawable.ic__child_care,
-//            resources.getString(R.string.icon_title_cc),
-//            null,
-//            HomeFragmentDirections.actionNavHomeToChildCareFragment()
-//        ),
-        Icon(
-            R.drawable.ic__ncd,
-            resources.getString(R.string.icon_title_ncd),
-            null,
-            HomeFragmentDirections.actionNavHomeToNcdFragment(),
-        ),
-        Icon(
-            R.drawable.ic__ncd,
-            resources.getString(R.string.icon_title_cd),
-            null,
-            HomeFragmentDirections.actionHomeFragmentToCdFragment()
-        ),
-//        Icon(
-//            R.drawable.ic__immunization,
-//            resources.getString(R.string.icon_title_imm),
-//            null,
-//            HomeFragmentDirections.actionNavHomeToImmunizationDueFragment(),
-//        ),
-//        Icon(
-//            R.drawable.ic__hrp,
-//            resources.getString(R.string.icon_title_hrp),
-//            recordsRepo.hrpCount,
-//            HomeFragmentDirections.actionNavHomeToHrpCasesFragment()
-//        ),
-//        Icon(
-//            R.drawable.ic__general_op,
-//            resources.getString(R.string.icon_title_gop),
-//            null,
-//            HomeFragmentDirections.actionNavHomeToGeneralOpCareFragment(),
-//        ),
-//        Icon(
-//            R.drawable.ic__menopause,
-//            resources.getString(R.string.icon_title_msl),
-//            recordsRepo.menopauseListCount,
-//            HomeFragmentDirections.actionNavHomeToMenopauseStageFragment()
-//        ),
-//        Icon(
-//            R.drawable.ic__death,
-//            resources.getString(R.string.icon_title_dr),
-//            null,
-//            HomeFragmentDirections.actionNavHomeToDeathReportsFragment(),
-//        ),
-//        Icon(
-//            R.drawable.ic__village_level_form,
-//            resources.getString(R.string.icon_title_vlf),
-//            null,
-//            HomeFragmentDirections.actionNavHomeToVillageLevelFormsFragment()
-//        ),
-    ).apply {
-        forEachIndexed { index, icon ->
-            icon.colorPrimary = index % 2 == 0
+    fun getHomeIconDataset(resources: Resources) : List<Icon> {
+        val showAll = preferenceDao.isDevModeEnabled
+        Timber.d("currently : $showAll")
+        return if (showAll) {
+            listOf(
+                Icon(
+                    R.drawable.ic__hh,
+                    resources.getString(R.string.icon_title_household),
+                    recordsRepo.hhListCount,
+                    HomeFragmentDirections.actionNavHomeToAllHouseholdFragment()
+                ),
+                Icon(
+                    R.drawable.ic__ben,
+                    resources.getString(R.string.icon_title_ben),
+                    recordsRepo.allBenListCount,
+                    HomeFragmentDirections.actionNavHomeToAllBenFragment(),
+                ),
+                Icon(
+                    R.drawable.ic__eligible_couple,
+                    resources.getString(R.string.icon_title_ec),
+                    recordsRepo.eligibleCoupleListCount,
+                    HomeFragmentDirections.actionNavHomeToEligibleCoupleFragment()
+                ),
+                Icon(
+                    R.drawable.ic__maternal_health,
+                    resources.getString(R.string.icon_title_mc),
+                    null,
+                    HomeFragmentDirections.actionNavHomeToMotherCareFragment(),
+                ),
+                Icon(
+                    R.drawable.ic__child_care,
+                    resources.getString(R.string.icon_title_cc),
+                    null,
+                    HomeFragmentDirections.actionNavHomeToChildCareFragment()
+                ),
+                Icon(
+                    R.drawable.ic__ncd,
+                    resources.getString(R.string.icon_title_ncd),
+                    null,
+                    HomeFragmentDirections.actionNavHomeToNcdFragment(),
+                ),
+                Icon(
+                    R.drawable.ic__ncd,
+                    resources.getString(R.string.icon_title_cd),
+                    null,
+                    HomeFragmentDirections.actionHomeFragmentToCdFragment()
+                ),
+                Icon(
+                    R.drawable.ic__immunization,
+                    resources.getString(R.string.icon_title_imm),
+                    null,
+                    HomeFragmentDirections.actionNavHomeToImmunizationDueFragment(),
+                ),
+                Icon(
+                    R.drawable.ic__hrp,
+                    resources.getString(R.string.icon_title_hrp),
+                    recordsRepo.hrpCount,
+                    HomeFragmentDirections.actionNavHomeToHrpCasesFragment()
+                ),
+                Icon(
+                    R.drawable.ic__general_op,
+                    resources.getString(R.string.icon_title_gop),
+                    null,
+                    HomeFragmentDirections.actionNavHomeToGeneralOpCareFragment(),
+                ),
+                Icon(
+                    R.drawable.ic__menopause,
+                    resources.getString(R.string.icon_title_msl),
+                    recordsRepo.menopauseListCount,
+                    HomeFragmentDirections.actionNavHomeToMenopauseStageFragment()
+                ),
+                Icon(
+                    R.drawable.ic__death,
+                    resources.getString(R.string.icon_title_dr),
+                    null,
+                    HomeFragmentDirections.actionNavHomeToDeathReportsFragment(),
+                ),
+                Icon(
+                    R.drawable.ic__village_level_form,
+                    resources.getString(R.string.icon_title_vlf),
+                    null,
+                    HomeFragmentDirections.actionNavHomeToVillageLevelFormsFragment()
+                ),
+            )
+        } else {
+            listOf(
+                Icon(
+                    R.drawable.ic__hh,
+                    resources.getString(R.string.icon_title_household),
+                    recordsRepo.hhListCount,
+                    HomeFragmentDirections.actionNavHomeToAllHouseholdFragment()
+                ),
+                Icon(
+                    R.drawable.ic__ben,
+                    resources.getString(R.string.icon_title_ben),
+                    recordsRepo.allBenListCount,
+                    HomeFragmentDirections.actionNavHomeToAllBenFragment(),
+                ),
+                Icon(
+                    R.drawable.ic__ncd,
+                    resources.getString(R.string.icon_title_ncd),
+                    null,
+                    HomeFragmentDirections.actionNavHomeToNcdFragment(),
+                )
+            )
+        }.apply {
+            forEachIndexed { index, icon ->
+                icon.colorPrimary = index % 2 == 0
+            }
         }
     }
 
@@ -132,8 +164,7 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             resources.getString(R.string.icon_title_ecr),
             recordsRepo.eligibleCoupleListCount,
             EligibleCoupleFragmentDirections.actionEligibleCoupleFragmentToEligibleCoupleListFragment()
-        ),
-        Icon(
+        ), Icon(
             R.drawable.ic__eligible_couple,
             resources.getString(R.string.icon_title_ect),
             recordsRepo.eligibleCoupleTrackingListCount,
@@ -192,8 +223,7 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
 //            recordsRepo.reproductiveAgeListCount,
 //            MotherCareFragmentDirections.actionMotherCareFragmentToReproductiveAgeListFragment()
 //        )
-    )
-        .apply {
+    ).apply {
             forEachIndexed { index, icon ->
                 icon.colorPrimary = index % 2 == 0
             }
@@ -224,8 +254,7 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
             recordsRepo.getNcdNonEligibleListCount,
             NcdFragmentDirections.actionNcdFragmentToNcdNonEligibleListFragment()
         ),
-    )
-        .apply {
+    ).apply {
             forEachIndexed { index, icon ->
                 icon.colorPrimary = index % 2 == 0
             }
@@ -245,8 +274,7 @@ class IconDataset @Inject constructor(private val recordsRepo: RecordsRepo) {
 //            ImmunizationDueTypeFragmentDirections.actionImmunizationDueTypeFragmentToMotherImmunizationListFragment()
 //        ),
 
-    )
-        .apply {
+    ).apply {
             forEachIndexed { index, icon ->
                 icon.colorPrimary = index % 2 == 0
             }

@@ -514,6 +514,7 @@ class UserRepo @Inject constructor(
             val userId = data.getInt("userID")
             TokenInsertTmcInterceptor.setToken(token)
             preferenceDao.registerAmritToken(token)
+            preferenceDao.lastAmritTokenFetchTimestamp = System.currentTimeMillis()
             return@withContext userId
         }
     }

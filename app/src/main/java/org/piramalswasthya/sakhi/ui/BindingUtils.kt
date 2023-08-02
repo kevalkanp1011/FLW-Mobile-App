@@ -84,6 +84,8 @@ fun TextView.setRecordCount(scope: CoroutineScope, count: Flow<Int>?) {
                 text = it.toString()
             }
         }
+    }?:run {
+        text = null
     }
 }
 

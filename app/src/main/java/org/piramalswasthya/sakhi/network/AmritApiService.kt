@@ -52,10 +52,10 @@ interface AmritApiService {
     suspend fun getBeneficiaries(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
     @POST("flw-0.0.1/cbac/getAll")
-    suspend fun getCbacs(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+    suspend fun getCbacs( @Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
     @POST("flw-0.0.1/cbac/saveAll")
-    suspend fun postCbacs(@Body list : List<CbacPost>): Response<ResponseBody>
+    suspend fun postCbacs(/*@Url url : String  ="http://192.168.1.94:8081/cbac/saveAll",*/@Body list : List<CbacPost>): Response<ResponseBody>
 
 //    @POST("tb/screening/getAll")
     @POST("flw-0.0.1/tb/screening/getAll")
