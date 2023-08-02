@@ -786,7 +786,7 @@
     <fragment
         android:id="@+id/cdFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.communicable_diseases.CdFragment"
-        android:label="CdFragment" >
+        android:label="Communicable Diseases" >
         <action
             android:id="@+id/action_cdFragment_to_TBScreeningListFragment"
             app:destination="@id/TBScreeningListFragment" />

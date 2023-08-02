@@ -55,7 +55,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:text="@{@string/long_to_string(ben.hhId)}"
+                    android:paddingHorizontal="@dimen/padding_small"
+                    android:text="@{ben.familyHeadName}"
                     android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     android:textColor="?attr/colorPrimaryVariant"
 

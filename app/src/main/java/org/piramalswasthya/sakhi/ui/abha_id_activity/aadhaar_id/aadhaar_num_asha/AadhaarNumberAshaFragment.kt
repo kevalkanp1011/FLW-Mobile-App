@@ -40,22 +40,32 @@ class AadhaarNumberAshaFragment : Fragment() {
             .create()
     }
 
-    private val rdServiceCapturePIDContract = registerForActivityResult(RDServiceCapturePIDContract()) {
-        Toast.makeText(requireContext(), "pid captured $it", Toast.LENGTH_SHORT).show()
-        binding.pid.text = Gson().toJson(AadhaarVerifyBioRequest(binding.tietAadhaarNumber.text.toString(),
-            "FMR", it.toString()))
-        viewModel.verifyBio(binding.tietAadhaarNumber.text.toString(), it)
-        binding.pid.text = Gson().toJson(viewModel.responseData)
-    }
+    private val rdServiceCapturePIDContract =
+        registerForActivityResult(RDServiceCapturePIDContract()) {
+            Toast.makeText(requireContext(), "pid captured $it", Toast.LENGTH_SHORT).show()
+            binding.pid.text = Gson().toJson(
+                AadhaarVerifyBioRequest(
+                    binding.tietAadhaarNumber.text.toString(),
+                    "FMR", it.toString()
+                )
+            )
+            viewModel.verifyBio(binding.tietAadhaarNumber.text.toString(), it)
+            binding.pid.text = Gson().toJson(viewModel.responseData)
+        }
 
     private val rdServiceDeviceInfoContract = registerForActivityResult(RDServiceInfoContract()) {
-        binding.pid.text = Gson().toJson(AadhaarVerifyBioRequest(binding.tietAadhaarNumber.toString(),
-            "FMR", it.toString()))
+        binding.pid.text = Gson().toJson(
+            AadhaarVerifyBioRequest(
+                binding.tietAadhaarNumber.toString(),
+                "FMR", it.toString()
+            )
+        )
         viewModel.verifyBio(binding.tietAadhaarNumber.text.toString(), it)
     }
     private val rdServiceInitContract = registerForActivityResult(RDServiceInitContract()) {
 
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -68,7 +78,7 @@ class AadhaarNumberAshaFragment : Fragment() {
         var isValidAadhaar = false
 
         parentViewModel.verificationType.observe(viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 "OTP" -> binding.btnVerifyAadhaar.text = "Generate OTP"
                 "FP" -> {
                     checkApp()
@@ -77,8 +87,23 @@ class AadhaarNumberAshaFragment : Fragment() {
             }
         }
 
+        val intent = requireActivity().intent
+
+        val benId = intent.getLongExtra("benId", 0)
+        val benRegId = intent.getLongExtra("benRegId", 0)
+
+        if (benId > 0) {
+            viewModel.getBen(benId)
+        }
         binding.btnVerifyAadhaar.setOnClickListener {
             verifyAadhaar()
+        }
+
+        viewModel.ben.observe(viewLifecycleOwner) {
+            it?.let {
+                binding.benName.visibility = View.VISIBLE
+                binding.benName.text = "Generating ABHA for: $it"
+            }
         }
 
         viewModel.state.observe(viewLifecycleOwner) {
@@ -100,11 +125,11 @@ class AadhaarNumberAshaFragment : Fragment() {
             }
         }
 
-        binding.aadharConsentCheckBox.setOnCheckedChangeListener{ _, ischecked ->
+        binding.aadharConsentCheckBox.setOnCheckedChangeListener { _, ischecked ->
             binding.btnVerifyAadhaar.isEnabled = isValidAadhaar && ischecked
         }
 
-        binding.aadharDisclaimer.setOnClickListener{
+        binding.aadharDisclaimer.setOnClickListener {
             aadhaarDisclaimer.show()
         }
 
@@ -134,9 +159,10 @@ class AadhaarNumberAshaFragment : Fragment() {
     }
 
     private fun verifyAadhaar() {
-        Toast.makeText(requireContext(),parentViewModel.verificationType.value, Toast.LENGTH_SHORT).show()
-        when(parentViewModel.verificationType.value) {
-            "OTP" ->  viewModel.generateOtpClicked(binding.tietAadhaarNumber.text.toString())
+        Toast.makeText(requireContext(), parentViewModel.verificationType.value, Toast.LENGTH_SHORT)
+            .show()
+        when (parentViewModel.verificationType.value) {
+            "OTP" -> viewModel.generateOtpClicked(binding.tietAadhaarNumber.text.toString())
             "FP" -> rdServiceCapturePIDContract.launch(Unit)
         }
     }

@@ -12,7 +12,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentGenerateMobileOtpBinding
@@ -143,6 +142,11 @@ class GenerateMobileOtpFragment : Fragment() {
             }
         }
 
+    }
+
+    private fun checkValidity() {
+        val no = binding.tietMobileNumber.text.toString()
+        binding.btnGenerateMobileOtp.isEnabled = no.length == 10 && (no.toLong() >= 6000000000)
     }
 
     override fun onDestroy() {

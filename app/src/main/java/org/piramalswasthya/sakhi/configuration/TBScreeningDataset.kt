@@ -80,6 +80,7 @@ class TBScreeningDataset (
         title = context.getString(R.string.cbac_taking_tb_drug),
         entries = arrayOf("Yes", "No"),
         required = true,
+        doubleStar = true,
         hasDependants = false
     )
 
@@ -88,6 +89,7 @@ class TBScreeningDataset (
         inputType = InputType.RADIO,
         title = context.getString(R.string.cbac_fh_tb),
         entries = arrayOf("Yes", "No"),
+        doubleStar = true,
         required = true,
         hasDependants = false
     )

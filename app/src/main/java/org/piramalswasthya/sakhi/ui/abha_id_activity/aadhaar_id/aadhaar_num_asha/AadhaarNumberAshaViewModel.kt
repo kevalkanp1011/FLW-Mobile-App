@@ -8,13 +8,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.network.*
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
+import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdViewModel
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class AadhaarNumberAshaViewModel @Inject constructor(
-    private var abhaIdRepo: AbhaIdRepo
+    private var abhaIdRepo: AbhaIdRepo,
+    private var benRepo: BenRepo
 ) : ViewModel() {
 
     private val _state = MutableLiveData(AadhaarIdViewModel.State.IDLE)
@@ -24,6 +26,11 @@ class AadhaarNumberAshaViewModel @Inject constructor(
     private var _txnId = MutableLiveData<String?>(null)
     val txnId: LiveData<String?>
         get() = _txnId
+
+    private var _ben = MutableLiveData<String?>(null)
+    val ben: LiveData<String?>
+        get() = _ben
+
     var responseData: CreateAbhaIdResponse? = null
 
     private var _mobileNumber = MutableLiveData<String?>(null)
@@ -89,6 +96,19 @@ class AadhaarNumberAshaViewModel @Inject constructor(
                 is NetworkResult.NetworkError -> {
                     Timber.i(result.toString())
                     _state.value = AadhaarIdViewModel.State.ERROR_NETWORK
+                }
+            }
+        }
+    }
+
+    fun getBen(benId: Long) {
+        viewModelScope.launch {
+            benRepo.getBenFromId(benId)?.let {
+                it.firstName?.let {
+                        first -> _ben.value = first
+                }
+                it.lastName?.let {
+                    last -> _ben.value += last
                 }
             }
         }
