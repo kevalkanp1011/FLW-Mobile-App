@@ -17,4 +17,11 @@ class AboutUsFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_about_us, container, false)
     }
+
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(R.drawable.ic_info)
+        }
+    }
 }

@@ -1204,7 +1204,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                 mobileNoOfRelation.getStringFromPosition(ben.mobileNoOfRelationId)
             ben.mobileOthers = otherMobileNoOfRelation.value
             ben.contactNumber =
-                if (ben.mobileNoOfRelationId == 3) familyHeadPhoneNo!!.toLong() else contactNumber.value!!.toLong()
+                if (ben.mobileNoOfRelationId == 5) familyHeadPhoneNo!!.toLong() else contactNumber.value!!.toLong()
             ben.community = community.value
             ben.communityId = community.getPosition()
             ben.religion = religion.value
