@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.NcdCbacAdapter
 import org.piramalswasthya.sakhi.databinding.BottomSheetNcdBinding
+import timber.log.Timber
 
 @AndroidEntryPoint
 class NcdBottomSheetFragment : BottomSheetDialogFragment() {
@@ -47,7 +48,7 @@ class NcdBottomSheetFragment : BottomSheetDialogFragment() {
 
         lifecycleScope.launch {
             viewModel.ncdDetails.collect {
-
+                Timber.d("List : $it")
                 (_binding?.rvImmCat?.adapter as NcdCbacAdapter?)?.apply {
                     submitList(emptyList())
                     submitList(it)

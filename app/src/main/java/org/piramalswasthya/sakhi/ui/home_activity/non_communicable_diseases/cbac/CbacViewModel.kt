@@ -551,7 +551,7 @@ class CbacViewModel @Inject constructor(
 
         }
         ben.cbacAvailable = true
-        ben.processed = "U"
+        if (ben.processed != "N") ben.processed = "U"
 //        ben.syncState = SyncState.UNSYNCED
 
 

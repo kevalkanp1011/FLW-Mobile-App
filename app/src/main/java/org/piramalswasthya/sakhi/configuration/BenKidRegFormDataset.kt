@@ -86,7 +86,6 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         arrayId = -1,
         required = true,
         allCaps = true,
-        etMaxLength = 2,
         hasSpeechToText = true,
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS,
     )
@@ -106,6 +105,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         arrayId = -1,
         required = true,
         hasDependants = true,
+        etMaxLength = 2,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         max = Konstants.maxAgeForAdolescent.toLong(),
         min = 1,
@@ -954,7 +954,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                 triggerDependants(
                     age = age.value!!.toInt(),
                     ageUnit = ageUnit,
-                    ageTriggerRange = Range(3, 14),
+                    ageTriggerRange = Range(4, 14),
                     ageUnitTriggerIndex = 2,
                     target = childRegisteredAtSchool,
                     placeAfter = religion,
