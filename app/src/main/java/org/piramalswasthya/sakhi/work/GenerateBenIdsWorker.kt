@@ -8,10 +8,8 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.network.interceptors.TokenInsertTmcInterceptor
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import timber.log.Timber
-import java.net.SocketTimeoutException
 
 
 @HiltWorker
@@ -32,21 +30,15 @@ class GenerateBenIdsWorker @AssistedInject constructor(
 
 
     override suspend fun doWork(): Result {
-        init()
         return try {
             benRepo.getBenIdsGeneratedFromServer()
             Result.success()
-        } catch (e: SocketTimeoutException) {
+        } /*catch (e: SocketTimeoutException) {
             Timber.e("Caught Exception for Gen Ben iD worker $e")
             doWork()
-        } catch (e: Exception) {
+        } */catch (e: Exception) {
             Timber.e("Caught Exception for Gen Ben iD worker $e")
             Result.failure()
         }
-    }
-
-    private fun init() {
-        if (TokenInsertTmcInterceptor.getToken() == "")
-            TokenInsertTmcInterceptor.setToken(preferenceDao.getAmritToken()!!)
     }
 }

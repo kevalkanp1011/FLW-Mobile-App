@@ -178,7 +178,7 @@ class NewBenRegG15Fragment : Fragment() {
         lifecycleScope.launch {
             viewModel.currentPage.collect {
                 binding.tvTitle.text = when (it) {
-                    1 -> "Ben Details"
+                    1 -> "Beneficiary Details"
                     2 -> "ID Details"
                     3 -> "Reproductive Status"
                     else -> null

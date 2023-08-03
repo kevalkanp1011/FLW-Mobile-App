@@ -21,7 +21,7 @@
 
 
     <!-- BEN KID -->
-    <string name="nbr_image">Image of Beneficiary</string>
+    <string name="nbr_image">Photo</string>
     <string name="nbr_dor">Date of Registration</string>
     <string name="nbr_nb_first_name">First Name</string>
     <string name="nbr_nb_last_name">Last Name / Surname</string>

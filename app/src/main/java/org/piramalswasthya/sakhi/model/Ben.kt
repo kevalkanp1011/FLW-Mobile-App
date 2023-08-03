@@ -111,7 +111,7 @@ data class BenBasicCache(
     val pmsmaFilled: Boolean,
     val hbncFilled: Boolean,
     val hbycFilled: Boolean,
-    val pwrFilled : Boolean,
+    val pwrFilled: Boolean,
     val ecrFilled: Boolean,
     val ectFilled: Boolean,
     val tbsnFilled: Boolean,
@@ -133,22 +133,47 @@ data class BenBasicCache(
             val calDob = Calendar.getInstance()
             calDob.timeInMillis = dob
             val calNow = Calendar.getInstance()
-            return (calNow.get(Calendar.YEAR) * 12 + calNow.get(Calendar.MONTH) )- (calDob.get(Calendar.YEAR) * 12 + calDob.get(
-                Calendar.MONTH)
+            return (calNow.get(Calendar.YEAR) * 12 + calNow.get(Calendar.MONTH)) - (calDob.get(
+                Calendar.YEAR
+            ) * 12 + calDob.get(
+                Calendar.MONTH
             )
+                    )
 
 
         }
 
         fun getAgeUnitFromDob(dob: Long): AgeUnit {
-            val diffLong = System.currentTimeMillis() - dob
-            return when (TimeUnit.MILLISECONDS.toDays(diffLong).toInt()) {
-                in 0..31 -> AgeUnit.DAYS
-                in 32..365 -> AgeUnit.MONTHS
-                else -> AgeUnit.YEARS
+            val calDob = Calendar.getInstance().apply {
+                timeInMillis = dob
             }
+            val calNow = Calendar.getInstance()
+            val diffYears = getDiffYears(calDob, calNow)
+            val diffLong = System.currentTimeMillis() - dob
+            return if (TimeUnit.MILLISECONDS.toDays(diffLong).toInt() in 0..31) {
+                AgeUnit.DAYS
+            } else if (diffYears == 0)
+                AgeUnit.MONTHS
+            else
+                AgeUnit.YEARS
 
         }
+
+        private fun getDiffYears(a: Calendar, b: Calendar): Int {
+            var diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR)
+            if (a.get(Calendar.MONTH) > b.get(Calendar.MONTH) || a.get(Calendar.MONTH) == b.get(
+                    Calendar.MONTH
+                ) && a.get(
+                    Calendar.DAY_OF_MONTH
+                ) > b.get(
+                    Calendar.DAY_OF_MONTH
+                )
+            ) {
+                diff--
+            }
+            return diff
+        }
+
 
     }
 
@@ -360,8 +385,9 @@ data class BenBasicCache(
             syncState = syncState
         )
     }
+
     fun asBenBasicDomainModelForHbycForm(): BenBasicDomainForForm {
-        return BenBasicDomainForForm (
+        return BenBasicDomainForForm(
             benId = benId,
             hhId = hhId,
             regDate = dateFormat.format(Date(regDate)),
@@ -452,7 +478,7 @@ data class BenBasicDomain(
     val regDate: String,
     val benName: String,
     val benSurname: String? = null,
-    val benFullName : String  = "$benName $benSurname",
+    val benFullName: String = "$benName $benSurname",
     val gender: String,
     val dob: Long,
     val ageInt: Int = getAgeFromDob(dob),
@@ -637,10 +663,12 @@ data class BenRegKidNetwork(
     val birthOPV: Boolean? = null,
 
     )
-data class  BenHealthIdDetails(
+
+data class BenHealthIdDetails(
     var healthId: String? = null,
     var healthIdNumber: String? = null
 )
+
 data class BenRegGen(
 
     var maritalStatus: String? = null,
