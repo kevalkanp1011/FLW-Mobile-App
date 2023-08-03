@@ -374,7 +374,7 @@ class AbhaIdRepo @Inject constructor(
                         val result = Gson().fromJson(data, CreateHIDResponse::class.java)
                         NetworkResult.Success(result)
                     }
-                    5000 -> {
+                    5000, 5002 -> {
                         if (JSONObject(responseBody).getString("errorMessage")
                                 .contentEquals("Invalid login key or session is expired")) {
                             val user = prefDao.getLoggedInUser()!!
@@ -410,7 +410,7 @@ class AbhaIdRepo @Inject constructor(
                 val responseBody = response.body()?.string()
                 when(responseBody?.let { JSONObject(it).getInt("statusCode") }) {
                     200 -> NetworkResult.Success(responseBody)
-                    5000 -> {
+                    5000, 5002 -> {
                         if (JSONObject(responseBody).getString("errorMessage")
                                 .contentEquals("Invalid login key or session is expired")){
                             userRepo.refreshTokenTmc(user.userName, user.password)
@@ -440,7 +440,7 @@ class AbhaIdRepo @Inject constructor(
                 val responseBody = response.body()?.string()
                 when(responseBody?.let { JSONObject(it).getInt("statusCode") }) {
                     200 -> NetworkResult.Success(JSONObject(responseBody).getJSONObject("data").getString("txnId"))
-                    5000 -> {
+                    5000, 5002 -> {
                         val error = JSONObject(responseBody).getString("errorMessage")
                         if ( error.contentEquals("Invalid login key or session is expired")){
                             val user = prefDao.getLoggedInUser()!!
@@ -471,7 +471,7 @@ class AbhaIdRepo @Inject constructor(
                 val responseBody = response.body()?.string()
                 when(responseBody?.let { JSONObject(it).getInt("statusCode") }) {
                     200 -> NetworkResult.Success(JSONObject(responseBody).getJSONObject("data").getString("data"))
-                    5000 -> {
+                    5000, 5002 -> {
                         if (JSONObject(responseBody).getString("errorMessage")
                                 .contentEquals("Invalid login key or session is expired")){
                             val user = prefDao.getLoggedInUser()!!

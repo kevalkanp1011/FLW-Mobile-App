@@ -1340,7 +1340,7 @@ class BenRepo @Inject constructor(
                         }
                     }
 
-                    5000 -> {
+                    5000, 5002 -> {
                         if (JSONObject(responseBody).getString("errorMessage")
                                 .contentEquals("Invalid login key or session is expired")
                         ) {

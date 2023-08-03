@@ -9,8 +9,10 @@ import org.piramalswasthya.sakhi.model.SyncStatusCache
 interface SyncDao {
 
     @Query(
-        "       SELECT 'BENEFICIARY' as name, b1.syncState as syncState, count(*) as count from beneficiary b1 group by b1.syncState union " +
-                "       SELECT 'CBAC' as name,  c1.syncState as syncState, count(*) as count from cbac c1 group by c1.syncState "
+        "       SELECT 'BENEFICIARY' as name, b1.syncState as syncState, count(*) as count from beneficiary b1 group by b1.syncState "
+                + "UNION SELECT 'CBAC' as name,  c1.syncState as syncState, count(*) as count from cbac c1 group by c1.syncState "
+                + "UNION SELECT 'TB Screening' as name,  tbsn.syncState as syncState, count(*) as count from TB_SCREENING tbsn group by tbsn.syncState "
+                + "UNION SELECT 'TB Suspected' as name,  tbsp.syncState as syncState, count(*) as count from TB_SUSPECTED tbsp group by tbsp.syncState "
     )
 //    @Query(
 //        "       SELECT count(*) as ben_synced from beneficiary b1 where b1.syncState = 2 union " +

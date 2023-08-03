@@ -17,6 +17,10 @@
             name="showAbha"
             type="Boolean" />
 
+        <variable
+            name="hasAbha"
+            type="Boolean" />
+
     </data>
 
     <androidx.cardview.widget.CardView
@@ -280,7 +284,7 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_abha"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        showLayout="@{showAbha}"
+                        showLayout="@{showAbha? !hasAbha : showAbha}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_small"
@@ -298,7 +302,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        showLayout="@{!showAbha}"
+                        showLayout="@{showAbha? hasAbha: showAbha}"
                         android:orientation="vertical"
                         android:padding="@dimen/padding_small">
 
