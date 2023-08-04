@@ -457,7 +457,7 @@ class UserRepo @Inject constructor(
         return withContext(Dispatchers.IO) {
             try {
                 val response =
-                    amritApiService.getJwtToken(TmcAuthUserRequest(userName, encrypt(password)))
+                    amritApiService.getJwtToken(json = TmcAuthUserRequest(userName, encrypt(password)))
                 Timber.d("JWT : $response")
                 if (!response.isSuccessful) {
                     return@withContext false
@@ -495,7 +495,7 @@ class UserRepo @Inject constructor(
             val encryptedPassword = encrypt(password)
             val response =
                 amritApiService.getJwtToken(
-                    TmcAuthUserRequest(
+                    json = TmcAuthUserRequest(
                         userName,
 //                        password,
                         encryptedPassword
