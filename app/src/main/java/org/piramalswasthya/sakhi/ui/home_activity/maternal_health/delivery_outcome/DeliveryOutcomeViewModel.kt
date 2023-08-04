@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.DeliveryOutcomeDataset
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.DeliveryOutcomeCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
@@ -59,6 +60,7 @@ class DeliveryOutcomeViewModel @Inject constructor(
                 _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
                 deliveryOutcome = DeliveryOutcomeCache(
                     benId = ben.beneficiaryId,
+                    syncState = SyncState.UNSYNCED
                 )
             }
 

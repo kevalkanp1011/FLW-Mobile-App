@@ -72,7 +72,7 @@ class DeliveryOutcomeDataset(
         inputType = InputType.DROPDOWN,
         title = "Probable Cause of Death",
         entries = arrayOf("Eclampcia", "Haemorrahge", "Obstructed Labour", "Prolonged Labour", "Other", "High Fever"),
-        required = false,
+        required = true,
         hasDependants = true
     )
 
@@ -80,7 +80,7 @@ class DeliveryOutcomeDataset(
         id = 8,
         inputType = InputType.EDIT_TEXT,
         title = "Other Cause of Death",
-        required = false,
+        required = true,
         hasDependants = false
     )
 
@@ -88,7 +88,7 @@ class DeliveryOutcomeDataset(
         id = 9,
         inputType = InputType.EDIT_TEXT,
         title = "Other Delivery Complication",
-        required = false,
+        required = true,
         hasDependants = false
     )
 
@@ -186,10 +186,10 @@ class DeliveryOutcomeDataset(
                 placeOfDelivery,
                 typeOfDelivery,
                 hadComplications,
-                complication,
-                causeOfDeath,
-                otherCauseOfDeath,
-                otherComplication,
+//                complication,
+//                causeOfDeath,
+//                otherCauseOfDeath,
+//                otherComplication,
                 deliveryOutcome,
                 liveBirth,
                 stillBirth,
@@ -221,6 +221,10 @@ class DeliveryOutcomeDataset(
     }
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
+            dateOfDelivery.id -> {
+                dateOfDischarge.min = getLongFromDate(dateOfDelivery.value)
+                -1
+            }
             hadComplications.id -> {
                 triggerDependants(
                     source = hadComplications,
@@ -260,8 +264,29 @@ class DeliveryOutcomeDataset(
                     target = otherCauseOfDeath
                 )
             }
+            deliveryOutcome.id -> {
+                validateIntMinMax(deliveryOutcome)
+                validateMaxDeliveryOutcome()
+            }
+            liveBirth.id -> {
+                validateIntMinMax(liveBirth)
+                validateMaxDeliveryOutcome()
+            }
+            stillBirth.id -> {
+                validateIntMinMax(stillBirth)
+                validateMaxDeliveryOutcome()
+            }
             else -> -1
         }
+    }
+
+    private fun validateMaxDeliveryOutcome() : Int {
+        if(!liveBirth.value.isNullOrEmpty() && !stillBirth.value.isNullOrEmpty() && !deliveryOutcome.value.isNullOrEmpty()) {
+            if(deliveryOutcome.value!!.toInt() !== liveBirth.value!!.toInt() + stillBirth.value!!.toInt()) {
+                deliveryOutcome.errorText = "Outcome of Delivery should equal to sum of Live and Still births"
+            }
+        }
+        return -1
     }
 
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {

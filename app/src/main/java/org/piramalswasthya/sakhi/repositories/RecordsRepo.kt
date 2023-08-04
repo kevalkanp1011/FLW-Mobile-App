@@ -147,6 +147,12 @@ class RecordsRepo @Inject constructor(
     val hrpCases = benDao.getHrpCases(selectedVillage)
         .map { list -> list.distinctBy { it.benId }.map { it.asBasicDomainModel() } }
 
+    fun getDeliveredWomenList() = benDao.getAllDeliveredWomenList(selectedVillage)
+        .map { list -> list.map { it.asBenBasicDomainModelForDeliveryOutcomeForm() } }
+    fun getListForInfantReg() = benDao.getAllDeliveredWomenList(selectedVillage)
+        .map { list -> list.map { it.asBenBasicDomainModelForInfantRegistrationForm() } }
+    fun getDeliveredWomenListCount() = benDao.getAllDeliveredWomenListCount(selectedVillage)
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val hrpCount = maternalHealthDao.getAllPregnancyRecords().transformLatest {
         var count = 0

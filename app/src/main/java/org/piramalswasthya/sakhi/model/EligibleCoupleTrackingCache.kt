@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import org.piramalswasthya.sakhi.configuration.FormDataModel
+import org.piramalswasthya.sakhi.database.room.SyncState
 
 @Entity(
     tableName = "ELIGIBLE_COUPLE_TRACKING",
@@ -27,6 +28,7 @@ data class EligibleCoupleTrackingCache (
     var pregnancyTestResult: String? = null,
     var isPregnant: String? = null,
     var usingFamilyPlanning: Boolean? = null,
-    var methodOfContraception: String? = null
-
+    var methodOfContraception: String? = null,
+    var processed: String? = "N",
+    var syncState: SyncState
 ) : FormDataModel

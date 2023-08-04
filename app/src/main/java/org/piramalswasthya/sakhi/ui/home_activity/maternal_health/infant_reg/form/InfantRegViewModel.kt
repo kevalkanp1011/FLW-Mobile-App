@@ -8,11 +8,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.InfantRegistrationDataset
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.model.DeliveryOutcomeCache
 import org.piramalswasthya.sakhi.model.InfantRegCache
+import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
+import org.piramalswasthya.sakhi.repositories.DeliveryOutcomeRepo
 import org.piramalswasthya.sakhi.repositories.InfantRegRepo
-import org.piramalswasthya.sakhi.ui.home_activity.maternal_health.delivery_outcome.DeliveryOutcomeFragmentArgs
+import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -22,6 +26,8 @@ class InfantRegViewModel @Inject constructor(
     preferenceDao: PreferenceDao,
     @ApplicationContext context: Context,
     private val infantRegRepo: InfantRegRepo,
+    private val deliveryOutcomeRepo: DeliveryOutcomeRepo,
+    private val maternalHealthRepo: MaternalHealthRepo,
     private val benRepo: BenRepo
 ) : ViewModel() {
     val benId =
@@ -51,6 +57,8 @@ class InfantRegViewModel @Inject constructor(
     val formList = dataset.listFlow
 
     private lateinit var infantReg: InfantRegCache
+    private var deliveryOutcome: DeliveryOutcomeCache? = null
+    private var pwrCache: PregnantWomanRegistrationCache? = null
 
     init {
         viewModelScope.launch {
@@ -60,6 +68,7 @@ class InfantRegViewModel @Inject constructor(
                 _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
                 infantReg = InfantRegCache(
                     benId = ben.beneficiaryId,
+                    syncState = SyncState.UNSYNCED
                 )
             }
 
@@ -70,11 +79,19 @@ class InfantRegViewModel @Inject constructor(
                 _recordExists.value = false
             }
 
+            deliveryOutcomeRepo.getDeliveryOutcome(benId)?.let {
+                deliveryOutcome = it
+            }
+            maternalHealthRepo.getSavedRegistrationRecord(benId)?.let {
+                pwrCache = it
+            }
+
             dataset.setUpPage(
                 ben,
+                deliveryOutcome,
+                pwrCache,
                 if (recordExists.value == true) infantReg else null
             )
-
         }
     }
 

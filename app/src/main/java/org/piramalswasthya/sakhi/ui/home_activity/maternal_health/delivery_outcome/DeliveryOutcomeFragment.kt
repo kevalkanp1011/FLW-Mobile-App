@@ -37,6 +37,7 @@ class DeliveryOutcomeFragment : Fragment() {
                 val adapter = FormInputAdapter(
                     formValueListener = FormInputAdapter.FormValueListener { formId, index ->
                         viewModel.updateListOnValueChanged(formId, index)
+                        hardCodedListUpdate(formId)
                     }, isEnabled = !recordExists
                 )
                 binding.btnSubmit.isEnabled = !recordExists
@@ -45,7 +46,6 @@ class DeliveryOutcomeFragment : Fragment() {
                     viewModel.formList.collect {
                         if (it.isNotEmpty())
                             adapter.submitList(it)
-
                     }
                 }
             }
@@ -91,4 +91,13 @@ class DeliveryOutcomeFragment : Fragment() {
         }
     }
 
+    private fun hardCodedListUpdate(formId: Int) {
+        binding.form.rvInputForm.adapter?.apply {
+            when (formId) {
+                11, 12 -> {
+                    notifyItemChanged(10)
+                }
+            }
+        }
+    }
 }

@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.PregnantWomanAncVisitDataset
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.PregnantWomanAncCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
@@ -68,7 +69,8 @@ class PwAncFormViewModel @Inject constructor(
                 _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
                 ancCache = PregnantWomanAncCache(
                     benId = ben.beneficiaryId,
-                    visitNumber = visitNumber
+                    visitNumber = visitNumber,
+                    syncState = SyncState.UNSYNCED
                 )
             }
             val registerRecord = maternalHealthRepo.getSavedRegistrationRecord(benId)!!

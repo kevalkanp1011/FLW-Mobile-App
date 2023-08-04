@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.InfantRegistrationDataset
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.InfantRegCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
@@ -63,6 +64,7 @@ class ChildRegViewModel @Inject constructor(
                 _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
                 infantReg = InfantRegCache(
                     benId = ben.beneficiaryId,
+                    syncState = SyncState.UNSYNCED
                 )
             }
 
@@ -73,10 +75,10 @@ class ChildRegViewModel @Inject constructor(
                 _recordExists.value = false
             }
 
-            dataset.setUpPage(
-                ben,
-                if (recordExists.value == true) infantReg else null
-            )
+//            dataset.setUpPage(
+//                ben,
+//                if (recordExists.value == true) infantReg else null
+//            )
 
         }
     }
