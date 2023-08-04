@@ -13,6 +13,7 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.IconGridAdapter
 import org.piramalswasthya.sakhi.configuration.IconDataset
 import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -26,6 +27,11 @@ class HomeIconsFragment : Fragment() {
         get() = _binding!!
 
     private val viewModel: HomeViewModel by viewModels({ requireActivity() })
+
+//    private val enableDevMode: EnableDevModeBottomSheetFragment by lazy {
+//        EnableDevModeBottomSheetFragment()
+//    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,6 +58,19 @@ class HomeIconsFragment : Fragment() {
             findNavController().navigate(it)
         }, viewModel.scope)
         binding.rvIconGrid.adapter = rvAdapter
-        rvAdapter.submitList(iconDataset.getHomeIconDataset(resources))
+        viewModel.devModeEnabled.observe(viewLifecycleOwner){
+            Timber.d("update called!~~ $it")
+            rvAdapter.submitList(iconDataset.getHomeIconDataset(resources))
+        }
+//        binding.root.setOnLongClickListener {
+//            if (viewModel.getDebMode())
+//                viewModel.setDevMode(false)
+//            else {
+//                if (!enableDevMode.isVisible)
+//                    enableDevMode.show(childFragmentManager, "DEV_MODE")
+//            }
+//            true
+//        }
+
     }
 }

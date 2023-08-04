@@ -10,6 +10,7 @@ data class FormElement(
     @ArrayRes var arrayId : Int = -1,
     var entries: Array<String>? = null,
     var required: Boolean,
+    var doubleStar: Boolean = false,
     val hasDependants: Boolean = false,
     val hasAlertError: Boolean = false,
     var value: String? = null,

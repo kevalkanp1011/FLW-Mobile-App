@@ -129,6 +129,7 @@ class AllBenFragment : Fragment() {
         viewModel.benRegId.observe(viewLifecycleOwner) {
             if (it != null) {
                 val intent = Intent (requireActivity(), AbhaIdActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 intent.putExtra("benId", viewModel.benId.value)
                 intent.putExtra("benRegId", it)
                 requireActivity().startActivity(intent)

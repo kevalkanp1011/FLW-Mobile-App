@@ -171,9 +171,26 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
         val json = pref.getString(prefKey, null)
         return Gson().fromJson(json, User::class.java)
     }
+
+    fun lastUpdatedAmritToken(currentTimeMillis: Long) {
+
+    }
+
     var isFullPullComplete : Boolean
         get() = pref.getBoolean("FIRST TIME FULL PULL DONE", false)
         set(value) {
             pref.edit().putBoolean("FIRST TIME FULL PULL DONE", value).apply()
+        }
+
+    var isDevModeEnabled : Boolean
+        get() = pref.getBoolean("DEV-MODE", false)
+        set(value) {
+            pref.edit().putBoolean("DEV-MODE", value).apply()
+        }
+
+    var lastAmritTokenFetchTimestamp : Long
+        get() = pref.getLong("last amrit token timestamp ", 0L)
+        set(value) {
+            pref.edit().putLong("last amrit token timestamp ", value).apply()
         }
 }

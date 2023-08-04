@@ -105,6 +105,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         arrayId = -1,
         required = true,
         hasDependants = true,
+        etMaxLength = 2,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         max = Konstants.maxAgeForAdolescent.toLong(),
         min = 1,
@@ -953,7 +954,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                 triggerDependants(
                     age = age.value!!.toInt(),
                     ageUnit = ageUnit,
-                    ageTriggerRange = Range(3, 14),
+                    ageTriggerRange = Range(4, 14),
                     ageUnitTriggerIndex = 2,
                     target = childRegisteredAtSchool,
                     placeAfter = religion,
@@ -1009,13 +1010,13 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
 
             mobileNoOfRelation.id -> {
                 when (index) {
-                    0, 1 -> triggerDependants(
+                    0, 1, 2, 3 -> triggerDependants(
                         source = mobileNoOfRelation,
                         removeItems = listOf(otherMobileNoOfRelation, contactNumberFamilyHead),
                         addItems = listOf(contactNumber)
                     )
 
-                    2 -> {
+                    4 -> {
                         contactNumberFamilyHead.value = familyHeadPhoneNo
                         triggerDependants(
                             source = mobileNoOfRelation,
@@ -1203,7 +1204,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                 mobileNoOfRelation.getStringFromPosition(ben.mobileNoOfRelationId)
             ben.mobileOthers = otherMobileNoOfRelation.value
             ben.contactNumber =
-                if (ben.mobileNoOfRelationId == 3) familyHeadPhoneNo!!.toLong() else contactNumber.value!!.toLong()
+                if (ben.mobileNoOfRelationId == 5) familyHeadPhoneNo!!.toLong() else contactNumber.value!!.toLong()
             ben.community = community.value
             ben.communityId = community.getPosition()
             ben.religion = religion.value

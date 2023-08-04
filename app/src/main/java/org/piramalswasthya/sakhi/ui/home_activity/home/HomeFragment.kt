@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -16,7 +17,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.HomePagerAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentHomeBinding
-import org.piramalswasthya.sakhi.helpers.Languages.*
+import org.piramalswasthya.sakhi.helpers.Languages.ASSAMESE
+import org.piramalswasthya.sakhi.helpers.Languages.ENGLISH
+import org.piramalswasthya.sakhi.helpers.Languages.HINDI
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.work.PullFromAmritWorker
 import org.piramalswasthya.sakhi.work.WorkerUtils
@@ -57,6 +60,10 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private val enableDevMode: EnableDevModeBottomSheetFragment by lazy {
+        EnableDevModeBottomSheetFragment()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         numCopies++
@@ -89,6 +96,7 @@ class HomeFragment : Fragment() {
 
         setUpViewPager()
         setUpWorkerProgress()
+
 
 
     }
@@ -139,6 +147,20 @@ class HomeFragment : Fragment() {
                 0 -> requireActivity().getString(R.string.menu_home_scheduler)
                 1 -> requireActivity().getString(R.string.menu_home_home)
                 else -> "NA"
+            }
+            if(position==1){
+                tab.view.setOnLongClickListener {
+                    if (viewModel.getDebMode()) {
+                        viewModel.setDevMode(false)
+                        Toast.makeText(context, "Dev Mode Disabled!", Toast.LENGTH_LONG).show()
+
+                    }
+                    else {
+                        if (!enableDevMode.isVisible)
+                            enableDevMode.show(childFragmentManager, "DEV_MODE")
+                    }
+                    true
+                }
             }
         }.attach()
     }

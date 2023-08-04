@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.ui.home_activity.home
 
 import android.net.Uri
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,6 +23,11 @@ class HomeViewModel @Inject constructor(
     private val pref: PreferenceDao,
     private val userRepo: UserRepo,
 ) : ViewModel() {
+
+
+    private val _devModeState : MutableLiveData<Boolean> = MutableLiveData(pref.isDevModeEnabled)
+    val devModeEnabled : LiveData<Boolean>
+        get() = _devModeState
 
 
     val currentUser = pref.getLoggedInUser()
@@ -71,5 +77,12 @@ class HomeViewModel @Inject constructor(
         _navigateToLoginPage.value = false
     }
 
+
+    fun setDevMode(boolean :Boolean){
+        pref.isDevModeEnabled = boolean
+        _devModeState.value = boolean
+    }
+
+    fun getDebMode () = pref.isDevModeEnabled
 
 }

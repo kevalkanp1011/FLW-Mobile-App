@@ -120,6 +120,8 @@ class BenRepo @Inject constructor(
 
     suspend fun getBeneficiaryRecord(benId: Long, hhId: Long): BenRegCache? {
         return withContext(Dispatchers.IO) {
+            if (benId == 0L)
+                return@withContext null
             benDao.getBen(hhId, benId)
         }
 
@@ -695,7 +697,6 @@ class BenRepo @Inject constructor(
         val localDateTime = formatter.parse(date)
         return localDateTime?.time ?: 0
     }
-
 
 
     private suspend fun getBenCacheFromServerResponse(response: String): MutableList<BenRegCache> {
@@ -1329,7 +1330,8 @@ class BenRepo @Inject constructor(
                 when (responseBody?.let { JSONObject(it).getInt("statusCode") }) {
                     200 -> {
                         val jsonObj = JSONObject(responseBody)
-                        val data = jsonObj.getJSONObject("data").getJSONArray("BenHealthDetails").toString()
+                        val data = jsonObj.getJSONObject("data").getJSONArray("BenHealthDetails")
+                            .toString()
                         val bens = Gson().fromJson(data, Array<BenHealthDetails>::class.java)
                         return if (bens.isNotEmpty()) {
                             bens.last()
@@ -1337,16 +1339,22 @@ class BenRepo @Inject constructor(
                             null
                         }
                     }
-                    5000 -> {
+
+                    5000, 5002 -> {
                         if (JSONObject(responseBody).getString("errorMessage")
-                                .contentEquals("Invalid login key or session is expired")) {
+                                .contentEquals("Invalid login key or session is expired")
+                        ) {
                             val user = preferenceDao.getLoggedInUser()!!
                             userRepo.refreshTokenTmc(user.userName, user.password)
                             return getBeneficiaryWithId(benRegId)
                         } else {
-                            NetworkResult.Error(0,JSONObject(responseBody).getString("errorMessage"))
+                            NetworkResult.Error(
+                                0,
+                                JSONObject(responseBody).getString("errorMessage")
+                            )
                         }
                     }
+
                     else -> {
                         NetworkResult.Error(0, responseBody.toString())
                     }

@@ -145,7 +145,7 @@ class CreateAbhaFragment : Fragment() {
 
         binding.btnDownloadAbhaNo.setOnClickListener{
             binding.txtDownloadAbha.visibility = View.INVISIBLE
-            binding.clDownloadAbha.visibility = View.INVISIBLE
+            binding.clDownloadAbha.visibility = View.GONE
         }
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,

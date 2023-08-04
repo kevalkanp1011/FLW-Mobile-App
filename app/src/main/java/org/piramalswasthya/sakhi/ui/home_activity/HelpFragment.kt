@@ -18,4 +18,11 @@ class HelpFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_help, container, false)
     }
 
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(R.drawable.ic_help)
+        }
+    }
+
 }

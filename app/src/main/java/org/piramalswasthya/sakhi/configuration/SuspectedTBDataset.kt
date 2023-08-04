@@ -66,7 +66,7 @@ class SuspectedTBDataset(
 
     private var followUps = FormElement(
         id = 7,
-        inputType = InputType.RADIO,
+        inputType = InputType.EDIT_TEXT,
         title = "Facility Referral follow-ups",
         entries = arrayOf("Yes", "No"),
         required = false,
@@ -86,22 +86,29 @@ class SuspectedTBDataset(
         if (saved == null) {
             dateOfVisit.value = getDateFromLong(System.currentTimeMillis())
         } else {
-            list = mutableListOf(
-                dateOfVisit,
-                isSputumCollected,
-                sputumSubmittedAt,
-                nikshayId,
-                sputumTestResult,
-                referred,
-                followUps
-            )
-            dateOfVisit.value = getDateFromLong(saved.visitDate)
-            isSputumCollected.value = if (saved.isSputumCollected == true) "Yes" else "No"
-            sputumSubmittedAt.value = saved.sputumSubmittedAt
-            nikshayId.value = saved.nikshayId
-            sputumTestResult.value = saved.sputumTestResult
-            referred.value = if (saved.referred == true) "Yes" else "No"
-            followUps.value = saved.followUps
+            if (saved.isSputumCollected == true) {
+                list = mutableListOf(
+                    dateOfVisit,
+                    isSputumCollected,
+                    sputumSubmittedAt,
+                    nikshayId,
+                    sputumTestResult,
+                    referred,
+                    followUps
+                )
+                dateOfVisit.value = getDateFromLong(saved.visitDate)
+                isSputumCollected.value = if (saved.isSputumCollected == true) "Yes" else "No"
+                sputumSubmittedAt.value = saved.sputumSubmittedAt
+                nikshayId.value = saved.nikshayId
+                sputumTestResult.value = saved.sputumTestResult
+                referred.value = if (saved.referred == true) "Yes" else "No"
+                followUps.value = saved.followUps
+            } else {
+                dateOfVisit.value = getDateFromLong(saved.visitDate)
+                isSputumCollected.value = if (saved.isSputumCollected == true) "Yes" else "No"
+                referred.value = if (saved.referred == true) "Yes" else "No"
+                followUps.value = saved.followUps
+            }
         }
 
 

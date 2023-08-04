@@ -21,7 +21,7 @@
 
 
     <!-- BEN KID -->
-    <string name="nbr_image">Image of Beneficiary</string>
+    <string name="nbr_image">Photo</string>
     <string name="nbr_dor">Date of Registration</string>
     <string name="nbr_nb_first_name">First Name</string>
     <string name="nbr_nb_last_name">Last Name / Surname</string>
@@ -62,8 +62,8 @@
     <string name="cbac_hint_fh">Do you have a family history (any one of your parents or siblings) of high blood pressure, diabetes and heart disease?</string>
 
     <string name="cbac_ask_pat_note">Note :</string>
-    <string name="cbac_ast1">* If the response is Yes- action suggested: Collect the sputum sample and send to nearest TB testing center.</string>
-    <string name="cbac_ast2">** If the answer is yes, tracing of all family members need to be done</string>
+    <string name="cbac_ast1">* If “Yes” is selected for any one of the questions below with “*” then show pop up message “Refer to MO and collect the Sputum sample”</string>
+    <string name="cbac_ast2">** If “Yes” is selected for any one of the questions below with “**” then show pop up message “Refer to MO orinform ANM/MPW to tracing of all family members”</string>
     <string name="cbac_select">Select ...</string>
     <string name="cbac_fh_tb">Anyone in family currently suffering from TB</string>
     <string name="cbac_taking_tb_drug">Are you currently taking anti-TB drugs</string>
@@ -305,9 +305,8 @@
     </string-array>
     <string-array name="cbac_type_occupational_exposure">
         <item>Crop residue burning</item>
-        <item>Leaves</item>
-        <item>Working in industries with smoke</item>
-        <item>Gas and dust exposure such as brick kilns and glass factories etc.</item>
+        <item>Burning of garbage – leaves</item>
+        <item>Working in industries with smoke, gas and dust exposure such as brick kilns and glass factories etc.</item>
     </string-array>
     <string-array name="cbac_li">
         <item>Not at all</item>
@@ -450,7 +449,7 @@
     <string name="nbr_child_type_school">Type of School/Institute</string>
     <string name="nbr_rch_id">RCH ID</string>
     <string name="nbr_child_pob">Place of birth</string>
-    <string name="nbr_child_facility">Facility Selection</string>
+    <string name="nbr_child_facility">Health Facility</string>
     <string name="nbr_child_pob_other_facility">Other Facility</string>
     <string name="nbr_child_pob_other">Other Place of Birth</string>
     <string name="nbr_child_who_cond_del">Who Conducted Delivery</string>

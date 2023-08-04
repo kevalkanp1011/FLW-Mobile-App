@@ -34,9 +34,9 @@ class NcdEligibleListViewModel @Inject constructor(
     }
 
     val ncdDetails = allBenList.combineTransform(selectedBenId) { list, benId ->
-        if (benId > 0) {
-            val list = list.firstOrNull { it.ben.benId == benId }?.savedCbacRecords?.map { it.asDomainModel() }
-            if (!list.isNullOrEmpty()) emit(list)
+        if (benId != 0L) {
+            val emitList = list.firstOrNull { it.ben.benId == benId }?.savedCbacRecords?.map { it.asDomainModel() }
+            if (!emitList.isNullOrEmpty()) emit(emitList)
         }
     }
 

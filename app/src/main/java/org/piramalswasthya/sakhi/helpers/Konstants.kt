@@ -2,6 +2,10 @@ package org.piramalswasthya.sakhi.helpers
 
 object Konstants {
 
+    const val  amritTokenTimeoutDuration: Int = 100
+
+    //Dev
+    const val devCode = 112
 
 
     const val tempBenImagePrefix: String = "tmp_image_file"

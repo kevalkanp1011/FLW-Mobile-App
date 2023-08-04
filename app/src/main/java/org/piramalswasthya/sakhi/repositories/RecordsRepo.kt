@@ -37,21 +37,21 @@ class RecordsRepo @Inject constructor(
         .map { list -> list.map { it.asBenBasicDomainModelForPmsmaForm() } }
     val deliveryListCount = deliveryList.map { it.size }
 
-    val ncdList = benDao.getBenWithCbac(selectedVillage)
-    val ncdListCount = benDao.getBenWithCbacCount(selectedVillage)
+    val ncdList = allBenList
+    val ncdListCount = allBenListCount
 
-    val getNcdEligibleList = ncdList
-    val getNcdEligibleListCount = ncdListCount
-    val getNcdPriorityList = ncdList.map {
+    val getNcdEligibleList = benDao.getBenWithCbac(selectedVillage)
+    val getNcdEligibleListCount = benDao.getBenWithCbacCount(selectedVillage)
+    val getNcdPriorityList = getNcdEligibleList.map {
         it.filter { it.savedCbacRecords.isNotEmpty() && it.savedCbacRecords.maxBy { it.createdDate }.total_score > 4 }
     }
 
-    val getNcdPriorityListCount = ncdListCount
-    val getNcdNonEligibleList = ncdList.map {
+    val getNcdPriorityListCount = getNcdPriorityList.map { it.count() }
+    val getNcdNonEligibleList = getNcdEligibleList.map {
         it.filter { it.savedCbacRecords.isNotEmpty() && it.savedCbacRecords.maxBy { it.createdDate }.total_score <= 4 }
     }
 
-    val getNcdNonEligibleListCount = ncdListCount
+    val getNcdNonEligibleListCount = getNcdNonEligibleList.map { it.count() }
 
 //    val ncdPriorityList = benDao.getAllNCDPriorityList(selectedVillage)
 //        .map { list -> list.map { it.asBenBasicDomainModelForCbacForm() } }

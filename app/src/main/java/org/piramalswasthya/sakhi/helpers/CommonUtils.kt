@@ -26,6 +26,7 @@ fun filterForBen(
     filterText: String
 ) = ben.hhId.toString().lowercase().contains(filterText) ||
         ben.benId.toString().lowercase().contains(filterText) ||
+        ben.abhaId.toString().lowercase().contains(filterText) ||
         ben.regDate.lowercase().contains((filterText)) ||
         ben.age.lowercase().contains(filterText) ||
         ben.benFullName.lowercase().contains(filterText) ||
@@ -63,6 +64,7 @@ fun filterBenFormList(
                     it.benId.toString().lowercase().contains(filterText) ||
                     it.regDate.lowercase().contains((filterText)) ||
                     it.age.lowercase().contains(filterText) ||
+                    it.rchId.takeIf { it1 -> it1.isDigitsOnly() }?.contains(filterText) ?: false ||
                     it.benName.lowercase().contains(filterText) ||
                     it.familyHeadName.lowercase().contains(filterText) ||
                     it.benSurname?.lowercase()?.contains(filterText) ?: false ||

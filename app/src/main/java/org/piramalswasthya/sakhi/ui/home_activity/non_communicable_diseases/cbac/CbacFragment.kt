@@ -60,6 +60,14 @@ class CbacFragment : Fragment() {
             .setMessage(context?.getString(R.string.tb_suspected_family_alert))
             .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }.create()
     }
+    private val ast0AlertDialog by lazy {
+        AlertDialog.Builder(requireContext()).setTitle("Alert !")
+            .setMessage(
+                "Suspected NCD case, please visit nearest HWC or call\n" +
+                        "104."
+            )
+            .setPositiveButton("Ok") { dialog, _ -> dialog.dismiss() }.create()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -227,6 +235,31 @@ class CbacFragment : Fragment() {
     }
 
     private fun handleAst1Alert() {
+        if (
+            binding.cbacHistb.cbacEdRg.checkedRadioButtonId != -1 &&
+            binding.cbacCoughing.cbacEdRg.checkedRadioButtonId != -1 &&
+            binding.cbacBlsputum.cbacEdRg.checkedRadioButtonId != -1 &&
+            binding.cbacFeverwks.cbacEdRg.checkedRadioButtonId != -1 &&
+            binding.cbacLsweight.cbacEdRg.checkedRadioButtonId != -1 &&
+            binding.cbacNtswets.cbacEdRg.checkedRadioButtonId != -1
+        ) {
+            if (
+                binding.cbacHistb.rbYes.isChecked ||
+                binding.cbacCoughing.rbYes.isChecked ||
+                binding.cbacBlsputum.rbYes.isChecked ||
+                binding.cbacFeverwks.rbYes.isChecked ||
+                binding.cbacLsweight.rbYes.isChecked ||
+                binding.cbacNtswets.rbYes.isChecked
+            ) {
+                ast1AlertDialog.setMessage(
+                    "Refer to MO and collect the Sputum sample"
+                )
+                ast1AlertDialog.show()
+            }
+        }
+
+    }
+    private fun handleAst0Alert() {
         if (
             binding.cbacHistb.cbacEdRg.checkedRadioButtonId != -1 &&
             binding.cbacCoughing.cbacEdRg.checkedRadioButtonId != -1 &&
@@ -452,48 +485,42 @@ class CbacFragment : Fragment() {
                 R.id.rb_yes -> viewModel.setHisTb(1)
                 R.id.rb_no -> viewModel.setHisTb(2)
             }
+            handleAst1Alert()
         }
         binding.cbacCoughing.cbacEdRg.setOnCheckedChangeListener { _, id ->
             when (id) {
                 R.id.rb_yes -> viewModel.setCoughing(1)
                 R.id.rb_no -> viewModel.setCoughing(2)
             }
+            handleAst1Alert()
         }
         binding.cbacBlsputum.cbacEdRg.setOnCheckedChangeListener { _, id ->
             when (id) {
                 R.id.rb_yes -> viewModel.setBloodSputum(1)
                 R.id.rb_no -> viewModel.setBloodSputum(2)
             }
+            handleAst1Alert()
         }
         binding.cbacFeverwks.cbacEdRg.setOnCheckedChangeListener { _, id ->
             when (id) {
                 R.id.rb_yes -> viewModel.setFeverWks(1)
                 R.id.rb_no -> viewModel.setFeverWks(2)
             }
+            handleAst1Alert()
         }
         binding.cbacLsweight.cbacEdRg.setOnCheckedChangeListener { _, id ->
             when (id) {
                 R.id.rb_yes -> viewModel.setLsWt(1)
                 R.id.rb_no -> viewModel.setLsWt(2)
             }
+            handleAst1Alert()
         }
         binding.cbacNtswets.cbacEdRg.setOnCheckedChangeListener { _, id ->
             when (id) {
                 R.id.rb_yes -> viewModel.setNtSwets(1)
                 R.id.rb_no -> viewModel.setNtSwets(2)
             }
-
-
-            if (
-                binding.cbacHistb.rbYes.isChecked ||
-                binding.cbacCoughing.rbYes.isChecked ||
-                binding.cbacBlsputum.rbYes.isChecked ||
-                binding.cbacFeverwks.rbYes.isChecked ||
-                binding.cbacLsweight.rbYes.isChecked ||
-                binding.cbacNtswets.rbYes.isChecked
-            ) {
-                ast1AlertDialog.show()
-            }
+            handleAst1Alert()
 
         }
         binding.cbacRecurrentUlceration.cbacEdRg.setOnCheckedChangeListener { _, id ->
@@ -810,6 +837,16 @@ class CbacFragment : Fragment() {
 
 
     private fun setupRfCopdFill() {
+        binding.actvExposureDropdown.setAdapter(
+            ArrayAdapter(
+                requireContext(),
+                R.layout.dropdown_item,
+                R.id.tv_dropdown_item_text,
+                resources.getStringArray(R.array.cbac_type_occupational_exposure),
+
+
+                )
+        )
         binding.actvFuelDropdown.setOnItemClickListener { _, _, i, _ -> viewModel.setFuelType(i) }
         binding.actvExposureDropdown.setOnItemClickListener { _, _, i, _ ->
             viewModel.setOccExposure(i)

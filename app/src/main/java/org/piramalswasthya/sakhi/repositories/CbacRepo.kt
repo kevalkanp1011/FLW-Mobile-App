@@ -113,6 +113,9 @@ class CbacRepo @Inject constructor(
                 }
                 database.cbacDao.update(*cbacList.toTypedArray())
             }
+            else {
+
+            }
         }
     }
 

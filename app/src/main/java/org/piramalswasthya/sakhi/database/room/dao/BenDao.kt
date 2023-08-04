@@ -59,10 +59,10 @@ interface BenDao {
     @Query("SELECT * FROM BENEFICIARY WHERE isDraft = 0 AND processed = 'U' AND syncState =:unsynced ")
     suspend fun getAllBenForSyncWithServer(unsynced: SyncState = SyncState.UNSYNCED): List<BenRegCache>
 
-    @Query("UPDATE BENEFICIARY SET processed = 'P' , syncState = 2 WHERE beneficiaryId =:benId")
+    @Query("UPDATE BENEFICIARY SET processed = 'P' , syncState = 2 WHERE beneficiaryId in (:benId)")
     suspend fun benSyncedWithServer(vararg benId: Long)
 
-    @Query("UPDATE BENEFICIARY SET processed = 'U' , syncState = 0 WHERE beneficiaryId =:benId")
+    @Query("UPDATE BENEFICIARY SET processed = 'U' , syncState = 0 WHERE beneficiaryId in (:benId)")
     suspend fun benSyncWithServerFailed(vararg benId: Long)
 
     @Query("SELECT beneficiaryId FROM BENEFICIARY WHERE beneficiaryId IN (:list)")
@@ -196,7 +196,7 @@ interface BenDao {
     ): Flow<List<BenWithCbacCache>>
 
     @Transaction
-    @Query("SELECT COUNT(*) FROM BEN_BASIC_CACHE b where CAST((strftime('%s','now') - b.dob/1000)/60/60/24/365 AS INTEGER)  >= :min and b.villageId=:selectedVillage")
+    @Query("SELECT COUNT(*) FROM BEN_BASIC_CACHE b where CAST((strftime('%s','now') - b.dob/1000)/60/60/24/365 AS INTEGER)  >= :min and b.reproductiveStatusId!=2 and b.villageId=:selectedVillage")
     fun getBenWithCbacCount(
         selectedVillage: Int, min: Int = Konstants.minAgeForNcd
     ): Flow<Int>
