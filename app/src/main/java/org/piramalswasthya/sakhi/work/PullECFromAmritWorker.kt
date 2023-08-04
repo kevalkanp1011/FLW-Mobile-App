@@ -16,7 +16,6 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.repositories.EcrRepo
-import org.piramalswasthya.sakhi.repositories.TBRepo
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -54,8 +53,7 @@ class PullECFromAmritWorker @AssistedInject constructor(
                 try {
                     val result1 =
                         awaitAll(
-                            async { getTbScreeningDetails() },
-                            async { getTbSuspectedDetails() }
+                            async { getECRDetails() }
                         )
 
                     val endTime = System.currentTimeMillis()
@@ -98,22 +96,10 @@ class PullECFromAmritWorker @AssistedInject constructor(
     }
 
 
-    private suspend fun getTbScreeningDetails() : Boolean {
+    private suspend fun getECRDetails() : Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val res = tbRepo.getTBScreeningDetailsFromServer()
-                return@withContext res == 1
-            } catch (e: Exception) {
-                Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
-            }
-            true
-        }
-    }
-
-    private suspend fun getTbSuspectedDetails() : Boolean {
-        return withContext(Dispatchers.IO) {
-            try {
-                val res = tbRepo.getTbSuspectedDetailsFromServer()
+                val res = ecrRepo.getECRDetailsFromServer()
                 return@withContext res == 1
             } catch (e: Exception) {
                 Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")

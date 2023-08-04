@@ -65,7 +65,7 @@ enum class Gender {
             " ect.benId is not null as ectFilled, " +
             " ect.benId is not null as ectFilled, " +
             " tbsn.benId is not null as tbsnFilled, tbsn.syncState as tbsnSyncState," +
-            " tbsp.benId is not null as tbspFilled, tbsp.syncState as tbspSyncState " +
+            " tbsp.benId is not null as tbspFilled, tbsp.syncState as tbspSyncState, " +
             " ir.benId is not null as irFilled, " +
             " do.benId is not null as doFilled " +
             "from BENEFICIARY b " +
