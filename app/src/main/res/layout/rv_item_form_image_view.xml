@@ -39,8 +39,10 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_title"
             app:layout_constraintEnd_toEndOf="parent"
-            benImage="@{form.value}"
+            tools:src="@drawable/ic_person"
+            android:padding="@dimen/padding_normal"
             android:background="@drawable/bg_circular"
+            benImage="@{form.value}"
             android:onClick="@{()->clickListener.onImageClick(form)}" />
 
         <TextView
@@ -49,6 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/iv"
             android:text="@string/tv_required_text_asterisk"
+            tools:visibility="gone"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/design_default_color_error"
             app:layout_constraintStart_toEndOf="@id/iv"

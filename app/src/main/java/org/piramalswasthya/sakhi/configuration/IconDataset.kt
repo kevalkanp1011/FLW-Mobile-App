@@ -26,7 +26,7 @@ class IconDataset @Inject constructor(
     fun getHomeIconDataset(resources: Resources) : List<Icon> {
         val showAll = preferenceDao.isDevModeEnabled
         Timber.d("currently : $showAll")
-        return if (showAll) {
+        return if (/*showAll*/true) {
             listOf(
                 Icon(
                     R.drawable.ic__hh,
@@ -88,12 +88,12 @@ class IconDataset @Inject constructor(
                     null,
                     HomeFragmentDirections.actionNavHomeToGeneralOpCareFragment(),
                 ),
-                Icon(
-                    R.drawable.ic__menopause,
-                    resources.getString(R.string.icon_title_msl),
-                    recordsRepo.menopauseListCount,
-                    HomeFragmentDirections.actionNavHomeToMenopauseStageFragment()
-                ),
+//                Icon(
+//                    R.drawable.ic__menopause,
+//                    resources.getString(R.string.icon_title_msl),
+//                    recordsRepo.menopauseListCount,
+//                    HomeFragmentDirections.actionNavHomeToMenopauseStageFragment()
+//                ),
                 Icon(
                     R.drawable.ic__death,
                     resources.getString(R.string.icon_title_dr),

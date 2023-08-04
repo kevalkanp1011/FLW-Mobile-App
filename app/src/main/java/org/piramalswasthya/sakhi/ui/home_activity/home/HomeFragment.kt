@@ -116,7 +116,7 @@ class HomeFragment : Fragment() {
                             val currentPage = progressData.getInt(PullFromAmritWorker.Progress, 0)
                             val totalPage = progressData.getInt(PullFromAmritWorker.NumPages, 0)
                             binding.llFullLoadProgress.visibility = View.VISIBLE
-                            binding.tvLoadProgress.text = "Starting Download ..."
+                            binding.tvLoadProgress.text = "Downloading ..."
 
                             if (totalPage > 0) {
                                 if (binding.pbLoadProgress.isIndeterminate) {

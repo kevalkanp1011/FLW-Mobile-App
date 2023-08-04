@@ -124,14 +124,14 @@
                     android:text="Add CBAC" />
 
                 <Button
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    cbac_list_avail="@{benWithCbac.savedCbacRecords}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.Material3.Button.TonalButton"
-                    app:layout_constraintTop_toBottomOf="@id/ll_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    cbac_list_avail="@{benWithCbac.savedCbacRecords}"
                     android:onClick="@{() -> clickListener.onClickedView(benWithCbac)}"
-                    android:text="View Filled CBAC" />
+                    android:text="View CBAC"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ll_content" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

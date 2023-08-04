@@ -134,7 +134,8 @@ class CbacViewModel @Inject constructor(
                 else
                     CbacCache(
                         benId = benId, ashaId = ashaId,
-                        syncState = SyncState.UNSYNCED
+                        syncState = SyncState.UNSYNCED,
+                        createdDate = System.currentTimeMillis()
                     )
                 ben = benDao.getBen(benId)!!
                 _minDate.postValue(ben.regDate)

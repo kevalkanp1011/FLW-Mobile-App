@@ -22,6 +22,7 @@
 
     <!-- BEN KID -->
     <string name="nbr_image">Photo</string>
+    <string name="nbr_image_sub">Tap to use camera</string>
     <string name="nbr_dor">Date of Registration</string>
     <string name="nbr_nb_first_name">First Name</string>
     <string name="nbr_nb_last_name">Last Name / Surname</string>
@@ -53,7 +54,9 @@
     <!--   CBAC -->
 
     <string name="cbac_ask_pat">Ask if Patient has any of these Symptoms</string>
-    <string name="cbac_early_detection">Early Detection</string>
+    <string name="cbac_early_detection">Part B1: Early Detection</string>
+    <string name="cbac_early_detection_2">Part B2: Women Only</string>
+    <string name="cbac_early_detection_3">Part B3: Elderly Specific</string>
     <string name="cbac_hint_age">What is your age?</string>
     <string name="cbac_hint_smoke">Do you smoke or consume smokeless products such as gutka or khaini?</string>
     <string name="cbac_hint_alcohol">Do you consume alcohol daily?</string>
@@ -112,9 +115,9 @@
     <string name="cbac_yes">Yes</string>
     <string name="cbac_no">No</string>
 
-    <string name="cbac_risk_Factors_COPD">Risk Factors for COPD</string>
+    <string name="cbac_risk_Factors_COPD">Part C: Risk factor for COPD</string>
     <string name="cbac_occupational_exposure">Occupational exposure</string>
-    <string name="cbac_PHQ2">PHQ2</string>
+    <string name="cbac_PHQ2">Part D: PHQ2</string>
     <string name="cbac_last_two_weeks">Over the last two weeks how often have you been bothered by the following problems ?</string>
     <string name="cbac_little_interest">Little interest or pleasure in doing things ?</string>
     <string name="cbac_feeling_down">Feeling down, depressed, &amp; hopeless ?</string>

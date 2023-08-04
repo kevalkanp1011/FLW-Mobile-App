@@ -18,28 +18,12 @@ interface AmritApiService {
     @POST("commonapi-v1.0/user/userAuthenticate/")
     suspend fun getJwtToken(@Body json: TmcAuthUserRequest): Response<ResponseBody>
 
-//    @Headers("No-Auth: true")
-//    @POST
-//    suspend fun getJwtToken(@Url url: String = "http://amritdemo.piramalswasthya.org:8080/commonapi-v1.0/user/userAuthenticate/",
-//                            @Body json: TmcAuthUserRequest): Response<ResponseBody>
-
-
     @GET("flw-0.0.1/user/getUserDetail")
 //    @GET("user/getUserRole")
     suspend fun getUserDetailsById(
         @Query("userId") userId: Int,
 //        @Query("roleId") roleId: Int = 526
     ): UserNetworkResponse
-
-    @POST("tmapi-v1.0/user/getUserVanSpDetails/")
-    suspend fun getTMVanSpDetails(
-        @Body vanServiceType: TmcUserVanSpDetailsRequest
-    ): Response<ResponseBody>
-
-    @POST("bengenapi-v1.0/generateBeneficiaryController/generateBeneficiaryIDs/")
-    suspend fun generateBeneficiaryIDs(
-        @Body obj: TmcGenerateBenIdsRequest
-    ): Response<ResponseBody>
 
     @POST("tmapi-v1.0/registrar/registrarBeneficaryRegistrationNew")
     suspend fun getBenIdFromBeneficiarySending(@Body beneficiaryDataSending: BeneficiaryDataSending): Response<ResponseBody>

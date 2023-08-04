@@ -22,7 +22,7 @@ interface CbacDao {
 
 
     @Query("SELECT c.*, b.householdId as hhId, b.gender as benGender FROM CBAC c join beneficiary b on c.benId= b.beneficiaryId WHERE c.processed = 'N' ")
-    suspend fun getAllUnprocessedCbac() : List<CbacCachePush>
+    suspend fun getAllUnprocessedCbac(): List<CbacCachePush>
 
     @Query("UPDATE CBAC SET syncState = 1 WHERE benId =:benId")
     suspend fun setCbacSyncing(vararg benId: Long)
@@ -32,6 +32,9 @@ interface CbacDao {
     suspend fun cbacSyncedWithServer(vararg benId: Long)
 
     @Query("UPDATE CBAC SET processed = 'N', syncState = 0 WHERE benId =:benId")
-    suspend fun cbacSyncWithServerFailed(vararg benId : Long)
+    suspend fun cbacSyncWithServerFailed(vararg benId: Long)
+
+    @Query("select count(*)>0 from cbac where createdDate=:createdDate")
+    suspend fun sameCreateDateExists(createdDate: Long): Boolean
 
 }

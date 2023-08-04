@@ -133,6 +133,7 @@ data class CbacCache(
             houseoldId = hhId,
             beneficiaryId = benId,
             ashaid = ashaId,
+            filledDate = getDateTimeStringFromLong(fillDate) ?: "",
             cbac_age = resources.getStringArray(R.array.cbac_age)[cbac_age_posi - 1],
             cbac_age_posi = cbac_age_posi,
             cbac_smoke = resources.getStringArray(R.array.cbac_smoke)[cbac_smoke_posi - 1],
@@ -390,6 +391,12 @@ data class CbacCache(
                 2 -> "No"
                 else -> resources.getString(R.string.cbac_Inability_close_eyelid)
             },
+            cbac_rec_tingling = when (cbac_tingling_palm_posi) {
+                1 -> "Yes"
+                2 -> "No"
+                else -> resources.getString(R.string.cbac_recurrent_tingling)
+            },
+            cbac_rec_tingling_posi = cbac_tingling_palm_posi,
             cbac_inability_close_eyelid_posi = cbac_inability_close_eyelid_posi,
             cbac_diff_holding_obj = when (cbac_diff_holding_obj_posi) {
                 1 -> "Yes"
@@ -449,10 +456,11 @@ data class CbacCache(
             date = "Filled on ${getCbacCreatedDateFromLong(this.createdDate)}"
         )
     }
-    companion object{
+
+    companion object {
         private val dateFormat = SimpleDateFormat("EEE, MMM dd yyyy", Locale.getDefault())
 
-        private fun getCbacCreatedDateFromLong(long: Long) : String{
+        private fun getCbacCreatedDateFromLong(long: Long): String {
             return dateFormat.format(long)
         }
     }
@@ -476,117 +484,118 @@ data class CbacPost(
     val houseoldId: Long,
     val beneficiaryId: Long,
     val ashaid: Int,
-    @Json(name  = "cbacAge")
+    val filledDate: String,
+    @Json(name = "cbacAge")
     val cbac_age: String,
-    @Json(name  = "cbacAgePosi")
+    @Json(name = "cbacAgePosi")
     val cbac_age_posi: Int,
-    @Json(name  = "cbacSmoke")
+    @Json(name = "cbacSmoke")
     val cbac_smoke: String,
-    @Json(name  = "cbacSmokePosi")
+    @Json(name = "cbacSmokePosi")
     val cbac_smoke_posi: Int,
-    @Json(name  = "cbacAlcohol")
+    @Json(name = "cbacAlcohol")
     val cbac_alcohol: String,
-    @Json(name  = "cbacAlcoholPosi")
+    @Json(name = "cbacAlcoholPosi")
     val cbac_alcohol_posi: Int,
-    @Json(name  = "cbacWaist")
+    @Json(name = "cbacWaist")
     val cbac_waist: String,
-    @Json(name  = "cbacWaistPosi")
+    @Json(name = "cbacWaistPosi")
     val cbac_waist_posi: Int,
-    @Json(name  = "cbacPa")
+    @Json(name = "cbacPa")
     val cbac_pa: String,
-    @Json(name  = "cbacPaPosi")
+    @Json(name = "cbacPaPosi")
     val cbac_pa_posi: Int,
-    @Json(name  = "cbacFamilyhistory")
+    @Json(name = "cbacFamilyhistory")
     val cbac_familyhistory: String,
-    @Json(name  = "cbacFamilyhistoryPosi")
+    @Json(name = "cbacFamilyhistoryPosi")
     val cbac_familyhistory_posi: Int,
-    @Json(name  = "totalScore")
+    @Json(name = "totalScore")
     val total_score: Int,
-    @Json(name  = "cbacSufferingtb")
+    @Json(name = "cbacSufferingtb")
     val cbac_sufferingtb: String,
-    @Json(name  = "cbacSufferingtbPos")
+    @Json(name = "cbacSufferingtbPos")
     val cbac_sufferingtb_pos: Int,
-    @Json(name  = "cbacAntitbdrugs")
+    @Json(name = "cbacAntitbdrugs")
     val cbac_antitbdrugs: String,
-    @Json(name  = "cbacAntitbdrugsPos")
+    @Json(name = "cbacAntitbdrugsPos")
     val cbac_antitbdrugs_pos: Int,
-    @Json(name  = "cbacTbhistory")
+    @Json(name = "cbacTbhistory")
     val cbac_tbhistory: String,
-    @Json(name  = "cbacTbhistoryPos")
+    @Json(name = "cbacTbhistoryPos")
     val cbac_tbhistory_pos: Int,
-    @Json(name  = "cbacSortnesofbirth")
+    @Json(name = "cbacSortnesofbirth")
     val cbac_sortnesofbirth: String,
-    @Json(name  = "cbacSortnesofbirthPos")
+    @Json(name = "cbacSortnesofbirthPos")
     val cbac_sortnesofbirth_pos: Int,
-    @Json(name  = "cbacCoughing")
+    @Json(name = "cbacCoughing")
     val cbac_coughing: String,
-    @Json(name  = "cbacCoughingPos")
+    @Json(name = "cbacCoughingPos")
     val cbac_coughing_pos: Int,
-    @Json(name  = "cbacBloodsputum")
+    @Json(name = "cbacBloodsputum")
     val cbac_bloodsputum: String,
-    @Json(name  = "cbacBloodsputumPos")
+    @Json(name = "cbacBloodsputumPos")
     val cbac_bloodsputum_pos: Int,
-    @Json(name  = "cbacFivermore")
+    @Json(name = "cbacFivermore")
     val cbac_fivermore: String,
-    @Json(name  = "cbacFivermorePos")
+    @Json(name = "cbacFivermorePos")
     val cbac_fivermore_pos: Int,
-    @Json(name  = "cbacLoseofweight")
+    @Json(name = "cbacLoseofweight")
     val cbac_loseofweight: String,
-    @Json(name  = "cbacLoseofweightPos")
+    @Json(name = "cbacLoseofweightPos")
     val cbac_loseofweight_pos: Int,
-    @Json(name  = "cbacNightsweats")
+    @Json(name = "cbacNightsweats")
     val cbac_nightsweats: String,
-    @Json(name  = "cbacNightsweatsPos")
+    @Json(name = "cbacNightsweatsPos")
     val cbac_nightsweats_pos: Int,
-    @Json(name  = "cbacHistoryoffits")
+    @Json(name = "cbacHistoryoffits")
     val cbac_historyoffits: String,
-    @Json(name  = "cbacHistoryoffitsPos")
+    @Json(name = "cbacHistoryoffitsPos")
     val cbac_historyoffits_pos: Int,
-    @Json(name  = "cbacDifficultyinmouth")
+    @Json(name = "cbacDifficultyinmouth")
     val cbac_difficultyinmouth: String,
-    @Json(name  = "cbacDifficultyinmouthPos")
+    @Json(name = "cbacDifficultyinmouthPos")
     val cbac_difficultyinmouth_pos: Int,
-    @Json(name  = "cbacUicers")
+    @Json(name = "cbacUicers")
     val cbac_uicers: String,
-    @Json(name  = "cbacUicersPos")
+    @Json(name = "cbacUicersPos")
     val cbac_uicers_pos: Int,
-    @Json(name  = "cbacToneofvoice")
+    @Json(name = "cbacToneofvoice")
     val cbac_toneofvoice: String,
-    @Json(name  = "cbacToneofvoicePos")
+    @Json(name = "cbacToneofvoicePos")
     val cbac_toneofvoice_pos: Int,
-    @Json(name  = "cbacLumpinbreast")
+    @Json(name = "cbacLumpinbreast")
     val cbac_lumpinbreast: String,
-    @Json(name  = "cbacLumpinbreastPos")
+    @Json(name = "cbacLumpinbreastPos")
     val cbac_lumpinbreast_pos: Int,
-    @Json(name  = "cbacBlooddischage")
+    @Json(name = "cbacBlooddischage")
     val cbac_blooddischage: String,
-    @Json(name  = "cbacBlooddischagePos")
+    @Json(name = "cbacBlooddischagePos")
     val cbac_blooddischage_pos: Int,
-    @Json(name  = "cbacChangeinbreast")
+    @Json(name = "cbacChangeinbreast")
     val cbac_changeinbreast: String,
-    @Json(name  = "cbacChangeinbreastPos")
+    @Json(name = "cbacChangeinbreastPos")
     val cbac_changeinbreast_pos: Int,
-    @Json(name  = "cbacBleedingbtwnperiods")
+    @Json(name = "cbacBleedingbtwnperiods")
     val cbac_bleedingbtwnperiods: String,
-    @Json(name  = "cbacBleedingbtwnperiodsPos")
+    @Json(name = "cbacBleedingbtwnperiodsPos")
     val cbac_bleedingbtwnperiods_pos: Int,
-    @Json(name  = "cbacBleedingaftermenopause")
+    @Json(name = "cbacBleedingaftermenopause")
     val cbac_bleedingaftermenopause: String,
-    @Json(name  = "cbacBleedingaftermenopausePos")
+    @Json(name = "cbacBleedingaftermenopausePos")
     val cbac_bleedingaftermenopause_pos: Int,
-    @Json(name  = "cbacBleedingafterintercourse")
+    @Json(name = "cbacBleedingafterintercourse")
     val cbac_bleedingafterintercourse: String,
-    @Json(name  = "cbacBleedingafterintercoursePos")
+    @Json(name = "cbacBleedingafterintercoursePos")
     val cbac_bleedingafterintercourse_pos: Int,
-    @Json(name  = "cbacFoulveginaldischarge")
+    @Json(name = "cbacFoulveginaldischarge")
     val cbac_foulveginaldischarge: String,
-    @Json(name  = "cbacFoulveginaldischargePos")
+    @Json(name = "cbacFoulveginaldischargePos")
     val cbac_foulveginaldischarge_pos: Int,
-    @Json(name  = "cbacReferpatientMo")
+    @Json(name = "cbacReferpatientMo")
     val cbac_referpatient_mo: String,
-    @Json(name  = "cbacTracingAllFm")
+    @Json(name = "cbacTracingAllFm")
     val cbac_tracing_all_fm: String,
-    @Json(name  = "cbacSputemcollection")
+    @Json(name = "cbacSputemcollection")
     val cbac_sputemcollection: String,
 
     val serverUpdatedStatus: Int,
@@ -594,13 +603,13 @@ data class CbacPost(
     val createdBy: String,
 
     val createdDate: String,
-    @Json(name  = "providerServiceMapId")
+    @Json(name = "providerServiceMapId")
     val ProviderServiceMapID: Int,
-    @Json(name  = "vanId")
+    @Json(name = "vanId")
     val VanID: Int,
-    @Json(name  = "processed")
+    @Json(name = "processed")
     val Processed: String,
-    @Json(name  = "countryid")
+    @Json(name = "countryid")
     val Countyid: Int,
     val stateid: Int,
     val districtid: Int,
@@ -608,16 +617,16 @@ data class CbacPost(
     val villageid: Int,
 
     val hrp_suspected: Boolean,
-    @Json(name  = "suspectedHrp")
+    @Json(name = "suspectedHrp")
     val suspected_hrp: String,
     val ncd_suspected: String,
-    @Json(name  = "suspectedNcd")
+    @Json(name = "suspectedNcd")
     val suspected_ncd: String,
-    @Json(name  = "suspectedTb")
+    @Json(name = "suspectedTb")
     val suspected_tb: String,
-    @Json(name  = "suspectedNcdDiseases")
+    @Json(name = "suspectedNcdDiseases")
     val suspected_ncd_diseases: String,
-    @Json(name  = "BeneficiaryRegId")
+    @Json(name = "BeneficiaryRegId")
     val cbac_reg_id: Long,
 
     val ncd_suspected_cancer: Boolean,
@@ -629,120 +638,129 @@ data class CbacPost(
     val ncd_suspected_diabettis: Boolean,
 
     val ncd_confirmed: Boolean,
-    @Json(name  = "confirmedNcd")
+    @Json(name = "confirmedNcd")
     val confirmed_ncd: String,
-    @Json(name  = "confirmedHrp")
+    @Json(name = "confirmedHrp")
     val confirmed_hrp: String?,
-    @Json(name  = "confirmedTb")
+    @Json(name = "confirmedTb")
     val confirmed_tb: String?,
     val suspected_confirmed_tb: Boolean,
-    @Json(name  = "confirmedNcdDiseases")
+    @Json(name = "confirmedNcdDiseases")
     val confirmed_ncd_diseases: String?,
-    @Json(name  = "diagnosisStatus")
+    @Json(name = "diagnosisStatus")
     val diagnosis_status: String?,
-    @Json(name  = "cbacGrowthInMouth")
+    @Json(name = "cbacGrowthInMouth")
     val cbac_growth_in_mouth: String,
-    @Json(name  = "cbacGrowthInMouthPosi")
+    @Json(name = "cbacGrowthInMouthPosi")
     val cbac_growth_in_mouth_posi: Int,
+    @Json(name = "cbacWhiteOrRedPatch")
     val cbac_white_or_red_patch: String,
+    @Json(name = "cbacWhiteOrRedPatchPosi")
     val cbac_white_or_red_patch_posi: Int,
-    @Json(name  = "cbacPainWhileChewing")
+    @Json(name = "cbacPainWhileChewing")
     val cbac_Pain_while_chewing: String,
-    @Json(name  = "cbacPainWhileChewingPosi")
+    @Json(name = "cbacPainWhileChewingPosi")
     val cbac_Pain_while_chewing_posi: Int,
-    @Json(name  = "cbacHyperPigmentedPatch")
+    @Json(name = "cbacHyperPigmentedPatch")
     val cbac_hyper_pigmented_patch: String,
-    @Json(name  = "cbacHyperPigmentedPatchPosi")
+    @Json(name = "cbacHyperPigmentedPatchPosi")
     val cbac_hyper_pigmented_patch_posi: Int,
-    @Json(name  = "cbacAnyThickendSkin")
+    @Json(name = "cbacAnyThickendSkin")
     val cbac_any_thickend_skin: String,
-    @Json(name  = "cbacAnyThickendSkinPosi")
+    @Json(name = "cbacAnyThickendSkinPosi")
     val cbac_any_thickend_skin_posi: Int,
-    @Json(name  = "cbacNodulesOnSkin")
+    @Json(name = "cbacNodulesOnSkin")
     val cbac_nodules_on_skin: String,
-    @Json(name  = "cbacNodulesOnSkinPosi")
+    @Json(name = "cbacNodulesOnSkinPosi")
     val cbac_nodules_on_skin_posi: Int,
-    @Json(name  = "cbacNumbnessOnPalm")
+    @Json(name = "cbacNumbnessOnPalm")
     val cbac_numbness_on_palm: String,
-    @Json(name  = "cbacNumbnessOnPalmPosi")
+    @Json(name = "cbacNumbnessOnPalmPosi")
     val cbac_numbness_on_palm_posi: Int,
-    @Json(name  = "cbacClawingOfFingers")
+    @Json(name = "cbacTinglingPalm")
+    val cbac_rec_tingling: String,
+    @Json(name = "cbacTinglingPalmPosi")
+    val cbac_rec_tingling_posi: Int,
+
+    @Json(name = "cbacClawingOfFingers")
     val cbac_clawing_of_fingers: String,
-    @Json(name  = "cbacClawingOfFingersPosi")
+    @Json(name = "cbacClawingOfFingersPosi")
     val cbac_clawing_of_fingers_posi: Int,
-    @Json(name  = "cbacTinglingOrNumbness")
+    @Json(name = "cbacTinglingOrNumbness")
     val cbac_tingling_or_numbness: String,
-    @Json(name  = "cbacTinglingOrNumbnessPosi")
+    @Json(name = "cbacTinglingOrNumbnessPosi")
     val cbac_tingling_or_numbness_posi: Int,
-
+    @Json(name = "cbacCloudy")
     val cbac_cloudy: String,
-
+    @Json(name = "cbacCloudyPosi")
     val cbac_cloudy_posi: Int,
-
+    @Json(name = "cbacDiffreading")
     val cbac_diffreading: String,
-
+    @Json(name = "cbacDiffreadingPosi")
     val cbac_diffreading_posi: Int,
-
+    @Json(name = "cbacPainIneyes")
     val cbac_pain_ineyes: String,
-
+    @Json(name = "cbacPainIneyesPosi")
     val cbac_pain_ineyes_posi: Int,
-
+    @Json(name = "cbacRednessIneyes")
     val cbac_redness_ineyes: String,
-
+    @Json(name = "cbacRednessIneyesPosi")
     val cbac_redness_ineyes_posi: Int,
-
+    @Json(name = "cbacDiffInhearing")
     val cbac_diff_inhearing: String,
-
+    @Json(name = "cbacDiffInhearingPosi")
     val cbac_diff_inhearing_posi: Int,
-    @Json(name  = "cbacInabilityCloseEyelid")
+    @Json(name = "cbacInabilityCloseEyelid")
     val cbac_inability_close_eyelid: String,
-    @Json(name  = "cbacInabilityCloseEyelidPosi")
+    @Json(name = "cbacInabilityCloseEyelidPosi")
     val cbac_inability_close_eyelid_posi: Int,
-    @Json(name  = "cbacDiffHoldingObj")
+    @Json(name = "cbacDiffHoldingObj")
     val cbac_diff_holding_obj: String,
-    @Json(name  = "cbacDiffHoldingObjPosi")
+    @Json(name = "cbacDiffHoldingObjPosi")
     val cbac_diff_holding_obj_posi: Int,
-    @Json(name  = "cbacWeeknessInFeet")
+    @Json(name = "cbacWeeknessInFeet")
     val cbac_weekness_in_feet: String,
-    @Json(name  = "cbacWeeknessInFeetPosi")
+    @Json(name = "cbacWeeknessInFeetPosi")
     val cbac_weekness_in_feet_posi: Int,
-
+    @Json(name = "cbacFeelingUnsteady")
     val cbac_feeling_unsteady: String,
-
+    @Json(name = "cbacFeelingUnsteadyPosi")
     val cbac_feeling_unsteady_posi: Int,
-
+    @Json(name = "cbacSufferPhysicalDisability")
     val cbac_suffer_physical_disability: String,
-
+    @Json(name = "cbacSufferPhysicalDisabilityPosi")
     val cbac_suffer_physical_disability_posi: Int,
-
+    @Json(name = "cbacNeedingHelp")
     val cbac_needing_help: String,
-    @Json(name  = "cbacFuelUsed")
+    @Json(name = "cbacNeedingHelpPosi")
+    val cbac_needing_help_posi: Int,
+    @Json(name = "cbacForgettingNames")
+    val cbac_forgetting_names: String,
+    @Json(name = "cbacForgettingNamesPosi")
+    val cbac_forgetting_names_posi: Int,
+    @Json(name = "cbacFuelUsed")
     val cbac_fuel_used: String,
-    @Json(name  = "cbacFuelUsedPosi")
+    @Json(name = "cbacFuelUsedPosi")
     val cbac_fuel_used_posi: Int,
-    @Json(name  = "cbacOccupationalExposure")
+    @Json(name = "cbacOccupationalExposure")
     val cbac_occupational_exposure: String,
-    @Json(name  = "cbacOccupationalExposurePosi")
+    @Json(name = "cbacOccupationalExposurePosi")
     val cbac_occupational_exposure_posi: Int,
-    @Json(name  = "cbacLittleInterest")
+    @Json(name = "cbacLittleInterest")
     val cbac_little_interest: String,
-    @Json(name  = "cbacLittleInterestPosi")
+    @Json(name = "cbacLittleInterestPosi")
     val cbac_little_interest_posi: Int,
-    @Json(name  = "cbacFeelingDown")
+    @Json(name = "cbacFeelingDown")
     val cbac_feeling_down: String,
-    @Json(name  = "cbacFeelingDownPosi")
+    @Json(name = "cbacFeelingDownPosi")
     val cbac_feeling_down_posi: Int,
-    @Json(name  = "cbacLittleInterestScore")
+    @Json(name = "cbacLittleInterestScore")
     val cbac_little_interest_score: Int,
-    @Json(name  = "cbacFeelingDownScore")
+    @Json(name = "cbacFeelingDownScore")
     val cbac_feeling_down_score: Int,
 
-    val cbac_needing_help_posi: Int,
 
-    val cbac_forgetting_names: String,
-
-    val cbac_forgetting_names_posi: Int,
-)
+    )
 
 data class BenWithCbacCache(
 //    @ColumnInfo(name = "benId")

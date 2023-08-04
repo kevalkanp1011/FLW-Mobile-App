@@ -55,6 +55,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         id = 1,
         inputType = IMAGE_VIEW,
         title = context.getString(R.string.nbr_image),
+        subtitle = context.getString(R.string.nbr_image_sub),
         arrayId = -1,
         required = false
     )

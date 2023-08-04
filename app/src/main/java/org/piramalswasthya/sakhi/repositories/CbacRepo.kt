@@ -22,6 +22,7 @@ import javax.inject.Inject
 class CbacRepo @Inject constructor(
     @ApplicationContext context: Context,
     private val database: InAppDb,
+    private val userRepo: UserRepo,
     private val amritApiService: AmritApiService,
     private val prefDao: PreferenceDao
 ) {
@@ -82,7 +83,8 @@ class CbacRepo @Inject constructor(
 
     }
 
-    suspend fun pullAndPersistCbacRecord(page: Int) {
+
+    suspend fun pullAndPersistCbacRecord(page: Int = 0): Int {
         val userId = prefDao.getLoggedInUser()?.userId!!
         val response = amritApiService.getCbacs(
             userDetail =
@@ -93,8 +95,23 @@ class CbacRepo @Inject constructor(
                 toDate = BenRepo.getCurrentDate(System.currentTimeMillis())
             )
         )
-        val cbacList = response.body()?.string()?.let { getCbacCacheFromServerResponse(it) }
-        cbacList?.let { database.cbacDao.upsert(*it.toTypedArray()) }
+        val body = response.body()?.string()?.let { JSONObject(it) }
+        body?.getInt("statusCode")?.takeIf { it == 5002 }?.let {
+            val user = prefDao.getLoggedInUser()!!
+            userRepo.refreshTokenTmc(user.userName, user.password)
+            pullAndPersistCbacRecord(page)
+        }
+        val cbacList = body?.let {
+            getCbacCacheFromServerResponse(it)
+        }
+        cbacList?.filter { !database.cbacDao.sameCreateDateExists(it.createdDate) }?.let {
+            database.cbacDao.upsert(*it.toTypedArray())
+        }
+        return if (page == 0) body?.let { getNumPages(it) } ?: 0 else 0
+    }
+
+    private fun getNumPages(body: JSONObject): Int {
+        return body.getJSONObject("data").getInt("totalPage")
     }
 
     suspend fun pushAndUpdateCbacRecord() {
@@ -104,26 +121,42 @@ class CbacRepo @Inject constructor(
         val response = list.takeIf { it.isNotEmpty() }?.let {
             amritApiService.postCbacs(list = list)
         }
-        response?.body()?.string()?.let {
-            if (JSONObject(it).getString("status")=="Success") {
-                val cbacList = unProcessedList.map { it.cbac }
-                cbacList.forEach {cbac ->
-                    cbac.Processed = "P"
-                    cbac.syncState = SyncState.SYNCED
+        response?.body()?.string()?.let { body ->
+            val jsonBody = JSONObject(body)
+            val array = jsonBody.getJSONArray("data")
+            for (i in 0 until array.length()) {
+                val item = array.getJSONObject(i)
+                val isSuccess = item.getString("status") == "Success"
+                if (isSuccess) {
+                    val benId = item.getLong("benId")
+                    val createdDate = getLongFromDate(item.getString("createdDate"))
+                    unProcessedList.firstOrNull {
+                        compareLocalWithServer(
+                            it.cbac.createdDate,
+                            createdDate
+                        ) && it.cbac.benId == benId
+                    }
+                        ?.let {
+                            it.cbac.Processed = "P"
+                            it.cbac.syncState = SyncState.SYNCED
+                            database.cbacDao.update(it.cbac)
+                        }
                 }
-                database.cbacDao.update(*cbacList.toTypedArray())
-            }
-            else {
-
             }
         }
     }
 
-    private fun getCbacCacheFromServerResponse(response: String): MutableList<CbacCache> {
-        val jsonObj = JSONObject(response)
+    private fun compareLocalWithServer(local: Long, server: Long): Boolean {
+        val localRounded = local - local % 1000
+        val serverRemovingTimezoneOffset = server - 19_800_000
+        return localRounded == serverRemovingTimezoneOffset
+    }
+
+    private fun getCbacCacheFromServerResponse(body: JSONObject): MutableList<CbacCache> {
+        val jsonObj = body.getJSONObject("data")
         val result = mutableListOf<CbacCache>()
 
-        val responseStatusCode = jsonObj.getInt("statusCode")
+        val responseStatusCode = body.getInt("statusCode")
         if (responseStatusCode == 200) {
             val jsonArray = jsonObj.getJSONArray("data")
 
@@ -136,7 +169,7 @@ class CbacRepo @Inject constructor(
 //                    val hhId =
 //                        if (jsonObject.has("houseoldId")) jsonObject.getLong("houseoldId") else -1L
 //                    if (benId == -1L || hhId == -1L) continue
-                    if (benId==0L ||cbacDataObj.length() == 0) continue
+                    if (benId == 0L || jsonArray.length() == 0) continue
 
 
                     try {
@@ -147,7 +180,11 @@ class CbacRepo @Inject constructor(
                                 ashaId = prefDao.getLoggedInUser()?.userId
                                     ?: throw IllegalStateException("logged in user not found!"),
 //                                gender = ben.gender!!,
-                                fillDate = getLongFromDate(cbacDataObj.getString("createdDate")),
+                                fillDate = getLongFromDate(
+                                    if (cbacDataObj.has("filledDate")) cbacDataObj.getString(
+                                        "filledDate"
+                                    ) else cbacDataObj.getString("createdDate")
+                                ),
                                 cbac_age_posi = cbacDataObj.getInt("cbacAgePosi"),
                                 cbac_smoke_posi = cbacDataObj.getInt("cbacSmokePosi"),
                                 cbac_alcohol_posi = cbacDataObj.getInt("cbacAlcoholPosi"),
@@ -192,6 +229,41 @@ class CbacRepo @Inject constructor(
                                 cbac_feeling_down_posi = cbacDataObj.getInt("cbacFeelingDownPosi"),
                                 cbac_little_interest_score = cbacDataObj.getInt("cbacLittleInterestScore"),
                                 cbac_feeling_down_score = cbacDataObj.getInt("cbacFeelingDownScore"),
+//START TODO()
+                                cbac_tingling_palm_posi = if (cbacDataObj.has("cbacTinglingPalmPosi")) cbacDataObj.getInt(
+                                    "cbacTinglingPalmPosi"
+                                ) else 0,
+                                cbac_cloudy_posi = if (cbacDataObj.has("cbacCloudyPosi")) cbacDataObj.getInt(
+                                    "cbacCloudyPosi"
+                                ) else 0,
+                                cbac_white_or_red_patch_posi = if (cbacDataObj.has("cbacWhiteOrRedPatchPosi")) cbacDataObj.getInt(
+                                    "cbacWhiteOrRedPatchPosi"
+                                ) else 0,
+                                cbac_diffreading_posi = if (cbacDataObj.has("cbacDiffreadingPosi")) cbacDataObj.getInt(
+                                    "cbacDiffreadingPosi"
+                                ) else 0,
+                                cbac_pain_ineyes_posi = if (cbacDataObj.has("cbacPainIneyesPosi")) cbacDataObj.getInt(
+                                    "cbacPainIneyesPosi"
+                                ) else 0,
+                                cbac_redness_ineyes_posi = if (cbacDataObj.has("cbacRednessIneyesPosi")) cbacDataObj.getInt(
+                                    "cbacRednessIneyesPosi"
+                                ) else 0,
+                                cbac_diff_inhearing_posi = if (cbacDataObj.has("cbacDiffInhearingPosi")) cbacDataObj.getInt(
+                                    "cbacDiffInhearingPosi"
+                                ) else 0,
+                                cbac_feeling_unsteady_posi = if (cbacDataObj.has("cbacFeelingUnsteadyPosi")) cbacDataObj.getInt(
+                                    "cbacFeelingUnsteadyPosi"
+                                ) else 0,
+                                cbac_suffer_physical_disability_posi = if (cbacDataObj.has("cbacSufferPhysicalDisabilityPosi")) cbacDataObj.getInt(
+                                    "cbacSufferPhysicalDisabilityPosi"
+                                ) else 0,
+                                cbac_needing_help_posi = if (cbacDataObj.has("cbacNeedingHelpPosi")) cbacDataObj.getInt(
+                                    "cbacNeedingHelpPosi"
+                                ) else 0,
+                                cbac_forgetting_names_posi = if (cbacDataObj.has("cbacForgettingNamesPosi")) cbacDataObj.getInt(
+                                    "cbacForgettingNamesPosi"
+                                ) else 0,
+//END TODO()
                                 cbac_referpatient_mo = cbacDataObj.getInt("cbacReferpatientMo")
                                     .toString(),
                                 cbac_tracing_all_fm = cbacDataObj.getInt("cbacTracingAllFm")
@@ -221,6 +293,8 @@ class CbacRepo @Inject constructor(
                             )
                         )
                     } catch (e: JSONException) {
+                        Timber.i("Cbac skipped: ${cbacDataObj.getLong("beneficiaryId")} with error $e")
+                    } catch (e: Exception) {
                         Timber.i("Cbac skipped: ${cbacDataObj.getLong("beneficiaryId")} with error $e")
                     }
                 }

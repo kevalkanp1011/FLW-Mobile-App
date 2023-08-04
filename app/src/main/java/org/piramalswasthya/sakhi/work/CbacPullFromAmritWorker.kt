@@ -6,6 +6,8 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.repositories.CbacRepo
 
 @HiltWorker
@@ -17,8 +19,20 @@ class CbacPullFromAmritWorker @AssistedInject constructor(
     companion object {
         const val name = "Cbac-Pull"
     }
+
     override suspend fun doWork(): Result {
-        cbacRepo.pullAndPersistCbacRecord(page = 1)
-        return Result.success()
+        return withContext(Dispatchers.IO) {
+            return@withContext try {
+                val getNumPages: Int = cbacRepo.pullAndPersistCbacRecord()
+                if (getNumPages > 0) {
+                    (1..getNumPages).forEach {
+                        cbacRepo.pullAndPersistCbacRecord(it)
+                    }
+                }
+                Result.success()
+            } catch (e: Exception) {
+                Result.failure()
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ import org.json.JSONObject
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.room.dao.TBDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.TBScreeningCache
 import org.piramalswasthya.sakhi.model.TBSuspectedCache
 import org.piramalswasthya.sakhi.network.AmritApiService
@@ -61,10 +62,10 @@ class TBRepo @Inject constructor(
             try {
                 val response = tmcNetworkApiService.getTBScreeningData(
                     GetDataPaginatedRequest(
-                        user.userId,
-                        0,
-                        getCurrentDate(lastTimeStamp),
-                        getCurrentDate()
+                        ashaId = user.userId,
+                        pageNo = 0,
+                        fromDate = BenRepo.getCurrentDate(Konstants.defaultTimeStamp),
+                        toDate = getCurrentDate()
                     )
                 )
                 val statusCode = response.code()
@@ -144,10 +145,10 @@ class TBRepo @Inject constructor(
             try {
                 val response = tmcNetworkApiService.getTBSuspectedData(
                     GetDataPaginatedRequest(
-                        user.userId,
-                        0,
-                        getCurrentDate(lastTimeStamp),
-                        getCurrentDate()
+                        ashaId = user.userId,
+                        pageNo = 0,
+                        fromDate = BenRepo.getCurrentDate(Konstants.defaultTimeStamp),
+                        toDate = getCurrentDate()
                     )
                 )
                 val statusCode = response.code()
