@@ -1,9 +1,6 @@
 package org.piramalswasthya.sakhi.database.room.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import org.piramalswasthya.sakhi.model.*
 
@@ -31,4 +28,9 @@ interface MaternalHealthDao {
     @Query("select * from pregnancy_register reg left outer join pregnancy_anc anc on reg.benId=anc.benId ")
     fun getAllPregnancyRecords(): Flow<Map<PregnantWomanRegistrationCache, List<PregnantWomanAncCache>>>
 
+    @Query("SELECT * FROM pregnancy_anc WHERE processed = 'N'")
+    suspend fun getAllUnprocessedAncVisits(): List<PregnantWomanAncCache>
+
+    @Update
+    suspend fun updateANC(it: PregnantWomanAncCache)
 }

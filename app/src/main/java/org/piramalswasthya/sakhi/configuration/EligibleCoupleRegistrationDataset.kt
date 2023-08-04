@@ -760,10 +760,20 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                 -1
             }
             noOfChildren.id -> {
-                if (noOfChildren.value?.toInt() == 0) {
+                if (noOfChildren.value?.takeIf { !it.isNullOrEmpty() }?.toInt() == 0) {
                     noOfLiveChildren.value = "0"
+                    noOfLiveChildren.isEnabled = false
                     numMale.value = "0"
                     numFemale.value = "0"
+                }
+                else {
+                    noOfLiveChildren.max = noOfChildren.value?.takeIf { !it.isNullOrEmpty() }?.toLong()
+                    validateIntMinMax(noOfLiveChildren)
+                    validateIntMinMax(noOfChildren)
+                    if (noOfLiveChildren.value == "0") noOfLiveChildren.value = null
+                    noOfLiveChildren.isEnabled = true
+                    numMale.value = null
+                    numFemale.value = null
                 }
                 -1
             }
@@ -848,7 +858,10 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             }
 
             noOfLiveChildren.id -> {
-            when(noOfLiveChildren.value.takeIf { !it.isNullOrEmpty() }?.toInt()?:0) {
+                noOfChildren.min = noOfLiveChildren.value.takeIf { !it.isNullOrEmpty() }?.toLong()
+                validateIntMinMax(noOfLiveChildren)
+                validateIntMinMax(noOfChildren)
+                when(noOfLiveChildren.value.takeIf { !it.isNullOrEmpty() }?.toInt()?:0) {
                     0 -> triggerDependants(
                         source = numFemale,
                         addItems = listOf(),
@@ -862,7 +875,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                             eighthChildDetails, dob8, age8, gender8, seventhAndEighthChildGap,
                             ninthChildDetails, dob9, age9, gender9, eighthAndNinthChildGap)
                     )
-                1 -> triggerDependants(
+                    1 -> triggerDependants(
                         source = numFemale,
                         addItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap),
                         removeItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
@@ -1094,6 +1107,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                 numMale.value = maleChild.toString()
                 -1
             }
+
             else -> -1
         }
     }
@@ -1257,4 +1271,9 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         }
         return false
     }
+
+//    fun getIndexOfLiveChildren() = getIndexById(noOfChildren.id)
+//    fun getIndexOfIsPregnant() = getIndexById(noOfChildren.id)
+//    fun getIndexOfIsPregnant() = getIndexById(noOfChildren.id)
+//    fun getIndexOfIsPregnant() = getIndexById(noOfChildren.id)
 }

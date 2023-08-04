@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import org.piramalswasthya.sakhi.configuration.FormDataModel
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.getWeeksOfPregnancy
 
 
@@ -153,5 +154,7 @@ data class PregnantWomanAncCache(
     var maternalDeathProbableCauseId : Int = 0,
     var otherMaternalDeathProbableCause : String? = null,
     var deathDate : Long? = null,
-    var pregnantWomanDelivered : Boolean? = null
+    var pregnantWomanDelivered : Boolean? = null,
+    var processed: String? = "N",
+    var syncState: SyncState
 ) : FormDataModel

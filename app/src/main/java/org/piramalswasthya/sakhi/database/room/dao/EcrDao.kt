@@ -13,6 +13,9 @@ interface EcrDao {
     @Query("SELECT * FROM ELIGIBLE_COUPLE_REG WHERE processed = 'N'")
     suspend fun getAllUnprocessedECR(): List<EligibleCoupleRegCache>
 
+    @Query("SELECT * FROM ELIGIBLE_COUPLE_TRACKING WHERE processed = 'N'")
+    suspend fun getAllUnprocessedECT(): List<EligibleCoupleTrackingCache>
+
     @Query("select count(*) from ELIGIBLE_COUPLE_REG")
     suspend fun ecrCount(): Int
 
@@ -21,6 +24,9 @@ interface EcrDao {
 
     @Update
     suspend fun update(it: EligibleCoupleRegCache)
+
+    @Update
+    suspend fun updateEligibleCoupleTracking(it: EligibleCoupleTrackingCache)
 
     @Query("select * from eligible_couple_tracking where benId = :benId and CAST((strftime('%s','now') - visitDate/1000)/60/60/24 AS INTEGER) < 30 order by visitDate limit 1")
     fun getEct(benId : Long) : EligibleCoupleTrackingCache?

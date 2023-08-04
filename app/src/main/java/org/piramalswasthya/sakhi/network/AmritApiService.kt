@@ -1,16 +1,9 @@
 package org.piramalswasthya.sakhi.network
 
 import okhttp3.ResponseBody
-import org.piramalswasthya.sakhi.model.BeneficiaryDataSending
-import org.piramalswasthya.sakhi.model.CbacPost
-import org.piramalswasthya.sakhi.model.SendingRMNCHData
-import org.piramalswasthya.sakhi.model.UserNetworkResponse
+import org.piramalswasthya.sakhi.model.*
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface AmritApiService {
 
@@ -21,8 +14,7 @@ interface AmritApiService {
     @GET("flw-0.0.1/user/getUserDetail")
 //    @GET("user/getUserRole")
     suspend fun getUserDetailsById(
-        @Query("userId") userId: Int,
-//        @Query("roleId") roleId: Int = 526
+        @Query("userId") userId: Int
     ): UserNetworkResponse
 
     @POST("tmapi-v1.0/registrar/registrarBeneficaryRegistrationNew")
@@ -74,5 +66,29 @@ interface AmritApiService {
 
     @POST("fhirapi-v1.0/healthIDCard/verifyOTPAndGenerateHealthCard")
     suspend fun verifyOtpAndGenerateHealthCard(@Body validateOtpHid: ValidateOtpHid): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/couple/register/saveAll")
+    suspend fun postEcrForm(@Body ecrPostList: List<EcrPost>): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/couple/tracking/saveAll")
+    suspend fun postEctForm(@Body ecrPostList: List<EligibleCoupleTrackingCache>): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/couple/register/getAll")
+    suspend fun getEcrFormData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/couple/tracking/getAll")
+    suspend fun getEctFormData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/maternalCare/deliveryOutcome/saveAll")
+    suspend fun postDeliveryOutcomeForm(@Body deliveryOutcomeList: List<DeliveryOutcomeCache>): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/maternalCare/deliveryOutcome/getAll")
+    suspend fun getDeliverOutcomeData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/maternalCare/ancVisit/saveAll")
+    suspend fun postAncForm(@Body ecrPostList: List<PregnantWomanAncCache>): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/maternalCare/ancVisit/getAll")
+    suspend fun getAnvVisitsData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
 }

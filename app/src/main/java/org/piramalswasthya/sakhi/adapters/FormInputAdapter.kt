@@ -71,7 +71,7 @@ class FormInputAdapter(
         }
 
         fun bind(item: FormElement, isEnabled: Boolean, formValueListener: FormValueListener?) {
-            Timber.d("binding triggered!!!")
+            Timber.d("binding triggered!!! $isEnabled ${item.id}")
             if (!isEnabled) {
                 binding.et.isClickable = false
                 binding.et.isFocusable = false
@@ -80,6 +80,10 @@ class FormInputAdapter(
                 binding.et.setText(item.value)
                 binding.executePendingBindings()
                 return
+            }
+            else {
+                binding.et.isClickable = true
+                binding.et.isFocusable = true
             }
             binding.form = item
             Timber.d("Bound EditText item ${item.title} with ${item.required}")
