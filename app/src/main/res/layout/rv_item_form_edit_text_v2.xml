@@ -11,7 +11,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_normal">
 
         <TextView
             android:id="@+id/tv_hint"
@@ -20,7 +21,6 @@
             tools:text="TextView"
             android:text="@{form.title}"
             android:visibility="gone"
-            android:paddingTop="@dimen/padding_normal"
             android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,7 +33,6 @@
             android:layout_height="wrap_content"
             android:hint="@{form.title}"
             app:errorEnabled="true"
-            android:paddingBottom="@dimen/padding_small"
             app:layout_constraintEnd_toStartOf="@id/tv_nullable"
             app:layout_constraintStart_toStartOf="parent"
             app:endIconMode="custom"

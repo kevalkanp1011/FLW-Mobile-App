@@ -1004,8 +1004,29 @@ data class BenRegCache(
 //            menstrualBFDId = 0,
 //            menstrualProblemId = 0,
 //            lastMenstrualPeriod = getDateTimeStringFromLong(genDetails?.lastMenstrualPeriod),
-            reproductiveStatus = genDetails?.reproductiveStatus ?: "",
-            reproductiveStatusId = genDetails?.reproductiveStatusId ?: 0,
+            /**
+             * part of reproductive status id mapping on @since Aug 7
+             */
+            reproductiveStatusId = genDetails?.reproductiveStatusId?.let {
+                when (it) {
+                    0 -> 0
+                    1 -> 1
+                    2 -> 2
+                    3 -> 4
+                    4 -> 5
+                    else -> 6
+                }
+            } ?: 0,
+            reproductiveStatus = genDetails?.reproductiveStatusId?.let {
+                when (it) {
+                    0 -> ""
+                    1 -> "Eligible Couple"
+                    2 -> "Antenatal Mother"
+                    3 -> "Postnatal Mother-Lactating Mother"
+                    4 -> "Menopause Stage"
+                    else -> "Teenager"
+                }
+            } ?: "",
 //            noOfDaysForDelivery = if (genDetails?.reproductiveStatusId ==2) getNumDaysForDeliveryFromLastMenstrualPeriod(
 //                genDetails?.lastMenstrualPeriod
 //            ) else null,

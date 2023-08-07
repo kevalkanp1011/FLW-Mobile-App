@@ -804,8 +804,8 @@ class BenRepo @Inject constructor(
                                 ).toLong() else 0,
 //                            literacy = literacy,
                                 literacyId = if (benDataObj.has("literacyId")) benDataObj.getInt("literacyId") else 0,
-                                community = if (benDataObj.has("community")) benDataObj.getString("community") else null,
                                 communityId = if (benDataObj.has("communityId")) benDataObj.getInt("communityId") else 0,
+                                community = if (benDataObj.has("community")) benDataObj.getString("community") else null,
                                 religion = if (benDataObj.has("religion")) benDataObj.getString("religion") else null,
                                 religionId = if (benDataObj.has("religionID")) benDataObj.getInt("religionID") else 0,
                                 religionOthers = if (benDataObj.has("religionOthers") && benDataObj.getString(
@@ -1112,12 +1112,26 @@ class BenRepo @Inject constructor(
 //                                    "menstrualProblemId"
 //                                ) else 0,
 //                                lastMenstrualPeriod = lastMenstrualPeriod,
+                                    /**
+                                     * part of reproductive status id mapping on @since Aug 7
+                                     */
                                     reproductiveStatus = if (benDataObj.has("reproductiveStatus")) benDataObj.getString(
                                         "reproductiveStatus"
                                     ) else null,
-                                    reproductiveStatusId = if (benDataObj.has("reproductiveStatusId")) benDataObj.getInt(
-                                        "reproductiveStatusId"
-                                    ) else 0,
+                                    reproductiveStatusId = if (benDataObj.has("reproductiveStatusId")) {
+                                        val idFromServer = benDataObj.getInt(
+                                            "reproductiveStatusId"
+                                        )
+                                        when (idFromServer) {
+                                            0 -> 0
+                                            1 -> 1
+                                            2, 3 -> 2
+                                            4 -> 3
+                                            5 -> 4
+                                            6 -> 5
+                                            else -> 5
+                                        }
+                                    } else 0,
 //                                lastDeliveryConducted = lastDeliveryConducted,
 //                                lastDeliveryConductedId = if (benDataObj.has("lastDeliveryConductedID")) benDataObj.getInt(
 //                                    "lastDeliveryConductedID"

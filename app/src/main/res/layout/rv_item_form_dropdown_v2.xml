@@ -13,7 +13,7 @@
         android:id="@+id/cl_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/padding_normal">
+        android:padding="@dimen/padding_normal">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_rv_dropdown"
@@ -46,7 +46,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:paddingBottom="@dimen/padding_normal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_nullable"

@@ -266,9 +266,10 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
             "General",
             "SC",
             "ST",
-            "EBC",
+            "BC",
             "OBC",
-            "Not Given",
+            "OC",
+            "Not given",
         ),
         required = true
     )
@@ -1151,6 +1152,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
                     target = corticosteroidGivenAtLabor,
                 )
             }
+
             babyWeight.id -> {
                 validateDoubleMinMax(babyWeight)
             }

@@ -330,7 +330,13 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
     )
     private val community = FormElement(
         id = 21, inputType = DROPDOWN, title = "Community", arrayId = -1, entries = arrayOf(
-            "General", "SC", "ST", "EBC", "OBC", "Not given"
+            "General",
+            "SC",
+            "ST",
+            "BC",
+            "OBC",
+            "OC",
+            "Not given",
         ), required = true
     )
     private val religion = FormElement(
@@ -439,14 +445,14 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         hasDependants = true
     )
 
-    private val otherReproductiveStatus = FormElement(
-        id = 29,
-        inputType = EDIT_TEXT,
-        title = "Reproductive Status Other",
-        arrayId = -1,
-        required = true,
-        etMaxLength = 100
-    )
+//    private val otherReproductiveStatus = FormElement(
+//        id = 29,
+//        inputType = EDIT_TEXT,
+//        title = "Reproductive Status Other",
+//        arrayId = -1,
+//        required = true,
+//        etMaxLength = 100
+//    )
 
 //    private val nishchayKitDeliveryStatus = FormElement(
 //        id = 30,
@@ -786,7 +792,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
             reproductiveStatus.value = reproductiveStatus.getStringFromPosition(
                 saved.genDetails?.reproductiveStatusId ?: 0
             )
-            otherReproductiveStatus.value = saved.genDetails?.reproductiveStatus
+//            otherReproductiveStatus.value = saved.genDetails?.reproductiveStatus
 //            nishchayKitDeliveryStatus.value =
 //                nishchayKitDeliveryStatus.getStringFromPosition(saved.nishchayDeliveryStatusPosition)
 //            pregnancyTestResult.value =
@@ -812,7 +818,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
 //            }
 //            otherWhoConductedDelivery.value = saved.genDetails?.otherWhoConductedDelivery
         }
-        when (reproductiveStatus.value) {
+//        when (reproductiveStatus.value) {
 //            reproductiveStatus.entries!![1]/*, reproductiveStatus.entries!![2] */-> {
 //                lastMenstrualPeriod.required = true
 //                list.addAll(listOf(expectedDateOfDelivery, numPrevLiveBirthOrPregnancy))
@@ -822,10 +828,10 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
 //                list.remove(lastMenstrualPeriod)
 //                list.add(dateOfDelivery)
 //            }
-
-            reproductiveStatus.entries?.last() -> list.add(otherReproductiveStatus)
-            else -> {}
-        }
+//
+//            reproductiveStatus.entries?.last() -> list.add(otherReproductiveStatus)
+//            else -> {}
+//        }
 //        if (nishchayKitDeliveryStatus.value?.isNotEmpty() == true) {
 //            list.add(nishchayKitDeliveryStatus)
 //        }
@@ -1408,13 +1414,13 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
 //                )
 //            }
 
-            reproductiveStatus.id ->
-                triggerDependants(
-                    source = reproductiveStatus,
-                    passedIndex = index,
-                    triggerIndex = reproductiveStatus.entries!!.lastIndex,
-                    target = otherReproductiveStatus
-                )
+//            reproductiveStatus.id ->
+//                triggerDependants(
+//                    source = reproductiveStatus,
+//                    passedIndex = index,
+//                    triggerIndex = reproductiveStatus.entries!!.lastIndex,
+//                    target = otherReproductiveStatus
+//                )
             /*{
             lastMenstrualPeriod.value = null
             when (index) {
