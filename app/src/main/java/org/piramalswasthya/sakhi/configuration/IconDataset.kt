@@ -77,10 +77,12 @@ class IconDataset @Inject constructor(
                     HomeFragmentDirections.actionNavHomeToImmunizationDueFragment(),
                 ),
                 Icon(
-                    R.drawable.ic__hrp,
-                    resources.getString(R.string.icon_title_hrp),
-                    recordsRepo.hrpCount,
-                    HomeFragmentDirections.actionNavHomeToHrpCasesFragment()
+                    icon = R.drawable.ic__hrp,
+                    title = resources.getString(R.string.icon_title_hrp),
+                    count = recordsRepo.hrpCount,
+                    navAction = HomeFragmentDirections.actionNavHomeToHrpCasesFragment(),
+                    allowRedBorder = true
+
                 ),
                 Icon(
                     R.drawable.ic__general_op,

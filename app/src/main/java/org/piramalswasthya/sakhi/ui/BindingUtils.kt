@@ -62,8 +62,14 @@ fun Button.setVaccineState(syncState: VaccineState?) {
         visibility = View.VISIBLE
         when (it) {
             PENDING,
-            OVERDUE -> { text = "FILL" }
-            DONE -> { text = "VIEW" }
+            OVERDUE -> {
+                text = "FILL"
+            }
+
+            DONE -> {
+                text = "VIEW"
+            }
+
             MISSED,
             UNAVAILABLE -> {
                 visibility = View.GONE
@@ -73,25 +79,37 @@ fun Button.setVaccineState(syncState: VaccineState?) {
 }
 
 
-
-
-
-@BindingAdapter("scope", "recordCount")
-fun TextView.setRecordCount(scope: CoroutineScope, count: Flow<Int>?) {
+@BindingAdapter("allowRedBorder", "scope", "recordCount")
+fun TextView.setRecordCount(showRedBorder: Boolean, scope: CoroutineScope, count: Flow<Int>?) {
     count?.let {
         scope.launch {
             it.collect {
                 text = it.toString()
+                if (it > 0 && showRedBorder) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        setBackgroundColor(
+                            context.resources.getColor(
+                                android.R.color.holo_red_dark,
+                                context.theme
+                            )
+                        )
+                    } else
+                        setBackgroundColor(
+                            context.resources.getColor(
+                                android.R.color.holo_red_dark,
+                            )
+                        )
+                }
             }
         }
-    }?:run {
+    } ?: run {
         text = null
     }
 }
 
 @BindingAdapter("benId", "syncState")
 fun TextView.setBenIdText(benId: Long?, syncState: SyncState?) {
-    if(syncState!=SyncState.SYNCED)
+    if (syncState != SyncState.SYNCED)
         text = "Pending Sync"
     else
         text = benId.toString()
@@ -118,12 +136,14 @@ fun Button.setVisibilityOfLayout(show: Boolean?) {
         visibility = if (it) View.VISIBLE else View.GONE
     }
 }
+
 @BindingAdapter("showLayout")
 fun LinearLayout.setVisibilityOfLayout(show: Boolean?) {
     show?.let {
         visibility = if (it) View.VISIBLE else View.GONE
     }
 }
+
 @BindingAdapter("radioForm")
 fun ConstraintLayout.setItems(form: FormInputOld?) {
 //    if(this.childCount!=0)
@@ -290,10 +310,11 @@ fun Button.setAncState(ancFormState: AncFormState?) {
         }
     }
 }
+
 @BindingAdapter("cbac_list_avail")
 fun Button.setCbacListAvail(list: List<Any>?) {
     list?.let {
-        if(list.isEmpty())
+        if (list.isEmpty())
             visibility = View.INVISIBLE
         else
             visibility = View.VISIBLE

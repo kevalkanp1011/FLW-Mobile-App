@@ -9,7 +9,8 @@ data class Icon(
     val title: String,
     val count: Flow<Int>?,
     val navAction: NavDirections,
-    var colorPrimary : Boolean = true
+    var colorPrimary : Boolean = true,
+    val allowRedBorder : Boolean = false
 )
 data class ImmunizationIcon(
     val benId: Long,
@@ -17,6 +18,7 @@ data class ImmunizationIcon(
     val title: String,
     val count: Int,
     val maxCount: Int = 5,
+
 //    val typeOfList: TypeOfList
 )
 

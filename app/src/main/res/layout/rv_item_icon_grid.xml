@@ -75,6 +75,7 @@
 
             <TextView
                 android:id="@+id/tv_count"
+                allowRedBorder="@{homeIcon.allowRedBorder}"
                 recordCount="@{homeIcon.count}"
                 scope="@{scope}"
                 android:layout_width="wrap_content"
