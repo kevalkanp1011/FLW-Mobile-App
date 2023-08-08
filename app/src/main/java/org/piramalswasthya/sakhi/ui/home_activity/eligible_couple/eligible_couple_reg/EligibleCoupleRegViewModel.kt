@@ -109,4 +109,71 @@ class EligibleCoupleRegViewModel @Inject constructor(
         }
     }
 
+    fun getIndexOfChildren(): Int {
+        return dataset.getIndexOfChildren()
+    }
+
+    fun getIndexOfLiveChildren(): Int {
+        return dataset.getIndexOfLiveChildren()
+    }
+    fun getIndexOfMaleChildren(): Int {
+        return dataset.getIndexOfMaleChildren()
+    }
+    fun getIndexOfFeMaleChildren(): Int {
+        return dataset.getIndexOfFeMaleChildren()
+    }
+    fun getIndexOfAge1(): Int {
+        return dataset.getIndexOfAge1()
+    }
+    fun getIndexOfGap1(): Int {
+        return dataset.getIndexOfGap1()
+    }
+    fun getIndexOfAge2(): Int {
+        return dataset.getIndexOfAge2()
+    }
+    fun getIndexOfGap2(): Int {
+        return dataset.getIndexOfGap2()
+    }
+    fun getIndexOfAge3(): Int {
+        return dataset.getIndexOfAge3()
+    }
+    fun getIndexOfGap3(): Int {
+        return dataset.getIndexOfGap3()
+    }
+    fun getIndexOfAge4(): Int {
+        return dataset.getIndexOfAge4()
+    }
+    fun getIndexOfGap4(): Int {
+        return dataset.getIndexOfGap4()
+    }
+    fun getIndexOfAge5(): Int {
+        return dataset.getIndexOfAge5()
+    }
+    fun getIndexOfGap5(): Int {
+        return dataset.getIndexOfGap5()
+    }
+    fun getIndexOfAge6(): Int {
+        return dataset.getIndexOfAge6()
+    }
+    fun getIndexOfGap6(): Int {
+        return dataset.getIndexOfGap6()
+    }
+    fun getIndexOfAge7(): Int {
+        return dataset.getIndexOfAge7()
+    }
+    fun getIndexOfGap7(): Int {
+        return dataset.getIndexOfGap7()
+    }
+    fun getIndexOfAge8(): Int {
+        return dataset.getIndexOfAge8()
+    }
+    fun getIndexOfGap8(): Int {
+        return dataset.getIndexOfGap8()
+    }
+    fun getIndexOfAge9(): Int {
+        return dataset.getIndexOfAge9()
+    }
+    fun getIndexOfGap9(): Int {
+        return dataset.getIndexOfGap9()
+    }
 }

@@ -154,7 +154,7 @@ class TBScreeningDataset (
                 englishResources.getStringArray(R.array.nbr_reproductive_status_array)[1]
             it.reproductiveStatusId = 2
         }
-        benRegCache.processed = "U"
+        if (benRegCache.processed != "N") benRegCache.processed = "U"
     }
 
     fun isTbSuspected(): String? {

@@ -78,11 +78,13 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
                 _recordExists.value = false
             }
 
-            dataset.setUpPage(
-                ben,
-                if (recordExists.value == true) eligibleCoupleTracking else null
-            )
-
+            ecrRepo.getSavedRecord(benId)?.let {
+                dataset.setUpPage(
+                    ben,
+                    it.dateOfReg,
+                    if (recordExists.value == true) eligibleCoupleTracking else null
+                )
+            }
 
         }
     }
