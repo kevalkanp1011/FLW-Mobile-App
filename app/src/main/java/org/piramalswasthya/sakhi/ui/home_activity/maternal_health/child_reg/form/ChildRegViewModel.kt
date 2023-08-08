@@ -63,7 +63,7 @@ class ChildRegViewModel @Inject constructor(
                     "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
                 _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
                 infantReg = InfantRegCache(
-                    benId = ben.beneficiaryId,
+                    motherBenId = ben.beneficiaryId,
                     syncState = SyncState.UNSYNCED
                 )
             }

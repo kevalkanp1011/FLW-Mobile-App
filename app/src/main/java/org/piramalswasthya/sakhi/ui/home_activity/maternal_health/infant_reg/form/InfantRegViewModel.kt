@@ -1,7 +1,11 @@
 package org.piramalswasthya.sakhi.ui.home_activity.maternal_health.infant_reg.form
 
 import android.content.Context
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -67,7 +71,7 @@ class InfantRegViewModel @Inject constructor(
                     "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
                 _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
                 infantReg = InfantRegCache(
-                    benId = ben.beneficiaryId,
+                    motherBenId = ben.beneficiaryId,
                     syncState = SyncState.UNSYNCED
                 )
             }

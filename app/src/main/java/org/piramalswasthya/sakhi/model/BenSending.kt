@@ -83,8 +83,8 @@ data class BeneficiaryDataSending(
     @Json(name = "maritalStatusID")
     val maritalStatusID: String = "",
 
-//    @Json(name = "vanID")
-//    val vanID: Int = 0,
+    @Json(name = "vanID")
+    val vanID: Int = 4,
 
 
     @Json(name = "accountNo")

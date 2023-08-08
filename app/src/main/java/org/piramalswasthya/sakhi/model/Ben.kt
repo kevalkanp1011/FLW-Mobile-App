@@ -66,7 +66,8 @@ enum class Gender {
             " ect.benId is not null as ectFilled, " +
             " tbsn.benId is not null as tbsnFilled, tbsn.syncState as tbsnSyncState," +
             " tbsp.benId is not null as tbspFilled, tbsp.syncState as tbspSyncState, " +
-            " ir.benId is not null as irFilled, " +
+            " ir.motherBenId is not null as irFilled, " +
+            " cr.motherBenId is not null as crFilled, " +
             " do.benId is not null as doFilled " +
             "from BENEFICIARY b " +
             "JOIN HOUSEHOLD h ON b.householdId = h.householdId " +
@@ -83,7 +84,8 @@ enum class Gender {
             "LEFT OUTER JOIN TB_SCREENING tbsn on b.beneficiaryId = tbsn.benId " +
             "LEFT OUTER JOIN TB_SUSPECTED tbsp on b.beneficiaryId = tbsp.benId " +
             "LEFT OUTER JOIN DELIVERY_OUTCOME do on b.beneficiaryId = do.benId " +
-            "LEFT OUTER JOIN INFANT_REG ir on b.beneficiaryId = ir.benId " +
+            "LEFT OUTER JOIN INFANT_REG ir on b.beneficiaryId = ir.motherBenId " +
+            "LEFT OUTER JOIN CHILD_REG cr on b.beneficiaryId = cr.motherBenId " +
             "where b.isDraft = 0 GROUP BY b.beneficiaryId ORDER BY b.updatedDate DESC"
 )
 data class BenBasicCache(
@@ -124,6 +126,7 @@ data class BenBasicCache(
     val tbspSyncState: SyncState?,
     val isDelivered: Boolean,
     val irFilled: Boolean,
+    val crFilled: Boolean,
     val doFilled: Boolean,
 ) {
     companion object {
@@ -436,6 +439,26 @@ data class BenBasicCache(
     }
 
     fun asBenBasicDomainModelForInfantRegistrationForm(): BenBasicDomainForForm {
+        return BenBasicDomainForForm(
+            benId = benId,
+            hhId = hhId,
+            regDate = dateFormat.format(Date(regDate)),
+            benName = benName,
+            benSurname = benSurname ?: "Not Available",
+            gender = gender.name,
+            dob = dob,
+            mobileNo = mobileNo.toString(),
+            fatherName = fatherName,
+            familyHeadName = familyHeadName ?: "Not Available",
+//            typeOfList = typeOfList.name,
+            rchId = rchId ?: "Not Available",
+            hrpStatus = hrpStatus,
+            form1Filled = irFilled,
+            syncState = syncState
+        )
+    }
+
+    fun asBenBasicDomainModelForChildRegistrationForm(): BenBasicDomainForForm {
         return BenBasicDomainForForm(
             benId = benId,
             hhId = hhId,

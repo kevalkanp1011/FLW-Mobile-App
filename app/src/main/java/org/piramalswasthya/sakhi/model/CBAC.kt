@@ -453,7 +453,7 @@ data class CbacCache(
     fun asDomainModel(): CbacDomain {
         return CbacDomain(
             cbacId = this.id,
-            date = "Filled on ${getCbacCreatedDateFromLong(this.createdDate)}"
+            date = "Filled on ${getCbacCreatedDateFromLong(this.fillDate)}"
         )
     }
 

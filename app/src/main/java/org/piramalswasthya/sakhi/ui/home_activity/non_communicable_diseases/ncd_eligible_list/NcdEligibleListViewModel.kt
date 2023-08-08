@@ -21,13 +21,13 @@ class NcdEligibleListViewModel @Inject constructor(
 
 ) {
 
-    private lateinit var asha : User
+    private lateinit var asha: User
     private val allBenList = recordsRepo.getNcdEligibleList
     private val filter = MutableStateFlow("")
     private val selectedBenId = MutableStateFlow(0L)
     val benList = allBenList.combine(filter) { cacheList, filter ->
         val list = cacheList.map { it.asDomainModel() }
-        val benBasicDomainList = list.map { it.ben}
+        val benBasicDomainList = list.map { it.ben }
         val filteredBenBasicDomainList = filterBenList(benBasicDomainList, filter)
         list.filter { it.ben.benId in filteredBenBasicDomainList.map { it.benId } }
 
@@ -35,8 +35,9 @@ class NcdEligibleListViewModel @Inject constructor(
 
     val ncdDetails = allBenList.combineTransform(selectedBenId) { list, benId ->
         if (benId != 0L) {
-            val emitList = list.firstOrNull { it.ben.benId == benId }?.savedCbacRecords?.map { it.asDomainModel() }
-            if (!emitList.isNullOrEmpty()) emit(emitList)
+            val emitList =
+                list.firstOrNull { it.ben.benId == benId }?.savedCbacRecords?.map { it.asDomainModel() }
+            if (!emitList.isNullOrEmpty()) emit(emitList.reversed())
         }
     }
 
@@ -60,7 +61,7 @@ class NcdEligibleListViewModel @Inject constructor(
     }
 
     fun getSelectedBenId(): Long = selectedBenId.value
-    fun getAshaId(): Int  = asha.userId
+    fun getAshaId(): Int = asha.userId
 
 
 }

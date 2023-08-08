@@ -14,17 +14,17 @@ import org.piramalswasthya.sakhi.configuration.FormDataModel
     foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
         parentColumns = arrayOf("beneficiaryId"),
-        childColumns = arrayOf("benId"),
+        childColumns = arrayOf("motherBenId"),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "childRegInd", value = ["benId"])]
+    indices = [Index(name = "childRegInd", value = ["motherBenId"])]
 )
 
 data class ChildRegCache(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val benId: Long,
+    val motherBenId: Long,
     var babyName: String? = null,
     var infantTerm: String? = null,
     var corticosteroidGiven: String? = null,
@@ -44,7 +44,7 @@ data class ChildRegCache(
 ) : FormDataModel
 
 data class BenWithChildRegCache(
-    @Embedded
+    @Embedded(prefix = "ben_")
     val ben: BenBasicCache,
     @Relation(
         parentColumn = "benId", entityColumn = "benId", entity = ChildRegCache::class

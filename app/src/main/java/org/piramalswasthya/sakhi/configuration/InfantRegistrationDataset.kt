@@ -4,7 +4,13 @@ import android.content.Context
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.helpers.getWeeksOfPregnancy
-import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.DeliveryOutcomeCache
+import org.piramalswasthya.sakhi.model.FormElement
+import org.piramalswasthya.sakhi.model.Gender
+import org.piramalswasthya.sakhi.model.InfantRegCache
+import org.piramalswasthya.sakhi.model.InputType
+import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 
 class InfantRegistrationDataset(
     context: Context, currentLanguage: Languages
@@ -229,7 +235,7 @@ class InfantRegistrationDataset(
             babyName.value = saved.babyName
             infantTerm.value = saved.infantTerm
             corticosteroidGiven.value = saved.corticosteroidGiven
-            gender.value = saved.gender
+            gender.value = saved.gender?.let { gender.entries?.get(it.ordinal) }
             babyCriedAtBirth.value = if (saved.babyCriedAtBirth == true) "Yes" else "No"
             resuscitation.value = if (saved.resuscitation == true) "Yes" else "No"
             referred.value = saved.referred
@@ -289,7 +295,9 @@ class InfantRegistrationDataset(
             form.babyName = babyName.value
             form.infantTerm = infantTerm.value
             form.corticosteroidGiven = corticosteroidGiven.value
-            form.gender = gender.value
+            form.gender = gender.value?.let {
+                Gender.values()[gender.getPosition()-1]
+            }
             form.babyCriedAtBirth = babyCriedAtBirth.value == "Yes"
             form.resuscitation = resuscitation.value == "Yes"
             form.referred = referred.value

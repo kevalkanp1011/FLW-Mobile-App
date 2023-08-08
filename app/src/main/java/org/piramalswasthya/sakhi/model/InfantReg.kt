@@ -12,20 +12,20 @@ import org.piramalswasthya.sakhi.database.room.SyncState
     foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
         parentColumns = arrayOf("beneficiaryId"),
-        childColumns = arrayOf("benId"),
+        childColumns = arrayOf("motherBenId"),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "infRegInd", value = ["benId"])])
+    indices = [Index(name = "infRegInd", value = ["motherBenId"])])
 
 data class InfantRegCache (
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val benId : Long,
+    val motherBenId : Long,
     var babyName: String? = null,
     var infantTerm: String? = null,
     var corticosteroidGiven: String? = null,
-    var gender: String? = null,
+    var gender: Gender? = null,
     var babyCriedAtBirth: Boolean? = null,
     var resuscitation: Boolean? = null,
     var referred: String? = null,

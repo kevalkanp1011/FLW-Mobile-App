@@ -10,7 +10,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_imm_cat"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="300dp"
+
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="4"
         tools:listitem="@layout/rv_item_ncd_cbac_element" />

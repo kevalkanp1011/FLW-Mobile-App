@@ -4,7 +4,10 @@ import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
-import androidx.work.*
+import androidx.work.CoroutineWorker
+import androidx.work.ForegroundInfo
+import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
@@ -129,7 +132,7 @@ class PullFromAmritWorker @AssistedInject constructor(
         return withContext(Dispatchers.IO) {
             var page: Int = startPage + rem
 
-            try{while (page < numPages) {
+            try{while (page <= numPages) {
                 val ret = benRepo.getBeneficiariesFromServerForWorker(page)
 
                 if (ret == -1)

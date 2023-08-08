@@ -217,5 +217,7 @@ data class BenPost(
     @Json(name = "diagnosis_status")
     val diagnosis_status: String? = null,
 
+    @Json(name = "vanID")
+    val vanId: Int = 4,
 
     )

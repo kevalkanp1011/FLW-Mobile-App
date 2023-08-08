@@ -59,7 +59,7 @@ class ChildRegListFragment : Fragment() {
                     binding.flEmpty.visibility = View.VISIBLE
                 else
                     binding.flEmpty.visibility = View.GONE
-//                benAdapter.submitList(it)
+                benAdapter.submitList(it)
             }
         }
         val searchTextWatcher = object : TextWatcher {

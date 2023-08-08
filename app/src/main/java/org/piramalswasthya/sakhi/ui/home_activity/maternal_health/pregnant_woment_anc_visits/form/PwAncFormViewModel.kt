@@ -118,7 +118,7 @@ class PwAncFormViewModel @Inject constructor(
                     }
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
-                    Timber.d("saving PW-ANC data failed!!")
+                    Timber.d("saving PW-ANC data failed!! $e")
                     _state.postValue(State.SAVE_FAILED)
                 }
             }
