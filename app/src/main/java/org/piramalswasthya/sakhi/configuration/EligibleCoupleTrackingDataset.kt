@@ -41,7 +41,7 @@ class EligibleCoupleTrackingDataset (
         inputType = InputType.RADIO,
         title = "Is Pregnancy Test done?",
         entries = arrayOf("Yes", "No", "Don't Know"),
-        required = true,
+        required = false,
         hasDependants = true
     )
 
@@ -95,7 +95,7 @@ class EligibleCoupleTrackingDataset (
 
     fun getIndexOfIsPregnant() = getIndexById(isPregnant.id)
 
-    suspend fun setUpPage(ben: BenRegCache?, saved: EligibleCoupleTrackingCache?) {
+    suspend fun setUpPage(ben: BenRegCache?, dateOfReg : Long, saved: EligibleCoupleTrackingCache?) {
         val list = mutableListOf(
             dateOfVisit,
             financialYear,
@@ -111,9 +111,7 @@ class EligibleCoupleTrackingDataset (
                 month.value = resources.getStringArray(R.array.visit_months)[Companion.getMonth(it)!!]
             }
 
-            ben?.let {
-                dateOfVisit.min = it.regDate
-            }
+            dateOfVisit.min = dateOfReg
         } else {
             dateOfVisit.value = getDateFromLong(saved.visitDate)
             isPregnancyTestDone.value = saved.isPregnancyTestDone
@@ -192,6 +190,9 @@ class EligibleCoupleTrackingDataset (
                     target = anyOtherMethod
                 )
             }
+            anyOtherMethod.id -> {
+                validateAllAlphabetsSpaceOnEditText(anyOtherMethod)
+            }
 
             else -> -1
         }
@@ -218,6 +219,6 @@ class EligibleCoupleTrackingDataset (
                 englishResources.getStringArray(R.array.nbr_reproductive_status_array)[1]
             it.reproductiveStatusId = 2
         }
-        benRegCache.processed = "U"
+        if (benRegCache.processed != "N") benRegCache.processed = "U"
     }
 }

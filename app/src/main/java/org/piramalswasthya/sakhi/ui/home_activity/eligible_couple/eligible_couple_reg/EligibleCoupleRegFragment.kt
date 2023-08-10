@@ -100,52 +100,52 @@ class EligibleCoupleRegFragment : Fragment() {
         binding.form.rvInputForm.adapter?.apply {
             when (formId) {
                 17 -> {
-                    notifyItemChanged(18)
-                    notifyItemChanged(20)
+                    notifyItemChanged(viewModel.getIndexOfAge1())
+                    notifyItemChanged(viewModel.getIndexOfGap1())
                 }
                 22 -> {
-                    notifyItemChanged(23)
-                    notifyItemChanged(25)
+                    notifyItemChanged(viewModel.getIndexOfAge2())
+                    notifyItemChanged(viewModel.getIndexOfGap2())
                 }
                 27 -> {
-                    notifyItemChanged(28)
-                    notifyItemChanged(30)
+                    notifyItemChanged(viewModel.getIndexOfAge3())
+                    notifyItemChanged(viewModel.getIndexOfGap3())
                 }
                 32 -> {
-                    notifyItemChanged(33)
-                    notifyItemChanged(35)
+                    notifyItemChanged(viewModel.getIndexOfAge4())
+                    notifyItemChanged(viewModel.getIndexOfGap4())
                 }
                 37 -> {
-                    notifyItemChanged(38)
-                    notifyItemChanged(40)
+                    notifyItemChanged(viewModel.getIndexOfAge5())
+                    notifyItemChanged(viewModel.getIndexOfGap5())
                 }
                 42 -> {
-                    notifyItemChanged(43)
-                    notifyItemChanged(44)
+                    notifyItemChanged(viewModel.getIndexOfAge6())
+                    notifyItemChanged(viewModel.getIndexOfGap6())
                 }
                 47 -> {
-                    notifyItemChanged(48)
-                    notifyItemChanged(50)
+                    notifyItemChanged(viewModel.getIndexOfAge7())
+                    notifyItemChanged(viewModel.getIndexOfGap7())
                 }
                 52 -> {
-                    notifyItemChanged(53)
-                    notifyItemChanged(55)
+                    notifyItemChanged(viewModel.getIndexOfAge8())
+                    notifyItemChanged(viewModel.getIndexOfGap8())
                 }
                 57 -> {
-                    notifyItemChanged(58)
-                    notifyItemChanged(60)
+                    notifyItemChanged(viewModel.getIndexOfAge9())
+                    notifyItemChanged(viewModel.getIndexOfGap9())
                 }
                 12 -> {
-                    notifyItemChanged(13)
-                    notifyItemChanged(14)
-                    notifyItemChanged(15)
+                    notifyItemChanged(viewModel.getIndexOfLiveChildren())
+                    notifyItemChanged(viewModel.getIndexOfMaleChildren())
+                    notifyItemChanged(viewModel.getIndexOfFeMaleChildren())
                 }
                 19, 24, 29, 34, 39, 44, 49, 54, 59 -> {
-                    notifyItemChanged(14)
-                    notifyItemChanged(15)
+                    notifyItemChanged(viewModel.getIndexOfMaleChildren())
+                    notifyItemChanged(viewModel.getIndexOfFeMaleChildren())
                 }
                 13 -> {
-                    notifyItemChanged(12)
+                    notifyItemChanged(viewModel.getIndexOfChildren())
                 }
             }
         }

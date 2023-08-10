@@ -106,6 +106,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         etMaxLength = 2,
         max = Konstants.maxAgeForGenBen.toLong(),
         min = Konstants.minAgeForGenBen.toLong(),
+        isEnabled = false
     )
 
     private val womanDetails = FormElement(
@@ -148,7 +149,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         title = "Bank Name",
         arrayId = -1,
         required = false,
-        etMaxLength = 100
+        etMaxLength = 50
     )
 
     private val branchName = FormElement(
@@ -157,7 +158,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         title = "Branch Name",
         arrayId = -1,
         required = false,
-        etMaxLength = 100
+        etMaxLength = 50
     )
 
     private val ifsc = FormElement(
@@ -436,7 +437,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val fifthChildDetails = FormElement(
         id = 36,
         inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
-        title = "Details of 2nd Child",
+        title = "Details of 5th Child",
         arrayId = -1,
         required = false
     )
@@ -709,8 +710,22 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     suspend fun setUpPage(ben: BenRegCache?, saved: EligibleCoupleRegCache?) {
         val list = mutableListOf(
-            dateOfReg, rchId, name, husbandName, age, ageAtMarriage, womanDetails, aadharNo, bankAccount, bankName, branchName, ifsc,
-            noOfChildren, noOfLiveChildren, numMale, numFemale
+            dateOfReg,
+            rchId,
+//            name,
+            husbandName,
+//            age,
+            ageAtMarriage,
+            womanDetails,
+            aadharNo,
+            bankAccount,
+            bankName,
+            branchName,
+            ifsc,
+            noOfChildren,
+            noOfLiveChildren,
+            numMale,
+            numFemale
         )
         dateOfReg.value = getDateFromLong(System.currentTimeMillis())
 //        dateOfReg.value?.let {
@@ -724,29 +739,34 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             name.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
             husbandName.value = ben.genDetails?.spouseName
             age.value = BenBasicCache.getAgeFromDob(ben.dob).toString()
-            ageAtMarriage.value = ben.genDetails?.ageAtMarriage.toString()
+            ben.genDetails?.ageAtMarriage?.let { it1 ->
+                ageAtMarriage.value = it1.toString()
+                val cal = Calendar.getInstance()
+                cal.timeInMillis = ben.dob
+                cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + it1)
+                dob1.min = cal.timeInMillis
+            }
         }
         setUpPage(list)
 
     }
 
-//    private val firstPage by lazy {
-//        listOf(
-//            dateOfReg, rchId, name, husbandName, age, ageAtMarriage, womanDetails, aadharNo, bankAccount, bankName, branchName, ifsc,
-//            noOfChildren, noOfLiveChildren, numMale, numFemale, firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
-//            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap
-//        )
-//    }
-//
-//    suspend fun setPage(ecr: EligibleCoupleRegCache?) {
-//        setUpPage(firstPage)
-//        ecr?.let { saved ->
-//            dateOfReg.value = getDateFromLong(saved.dateOfReg)
-//        }
-//    }
-
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
+            aadharNo.id -> {validateIntMinMax(aadharNo)}
+            bankAccount.id -> {validateIntMinMax(bankAccount)}
+            bankName.id -> {
+                validateAllAlphaNumericSpaceOnEditText(bankName)
+            }
+
+            branchName.id -> {
+                validateAllAlphaNumericSpaceOnEditText(branchName)
+            }
+
+            ifsc.id -> {
+                validateAllAlphaNumericSpaceOnEditText(ifsc)
+            }
+
             ageAtMarriage.id -> {
                 if (ageAtMarriage.value.isNullOrEmpty()) {
                     validateEmptyOnEditText(ageAtMarriage)
@@ -755,27 +775,26 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                 ageAtMarriage.min = 14
                 ageAtMarriage.max = age.value?.toLong()
                 validateIntMinMax(ageAtMarriage)
-
-//                dob1.min = System.currentTimeMillis() -
                 -1
             }
             noOfChildren.id -> {
-                if (noOfChildren.value?.takeIf { !it.isNullOrEmpty() }?.toInt() == 0) {
+                if (noOfChildren.value.isNullOrEmpty() ||
+                    noOfChildren.value?.takeIf { it.isNotEmpty() }?.toInt() == 0) {
                     noOfLiveChildren.value = "0"
-                    noOfLiveChildren.isEnabled = false
+//                    noOfLiveChildren.isEnabled = false
                     numMale.value = "0"
                     numFemale.value = "0"
                 }
                 else {
-                    noOfLiveChildren.max = noOfChildren.value?.takeIf { !it.isNullOrEmpty() }?.toLong()
+                    noOfLiveChildren.max = noOfChildren.value?.takeIf { it.isNotEmpty() }?.toLong()
                     validateIntMinMax(noOfLiveChildren)
                     validateIntMinMax(noOfChildren)
                     if (noOfLiveChildren.value == "0") noOfLiveChildren.value = null
-                    noOfLiveChildren.isEnabled = true
+//                    noOfLiveChildren.isEnabled = true
                     numMale.value = null
                     numFemale.value = null
                 }
-                -1
+                handleListOnValueChanged(noOfLiveChildren.id, 0)
             }
             dob1.id -> {
                 assignValuesToAgeFromDob(getLongFromDate(dob1.value), age1)
@@ -783,32 +802,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                 dob2.min = getLongFromDate(dob1.value)
                 -1
             }
-//            age1.id -> {
-//
-//                if (age1.value.isNullOrEmpty()) {
-//                    validateEmptyOnEditText(age1)
-//                    return -1
-//                }
-//                age1.min = 1
-//                age1.max = 15
-//                validateIntMinMax(age1)
-//                if (age1.errorText == null) {
-//                    val cal = Calendar.getInstance()
-//                    cal.add(
-//                        Calendar.YEAR, -1 * age1.value!!.toInt()
-//                    )
-//                    val year = cal.get(Calendar.YEAR)
-//                    val month = cal.get(Calendar.MONTH) + 1
-//                    val day = cal.get(Calendar.DAY_OF_MONTH)
-//                    val newDob =
-//                        "${if (day > 9) day else "0$day"}-${if (month > 9) month else "0$month"}-$year"
-//                    if (dob1.value != newDob) {
-//                        dob1.value = newDob
-//                        dob1.errorText = null
-//                    }
-//                }
-//                -1
-//            }
+
             dob2.id -> {
                 assignValuesToAgeFromDob(getLongFromDate(dob2.value), age2)
                 setFirstChildAndSecondChildGap()
@@ -861,6 +855,21 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                 noOfChildren.min = noOfLiveChildren.value.takeIf { !it.isNullOrEmpty() }?.toLong()
                 validateIntMinMax(noOfLiveChildren)
                 validateIntMinMax(noOfChildren)
+                if (noOfLiveChildren.value.isNullOrEmpty()) {
+                    triggerDependants(
+                        source = numFemale,
+                        addItems = listOf(),
+                        removeItems = listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
+                            secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
+                            thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap,
+                            fourthChildDetails, dob4, age4, gender4, thirdAndFourthChildGap,
+                            fifthChildDetails, dob5, age5, gender5, fourthAndFifthChildGap,
+                            sixthChildDetails, dob6, age6, gender6, fifthAndSixthChildGap,
+                            seventhChildDetails, dob7, age7, gender7, sixthAndSeventhChildGap,
+                            eighthChildDetails, dob8, age8, gender8, seventhAndEighthChildGap,
+                            ninthChildDetails, dob9, age9, gender9, eighthAndNinthChildGap)
+                    )
+                }
                 when(noOfLiveChildren.value.takeIf { !it.isNullOrEmpty() }?.toInt()?:0) {
                     0 -> triggerDependants(
                         source = numFemale,
@@ -1272,8 +1281,31 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         return false
     }
 
-//    fun getIndexOfLiveChildren() = getIndexById(noOfChildren.id)
-//    fun getIndexOfIsPregnant() = getIndexById(noOfChildren.id)
-//    fun getIndexOfIsPregnant() = getIndexById(noOfChildren.id)
-//    fun getIndexOfIsPregnant() = getIndexById(noOfChildren.id)
+    fun getIndexOfChildren() = getIndexById(noOfChildren.id)
+
+    fun getIndexOfLiveChildren() = getIndexById(noOfLiveChildren.id)
+    fun getIndexOfMaleChildren() = getIndexById(numMale.id)
+    fun getIndexOfFeMaleChildren() = getIndexById(numFemale.id)
+    fun getIndexOfAge1() = getIndexById(age1.id)
+    fun getIndexOfGap1() = getIndexById(marriageFirstChildGap.id)
+    fun getIndexOfAge2() = getIndexById(age2.id)
+    fun getIndexOfGap2() = getIndexById(firstAndSecondChildGap.id)
+    fun getIndexOfAge3() = getIndexById(age3.id)
+    fun getIndexOfGap3() = getIndexById(secondAndThirdChildGap.id)
+    fun getIndexOfAge4() = getIndexById(age4.id)
+    fun getIndexOfGap4() = getIndexById(thirdAndFourthChildGap.id)
+    fun getIndexOfAge5() = getIndexById(age5.id)
+    fun getIndexOfGap5() = getIndexById(fourthAndFifthChildGap.id)
+
+    fun getIndexOfAge6() = getIndexById(age6.id)
+    fun getIndexOfGap6() = getIndexById(fifthAndSixthChildGap.id)
+
+    fun getIndexOfAge7() = getIndexById(age7.id)
+    fun getIndexOfGap7() = getIndexById(sixthAndSeventhChildGap.id)
+
+    fun getIndexOfAge8() = getIndexById(age8.id)
+    fun getIndexOfGap8() = getIndexById(seventhAndEighthChildGap.id)
+
+    fun getIndexOfAge9() = getIndexById(age9.id)
+    fun getIndexOfGap9() = getIndexById(eighthAndNinthChildGap.id)
 }
