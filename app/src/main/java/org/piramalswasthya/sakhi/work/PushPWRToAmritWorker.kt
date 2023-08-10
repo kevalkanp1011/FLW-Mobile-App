@@ -8,29 +8,25 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertTmcInterceptor
-import org.piramalswasthya.sakhi.repositories.BenRepo
-import org.piramalswasthya.sakhi.repositories.EcrRepo
 import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
 import timber.log.Timber
 import java.net.SocketTimeoutException
 
 @HiltWorker
-class PushToAmritWorker @AssistedInject constructor(
+class PushPWRToAmritWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted params: WorkerParameters,
-    private val benRepo: BenRepo,
-    private val ecrRepo: EcrRepo,
     private val maternalHealthRepo: MaternalHealthRepo,
     private val preferenceDao: PreferenceDao,
 ) : CoroutineWorker(appContext, params) {
     companion object {
-        const val name = "PushToAmritWorker"
+        const val name = "PushPWRToAmritWorker"
     }
     override suspend fun doWork(): Result {
         init()
         try {
 //            val workerResult = benRepo.syncUnprocessedRecords()
-            val workerResult = benRepo.processNewBen()
+            val workerResult = maternalHealthRepo.processNewAncVisit()
 //            val workerResult1 = ecrRepo.processUnsyncedEcr()
 //            val workerResult2 = maternalHealthRepo.processNewAncVisit()
             return if (workerResult /*&& workerResult1 && workerResult2*/) {

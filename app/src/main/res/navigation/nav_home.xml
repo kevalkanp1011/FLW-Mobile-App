@@ -782,7 +782,11 @@
     <fragment
         android:id="@+id/childRegFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.child_reg.form.ChildRegFragment"
-        android:label="ChildRegFragment" />
+        android:label="ChildRegFragment" >
+        <argument
+            android:name="motherBenId"
+            app:argType="long" />
+    </fragment>
     <fragment
         android:id="@+id/cdFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.communicable_diseases.CdFragment"

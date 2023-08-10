@@ -756,8 +756,8 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         title = "Weight at birth ( Kg )",
         arrayId = -1,
         required = false,
-        min = 0,
-        max = 10,
+        minDecimal = 0.0,
+        maxDecimal = 10.0,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL,
         etMaxLength = 4
     )

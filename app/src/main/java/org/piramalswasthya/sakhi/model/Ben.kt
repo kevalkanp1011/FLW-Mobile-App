@@ -714,7 +714,7 @@ data class BenRegKidNetwork(
     val updatedDate: String? = null,
 
     val ProviderServiceMapID: Int = 0,
-    val VanID: Int = 0,
+    val VanID: Int = 4,
     val Processed: String? = null,
     val Countyid: Int = 0,
     val stateid: Int = 0,

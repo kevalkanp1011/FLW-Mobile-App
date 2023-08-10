@@ -46,7 +46,7 @@ class ChildRegListFragment : Fragment() {
                 { hhId, benId ->
                     findNavController().navigate(
                         ChildRegListFragmentDirections.actionChildRegListFragmentToChildRegFragment(
-//                            benId
+                            benId
                         )
                     )
                 }), "Register"

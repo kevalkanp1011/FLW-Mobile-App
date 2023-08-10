@@ -395,7 +395,12 @@ class BenRepo @Inject constructor(
                 householdNetworkPostList.add(
                     householdDao.getHousehold(it.householdId)!!.asNetworkModel()
                 )
-                if (it.isKid) kidNetworkPostList.add(it.asKidNetworkModel())
+                try {
+                    if (it.isKid) kidNetworkPostList.add(it.asKidNetworkModel())
+                }catch (e : java.lang.Exception){
+                    Timber.d("caught error in adding kidDetails : $e")
+                }
+
 
             }
 //            val cbac = cbacDao.getAllUnprocessedCbac()

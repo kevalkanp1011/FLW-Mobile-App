@@ -495,15 +495,15 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
 
     protected fun validateDoubleMinMax(formElement: FormElement): Int {
         formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.toDouble()?.let {
-            formElement.min?.let { min ->
-                formElement.max?.let { max ->
+            formElement.minDecimal?.let { min ->
+                formElement.maxDecimal?.let { max ->
                     if (it < min) {
                         resources.getString(
-                            R.string.form_input_min_limit_error, formElement.title, min
+                            R.string.form_input_min_limit_error_decimal, formElement.title, min
                         )
                     } else if (it > max) {
                         resources.getString(
-                            R.string.form_input_max_limit_error, formElement.title, max
+                            R.string.form_input_max_limit_error_decimal, formElement.title, max
                         )
                     } else null
                 }
