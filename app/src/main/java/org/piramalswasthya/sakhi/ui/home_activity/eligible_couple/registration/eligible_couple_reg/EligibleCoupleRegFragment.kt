@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.eligible_couple_reg
+package org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.registration.eligible_couple_reg
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -38,6 +38,7 @@ class EligibleCoupleRegFragment : Fragment() {
         viewModel.recordExists.observe(viewLifecycleOwner) { notIt ->
             notIt?.let { recordExists ->
 //                binding.fabEdit.visibility = if(recordExists) View.VISIBLE else View.GONE
+                binding.btnSubmit.visibility = if(recordExists) View.GONE else View.VISIBLE
                 val adapter = FormInputAdapter(
                     formValueListener = FormInputAdapter.FormValueListener { formId, index ->
                         viewModel.updateListOnValueChanged(formId, index)

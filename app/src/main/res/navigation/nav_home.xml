@@ -661,7 +661,7 @@
 
     <fragment
         android:id="@+id/eligibleCoupleListFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.eligible_couple_list.EligibleCoupleListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.registration.eligible_couple_list.EligibleCoupleListFragment"
         android:label="Eligible Couple List" >
         <action
             android:id="@+id/action_eligibleCoupleListFragment_to_eligibleCoupleRegFragment"
@@ -669,7 +669,7 @@
     </fragment>
     <fragment
         android:id="@+id/eligibleCoupleRegFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.eligible_couple_reg.EligibleCoupleRegFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.registration.eligible_couple_reg.EligibleCoupleRegFragment"
         android:label="Eligible Couple Registration" >
         <argument
             android:name="benId"

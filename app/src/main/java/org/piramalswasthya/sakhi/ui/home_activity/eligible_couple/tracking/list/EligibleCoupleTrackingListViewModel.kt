@@ -7,25 +7,28 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.helpers.filterBenFormList
-import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
-import org.piramalswasthya.sakhi.repositories.EcrRepo
+import org.piramalswasthya.sakhi.helpers.filterBenList
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import javax.inject.Inject
 
 @HiltViewModel
 class EligibleCoupleTrackingListViewModel @Inject constructor(
     recordsRepo: RecordsRepo,
-    private var ecrRepo: EcrRepo
+//    private var ecrRepo: EcrRepo
 ) : ViewModel() {
 
-    val scope : CoroutineScope
+    val scope: CoroutineScope
         get() = viewModelScope
 
     private val allBenList = recordsRepo.eligibleCoupleTrackingList
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter) { list, filter ->
-        filterBenFormList(list, filter)
+        list.filter { domainList ->
+            domainList.ben.benId in filterBenList(
+                list.map { it.ben },
+                filter
+            ).map { it.benId }
+        }
     }
 
     fun filterText(text: String) {

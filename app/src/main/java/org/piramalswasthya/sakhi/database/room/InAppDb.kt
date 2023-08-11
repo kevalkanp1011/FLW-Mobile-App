@@ -5,8 +5,6 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.asExecutor
 import org.piramalswasthya.sakhi.database.converters.LocationEntityListConverter
 import org.piramalswasthya.sakhi.database.converters.SyncStateConverter
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
@@ -50,7 +48,6 @@ import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import org.piramalswasthya.sakhi.model.TBScreeningCache
 import org.piramalswasthya.sakhi.model.TBSuspectedCache
 import org.piramalswasthya.sakhi.model.Vaccine
-import timber.log.Timber
 
 @Database(
     entities = [
@@ -121,14 +118,14 @@ abstract class InAppDb : RoomDatabase() {
                         "Sakhi-2.0-In-app-database"
                     )
                         .fallbackToDestructiveMigration()
-                        .setQueryCallback(
-                            object : QueryCallback {
-                                override fun onQuery(sqlQuery: String, bindArgs: List<Any?>) {
-                                    Timber.d("Query to Room : sqlQuery=$sqlQuery with arguments : $bindArgs")
-                                }
-                            },
-                            Dispatchers.IO.asExecutor()
-                        )
+//                        .setQueryCallback(
+//                            object : QueryCallback {
+//                                override fun onQuery(sqlQuery: String, bindArgs: List<Any?>) {
+//                                    Timber.d("Query to Room : sqlQuery=$sqlQuery with arguments : $bindArgs")
+//                                }
+//                            },
+//                            Dispatchers.IO.asExecutor()
+//                        )
                         .build()
 
                     INSTANCE = instance

@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.eligible_couple_list
+package org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.registration.eligible_couple_list
 
 import android.os.Bundle
 import android.text.Editable

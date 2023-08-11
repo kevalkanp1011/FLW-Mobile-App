@@ -7,20 +7,21 @@ import androidx.room.PrimaryKey
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 @Entity(
     tableName = "ELIGIBLE_COUPLE_REG",
     foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
-        parentColumns = arrayOf("beneficiaryId",/* "householdId"*/),
-        childColumns = arrayOf("benId", /*"hhId"*/),
+        parentColumns = arrayOf("beneficiaryId"/* "householdId"*/),
+        childColumns = arrayOf("benId" /*"hhId"*/),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "ecrInd", value = ["benId",/* "hhId"*/])])
+    indices = [Index(name = "ecrInd", value = ["benId"/* "hhId"*/])]
+)
 
-data class EligibleCoupleRegCache (
+data class EligibleCoupleRegCache(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val benId: Long,
@@ -77,8 +78,12 @@ data class EligibleCoupleRegCache (
     var gender9: Gender? = null,
     var eighthAndNinthChildGap: Int? = 0,
     var processed: String? = "N",
+    var createdBy: String,
+    val createdDate: Long = System.currentTimeMillis(),
+    var updatedBy: String,
+    val updatedDate: Long = System.currentTimeMillis(),
     var syncState: SyncState
-): FormDataModel {
+) : FormDataModel {
     fun asPostModel(): EcrPost {
         return EcrPost(
             benId = benId,

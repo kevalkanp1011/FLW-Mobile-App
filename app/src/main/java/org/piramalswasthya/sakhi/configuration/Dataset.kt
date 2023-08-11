@@ -53,11 +53,11 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
             return date?.time ?: 0L
         }
 
-        fun getFinancialYear(dateString: String?) : String? {
+        fun getFinancialYear(dateString: String?): String? {
             val f = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
             val date = dateString?.let { f.parse(it) }
             return date?.let {
-                if (it.month >=3) {
+                if (it.month >= 3) {
                     "" + (it.year + 1900) + " - " + (it.year + 1902)
                 } else {
                     "" + (it.year + 1899) + " - " + (it.year + 1901)
@@ -65,7 +65,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
             }
         }
 
-        fun getMonth(dateString: String?) : Int? {
+        fun getMonth(dateString: String?): Int? {
             val f = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
             val date = dateString?.let { f.parse(it) }
             return (date?.month?.minus(1))
@@ -376,7 +376,6 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         }.timeInMillis
 
 
-
     protected suspend fun emitAlertErrorMessage(
         @StringRes errorMessage: Int
     ) {
@@ -427,7 +426,8 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         val yearsDiff = getDiffYears(calDob, calNow)
         if (yearsDiff > 0) {
             ageElement.value = yearsDiff.toString()
-        }
+        }else
+            ageElement.value = "0"
         return -1
     }
 
@@ -453,7 +453,8 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
             ?: false
 
     private fun String.isAllAlphaNumericAndSpace() =
-        takeIf { it.isNotEmpty() }?.toCharArray()?.all { it.isWhitespace() || it.isLetter() || it.isDigit() }
+        takeIf { it.isNotEmpty() }?.toCharArray()
+            ?.all { it.isWhitespace() || it.isLetter() || it.isDigit() }
             ?: false
 
     protected fun validateAllCapsOrSpaceOnEditText(formElement: FormElement): Int {
@@ -558,8 +559,6 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
             it.value = value
         }
     }
-
-
 
 
 }

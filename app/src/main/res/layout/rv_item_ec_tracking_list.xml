@@ -6,12 +6,12 @@
     <data>
 
         <variable
-            name="visit"
-            type="org.piramalswasthya.sakhi.model.PregnantWomenVisitDomain" />
+            name="item"
+            type="org.piramalswasthya.sakhi.model.BenWithEctListDomain" />
 
         <variable
             name="clickListener"
-            type="org.piramalswasthya.sakhi.adapters.AncVisitListAdapter.PregnancyVisitClickListener" />
+            type="org.piramalswasthya.sakhi.adapters.ECTrackingListAdapter.ECTrackListClickListener" />
 
     </data>
 
@@ -39,121 +39,146 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_spouse_name_ph"
+                        android:layout_width="match_parent"
+
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:paddingVertical="@dimen/padding_normal"
+                        android:text="ID"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+                        android:textColor="?attr/colorOnPrimary" />
+
+                    <TextView
+                        android:id="@+id/tv_spouse_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_spouse_name_ph"
+                        android:text="@{@string/long_to_string(item.benId)}"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:textColor="?attr/colorOnPrimary"
+                        tools:text="TextView" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+
                     <TextView
                         android:id="@+id/tv_name_ph"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:text="Beneficiary Name"
                         android:paddingVertical="@dimen/padding_normal"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
+                        android:text="Name"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+                        android:textColor="?attr/colorOnPrimary" />
+
                     <TextView
                         android:id="@+id/tv_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{visit.name}"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                         android:layout_below="@id/tv_name_ph"
-                        tools:text="TextView" />
-
-
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
-                    <TextView
-                        android:id="@+id/tv_spouse_name_ph"
-                        android:paddingVertical="@dimen/padding_normal"
-
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:text="Husband's Name"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
-                    <TextView
-                        android:id="@+id/tv_spouse_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@{visit.spouseName}"
-                        android:textColor="?attr/colorOnPrimary"
+                        android:text="@{item.ben.benFullName}"
                         android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                        android:layout_below="@id/tv_spouse_name_ph"
+                        android:textColor="?attr/colorOnPrimary"
                         tools:text="TextView" />
 
+
                 </LinearLayout>
+
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
                     <TextView
                         android:id="@+id/tv_age_ph"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:paddingVertical="@dimen/padding_normal"
                         android:layout_weight="1"
+                        android:paddingVertical="@dimen/padding_normal"
                         android:text="Age"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
+                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+                        android:textColor="?attr/colorOnPrimary" />
+
                     <TextView
                         android:id="@+id/ttv_age_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{visit.age}"
-                        android:layout_gravity="bottom"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                         android:layout_below="@id/tv_age_ph"
+                        android:layout_gravity="bottom"
+                        android:text="@{item.ben.age}"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:textColor="?attr/colorOnPrimary"
                         tools:text="TextView" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
                     <TextView
                         android:id="@+id/tv_weeks_of_pregnancy_ph"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:text="Weeks Of Pregnancy"
                         android:paddingVertical="@dimen/padding_normal"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
+                        android:text="No.of Children"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+                        android:textColor="?attr/colorOnPrimary" />
+
                     <TextView
                         android:id="@+id/tv_weeks_of_pregnancy"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{@string/long_to_string(visit.weeksOfPregnancy)}"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                         android:layout_below="@id/tv_weeks_of_pregnancy_ph"
+                        android:text="@{item.numChildren}"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                        android:textColor="?attr/colorOnPrimary"
                         tools:text="TextView" />
                 </LinearLayout>
 
             </LinearLayout>
 
             <Button
-                android:id="@+id/btn_visit"
+                android:id="@+id/btn_view_all_tracks"
+                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_marginTop="@dimen/padding_normal"
 
-                android:onClick="@{() -> clickListener.onClickedVisit(visit)}"
-                android:text="ANC VISITS"
+                android:onClick="@{() -> clickListener.onClickedShowAllTracks(item.benId)}"
+                android:text="View Trackings"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+            <Button
+                android:id="@+id/btn_add"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_normal"
+
+                android:onClick="@{() -> clickListener.onClickedAdd(item.benId)}"
+                android:text="Add Tracking"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
 

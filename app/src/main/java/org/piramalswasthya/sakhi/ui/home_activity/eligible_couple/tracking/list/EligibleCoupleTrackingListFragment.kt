@@ -14,7 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
+import org.piramalswasthya.sakhi.adapters.ECTrackingListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 
 @AndroidEntryPoint
@@ -39,18 +39,27 @@ class EligibleCoupleTrackingListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapterForForm(
-            BenListAdapterForForm.ClickListener(
-                {
-                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
-                },
-                { hhId, benId ->
-                    findNavController().navigate(
-                        EligibleCoupleTrackingListFragmentDirections.actionEligibleCoupleTrackingListFragmentToEligibleCoupleTrackingFormFragment(
-                            benId
-                        )
+        val benAdapter = ECTrackingListAdapter(
+            ECTrackingListAdapter.ECTrackListClickListener(addNewTrack = {
+                findNavController().navigate(
+                    EligibleCoupleTrackingListFragmentDirections.actionEligibleCoupleTrackingListFragmentToEligibleCoupleTrackingFormFragment(
+                        it
                     )
-                }), "Track"
+                )
+            }, showAllTracks = {
+                Toast.makeText(context, " Yet to impleteme.t", Toast.LENGTH_SHORT).show()
+            })
+//            BenListAdapterForForm.ClickListener(
+//                {
+//                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
+//                },
+//                { hhId, benId ->
+//                    findNavController().navigate(
+//                        EligibleCoupleTrackingListFragmentDirections.actionEligibleCoupleTrackingListFragmentToEligibleCoupleTrackingFormFragment(
+//                            benId
+//                        )
+//                    )
+//                }), "Track"
         )
         binding.rvAny.adapter = benAdapter
 
