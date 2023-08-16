@@ -83,6 +83,9 @@ object WorkerUtils {
         val pullTBWorkRequest = OneTimeWorkRequestBuilder<PullTBFromAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
+        val pullECWorkRequest = OneTimeWorkRequestBuilder<PullECFromAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
         val setSyncCompleteWorker = OneTimeWorkRequestBuilder<UpdatePrefForPullCompleteWorker>()
             .build()
         val workManager = WorkManager.getInstance(context)
@@ -90,6 +93,7 @@ object WorkerUtils {
             .beginUniqueWork(syncWorkerUniqueName, ExistingWorkPolicy.APPEND_OR_REPLACE, pullWorkRequest)
             .then(pullCbacWorkRequest)
             .then(pullTBWorkRequest)
+            .then(pullECWorkRequest)
             .then(setSyncCompleteWorker)
             .enqueue()
     }

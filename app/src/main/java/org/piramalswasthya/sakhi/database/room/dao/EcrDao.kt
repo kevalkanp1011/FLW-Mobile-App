@@ -33,5 +33,9 @@ interface EcrDao {
     fun getEct(benId: Long, visitDate : Long): EligibleCoupleTrackingCache?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveRecord(eligibleCoupleTrackingCache: EligibleCoupleTrackingCache)
+    suspend fun upsert(vararg eligibleCoupleTrackingCache: EligibleCoupleTrackingCache)
+
+    @Query("select count(*)>0 from eligible_couple_tracking where createdDate=:createdDate")
+    suspend fun ectWithsameCreateDateExists(createdDate: Long): Boolean
+
 }

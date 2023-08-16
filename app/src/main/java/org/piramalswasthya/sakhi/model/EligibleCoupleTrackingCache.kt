@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import com.squareup.moshi.JsonClass
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
 import java.text.SimpleDateFormat
@@ -33,10 +34,45 @@ data class EligibleCoupleTrackingCache(
     var isPregnant: String? = null,
     var usingFamilyPlanning: Boolean? = null,
     var methodOfContraception: String? = null,
+    val createdBy: String,
+    val createdDate: Long = System.currentTimeMillis(),
+    val updatedBy: String,
+    val updatedDate: Long = System.currentTimeMillis(),
     var processed: String? = "N",
     var syncState: SyncState
-) : FormDataModel
+) : FormDataModel {
 
+    fun asNetworkModel(): ECTNetwork {
+        return ECTNetwork(
+            benId = benId,
+            visitDate = getDateTimeStringFromLong(visitDate)!!,
+            isPregnancyTestDone = isPregnancyTestDone,
+            pregnancyTestResult = pregnancyTestResult,
+            isPregnant = isPregnant,
+            usingFamilyPlanning = usingFamilyPlanning,
+            methodOfContraception = methodOfContraception,
+            createdBy = createdBy,
+            createdDate = getDateTimeStringFromLong(createdDate)!!,
+            updatedBy = updatedBy,
+            updatedDate = getDateTimeStringFromLong(updatedDate)!!,
+        )
+    }
+}
+
+@JsonClass(generateAdapter = true)
+data class ECTNetwork(
+    val benId: Long,
+    val visitDate: String,
+    val isPregnancyTestDone: String?,
+    val pregnancyTestResult: String?,
+    val isPregnant: String?,
+    val usingFamilyPlanning: Boolean?,
+    val methodOfContraception: String?,
+    val createdBy: String,
+    val createdDate: String,
+    val updatedBy: String,
+    val updatedDate: String,
+)
 
 data class BenWithEcTrackingCache(
 //    @ColumnInfo(name = "benId")

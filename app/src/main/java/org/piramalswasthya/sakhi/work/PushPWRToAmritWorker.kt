@@ -27,7 +27,7 @@ class PushPWRToAmritWorker @AssistedInject constructor(
         try {
 //            val workerResult = benRepo.syncUnprocessedRecords()
             val workerResult = maternalHealthRepo.processNewAncVisit()
-//            val workerResult1 = ecrRepo.processUnsyncedEcr()
+//            val workerResult1 = ecrRepo.pushAndUpdateEcrRecord()
 //            val workerResult2 = maternalHealthRepo.processNewAncVisit()
             return if (workerResult /*&& workerResult1 && workerResult2*/) {
                 Timber.d("Worker completed")

@@ -2,11 +2,13 @@ package org.piramalswasthya.sakhi.repositories
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.EcrPost
 import org.piramalswasthya.sakhi.model.EligibleCoupleRegCache
@@ -26,16 +28,16 @@ class EcrRepo @Inject constructor(
     private val database: InAppDb,
     private val preferenceDao: PreferenceDao,
     private val tmcNetworkApiService: AmritApiService
-)  {
+) {
 
     suspend fun persistRecord(ecrForm: EligibleCoupleRegCache) {
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             database.ecrDao.upsert(ecrForm)
         }
     }
 
     suspend fun getBenFromId(benId: Long): BenRegCache? {
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             database.benDao.getBen(benId)
         }
     }
@@ -46,25 +48,21 @@ class EcrRepo @Inject constructor(
         }
     }
 
-    suspend fun getEct(benId: Long, visitDate : Long): EligibleCoupleTrackingCache? {
+    suspend fun getEct(benId: Long, visitDate: Long): EligibleCoupleTrackingCache? {
         return withContext(Dispatchers.IO) {
             database.ecrDao.getEct(benId, visitDate)
         }
     }
 
     suspend fun saveEct(eligibleCoupleTrackingCache: EligibleCoupleTrackingCache) {
-        withContext(Dispatchers.IO){
-            database.ecrDao.saveRecord(eligibleCoupleTrackingCache)
+        withContext(Dispatchers.IO) {
+            database.ecrDao.upsert(eligibleCoupleTrackingCache)
         }
     }
 
-    suspend fun processUnsyncedEcr(): Boolean {
+    suspend fun pushAndUpdateEcrRecord(): Boolean {
         return withContext(Dispatchers.IO) {
-            val user = preferenceDao.getLoggedInUser()
-                ?: throw IllegalStateException("No user logged in!!")
-
             val ecrList = database.ecrDao.getAllUnprocessedECR()
-
             val ecrPostList = mutableSetOf<EcrPost>()
 
             ecrList.forEach {
@@ -74,7 +72,7 @@ class EcrRepo @Inject constructor(
                 ecrPostList.add(it.asPostModel())
                 it.syncState = SyncState.SYNCING
                 database.ecrDao.update(it)
-                val uploadDone = postDataToAmritServer(ecrPostList)
+                val uploadDone = postECRDataToAmritServer(ecrPostList)
                 if (uploadDone) {
                     it.processed = "P"
                     it.syncState = SyncState.SYNCED
@@ -88,12 +86,11 @@ class EcrRepo @Inject constructor(
         }
     }
 
-    private suspend fun postDataToAmritServer(ecrPostList: MutableSet<EcrPost>): Boolean {
+    private suspend fun postECRDataToAmritServer(ecrPostList: MutableSet<EcrPost>): Boolean {
         if (ecrPostList.isEmpty()) return false
 
         val user =
-            preferenceDao.getLoggedInUser()
-                ?: throw IllegalStateException("No user logged in!!")
+            preferenceDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
 
         try {
 
@@ -115,12 +112,14 @@ class EcrRepo @Inject constructor(
                                 Timber.d("Saved Successfully to server")
                                 return true
                             }
+
                             5002 -> {
                                 if (userRepo.refreshTokenTmc(
                                         user.userName, user.password
                                     )
                                 ) throw SocketTimeoutException()
                             }
+
                             else -> {
                                 throw IOException("Throwing away IO eXcEpTiOn")
                             }
@@ -138,14 +137,14 @@ class EcrRepo @Inject constructor(
             return false
         } catch (e: SocketTimeoutException) {
             Timber.d("Caught exception $e here")
-            return postDataToAmritServer(ecrPostList)
+            return postECRDataToAmritServer(ecrPostList)
         } catch (e: JSONException) {
             Timber.d("Caught exception $e here")
             return false
         }
     }
 
-    suspend fun processNewEct(): Boolean {
+    suspend fun pushAndUpdateEctRecord(): Boolean {
         return withContext(Dispatchers.IO) {
             val user = preferenceDao.getLoggedInUser()
                 ?: throw IllegalStateException("No user logged in!!")
@@ -156,12 +155,10 @@ class EcrRepo @Inject constructor(
 
             ectList.forEach {
                 ectPostList.clear()
-                val ben = database.benDao.getBen(it.benId)
-                    ?: throw IllegalStateException("No beneficiary exists for benId: ${it.benId}!!")
                 ectPostList.add(it)
                 it.syncState = SyncState.SYNCING
                 database.ecrDao.updateEligibleCoupleTracking(it)
-                val uploadDone = postEctDataToAmritServer(ectPostList)
+                val uploadDone = postECTDataToAmritServer(ectPostList)
                 if (uploadDone) {
                     it.processed = "P"
                     it.syncState = SyncState.SYNCED
@@ -175,14 +172,15 @@ class EcrRepo @Inject constructor(
         }
     }
 
-    private suspend fun postEctDataToAmritServer(ectPostList: MutableSet<EligibleCoupleTrackingCache>): Boolean {
+    private suspend fun postECTDataToAmritServer(ectPostList: MutableSet<EligibleCoupleTrackingCache>): Boolean {
         if (ectPostList.isEmpty()) return false
 
-        val user = preferenceDao.getLoggedInUser()
-            ?: throw IllegalStateException("No user logged in!!")
+        val user =
+            preferenceDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
         try {
 
-            val response = amritApiService.postEctForm(ectPostList.toList())
+            val response =
+                amritApiService.postEctForm(ectPostList.toList().map { it.asNetworkModel() })
             val statusCode = response.code()
 
             if (statusCode == 200) {
@@ -200,12 +198,14 @@ class EcrRepo @Inject constructor(
                                 Timber.d("Saved Successfully to server")
                                 return true
                             }
+
                             5002 -> {
                                 if (userRepo.refreshTokenTmc(
                                         user.userName, user.password
                                     )
                                 ) throw SocketTimeoutException()
                             }
+
                             else -> {
                                 throw IOException("Throwing away IO eXcEpTiOn")
                             }
@@ -223,26 +223,22 @@ class EcrRepo @Inject constructor(
             return false
         } catch (e: SocketTimeoutException) {
             Timber.d("Caught exception $e here")
-            return postEctDataToAmritServer(ectPostList)
+            return postECTDataToAmritServer(ectPostList)
         } catch (e: JSONException) {
             Timber.d("Caught exception $e here")
             return false
         }
     }
 
-    suspend fun getECRDetailsFromServer(): Int {
+    suspend fun pullAndPersistEcrRecord(): Int {
         return withContext(Dispatchers.IO) {
-            val user =
-                preferenceDao.getLoggedInUser()
-                    ?: throw IllegalStateException("No user logged in!!")
-            val lastTimeStamp = preferenceDao.getLastSyncedTimeStamp()
+            val user = preferenceDao.getLoggedInUser()
+                ?: throw IllegalStateException("No user logged in!!")
+            val lastTimeStamp = Konstants.defaultTimeStamp
             try {
                 val response = tmcNetworkApiService.getEcrFormData(
                     GetDataPaginatedRequest(
-                        user.userId,
-                        0,
-                        getCurrentDate(lastTimeStamp),
-                        getCurrentDate()
+                        user.userId, 0, getCurrentDate(lastTimeStamp), getCurrentDate()
                     )
                 )
                 val statusCode = response.code()
@@ -257,8 +253,15 @@ class EcrRepo @Inject constructor(
                         when (responseStatusCode) {
                             200 -> {
                                 try {
-                                    val dataObj = jsonObj.getString("data")
-//                                    saveECRCacheFromResponse(dataObj)
+                                    val dataObj = jsonObj.getJSONArray("data")
+                                    val ecrList = getEcrCacheFromServerResponse(dataObj)
+                                    ecrList.filter {
+                                        database.benDao.getBen(
+                                            it.benId
+                                        ) != null
+                                    }.takeIf { it.isNotEmpty() }?.let {
+                                        database.ecrDao.upsert(*it.toTypedArray())
+                                    }
                                 } catch (e: Exception) {
                                     Timber.d("TB Screening entries not synced $e")
                                     return@withContext 0
@@ -287,17 +290,173 @@ class EcrRepo @Inject constructor(
                 }
 
             } catch (e: SocketTimeoutException) {
-                Timber.d("get_tb error : $e")
-                return@withContext -2
+                Timber.d("get_ect error : $e")
+                pullAndPersistEcrRecord()
 
             } catch (e: java.lang.IllegalStateException) {
-                Timber.d("get_tb error : $e")
+                Timber.d("get_ect error : $e")
                 return@withContext -1
             }
             -1
         }
     }
 
+
+    suspend fun pullAndPersistEctRecord(): Int {
+        return withContext(Dispatchers.IO) {
+            val user = preferenceDao.getLoggedInUser()
+                ?: throw IllegalStateException("No user logged in!!")
+            val lastTimeStamp = Konstants.defaultTimeStamp
+            try {
+                val response = tmcNetworkApiService.getEcrFormData(
+                    GetDataPaginatedRequest(
+                        user.userId, 0, getCurrentDate(lastTimeStamp), getCurrentDate()
+                    )
+                )
+                val statusCode = response.code()
+                if (statusCode == 200) {
+                    val responseString = response.body()?.string()
+                    if (responseString != null) {
+                        val jsonObj = JSONObject(responseString)
+
+                        val errorMessage = jsonObj.getString("errorMessage")
+                        val responseStatusCode = jsonObj.getInt("statusCode")
+                        Timber.d("Pull from amrit eligible couple register data : $responseStatusCode")
+                        when (responseStatusCode) {
+                            200 -> {
+                                try {
+                                    val dataObj = jsonObj.getJSONArray("data")
+                                    val ecrList = getEctCacheFromServerResponse(dataObj)
+                                    ecrList.filter {
+                                        !database.ecrDao.ectWithsameCreateDateExists(it.createdDate) && database.benDao.getBen(
+                                            it.benId
+                                        ) != null
+                                    }.takeIf { it.isNotEmpty() }?.let {
+                                        database.ecrDao.upsert(*it.toTypedArray())
+                                    }
+                                } catch (e: Exception) {
+                                    Timber.d("TB Screening entries not synced $e")
+                                    return@withContext 0
+                                }
+
+                                return@withContext 1
+                            }
+
+                            5002 -> {
+                                if (userRepo.refreshTokenTmc(
+                                        user.userName, user.password
+                                    )
+                                ) throw SocketTimeoutException("Refreshed Token!")
+                                else throw IllegalStateException("User Logged out!!")
+                            }
+
+                            5000 -> {
+                                if (errorMessage == "No record found") return@withContext 0
+                            }
+
+                            else -> {
+                                throw IllegalStateException("$responseStatusCode received, dont know what todo!?")
+                            }
+                        }
+                    }
+                }
+
+            } catch (e: SocketTimeoutException) {
+                Timber.d("get_ect error : $e")
+                pullAndPersistEctRecord()
+
+            } catch (e: java.lang.IllegalStateException) {
+                Timber.d("get_ect error : $e")
+                return@withContext -1
+            }
+            -1
+        }
+    }
+
+    private fun getEcrCacheFromServerResponse(dataObj: JSONArray): List<EligibleCoupleRegCache> {
+//        TODO()
+        val list = mutableListOf<EligibleCoupleRegCache>()
+        for (i in 0 until dataObj.length()) {
+            val ecrJson = dataObj.getJSONObject(i)
+            val ecr = EligibleCoupleRegCache(
+                benId = ecrJson.getLong("benId"),
+//                dateOfReg = if (ecrJson.has("dateOfReg")) getLongFromDate(ecrJson.getString("dateOfReg")) else getLongFromDate(
+//                    ecrJson.getString("createdDate")),
+//                    rchId = null,
+//                    name =null,
+//                    husbandName = null,
+//                    age = null,
+//                    ageAtMarriage = null,
+//                    aadharNo = null,
+//                    bankAccount = null,
+//                    bankName = null,
+//                    branchName = null,
+//                    ifsc =,
+//                    noOfChildren =,
+//                    noOfLiveChildren =,
+//                    noOfMaleChildren =,
+//                    noOfFemaleChildren =,
+//                    dob1 =,
+//                    age1 =,
+//                    gender1 =,
+//                    marriageFirstChildGap =,
+//                    dob2 =,
+//                    age2 =,
+//                    gender2 =,
+//                    firstAndSecondChildGap =,
+//                    dob3 =,
+//                    age3 =,
+//                    gender3 =,
+//                    secondAndThirdChildGap =,
+//                    dob4 =,
+//                    age4 =,
+//                    gender4 =,
+//                    thirdAndFourthChildGap =,
+//                    dob5 =,
+//                    age5 =,
+//                    gender5 =,
+//                    fourthAndFifthChildGap =,
+//                    dob6 =,
+//                    age6 =,
+//                    gender6 =,
+//                    fifthANdSixthChildGap =,
+//                    dob7 =,
+//                    age7 =,
+//                    gender7 =,
+//                    sixthAndSeventhChildGap =,
+//                    dob8 =,
+//                    age8 =,
+//                    gender8 =,
+//                    seventhAndEighthChildGap =,
+//                    dob9 =,
+//                    age9 =,
+//                    gender9 =,
+//                    eighthAndNinthChildGap =,
+//                    processed =,
+                createdBy = ecrJson.getString("createdBy"),
+                createdDate = getLongFromDate(
+                    ecrJson.getString("createdDate")
+                ),
+                updatedBy = if (ecrJson.has("updatedBy")) ecrJson.getString("updatedBy") else ecrJson.getString(
+                    "createdBy"
+                ),
+                updatedDate = getLongFromDate(
+                    if (ecrJson.has("updatedDate")) ecrJson.getString(
+                        "updatedDate"
+                    ) else ecrJson.getString("createdDate")
+                ),
+                syncState = SyncState.SYNCED
+            )
+            list.add(ecr)
+
+        }
+        return list
+    }
+
+    private fun getEctCacheFromServerResponse(dataObj: JSONArray): List<EligibleCoupleTrackingCache> {
+//        TODO()
+        return emptyList()
+    }
 //    private suspend fun saveECRCacheFromResponse(dataObj: String): MutableList<EligibleCoupleRegCache> {
 //        val tbScreeningList = mutableListOf<TBScreeningCache>()
 //        var requestDTO = Gson().fromJson(dataObj, TBScreeningRequestDTO::class.java)
