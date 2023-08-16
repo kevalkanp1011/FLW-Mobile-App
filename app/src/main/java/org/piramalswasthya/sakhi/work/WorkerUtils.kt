@@ -128,6 +128,17 @@ object WorkerUtils {
                 workRequest
             )
     }
+    fun triggerECPushWorker(context: Context){
+        val workRequest = OneTimeWorkRequestBuilder<PushECToAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
+        WorkManager.getInstance(context)
+            .enqueueUniqueWork(
+                PushECToAmritWorker.name,
+                ExistingWorkPolicy.APPEND_OR_REPLACE,
+                workRequest
+            )
+    }
 
     fun triggerGenBenIdWorker(context: Context) {
         val workRequest = OneTimeWorkRequestBuilder<GenerateBenIdsWorker>()

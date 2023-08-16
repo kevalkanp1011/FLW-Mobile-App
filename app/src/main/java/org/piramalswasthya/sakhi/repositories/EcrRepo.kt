@@ -7,13 +7,17 @@ import org.json.JSONObject
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.model.*
-import org.piramalswasthya.sakhi.network.*
+import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.EcrPost
+import org.piramalswasthya.sakhi.model.EligibleCoupleRegCache
+import org.piramalswasthya.sakhi.model.EligibleCoupleTrackingCache
+import org.piramalswasthya.sakhi.network.AmritApiService
+import org.piramalswasthya.sakhi.network.GetDataPaginatedRequest
 import timber.log.Timber
 import java.io.IOException
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 class EcrRepo @Inject constructor(
@@ -42,9 +46,9 @@ class EcrRepo @Inject constructor(
         }
     }
 
-    suspend fun getEct(benId: Long): EligibleCoupleTrackingCache? {
+    suspend fun getEct(benId: Long, visitDate : Long): EligibleCoupleTrackingCache? {
         return withContext(Dispatchers.IO) {
-            database.ecrDao.getEct(benId)
+            database.ecrDao.getEct(benId, visitDate)
         }
     }
 

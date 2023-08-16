@@ -698,6 +698,10 @@
             android:id="@+id/action_eligibleCoupleTrackingFormFragment_to_eligibleCoupleTrackingListFragment"
             app:destination="@id/eligibleCoupleTrackingListFragment"
             app:popUpToInclusive="false" />
+        <argument
+            android:name="visitDate"
+            app:argType="long"
+            android:defaultValue="0L" />
     </fragment>
     <fragment
         android:id="@+id/TBScreeningListFragment"

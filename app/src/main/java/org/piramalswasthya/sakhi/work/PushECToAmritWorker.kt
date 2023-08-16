@@ -20,11 +20,12 @@ class PushECToAmritWorker @AssistedInject constructor(
     private val preferenceDao: PreferenceDao,
 ) : CoroutineWorker(appContext, params) {
     companion object {
-        const val name = "PushTBToAmritWorker"
+        const val name = "PushEcToAmritWorker"
     }
     override suspend fun doWork(): Result {
         init()
         return try {
+            Timber.d("EC Worker started!")
             val workerResult = ecrRepo.processUnsyncedEcr()
             val workerResult1 = ecrRepo.processNewEct()
             if (workerResult && workerResult1) {
