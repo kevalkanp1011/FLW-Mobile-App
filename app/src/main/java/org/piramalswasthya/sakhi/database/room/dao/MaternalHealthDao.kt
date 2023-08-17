@@ -31,6 +31,11 @@ interface MaternalHealthDao {
     @Query("SELECT * FROM pregnancy_anc WHERE processed = 'N'")
     suspend fun getAllUnprocessedAncVisits(): List<PregnantWomanAncCache>
 
+    @Query("SELECT * FROM pregnancy_register WHERE processed = 'N'")
+    suspend fun getAllUnprocessedPWRs(): List<PregnantWomanRegistrationCache>
     @Update
     suspend fun updateANC(it: PregnantWomanAncCache)
+
+    @Update
+    suspend fun updatePwr(it: PregnantWomanRegistrationCache)
 }

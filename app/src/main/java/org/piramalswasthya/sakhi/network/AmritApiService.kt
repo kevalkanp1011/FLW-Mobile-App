@@ -86,9 +86,15 @@ interface AmritApiService {
     suspend fun getDeliverOutcomeData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
     @POST("/flw-0.0.1/maternalCare/ancVisit/saveAll")
-    suspend fun postAncForm(@Body ecrPostList: List<PregnantWomanAncCache>): Response<ResponseBody>
+    suspend fun postAncForm(@Body ecrPostList: List<ANCPost>): Response<ResponseBody>
 
     @POST("/flw-0.0.1/maternalCare/ancVisit/getAll")
-    suspend fun getAnvVisitsData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+    suspend fun getAncVisitsData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/maternalCare/pregnantWoman/saveAll")
+    suspend fun postPwrForm(@Body ecrPostList: List<PwrPost>): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/maternalCare/pregnantWoman/getAll")
+    suspend fun getPwrData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
 }
