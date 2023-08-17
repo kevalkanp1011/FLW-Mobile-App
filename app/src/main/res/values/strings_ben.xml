@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="nbr_reproductive_status_array">
+        <item>Eligible Couple</item>
+        <item>Pregnant Woman</item>
+        <item>Postnatal Mother</item>
+        <item>Elderly Woman</item>
+        <item>Adolescent Girl</item>
+    </string-array>
+
+    <string-array name="nbr_marital_status_male_array">
+        <item>Unmarried</item>
+        <item>Married</item>
+        <item>Divorced</item>
+        <item>Separated</item>
+        <item>Widower</item>
+        )
+    </string-array>
+
+    <string-array name="nbr_marital_status_female_array">
+        <item>Unmarried</item>
+        <item>Married</item>
+        <item>Divorced</item>
+        <item>Separated</item>
+        <item>Widow</item>
+        )
+    </string-array>
+
+    <string-array name="nbr_mobile_no_relation_array">
+        <item>Self</item>
+        <item>Husband</item>
+        <item>Mother</item>
+        <item>Father</item>
+        <item>Family Head</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="nbr_relationship_to_head">
+        <item>Mother</item>
+        <item>Father</item>
+        <item>Brother</item>
+        <item>Sister</item>
+        <item>Wife</item>
+        <item>Husband</item>
+        <item>Nephew</item>
+        <item>Niece</item>
+        <item>Son</item>
+        <item>Daughter</item>
+        <item>Grand Father</item>
+        <item>Grand Mother</item>
+        <item>Father in Law</item>
+        <item>Mother in Law</item>
+        <item>Grand Son</item>
+        <item>Grand Daughter</item>
+        <item>Son in Law</item>
+        <item>Daughter in Law</item>
+        <item>Self</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="nbr_relationship_to_head_male">
+        <item>Father</item>
+        <item>Brother</item>
+        <item>Husband</item>
+        <item>Nephew</item>
+        <item>Son</item>
+        <item>Grand Father</item>
+        <item>Father in Law</item>
+        <item>Grand Son</item>
+        <item>Son in Law</item>
+        <item>Self</item>
+        <item>Other</item>
+    </string-array>
+
+    <string name="marital_status">Marital Status</string>
+
+</resources>
