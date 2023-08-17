@@ -1,37 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="form"
             type="org.piramalswasthya.sakhi.model.FormElement" />
     </data>
 
     <LinearLayout
+        android:id="@+id/cl_ri"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/cl_ri"
+        android:baselineAligned="false"
         android:padding="@dimen/padding_wide">
 
         <LinearLayout
             android:id="@+id/ll_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_weight="1">
-            <TextView
-                android:id="@+id/tv_title"
+            android:paddingVertical="@dimen/padding_small">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{form.title}"
-                android:padding="@dimen/padding_small"
-                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Hello you@!!" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="300dp"
+                    android:paddingVertical="@dimen/padding_small"
+                    android:text="@{form.title}"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                    app:layout_constraintEnd_toStartOf="@id/tv_nullable"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/ll_content"
+                    tools:text="Hello you@" />
+
+                <TextView
+                    android:id="@+id/tv_nullable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="@dimen/padding_small"
+                    android:text="@string/tv_required_text_asterisk"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="@color/design_default_color_error"
+                    app:layout_constraintStart_toEndOf="@id/tv_title"
+                    app:layout_constraintTop_toTopOf="@id/ll_content"
+                    app:required="@{form.required}" />
+
+                <TextView
+                    android:id="@+id/tv_ds"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_required_text_asterisk"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="@color/design_default_color_error"
+                    app:layout_constraintStart_toEndOf="@id/tv_nullable"
+                    app:layout_constraintTop_toTopOf="@id/ll_content"
+                    app:required="@{form.doubleStar}" />
+            </LinearLayout>
+
 
             <RadioGroup
                 android:id="@+id/rg"
@@ -45,29 +81,6 @@
 
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_ds"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/rg"
-            android:text="@string/tv_required_text_asterisk"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/design_default_color_error"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_title"
-            app:required="@{form.doubleStar}" />
-        <TextView
-            android:id="@+id/tv_nullable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/rg"
-            android:text="@string/tv_required_text_asterisk"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/design_default_color_error"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_title"
-            app:required="@{form.required}" />
 
     </LinearLayout>
 </layout>

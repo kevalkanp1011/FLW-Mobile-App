@@ -119,25 +119,14 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         hasDependants = true,
     )
 
-    private val maritalStatusMale = arrayOf(
-        "Unmarried",
-        "Married",
-        "Divorced",
-        "Separated",
-        "Widower",
-    )
+    private val maritalStatusMale = resources.getStringArray(R.array.nbr_marital_status_male_array)
 
-    private val maritalStatusFemale = arrayOf(
-        "Unmarried",
-        "Married",
-        "Divorced",
-        "Separated",
-        "Widow",
-    )
+    private val maritalStatusFemale = resources.getStringArray(R.array.nbr_marital_status_male_array)
+    
     private val maritalStatus = FormElement(
         id = 8,
         inputType = DROPDOWN,
-        title = "Marital Status",
+        title = resources.getString(R.string.marital_status),
         arrayId = -1,
         entries = maritalStatusMale,
         required = true,
@@ -146,7 +135,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
     private val husbandName = FormElement(
         id = 9,
         inputType = EDIT_TEXT,
-        title = "Husband's Name",
+        title = resources.getString(R.string.husband_s_name),
         arrayId = -1,
         required = true,
         allCaps = true,
@@ -157,7 +146,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
     private val wifeName = FormElement(
         id = 10,
         inputType = EDIT_TEXT,
-        title = "Wife's Name",
+        title = resources.getString(R.string.wife_s_name),
         arrayId = -1,
         required = true,
         allCaps = true,
@@ -168,7 +157,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
     private val spouseName = FormElement(
         id = 11,
         inputType = EDIT_TEXT,
-        title = "Spouse's Name",
+        title = resources.getString(R.string.spouse_s_name),
         arrayId = -1,
         required = true,
         allCaps = true,
@@ -179,7 +168,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
     private val ageAtMarriage = FormElement(
         id = 12,
         inputType = EDIT_TEXT,
-        title = "Age At Marriage",
+        title = resources.getString(R.string.age_at_marriage),
         etMaxLength = 2,
         arrayId = -1,
         required = true,
@@ -192,7 +181,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
     private val dateOfMarriage = FormElement(
         id = 13,
         inputType = DATE_PICKER,
-        title = "Date of Marriage",
+        title = resources.getString(R.string.date_of_marriage),
         arrayId = -1,
         required = true,
         max = System.currentTimeMillis(),
@@ -201,7 +190,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
     private val fatherName = FormElement(
         id = 14,
         inputType = EDIT_TEXT,
-        title = "Father's Name",
+        title = resources.getString(R.string.father_s_name),
         arrayId = -1,
         required = true,
         allCaps = true,
@@ -212,7 +201,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
     private val motherName = FormElement(
         id = 15,
         inputType = EDIT_TEXT,
-        title = "Mother's Name",
+        title = resources.getString(R.string.mother_s_name),
         arrayId = -1,
         required = true,
         allCaps = true,
@@ -224,25 +213,23 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
     private val mobileNoOfRelation = FormElement(
         id = 16,
         inputType = DROPDOWN,
-        title = "Mobile Number Of",
+        title = resources.getString(R.string.mobile_number_of),
         arrayId = -1,
-        entries = arrayOf(
-            "Self", "Husband", "Mother", "Father", "Family Head", "Other"
-        ),
+        entries = resources.getStringArray(R.array.nbr_mobile_no_relation_array),
         required = true,
         hasDependants = true,
     )
     private val otherMobileNoOfRelation = FormElement(
         id = 17,
         inputType = EDIT_TEXT,
-        title = "Other - Mobile Number of",
+        title = resources.getString(R.string.other_mobile_number_of),
         arrayId = -1,
         required = true
     )
     private val contactNumber = FormElement(
         id = 18,
         inputType = EDIT_TEXT,
-        title = "Contact Number",
+        title = resources.getString(R.string.contact_number),
         arrayId = -1,
         required = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -262,41 +249,10 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
     )
 
 
-    private val relationToHeadListDefault = arrayOf(
-        "Mother",
-        "Father",
-        "Brother",
-        "Sister",
-        "Wife",
-        "Husband",
-        "Nephew",
-        "Niece",
-        "Son",
-        "Daughter",
-        "Grand Father",
-        "Grand Mother",
-        "Father in Law",
-        "Mother in Law",
-        "Grand Son",
-        "Grand Daughter",
-        "Son in Law",
-        "Daughter in Law",
-        "Self",
-        "Other"
-    )
-    private val relationToHeadListMale = arrayOf(
-        "Father",
-        "Brother",
-        "Husband",
-        "Nephew",
-        "Son",
-        "Grand Father",
-        "Father in Law",
-        "Grand Son",
-        "Son in Law",
-        "Self",
-        "Other",
-    )
+    private val relationToHeadListDefault =
+        resources.getStringArray(R.array.nbr_relationship_to_head)
+    private val relationToHeadListMale =
+        resources.getStringArray(R.array.nbr_relationship_to_head_male)
     private val relationToHeadListFemale = arrayOf(
         "Mother",
         "Sister",
