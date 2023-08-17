@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
+import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -69,6 +70,7 @@ class EligibleCoupleRegFragment : Fragment() {
             when (it) {
                 EligibleCoupleRegViewModel.State.SAVE_SUCCESS -> {
                     findNavController().navigateUp()
+                    WorkerUtils.triggerECPushWorker(requireContext())
                 }
 
                 else -> {}

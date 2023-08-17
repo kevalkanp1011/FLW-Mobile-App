@@ -5,39 +5,39 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.piramalswasthya.sakhi.databinding.RvItemPregnancyAncBinding
-import org.piramalswasthya.sakhi.model.AncStatus
+import org.piramalswasthya.sakhi.databinding.RvItemEcTrackBinding
+import org.piramalswasthya.sakhi.model.ECTDomain
 
-class ECTrackingAdapter(private val clickListener: AncVisitClickListener) :
-    ListAdapter<AncStatus, ECTrackingAdapter.ECTrackViewHolder>(
+class ECTrackingAdapter(private val clickListener: ECTrackViewClickListener) :
+    ListAdapter<ECTDomain, ECTrackingAdapter.ECTrackViewHolder>(
         MyDiffUtilCallBack
     ) {
-    private object MyDiffUtilCallBack : DiffUtil.ItemCallback<AncStatus>() {
+    private object MyDiffUtilCallBack : DiffUtil.ItemCallback<ECTDomain>() {
         override fun areItemsTheSame(
-            oldItem: AncStatus, newItem: AncStatus
-        ) = oldItem.benId == newItem.benId
+            oldItem: ECTDomain, newItem: ECTDomain
+        ) = oldItem.filledOn == newItem.filledOn
 
         override fun areContentsTheSame(
-            oldItem: AncStatus, newItem: AncStatus
+            oldItem: ECTDomain, newItem: ECTDomain
         ) = oldItem == newItem
 
     }
 
-    class ECTrackViewHolder private constructor(private val binding: RvItemPregnancyAncBinding) :
+    class ECTrackViewHolder private constructor(private val binding: RvItemEcTrackBinding) :
         RecyclerView.ViewHolder(binding.root) {
         companion object {
             fun from(parent: ViewGroup): ECTrackViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RvItemPregnancyAncBinding.inflate(layoutInflater, parent, false)
+                val binding = RvItemEcTrackBinding.inflate(layoutInflater, parent, false)
                 return ECTrackViewHolder(binding)
             }
         }
 
         fun bind(
-            item: AncStatus, clickListener: AncVisitClickListener
+            item: ECTDomain, clickListener: ECTrackViewClickListener
         ) {
             binding.visit = item
-//            binding.clickListener = clickListener
+            binding.clickListener = clickListener
             binding.executePendingBindings()
 
         }
@@ -52,12 +52,12 @@ class ECTrackingAdapter(private val clickListener: AncVisitClickListener) :
     }
 
 
-    class AncVisitClickListener(
-        private val clickedForm: (benId: Long, visitNumber: Int) -> Unit,
+    class ECTrackViewClickListener(
+        private val clickedForm: (benId: Long, visitedOn: Long) -> Unit,
 
         ) {
-        fun onClickedVisit(item: AncStatus) = clickedForm(
-            item.benId, item.visitNumber
+        fun onClickedVisit(item: ECTDomain) = clickedForm(
+            item.benId, item.filledOn
         )
     }
 

@@ -13,6 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
+import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -67,28 +68,33 @@ class EligibleCoupleTrackingFormFragment : Fragment() {
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
                 EligibleCoupleTrackingFormViewModel.State.SAVE_SUCCESS -> {
-                    if (viewModel.isPregnant) {
-                        findNavController().navigate(
-                            EligibleCoupleTrackingFormFragmentDirections.actionEligibleCoupleTrackingFormFragmentToPregnancyRegistrationFormFragment(
-                                benId = viewModel.benId
-                            )
-                        )
-                        viewModel.resetState()
-                    } else {
-                        findNavController().navigate(
-                            EligibleCoupleTrackingFormFragmentDirections.actionEligibleCoupleTrackingFormFragmentToEligibleCoupleTrackingListFragment()
-                        )
-                        Toast.makeText(
-                            requireContext(),
-                            "Tracking form filled successfully",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        viewModel.resetState()
-                    }
+                    navigateToNextScreen()
+                    WorkerUtils.triggerECPushWorker(requireContext())
                 }
 
                 else -> {}
             }
+        }
+    }
+
+    private fun navigateToNextScreen() {
+        if (viewModel.isPregnant) {
+            findNavController().navigate(
+                EligibleCoupleTrackingFormFragmentDirections.actionEligibleCoupleTrackingFormFragmentToPregnancyRegistrationFormFragment(
+                    benId = viewModel.benId
+                )
+            )
+            viewModel.resetState()
+        } else {
+            findNavController().navigate(
+                EligibleCoupleTrackingFormFragmentDirections.actionEligibleCoupleTrackingFormFragmentToEligibleCoupleTrackingListFragment()
+            )
+            Toast.makeText(
+                requireContext(),
+                "Tracking form filled successfully",
+                Toast.LENGTH_SHORT
+            ).show()
+            viewModel.resetState()
         }
     }
 

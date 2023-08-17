@@ -3,11 +3,14 @@ package org.piramalswasthya.sakhi.configuration
 import android.content.Context
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Languages
-import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.EligibleCoupleTrackingCache
+import org.piramalswasthya.sakhi.model.FormElement
+import org.piramalswasthya.sakhi.model.InputType
 
-class EligibleCoupleTrackingDataset (
+class EligibleCoupleTrackingDataset(
     context: Context, currentLanguage: Languages
-    ) : Dataset(context, currentLanguage) {
+) : Dataset(context, currentLanguage) {
 
     private var dateOfVisit = FormElement(
         id = 1,
@@ -95,7 +98,7 @@ class EligibleCoupleTrackingDataset (
 
     fun getIndexOfIsPregnant() = getIndexById(isPregnant.id)
 
-    suspend fun setUpPage(ben: BenRegCache?, dateOfReg : Long, saved: EligibleCoupleTrackingCache?) {
+    suspend fun setUpPage(ben: BenRegCache?, dateOfReg: Long, saved: EligibleCoupleTrackingCache?) {
         val list = mutableListOf(
             dateOfVisit,
             financialYear,
@@ -108,12 +111,14 @@ class EligibleCoupleTrackingDataset (
             dateOfVisit.value = getDateFromLong(System.currentTimeMillis())
             dateOfVisit.value?.let {
                 financialYear.value = getFinancialYear(it)
-                month.value = resources.getStringArray(R.array.visit_months)[Companion.getMonth(it)!!]
+                month.value =
+                    resources.getStringArray(R.array.visit_months)[Companion.getMonth(it)!!]
             }
 
             dateOfVisit.min = dateOfReg
         } else {
             dateOfVisit.value = getDateFromLong(saved.visitDate)
+            financialYear.value = getFinancialYear(dateString = dateOfVisit.value)
             isPregnancyTestDone.value = saved.isPregnancyTestDone
             if (isPregnancyTestDone.value == "Yes") {
                 list.add(pregnancyTestResult)
@@ -135,13 +140,16 @@ class EligibleCoupleTrackingDataset (
         setUpPage(list)
 
     }
+
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
             dateOfVisit.id -> {
                 financialYear.value = Companion.getFinancialYear(dateOfVisit.value)
-                month.value = resources.getStringArray(R.array.visit_months)[Companion.getMonth(dateOfVisit.value)!!]
+                month.value =
+                    resources.getStringArray(R.array.visit_months)[Companion.getMonth(dateOfVisit.value)!!]
                 -1
             }
+
             isPregnancyTestDone.id -> {
                 triggerDependants(
                     source = isPregnancyTestDone,
@@ -159,7 +167,7 @@ class EligibleCoupleTrackingDataset (
                     isPregnant.value = null
                     isPregnant.isEnabled = true
                 }
-                handleListOnValueChanged(isPregnant.id,0)
+                handleListOnValueChanged(isPregnant.id, 0)
 
             }
 
@@ -172,6 +180,7 @@ class EligibleCoupleTrackingDataset (
                     targetSideEffect = listOf(methodOfContraception, anyOtherMethod)
                 )
             }
+
             usingFamilyPlanning.id -> {
                 triggerDependants(
                     source = usingFamilyPlanning,
@@ -190,6 +199,7 @@ class EligibleCoupleTrackingDataset (
                     target = anyOtherMethod
                 )
             }
+
             anyOtherMethod.id -> {
                 validateAllAlphabetsSpaceOnEditText(anyOtherMethod)
             }
@@ -202,8 +212,8 @@ class EligibleCoupleTrackingDataset (
         (cacheModel as EligibleCoupleTrackingCache).let { form ->
             form.visitDate = getLongFromDate(dateOfVisit.value)
             form.isPregnancyTestDone = isPregnancyTestDone.value
-            form.pregnancyTestResult= pregnancyTestResult.value
-            form.isPregnant= isPregnant.value
+            form.pregnancyTestResult = pregnancyTestResult.value
+            form.isPregnant = isPregnant.value
             form.usingFamilyPlanning = usingFamilyPlanning.value == "Yes"
             if (methodOfContraception.value == "Any Other Method") {
                 form.methodOfContraception = anyOtherMethod.value

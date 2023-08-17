@@ -14,7 +14,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.repositories.EcrRepo
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -45,11 +44,6 @@ class PullECFromAmritWorker @AssistedInject constructor(
             }
             withContext(Dispatchers.IO) {
                 val startTime = System.currentTimeMillis()
-                var numPages: Int
-                val startPage = if(preferenceDao.getLastSyncedTimeStamp()==Konstants.defaultTimeStamp)
-                    preferenceDao.getFirstSyncLastSyncedPage()
-                else 0
-
                 try {
                     val result1 =
                         awaitAll(
@@ -65,7 +59,7 @@ class PullECFromAmritWorker @AssistedInject constructor(
                         return@withContext Result.success()
                     }
                     return@withContext Result.failure()
-                }catch (e : SQLiteConstraintException){
+                } catch (e: SQLiteConstraintException) {
                     Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
                     return@withContext Result.failure()
                 }
@@ -96,10 +90,10 @@ class PullECFromAmritWorker @AssistedInject constructor(
     }
 
 
-    private suspend fun getECRDetails() : Boolean {
+    private suspend fun getECRDetails(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val res = ecrRepo.getECRDetailsFromServer()
+                val res = ecrRepo.pullAndPersistEcrRecord()
                 return@withContext res == 1
             } catch (e: Exception) {
                 Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")

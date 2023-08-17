@@ -71,7 +71,7 @@ interface AmritApiService {
     suspend fun postEcrForm(@Body ecrPostList: List<EcrPost>): Response<ResponseBody>
 
     @POST("/flw-0.0.1/couple/tracking/saveAll")
-    suspend fun postEctForm(@Body ecrPostList: List<EligibleCoupleTrackingCache>): Response<ResponseBody>
+    suspend fun postEctForm(@Body ecrPostList: List<ECTNetwork>): Response<ResponseBody>
 
     @POST("/flw-0.0.1/couple/register/getAll")
     suspend fun getEcrFormData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>

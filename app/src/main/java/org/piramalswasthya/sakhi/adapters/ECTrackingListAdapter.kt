@@ -57,12 +57,12 @@ class ECTrackingListAdapter(private val clickListener: ECTrackListClickListener)
         private val showAllTracks: (benId: Long) -> Unit,
 
         ) {
-        fun onClickedAdd(benId: Long) = addNewTrack(
-            benId
+        fun onClickedAdd(item : BenWithEctListDomain) = addNewTrack(
+            item.ben.benId
         )
 
-        fun onClickedShowAllTracks(benId: Long) = showAllTracks(
-            benId
+        fun onClickedShowAllTracks(item : BenWithEctListDomain) = showAllTracks(
+            item.ben.benId
         )
     }
 

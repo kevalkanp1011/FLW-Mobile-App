@@ -31,6 +31,9 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
     val benId =
         EligibleCoupleTrackingFormFragmentArgs.fromSavedStateHandle(savedStateHandle).benId
 
+    val visitDate =
+        EligibleCoupleTrackingFormFragmentArgs.fromSavedStateHandle(savedStateHandle).visitDate
+
     enum class State {
         IDLE, SAVING, SAVE_SUCCESS, SAVE_FAILED
     }
@@ -61,17 +64,20 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            val asha = preferenceDao.getLoggedInUser()!!
             val ben = ecrRepo.getBenFromId(benId)?.also { ben ->
                 _benName.value =
                     "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
                 _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
                 eligibleCoupleTracking = EligibleCoupleTrackingCache(
                     benId = ben.beneficiaryId,
-                    syncState = SyncState.UNSYNCED
+                    syncState = SyncState.UNSYNCED,
+                    createdBy = asha.userName,
+                    updatedBy = asha.userName,
                 )
             }
 
-            ecrRepo.getEct(benId)?.let {
+            ecrRepo.getEct(benId, visitDate)?.let {
                 eligibleCoupleTracking = it
                 _recordExists.value = true
             } ?: run {
