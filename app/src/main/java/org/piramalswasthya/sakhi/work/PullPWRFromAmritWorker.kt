@@ -15,7 +15,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
-import org.piramalswasthya.sakhi.repositories.TBRepo
+import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit
 class PullPWRFromAmritWorker @AssistedInject constructor(
     @Assisted private val appContext: Context,
     @Assisted params: WorkerParameters,
-    private val tbRepo: TBRepo,
+    private val maternalHealthRepo: MaternalHealthRepo,
     private val preferenceDao: PreferenceDao,
 ) : CoroutineWorker(appContext, params) {
 
@@ -38,7 +38,7 @@ class PullPWRFromAmritWorker @AssistedInject constructor(
         return try {
             try {
                 // This ensures that you waiting for the Notification update to be done.
-                setForeground(createForegroundInfo("Downloading TB Data"))
+                setForeground(createForegroundInfo("Downloading Pregnant Women Data"))
             } catch (throwable: Throwable) {
                 // Handle this exception gracefully
                 Timber.d("FgLW", "Something bad happened", throwable)
@@ -53,13 +53,13 @@ class PullPWRFromAmritWorker @AssistedInject constructor(
                 try {
                     val result1 =
                         awaitAll(
-                            async { getTbScreeningDetails() },
-                            async { getTbSuspectedDetails() }
+                            async { getPwrDetails() },
+                            async { getAncVisitDetails() }
                         )
 
                     val endTime = System.currentTimeMillis()
                     val timeTaken = TimeUnit.MILLISECONDS.toSeconds(endTime - startTime)
-                    Timber.d("Full tb fetching took $timeTaken seconds $result1")
+                    Timber.d("Full pregnant women details fetching took $timeTaken seconds $result1")
 
                     if (result1.all { it }) {
 //                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
@@ -74,7 +74,7 @@ class PullPWRFromAmritWorker @AssistedInject constructor(
             }
 
         } catch (e: java.lang.Exception) {
-            Timber.d("Error occurred in PullTBFromAmritWorker $e ${e.stackTrace}")
+            Timber.d("Error occurred in PullPWFromAmritWorker $e ${e.stackTrace}")
 
             Result.failure()
         }
@@ -97,10 +97,10 @@ class PullPWRFromAmritWorker @AssistedInject constructor(
     }
 
 
-    private suspend fun getTbScreeningDetails() : Boolean {
+    private suspend fun getPwrDetails() : Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val res = tbRepo.getTBScreeningDetailsFromServer()
+                val res = maternalHealthRepo.getPwrDetailsFromServer()
                 return@withContext res == 1
             } catch (e: Exception) {
                 Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
@@ -109,10 +109,10 @@ class PullPWRFromAmritWorker @AssistedInject constructor(
         }
     }
 
-    private suspend fun getTbSuspectedDetails() : Boolean {
+    private suspend fun getAncVisitDetails() : Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val res = tbRepo.getTbSuspectedDetailsFromServer()
+                val res = maternalHealthRepo.getAncVisitDetailsFromServer()
                 return@withContext res == 1
             } catch (e: Exception) {
                 Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")

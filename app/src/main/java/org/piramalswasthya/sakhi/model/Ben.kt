@@ -59,7 +59,7 @@ enum class Gender {
             " pmsma.benId is not null as pmsmaFilled, " +//" pmsma.sync as mdsrSyncState, " +
             " hbnc.benId is not null as hbncFilled,  " +
             " hbyc.benId is not null as hbycFilled,  " +
-            " pwr.benId is not null as pwrFilled, " +
+            " pwr.benId is not null as pwrFilled, pwr.syncState as pwrSyncState," +
             " pwa.pregnantWomanDelivered as isDelivered, " +
             " ecr.benId is not null as ecrFilled, " +
             " ect.benId is not null as ectFilled, " +
@@ -118,6 +118,7 @@ data class BenBasicCache(
     val hbncFilled: Boolean,
     val hbycFilled: Boolean,
     val pwrFilled: Boolean,
+    val pwrSyncState: SyncState?,
     val ecrFilled: Boolean,
     val ectFilled: Boolean,
     val tbsnFilled: Boolean,
@@ -434,7 +435,7 @@ data class BenBasicCache(
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             form1Filled = pwrFilled,
-            syncState = syncState
+            syncState = pwrSyncState
         )
     }
 
