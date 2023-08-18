@@ -14,7 +14,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -45,10 +44,6 @@ class PullPWRFromAmritWorker @AssistedInject constructor(
             }
             withContext(Dispatchers.IO) {
                 val startTime = System.currentTimeMillis()
-                var numPages: Int
-                val startPage = if(preferenceDao.getLastSyncedTimeStamp()==Konstants.defaultTimeStamp)
-                    preferenceDao.getFirstSyncLastSyncedPage()
-                else 0
 
                 try {
                     val result1 =

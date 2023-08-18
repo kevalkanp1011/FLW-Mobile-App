@@ -11,6 +11,7 @@ import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.MaternalHealthDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.helpers.hasPendingAncVisit
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.network.AmritApiService
@@ -242,9 +243,9 @@ class MaternalHealthRepo @Inject constructor(
                     if (responseString != null) {
                         val jsonObj = JSONObject(responseString)
 
-                        val errormessage = jsonObj.getString("message")
-                        if (jsonObj.isNull("status")) throw IllegalStateException("Amrit server not responding properly, Contact Service Administrator!!")
-                        val responsestatuscode = jsonObj.getInt("status")
+                        val errormessage = jsonObj.getString("errorMessage")
+                        if (jsonObj.isNull("statusCode")) throw IllegalStateException("Amrit server not responding properly, Contact Service Administrator!!")
+                        val responsestatuscode = jsonObj.getInt("statusCode")
 
                         when (responsestatuscode) {
                             200 -> {
@@ -287,7 +288,7 @@ class MaternalHealthRepo @Inject constructor(
             val user =
                 preferenceDao.getLoggedInUser()
                     ?: throw IllegalStateException("No user logged in!!")
-            val lastTimeStamp = preferenceDao.getLastSyncedTimeStamp()
+            val lastTimeStamp = Konstants.defaultTimeStamp
             try {
                 val response = amritApiService.getPwrData(
                     GetDataPaginatedRequest(
@@ -370,7 +371,7 @@ class MaternalHealthRepo @Inject constructor(
             val user =
                 preferenceDao.getLoggedInUser()
                     ?: throw IllegalStateException("No user logged in!!")
-            val lastTimeStamp = preferenceDao.getLastSyncedTimeStamp()
+            val lastTimeStamp = Konstants.defaultTimeStamp
             try {
                 val response = amritApiService.getAncVisitsData(
                     GetDataPaginatedRequest(

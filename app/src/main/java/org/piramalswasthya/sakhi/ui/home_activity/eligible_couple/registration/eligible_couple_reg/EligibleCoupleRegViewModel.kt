@@ -105,7 +105,7 @@ class EligibleCoupleRegViewModel @Inject constructor(
                     ecrRepo.getBenFromId(benId)?.let {
                         val hasBenUpdated = dataset.mapValueToBen(it)
                         if (hasBenUpdated) {
-                            benRepo.persistRecord(it)
+                            benRepo.updateRecord(it)
 
                         }
                     }

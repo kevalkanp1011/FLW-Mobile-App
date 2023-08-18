@@ -1169,7 +1169,7 @@ data class BenRegCache(
             updatedDate = getDateTimeStringFromLong(updatedDate),
             Processed = processed,
             serverUpdatedStatus = serverUpdatedStatus,
-//            VanID = user.vanId,
+            VanID = 4,
 //            ProviderServiceMapID = user.serviceMapId,
             Countyid = locationRecord.country.id,
             stateid = locationRecord.state.id,

@@ -116,7 +116,7 @@ class PwAncFormViewModel @Inject constructor(
                         }
                         maternalHealthRepo.getBenFromId(benId)?.let {
                             dataset.updateBenRecordForDelivered(it)
-                            benRepo.persistRecord(it)
+                            benRepo.updateRecord(it)
                         }
                     }
                     _state.postValue(State.SAVE_SUCCESS)

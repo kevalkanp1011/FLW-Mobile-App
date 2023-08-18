@@ -69,7 +69,7 @@ class EligibleCoupleTrackingFormFragment : Fragment() {
             when (it) {
                 EligibleCoupleTrackingFormViewModel.State.SAVE_SUCCESS -> {
                     navigateToNextScreen()
-                    WorkerUtils.triggerECPushWorker(requireContext())
+                    WorkerUtils.triggerAmritPushWorker(requireContext())
                 }
 
                 else -> {}

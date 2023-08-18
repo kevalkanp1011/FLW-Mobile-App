@@ -190,9 +190,9 @@ class EcrRepo @Inject constructor(
                     if (responseString != null) {
                         val jsonObj = JSONObject(responseString)
 
-                        val errormessage = jsonObj.getString("message")
-                        if (jsonObj.isNull("status")) throw IllegalStateException("Amrit server not responding properly, Contact Service Administrator!!")
-                        val responsestatuscode = jsonObj.getInt("status")
+                        val errormessage = jsonObj.getString("errorMessage")
+                        if (jsonObj.isNull("statusCode")) throw IllegalStateException("Amrit server not responding properly, Contact Service Administrator!!")
+                        val responsestatuscode = jsonObj.getInt("statusCode")
 
                         when (responsestatuscode) {
                             200 -> {

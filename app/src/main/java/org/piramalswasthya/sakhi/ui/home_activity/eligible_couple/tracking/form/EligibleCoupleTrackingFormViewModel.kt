@@ -119,7 +119,7 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
                     if (isPregnant) {
                         ecrRepo.getBenFromId(benId)?.let {
                             dataset.updateBen(it)
-                            benRepo.persistRecord(it)
+                            benRepo.updateRecord(it)
                         }
                     }
 

@@ -113,7 +113,7 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
                     maternalHealthRepo.getBenFromId(benId)?.let {
                         val hasBenUpdated = dataset.mapValueToBenRegId(it)
                         if (hasBenUpdated)
-                            benRepo.persistRecord(it)
+                            benRepo.updateRecord(it)
                     }
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {

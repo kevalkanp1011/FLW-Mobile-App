@@ -2,6 +2,7 @@ package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.EligibleCoupleTrackingCache
@@ -230,5 +231,6 @@ class EligibleCoupleTrackingDataset(
             it.reproductiveStatusId = 2
         }
         if (benRegCache.processed != "N") benRegCache.processed = "U"
+        benRegCache.syncState = SyncState.UNSYNCED
     }
 }
