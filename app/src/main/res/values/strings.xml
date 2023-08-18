@@ -348,7 +348,7 @@
 
 
     <string name="nav_item_1_text">Name : <b>%s</b></string>
-    <string name="nav_item_2_text">Handle : <b>%s</b></string>
+    <string name="nav_item_2_text">Username : <b>%s</b></string>
     <string name="nav_item_3_text">User ID :  <b>%d</b></string>
     <string name="nav_item_4_text">Version : %s</string>
 

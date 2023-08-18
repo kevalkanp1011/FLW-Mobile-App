@@ -640,8 +640,8 @@
     <fragment
         android:id="@+id/pregnancyRegistrationFormFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pregnant_women_registration.form.PregnancyRegistrationFormFragment"
-        android:label="fragment_pregnancy_registration_form"
-        tools:layout="@layout/fragment_new_form" >
+        android:label="Pregnancy Registration"
+        tools:layout="@layout/fragment_new_form">
         <argument
             android:name="benId"
             app:argType="long" />
