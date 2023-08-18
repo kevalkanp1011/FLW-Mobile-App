@@ -26,7 +26,7 @@ class EligibleCoupleTrackingDataset(
 
     private val financialYear = FormElement(
         id = 2,
-        inputType = InputType.EDIT_TEXT,
+        inputType = InputType.TEXT_VIEW,
         title = "Financial Year",
         required = false,
     )
