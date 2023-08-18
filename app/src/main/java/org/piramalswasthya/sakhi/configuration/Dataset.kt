@@ -30,7 +30,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     protected var englishResources: Resources
 
     init {
-        englishResources = context.resources
+        englishResources = getLocalizedResources( context, Languages.ENGLISH)
         resources = getLocalizedResources(context, currentLanguage)
     }
 

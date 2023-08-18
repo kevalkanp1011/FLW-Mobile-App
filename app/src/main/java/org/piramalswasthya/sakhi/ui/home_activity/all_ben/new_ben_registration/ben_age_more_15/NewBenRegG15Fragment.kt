@@ -25,6 +25,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.BuildConfig
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.contracts.SpeechToTextContract
 import org.piramalswasthya.sakhi.databinding.FragmentInputFormPageHhBinding
@@ -178,9 +179,9 @@ class NewBenRegG15Fragment : Fragment() {
         lifecycleScope.launch {
             viewModel.currentPage.collect {
                 binding.tvTitle.text = when (it) {
-                    1 -> "Beneficiary Details"
-                    2 -> "ID Details"
-                    3 -> "Reproductive Status"
+                    1 -> resources.getString(R.string.beneficiary_details_ben)
+                    2 -> resources.getString(R.string.id_details)
+                    3 -> resources.getString(R.string.reproductive_status_ben)
                     else -> null
                 }
 //                binding.tlNhhr.selectTab(binding.tlNhhr.getTabAt(it - 1), true)

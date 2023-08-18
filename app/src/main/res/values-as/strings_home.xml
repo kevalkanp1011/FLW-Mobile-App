@@ -20,7 +20,7 @@
     <string name="icon_title_icc">নৱজাতকৰ তালিকা</string>
     <string name="icon_title_ccc">শিশুৰ তালিকা</string>
     <string name="icon_title_acc">কিশোৰ তালিকা</string>
-    <string name="icon_title_pmc">গৰ্ভাৱস্থাৰ তালিকা</string>
+<!--    <string name="icon_title_pmc">গৰ্ভাৱস্থাৰ তালিকা</string>-->
     <string name="icon_title_dmc">প্ৰসবাৱস্থাৰ তালিকা</string>
     <string name="icon_title_pncmc">প্ৰসৱোত্তৰ মাত্ৰীৰ তালিকা</string>
     <string name="icon_title_rmc">প্ৰজননৰ আয়ুস তালিকা</string>

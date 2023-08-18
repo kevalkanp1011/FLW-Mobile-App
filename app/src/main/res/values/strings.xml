@@ -21,22 +21,7 @@
 
 
     <!-- BEN KID -->
-    <string name="nbr_image">Photo</string>
-    <string name="nbr_image_sub">Tap to use camera</string>
-    <string name="nbr_dor">Date of Registration</string>
-    <string name="nbr_nb_first_name">First Name</string>
-    <string name="nbr_nb_last_name">Last Name / Surname</string>
-    <string name="nbr_nb_age_unit">Age Unit</string>
-    <string-array name="nbr_age_unit_array">
-        <item name="nbr_age_unit_1">Day</item>
-        <item name="nbr_age_unit_2">Month</item>
-        <item name="nbr_age_unit_3">Year</item>
-    </string-array>
-    <string-array name="nbr_gender_array">
-        <item name="nbr_gender_1">Male</item>
-        <item name="nbr_gender_2">Female</item>
-        <item name="nbr_gender_3">Transgender</item>
-    </string-array>
+
 
     <string name="tracking_date">Date of Visit</string>
 
@@ -103,22 +88,6 @@
 
     <string name="title_activity_home" translatable="false">HomeActivity</string>
     <string name="nav_header_desc" translatable="false">Navigation header</string>
-
-
-    <!--    <string name="home_icon_title_all_ben">All Beneficiaries</string>-->
-    <!--    <string name="home_icon_title_elig_coup">Eligible Couples</string>-->
-    <!--    <string name="home_icon_title_child_care">Child Care</string>-->
-    <string name="child_care_icon_title_child_list">Child List</string>
-    <string name="child_care_icon_title_infant_list">Infant List</string>
-    <string name="child_care_icon_title_adolescent_list">Adolescent List</string>
-    <!--    <string name="home_icon_title_mother_care">Mother Care</string>-->
-    <!--    <string name="home_icon_title_death_rep">Death Reports</string>-->
-    <!--    <string name="home_icon_title_gen_op">General OP Care</string>-->
-    <!--    <string name="home_icon_title_hrp_cases">HRP Cases</string>-->
-    <!--    <string name="home_icon_title_imm_due">Immunization Due</string>-->
-    <!--    <string name="home_icon_title_menopause_stage_list">Menopause Stage List</string>-->
-    <!--    <string name="home_icon_title_ncd">NCD</string>-->
-    <!--    <string name="home_icon_title_village_lvl_forms">Village Level Forms</string>-->
 
     <string name="cd_icon_grid_icon">icon</string>
 
@@ -204,39 +173,6 @@
         In case of any doubts and concerns, please write an e-mail to IT SUPPORT TEAM \n
         <b>it.support@piramalfoundation.org</b>
     </string>
-    <string name="nbr_age">Age</string>
-    <string name="nbr_dob">Date of Birth</string>
-    <string name="nbr_gender">Gender</string>
-    <string name="nbr_father_name">Father\'s Name</string>
-    <string name="nbr_mother_name">Mother\'s Name</string>
-    <string name="nbr_mobile_number_of">Mobile Number Of</string>
-    <string name="nrb_contact_number">Contact Number</string>
-    <string name="nbr_rel_to_head">Relation with head of family</string>
-    <string name="nbr_rel_to_head_other">Other - Enter relation to head</string>
-    <string name="nbr_community">Community</string>
-    <string name="nbr_religion">Religion</string>
-    <string name="nbr_religion_other">Other - Enter Religion</string>
-    <string name="nbr_child_awc">Is the Child registered at AWC</string>
-    <string name="nbr_child_reg_school">Is the Child registered at School</string>
-    <string name="nbr_child_type_school">Type of School/Institute</string>
-    <string name="nbr_rch_id">RCH ID</string>
-    <string name="nbr_child_pob">Place of birth</string>
-    <string name="nbr_child_facility">Health Facility</string>
-    <string name="nbr_child_pob_other_facility">Other Facility</string>
-    <string name="nbr_child_pob_other">Other Place of Birth</string>
-    <string name="nbr_child_who_cond_del">Who Conducted Delivery</string>
-    <string name="nbr_child_who_cond_del_other">Other - Enter who Conducted Delivery</string>
-    <string name="nbr_child_type_del">Type of Delivery</string>
-    <string name="nbr_child_comp_del">Complications during delivery</string>
-    <string name="nbr_child_feed_1_hr">Breast feeding started within 1 hr of birth</string>
-    <string name="nbr_child_birth_dose">Birth Dose</string>
-    <string name="nbr_child_birth_dose_details">Given birth dose details</string>
-    <string name="nbr_child_term">Term</string>
-    <string name="nbr_child_gest_age">Gestational Age</string>
-    <string name="nbr_child_corticosteroid">Corticosteroid given to mother at labor</string>
-    <string name="nbr_child_cry_imm_birth">Baby cried immediately at birth</string>
-    <string name="nbr_child_defect_at_birth">Any Defect Seen at Birth</string>
-
 
     <string name="hbnc_day_text">Day %1d</string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -264,8 +200,6 @@
     <string name="form_input_error_invalid_rch">Invalid RCH ID !</string>
     <string name="form_input_error_invalid_aadhar">Invalid Aadhaar Number</string>
     <string name="no_records_found_hh">No Household records found. Please start registering households by clicking on the button below.</string>
-    <string name="something_went_wrong_nunable_to_connect_to_server_ntry_again_later">Something went wrong !\nUnable to connect to server !\nTry again later!</string>
-    <string name="try_again">Try Again!</string>
     <string name="version_2_0_0">Version 2.0.0</string>
     <string name="disagree">DISAGREE</string>
     <string name="agree">AGREE</string>
@@ -366,7 +300,6 @@
     <string name="hbyc">HBYC</string>
     <string name="hbyc_month_list">Hbyc Month List</string>
     <string name="immunization">Immunization</string>
-    <string name="child_immunization_list">Child Immunization List</string>
     <string name="pregnancy_registration_form">Pregnancy Registration Form</string>
     <string name="anc_visit">ANC Visit</string>
     <string name="eligible_couple_list">Eligible Couple List</string>
@@ -382,22 +315,10 @@
     <string name="delivery_outcome_list">Delivery Outcome List</string>
     <string name="infant_reg_list">Infant Reg List</string>
     <string name="infant_reg">Infant Reg</string>
-    <string name="child_reg_list">Child Reg List</string>
-    <string name="child_reg">Child Reg.</string>
     <string name="communicable_diseases">Communicable Diseases</string>
     <string name="dashboard">Dashboard</string>
     <string name="sign_in">Sign In</string>
     <string name="service_location">Service Location</string>
-
-    <string name="wife_s_name">Wife\'s Name</string>
-    <string name="spouse_s_name">Spouse\'s Name</string>
-    <string name="age_at_marriage">Age At Marriage</string>
-    <string name="date_of_marriage">Date of Marriage</string>
-    <string name="father_s_name">Father\'s Name</string>
-    <string name="mother_s_name">Mother\'s Name</string>
-    <string name="mobile_number_of">Mobile Number Of</string>
-    <string name="other_mobile_number_of">Other - Mobile Number of</string>
-    <string name="form_name">Form Name</string>
 
     <!-- Eligible couple registration -->
     <string-array name="ecr_gender_array">

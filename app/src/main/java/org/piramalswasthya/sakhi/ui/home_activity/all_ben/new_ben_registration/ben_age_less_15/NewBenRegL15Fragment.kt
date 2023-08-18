@@ -23,6 +23,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.BuildConfig
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.contracts.SpeechToTextContract
 import org.piramalswasthya.sakhi.databinding.FragmentInputFormPageHhBinding
@@ -161,8 +162,8 @@ class NewBenRegL15Fragment : Fragment() {
         lifecycleScope.launch {
             viewModel.currentPage.collect {
                 binding.tvTitle.text = when (it) {
-                    1 -> "Beneficiary Details"
-                    2 -> "Birth Details"
+                    1 -> getString(R.string.beneficiary_details)
+                    2 -> getString(R.string.birth_details)
                     else -> null
                 }
 //                binding.tlNhhr.selectTab(binding.tlNhhr.getTabAt(it - 1), true)
