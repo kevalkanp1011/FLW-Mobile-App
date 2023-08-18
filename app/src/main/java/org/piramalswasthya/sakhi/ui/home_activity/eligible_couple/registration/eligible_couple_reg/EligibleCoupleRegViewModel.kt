@@ -103,9 +103,11 @@ class EligibleCoupleRegViewModel @Inject constructor(
                     dataset.mapValues(ecrForm, 1)
                     ecrRepo.persistRecord(ecrForm)
                     ecrRepo.getBenFromId(benId)?.let {
-                        val hasBenUpdated = dataset.mapValueToBenRegId(it)
-                        if (hasBenUpdated)
+                        val hasBenUpdated = dataset.mapValueToBen(it)
+                        if (hasBenUpdated) {
                             benRepo.persistRecord(it)
+
+                        }
                     }
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {

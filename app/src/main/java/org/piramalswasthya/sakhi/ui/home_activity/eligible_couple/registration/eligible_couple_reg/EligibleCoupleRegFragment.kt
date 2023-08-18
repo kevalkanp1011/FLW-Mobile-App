@@ -39,7 +39,7 @@ class EligibleCoupleRegFragment : Fragment() {
         viewModel.recordExists.observe(viewLifecycleOwner) { notIt ->
             notIt?.let { recordExists ->
 //                binding.fabEdit.visibility = if(recordExists) View.VISIBLE else View.GONE
-                binding.btnSubmit.visibility = if(recordExists) View.GONE else View.VISIBLE
+                binding.btnSubmit.visibility = if (recordExists) View.GONE else View.VISIBLE
                 val adapter = FormInputAdapter(
                     formValueListener = FormInputAdapter.FormValueListener { formId, index ->
                         viewModel.updateListOnValueChanged(formId, index)
@@ -70,7 +70,7 @@ class EligibleCoupleRegFragment : Fragment() {
             when (it) {
                 EligibleCoupleRegViewModel.State.SAVE_SUCCESS -> {
                     findNavController().navigateUp()
-                    WorkerUtils.triggerECPushWorker(requireContext())
+                    WorkerUtils.triggerAmritPushWorker(requireContext())
                 }
 
                 else -> {}
@@ -106,47 +106,58 @@ class EligibleCoupleRegFragment : Fragment() {
                     notifyItemChanged(viewModel.getIndexOfAge1())
                     notifyItemChanged(viewModel.getIndexOfGap1())
                 }
+
                 22 -> {
                     notifyItemChanged(viewModel.getIndexOfAge2())
                     notifyItemChanged(viewModel.getIndexOfGap2())
                 }
+
                 27 -> {
                     notifyItemChanged(viewModel.getIndexOfAge3())
                     notifyItemChanged(viewModel.getIndexOfGap3())
                 }
+
                 32 -> {
                     notifyItemChanged(viewModel.getIndexOfAge4())
                     notifyItemChanged(viewModel.getIndexOfGap4())
                 }
+
                 37 -> {
                     notifyItemChanged(viewModel.getIndexOfAge5())
                     notifyItemChanged(viewModel.getIndexOfGap5())
                 }
+
                 42 -> {
                     notifyItemChanged(viewModel.getIndexOfAge6())
                     notifyItemChanged(viewModel.getIndexOfGap6())
                 }
+
                 47 -> {
                     notifyItemChanged(viewModel.getIndexOfAge7())
                     notifyItemChanged(viewModel.getIndexOfGap7())
                 }
+
                 52 -> {
                     notifyItemChanged(viewModel.getIndexOfAge8())
                     notifyItemChanged(viewModel.getIndexOfGap8())
                 }
+
                 57 -> {
                     notifyItemChanged(viewModel.getIndexOfAge9())
                     notifyItemChanged(viewModel.getIndexOfGap9())
                 }
+
                 12 -> {
                     notifyItemChanged(viewModel.getIndexOfLiveChildren())
                     notifyItemChanged(viewModel.getIndexOfMaleChildren())
                     notifyItemChanged(viewModel.getIndexOfFeMaleChildren())
                 }
+
                 19, 24, 29, 34, 39, 44, 49, 54, 59 -> {
                     notifyItemChanged(viewModel.getIndexOfMaleChildren())
                     notifyItemChanged(viewModel.getIndexOfFeMaleChildren())
                 }
+
                 13 -> {
                     notifyItemChanged(viewModel.getIndexOfChildren())
                 }

@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.configuration
 import android.content.Context
 import android.text.InputType
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.AgeUnit
@@ -744,6 +745,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         ben?.let {
             dateOfReg.min = it.regDate
             rchId.value = ben.rchId
+            aadharNo.value = ben.aadharNum
             name.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
             husbandName.value = ben.genDetails?.spouseName
             age.value = BenBasicCache.getAgeFromDob(ben.dob).toString()
@@ -756,7 +758,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             }
         }
         saved?.let { ecCache ->
-            aadharNo.value = ecCache.aadharNo?.toString()
+
             bankAccount.value = ecCache.bankAccount?.toString()
             bankName.value = ecCache.bankName
             branchName.value = ecCache.branchName
@@ -765,8 +767,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             noOfLiveChildren.value = ecCache.noOfLiveChildren.toString()
             numMale.value = ecCache.noOfMaleChildren.toString()
             numFemale.value = ecCache.noOfFemaleChildren.toString()
-            if (ecCache.noOfLiveChildren!! > 0) {
-
+            if (ecCache.noOfLiveChildren > 0) {
                 ecCache.dob1?.let {
                     dob1.value = getDateFromLong(it)
                     age1.value = if (BenBasicCache.getAgeUnitFromDob(it)
@@ -774,16 +775,20 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ) {
                         BenBasicCache.getAgeFromDob(it).toString()
                     } else "0"
+
+                }
+                ecCache.gender1?.let {
+                    gender1.value =
+                        if (it == Gender.MALE) gender1.entries!![0] else gender1.entries!![1]
                 }
                 marriageFirstChildGap.value = ecCache.marriageFirstChildGap?.toString()
 
                 list.addAll(
-                    list.indexOf(numFemale) + 1,
-                    listOf(firstChildDetails, dob1, age1, marriageFirstChildGap)
+                    list.indexOf(noOfLiveChildren) + 1,
+                    listOf(firstChildDetails, dob1, age1, gender1, marriageFirstChildGap)
                 )
             }
-            if (ecCache.noOfLiveChildren!! > 1) {
-
+            if (ecCache.noOfLiveChildren > 1) {
                 ecCache.dob2?.let {
                     dob2.value = getDateFromLong(it)
                     age2.value = if (BenBasicCache.getAgeUnitFromDob(it)
@@ -791,16 +796,21 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ) {
                         BenBasicCache.getAgeFromDob(it).toString()
                     } else "0"
+
                 }
+                ecCache.gender2?.let {
+                    gender2.value =
+                        if (it == Gender.MALE) gender2.entries!![0] else gender2.entries!![1]
+                }
+
                 firstAndSecondChildGap.value = ecCache.firstAndSecondChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(marriageFirstChildGap) + 1,
-                    listOf(secondChildDetails, dob2, age2, firstAndSecondChildGap)
+                    listOf(secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap)
                 )
             }
-            if (ecCache.noOfLiveChildren!! > 2) {
-
+            if (ecCache.noOfLiveChildren > 2) {
                 ecCache.dob3?.let {
                     dob3.value = getDateFromLong(it)
                     age3.value = if (BenBasicCache.getAgeUnitFromDob(it)
@@ -809,15 +819,19 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                         BenBasicCache.getAgeFromDob(it).toString()
                     } else "0"
                 }
+                ecCache.gender3?.let {
+                    gender3.value =
+                        if (it == Gender.MALE) gender3.entries!![0] else gender3.entries!![1]
+                }
+
                 secondAndThirdChildGap.value = ecCache.secondAndThirdChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(firstAndSecondChildGap) + 1,
-                    listOf(thirdChildDetails, dob3, age3, secondAndThirdChildGap)
+                    listOf(thirdChildDetails, dob3, age3, gender3, secondAndThirdChildGap)
                 )
             }
-            if (ecCache.noOfLiveChildren!! > 3) {
-
+            if (ecCache.noOfLiveChildren > 3) {
                 ecCache.dob4?.let {
                     dob4.value = getDateFromLong(it)
                     age4.value = if (BenBasicCache.getAgeUnitFromDob(it)
@@ -826,15 +840,19 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                         BenBasicCache.getAgeFromDob(it).toString()
                     } else "0"
                 }
+                ecCache.gender4?.let {
+                    gender4.value =
+                        if (it == Gender.MALE) gender4.entries!![0] else gender4.entries!![1]
+                }
+
                 thirdAndFourthChildGap.value = ecCache.thirdAndFourthChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(secondAndThirdChildGap) + 1,
-                    listOf(fourthChildDetails, dob4, age4, thirdAndFourthChildGap)
+                    listOf(fourthChildDetails, dob4, age4, gender4, thirdAndFourthChildGap)
                 )
             }
-            if (ecCache.noOfLiveChildren!! > 4) {
-
+            if (ecCache.noOfLiveChildren > 4) {
                 ecCache.dob5?.let {
                     dob5.value = getDateFromLong(it)
                     age5.value = if (BenBasicCache.getAgeUnitFromDob(it)
@@ -843,15 +861,19 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                         BenBasicCache.getAgeFromDob(it).toString()
                     } else "0"
                 }
+                ecCache.gender5?.let {
+                    gender5.value =
+                        if (it == Gender.MALE) gender5.entries!![0] else gender5.entries!![1]
+                }
+
                 fourthAndFifthChildGap.value = ecCache.fourthAndFifthChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(thirdAndFourthChildGap) + 1,
-                    listOf(fifthChildDetails, dob5, age5, fourthAndFifthChildGap)
+                    listOf(fifthChildDetails, dob5, age5, gender5, fourthAndFifthChildGap)
                 )
             }
-            if (ecCache.noOfLiveChildren!! > 5) {
-
+            if (ecCache.noOfLiveChildren > 5) {
                 ecCache.dob6?.let {
                     dob6.value = getDateFromLong(it)
                     age6.value = if (BenBasicCache.getAgeUnitFromDob(it)
@@ -860,15 +882,19 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                         BenBasicCache.getAgeFromDob(it).toString()
                     } else "0"
                 }
+                ecCache.gender6?.let {
+                    gender6.value =
+                        if (it == Gender.MALE) gender6.entries!![0] else gender6.entries!![1]
+                }
+
                 fifthAndSixthChildGap.value = ecCache.fifthANdSixthChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(fourthAndFifthChildGap) + 1,
-                    listOf(sixthChildDetails, dob6, age6, fifthAndSixthChildGap)
+                    listOf(sixthChildDetails, dob6, age6, gender6, fifthAndSixthChildGap)
                 )
             }
-            if (ecCache.noOfLiveChildren!! > 6) {
-
+            if (ecCache.noOfLiveChildren > 6) {
                 ecCache.dob7?.let {
                     dob7.value = getDateFromLong(it)
                     age7.value = if (BenBasicCache.getAgeUnitFromDob(it)
@@ -877,15 +903,19 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                         BenBasicCache.getAgeFromDob(it).toString()
                     } else "0"
                 }
+                ecCache.gender7?.let {
+                    gender7.value =
+                        if (it == Gender.MALE) gender7.entries!![0] else gender7.entries!![1]
+                }
+
                 sixthAndSeventhChildGap.value = ecCache.sixthAndSeventhChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(fifthAndSixthChildGap) + 1,
-                    listOf(sixthChildDetails, dob7, age7, sixthAndSeventhChildGap)
+                    listOf(sixthChildDetails, dob7, age7, gender7, sixthAndSeventhChildGap)
                 )
             }
-            if (ecCache.noOfLiveChildren!! > 7) {
-
+            if (ecCache.noOfLiveChildren > 7) {
                 ecCache.dob8?.let {
                     dob8.value = getDateFromLong(it)
                     age8.value = if (BenBasicCache.getAgeUnitFromDob(it)
@@ -894,15 +924,19 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                         BenBasicCache.getAgeFromDob(it).toString()
                     } else "0"
                 }
+                ecCache.gender8?.let {
+                    gender8.value =
+                        if (it == Gender.MALE) gender8.entries!![0] else gender8.entries!![1]
+                }
+
                 seventhAndEighthChildGap.value = ecCache.seventhAndEighthChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(sixthAndSeventhChildGap) + 1,
-                    listOf(eighthChildDetails, dob8, age8, seventhAndEighthChildGap)
+                    listOf(eighthChildDetails, dob8, age8, gender8, seventhAndEighthChildGap)
                 )
             }
-            if (ecCache.noOfLiveChildren!! > 8) {
-
+            if (ecCache.noOfLiveChildren > 8) {
                 ecCache.dob9?.let {
                     dob9.value = getDateFromLong(it)
                     age9.value = if (BenBasicCache.getAgeUnitFromDob(it)
@@ -911,11 +945,15 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                         BenBasicCache.getAgeFromDob(it).toString()
                     } else "0"
                 }
-                eighthAndNinthChildGap.value = ecCache.eighthAndNinthChildGap?.toString()
+                ecCache.gender9?.let {
+                    gender9.value =
+                        if (it == Gender.MALE) gender9.entries!![0] else gender9.entries!![1]
+                }
 
+                eighthAndNinthChildGap.value = ecCache.eighthAndNinthChildGap?.toString()
                 list.addAll(
                     list.indexOf(seventhAndEighthChildGap) + 1,
-                    listOf(ninthChildDetails, dob9, age9, eighthAndNinthChildGap)
+                    listOf(ninthChildDetails, dob9, age9, gender9, eighthAndNinthChildGap)
                 )
             }
         }
@@ -1044,7 +1082,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                 validateIntMinMax(noOfChildren)
                 if (noOfLiveChildren.value.isNullOrEmpty()) {
                     triggerDependants(
-                        source = numFemale,
+                        source = noOfLiveChildren,
                         addItems = listOf(),
                         removeItems = listOf(
                             firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
@@ -1061,7 +1099,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                 }
                 when (noOfLiveChildren.value.takeIf { !it.isNullOrEmpty() }?.toInt() ?: 0) {
                     0 -> triggerDependants(
-                        source = numFemale,
+                        source = noOfLiveChildren,
                         addItems = listOf(),
                         removeItems = listOf(
                             firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
@@ -1077,7 +1115,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     )
 
                     1 -> triggerDependants(
-                        source = numFemale,
+                        source = noOfLiveChildren,
                         addItems = listOf(
                             firstChildDetails,
                             dob1,
@@ -1099,7 +1137,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     )
 
                     2 -> triggerDependants(
-                        source = numFemale,
+                        source = noOfLiveChildren,
                         addItems = listOf(
                             firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
                             secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap
@@ -1118,7 +1156,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     )
 
                     3 -> triggerDependants(
-                        source = numFemale,
+                        source = noOfLiveChildren,
                         addItems = listOf(
                             firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
                             secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
@@ -1138,7 +1176,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     )
 
                     4 -> triggerDependants(
-                        source = numFemale,
+                        source = noOfLiveChildren,
                         addItems = listOf(
                             firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
                             secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
@@ -1159,7 +1197,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     )
 
                     5 -> triggerDependants(
-                        source = numFemale,
+                        source = noOfLiveChildren,
                         addItems = listOf(
                             firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
                             secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
@@ -1181,7 +1219,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     )
 
                     6 -> triggerDependants(
-                        source = numFemale,
+                        source = noOfLiveChildren,
                         addItems = listOf(
                             firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
                             secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
@@ -1204,7 +1242,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     )
 
                     7 -> triggerDependants(
-                        source = numFemale,
+                        source = noOfLiveChildren,
                         addItems = listOf(
                             firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
                             secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
@@ -1228,7 +1266,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     )
 
                     8 -> triggerDependants(
-                        source = numFemale,
+                        source = noOfLiveChildren,
                         addItems = listOf(
                             firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
                             secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
@@ -1253,7 +1291,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     )
 
                     9 -> triggerDependants(
-                        source = numFemale,
+                        source = noOfLiveChildren,
                         addItems = listOf(
                             firstChildDetails, dob1, age1, gender1, marriageFirstChildGap,
                             secondChildDetails, dob2, age2, gender2, firstAndSecondChildGap,
@@ -1279,7 +1317,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     )
 
                     else -> triggerDependants(
-                        source = numFemale,
+                        source = noOfLiveChildren,
                         addItems = listOf(
                             firstChildDetails,
                             dob1,
@@ -1423,20 +1461,14 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
         (cacheModel as EligibleCoupleRegCache).let { ecr ->
             ecr.dateOfReg = getLongFromDate(dateOfReg.value!!)
-            ecr.rchId = rchId.value?.takeIf { it.isNotEmpty() }?.toLong()
-            ecr.name = name.value
-            ecr.husbandName = husbandName.value
-            ecr.age = age.value?.toInt()
-            ecr.ageAtMarriage = ageAtMarriage.value?.toInt()
-            ecr.aadharNo = aadharNo.value?.toLong()
             ecr.bankAccount = bankAccount.value?.toLong()
             ecr.bankName = bankName.value
             ecr.branchName = branchName.value
             ecr.ifsc = ifsc.value
-            ecr.noOfChildren = noOfChildren.value?.toInt()
-            ecr.noOfLiveChildren = noOfLiveChildren.value?.toInt()
-            ecr.noOfMaleChildren = numMale.value?.toInt()
-            ecr.noOfFemaleChildren = numFemale.value?.toInt()
+            ecr.noOfChildren = noOfChildren.value?.toInt() ?: 0
+            ecr.noOfLiveChildren = noOfLiveChildren.value?.toInt() ?: 0
+            ecr.noOfMaleChildren = numMale.value?.toInt() ?: 0
+            ecr.noOfFemaleChildren = numFemale.value?.toInt() ?: 0
             ecr.dob1 = getLongFromDate(dob1.value)
             ecr.age1 = age1.value?.toInt()
             ecr.gender1 = when (gender1.value) {
@@ -1528,17 +1560,31 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         }
     }
 
-    fun mapValueToBenRegId(ben: BenRegCache?): Boolean {
+    fun mapValueToBen(ben: BenRegCache?): Boolean {
+        var isUpdated = false;
         val rchIdFromBen = ben?.rchId?.takeIf { it.isNotEmpty() }?.toLong()
+        val aadharNoFromBen = ben?.aadharNum?.takeIf { it.isNotEmpty() }?.toLong()
         rchId.value?.takeIf {
             it.isNotEmpty()
         }?.toLong()?.let {
             if (it != rchIdFromBen) {
                 ben?.rchId = it.toString()
-                return true
+                isUpdated = true
             }
         }
-        return false
+        aadharNo.value?.takeIf {
+            it.isNotEmpty()
+        }?.toLong()?.let {
+            if (it != aadharNoFromBen) {
+                ben?.aadharNum = it.toString()
+                isUpdated = true
+            }
+        }
+        if (isUpdated) {
+            ben?.processed = "U"
+            ben?.syncState = SyncState.UNSYNCED
+        }
+        return isUpdated
     }
 
     fun getIndexOfChildren() = getIndexById(noOfChildren.id)

@@ -13,6 +13,7 @@ import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.EcrPost
 import org.piramalswasthya.sakhi.model.EligibleCoupleRegCache
 import org.piramalswasthya.sakhi.model.EligibleCoupleTrackingCache
+import org.piramalswasthya.sakhi.model.Gender
 import org.piramalswasthya.sakhi.network.AmritApiService
 import org.piramalswasthya.sakhi.network.GetDataPaginatedRequest
 import timber.log.Timber
@@ -103,9 +104,9 @@ class EcrRepo @Inject constructor(
                     if (responseString != null) {
                         val jsonObj = JSONObject(responseString)
 
-                        val errormessage = jsonObj.getString("message")
-                        if (jsonObj.isNull("status")) throw IllegalStateException("Amrit server not responding properly, Contact Service Administrator!!")
-                        val responsestatuscode = jsonObj.getInt("status")
+                        val errormessage = jsonObj.getString("errorMessage")
+                        if (jsonObj.isNull("statusCode")) throw IllegalStateException("Amrit server not responding properly, Contact Service Administrator!!")
+                        val responsestatuscode = jsonObj.getInt("statusCode")
 
                         when (responsestatuscode) {
                             200 -> {
@@ -308,7 +309,7 @@ class EcrRepo @Inject constructor(
                 ?: throw IllegalStateException("No user logged in!!")
             val lastTimeStamp = Konstants.defaultTimeStamp
             try {
-                val response = tmcNetworkApiService.getEcrFormData(
+                val response = tmcNetworkApiService.getEctFormData(
                     GetDataPaginatedRequest(
                         user.userId, 0, getCurrentDate(lastTimeStamp), getCurrentDate()
                     )
@@ -376,63 +377,172 @@ class EcrRepo @Inject constructor(
     private fun getEcrCacheFromServerResponse(dataObj: JSONArray): List<EligibleCoupleRegCache> {
 //        TODO()
         val list = mutableListOf<EligibleCoupleRegCache>()
+        var numMale: Int
+        var numFemale: Int
         for (i in 0 until dataObj.length()) {
             val ecrJson = dataObj.getJSONObject(i)
-            val ecr = EligibleCoupleRegCache(
+            numMale = 0
+            numFemale = 0
+            try {
+                val ecr = EligibleCoupleRegCache(
+                    benId = ecrJson.getLong("benId"),
+                    dateOfReg = if (ecrJson.has("dateOfReg")) getLongFromDate(
+                        ecrJson.getString(
+                            "dateOfReg"
+                        )
+                    ) else getLongFromDate(
+                        ecrJson.getString("createdDate")
+                    ),
+                    bankAccount = if (ecrJson.has("bankAccountNumber")) ecrJson.getLong("bankAccount") else null,
+                    bankName = if (ecrJson.has("bankName")) ecrJson.getString("bankName") else null,
+                    branchName = if (ecrJson.has("branchName")) ecrJson.getString("branchName") else null,
+                    ifsc = if (ecrJson.has("ifsc")) ecrJson.getString("ifsc") else null,
+                    noOfChildren = if (ecrJson.has("numChildren")) ecrJson.getInt("numChildren") else 0,
+//                    noOfLiveChildren = if (ecrJson.has("noOfLiveChildren")) ecrJson.getInt("noOfLiveChildren") else 0,
+//                    noOfMaleChildren = if (ecrJson.has("noOfMaleChildren")) ecrJson.getInt("noOfMaleChildren") else 0,
+//                    noOfFemaleChildren = if (ecrJson.has("noOfFemaleChildren")) ecrJson.getInt("noOfFemaleChildren") else 0,
+                    dob1 = if (ecrJson.has("dob1")) getLongFromDate(ecrJson.getString("dob1")) else null,
+                    age1 = if (ecrJson.has("age1")) ecrJson.getInt("age1") else null,
+                    gender1 = if (ecrJson.has("gender1")) ecrJson.getString("gender1")
+                        .uppercase()
+                        .let {
+                            Gender.valueOf(it)
+                                .also { if (it == Gender.MALE) numMale++ else numFemale++ }
+                        } else null,
+                    marriageFirstChildGap = if (ecrJson.has("marriageFirstChildGap")) ecrJson.getInt(
+                        "marriageFirstChildGap"
+                    ) else null,
+                    dob2 = if (ecrJson.has("dob2")) getLongFromDate(ecrJson.getString("dob2")) else null,
+                    age2 = if (ecrJson.has("age2")) ecrJson.getInt("age2") else null,
+                    gender2 = if (ecrJson.has("gender2")) ecrJson.getString("gender2")
+                        .uppercase()
+                        .let {
+                            Gender.valueOf(it)
+                                .also { if (it == Gender.MALE) numMale++ else numFemale++ }
+                        } else null,
+                    firstAndSecondChildGap = if (ecrJson.has("firstAndSecondChildGap")) ecrJson.getInt(
+                        "firstAndSecondChildGap"
+                    ) else null,
+                    dob3 = if (ecrJson.has("dob3")) getLongFromDate(ecrJson.getString("dob3")) else null,
+                    age3 = if (ecrJson.has("age3")) ecrJson.getInt("age3") else null,
+                    gender3 = if (ecrJson.has("gender3")) ecrJson.getString("gender3")
+                        .uppercase()
+                        .let {
+                            Gender.valueOf(it)
+                                .also { if (it == Gender.MALE) numMale++ else numFemale++ }
+                        } else null,
+                    secondAndThirdChildGap = if (ecrJson.has("secondAndThirdChildGap")) ecrJson.getInt(
+                        "secondAndThirdChildGap"
+                    ) else null,
+                    dob4 = if (ecrJson.has("dob4")) getLongFromDate(ecrJson.getString("dob4")) else null,
+                    age4 = if (ecrJson.has("age4")) ecrJson.getInt("age4") else null,
+                    gender4 = if (ecrJson.has("gender4")) ecrJson.getString("gender4")
+                        .uppercase()
+                        .let {
+                            Gender.valueOf(it)
+                                .also { if (it == Gender.MALE) numMale++ else numFemale++ }
+                        } else null,
+                    thirdAndFourthChildGap = if (ecrJson.has("thirdAndFourthChildGap")) ecrJson.getInt(
+                        "thirdAndFourthChildGap"
+                    ) else null,
+                    dob5 = if (ecrJson.has("dob5")) getLongFromDate(ecrJson.getString("dob5")) else null,
+                    age5 = if (ecrJson.has("age5")) ecrJson.getInt("age5") else null,
+                    gender5 = if (ecrJson.has("gender5")) ecrJson.getString("gender5")
+                        .uppercase()
+                        .let {
+                            Gender.valueOf(it)
+                                .also { if (it == Gender.MALE) numMale++ else numFemale++ }
+                        } else null,
+                    fourthAndFifthChildGap = if (ecrJson.has("fourthAndFifthChildGap")) ecrJson.getInt(
+                        "fourthAndFifthChildGap"
+                    ) else null,
+                    dob6 = if (ecrJson.has("dob6")) getLongFromDate(ecrJson.getString("dob6")) else null,
+                    age6 = if (ecrJson.has("age6")) ecrJson.getInt("age6") else null,
+                    gender6 = if (ecrJson.has("gender6")) ecrJson.getString("gender6")
+                        .uppercase()
+                        .let {
+                            Gender.valueOf(it)
+                                .also { if (it == Gender.MALE) numMale++ else numFemale++ }
+                        } else null,
+                    fifthANdSixthChildGap = if (ecrJson.has("fifthANdSixthChildGap")) ecrJson.getInt(
+                        "fifthANdSixthChildGap"
+                    ) else null,
+                    dob7 = if (ecrJson.has("dob7")) getLongFromDate(ecrJson.getString("dob7")) else null,
+                    age7 = if (ecrJson.has("age7")) ecrJson.getInt("age7") else null,
+                    gender7 = if (ecrJson.has("gender7")) ecrJson.getString("gender7")
+                        .uppercase()
+                        .let {
+                            Gender.valueOf(it)
+                                .also { if (it == Gender.MALE) numMale++ else numFemale++ }
+                        } else null,
+                    sixthAndSeventhChildGap = if (ecrJson.has("sixthAndSeventhChildGap")) ecrJson.getInt(
+                        "sixthAndSeventhChildGap"
+                    ) else null,
+                    dob8 = if (ecrJson.has("dob8")) getLongFromDate(ecrJson.getString("dob8")) else null,
+                    age8 = if (ecrJson.has("age8")) ecrJson.getInt("age8") else null,
+                    gender8 = if (ecrJson.has("gender8")) ecrJson.getString("gender8")
+                        .uppercase()
+                        .let {
+                            Gender.valueOf(it)
+                                .also { if (it == Gender.MALE) numMale++ else numFemale++ }
+                        } else null,
+                    seventhAndEighthChildGap = if (ecrJson.has("seventhAndEighthChildGap")) ecrJson.getInt(
+                        "seventhAndEighthChildGap"
+                    ) else null,
+                    dob9 = if (ecrJson.has("dob9")) getLongFromDate(ecrJson.getString("dob9")) else null,
+                    age9 = if (ecrJson.has("age9")) ecrJson.getInt("age9") else null,
+                    gender9 = if (ecrJson.has("gender9")) ecrJson.getString("gender9")
+                        .uppercase()
+                        .let {
+                            Gender.valueOf(it)
+                                .also { if (it == Gender.MALE) numMale++ else numFemale++ }
+                        } else null,
+                    eighthAndNinthChildGap = if (ecrJson.has("eighthAndNinthChildGap")) ecrJson.getInt(
+                        "eighthAndNinthChildGap"
+                    ) else null,
+                    noOfLiveChildren = numMale + numFemale,
+                    noOfMaleChildren = numMale,
+                    noOfFemaleChildren = numFemale,
+                    processed = "P",
+                    createdBy = ecrJson.getString("createdBy"),
+                    createdDate = getLongFromDate(
+                        ecrJson.getString("createdDate")
+                    ),
+                    updatedBy = if (ecrJson.has("updatedBy")) ecrJson.getString("updatedBy") else ecrJson.getString(
+                        "createdBy"
+                    ),
+                    updatedDate = getLongFromDate(
+                        if (ecrJson.has("updatedDate")) ecrJson.getString(
+                            "updatedDate"
+                        ) else ecrJson.getString("createdDate")
+                    ),
+                    syncState = SyncState.SYNCED
+                )
+                list.add(ecr)
+            } catch (e: Exception) {
+                Timber.e("Caught $e at ECR PULL")
+            }
+
+        }
+
+        return list
+    }
+
+    private fun getEctCacheFromServerResponse(dataObj: JSONArray): List<EligibleCoupleTrackingCache> {
+//        TODO()
+        val list = mutableListOf<EligibleCoupleTrackingCache>()
+        for (i in 0 until dataObj.length()) {
+            val ecrJson = dataObj.getJSONObject(i)
+            val ecr = EligibleCoupleTrackingCache(
                 benId = ecrJson.getLong("benId"),
-//                dateOfReg = if (ecrJson.has("dateOfReg")) getLongFromDate(ecrJson.getString("dateOfReg")) else getLongFromDate(
-//                    ecrJson.getString("createdDate")),
-//                    rchId = null,
-//                    name =null,
-//                    husbandName = null,
-//                    age = null,
-//                    ageAtMarriage = null,
-//                    aadharNo = null,
-//                    bankAccount = null,
-//                    bankName = null,
-//                    branchName = null,
-//                    ifsc =,
-//                    noOfChildren =,
-//                    noOfLiveChildren =,
-//                    noOfMaleChildren =,
-//                    noOfFemaleChildren =,
-//                    dob1 =,
-//                    age1 =,
-//                    gender1 =,
-//                    marriageFirstChildGap =,
-//                    dob2 =,
-//                    age2 =,
-//                    gender2 =,
-//                    firstAndSecondChildGap =,
-//                    dob3 =,
-//                    age3 =,
-//                    gender3 =,
-//                    secondAndThirdChildGap =,
-//                    dob4 =,
-//                    age4 =,
-//                    gender4 =,
-//                    thirdAndFourthChildGap =,
-//                    dob5 =,
-//                    age5 =,
-//                    gender5 =,
-//                    fourthAndFifthChildGap =,
-//                    dob6 =,
-//                    age6 =,
-//                    gender6 =,
-//                    fifthANdSixthChildGap =,
-//                    dob7 =,
-//                    age7 =,
-//                    gender7 =,
-//                    sixthAndSeventhChildGap =,
-//                    dob8 =,
-//                    age8 =,
-//                    gender8 =,
-//                    seventhAndEighthChildGap =,
-//                    dob9 =,
-//                    age9 =,
-//                    gender9 =,
-//                    eighthAndNinthChildGap =,
-//                    processed =,
+                visitDate = getLongFromDate(ecrJson.getString("visitDate")),
+                isPregnancyTestDone = if (ecrJson.has("isPregnancyTestDone")) ecrJson.getString("isPregnancyTestDone") else null,
+                pregnancyTestResult = if (ecrJson.has("pregnancyTestResult")) ecrJson.getString("pregnancyTestResult") else null,
+                isPregnant = if (ecrJson.has("isPregnant")) ecrJson.getString("isPregnant") else null,
+                usingFamilyPlanning = if (ecrJson.has("usingFamilyPlanning")) ecrJson.getBoolean("usingFamilyPlanning") else null,
+                methodOfContraception = if (ecrJson.has("methodOfContraception")) ecrJson.getString(
+                    "methodOfContraception"
+                ) else null,
                 createdBy = ecrJson.getString("createdBy"),
                 createdDate = getLongFromDate(
                     ecrJson.getString("createdDate")
@@ -445,17 +555,13 @@ class EcrRepo @Inject constructor(
                         "updatedDate"
                     ) else ecrJson.getString("createdDate")
                 ),
+                processed = "P",
                 syncState = SyncState.SYNCED
             )
             list.add(ecr)
 
         }
         return list
-    }
-
-    private fun getEctCacheFromServerResponse(dataObj: JSONArray): List<EligibleCoupleTrackingCache> {
-//        TODO()
-        return emptyList()
     }
 //    private suspend fun saveECRCacheFromResponse(dataObj: String): MutableList<EligibleCoupleRegCache> {
 //        val tbScreeningList = mutableListOf<TBScreeningCache>()
