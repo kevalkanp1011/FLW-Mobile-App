@@ -6,6 +6,7 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.helpers.Languages
+import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.model.AgeUnit
 import org.piramalswasthya.sakhi.model.BenBasicCache
 import org.piramalswasthya.sakhi.model.BenRegCache
@@ -271,7 +272,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val marriageFirstChildGap = FormElement(
         id = 20,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Gap between Date of marriage and 1st child",
         arrayId = -1,
         required = true,
@@ -325,7 +326,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val firstAndSecondChildGap = FormElement(
         id = 25,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Gap between 1st child and 2nd Child",
         arrayId = -1,
         required = true,
@@ -379,7 +380,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val secondAndThirdChildGap = FormElement(
         id = 30,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Gap between 2nd child and 3rd Child",
         arrayId = -1,
         required = true,
@@ -433,7 +434,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val thirdAndFourthChildGap = FormElement(
         id = 35,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Gap between 3rd Child and 4th Child",
         arrayId = -1,
         required = true,
@@ -487,7 +488,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val fourthAndFifthChildGap = FormElement(
         id = 40,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Gap between 4th child and 5th Child",
         arrayId = -1,
         required = true,
@@ -541,7 +542,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val fifthAndSixthChildGap = FormElement(
         id = 45,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Gap between 5th child and 6th Child",
         arrayId = -1,
         required = true,
@@ -595,7 +596,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val sixthAndSeventhChildGap = FormElement(
         id = 50,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Gap between 6th child and 7th Child",
         arrayId = -1,
         required = true,
@@ -649,7 +650,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val seventhAndEighthChildGap = FormElement(
         id = 55,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Gap between 7th child and 8th Child",
         arrayId = -1,
         required = true,
@@ -701,9 +702,10 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         hasDependants = true,
     )
 
+    private var timeAtMarriage: Long = 0L
     private val eighthAndNinthChildGap = FormElement(
         id = 60,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Gap between 8th child and 9th Child",
         arrayId = -1,
         required = true,
@@ -755,10 +757,11 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                 cal.timeInMillis = ben.dob
                 cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + it1)
                 dob1.min = cal.timeInMillis
+                timeAtMarriage = cal.timeInMillis
             }
         }
         saved?.let { ecCache ->
-
+            dateOfReg.value = getDateFromLong(ecCache.dateOfReg)
             bankAccount.value = ecCache.bankAccount?.toString()
             bankName.value = ecCache.bankName
             branchName.value = ecCache.branchName
@@ -963,12 +966,16 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
+            rchId.id -> {
+                validateRchIdOnEditText(rchId)
+            }
+
             aadharNo.id -> {
                 validateIntMinMax(aadharNo)
             }
 
             bankAccount.id -> {
-                validateIntMinMax(bankAccount)
+                validateAllZerosOnEditText(bankAccount)
             }
 
             bankName.id -> {
@@ -976,7 +983,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             }
 
             branchName.id -> {
-                validateAllAlphaNumericSpaceOnEditText(branchName)
+                validateAllAlphabetsSpaceOnEditText(branchName)
             }
 
             ifsc.id -> {
@@ -1015,64 +1022,99 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             }
 
             dob1.id -> {
-                assignValuesToAgeFromDob(getLongFromDate(dob1.value), age1)
-                setMarriageAndFirstChildGap()
-                dob2.min = getLongFromDate(dob1.value)
+                if (dob1.value != null && timeAtMarriage != 0L) {
+                    val dob1Long = getLongFromDate(dob1.value)
+                    assignValuesToAgeFromDob(dob1Long, age1)
+                    setSiblingAgeDiff(timeAtMarriage, dob1Long, marriageFirstChildGap)
+                    dob2.min = dob1Long
+                }
                 -1
             }
 
             dob2.id -> {
-                assignValuesToAgeFromDob(getLongFromDate(dob2.value), age2)
-                setFirstChildAndSecondChildGap()
-                dob3.min = getLongFromDate(dob2.value)
+                if (dob1.value != null && dob2.value != null) {
+                    val dob2Long = getLongFromDate(dob2.value)
+                    val dob1Long = getLongFromDate(dob1.value)
+                    assignValuesToAgeFromDob(dob2Long, age2)
+                    setSiblingAgeDiff(dob1Long, dob2Long, firstAndSecondChildGap)
+                    dob3.min = dob2Long
+                }
                 -1
             }
 
             dob3.id -> {
-                assignValuesToAgeFromDob(getLongFromDate(dob3.value), age3)
-                setSecondAndThirdChildGap()
-                dob4.min = getLongFromDate(dob3.value)
+                if (dob2.value != null && dob3.value != null) {
+                    val dob2Long = getLongFromDate(dob2.value)
+                    val dob3Long = getLongFromDate(dob3.value)
+                    assignValuesToAgeFromDob(dob3Long, age3)
+                    setSiblingAgeDiff(dob2Long, dob3Long, secondAndThirdChildGap)
+                    dob4.min = dob3Long
+                }
                 -1
             }
 
             dob4.id -> {
-                assignValuesToAgeFromDob(getLongFromDate(dob4.value), age4)
-                setThirdAndFourthChildGap()
-                dob5.min = getLongFromDate(dob4.value)
+                if (dob3.value != null && dob4.value != null) {
+                    val dob3Long = getLongFromDate(dob3.value)
+                    val dob4Long = getLongFromDate(dob4.value)
+                    assignValuesToAgeFromDob(dob4Long, age4)
+                    setSiblingAgeDiff(dob3Long, dob4Long, thirdAndFourthChildGap)
+                    dob5.min = dob4Long
+                }
                 -1
             }
 
             dob5.id -> {
-                assignValuesToAgeFromDob(getLongFromDate(dob5.value), age5)
-                setFourthAndFifthChildGap()
-                dob6.min = getLongFromDate(dob5.value)
+                if (dob4.value != null && dob5.value != null) {
+                    val dob4Long = getLongFromDate(dob4.value)
+                    val dob5Long = getLongFromDate(dob5.value)
+                    assignValuesToAgeFromDob(dob5Long, age5)
+                    setSiblingAgeDiff(dob4Long, dob5Long, fourthAndFifthChildGap)
+                    dob6.min = dob5Long
+                }
                 -1
             }
 
             dob6.id -> {
-                assignValuesToAgeFromDob(getLongFromDate(dob6.value), age6)
-                setFifthAndSixthChildGap()
-                dob7.min = getLongFromDate(dob6.value)
+                if (dob5.value != null && dob6.value != null) {
+                    val dob5Long = getLongFromDate(dob5.value)
+                    val dob6Long = getLongFromDate(dob6.value)
+                    assignValuesToAgeFromDob(dob6Long, age6)
+                    setSiblingAgeDiff(dob5Long, dob6Long, fifthAndSixthChildGap)
+                    dob7.min = dob6Long
+                }
                 -1
             }
 
             dob7.id -> {
-                assignValuesToAgeFromDob(getLongFromDate(dob7.value), age7)
-                setSixthAndSeventhChildGap()
-                dob8.min = getLongFromDate(dob7.value)
+                if (dob6.value != null && dob7.value != null) {
+                    val dob6Long = getLongFromDate(dob6.value)
+                    val dob7Long = getLongFromDate(dob7.value)
+                    assignValuesToAgeFromDob(dob7Long, age7)
+                    setSiblingAgeDiff(dob6Long, dob7Long, sixthAndSeventhChildGap)
+                    dob8.min = dob7Long
+                }
                 -1
             }
 
             dob8.id -> {
-                assignValuesToAgeFromDob(getLongFromDate(dob8.value), age8)
-                setSeventhAndEighthChildGap()
-                dob9.min = getLongFromDate(dob8.value)
+                if (dob7.value != null && dob8.value != null) {
+                    val dob7Long = getLongFromDate(dob7.value)
+                    val dob8Long = getLongFromDate(dob8.value)
+                    assignValuesToAgeFromDob(dob8Long, age8)
+                    setSiblingAgeDiff(dob7Long, dob8Long, seventhAndEighthChildGap)
+                    dob9.min = dob8Long
+                }
                 -1
             }
 
             dob9.id -> {
-                assignValuesToAgeFromDob(getLongFromDate(dob9.value), age9)
-                setEighthAndNinthChildGap()
+                if (dob8.value != null && dob9.value != null) {
+                    val dob8Long = getLongFromDate(dob8.value)
+                    val dob9Long = getLongFromDate(dob9.value)
+                    assignValuesToAgeFromDob(dob9Long, age9)
+                    setSiblingAgeDiff(dob8Long, dob9Long, eighthAndNinthChildGap)
+                }
                 -1
             }
 
@@ -1409,54 +1451,66 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         }
     }
 
-    private fun setMarriageAndFirstChildGap() {
-        marriageFirstChildGap.value =
-            (age1.value?.let { age1 ->
-                (ageAtMarriage.value?.toInt()?.let { age.value?.toInt()?.minus(it) })?.minus(
-                    age1.toInt()
-                )
-            }).toString()
+//    private fun setMarriageAndFirstChildGap() {
+//        marriageFirstChildGap.value =
+//            (age1.value?.let { age1 ->
+//                (ageAtMarriage.value?.toInt()?.let { age.value?.toInt()?.minus(it) })?.minus(
+//                    age1.toInt()
+//                )
+//            }).toString()
+//    }
+
+    private fun setSiblingAgeDiff(old: Long, new: Long, target: FormElement) {
+        val calOld = Calendar.getInstance().setToStartOfTheDay().apply {
+            timeInMillis = old
+        }
+        val calNew = Calendar.getInstance().setToStartOfTheDay().apply {
+            timeInMillis = new
+        }
+        val diff = getDiffYears(calOld, calNew)
+        target.value = diff.toString()
     }
 
-    private fun setFirstChildAndSecondChildGap() {
-        firstAndSecondChildGap.value =
-            (age2.value?.toInt()?.let { age1.value?.toInt()?.minus(it) }).toString()
-    }
 
-    private fun setSecondAndThirdChildGap() {
-        secondAndThirdChildGap.value =
-            (age3.value?.toInt()?.let { age2.value?.toInt()?.minus(it) }).toString()
-    }
-
-    private fun setThirdAndFourthChildGap() {
-        thirdAndFourthChildGap.value =
-            (age4.value?.toInt()?.let { age3.value?.toInt()?.minus(it) }).toString()
-    }
-
-    private fun setFourthAndFifthChildGap() {
-        fourthAndFifthChildGap.value =
-            (age5.value?.toInt()?.let { age4.value?.toInt()?.minus(it) }).toString()
-    }
-
-    private fun setFifthAndSixthChildGap() {
-        fifthAndSixthChildGap.value =
-            (age6.value?.toInt()?.let { age5.value?.toInt()?.minus(it) }).toString()
-    }
-
-    private fun setSixthAndSeventhChildGap() {
-        sixthAndSeventhChildGap.value =
-            (age7.value?.toInt()?.let { age6.value?.toInt()?.minus(it) }).toString()
-    }
-
-    private fun setSeventhAndEighthChildGap() {
-        seventhAndEighthChildGap.value =
-            (age8.value?.toInt()?.let { age7.value?.toInt()?.minus(it) }).toString()
-    }
-
-    private fun setEighthAndNinthChildGap() {
-        eighthAndNinthChildGap.value =
-            (age9.value?.toInt()?.let { age8.value?.toInt()?.minus(it) }).toString()
-    }
+//    private fun setFirstChildAndSecondChildGap() {
+//        firstAndSecondChildGap.value =
+//            (age2.value?.toInt()?.let { age1.value?.toInt()?.minus(it) }).toString()
+//    }
+//
+//    private fun setSecondAndThirdChildGap() {
+//        secondAndThirdChildGap.value =
+//            (age3.value?.toInt()?.let { age2.value?.toInt()?.minus(it) }).toString()
+//    }
+//
+//    private fun setThirdAndFourthChildGap() {
+//        thirdAndFourthChildGap.value =
+//            (age4.value?.toInt()?.let { age3.value?.toInt()?.minus(it) }).toString()
+//    }
+//
+//    private fun setFourthAndFifthChildGap() {
+//        fourthAndFifthChildGap.value =
+//            (age5.value?.toInt()?.let { age4.value?.toInt()?.minus(it) }).toString()
+//    }
+//
+//    private fun setFifthAndSixthChildGap() {
+//        fifthAndSixthChildGap.value =
+//            (age6.value?.toInt()?.let { age5.value?.toInt()?.minus(it) }).toString()
+//    }
+//
+//    private fun setSixthAndSeventhChildGap() {
+//        sixthAndSeventhChildGap.value =
+//            (age7.value?.toInt()?.let { age6.value?.toInt()?.minus(it) }).toString()
+//    }
+//
+//    private fun setSeventhAndEighthChildGap() {
+//        seventhAndEighthChildGap.value =
+//            (age8.value?.toInt()?.let { age7.value?.toInt()?.minus(it) }).toString()
+//    }
+//
+//    private fun setEighthAndNinthChildGap() {
+//        eighthAndNinthChildGap.value =
+//            (age9.value?.toInt()?.let { age8.value?.toInt()?.minus(it) }).toString()
+//    }
 
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
         (cacheModel as EligibleCoupleRegCache).let { ecr ->
@@ -1581,7 +1635,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             }
         }
         if (isUpdated) {
-            ben?.processed = "U"
+            if(ben?.processed!="N")
+                ben?.processed = "U"
             ben?.syncState = SyncState.UNSYNCED
         }
         return isUpdated

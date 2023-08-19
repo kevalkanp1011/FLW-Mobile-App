@@ -370,7 +370,7 @@ class PregnantWomanRegistrationDataset(
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
             rchId.id -> validateRchIdOnEditText(rchId)
-            mcpCardNumber.id -> validateRchIdOnEditText(mcpCardNumber)
+            mcpCardNumber.id -> validateMcpOnEditText(mcpCardNumber)
             dateOfReg.id ->{
                 dateOfReg.value?.let {
                     lmp.max = getLongFromDate(it)

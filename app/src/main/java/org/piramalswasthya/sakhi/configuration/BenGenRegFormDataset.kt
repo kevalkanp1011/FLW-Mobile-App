@@ -567,7 +567,8 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         val list = firstPage.toMutableList()
         contactNumberFamilyHead.value = familyHeadPhoneNo?.toString()
         this.familyHeadPhoneNo = familyHeadPhoneNo?.toString()
-        dateOfReg.value = getCurrentDateString()
+        if(dateOfReg.value==null)
+            dateOfReg.value = getCurrentDateString()
         ben?.takeIf { !it.isDraft }?.let { saved ->
             pic.value = saved.userImage
             dateOfReg.value = getDateFromLong(saved.regDate)
@@ -602,12 +603,19 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
             otherReligion.value = saved.religionOthers
 
         }
+        maritalStatus.entries = when (gender.value) {
+            gender.entries!![1] -> maritalStatusFemale
+            else -> maritalStatusMale
+        }
+        relationToHead.entries = when (gender.value) {
+            gender.entries!![0] -> relationToHeadListMale
+            gender.entries!![1] -> relationToHeadListFemale
+            else -> relationToHeadListDefault
+        }
         /// Set up fields
         if (maritalStatus.value != maritalStatus.entries!![0] && gender.value != null) {
 //            if(maritalStatus.value ==maritalStatus.entries!![1])
 //            list.removeAll(listOf(fatherName, motherName))
-            fatherName.required = false
-            motherName.required = false
             list.add(
                 list.indexOf(maritalStatus) + 3, when (gender.value) {
                     gender.entries!![0] -> wifeName
@@ -617,6 +625,17 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
                 }
             )
             list.add(list.indexOf(maritalStatus) + 4, ageAtMarriage)
+        }
+        if (maritalStatus.value == maritalStatus.entries!![1] && gender.value == gender.entries!![1]) {
+            fatherName.required = false
+            motherName.required = false
+
+        }
+        if (maritalStatus.value == maritalStatus.entries!![2]) {
+            husbandName.required = false
+            wifeName.required = false
+            spouseName.required = false
+
         }
         ageAtMarriage.value?.takeIf { it.isNotEmpty() && it == age.value }?.let {
             list.add(list.indexOf(ageAtMarriage) + 1, dateOfMarriage)

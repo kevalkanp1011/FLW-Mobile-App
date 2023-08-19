@@ -33,7 +33,7 @@ class EligibleCoupleTrackingDataset(
 
     private val month = FormElement(
         id = 3,
-        inputType = InputType.DROPDOWN,
+        inputType = InputType.TEXT_VIEW,
         title = "Month",
         arrayId = R.array.visit_months,
         entries = resources.getStringArray(R.array.visit_months),
@@ -103,7 +103,7 @@ class EligibleCoupleTrackingDataset(
         val list = mutableListOf(
             dateOfVisit,
             financialYear,
-//            month,
+            month,
             isPregnancyTestDone,
             isPregnant,
 //            usingFamilyPlanning,
@@ -120,6 +120,8 @@ class EligibleCoupleTrackingDataset(
         } else {
             dateOfVisit.value = getDateFromLong(saved.visitDate)
             financialYear.value = getFinancialYear(dateString = dateOfVisit.value)
+            month.value =
+                resources.getStringArray(R.array.visit_months)[Companion.getMonth(dateOfVisit.value)!!]
             isPregnancyTestDone.value = saved.isPregnancyTestDone
             if (isPregnancyTestDone.value == "Yes") {
                 list.add(pregnancyTestResult)
@@ -128,15 +130,23 @@ class EligibleCoupleTrackingDataset(
             isPregnant.value = saved.isPregnant
             if (isPregnant.value == "No") {
                 list.add(usingFamilyPlanning)
+                saved.usingFamilyPlanning?.let {
+                    usingFamilyPlanning.value = if (it) "Yes" else "No"
+                }
                 usingFamilyPlanning.value = if (saved.usingFamilyPlanning == true) "Yes" else "No"
-                if (saved.methodOfContraception in resources.getStringArray(R.array.method_of_contraception)) {
+                if (saved.usingFamilyPlanning == true) {
                     list.add(methodOfContraception)
-                    methodOfContraception.value = saved.methodOfContraception
-                } else if (saved.methodOfContraception != null) {
-                    list.add(anyOtherMethod)
-                    anyOtherMethod.value = saved.methodOfContraception
+                    if (saved.methodOfContraception in resources.getStringArray(R.array.method_of_contraception)) {
+                        methodOfContraception.value = saved.methodOfContraception
+                    } else if (saved.methodOfContraception != null) {
+                        methodOfContraception.value =
+                            resources.getStringArray(R.array.method_of_contraception).last()
+                        list.add(anyOtherMethod)
+                        anyOtherMethod.value = saved.methodOfContraception
+                    }
                 }
             }
+
         }
         setUpPage(list)
 

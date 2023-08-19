@@ -75,7 +75,7 @@ import org.piramalswasthya.sakhi.model.Vaccine
         ChildRegCache::class,
     ],
     views = [BenBasicCache::class],
-    version = 4, exportSchema = false
+    version = 5, exportSchema = false
 )
 
 @TypeConverters(LocationEntityListConverter::class, SyncStateConverter::class)

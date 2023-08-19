@@ -373,7 +373,8 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
     suspend fun setFirstPage(ben: BenRegCache?, familyHeadPhoneNo: Long?) {
         val list = firstPage.toMutableList()
         this.familyHeadPhoneNo = familyHeadPhoneNo?.toString()
-        dateOfReg.value = getCurrentDateString()
+        if (dateOfReg.value == null)
+            dateOfReg.value = getCurrentDateString()
         contactNumberFamilyHead.value = familyHeadPhoneNo?.toString()
         ben?.takeIf { !it.isDraft }?.let { saved ->
             pic.value = saved.userImage
@@ -423,7 +424,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
         if (mobileNoOfRelation.value == mobileNoOfRelation.entries!!.last()) {
             list.add(list.indexOf(mobileNoOfRelation) + 1, otherMobileNoOfRelation)
         }
-        if (mobileNoOfRelation.value == mobileNoOfRelation.entries!![2]) {
+        if (mobileNoOfRelation.value == mobileNoOfRelation.entries!![4]) {
             list.add(list.indexOf(mobileNoOfRelation) + 1, contactNumberFamilyHead)
         } else
             list.add(list.indexOf(community), contactNumber)
@@ -436,7 +437,7 @@ class BenKidRegFormDataset(context: Context, language: Languages) : Dataset(cont
 //        if (ageUnit.value == ageUnit.entries?.last() && (age.value?.toInt() ?: 0) in 3..5) {
 //            list.add((list.indexOf(rchId)), childRegisteredAtAwc)
 //        }
-        if (ageUnit.value == ageUnit.entries?.last() && (age.value?.toInt() ?: 0) in 3..14) {
+        if (ageUnit.value == ageUnit.entries?.last() && (age.value?.toInt() ?: 0) in 4..14) {
             list.add((list.indexOf(rchId)), childRegisteredAtSchool)
         }
         if (childRegisteredAtSchool.value == childRegisteredAtSchool.entries?.first()) list.add(

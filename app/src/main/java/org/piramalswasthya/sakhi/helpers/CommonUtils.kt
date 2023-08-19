@@ -5,6 +5,7 @@ import org.piramalswasthya.sakhi.model.AncFormState
 import org.piramalswasthya.sakhi.model.AncStatus
 import org.piramalswasthya.sakhi.model.BenBasicDomain
 import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
+import org.piramalswasthya.sakhi.model.BenWithEctListDomain
 import org.piramalswasthya.sakhi.model.PregnantWomenVisitDomain
 import timber.log.Timber
 import java.util.Calendar
@@ -48,6 +49,17 @@ fun filterBenFormList(
                 ben.name.lowercase().contains(filterText) ||
                 ben.spouseName.lowercase().contains(filterText) ||
                 ben.weeksOfPregnancy.toString().lowercase().contains(filterText)
+    }
+
+fun filterEcTrackingList(
+    list: List<BenWithEctListDomain>,
+    filterText: String
+) =
+    list.filter {
+        it.ben.benId.toString().lowercase().contains(filterText) ||
+                it.ben.age.lowercase().contains(filterText) ||
+                it.ben.benFullName.lowercase().contains(filterText) ||
+                it.numChildren.contains(filterText)
     }
 
 @JvmName("filterBenList1")
@@ -112,12 +124,14 @@ fun hasPendingAncVisit(
 
 }
 
-fun getTodayMillis() = Calendar.getInstance().apply {
+fun getTodayMillis() = Calendar.getInstance().setToStartOfTheDay().timeInMillis
+
+fun Calendar.setToStartOfTheDay() = apply {
     set(Calendar.HOUR_OF_DAY, 0)
     set(Calendar.MINUTE, 0)
     set(Calendar.SECOND, 0)
     set(Calendar.MILLISECOND, 0)
-}.timeInMillis
+}
 
 
 sealed class NetworkResponse<T>(val data: T? = null, val message: String? = null) {

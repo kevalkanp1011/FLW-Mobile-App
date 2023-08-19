@@ -49,9 +49,9 @@ class EcrRepo @Inject constructor(
         }
     }
 
-    suspend fun getEct(benId: Long, visitDate: Long): EligibleCoupleTrackingCache? {
+    suspend fun getEct(benId: Long, createdDate: Long): EligibleCoupleTrackingCache? {
         return withContext(Dispatchers.IO) {
-            database.ecrDao.getEct(benId, visitDate)
+            database.ecrDao.getEct(benId, createdDate)
         }
     }
 
@@ -393,7 +393,7 @@ class EcrRepo @Inject constructor(
                     ) else getLongFromDate(
                         ecrJson.getString("createdDate")
                     ),
-                    bankAccount = if (ecrJson.has("bankAccountNumber")) ecrJson.getLong("bankAccount") else null,
+                    bankAccount = if (ecrJson.has("bankAccountNumber")) ecrJson.getLong("bankAccountNumber") else null,
                     bankName = if (ecrJson.has("bankName")) ecrJson.getString("bankName") else null,
                     branchName = if (ecrJson.has("branchName")) ecrJson.getString("branchName") else null,
                     ifsc = if (ecrJson.has("ifsc")) ecrJson.getString("ifsc") else null,

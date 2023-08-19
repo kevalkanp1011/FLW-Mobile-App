@@ -36,10 +36,10 @@ class ECTrackingListBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.rvAnc.adapter =
-            ECTrackingAdapter(ECTrackingAdapter.ECTrackViewClickListener { benId, visitedOn ->
+            ECTrackingAdapter(ECTrackingAdapter.ECTrackViewClickListener { benId, createdDate ->
                 findNavController().navigate(
                     EligibleCoupleTrackingListFragmentDirections.actionEligibleCoupleTrackingListFragmentToEligibleCoupleTrackingFormFragment(
-                        benId = benId, visitDate = visitedOn
+                        benId = benId, createdDate = createdDate
                     )
                 )
                 this.dismiss()

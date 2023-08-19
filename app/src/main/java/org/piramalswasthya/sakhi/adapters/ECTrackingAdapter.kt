@@ -15,7 +15,7 @@ class ECTrackingAdapter(private val clickListener: ECTrackViewClickListener) :
     private object MyDiffUtilCallBack : DiffUtil.ItemCallback<ECTDomain>() {
         override fun areItemsTheSame(
             oldItem: ECTDomain, newItem: ECTDomain
-        ) = oldItem.filledOn == newItem.filledOn
+        ) = oldItem.created == newItem.created
 
         override fun areContentsTheSame(
             oldItem: ECTDomain, newItem: ECTDomain
@@ -53,11 +53,11 @@ class ECTrackingAdapter(private val clickListener: ECTrackViewClickListener) :
 
 
     class ECTrackViewClickListener(
-        private val clickedForm: (benId: Long, visitedOn: Long) -> Unit,
+        private val clickedForm: (benId: Long, created: Long) -> Unit,
 
         ) {
         fun onClickedVisit(item: ECTDomain) = clickedForm(
-            item.benId, item.filledOn
+            item.benId, item.created
         )
     }
 

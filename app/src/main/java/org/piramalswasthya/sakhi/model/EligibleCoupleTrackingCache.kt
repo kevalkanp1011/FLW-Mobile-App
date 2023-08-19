@@ -103,11 +103,13 @@ data class BenWithEcTrackingCache(
         return BenWithEctListDomain(
 //            ecBenId,
             ben.asBasicDomainModel(),
-            ecr.noOfChildren?.toString() ?: "0",
+            ecr.noOfChildren.toString(),
             savedECTRecords.map {
                 ECTDomain(
                     it.benId,
-                    it.visitDate, getECTFilledDateFromLong(it.visitDate)
+                    it.createdDate,
+                    it.visitDate,
+                    getECTFilledDateFromLong(it.visitDate)
                 )
             }
         )
@@ -116,7 +118,8 @@ data class BenWithEcTrackingCache(
 
 data class ECTDomain(
     val benId: Long,
-    val filledOn: Long,
+    val created: Long,
+    val visited : Long,
     val filledOnString: String
 )
 

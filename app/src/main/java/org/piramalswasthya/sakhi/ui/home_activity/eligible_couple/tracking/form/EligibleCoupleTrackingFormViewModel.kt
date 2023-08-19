@@ -31,8 +31,8 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
     val benId =
         EligibleCoupleTrackingFormFragmentArgs.fromSavedStateHandle(savedStateHandle).benId
 
-    val visitDate =
-        EligibleCoupleTrackingFormFragmentArgs.fromSavedStateHandle(savedStateHandle).visitDate
+    val createdDate =
+        EligibleCoupleTrackingFormFragmentArgs.fromSavedStateHandle(savedStateHandle).createdDate
 
     enum class State {
         IDLE, SAVING, SAVE_SUCCESS, SAVE_FAILED
@@ -77,7 +77,7 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
                 )
             }
 
-            ecrRepo.getEct(benId, visitDate)?.let {
+            ecrRepo.getEct(benId, createdDate)?.let {
                 eligibleCoupleTracking = it
                 _recordExists.value = true
             } ?: run {

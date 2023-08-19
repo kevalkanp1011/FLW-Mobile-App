@@ -86,9 +86,7 @@ class EligibleCoupleTrackingFormFragment : Fragment() {
             )
             viewModel.resetState()
         } else {
-            findNavController().navigate(
-                EligibleCoupleTrackingFormFragmentDirections.actionEligibleCoupleTrackingFormFragmentToEligibleCoupleTrackingListFragment()
-            )
+            findNavController().navigateUp()
             Toast.makeText(
                 requireContext(),
                 "Tracking form filled successfully",
@@ -122,6 +120,11 @@ class EligibleCoupleTrackingFormFragment : Fragment() {
     private fun hardCodedListUpdate(formId: Int) {
         binding.form.rvInputForm.adapter?.apply {
             when (formId) {
+                1 -> {
+                    notifyItemChanged(1)
+                    notifyItemChanged(2)
+
+                }
                 5 -> {
                     notifyItemChanged(viewModel.getIndexOfIsPregnant())
                 }

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.helpers.filterBenList
+import org.piramalswasthya.sakhi.helpers.filterEcTrackingList
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import javax.inject.Inject
 
@@ -26,17 +26,20 @@ class EligibleCoupleTrackingListViewModel @Inject constructor(
     private val selectedBenId = MutableStateFlow(0L)
     val benList = allBenList.combine(filter) { list, filter ->
         list.filter { domainList ->
-            domainList.ben.benId in filterBenList(
-                list.map { it.ben },
+            domainList.ben.benId in filterEcTrackingList(
+                list,
                 filter
-            ).map { it.benId }
+            ).map { it.ben.benId }
         }
     }
 
     val bottomSheetList = allBenList.combineTransform(selectedBenId) { list, benId ->
         if (benId != 0L) {
             val emitList =
-                list.firstOrNull { it.ben.benId == benId }?.savedECTRecords
+                list.firstOrNull { it.ben.benId == benId }?.savedECTRecords?.toMutableList()
+                    ?.apply {
+                        sortByDescending { it.visited }
+                    }
             if (!emitList.isNullOrEmpty()) emit(emitList.reversed())
         }
     }

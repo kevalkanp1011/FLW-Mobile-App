@@ -3,7 +3,7 @@
     <!--    Login-->
     <string name="tv_text_welcome">Welcome, please login</string>
     <string name="tv_text_welcome_user">Welcome, %s</string>
-    <string name="tv_text_sign_in">Log in to continue</string>
+    <string name="tv_text_sign_in">Login to continue</string>
     <string name="tv_text_select_language">Please Select Your language</string>
     <string name="text_english" translatable="false">English</string>
     <string name="text_hindi" translatable="false">हिंदी</string>
@@ -14,6 +14,6 @@
     <string name="cb_login_remember_me_text">Remember me</string>
     <string name="btn_login_forgot_password_text">Forgot Password?</string>
     <string name="btn_login_text">Login</string>
-    <string name="pwr_by_text" translatable="false">powered by <b>Piramal Foundation</b></string>
+    <string name="pwr_by_text" translatable="false">powered by\n\n <b>Piramal Foundation</b></string>
 
 </resources>

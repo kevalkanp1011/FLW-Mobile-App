@@ -28,9 +28,9 @@ interface EcrDao {
     @Update
     suspend fun updateEligibleCoupleTracking(it: EligibleCoupleTrackingCache)
 
-    @Query("select * from eligible_couple_tracking where benId = :benId and visitDate =:visitDate limit 1")
+    @Query("select * from eligible_couple_tracking where benId = :benId and createdDate =:createdDate limit 1")
 //    @Query("select * from eligible_couple_tracking where benId = :benId and CAST((strftime('%s','now') - visitDate/1000)/60/60/24 AS INTEGER) < 30 order by visitDate limit 1")
-    fun getEct(benId: Long, visitDate : Long): EligibleCoupleTrackingCache?
+    fun getEct(benId: Long, createdDate : Long): EligibleCoupleTrackingCache?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(vararg eligibleCoupleTrackingCache: EligibleCoupleTrackingCache)
