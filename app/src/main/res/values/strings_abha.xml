@@ -11,11 +11,6 @@
     <string name="timer">timer</string>
     <string name="something_went_wrong_nunable_to_connect_to_server_ntry_again_later">Something went wrong !\nUnable to connect to server !\nTry again later!</string>
     <string name="try_again">Try Again!</string>
-    <string name="version_2_0_0">Version 2.0.0</string>
-    <string name="disagree">DISAGREE</string>
-    <string name="agree">AGREE</string>
-    <string name="enter_pin">Enter PIN</string>
-    <string name="sync_in_progress">Sync in progress …</string>
     <string name="aadhaar">Aadhaar</string>
     <string name="asha">ASHA</string>
     <string name="gov">GOV</string>
@@ -23,11 +18,6 @@
     <string name="aadhaar_number">Aadhaar Number</string>
     <string name="generate_otp">Generate OTP</string>
     <string name="pid">PID</string>
-    <string name="full_name">Full Name</string>
-    <string name="male">Male</string>
-    <string name="female">Female</string>
-    <string name="state">State</string>
-    <string name="district">District</string>
     <string name="generate_abha">Generate ABHA</string>
     <string name="_30">30</string>
     <string name="date">Date</string>
@@ -52,4 +42,5 @@
     <string name="abha">ABHA</string>
     <string name="aadhar_disclaimer_consent_text">I, hereby declare that I am voluntarily sharing my Aadhaar Number and demographic information issued by UIDAI, with National Health Authority (NHA)for the sole purpose of creation of ABHA Number.I understand that my ABHA Number can be used and shared for purposes as may be notified by ABDM from time to time including provision of healthcare services. \n\nFurther,I am aware that my personal identifiable information (Name, Address, Age, Date of Birth, Gender and Photograph) may be made available to the entities working in the NationalDigital Health Ecosystem (NDHE)which inter alia includes stakeholders and entities such as healthcare professionals (e.g. doctors), facilities (e.g. hospitals, laboratories) and data fiduciaries (e.g. health programmers), which are registered with or linked to the Ayushman Bharat Digital Mission (ABDM), and various processes there under. I authorize NHA to use myAadhaar number for performing Aadhaar based authentication with UIDAI as per the provisions of the Aadhaar (Targeted Delivery of Financial and other Subsidies, Benefits and Services) Act, 2016 for the aforesaid purpose.I understand that UIDAI will share my e-KYC details, or response of “Yes” with NHA upon successful authentication. I have been duly informed about the option of using other IDs apart from Aadhaar; however,I consciously choose to use Aadhaar number for the purpose of availing benefits across the NDHE.I am aware that my personal identifiable information excluding Aadhaar number can be used and shared for purposes as mentioned above.I reserve the right to revoke the given consent at any point of time as per provisions of Aadhar Act and Regulations.</string>
     <string name="d_o_b">D.O.B</string>
+    <string name="beneficiary_abha_number">Beneficiary ABHA Number.</string>
 </resources>

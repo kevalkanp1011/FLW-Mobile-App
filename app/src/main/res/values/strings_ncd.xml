@@ -164,6 +164,28 @@
     <string name="cbac_risk_assessment_tv">Part A: Risk Assessment</string>
     <string name="cbac_tv_bl_menopause">Inform ASHA Facilitator</string>
     <string name="cbac_form">CBAC Form</string>
+    <string name="alert">Alert !</string>
+    <string name="missing_field">MISSING FIELD</string>
+    <string name="suspected_hrp_and_ncd_case">SUSPECTED HRP AND NCD CASE!</string>
+    <string name="ok">Ok</string>
+    <string name="suspected_hrp_case">SUSPECTED HRP CASE!</string>
+    <string name="suspected_ncd_case_please_visit_nearest_hwc_or_call">Suspected NCD case, please visit nearest HWC or call\n 104.</string>
+    <string name="refer_to_ncd_screening_day_vhsnd_hwc_for_ncd_screening_priority">Refer to NCD screening day / VHSND/ HWC for NCD screening (Priority)</string>
+    <string name="refer_to_ncd_screening_day_vhsnd_hwc_for_ncd_screening_less_priority">Refer to NCD screening day / VHSND/ HWC for NCD screening (Less Priority)</string>
+    <string name="send_the_patient_to_moic_of_nearest_health_center_for_treatment">Send the patient to MOIC of nearest health center for treatment</string>
+    <string name="refer_to_mo_and_collect_the_sputum_sample">Refer to MO and collect the Sputum sample</string>
+    <string name="inform_asha_facilitator">Inform ASHA Facilitator.</string>
+    <string name="total_score_wihout_semi_colon">"Total Score "</string>
+    <string name="total_score">"Total Score : "</string>
+    <string name="refer_to_mo_or_inform_anm_mpw_to_tracing_of_all_family_members">Refer to MO or inform ANM/MPW to tracing of all family members</string>
+    <string name="cbac">CBAC</string>
+    <string name="tb_screening">TB Screening</string>
+    <string name="tb_screening_submitted">TB Screening submitted</string>
+    <string name="screen">Screen</string>
+    <string name="tb_suspected_sputum_test">TB Suspected Sputum Test</string>
+    <string name="tb_tracking_submitted">TB Tracking submitted</string>
+    <string name="track">Track</string>
+    <string name="filled_on">"Filled on "</string>
     <string-array name="cbac_age">
         <item>0-29 years</item>
         <item>30-39 years</item>

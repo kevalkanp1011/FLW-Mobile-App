@@ -1,2 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="marital_status">বৈবাহিক স্থিতি</string>
+    <string name="relation_with_family_head">পৰিৱাৰ প্ৰধানৰ সৈতে সম্পৰ্ক</string>
+    <string name="other_enter_relation_to_head">অন্য - পৰিৱাৰ প্ৰধানলৈ সম্পৰ্ক লিখক</string>
+    <string name="community">সমাজ</string>
+    <string name="religion">ধৰ্ম</string>
+    <string name="other_enter_religion">অন্য - ধৰ্ম লিখক</string>
+    <string name="has_aadhaar_number">আধাৰ নম্বৰ আছে</string>
+    <string name="enter_aadhaar_number_ben">আধাৰ নম্বৰ লিখক</string>
+    <string name="reproductive_status">প্ৰজনন স্থিতি</string>
+    <string name="beneficiary_details">সুবিধা প্ৰাপ্তবোৰ বিৱৰণ</string>
+    <string name="wife_s_name">বাইৰ নাম</string>
+    <string name="spouse_s_name">জীৱনসংগীৰ নাম</string>
+    <string name="age_at_marriage">বিবাহৰ সময়ত বয়স</string>
+    <string name="date_of_marriage">বিবাহৰ তাৰিখ</string>
+    <string name="father_s_name">পিতৃৰ নাম</string>
+    <string name="mother_s_name">মাতৃৰ নাম</string>
+    <string name="mobile_number_of">ৰ মোবাইল নম্বৰ</string>
+    <string name="other_mobile_number_of">অন্য - ৰ মোবাইল নম্বৰ</string>
+    <string name="form_name">ফৰ্মৰ নাম</string>
+    <string name="rch_id_ben">RCH ID</string>
+    <string name="nbr_age">বয়স</string>
+    <string name="nbr_dob">জন্মৰ তাৰিখ</string>
+    <string name="nbr_gender">লিংগ</string>
+    <string name="nbr_image">ফটো</string>
+    <string name="nbr_image_sub">কেমেৰা ব্যৱহাৰ কৰিবলৈ টিপক</string>
+    <string name="nbr_dor">নিবন্ধনৰ তাৰিখ</string>
+    <string name="nbr_nb_first_name">প্ৰথম নাম</string>
+    <string name="nbr_nb_last_name">শেষ নাম / উপনাম</string>
+
+    <string-array name="nbr_gender_array">
+        <item name="nbr_gender_1">পুৰুষ</item>
+        <item name="nbr_gender_2">মহিলা</item>
+        <item name="nbr_gender_3">ট্ৰান্সজেন্ডাৰ</item>
+    </string-array>
+    <string-array name="nbr_reproductive_status_array">
+        <item>যোগ্য জন্য জুতি দিব যোৱা জন</item>
+        <item>গৰ্ভবতী মহিলা</item>
+        <item>পষ্টুতা কৰা মহিলা</item>
+        <item>বৃদ্ধা মহিলা</item>
+        <item>কিশোৰী</item>
+    </string-array>
+
+    <string-array name="nbr_marital_status_male_array">
+        <item>অবিবাহিত</item>
+        <item>বিবাহিত</item>
+        <item>তালাকপ্ৰাপ্ত</item>
+        <item>পৃথিবীৰ সালুৱা</item>
+        <item>বিধবা</item>
+    </string-array>
+
+    <string-array name="nbr_marital_status_female_array">
+        <item>অবিবাহিত</item>
+        <item>বিবাহিত</item>
+        <item>তালাকপ্ৰাপ্ত</item>
+        <item>পৃথিবীৰ সালুৱা</item>
+        <item>বিধবা</item>
+    </string-array>
+
+    <string-array name="nbr_mobile_no_relation_array">
+        <item>আত্ম</item>
+        <item>গৰু</item>
+        <item>মাতা</item>
+        <item>পিতা</item>
+        <item>পৰিৱাৰ প্ৰধান</item>
+        <item>অন্য</item>
+    </string-array>
+
+    <string-array name="nbr_relationship_to_head">
+        <item>মা</item>
+        <item>পিতা</item>
+        <item>ভাই</item>
+        <item>বেহীৰ</item>
+        <item>বউ</item>
+        <item>গৰু</item>
+        <item>নেফিউ</item>
+        <item>নিচি</item>
+        <item>মাহ</item>
+        <item>মেহ</item>
+        <item>পৰোৱা পিতা</item>
+        <item>পৰোৱা মা</item>
+        <item>বেহীৰীৰ পিতা</item>
+        <item>বেহীৰীৰ মা</item>
+        <item>পৰোৱা গৰু</item>
+        <item>পৰোৱা গৰুৰ ভেবি</item>
+        <item>পৰোৱা পৰী</item>
+        <item>পৰোৱা পৰীৰ ভেবি</item>
+        <item>আত্ম</item>
+        <item>অন্য</item>
+    </string-array>
+
+    <string-array name="nbr_relationship_to_head_male">
+        <item>পিতা</item>
+        <item>ভাই</item>
+        <item>গৰু</item>
+        <item>নেফিউ</item>
+        <item>মাহ</item>
+        <item>পৰোৱা গৰু</item>
+        <item>পৰোৱা গৰুৰ ভেবি</item>
+        <item>পৰোৱা পৰী</item>
+        <item>পৰোৱা পৰীৰ ভেবি</item>
+        <item>আত্ম</item>
+        <item>অন্য</item>
+    </string-array>
+
+    <string-array name="nbr_relationship_to_head_female">
+        <item>মা</item>
+        <item>বেহীৰ</item>
+        <item>বউ</item>
+        <item>নিচি</item>
+        <item>মাহ</item>
+        <item>বেহীৰীৰ মা</item>
+        <item>পৰোৱা বউ</item>
+        <item>পৰোৱা মাহ</item>
+        <item>পৰোৱা বেহীৰ</item>
+        <item>আত্ম</item>
+        <item>অন্য</item>
+    </string-array>
+
+
+    <string-array name="community_array">
+        <item>সাধাৰণ</item>
+        <item>এছি</item>
+        <item>এসটি</item>
+        <item>বিচ</item>
+        <item>অবিচ</item>
+        <item>ওচি</item>
+        <item>দিয়া হোৱা নাই</item>
+    </string-array>
+
+    <string-array name="religion_array">
+        <item>হিন্দু</item>
+        <item>মুছলিম</item>
+        <item>খ্ৰিছ্চম</item>
+        <item>ছিখ</item>
+        <item>বুদ্ধ</item>
+        <item>জৈন</item>
+        <item>পার্সী</item>
+        <item>অন্য</item>
+        <item>প্ৰকাশন হোৱা নাই</item>
+    </string-array>
+
+    <string-array name="yes_no_donno">
+        <item>হয়</item>
+        <item>নহয়</item>
+        <item>জানোৱা নাই</item>
+    </string-array>
+    <string-array name="yes_no">
+        <item>হয়</item>
+        <item>নহয়</item>
+    </string-array>
+
+    <string-array name="yes">
+        <item>হয়</item>
+    </string-array>
+</resources>

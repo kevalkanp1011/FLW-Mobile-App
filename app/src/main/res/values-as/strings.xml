@@ -23,9 +23,9 @@
 <!--    <string name="home_icon_title_all_ben">All Beneficiaries</string>-->
 <!--    <string name="home_icon_title_elig_coup">Eligible Couples</string>-->
 <!--    <string name="home_icon_title_child_care">Child Care</string>-->
-    <string name="child_care_icon_title_child_list">Child List</string>
-    <string name="child_care_icon_title_infant_list">Infant List</string>
-    <string name="child_care_icon_title_adolescent_list">Adolescent List</string>
+<!--    <string name="child_care_icon_title_child_list">Child List</string>-->
+<!--    <string name="child_care_icon_title_infant_list">Infant List</string>-->
+<!--    <string name="child_care_icon_title_adolescent_list">Adolescent List</string>-->
 <!--    <string name="home_icon_title_mother_care">Mother Care</string>-->
 <!--    <string name="home_icon_title_death_rep">Death Reports</string>-->
 <!--    <string name="home_icon_title_gen_op">General OP Care</string>-->
@@ -36,7 +36,6 @@
 <!--    <string name="home_icon_title_village_lvl_forms">Village Level Forms</string>-->
     <string name="frag_service_type_title">Select Village</string>
 
-    <string name="home_icon_all_household">All Household List</string>
 
     <string name="cd_icon_grid_icon">icon</string>
 
@@ -55,8 +54,6 @@
     <string name="notification_sync_channel_name">Sync Data</string>
     <string name="notification_sync_channel_description">Upload beneficiaries to Server</string>
     <string name="notification_sync_channel_id">sakhi-sync0</string>
-    <string name="consent_text">Consent:\nI have been explained by the ASHA, the purpose for which the information and measurement findings is being collected from me, in a language I understand and I give my consent to collect the information and measurement findings on my personal health profile.</string>
-    <string name="aadhar_consent_text">I hereby confirm that I have explained the below mentioned consent process to the individual for the creation of the ABHA Number using he individual\'s aadhar number</string>
 
     <string name="long_to_string">%d</string>
 
@@ -83,7 +80,7 @@
     <string name="frag_new_ben_reg_type_title">Beneficiary Type for Registration</string>
     <string name="version">2.0.0</string>
     <string name="tv_text_select_village">Please select the village below.</string>
-    <string name="form_input_empty_error">প্ৰয়োজনীয় ক্ষেত্ৰখন খালী হ’ব নোৱাৰে !</string>
+    <string name="form_input_empty_error">"প্ৰয়োজনীয় ক্ষেত্ৰখন খালী হ’ব নোৱাৰে !</string>
     <string name="form_input_upper_case_error">Only Alphabets in upper case allowed!</string>
     <string name="form_input_min_limit_error">%1s should be greater than or equal to %2d</string>
     <string name="form_input_max_limit_error">%1s should be lesser than or equal to %2d</string>
