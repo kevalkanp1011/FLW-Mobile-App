@@ -43,6 +43,12 @@
     <string name="nbr_mobile_number_of">Mobile Number Of</string>
     <string name="nrb_contact_number">Contact Number</string>
     <string name="nbr_nb_age_unit">Age Unit</string>
+    <string name="saving_mdsr_to_database_failed">Saving Mdsr to database Failed!</string>
+    <string name="hbyc_form">HBYC Form</string>
+    <string name="saving_hbnc_part_ii_to_database_failed">Saving hbnc part II to database Failed!</string>
+    <string name="part_i">Part I</string>
+    <string name="part_ii">Part II</string>
+    <string name="hbnc_form">HBNC Form</string>
 
     <string-array name="nbr_age_unit_array">
         <item name="nbr_age_unit_1">Day</item>

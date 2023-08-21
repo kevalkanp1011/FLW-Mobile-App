@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.work.WorkerUtils
@@ -91,7 +92,7 @@ class EligibleCoupleTrackingFormFragment : Fragment() {
             )
             Toast.makeText(
                 requireContext(),
-                "Tracking form filled successfully",
+                resources.getString(R.string.tracking_form_filled_successfully),
                 Toast.LENGTH_SHORT
             ).show()
             viewModel.resetState()

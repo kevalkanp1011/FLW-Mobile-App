@@ -208,6 +208,8 @@
     <string name="full_name">Full Name</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
+    <string name="transgender">Transgender</string>
+    <string name="other">Other</string>
     <string name="state">State</string>
     <string name="district">District</string>
 
@@ -319,6 +321,18 @@
     <string name="dashboard">Dashboard</string>
     <string name="sign_in">Sign In</string>
     <string name="service_location">Service Location</string>
+    <string name="save_successful">Save Successful!!!</string>
+    <string name="something_wend_wong_contact_testing">Something wend wong! Contact testing!</string>
+    <string name="error_input">Error Input</string>
+    <string name="exit_application">Exit Application</string>
+    <string name="do_you_want_to_exit_application">Do you want to exit application</string>
+    <string name="downloading">Downloading ...</string>
+    <string name="choose_application_language">Choose Application Language</string>
+    <string name="english">English</string>
+    <string name="hindi">Hindi</string>
+    <string name="assamese">Assamese</string>
+    <string name="sync">SYNC</string>
+    <string name="tap_to_change">Tap to Change</string>
 
     <!-- Eligible couple registration -->
     <string-array name="ecr_gender_array">
