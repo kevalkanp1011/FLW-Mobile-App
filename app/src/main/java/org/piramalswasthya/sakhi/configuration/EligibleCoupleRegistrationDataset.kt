@@ -915,7 +915,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
                 list.addAll(
                     list.indexOf(fifthAndSixthChildGap) + 1,
-                    listOf(sixthChildDetails, dob7, age7, gender7, sixthAndSeventhChildGap)
+                    listOf(seventhChildDetails, dob7, age7, gender7, sixthAndSeventhChildGap)
                 )
             }
             if (ecCache.noOfLiveChildren > 7) {
