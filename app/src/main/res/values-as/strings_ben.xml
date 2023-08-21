@@ -28,6 +28,30 @@
     <string name="nbr_dor">নিবন্ধনৰ তাৰিখ</string>
     <string name="nbr_nb_first_name">প্ৰথম নাম</string>
     <string name="nbr_nb_last_name">শেষ নাম / উপনাম</string>
+    <string name="beneficiary_details_ben">সুবিধানুগত তথ্য</string>
+    <string name="id_details">আইডি বিবরণী</string>
+    <string name="reproductive_status_ben">প্রজনন স্থিতি</string>
+    <string name="enable_gps">জিপিএস সক্ষম করুন</string>
+    <string name="gps_is_not_enabled_do_you_want_to_go_to_settings_menu">জিপিএস সক্ষম নেই। আপনি কি সেটিংস মেনুতে যেতে চান?</string>
+    <string name="settings">সেটিংস</string>
+    <string name="cancel">বাতিল</string>
+    <string name="please_tick_the_checkbox">দয়া করে চেকবক্স টিক করুন</string>
+    <string name="incomplete_form_found">অসম্পূর্ণ ফর্ম পাওয়া গেল</string>
+    <string name="do_you_want_to_continue_with_previous_form_or_create_a_new_form_and_discard_the_previous_form">আপনি কি পূর্ববর্তী ফর্ম সঙ্গে চালিয়ে যেতে চান, অথবা পূর্ববর্তী ফর্ম ত্যাগ করে নতুন ফর্ম তৈরি করতে চান?</string>
+    <string name="open_draft">ড্রাফট খোলুন</string>
+    <string name="create_new">নতুন তৈরি করুন</string>
+    <string name="warning_id_running_low_connect_to_internet_at_the_earliest">সতর্কবার্তা: আইডি ঘাটতি হচ্ছে, সহযোগিতা ত্রৈমাসিক সংযোগ করুন</string>
+    <string name="error_no_more_ben_ids_available_connect_to_internet_to_get_some">ত্রুটি: আর কোন সুবিধানুগত আইডি প্রাপ্ত নেই। কিছু পেতে ইন্টারনেট সংযোগ করুন।</string>
+    <string name="please_select_type_of_beneficiary">সুবিধানুগতের ধরন নির্বাচন করুন</string>
+    <string name="frag_new_ben_type_kid_text">নতুন জন্ম / শিশু / শিশু / কিশোর\n( 0 - 15 বছর বয়সের মধ্যে )</string>
+    <string name="frag_new_ben_type_adult_text">সাধারণ নিবন্ধন\n( 15 বছর এবং তার উপর )</string>
+    <string name="frag_new_ben_type_select_text">সুবিধানুগতের ধরন নির্বাচন করুন</string>
+    <string name="frag_new_ben_reg_type_title">নিবন্ধনের জন্য সুবিধানুগতের ধরন</string>
+    <string name="consent_text">সন্মতি:\n
+    মোক আশা দ্বারা ব্যাখ্যা দিয়া হৈছে, যি উদ্দেশ্যৰ বাবে এই তথ্য আৰু পৰিমাপৰ ফলাফল মোৰ ব্যক্তিগত স্বাস্থ্য প্ৰোফাইলত সংগ্ৰহ কৰা হৈছে, সেয়া মোক বোজাবলৈ প্ৰদান কৰা হৈছে আৰু মোৰ সন্মতি প্ৰদান কৰোৱাৰ বাবে যি এটি সংগৰোহ কৰিব আৰু মোৰ ব্যক্তিগত স্বাস্থ্য প্ৰোফাইলত সংগ্ৰহ কৰিব সেয়া আমি মন্তব্য দিয়া হৈছে।</string>
+    <string name="disagree">অসম্মত</string>
+    <string name="agree">সম্মত</string>
+
 
     <string-array name="nbr_gender_array">
         <item name="nbr_gender_1">পুৰুষ</item>

@@ -7,10 +7,10 @@
     <string name="verify_otp">Verify OTP</string>
     <string name="resend_otp">Resend OTP</string>
     <string name="exit">Exit</string>
-    <string name="no_records_found_hh">No Household records found. Please start registering households by clicking on the button below.</string>
+<!--    <string name="no_records_found_hh">No Household records found. Please start registering households by clicking on the button below.</string>-->
     <string name="timer">timer</string>
-    <string name="something_went_wrong_nunable_to_connect_to_server_ntry_again_later">Something went wrong !\nUnable to connect to server !\nTry again later!</string>
-    <string name="try_again">Try Again!</string>
+<!--    <string name="something_went_wrong_nunable_to_connect_to_server_ntry_again_later">Something went wrong !\nUnable to connect to server !\nTry again later!</string>-->
+<!--    <string name="try_again">Try Again!</string>-->
     <string name="aadhaar">Aadhaar</string>
     <string name="asha">ASHA</string>
     <string name="gov">GOV</string>
