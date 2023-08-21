@@ -135,7 +135,7 @@
                         android:id="@+id/tv_weeks_of_pregnancy"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{@string/long_to_string(visit.weeksOfPregnancy)}"
+                        android:text="@{visit.weeksOfPregnancyString}"
                         android:textColor="?attr/colorOnPrimary"
                         android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                         android:layout_below="@id/tv_weeks_of_pregnancy_ph"

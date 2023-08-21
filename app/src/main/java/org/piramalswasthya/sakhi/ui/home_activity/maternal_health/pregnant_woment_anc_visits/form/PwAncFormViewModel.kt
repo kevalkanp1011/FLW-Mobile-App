@@ -83,10 +83,12 @@ class PwAncFormViewModel @Inject constructor(
             } ?: run {
                 _recordExists.value = false
             }
+            val lastAnc= maternalHealthRepo.getSavedAncRecord(benId, visitNumber-1)
 
             dataset.setUpPage(
                 ben,
                 registerRecord,
+                lastAnc,
                 if (recordExists.value == true) ancCache else null
             )
 

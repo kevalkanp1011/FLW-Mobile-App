@@ -95,18 +95,36 @@ private fun getAncStatus(
     list: List<AncStatus>, lmpDate: Long, visitNumber: Int, benId: Long, at: Long
 ): AncStatus {
 
-    list.firstOrNull { it.visitNumber == visitNumber }?.let { return it }
+    val currentAnc = list.firstOrNull { it.visitNumber == visitNumber }?.let { return it }
+    val lastAnc =
+        if (visitNumber > 1) list.firstOrNull { it.visitNumber == visitNumber - 1 } else null
+    val lastAncFilledWeek = lastAnc?.filledWeek ?: 0
     val weeks = getWeeksOfPregnancy(at, lmpDate)
     val weekRange = when (visitNumber) {
-        1 -> Konstants.minAnc1Week..Konstants.maxAnc1Week
-        2 -> Konstants.minAnc2Week..Konstants.maxAnc2Week
-        3 -> Konstants.minAnc3Week..Konstants.maxAnc3Week
-        4 -> Konstants.minAnc4Week..Konstants.maxAnc4Week
+        1 -> Konstants.minAnc1Week//..Konstants.maxAnc1Week
+        2 -> getMinAncFillDate(Konstants.minAnc2Week, lastAncFilledWeek) //..Konstants.maxAnc2Week
+        3 -> getMinAncFillDate(Konstants.minAnc3Week, lastAncFilledWeek)  //..Konstants.maxAnc2Week//..Konstants.maxAnc3Week
+        4 -> getMinAncFillDate(Konstants.minAnc4Week, lastAncFilledWeek)  //..Konstants.maxAnc2Week//..Konstants.maxAnc4Week
         else -> throw IllegalStateException("visit number not in [1,4]")
     }
-    return if (weeks in weekRange) AncStatus(benId, visitNumber, AncFormState.ALLOW_FILL)
-    else AncStatus(benId, visitNumber, AncFormState.NO_FILL)
+    return if (weeks >= weekRange) AncStatus(
+        benId,
+        visitNumber,
+        if (visitNumber == 1) AncFormState.ALLOW_FILL else {
+            if (lastAnc == null) AncFormState.NO_FILL else AncFormState.ALLOW_FILL
+        },
+        0
+    )
+    else AncStatus(
+        benId,
+        visitNumber,
+        AncFormState.NO_FILL,
+        0
+    )
 }
+
+fun getMinAncFillDate(minWeek: Int, lastAncFilledWeek: Int) =
+    if (minWeek - lastAncFilledWeek <= 4) lastAncFilledWeek + 4 else minWeek
 
 fun getAncStatusList(
     list: List<AncStatus>, lmpDate: Long, benId: Long, at: Long
@@ -117,10 +135,10 @@ fun getAncStatusList(
 
 fun hasPendingAncVisit(
     list: List<AncStatus>, lmpDate: Long, benId: Long, at: Long
-) : Boolean {
+): Boolean {
     val l = getAncStatusList(list, lmpDate, benId, at).map { it.formState }
     Timber.tag("MaternalHealthRepo").d("Emitted : at CommonUtls : $l")
-        return l.contains(AncFormState.ALLOW_FILL)
+    return l.contains(AncFormState.ALLOW_FILL)
 
 }
 

@@ -386,11 +386,11 @@ class UserRepo @Inject constructor(
                 return@withContext NetworkResponse.Error(message = "Server refused connection !")
             } catch (ue: UnknownHostException) {
                 return@withContext NetworkResponse.Error(message = "Unable to connect to server !")
-            } catch (ie: java.lang.IllegalStateException) {
+            } catch (ie: Exception) {
                 if (ie.message == "Invalid username / password")
                     return@withContext NetworkResponse.Error(message = "Invalid Username/password")
                 else
-                    return@withContext NetworkResponse.Error(message = "Unknown Exception : ${ie.message}")
+                    return@withContext NetworkResponse.Error(message = "Something went wrong... Try again later")
 
             }
         }

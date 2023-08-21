@@ -38,12 +38,14 @@ data class PregnantWomenVisitDomain(
     val spouseName: String,
     val lmp: Long,
     val weeksOfPregnancy: Int,
+    val weeksOfPregnancyString: String = if(weeksOfPregnancy<=40) weeksOfPregnancy.toString() else "NA",
 )
 
 data class AncStatus(
     val benId: Long,
     val visitNumber: Int,
-    val formState: AncFormState
+    val formState: AncFormState,
+    val filledWeek : Int
 )
 
 enum class AncFormState {

@@ -21,6 +21,7 @@ import java.io.IOException
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class MaternalHealthRepo @Inject constructor(
@@ -74,24 +75,29 @@ class MaternalHealthRepo @Inject constructor(
         Timber.d("From DB : ${it.count()}")
         var count = 0
         it.map {
+            val regis = it.key
             Timber.d(
                 "Values emitted : ${
                     it.value.map {
                         AncStatus(
                             it.benId,
                             it.visitNumber,
-                            AncFormState.ALREADY_FILLED
+                            AncFormState.ALREADY_FILLED,
+                            (TimeUnit.MILLISECONDS.toDays(regis.lmpDate - it.ancDate) / 7).toInt()
+
                         )
                     }
                 }"
             )
-            val regis = it.key
+
             val visitPending = hasPendingAncVisit(
                 it.value.map {
                     AncStatus(
                         it.benId,
                         it.visitNumber,
-                        AncFormState.ALREADY_FILLED
+                        AncFormState.ALREADY_FILLED,
+                        (TimeUnit.MILLISECONDS.toDays(regis.lmpDate - it.ancDate) / 7).toInt()
+
                     )
                 },
                 regis.lmpDate,
@@ -165,6 +171,7 @@ class MaternalHealthRepo @Inject constructor(
                                 Timber.d("Saved Successfully to server")
                                 return true
                             }
+
                             5002 -> {
                                 if (userRepo.refreshTokenTmc(
                                         user.userName,
@@ -172,6 +179,7 @@ class MaternalHealthRepo @Inject constructor(
                                     )
                                 ) throw SocketTimeoutException()
                             }
+
                             else -> {
                                 throw IOException("Throwing away IO eXcEpTiOn")
                             }
@@ -252,6 +260,7 @@ class MaternalHealthRepo @Inject constructor(
                                 Timber.d("Saved Successfully to server")
                                 return true
                             }
+
                             5002 -> {
                                 if (userRepo.refreshTokenTmc(
                                         user.userName,
@@ -259,6 +268,7 @@ class MaternalHealthRepo @Inject constructor(
                                     )
                                 ) throw SocketTimeoutException()
                             }
+
                             else -> {
                                 throw IOException("Throwing away IO eXcEpTiOn")
                             }
