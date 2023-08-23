@@ -82,7 +82,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:paddingVertical="@dimen/padding_normal"
-                        android:text="Name"
+                        android:text="@string/name"
                         android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
                         android:textColor="?attr/colorOnPrimary" />
 
@@ -112,7 +112,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:paddingVertical="@dimen/padding_normal"
-                        android:text="Age"
+                        android:text="@string/age"
                         android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
                         android:textColor="?attr/colorOnPrimary" />
 
@@ -140,7 +140,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:paddingVertical="@dimen/padding_normal"
-                        android:text="No.of Children"
+                        android:text="@string/no_of_children"
                         android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
                         android:textColor="?attr/colorOnPrimary" />
 
@@ -166,7 +166,7 @@
                 list_avail="@{item.savedECTRecords}"
 
                 android:onClick="@{() -> clickListener.onClickedShowAllTracks(item)}"
-                android:text="View Trackings"
+                android:text="@string/view_trackings"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
@@ -178,7 +178,7 @@
                 android:layout_marginTop="@dimen/padding_normal"
 
                 android:onClick="@{() -> clickListener.onClickedAdd(item)}"
-                android:text="Add Tracking"
+                android:text="@string/add_tracking"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 

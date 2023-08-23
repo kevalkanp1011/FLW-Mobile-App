@@ -10,7 +10,7 @@
     </data>
 
     <FrameLayout
-        tools:background="@color/green"
+        tools:background="@color/md_theme_dark_onTertiary"
         android:id="@+id/fl_aadhaar_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -122,7 +122,8 @@
                     app:layout_constraintBottom_toTopOf="@+id/textView5"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="@+id/textView5"
-                    app:layout_constraintStart_toStartOf="@+id/textView5" />
+                    app:layout_constraintStart_toStartOf="@+id/textView5"
+                    android:contentDescription="@string/offline" />
 
                 <TextView
                     android:id="@+id/textView5"

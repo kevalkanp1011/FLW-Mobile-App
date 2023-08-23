@@ -15,33 +15,7 @@
     <string name="PREF_current_saved_language" translatable="false">Locale.Helper.Selected.Language</string>
     <string name="PREF_current_dp_uri" translatable="false">DP_URI_cat</string>
 
-
-
-    <!-- HOME -->
-
-
-    <!-- BEN KID -->
-
-
     <string name="tracking_date">Date of Visit</string>
-
-    <!--    BEN GEN-->
-
-    <!--   CBAC -->
-
-
-    <!--TB Screening-->
-    <string name="tb_suspected_alert">Refer to MO and collect the Sputum sample</string>
-    <string name="tb_suspected_alert_positive">Refer to MO</string>
-    <string name="tb_suspected_family_alert">Refer to MO or inform ANM/MPW to tracing of all family members</string>
-
-
-    <!--Valdiateion mesages-->
-
-
-
-    <!-- 32 33 MDSR-->
-
     <string name="mdsr_form">MDSR</string>
     <string name="mdsr_district">District</string>
     <string name="mdsr_state">State</string>
@@ -90,29 +64,17 @@
     <string name="nav_header_desc" translatable="false">Navigation header</string>
 
     <string name="cd_icon_grid_icon">icon</string>
-
-
     <string name="nav_item_1_text">Name : <b>%s</b></string>
     <string name="nav_item_2_text">Username : <b>%s</b></string>
     <string name="nav_item_3_text">User ID :  <b>%d</b></string>
     <string name="nav_item_4_text">Version : %s</string>
-
-
     <string name="tv_required_text_asterisk">*</string>
-
-
     <string name="rv_item_hh_entry_1">%1$d</string>
-
-
     <string name="notification_sync_channel_name">Sync Data</string>
     <string name="notification_sync_channel_description">Upload beneficiaries to Server</string>
     <string name="notification_sync_channel_id">sakhi-sync0</string>
-
     <string name="btn_submit">Submit</string>
-
     <string name="long_to_string">%d</string>
-
-
     <string name="tv_reg_date_ph">Registration Date</string>
     <string name="tv_ben_name_ph">Beneficiary Name</string>
     <string name="tv_type_of_list">Type of List</string>
@@ -200,8 +162,8 @@
     <string name="something_went_wrong_nunable_to_connect_to_server_ntry_again_later">Something went wrong !\nUnable to connect to server !\nTry again later!</string>
     <string name="try_again">Try Again!</string>
     <string name="version_2_0_0">Version 2.0.0</string>
-    <string name="disagree">DISAGREE</string>
-    <string name="agree">AGREE</string>
+<!--    <string name="disagree">DISAGREE</string>-->
+<!--    <string name="agree">AGREE</string>-->
     <string name="enter_pin">Enter PIN</string>
     <string name="sync_in_progress">Sync in progress ...</string>
     <string name="full_name">Full Name</string>
@@ -339,13 +301,19 @@
     <string name="error_input">Error Input</string>
     <string name="exit_application">Exit Application</string>
     <string name="do_you_want_to_exit_application">Do you want to exit application</string>
-    <string name="downloading">Downloading ...</string>
+    <string name="downloading">Downloading …</string>
     <string name="choose_application_language">Choose Application Language</string>
     <string name="english">English</string>
     <string name="hindi">Hindi</string>
     <string name="assamese">Assamese</string>
     <string name="sync">SYNC</string>
     <string name="tap_to_change">Tap to Change</string>
+    <string name="validate">Validate</string>
+    <string name="hbnc_daylist">Hbnc DayList</string>
+    <string name="hbyc_list">Hbyc List</string>
+    <string name="child_immunization">Child Immunization</string>
+    <string name="pregnancy_registration">Pregnancy Registration</string>
+    <string name="mother_immunizationlist">Mother ImmunizationList</string>
 
     <!-- Eligible couple registration -->
     <string-array name="ecr_gender_array">

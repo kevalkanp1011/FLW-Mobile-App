@@ -43,4 +43,16 @@
     <string name="aadhar_disclaimer_consent_text">I, hereby declare that I am voluntarily sharing my Aadhaar Number and demographic information issued by UIDAI, with National Health Authority (NHA)for the sole purpose of creation of ABHA Number.I understand that my ABHA Number can be used and shared for purposes as may be notified by ABDM from time to time including provision of healthcare services. \n\nFurther,I am aware that my personal identifiable information (Name, Address, Age, Date of Birth, Gender and Photograph) may be made available to the entities working in the NationalDigital Health Ecosystem (NDHE)which inter alia includes stakeholders and entities such as healthcare professionals (e.g. doctors), facilities (e.g. hospitals, laboratories) and data fiduciaries (e.g. health programmers), which are registered with or linked to the Ayushman Bharat Digital Mission (ABDM), and various processes there under. I authorize NHA to use myAadhaar number for performing Aadhaar based authentication with UIDAI as per the provisions of the Aadhaar (Targeted Delivery of Financial and other Subsidies, Benefits and Services) Act, 2016 for the aforesaid purpose.I understand that UIDAI will share my e-KYC details, or response of “Yes” with NHA upon successful authentication. I have been duly informed about the option of using other IDs apart from Aadhaar; however,I consciously choose to use Aadhaar number for the purpose of availing benefits across the NDHE.I am aware that my personal identifiable information excluding Aadhaar number can be used and shared for purposes as mentioned above.I reserve the right to revoke the given consent at any point of time as per provisions of Aadhar Act and Regulations.</string>
     <string name="d_o_b">D.O.B</string>
     <string name="beneficiary_abha_number">Beneficiary ABHA Number.</string>
+    <string name="offline">offline</string>
+    <string name="check_circle">check circle</string>
+    <string name="name_">Name :</string>
+    <string name="abha_number_">ABHA Number :</string>
+    <string name="aadhaar_linked_mobile_number_or_other_mobile_number">Aadhaar linked mobile number or other mobile number</string>
+    <string name="individual_s_consent_for_creation_of_abha_number">Individual’s consent for creation of ABHA Number.</string>
+    <string name="validate_fp">Validate FP</string>
+    <string name="generating_abha_for">Generating ABHA for:</string>
+    <string name="otp_sent_to">"OTP sent to "</string>
+    <string name="otp_was_resent">OTP was resent.</string>
+    <string name="do_you_want_to_go_back">Do you want to go back?</string>
+    <string name="downloading_abha_card">Downloading abha card</string>
 </resources>
