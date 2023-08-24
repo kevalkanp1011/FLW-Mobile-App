@@ -311,13 +311,17 @@ class PregnantWomanAncVisitDataset(
             maternalDeath
 
         )
+        abortionDate.min = lmp + TimeUnit.DAYS.toMillis(5 * 7 + 1)
+        abortionDate.max = minOf(System.currentTimeMillis(), lmp + TimeUnit.DAYS.toMillis(21 * 7))
         ben?.let {
             if (visitNumber == 1) {
-                ancDate.min =
-                    (lmp + TimeUnit.DAYS.toMillis(Konstants.minAnc1Week * 7L+1L)).also {
-                        ancDate.value = getDateFromLong(it)
-                    }
-                ancDate.max = minOf(Calendar.getInstance().setToStartOfTheDay().timeInMillis,lmp + TimeUnit.DAYS.toMillis((Konstants.maxAnc1Week+1) * 7L-1))
+                ancDate.min = (lmp + TimeUnit.DAYS.toMillis(Konstants.minAnc1Week * 7L + 1L)).also {
+                    ancDate.value = getDateFromLong(it)
+                }
+                ancDate.max = minOf(
+                    Calendar.getInstance().setToStartOfTheDay().timeInMillis,
+                    lmp + TimeUnit.DAYS.toMillis((Konstants.maxAnc1Week + 1) * 7L - 1)
+                )
             } else {
                 lastAnc?.let {
                     val minWeekInit = when (visitNumber) {
@@ -333,8 +337,7 @@ class PregnantWomanAncVisitDataset(
                         else -> throw IllegalStateException("visit number not in [2,4]")
                     }
                     val minWeek = getMinAncFillDate(
-                        minWeekInit,
-                        getWeeksOfPregnancy(
+                        minWeekInit, getWeeksOfPregnancy(
                             it.ancDate,
                             lmp,
 
@@ -343,7 +346,10 @@ class PregnantWomanAncVisitDataset(
                     ancDate.min = (lmp + TimeUnit.DAYS.toMillis(minWeek * 7L + 1L)).also {
                         ancDate.value = getDateFromLong(it)
                     }
-                    ancDate.max = minOf(Calendar.getInstance().setToStartOfTheDay().timeInMillis,lmp + TimeUnit.DAYS.toMillis((Konstants.maxAnc1Week+1) * 7L-1))
+                    ancDate.max = minOf(
+                        Calendar.getInstance().setToStartOfTheDay().timeInMillis,
+                        lmp + TimeUnit.DAYS.toMillis((maxWeek + 1) * 7L - 1)
+                    )
                 }
             }
         }
@@ -474,12 +480,21 @@ class PregnantWomanAncVisitDataset(
 
             weight.id -> validateIntMinMax(weight)
             bpSystolic.id, bpDiastolic.id -> {
+                (isBothBpEmpty()).let {
+                    bpDiastolic.required = !it
+                    bpSystolic.required = !it
+                    if(!it){
+                        validateEmptyOnEditText(bpSystolic)
+                        validateEmptyOnEditText(bpDiastolic)
+                    }
+                }
+                if(formId==bpSystolic.id){
+                    bpSystolic.value?.takeIf { it.isNotEmpty() }?.toLong()?.let {
+                        bpDiastolic.max = it
+                    }
+                }
                 validateIntMinMax(bpSystolic)
                 validateIntMinMax(bpDiastolic)
-                if (bpSystolic.value?.isNotEmpty() == true || bpDiastolic.value?.isNotEmpty() == true) {
-                    validateEmptyOnEditText(bpSystolic)
-                    validateEmptyOnEditText(bpDiastolic)
-                }
                 -1
             }
 
@@ -545,6 +560,9 @@ class PregnantWomanAncVisitDataset(
 
     }
 
+    fun isBothBpEmpty() = bpSystolic.value.isNullOrEmpty() && bpDiastolic.value.isNullOrEmpty()
+    fun isBpSetToRequired() = bpSystolic.required
+
 
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
         (cacheModel as PregnantWomanAncCache).let { cache ->
@@ -590,6 +608,8 @@ class PregnantWomanAncVisitDataset(
     }
 
     fun getWeeksOfPregnancy(): Int = getIndexById(weekOfPregnancy.id)
+    fun getSystolicIndex(): Int = getIndexById(bpSystolic.id)
+    fun getDiastolicIndex(): Int = getIndexById(bpDiastolic.id)
     fun updateBenRecordForDelivered(it: BenRegCache) {
         it.genDetails?.apply {
             reproductiveStatus =

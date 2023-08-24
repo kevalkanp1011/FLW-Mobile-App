@@ -2,6 +2,7 @@ package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.helpers.getWeeksOfPregnancy
@@ -58,7 +59,7 @@ class PregnantWomanRegistrationDataset(
         inputType = InputType.TEXT_VIEW,
         title = "Name of Pregnant Women",
         arrayId = -1,
-        required = true,
+        required = false,
         allCaps = true,
         hasSpeechToText = true,
         etInputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
@@ -69,7 +70,7 @@ class PregnantWomanRegistrationDataset(
         inputType = InputType.TEXT_VIEW,
         title = "Name of Husband",
         arrayId = -1,
-        required = true,
+        required = false,
         allCaps = true,
         hasSpeechToText = true,
         etInputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
@@ -79,7 +80,7 @@ class PregnantWomanRegistrationDataset(
         inputType = InputType.TEXT_VIEW,
         title = "Current Age of Woman",
         arrayId = -1,
-        required = true,
+        required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 2,
         max = Konstants.maxAgeForGenBen.toLong(),
@@ -152,7 +153,7 @@ class PregnantWomanRegistrationDataset(
     private val dateOfVdrlTestDone = FormElement(
         id = 14,
         inputType = InputType.DATE_PICKER,
-        title = "Date of Test done",
+        title = "Date of VDRL Test done",
         arrayId = -1,
         required = false,
         max = System.currentTimeMillis(),
@@ -170,7 +171,7 @@ class PregnantWomanRegistrationDataset(
     private val dateOfhivTestDone = FormElement(
         id = 16,
         inputType = InputType.DATE_PICKER,
-        title = "Date of Test done",
+        title = "Date of HIV Test done",
         arrayId = -1,
         required = false,
         max = System.currentTimeMillis(),
@@ -188,7 +189,7 @@ class PregnantWomanRegistrationDataset(
     private val dateOfhbsAgTestDone = FormElement(
         id = 18,
         inputType = InputType.DATE_PICKER,
-        title = "Date of Test done",
+        title = "Date of HbsAg Test done",
         arrayId = -1,
         required = false,
         max = System.currentTimeMillis(),
@@ -244,7 +245,7 @@ class PregnantWomanRegistrationDataset(
     private val otherComplicationsDuringLastPregnancy = FormElement(
         id = 24,
         inputType = InputType.EDIT_TEXT,
-        title = "other",
+        title = "Any other Complication",
         required = true,
     )
 
@@ -298,64 +299,92 @@ class PregnantWomanRegistrationDataset(
         }
 
         ben?.let {
-            dateOfReg.min = it.regDate
+            dateOfReg.min = it.regDate.also {
+                dateOfVdrlTestDone.min = it
+                dateOfhivTestDone.min = it
+                hbsAgTestResult.min = it
+            }
             rchId.value = ben.rchId
             name.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
             husbandName.value = ben.genDetails?.spouseName
-            age.value = BenBasicCache.getAgeFromDob(ben.dob).toString()
+            age.value = "${BenBasicCache.getAgeFromDob(ben.dob)} YEARS"
         }
         saved?.let {
-            dateOfReg.value = getDateFromLong(it.dateOfRegistration)
-            rchId.value = it.rchId.toString()
+            dateOfReg.apply {
+                value = getDateFromLong(it.dateOfRegistration)
+                inputType = InputType.TEXT_VIEW
+            }
+            it.dateOfRegistration.let {
+                dateOfVdrlTestDone.min = it
+                dateOfhivTestDone.min = it
+                dateOfhbsAgTestDone.min = it
+
+            }
+            val eddFromLmp = getEddFromLmp(it.lmpDate)
+            minOf(System.currentTimeMillis(), eddFromLmp).let { maxDate ->
+                dateOfVdrlTestDone.max = maxDate
+                dateOfhivTestDone.max = maxDate
+                dateOfhbsAgTestDone.max = maxDate
+            }
             mcpCardNumber.value = it.mcpCardNumber.toString()
             lmp.value = getDateFromLong(it.lmpDate)
-            weekOfPregnancy.value = getWeeksOfPregnancy(it.dateOfRegistration, it.lmpDate).toString()
+            val weekOfPreg = getWeeksOfPregnancy(it.dateOfRegistration, it.lmpDate)
+            weekOfPregnancy.value =
+                weekOfPreg.toString()
+            if (weekOfPreg > 26)
+                lmp.inputType = InputType.TEXT_VIEW
             edd.value = getDateFromLong(getEddFromLmp(it.lmpDate))
             bloodGroup.value = bloodGroup.getStringFromPosition(it.bloodGroupId)
             weight.value = it.weight?.toString()
             height.value = it.height?.toString()
-            vdrlrprTestResult.value = vdrlrprTestResult.getStringFromPosition(it.vdrlRprTestResultId)
-            if(it.vdrlRprTestResultId == 1 ||it.vdrlRprTestResultId == 2)
-                list.add(list.indexOf(vdrlrprTestResult)+1, dateOfVdrlTestDone)  
-            if(it.hivTestResultId == 1 ||it.hivTestResultId == 2)
-                list.add(list.indexOf(hivTestResult)+1, dateOfVdrlTestDone)
-            if(it.hbsAgTestResultId == 1 ||it.hbsAgTestResultId == 2)
-                list.add(list.indexOf(hbsAgTestResult)+1, dateOfVdrlTestDone)
+            vdrlrprTestResult.value =
+                vdrlrprTestResult.getStringFromPosition(it.vdrlRprTestResultId)
+            if (it.vdrlRprTestResultId == 1 || it.vdrlRprTestResultId == 2)
+                list.add(list.indexOf(vdrlrprTestResult) + 1, dateOfVdrlTestDone)
+            if (it.hivTestResultId == 1 || it.hivTestResultId == 2)
+                list.add(list.indexOf(hivTestResult) + 1, dateOfhivTestDone)
+            if (it.hbsAgTestResultId == 1 || it.hbsAgTestResultId == 2)
+                list.add(list.indexOf(hbsAgTestResult) + 1, dateOfhbsAgTestDone)
             dateOfVdrlTestDone.value = it.dateOfVdrlRprTest?.let { it1 -> getDateFromLong(it1) }
             hivTestResult.value = hivTestResult.getStringFromPosition(it.hivTestResultId)
             dateOfhivTestDone.value = it.dateOfHivTest?.let { it1 -> getDateFromLong(it1) }
             hbsAgTestResult.value = hbsAgTestResult.getStringFromPosition(it.hbsAgTestResultId)
             dateOfhbsAgTestDone.value = it.dateOfHbsAgTest?.let { it1 -> getDateFromLong(it1) }
             pastIllness.value = it.pastIllness
-            if(pastIllness.value==pastIllness.entries!!.last())
-                list.add(list.indexOf(pastIllness)+1, otherPastIllness)
+            if (pastIllness.value == pastIllness.entries!!.last())
+                list.add(list.indexOf(pastIllness) + 1, otherPastIllness)
             otherPastIllness.value = it.otherPastIllness
-            isFirstPregnancy.value = isFirstPregnancy.getStringFromPosition(if(it.is1st) 1 else 2)
-            if(isFirstPregnancy.value==isFirstPregnancy.entries!!.last()) {
+            isFirstPregnancy.value = isFirstPregnancy.getStringFromPosition(if (it.is1st) 1 else 2)
+            if (isFirstPregnancy.value == isFirstPregnancy.entries!!.last()) {
                 totalNumberOfPreviousPregnancy.value = it.numPrevPregnancy?.toString()
-                complicationsDuringLastPregnancy.value = it.complicationPrevPregnancyId?.let { it1 ->
-                    complicationsDuringLastPregnancy.getStringFromPosition(
-                        it1
-                    )
-                }
+                complicationsDuringLastPregnancy.value =
+                    it.complicationPrevPregnancyId?.let { it1 ->
+                        complicationsDuringLastPregnancy.getStringFromPosition(
+                            it1
+                        )
+                    }
                 list.addAll(
                     list.indexOf(isFirstPregnancy) + 1,
                     listOf(totalNumberOfPreviousPregnancy, complicationsDuringLastPregnancy)
                 )
                 otherComplicationsDuringLastPregnancy.value = it.otherComplication
-                if(complicationsDuringLastPregnancy.value == complicationsDuringLastPregnancy.entries!!.last())
-                    list.add(list.indexOf(complicationsDuringLastPregnancy)+1, otherComplicationsDuringLastPregnancy)
+                if (complicationsDuringLastPregnancy.value == complicationsDuringLastPregnancy.entries!!.last())
+                    list.add(
+                        list.indexOf(complicationsDuringLastPregnancy) + 1,
+                        otherComplicationsDuringLastPregnancy
+                    )
             }
-            isHrpCase.value = isHrpCase.getStringFromPosition(if(it.isHrp) 1 else 2)
-            if(it.isHrp) {
+            isHrpCase.value = isHrpCase.getStringFromPosition(if (it.isHrp) 1 else 2)
+            if (it.isHrp) {
                 assignedAsHrpBy.value = assignedAsHrpBy.getStringFromPosition(it.hrpIdById)
                 list.add(assignedAsHrpBy)
             }
 
-            
 
-
-
+        } ?: run {
+            vdrlrprTestResult.inputType = InputType.TEXT_VIEW
+            hivTestResult.inputType = InputType.TEXT_VIEW
+            hbsAgTestResult.inputType = InputType.TEXT_VIEW
         }
         setUpPage(list)
 
@@ -365,19 +394,25 @@ class PregnantWomanRegistrationDataset(
     fun getIndexOfEdd() = getIndexById(edd.id)
     fun getIndexOfWeeksPregnancy() = getIndexById(weekOfPregnancy.id)
     fun getIndexOfPastIllness() = getIndexById(pastIllness.id)
+    fun getIndexOfVdrlTestResult() = getIndexById(vdrlrprTestResult.id)
 
 
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
             rchId.id -> validateRchIdOnEditText(rchId)
             mcpCardNumber.id -> validateMcpOnEditText(mcpCardNumber)
-            dateOfReg.id ->{
+            dateOfReg.id -> {
                 dateOfReg.value?.let {
-                    lmp.max = getLongFromDate(it)
+                    val dateOfRegLong = getLongFromDate(it)
+                    lmp.max = dateOfRegLong
                     lmp.min = getMinFromMaxForLmp(lmp.max!!)
+                    dateOfVdrlTestDone.min = dateOfRegLong
+                    dateOfhivTestDone.min = dateOfRegLong
+                    hbsAgTestResult.min = dateOfRegLong
                 }
                 -1
             }
+
             lmp.id -> {
                 val lmpLong = lmp.value?.let { getLongFromDate(it) }
                 val regLong = dateOfReg.value?.let { getLongFromDate(it) }
@@ -389,13 +424,27 @@ class PregnantWomanRegistrationDataset(
                         weekOfPregnancy.value = bracket.toString()
                     }
                 }
+                vdrlrprTestResult.let {
+                    if (it.inputType != InputType.DROPDOWN) it.inputType = InputType.DROPDOWN
+                }
+                hivTestResult.let {
+                    if (it.inputType != InputType.DROPDOWN) it.inputType = InputType.DROPDOWN
+                }
+                hbsAgTestResult.let {
+                    if (it.inputType != InputType.DROPDOWN) it.inputType = InputType.DROPDOWN
+                }
                 edd.value = eddLong?.let { getDateFromLong(it) }
-                dateOfhivTestDone.min = regLong
-                dateOfVdrlTestDone.min = regLong
-                dateOfhbsAgTestDone.min = regLong
-                dateOfVdrlTestDone.max = eddLong
-                dateOfhivTestDone.max = eddLong
-                dateOfhbsAgTestDone.max = eddLong
+                regLong?.let {
+                    dateOfhivTestDone.min = it
+                    dateOfVdrlTestDone.min = it
+                    dateOfhbsAgTestDone.min = it
+                }
+                eddLong?.let {
+                    val max = minOf(it, System.currentTimeMillis())
+                    dateOfVdrlTestDone.max = max
+                    dateOfhivTestDone.max = max
+                    dateOfhbsAgTestDone.max = max
+                }
                 -1
             }
 
@@ -452,10 +501,12 @@ class PregnantWomanRegistrationDataset(
                     target = otherPastIllness
                 )
             }
-            otherPastIllness.id ->{
+
+            otherPastIllness.id -> {
                 validateEmptyOnEditText(otherPastIllness)
                 validateAllAlphabetsSpaceOnEditText(otherPastIllness)
             }
+
             isFirstPregnancy.id -> {
                 complicationsDuringLastPregnancy.apply {
                     value = entries!!.first()
@@ -480,6 +531,7 @@ class PregnantWomanRegistrationDataset(
                     target = otherComplicationsDuringLastPregnancy
                 )
             }
+
             otherComplicationsDuringLastPregnancy.id -> {
                 validateEmptyOnEditText(otherComplicationsDuringLastPregnancy)
                 validateAllAlphabetsSpaceOnEditText(otherComplicationsDuringLastPregnancy)
@@ -500,30 +552,32 @@ class PregnantWomanRegistrationDataset(
     }
 
 
-
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
-        (cacheModel as PregnantWomanRegistrationCache).let {form ->
+        (cacheModel as PregnantWomanRegistrationCache).let { form ->
             form.dateOfRegistration = getLongFromDate(dateOfReg.value)
-            form.mcpCardNumber = mcpCardNumber.value?.takeIf { it.isNotEmpty() }?.toLong()?:0
-            form.rchId = rchId.value?.takeIf { it.isNotEmpty() }?.toLong()?:0
+            form.mcpCardNumber = mcpCardNumber.value?.takeIf { it.isNotEmpty() }?.toLong() ?: 0
+            form.rchId = rchId.value?.takeIf { it.isNotEmpty() }?.toLong() ?: 0
             form.lmpDate = getLongFromDate(lmp.value)
             form.bloodGroup = bloodGroup.value
-            form.bloodGroupId= bloodGroup.getPosition()
+            form.bloodGroupId = bloodGroup.getPosition()
             form.weight = weight.value?.toInt()
             form.height = height.value?.toInt()
             form.vdrlRprTestResult = vdrlrprTestResult.value
             form.vdrlRprTestResultId = vdrlrprTestResult.getPosition()
-            form.dateOfVdrlRprTest = dateOfVdrlTestDone.value?.let { getLongFromDate(dateOfVdrlTestDone.value)}
+            form.dateOfVdrlRprTest =
+                dateOfVdrlTestDone.value?.let { getLongFromDate(dateOfVdrlTestDone.value) }
             form.hivTestResult = hivTestResult.value
             form.hivTestResultId = hivTestResult.getPosition()
-            form.dateOfHivTest = dateOfhivTestDone.value?.let { getLongFromDate(dateOfhivTestDone.value)}
+            form.dateOfHivTest =
+                dateOfhivTestDone.value?.let { getLongFromDate(dateOfhivTestDone.value) }
             form.hbsAgTestResult = hbsAgTestResult.value
             form.hbsAgTestResultId = hbsAgTestResult.getPosition()
-            form.dateOfHbsAgTest = dateOfhbsAgTestDone.value?.let {getLongFromDate(dateOfhbsAgTestDone.value)}
+            form.dateOfHbsAgTest =
+                dateOfhbsAgTestDone.value?.let { getLongFromDate(dateOfhbsAgTestDone.value) }
             form.pastIllness = pastIllness.value
             form.otherPastIllness = otherPastIllness.value
-            form.is1st = isFirstPregnancy.value==isFirstPregnancy.entries!!.first()
-            form.numPrevPregnancy= totalNumberOfPreviousPregnancy.value?.toInt()
+            form.is1st = isFirstPregnancy.value == isFirstPregnancy.entries!!.first()
+            form.numPrevPregnancy = totalNumberOfPreviousPregnancy.value?.toInt()
             form.complicationPrevPregnancy = complicationsDuringLastPregnancy.value
             form.complicationPrevPregnancyId = complicationsDuringLastPregnancy.getPosition()
             form.otherComplication = otherComplicationsDuringLastPregnancy.value
@@ -533,13 +587,15 @@ class PregnantWomanRegistrationDataset(
         }
     }
 
-    fun mapValueToBenRegId( ben: BenRegCache?): Boolean {
-        val rchIdFromBen = ben?.rchId?.takeIf{it.isNotEmpty()}?.toLong()
+    fun mapValueToBenRegId(ben: BenRegCache?): Boolean {
+        val rchIdFromBen = ben?.rchId?.takeIf { it.isNotEmpty() }?.toLong()
         rchId.value?.takeIf {
             it.isNotEmpty()
         }?.toLong()?.let {
-            if(it!=rchIdFromBen){
+            if (it != rchIdFromBen) {
                 ben?.rchId = it.toString()
+                ben?.syncState = SyncState.UNSYNCED
+                if (ben?.processed != "N") ben?.processed = "U"
                 return true
             }
         }
