@@ -247,6 +247,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_wide"
         android:text="@string/pwr_by_text"
+        android:lineSpacingMultiplier="1.5"
         android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
         android:textColor="?attr/colorOnPrimary"
         android:gravity="center"

@@ -9,6 +9,7 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import android.widget.*
 import android.widget.RadioGroup.LayoutParams
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -79,32 +80,36 @@ fun Button.setVaccineState(syncState: VaccineState?) {
 }
 
 
-@BindingAdapter("allowRedBorder", "scope", "recordCount")
-fun TextView.setRecordCount(showRedBorder: Boolean, scope: CoroutineScope, count: Flow<Int>?) {
+@BindingAdapter("scope", "recordCount")
+fun TextView.setRecordCount(scope: CoroutineScope, count: Flow<Int>?) {
     count?.let {
         scope.launch {
             it.collect {
                 text = it.toString()
-                if (it > 0 && showRedBorder) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        setBackgroundColor(
-                            context.resources.getColor(
-                                android.R.color.holo_red_dark,
-                                context.theme
-                            )
-                        )
-                    } else
-                        setBackgroundColor(
-                            context.resources.getColor(
-                                android.R.color.holo_red_dark,
-                            )
-                        )
-                }
             }
         }
     } ?: run {
         text = null
     }
+}
+
+@BindingAdapter("allowRedBorder", "scope", "recordCount")
+fun CardView.setRedBorder(allowRedBorder: Boolean, scope: CoroutineScope, count: Flow<Int>?) {
+    count?.let {
+        scope.launch {
+            it.collect {
+                if (it > 0 && allowRedBorder) {
+                    setBackgroundResource(R.drawable.red_border)
+                }
+                //                else{
+//                    this@setRedBorder.setBackgroundResource(0)
+//                }
+            }
+        }
+    }
+//        ?: run {
+//        this@setRedBorder.setBackgroundResource(0)
+//    }
 }
 
 @BindingAdapter("benId", "syncState")

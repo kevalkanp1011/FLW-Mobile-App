@@ -15,6 +15,6 @@
     <string name="cb_login_remember_me_text">Remember me</string>
     <string name="btn_login_forgot_password_text">Forgot Password?</string>
     <string name="btn_login_text">Login</string>
-    <string name="pwr_by_text" translatable="false">powered by\n\n <b>Piramal Foundation</b></string>
+    <string name="pwr_by_text" translatable="false">Powered by\n <b>Piramal Foundation</b></string>
 
 </resources>

@@ -63,7 +63,7 @@ class PwAncFormViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val asha  = preferenceDao.getLoggedInUser()!!
+            val asha = preferenceDao.getLoggedInUser()!!
             val ben = maternalHealthRepo.getBenFromId(benId)?.also { ben ->
                 _benName.value =
                     "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
@@ -83,7 +83,7 @@ class PwAncFormViewModel @Inject constructor(
             } ?: run {
                 _recordExists.value = false
             }
-            val lastAnc= maternalHealthRepo.getSavedAncRecord(benId, visitNumber-1)
+            val lastAnc = maternalHealthRepo.getSavedAncRecord(benId, visitNumber - 1)
 
             dataset.setUpPage(
                 ben,
@@ -111,7 +111,7 @@ class PwAncFormViewModel @Inject constructor(
                     _state.postValue(State.SAVING)
                     dataset.mapValues(ancCache, 1)
                     maternalHealthRepo.persistAncRecord(ancCache)
-                    if(ancCache.pregnantWomanDelivered==true){
+                    if (ancCache.pregnantWomanDelivered == true) {
                         maternalHealthRepo.getSavedRegistrationRecord(benId)?.let {
                             it.active = false
                             maternalHealthRepo.persistRegisterRecord(it)
@@ -136,6 +136,11 @@ class PwAncFormViewModel @Inject constructor(
     }
 
     fun getIndexOfWeeksOfPregnancy(): Int = dataset.getWeeksOfPregnancy()
+    fun getIndexOfDiastolic(): Int = dataset.getDiastolicIndex()
+    fun getIndexOfSystolic(): Int = dataset.getSystolicIndex()
+
+    fun getBpReq() = dataset.isBpSetToRequired()
+    fun isBothBpEmpty() = dataset.isBothBpEmpty()
 
 
 }
