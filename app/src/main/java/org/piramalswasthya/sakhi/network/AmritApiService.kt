@@ -97,4 +97,10 @@ interface AmritApiService {
     @POST("/flw-0.0.1/maternalCare/pregnantWoman/getAll")
     suspend fun getPwrData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
+    @POST("/flw-0.0.1/pmsma//saveAll")
+    suspend fun postPmsmaForm(@Body ecrPostList: List<PmsmaPost>): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/pmsma/getAll")
+    suspend fun getPmsmaData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+
 }

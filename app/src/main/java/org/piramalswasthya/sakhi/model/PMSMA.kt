@@ -5,6 +5,8 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.squareup.moshi.JsonClass
+import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.network.getLongFromDate
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -22,83 +24,49 @@ import java.util.Locale
 
 data class PMSMACache(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Long = 0,
     val benId: Long,
-    val hhId: Long,
-
+//    val hhId: Long,
     var mctsNumberOrRchNumber: String? = null,
-
     var haveMCPCard: Boolean = false,
-
     var givenMCPCard : Boolean? = null,
-
     var husbandName: String? = null,
-
     var address: String? = null,
-
-    var mobileNumber: Long = 0,
-
+    var mobileNumber: Long? = null,
     var numANC: Int = 0,
-
     var weight: Int = 0,
-
     var systolicBloodPressure: String? = null,
-
     var bloodPressure: String? = null,
-
     var abdominalCheckUp: String? = null,
-
     var fetalHRPM: Int = 0,
-
     var twinPregnancy: Boolean = false,
-
     var urineAlbumin: String? = null,
-
     var haemoglobinAndBloodGroup: String? = null,
-
     var hiv: String? = null,
-
     var vdrl: String? = null,
-
     var hbsc: String? = null,
-
     var malaria: String? = null,
-
     var hivTestDuringANC: Boolean? = null,
-
     var swollenCondtion: Boolean? = null,
-
     var bloodSugarTest: Boolean? = null,
-
     var ultraSound: Boolean? = null,
-
     var ironFolicAcid: Boolean? = null,
-
     var calciumSupplementation: Boolean? = null,
-
     var tetanusToxoid: String? = null,
-
     var lastMenstrualPeriod: Long = 0,
-
     var expectedDateOfDelivery: Long = 0,
-
     var highriskSymbols: Boolean? = null,
-
     var highRiskReason: String? = null,
-
     var highRiskPregnant: Boolean? = null,
-
     var highRiskPregnancyReferred: Boolean? = null,
-
     var birthPrepAndNutritionAndFamilyPlanning: Boolean? = null,
-
     var medicalOfficerSign: String? = null,
-
-    var createdBy: String? = null,
-
-    var createdDate: Long? = System.currentTimeMillis(),
-
-    var processed: String? = null,
+    var processed: String? = "N",
+    var createdBy: String,
+    var createdDate: Long = System.currentTimeMillis(),
+    var updatedBy: String,
+    var updatedDate: Long = System.currentTimeMillis(),
+    var syncState: SyncState
 ) {
 
 
@@ -113,58 +81,48 @@ data class PMSMACache(
 
     }
 
-    fun asPostModel(user: User, ben: BenRegCache): PmsmaPost {
+    fun asPostModel(): PmsmaPost {
         return PmsmaPost(
-            abdominalCheckUp = abdominalCheckUp,
-            address = address,
-            beneficiaryHaveMcpCarc = if (haveMCPCard) "Yes" else "No",
-            beneficiaryid = benId,
-            bloodPressure = bloodPressure,
-            bloodSugarTest = if (bloodSugarTest==true) "Yes" else "No",
-            calciumSupplementation = if (calciumSupplementation==true) "Yes" else "No",
-            createdBy = user.userName,
-            createdDate = System.currentTimeMillis() ,
-            edit_flag = false,
-            fetalRatePerMinutes = fetalHRPM.toString(),
-            fetalTwinsPregnancy = if (twinPregnancy) "Yes" else "No",
-            hbsg = hbsc,
-            himoglobinBloodGroup = haemoglobinAndBloodGroup,
-            hiv = hiv,
-            houseoldId = hhId.toString(),
+            id = id,
+            benId = benId,
+            rchNumber = mctsNumberOrRchNumber,
+            haveMCPCard = haveMCPCard,
+            givenMCPCard = givenMCPCard,
             husbandName = husbandName,
-            ironFolicAcid = if (ironFolicAcid==true) "Yes" else "No",
-            latitude = 0.0,
-            loginId = benId,
-            longitude =0.0,
-            systolic = systolicBloodPressure,
-            diastolic = bloodPressure,
-            malaria = malaria,
-            mcpCardIsGiven = if (haveMCPCard) "Yes" else "No",
-            mobileNumber = mobileNumber.toString(),
-            name = ben.firstName,
-            lmpDate = getDateStringFromLong(lastMenstrualPeriod) ,
-            eddDate = getDateStringFromLong(expectedDateOfDelivery),
-            pmsMaMctsRchNumber = mctsNumberOrRchNumber,
-            pregnantHighRiskCategoryReffredEdd = "0",
-            pregnantHighRiskCategoryReffredLmp = if(highRiskPregnancyReferred==true) "1" else "2",
-            pregnantHighRiskCategoryTreatedEdd = "0",
-            pregnantHighRiskCategoryTreatedLmp = if(highRiskPregnant==true) "1" else "2",
-            pregnantOfHighRiskEdd = "0",
-            pregnantOfHighRiskLmp = if(highriskSymbols==true) "1" else "2" ,
-            preparationForBirthComplicationAdvice = if(birthPrepAndNutritionAndFamilyPlanning==true)  "1" else "2",
-            selectTheReasonGivenBelowLmp = highRiskReason,
-            signatureOfMedicalOfficer = medicalOfficerSign,
-            swallonCondition = if(swollenCondtion==true) "1" else "2",
-            teatnousToxoid = tetanusToxoid,
-            ultrasound = if(ultraSound==true) "1" else "2",
-            updatedBy = user.userName,
-            updatedDate = System.currentTimeMillis(),
-            urineAlubmin = urineAlbumin,
+            address = address,
+            mobileNumber = mobileNumber,
+            numANC = numANC,
+            weight = weight,
+            systolicBloodPressure = systolicBloodPressure?.toInt(),
+            diastolicBloodPressure = bloodPressure?.toInt(),
+            abdominalCheckUp = abdominalCheckUp,
+            fetalHRPM = fetalHRPM,
+            twinPregnancy = twinPregnancy,
+            urineAlbumin = urineAlbumin,
+            haemoglobinAndBloodGroup = haemoglobinAndBloodGroup,
+            hiv = hiv,
             vdrl = vdrl,
-            villageid = ben.locationRecord.village.id,
-            wasHivTest = if(hivTestDuringANC==true) "1" else "2",
-            weight = weight.toString(),
-            writeTheNumberOfAncs = numANC.toString(),
+            hbsc = hbsc,
+            malaria = malaria,
+            hivTestDuringANC = hivTestDuringANC,
+            swollenCondition = swollenCondtion,
+            bloodSugarTest = bloodSugarTest,
+            ultraSound = ultraSound,
+            ironFolicAcid = ironFolicAcid,
+            calciumSupplementation = calciumSupplementation,
+            tetanusToxoid = tetanusToxoid,
+            lastMenstrualPeriod = getDateStringFromLong(lastMenstrualPeriod),
+            expectedDateOfDelivery = getDateStringFromLong(expectedDateOfDelivery),
+            highriskSymbols = highriskSymbols,
+            highRiskReason = highRiskReason,
+            highRiskPregnant = highRiskPregnant,
+            highRiskPregnancyReferred = highRiskPregnancyReferred,
+            birthPrepNutriAndFamilyPlanning = birthPrepAndNutritionAndFamilyPlanning,
+            medicalOfficerSign = medicalOfficerSign,
+            createdBy = createdBy,
+            createdDate = getDateStringFromLong(createdDate),
+            updatedDate = getDateStringFromLong(updatedDate),
+            updatedBy = updatedBy
             )
     }
 }
@@ -172,54 +130,92 @@ data class PMSMACache(
 @JsonClass(generateAdapter = true)
 data class PmsmaPost(
 
-    val abdominalCheckUp: String? = null,
-    val address: String? = null,
-    val beneficiaryHaveMcpCarc: String? = null,
-    val beneficiaryid: Long,
-    val bloodPressure: String? = null,
-    val bloodSugarTest: String? = null,
-    val calciumSupplementation: String? = null,
-    val createdBy: String? = null,
-    val createdDate: Long? = System.currentTimeMillis() / 1000L,
-    val edit_flag: Boolean? = false,
-    val fetalRatePerMinutes: String? = null,
-    val fetalTwinsPregnancy: String? = null,
-    val hbsg: String? = null,
-    val himoglobinBloodGroup: String? = null,
-    val hiv: String? = null,
-    val houseoldId: String? = null,
+    val id: Long = 0,
+    val benId: Long = 0,
+    val rchNumber: String? = null,
+    val haveMCPCard:Boolean = false,
+    val givenMCPCard:Boolean? = null,
     val husbandName: String? = null,
-    val ironFolicAcid: String? = null,
-    val latitude: Double? = 0.0,
-    val loginId: Long,
-    val longitude: Double? = 0.0,
-    val systolic: String? = null,
-    val diastolic: String? = null,
-    val malaria: String? = null,
-    val mcpCardIsGiven: String? = null,
-    val mobileNumber: String? = null,
-    val name: String? = null,
-    val lmpDate: String? = null,
-    val eddDate: String? = null,
-    val pmsMaMctsRchNumber: String? = null,
-    val pregnantHighRiskCategoryReffredEdd: String? = null,
-    val pregnantHighRiskCategoryReffredLmp: String? = null,
-    val pregnantHighRiskCategoryTreatedEdd: String? = null,
-    val pregnantHighRiskCategoryTreatedLmp: String? = null,
-    val pregnantOfHighRiskEdd: String? = null,
-    val pregnantOfHighRiskLmp: String? = null,
-    val preparationForBirthComplicationAdvice: String? = null,
-    val selectTheReasonGivenBelowLmp: String? = null,
-    val signatureOfMedicalOfficer: String? = null,
-    val swallonCondition: String? = null,
-    val teatnousToxoid: String? = null,
-    val ultrasound: String? = null,
-    val updatedBy: String? = null,
-    val updatedDate: Long? = System.currentTimeMillis() / 1000L,
-    val urineAlubmin: String? = null,
+    val address: String? = null,
+    val mobileNumber: Long? = null,
+    val numANC: Int = 0,
+    val weight: Int = 0,
+    val systolicBloodPressure: Int? = null,
+    val diastolicBloodPressure: Int? = null,
+    val abdominalCheckUp: String? = null,
+    val fetalHRPM: Int = 0,
+    val twinPregnancy:Boolean = false,
+    val urineAlbumin: String? = null,
+    val haemoglobinAndBloodGroup: String? = null,
+    val hiv: String? = null,
     val vdrl: String? = null,
-    val villageid: Int? = 0,
-    val wasHivTest: String? = null,
-    val weight: String? = null,
-    val writeTheNumberOfAncs: String? = null
-)
+    val hbsc: String? = null,
+    val malaria: String? = null,
+    val hivTestDuringANC:Boolean? = null,
+    val swollenCondition:Boolean? = null,
+    val bloodSugarTest:Boolean? = null,
+    val ultraSound:Boolean? = null,
+    val ironFolicAcid:Boolean? = null,
+    val calciumSupplementation:Boolean? = null,
+    val tetanusToxoid: String? = null,
+    val lastMenstrualPeriod: String? = null,
+    val expectedDateOfDelivery: String? = null,
+    val highriskSymbols:Boolean? = null,
+    val highRiskReason: String? = null,
+    val highRiskPregnant:Boolean? = null,
+    val highRiskPregnancyReferred:Boolean? = null,
+    val birthPrepNutriAndFamilyPlanning:Boolean? = null,
+    val medicalOfficerSign: String? = null,
+    val createdBy: String,
+    val createdDate: String? = null,
+    val updatedDate: String? = null,
+    val updatedBy: String
+) {
+    fun toPmsmaCache (): PMSMACache {
+        return PMSMACache(
+            id = id,
+            benId = benId,
+//            hhId
+            mctsNumberOrRchNumber = rchNumber,
+            haveMCPCard = haveMCPCard,
+            givenMCPCard = givenMCPCard,
+            husbandName = husbandName,
+            address = address,
+            mobileNumber = mobileNumber,
+            numANC = numANC,
+            weight = weight,
+            systolicBloodPressure = systolicBloodPressure.toString(),
+            bloodPressure = diastolicBloodPressure.toString(),
+            abdominalCheckUp = abdominalCheckUp,
+            fetalHRPM = fetalHRPM,
+            twinPregnancy = twinPregnancy,
+            urineAlbumin = urineAlbumin,
+            haemoglobinAndBloodGroup = haemoglobinAndBloodGroup,
+            hiv = hiv,
+            vdrl = vdrl,
+            hbsc = hbsc,
+            malaria = malaria,
+            hivTestDuringANC = hivTestDuringANC,
+            swollenCondtion = swollenCondition,
+            bloodSugarTest = bloodSugarTest,
+            ultraSound = ultraSound,
+            ironFolicAcid = ironFolicAcid,
+            calciumSupplementation = calciumSupplementation,
+            tetanusToxoid = tetanusToxoid,
+            lastMenstrualPeriod = getLongFromDate(lastMenstrualPeriod),
+            expectedDateOfDelivery = getLongFromDate(expectedDateOfDelivery),
+            highriskSymbols = highriskSymbols,
+            highRiskReason = highRiskReason,
+            highRiskPregnant = highRiskPregnant,
+            highRiskPregnancyReferred = highRiskPregnancyReferred,
+            birthPrepAndNutritionAndFamilyPlanning = birthPrepNutriAndFamilyPlanning,
+            medicalOfficerSign = medicalOfficerSign,
+            processed = "P",
+            createdBy = createdBy,
+            createdDate = getLongFromDate(createdDate),
+            updatedBy = updatedBy,
+            updatedDate = getLongFromDate(updatedDate),
+            syncState = SyncState.SYNCED
+        )
+    }
+}

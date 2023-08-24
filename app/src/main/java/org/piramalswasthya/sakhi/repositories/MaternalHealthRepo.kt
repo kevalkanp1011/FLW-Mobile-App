@@ -253,9 +253,8 @@ class MaternalHealthRepo @Inject constructor(
 
                         val errormessage = jsonObj.getString("errorMessage")
                         if (jsonObj.isNull("statusCode")) throw IllegalStateException("Amrit server not responding properly, Contact Service Administrator!!")
-                        val responsestatuscode = jsonObj.getInt("statusCode")
 
-                        when (responsestatuscode) {
+                        when (jsonObj.getInt("statusCode")) {
                             200 -> {
                                 Timber.d("Saved Successfully to server")
                                 return true
@@ -367,7 +366,6 @@ class MaternalHealthRepo @Inject constructor(
             pwrDTO.createdDate?.let {
                 var pwrCache: PregnantWomanRegistrationCache? =
                     maternalHealthDao.getSavedRecord(pwrDTO.benId)
-//                        EcrRepo.getLongFromDate(pwrDTO.createdDate) )
                 if (pwrCache == null) {
                     maternalHealthDao.saveRecord(pwrDTO.toPwrCache())
                 }
@@ -450,7 +448,6 @@ class MaternalHealthRepo @Inject constructor(
             ancDTO.createdDate?.let {
                 var pwrCache: PregnantWomanRegistrationCache? =
                     maternalHealthDao.getSavedRecord(ancDTO.benId)
-//                        EcrRepo.getLongFromDate(ancDTO.createdDate) )
                 if (pwrCache == null) {
                     maternalHealthDao.saveRecord(ancDTO.toAncCache())
                 }

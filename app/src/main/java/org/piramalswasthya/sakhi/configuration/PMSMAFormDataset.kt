@@ -56,6 +56,11 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
+    private val motherStatus = FormInputOld(
+        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        title = "Status of Mother",
+        required = false
+    )
     private val weight = FormInputOld(
         inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "Weight (in Kg)",
@@ -82,6 +87,11 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
         title = "Abdominal Check-up",
         required = false
     )
+    private val fetalStatus = FormInputOld(
+        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        title = "Fetal Status",
+        required = false
+    )
     private val fetalHRPM = FormInputOld(
         inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
         title = "Fetal Heart Rate per minute",
@@ -92,6 +102,11 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
         inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = "Twins pregnancy",
         entries = arrayOf("Yes", "No"),
+        required = false
+    )
+    private val investigations = FormInputOld(
+        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        title = "Investigations",
         required = false
     )
     private val urineAlbumin = FormInputOld(
@@ -148,6 +163,11 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
         entries = arrayOf("Yes", "No"),
         required = false
     )
+    private val interventionDetails = FormInputOld(
+        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        title = "Intervention Details",
+        required = false
+    )
     private val ironFolicAcid = FormInputOld(
         inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = "Iron Folic Acid ",
@@ -170,6 +190,11 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
         ),
         required = false
     )
+    private val lmp = FormInputOld(
+        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        title = "LMP",
+        required = false
+    )
     val lastMenstrualPeriod = FormInputOld(
         inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
         title = "Last Menstrual Period ",
@@ -181,6 +206,11 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
         inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = "Expected Date of Delivery ",
         required = true
+    )
+    private val highRiskFactors = FormInputOld(
+        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        title = "Identification of high-risk factors",
+        required = false
     )
     val highriskSymbols = FormInputOld(
         inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
@@ -195,14 +225,19 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
     )
     private val highRiskPregnant = FormInputOld(
         inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
-        title = "Pregnant in high risk childCategory treated",
+        title = "Pregnant in high risk category treated",
         entries = arrayOf("Yes", "No"),
         required = false
     )
     private val highRiskPregnancyReferred = FormInputOld(
         inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
-        title = "Pregnant in high risk childCategory was referred",
+        title = "Pregnant in high risk category was referred",
         entries = arrayOf("Yes", "No"),
+        required = false
+    )
+    private val advice = FormInputOld(
+        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        title = "Advice",
         required = false
     )
     private val birthPrepAndNutritionAndFamilyPlanning = FormInputOld(
@@ -225,12 +260,15 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
             address,
             mobileNumber,
             numANC,
+            motherStatus,
             weight,
             systolicBloodPressure,
             diastolicBloodPressure,
             abdominalCheckUp,
+            fetalStatus,
             fetalHRPM,
             twinPregnancy,
+            investigations,
             urineAlbumin,
             haemoglobinAndBloodGroup,
             hiv,
@@ -241,14 +279,18 @@ class PMSMAFormDataset(context: Context, private val pmsma: PMSMACache? = null) 
             swollenCondtion,
             bloodSugarTest,
             ultraSound,
+            interventionDetails,
             ironFolicAcid,
             calciumSupplementation,
             tetanusToxoid,
+            lmp,
             lastMenstrualPeriod,
             expectedDateOfDelivery,
+            highRiskFactors,
             highriskSymbols,
             highRiskPregnant,
             highRiskPregnancyReferred,
+            advice,
             birthPrepAndNutritionAndFamilyPlanning,
             medicalOfficerSign,
 

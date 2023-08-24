@@ -157,5 +157,8 @@ object AppModule {
     @Provides
     fun providePreferenceDao(@ApplicationContext context: Context) = PreferenceDao(context)
 
+    @Singleton
+    @Provides
+    fun providePmsmaDao(database : InAppDb) : PmsmaDao = database.pmsmaDao
 
 }
