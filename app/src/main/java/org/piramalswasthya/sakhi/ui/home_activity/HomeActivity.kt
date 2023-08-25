@@ -37,6 +37,7 @@ import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.ui.home_activity.sync.SyncBottomSheetFragment
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
 import org.piramalswasthya.sakhi.ui.service_location_activity.ServiceLocationActivity
+import org.piramalswasthya.sakhi.utils.HelperUtil
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import javax.inject.Inject
 
@@ -105,15 +106,23 @@ class HomeActivity : AppCompatActivity() {
 
 
     private val logoutAlert by lazy {
+        var str = ""
+        if (viewModel.unprocessedRecords > 0) {
+            str += viewModel.unprocessedRecords
+            str += resources.getString(R.string.not_processed)
+        } else {
+            str += resources.getString(R.string.all_records_synced)
+        }
+        str += resources.getString(R.string.are_you_sure_to_logout)
+
         MaterialAlertDialogBuilder(this).setTitle(resources.getString(R.string.logout))
-            .setMessage("${if (viewModel.unprocessedRecords > 0) "${viewModel.unprocessedRecords} not Processed." else "All records synced"} Are you sure to logout?")
+            .setMessage(str)
             .setPositiveButton(resources.getString(R.string.yes)) { dialog, _ ->
                 viewModel.logout()
                 ImageUtils.removeAllBenImages(this)
                 WorkerUtils.cancelAllWork(this)
                 dialog.dismiss()
             }.setNegativeButton(resources.getString(R.string.no)) { dialog, _ ->
-
                 dialog.dismiss()
             }.create()
     }
@@ -241,8 +250,8 @@ class HomeActivity : AppCompatActivity() {
                 resources.getString(R.string.nav_item_1_text, it.name)
             headerView.findViewById<TextView>(R.id.tv_nav_role).text =
                 resources.getString(R.string.nav_item_2_text, it.userName)
-            headerView.findViewById<TextView>(R.id.tv_nav_id).text =
-                resources.getString(R.string.nav_item_3_text, it.userId)
+            headerView.findViewById<TextView>(R.id.tv_nav_id).text = String.format("%s%d",
+                resources.getString(R.string.nav_item_3_text), HelperUtil().formatNumber(it.userId, Languages.ENGLISH))
 
 //                headerView.findViewById<TextView>(R.id.tv_nav_version).text =
 //                    getString(R.string.version)

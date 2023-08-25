@@ -2,6 +2,7 @@ package org.piramalswasthya.sakhi.adapters
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import android.text.Editable
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.databinding.RvItemFormCheckV2Binding
 import org.piramalswasthya.sakhi.databinding.RvItemFormDatepickerV2Binding
 import org.piramalswasthya.sakhi.databinding.RvItemFormDropdownV2Binding
@@ -30,6 +32,7 @@ import org.piramalswasthya.sakhi.databinding.RvItemFormRadioV2Binding
 import org.piramalswasthya.sakhi.databinding.RvItemFormTextViewV2Binding
 import org.piramalswasthya.sakhi.databinding.RvItemFormTimepickerV2Binding
 import org.piramalswasthya.sakhi.helpers.Konstants
+import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.InputType.CHECKBOXES
 import org.piramalswasthya.sakhi.model.InputType.DATE_PICKER
@@ -41,14 +44,21 @@ import org.piramalswasthya.sakhi.model.InputType.RADIO
 import org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW
 import org.piramalswasthya.sakhi.model.InputType.TIME_PICKER
 import org.piramalswasthya.sakhi.model.InputType.values
+import org.piramalswasthya.sakhi.utils.HelperUtil
 import timber.log.Timber
 import java.util.Calendar
+import javax.inject.Inject
 
 class FormInputAdapter(
     private val imageClickListener: ImageClickListener? = null,
     private val formValueListener: FormValueListener? = null,
     private val isEnabled: Boolean = true
 ) : ListAdapter<FormElement, ViewHolder>(FormInputDiffCallBack) {
+
+//    @Inject
+//    lateinit var preferenceDao: PreferenceDao
+//    @Inject
+//    lateinit var context: Context
     object FormInputDiffCallBack : DiffUtil.ItemCallback<FormElement>() {
         override fun areItemsTheSame(oldItem: FormElement, newItem: FormElement) =
             oldItem.id == newItem.id
