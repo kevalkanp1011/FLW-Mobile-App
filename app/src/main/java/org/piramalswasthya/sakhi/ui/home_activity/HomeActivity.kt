@@ -37,7 +37,6 @@ import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.ui.home_activity.sync.SyncBottomSheetFragment
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
 import org.piramalswasthya.sakhi.ui.service_location_activity.ServiceLocationActivity
-import org.piramalswasthya.sakhi.utils.HelperUtil
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import javax.inject.Inject
 
@@ -250,8 +249,8 @@ class HomeActivity : AppCompatActivity() {
                 resources.getString(R.string.nav_item_1_text, it.name)
             headerView.findViewById<TextView>(R.id.tv_nav_role).text =
                 resources.getString(R.string.nav_item_2_text, it.userName)
-            headerView.findViewById<TextView>(R.id.tv_nav_id).text = String.format("%s%d",
-                resources.getString(R.string.nav_item_3_text), HelperUtil().formatNumber(it.userId, Languages.ENGLISH))
+            headerView.findViewById<TextView>(R.id.tv_nav_id).text =
+                resources.getString(R.string.nav_item_3_text, it.userId)
 
 //                headerView.findViewById<TextView>(R.id.tv_nav_version).text =
 //                    getString(R.string.version)
