@@ -120,7 +120,7 @@ class PmsmaFragment : Fragment() {
                     binding.pbForm.visibility = View.VISIBLE
                 }
                 State.SUCCESS -> {
-                    WorkerUtils.triggerD2dSyncWorker(requireContext())
+                    WorkerUtils.triggerPMSMAPushWorker(requireContext())
                     findNavController().navigateUp()
                 }
                 State.FAIL -> {

@@ -100,6 +100,9 @@ object WorkerUtils {
         val pullPMSMAWorkRequest = OneTimeWorkRequestBuilder<PullPmsmaFromAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
+        val pullDeliveryOutcomeWorkRequest = OneTimeWorkRequestBuilder<PullDeliveryOutcomeFromAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
         val setSyncCompleteWorker = OneTimeWorkRequestBuilder<UpdatePrefForPullCompleteWorker>()
             .build()
         val workManager = WorkManager.getInstance(context)
@@ -110,6 +113,7 @@ object WorkerUtils {
             .then(pullECWorkRequest)
             .then(pullPWWorkRequest)
             .then(pullPMSMAWorkRequest)
+            .then(pullDeliveryOutcomeWorkRequest)
             .then(setSyncCompleteWorker)
             .enqueue()
     }
@@ -167,6 +171,18 @@ object WorkerUtils {
         WorkManager.getInstance(context)
             .enqueueUniqueWork(
                 PushPmsmaToAmritWorker.name,
+                ExistingWorkPolicy.APPEND_OR_REPLACE,
+                workRequest
+            )
+    }
+
+    fun triggerDeliveryOutcomePushWorker(context: Context){
+        val workRequest = OneTimeWorkRequestBuilder<PushDeliveryOutcomeToAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
+        WorkManager.getInstance(context)
+            .enqueueUniqueWork(
+                PushDeliveryOutcomeToAmritWorker.name,
                 ExistingWorkPolicy.APPEND_OR_REPLACE,
                 workRequest
             )

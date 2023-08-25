@@ -54,13 +54,16 @@ class DeliveryOutcomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            val asha  = preferenceDao.getLoggedInUser()!!
             val ben = benRepo.getBenFromId(benId)?.also { ben ->
                 _benName.value =
                     "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
                 _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
                 deliveryOutcome = DeliveryOutcomeCache(
                     benId = ben.beneficiaryId,
-                    syncState = SyncState.UNSYNCED
+                    syncState = SyncState.UNSYNCED,
+                    createdBy = asha.userName,
+                    updatedBy = asha.userName
                 )
             }
 

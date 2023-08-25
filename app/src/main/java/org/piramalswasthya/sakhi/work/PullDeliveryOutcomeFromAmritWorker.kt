@@ -13,19 +13,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.repositories.PmsmaRepo
+import org.piramalswasthya.sakhi.repositories.DeliveryOutcomeRepo
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 @HiltWorker
-class PullPmsmaFromAmritWorker @AssistedInject constructor(
+class PullDeliveryOutcomeFromAmritWorker @AssistedInject constructor(
     @Assisted private val appContext: Context,
     @Assisted params: WorkerParameters,
-    private val pmsmaRepo: PmsmaRepo,
+    private val deliveryOutcomeRepo: DeliveryOutcomeRepo,
 ) : CoroutineWorker(appContext, params) {
 
     companion object {
-        const val name = "PullPmsmaFromAmritWorker"
+        const val name = "PullDeliveryOutcomeFromAmritWorker"
         const val Progress = "Progress"
 
     }
@@ -35,7 +35,7 @@ class PullPmsmaFromAmritWorker @AssistedInject constructor(
         return try {
             try {
                 // This ensures that you waiting for the Notification update to be done.
-                setForeground(createForegroundInfo("Downloading PMSMA Data"))
+                setForeground(createForegroundInfo("Downloading Delivery Outcome Data"))
             } catch (throwable: Throwable) {
                 // Handle this exception gracefully
                 Timber.d("FgLW", "Something bad happened", throwable)
@@ -46,12 +46,12 @@ class PullPmsmaFromAmritWorker @AssistedInject constructor(
                 try {
                     val result1 =
                         awaitAll(
-                            async { getPmsmaDetails() }
+                            async { getDeliveryOutcomeDetails() }
                         )
 
                     val endTime = System.currentTimeMillis()
                     val timeTaken = TimeUnit.MILLISECONDS.toSeconds(endTime - startTime)
-                    Timber.d("Full PMSMA details fetching took $timeTaken seconds $result1")
+                    Timber.d("Full delivery outcome details fetching took $timeTaken seconds $result1")
 
                     if (result1.all { it }) {
 //                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
@@ -66,7 +66,7 @@ class PullPmsmaFromAmritWorker @AssistedInject constructor(
             }
 
         } catch (e: java.lang.Exception) {
-            Timber.d("Error occurred in PullPMSMAFromAmritWorker $e ${e.stackTrace}")
+            Timber.d("Error occurred in PullDeliveryOutcomeFromAmritWorker $e ${e.stackTrace}")
 
             Result.failure()
         }
@@ -89,10 +89,10 @@ class PullPmsmaFromAmritWorker @AssistedInject constructor(
     }
 
 
-    private suspend fun getPmsmaDetails() : Boolean {
+    private suspend fun getDeliveryOutcomeDetails() : Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val res = pmsmaRepo.getPmsmaDetailsFromServer()
+                val res = deliveryOutcomeRepo.getDeliveryOutcomesFromServer()
                 return@withContext res == 1
             } catch (e: Exception) {
                 Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
