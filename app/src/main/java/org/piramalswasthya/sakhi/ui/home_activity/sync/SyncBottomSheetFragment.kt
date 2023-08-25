@@ -36,9 +36,12 @@ class SyncBottomSheetFragment : BottomSheetDialogFragment() {
         val divider = DividerItemDecoration(context, LinearLayout.VERTICAL)
         binding.rvSync.adapter = adapter
         binding.rvSync.addItemDecoration(divider)
+
+        val localNames = viewModel.getLocalNames(requireContext())
+        val englishNames = viewModel.getEnglishNames(requireContext())
         lifecycleScope.launch{
             viewModel.syncStatus.collect{
-                adapter.submitList(it.asDomainModel())
+                adapter.submitList(it.asDomainModel(localNames, englishNames))
             }
         }
     }

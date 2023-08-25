@@ -309,7 +309,16 @@
     <string name="child_immunization">Child Immunization</string>
     <string name="pregnancy_registration">Pregnancy Registration</string>
     <string name="mother_immunizationlist">Mother ImmunizationList</string>
-
+    <string-array name="sync_records">
+        <item>BENEFICIARY</item>
+        <item>CBAC</item>
+        <item>TB Screening</item>
+        <item>TB Suspected</item>
+        <item>EC Registration</item>
+        <item>EC Tracking</item>
+        <item>PW Registration</item>
+        <item>PW ANC</item>
+    </string-array>
     <!-- Eligible couple registration -->
     <string-array name="ecr_gender_array">
         <item name="nbr_gender_1">Male</item>
