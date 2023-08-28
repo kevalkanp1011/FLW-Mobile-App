@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity
 
+import android.content.Context
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
@@ -8,9 +9,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.databinding.ActivityAbhaIdBinding
+import org.piramalswasthya.sakhi.helpers.MyContextWrapper
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertAbhaInterceptor
 import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdViewModel.State
 import timber.log.Timber
@@ -125,6 +132,12 @@ class AbhaIdActivity : AppCompatActivity() {
             .create()
     }
 
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface WrapperEntryPoint {
+        val preferenceDao: PreferenceDao
+    }
+
     private fun setUpActionBar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -146,5 +159,13 @@ class AbhaIdActivity : AppCompatActivity() {
         val remainingSeconds = seconds % 60
 
         return String.format("%02d:%02d", minutes, remainingSeconds)
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        val pref = EntryPointAccessors.fromApplication(
+            newBase,
+            WrapperEntryPoint::class.java
+        ).preferenceDao
+        super.attachBaseContext(MyContextWrapper.wrap(newBase, pref.getCurrentLanguage().symbol))
     }
 }

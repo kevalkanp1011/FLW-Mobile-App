@@ -30,5 +30,8 @@
     <string name="icon_title_sr">জৰীপ পঞ্জী</string>
     <string name="icon_title_ncd_tb_screening">টি.বি. স্ক্ৰীনিং</string>
     <string name="icon_title_ncd_tb_suspected">সন্দেহিত টি.বি. মৰাত কেছব</string>
-
+    <string name="home_fragment_percent_download_text">%1d%% ডাউনলোড হৈছে</string>
+    <string name="error_sign_in_invalid_u_p">অবৈধ ব্যৱহাৰকাৰীনাম / পাছৱৰ্ড!</string>
+    <string name="error_sign_in_timeout">সাৰ্ভাৰ সময় অতিবাহিত, পুনৰ চেষ্টা কৰক!</string>
+    <string name="error_sign_in_disconnected_network">নেটওৱাৰ্কলৈ সংযোগ কৰিব পৰা হোৱা নাই!</string>
 </resources>

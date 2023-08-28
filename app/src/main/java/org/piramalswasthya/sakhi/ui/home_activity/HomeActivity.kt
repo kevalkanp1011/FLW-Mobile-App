@@ -105,15 +105,23 @@ class HomeActivity : AppCompatActivity() {
 
 
     private val logoutAlert by lazy {
+        var str = ""
+        if (viewModel.unprocessedRecords > 0) {
+            str += viewModel.unprocessedRecords
+            str += resources.getString(R.string.not_processed)
+        } else {
+            str += resources.getString(R.string.all_records_synced)
+        }
+        str += resources.getString(R.string.are_you_sure_to_logout)
+
         MaterialAlertDialogBuilder(this).setTitle(resources.getString(R.string.logout))
-            .setMessage("${if (viewModel.unprocessedRecords > 0) "${viewModel.unprocessedRecords} not Processed." else "All records synced"} Are you sure to logout?")
+            .setMessage(str)
             .setPositiveButton(resources.getString(R.string.yes)) { dialog, _ ->
                 viewModel.logout()
                 ImageUtils.removeAllBenImages(this)
                 WorkerUtils.cancelAllWork(this)
                 dialog.dismiss()
             }.setNegativeButton(resources.getString(R.string.no)) { dialog, _ ->
-
                 dialog.dismiss()
             }.create()
     }

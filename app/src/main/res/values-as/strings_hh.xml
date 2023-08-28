@@ -2,13 +2,13 @@
 <resources>
 
     <string name="btn_text_frag_home_nhhr">নতুন পাৰিবাৰিক নিবন্ধন</string>
-    <string name="no_records_found">প্রদর্শনৰ বাবে কোনো হিতাধিকাৰী নাই। অনুগ্ৰহ কৰি হিতাধিকাৰী পঞ্জীকৰন আৰম্ভ কৰক।</string>
+    <string name="no_records_found">কোনো রেকর্ড পোৱা নগল</string>
     <string name="household_search">ঘৰুৱা সন্ধান</string>
 
     <string name="rv_item_hh_ph_1">এইচ এইচ আই ডি : </string>
     <string name="rv_item_hh_ph_2">পৰিয়াল মুৰব্বীৰ নাম :</string>
     <string name="rv_item_hh_ph_3">উপাধি/ উপনাম : </string>
-    <string name="hh_members_text">সদস্যসকল</string>
+    <string name="hh_members_text">সদস্যসকল : %1d</string>
     <string name="btn_rv_item_hh_add_ben">যোগ কৰক</string>
 
     <string name="frag_nhhr_title">নতুন পাৰিবাৰিক নিবন্ধন</string>

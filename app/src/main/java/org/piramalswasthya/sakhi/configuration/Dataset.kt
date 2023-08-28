@@ -11,6 +11,7 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.model.FormElement
+import org.piramalswasthya.sakhi.utils.HelperUtil
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -31,21 +32,13 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     protected var englishResources: Resources
 
     init {
-        englishResources = getLocalizedResources(context, Languages.ENGLISH)
-        resources = getLocalizedResources(context, currentLanguage)
+        englishResources = HelperUtil().getLocalizedResources( context, Languages.ENGLISH)
+        resources = HelperUtil().getLocalizedResources(context, currentLanguage)
     }
 
     /**
      * Helper function to get resource instance chosen language.
      */
-    private fun getLocalizedResources(context: Context, currentLanguage: Languages): Resources {
-        val desiredLocale = Locale(currentLanguage.symbol)
-        var conf = context.resources.configuration
-        conf = Configuration(conf)
-        conf.setLocale(desiredLocale)
-        val localizedContext: Context = context.createConfigurationContext(conf)
-        return localizedContext.resources
-    }
 
     protected companion object {
         fun getLongFromDate(dateString: String?): Long {

@@ -37,7 +37,7 @@
 
     <string name="cd_icon_grid_icon">চিহ্ন</string>
     <string name="nav_item_1_text">নাম : <b>%s</b></string>
-    <string name="nav_item_2_text">ব্যৱহাৰকাৰী নাম : <b>%s</b></string>
+    <string name="nav_item_2_text">ব্যৱহাৰকাৰী : <b>%s</b></string>
     <string name="nav_item_3_text">ব্যৱহাৰকাৰী আইডি :  <b>%d</b></string>
     <string name="nav_item_4_text">ভাৰ্সন : %s</string>
     <string name="tv_required_text_asterisk">*</string>
@@ -64,14 +64,21 @@
     <string name="tv_tb_status_ph">টিবি স্থিতি</string>
     <string name="iv_sync_state_tv">সময়সৰণি স্থিতি</string>
     <string name="version">2.0.0</string>
-    <string name="tv_text_select_village">Please select the village below.</string>
+    <string name="tv_text_select_village">দয়া করে নীচের গ্রাম নির্বাচন করুন।</string>
     <string name="form_input_empty_error">"প্ৰয়োজনীয় ক্ষেত্ৰখন খালী হ’ব নোৱাৰে !</string>
-    <string name="form_input_upper_case_error">Only Alphabets in upper case allowed!</string>
-    <string name="form_input_min_limit_error">%1s should be greater than or equal to %2d</string>
-    <string name="form_input_max_limit_error">%1s should be lesser than or equal to %2d</string>
-    <string name="form_input_error_invalid_mobile">Invalid Mobile Number !</string>
-    <string name="form_input_error_invalid_rch">Invalid RCH ID !</string>
-    <string name="form_input_error_invalid_aadhar">Invalid Aadhar Number</string>
+    <string name="form_input_upper_case_error">শুধুমাত্র বড় অক্ষরে অক্ষর অনুমোদিত!</string>
+    <string name="form_input_missing_entry_error">ঘরে %1d টি সংখ্যা থাকা আবশ্যক।</string>
+    <string name="form_input_alphabet_space_only_error">শুধুমাত্র বর্ণমালা এবং শূন্যস্থানের অক্ষর অনুমোদিত!</string>
+    <string name="form_input_min_limit_error">%1s অবশ্যই %2d এর সমান অথবা বেশি হতে হবে</string>
+    <string name="form_input_alph_numeric_space_only_error">শুধুমাত্র বর্ণমালা এবং সংখ্যাগুলি অনুমোদিত!</string>
+    <string name="form_input_min_limit_error_decimal">%1s অবশ্যই %2.1f এর সমান অথবা বেশি হতে হবে</string>
+    <string name="form_input_max_limit_error">%1s অবশ্যই %2d এর সমান অথবা কম হতে হবে</string>
+    <string name="form_input_max_limit_error_decimal">%1s অবশ্যই %2.1f এর সমান অথবা কম হতে হবে</string>
+    <string name="form_input_error_invalid_mobile">অবৈধ মোবাইল নম্বর !</string>
+    <string name="form_input_error_invalid_rch">অবৈধ RCH আইডি !</string>
+    <string name="form_input_error_invalid_mcp">অবৈধ MCP নম্বর !</string>
+    <string name="form_input_error_invalid_aadhar">অবৈধ আধার নম্বর</string>
+    <string name="no_records_found_hh">কোনও পরিবারের রেকর্ড পাওয়া যায়নি। দয়া করে নীচের বোতামে ক্লিক করে পরিবার নিবন্ধন শুরু করুন।</string>
 
 
     <string name="tracking_date">দৰমাহাৰ তাৰিখ</string>
@@ -102,8 +109,8 @@
     <string name="do_you_want_to_exit_application">আপুনি অপৰ্যাপ্ত আছে আপুনি অ্যাপ্লিকেশন প্ৰস্থান কৰিব বিচাৰিছে নেকি?</string>
     <string name="downloading">ডাউনলোড হৈছে …</string>
     <string name="choose_application_language">অ্যাপ্লিকেশনৰ ভাষা চয়ন কৰক</string>
-    <string name="english">ইংৰাজী</string>
-    <string name="hindi">হিন্দী</string>
+    <string name="english">English</string>
+    <string name="hindi">हिन्दी</string>
     <string name="assamese">অসমীয়া</string>
     <string name="sync">সময়সৰণি</string>
     <string name="tap_to_change">স্পৰ্শ কৰক পৰিবৰ্তন কৰিবলৈ</string>
