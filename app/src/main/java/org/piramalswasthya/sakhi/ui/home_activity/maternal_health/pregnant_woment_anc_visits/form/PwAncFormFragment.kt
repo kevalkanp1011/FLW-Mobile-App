@@ -126,20 +126,22 @@ class PwAncFormFragment : Fragment() {
                 1 -> {
                     notifyItemChanged(viewModel.getIndexOfWeeksOfPregnancy())
                 }
-                9 ->{
-                    notifyItemChanged(viewModel.getIndexOfDiastolic())
-                    if(viewModel.isBothBpEmpty() == viewModel.getBpReq() ){
-                        notifyItemChanged(viewModel.getIndexOfSystolic())
-
-                    }
-                }
-                10 ->{
-                    notifyItemChanged(viewModel.getIndexOfSystolic())
-                    if(viewModel.isBothBpEmpty() == viewModel.getBpReq() ){
-                        notifyItemChanged(viewModel.getIndexOfDiastolic())
-
-                    }
-                }
+//                9 ->{
+//                    notifyItemChanged(viewModel.getIndexOfDiastolic())
+//                    if(viewModel.triggerBpToggle() ){
+//                        notifyItemChanged(viewModel.getIndexOfSystolic())
+//                        viewModel.resetBpToggle()
+//
+//                    }
+//                }
+//                10 ->{
+//                    notifyItemChanged(viewModel.getIndexOfSystolic())
+//                    if(viewModel.triggerBpToggle()){
+//                        notifyItemChanged(viewModel.getIndexOfDiastolic())
+//                        viewModel.resetBpToggle()
+//
+//                    }
+//                }
 //                19 -> notifyItemChanged(viewModel.getIndexOfPastIllness())
             }
         }

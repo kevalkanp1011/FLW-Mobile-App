@@ -31,7 +31,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     protected var englishResources: Resources
 
     init {
-        englishResources = getLocalizedResources( context, Languages.ENGLISH)
+        englishResources = getLocalizedResources(context, Languages.ENGLISH)
         resources = getLocalizedResources(context, currentLanguage)
     }
 
@@ -545,6 +545,16 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
                     } else null
                 }
             }
+        }
+        return -1
+    }
+
+    protected fun validateDouble1DecimalPlaces(formElement: FormElement): Int {
+        formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.let {
+            if (it.contains('.') && it.substringAfter(".").length > 1)
+                "Only 1 decimal place allowed"
+            else
+                null
         }
         return -1
     }
