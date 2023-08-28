@@ -1,7 +1,6 @@
 package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
-import android.content.res.Configuration
 import android.content.res.Resources
 import android.util.Range
 import androidx.annotation.StringRes
@@ -32,7 +31,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     protected var englishResources: Resources
 
     init {
-        englishResources = HelperUtil().getLocalizedResources( context, Languages.ENGLISH)
+        englishResources = HelperUtil().getLocalizedResources(context, Languages.ENGLISH)
         resources = HelperUtil().getLocalizedResources(context, currentLanguage)
     }
 
