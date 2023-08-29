@@ -81,7 +81,7 @@ class PmsmaViewModel @Inject constructor(
     val popupString: LiveData<String?>
         get() = _popupString
 
-    private val form = PMSMAFormDataset(context)
+    private val form = PMSMAFormDataset(context, preferenceDao.getCurrentLanguage())
 
     private fun toggleFieldOnTrigger(
         causeField: FormInputOld,

@@ -149,6 +149,9 @@
         <action
             android:id="@+id/action_motherCareFragment_to_childRegListFragment"
             app:destination="@id/childRegListFragment" />
+        <action
+            android:id="@+id/action_motherCareFragment_to_pmsmaListFragment"
+            app:destination="@id/pmsmaListFragment" />
     </fragment>
     <fragment
         android:id="@+id/deathReportsFragment"
@@ -803,5 +806,13 @@
         android:name="org.piramalswasthya.sakhi.ui.home_activity.dashboard.DashboardFragment"
         android:label="@string/dashboard"
         tools:layout="@layout/fragment_dashboard" />
+    <fragment
+        android:id="@+id/pmsmaListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pmsma.list.PmsmaListFragment"
+        android:label="PmsmaListFragment" >
+        <action
+            android:id="@+id/action_pmsmaListFragment_to_pmsmaFragment"
+            app:destination="@id/pmsmaFragment" />
+    </fragment>
 
 </navigation>
