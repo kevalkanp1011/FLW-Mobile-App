@@ -32,7 +32,11 @@ class LoginActivity : AppCompatActivity() {
             newBase,
             WrapperEntryPoint::class.java
         ).preferenceDao
-        super.attachBaseContext(MyContextWrapper.wrap(newBase, pref.getCurrentLanguage().symbol))
+        super.attachBaseContext(MyContextWrapper.wrap(
+            newBase,
+            newBase.applicationContext,
+            pref.getCurrentLanguage().symbol
+        ))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

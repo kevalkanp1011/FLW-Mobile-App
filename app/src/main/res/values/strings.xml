@@ -15,6 +15,8 @@
     <string name="PREF_current_saved_language" translatable="false">Locale.Helper.Selected.Language</string>
     <string name="PREF_current_dp_uri" translatable="false">DP_URI_cat</string>
 
+    <string name="radio_title">%s<span> *</span></string>
+    <string name="radio_title_ds">%s<span> **</span></string>
     <string name="tracking_date">Date of Visit</string>
     <string name="mdsr_form">MDSR</string>
     <string name="mdsr_district">District</string>
@@ -310,7 +312,7 @@
     <string name="pregnancy_registration">Pregnancy Registration</string>
     <string name="mother_immunizationlist">Mother ImmunizationList</string>
     <string-array name="sync_records">
-        <item>BENEFICIARY</item>
+        <item>Beneficiary</item>
         <item>CBAC</item>
         <item>TB Screening</item>
         <item>TB Suspected</item>
