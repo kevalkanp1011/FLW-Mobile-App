@@ -15,6 +15,8 @@
     <string name="PREF_current_saved_language" translatable="false">Locale.Helper.Selected.Language</string>
     <string name="PREF_current_dp_uri" translatable="false">DP_URI_cat</string>
 
+    <string name="radio_title">%s<span> *</span></string>
+    <string name="radio_title_ds">%s<span> **</span></string>
     <string name="tracking_date">Date of Visit</string>
     <string name="mdsr_form">MDSR</string>
     <string name="mdsr_district">District</string>
@@ -134,22 +136,17 @@
     <string name="hbnc_day_text">Day %1d</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="home_fragment_percent_download_text">%1d%% downloaded</string>
-
-    <string name="error_sign_in_invalid_u_p">Invalid Username / password !</string>
-    <string name="error_sign_in_timeout">Server timed out, try again!</string>
-    <string name="error_sign_in_disconnected_network">Unable to connect to network!</string>
     <string name="hbnc_mother_temp_case_1">Treat mother to paracetamol.</string>
     <string name="hbnc_mother_temp_case_2">Refer mother to Hospital.</string>
     <string name="hbnc_baby_temp_97_alert">advice the mother to keep the baby warm by increasing the room temperature, providing skin to skin contact, putting the baby in a warm bag and frequently feeding the baby.</string>
     <string name="hbnc_baby_temp_96_alert">advice the mother to keep the baby warm by increasing the room temperature, providing skin to skin contact, putting the baby in a warm bag and frequently feeding the baby. once the baby is warmer then clothe the baby and place in a pre warmed bed close to the mother.</string>
     <string name="hbnc_baby_temp_99_alert">then look for signs of sepsis. In case signs of sepsis are not present manage only with 1/4th of a spoon of paracetamol and immediately refer to the SNCU at the nearest health facility.</string>
+
     <string name="form_input_empty_error">Required field cannot be empty !</string>
     <string name="form_input_upper_case_error">Only Alphabets in upper case allowed!</string>
     <string name="form_input_missing_entry_error">Field must contain %1d digits.</string>
     <string name="form_input_alphabet_space_only_error">Only Alphabets and whitespace allowed!</string>
     <string name="form_input_min_limit_error">%1s should be greater than or equal to %2d</string>
-
     <string name="form_input_alph_numeric_space_only_error">Only Alphabets and Numerics allowed!</string>
     <string name="form_input_min_limit_error_decimal">%1s should be greater than or equal to %2.1f</string>
     <string name="form_input_max_limit_error">%1s should be lesser than or equal to %2d</string>
@@ -304,8 +301,8 @@
     <string name="downloading">Downloading …</string>
     <string name="choose_application_language">Choose Application Language</string>
     <string name="english">English</string>
-    <string name="hindi">Hindi</string>
-    <string name="assamese">Assamese</string>
+    <string name="hindi">हिन्दी</string>
+    <string name="assamese">অসমীয়া</string>
     <string name="sync">SYNC</string>
     <string name="tap_to_change">Tap to Change</string>
     <string name="validate">Validate</string>
@@ -314,7 +311,16 @@
     <string name="child_immunization">Child Immunization</string>
     <string name="pregnancy_registration">Pregnancy Registration</string>
     <string name="mother_immunizationlist">Mother ImmunizationList</string>
-
+    <string-array name="sync_records">
+        <item>Beneficiary</item>
+        <item>CBAC</item>
+        <item>TB Screening</item>
+        <item>TB Suspected</item>
+        <item>EC Registration</item>
+        <item>EC Tracking</item>
+        <item>PW Registration</item>
+        <item>PW ANC</item>
+    </string-array>
     <!-- Eligible couple registration -->
     <string-array name="ecr_gender_array">
         <item name="nbr_gender_1">Male</item>

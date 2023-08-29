@@ -19,11 +19,11 @@
     <string-array name="maternal_health_blood_group">
         <item>A +Ve</item>
         <item>A -Ve</item>
-        <item>B+Ve</item>
+        <item>B +Ve</item>
         <item>B -Ve</item>
-        <item>AB+Ve</item>
+        <item>AB +Ve</item>
         <item>AB -Ve</item>
-        <item>O+Ve</item>
+        <item>O +Ve</item>
         <item>O -Ve</item>
     </string-array>
 

@@ -204,11 +204,11 @@
     </string-array>
 
     <string-array name="cbac_age">
-        <item>০-২৯ বছৰ</item>
-        <item>৩০-৩৯ বছৰ</item>
-        <item>৪০-৪৯ বছৰ</item>
-        <item>৫০-৫৯ বছৰ</item>
-        <item>৬০ বছৰ বা তাতোকৈ</item>
+        <item>0-29 বছৰ</item>
+        <item>30-39 বছৰ</item>
+        <item>40-49 বছৰ</item>
+        <item>50-59 বছৰ</item>
+        <item>≥ 60 বছৰ</item>
     </string-array>
     <string-array name="cbac_smoke">
         <item>কখনও নহয়</item>
@@ -220,18 +220,18 @@
         <item>হয়</item>
     </string-array>
     <string-array name="cbac_waist_mes_female">
-        <item>৮০ ছে. মিটা অথবা তাতোকৈ</item>
-        <item>৮১-৯০ ছে. মিটা</item>
-        <item>৯০ ছে. মিটা বৰু</item>
+        <item>80 ছে. মিটা অথবা তাতোকৈ</item>
+        <item>81-90 ছে. মিটা</item>
+        <item>90 ছে. মিটা বৰু</item>
     </string-array>
     <string-array name="cbac_waist_mes_male">
-        <item>৯০ ছে. মিটা অথবা তাতোকৈ</item>
-        <item>৯১-১০০ ছে. মিটা</item>
-        <item>১০০ ছে. মিটা বৰু</item>
+        <item>90 ছে. মিটা অথবা তাতোকৈ</item>
+        <item>91-100 ছে. মিটা</item>
+        <item>100 ছে. মিটা বৰু</item>
     </string-array>
     <string-array name="cbac_pa">
-        <item>কমতি ১৫০ মিনিট অধিক পাৰ আছে</item>
-        <item>১৫০ মিনিটৰ তলত</item>
+        <item>কমতি 150 মিনিট অধিক পাৰ আছে</item>
+        <item>150 মিনিটৰ তলত</item>
     </string-array>
     <string-array name="cbac_fh">
         <item>নহয়</item>

@@ -50,7 +50,14 @@
     <string name="icon_title_ncd_priority_list">NCD Priority List</string>
     <string name="icon_title_ncd_tb_screening">TB Screening</string>
     <string name="icon_title_ncd_tb_suspected">Suspected TB cases</string>
-
     <string name="icon_title_sr">Survey Register</string>
+
+    <string name="home_fragment_percent_download_text">%1d%% downloaded</string>
+    <string name="error_sign_in_invalid_u_p">Invalid Username / password !</string>
+    <string name="error_sign_in_timeout">Server timed out, try again!</string>
+    <string name="error_sign_in_disconnected_network">Unable to connect to network!</string>
+    <string name="not_processed">" not Processed"</string>
+    <string name="all_records_synced">All records synced</string>
+    <string name="are_you_sure_to_logout">" Are you sure to logout?"</string>
 
 </resources>

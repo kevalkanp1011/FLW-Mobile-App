@@ -2,42 +2,40 @@
 <resources>
     <string name="navigation_drawer_open">নেভিগেচন ড্ৰয়াৰ খোলক</string>
     <string name="navigation_drawer_close">নেভিগেচন ড্ৰয়াৰ বন্ধ কৰক</string>
-
-
     <!--   To Be Deleeted-->
-
-
     <string name="title_activity_home" translatable="false">HomeActivity</string>
     <string name="nav_header_desc" translatable="false">Navigation header</string>
 
-
-    <string name="btn_continue_text">Continue</string>
-
-    <string name="service_type_dd_state_text">State</string>
-    <string name="service_type_dd_district_text">District</string>
-    <string name="service_type_dd_block_text">Block</string>
-    <string name="service_type_dd_village_text">Village</string>
-    <string name="til_hint_selected_village">Selected Village</string>
-    <!--    <string name="home_icon_title_all_ben">All Beneficiaries</string>-->
-    <!--    <string name="home_icon_title_elig_coup">Eligible Couples</string>-->
-    <!--    <string name="home_icon_title_child_care">Child Care</string>-->
-    <!--    <string name="child_care_icon_title_child_list">Child List</string>-->
-    <!--    <string name="child_care_icon_title_infant_list">Infant List</string>-->
-    <!--    <string name="child_care_icon_title_adolescent_list">Adolescent List</string>-->
-    <!--    <string name="home_icon_title_mother_care">Mother Care</string>-->
-    <!--    <string name="home_icon_title_death_rep">Death Reports</string>-->
-    <!--    <string name="home_icon_title_gen_op">General OP Care</string>-->
-    <!--    <string name="home_icon_title_hrp_cases">HRP Cases</string>-->
-    <!--    <string name="home_icon_title_imm_due">Immunization Due</string>-->
-    <!--    <string name="home_icon_title_menopause_stage_list">Menopause Stage List</string>-->
-    <!--    <string name="home_icon_title_ncd">NCD</string>-->
-    <!--    <string name="home_icon_title_village_lvl_forms">Village Level Forms</string>-->
-    <string name="frag_service_type_title">Select Village</string>
+    <string name="btn_continue_text">অগ্রসৰ হৈ যাওক</string>
+    <string name="service_type_dd_state_text">ৰাজ্য</string>
+    <string name="service_type_dd_district_text">জিলা</string>
+    <string name="service_type_dd_block_text">ব্লক</string>
+    <string name="service_type_dd_village_text">গাঁও</string>
+    <string name="til_hint_selected_village">চয়ন কৰা গাঁও</string>
+    <string name="frag_service_type_title">গাঁওৰ নিৰ্বাচন কৰক</string>
+    <string name="about_us">প"িৰামল স্বাস্থ্য সার্বজনীন স্বাস্থ্য বৃদ্ধি কৰাৰ পৰা গড়কীৰাৱৰ ঘপট সন্দৰ্শন কৰা আছে, যিটো ভাৰত সৰকাৰৰ লক্ষ্য সকলৰ বাবে সামীপ্য স্বাস্থ্য দেখৰ সম্পূৰ্ণ হ'ল আৰু যোগদান কৰা হ'ল, যাতে সকলোৱে সামীপ্য স্বাস্থ্য দেখৰ পূৰ্তি কৰিব পাৰে। পিৰামল স্বাস্থ্য ভাৰতত সবুজীৰ লক্ষ্য নলাকৰী সংস্থাত এটি - মাতৃ স্বাস্থ্য, শিশু আৰু কিশোৰ স্বাস্থ্য, অসংক্রামক রোগ বাবে শ্ৰেণীবদ্ধ বাচবোৰ দিকৰি যাওৱা কাম কৰাৰ বাবে এটি এটি প্ৰাথমিক সার্বজনীন স্বাস্থ্য যোজনাৰ উপৰত কথাই অসংশয়ী। পিৰামল স্বাস্থ্য পৰা দশকীয়া অবস্থা অৱস্থান অসমৰ অধীনত বাজৰ বৰ্গীয় জনগণৰ প্ৰাথমিক স্বাস্থ্য আৱশ্যকতাৰ উপৰ স্থিতি সম্পৰ্কভাৱে সলনি সলাই পৰা পৰিযোজনাৰ স্থিতি বাৰ পৰা হ'ল, যি ভাৰতত সবলৈ ন্যায্যতা কৰা বৃদ্ধি কৰা নাইমকাৰী সংগঠনত - ২০ বছৰৰ অন্তৰ্গত বাজৰ আৰু ৩৫ নবাচাৰি সার্বজনীন স্বাস্থ্য সেৱা সমূহৰ মাধ্যমে কৰা হ'ল আৰু এই পৰা ১০.৭ কৰোড় শ্ৰীৰকাৰীৰ পৰা সেৱা কৰা হ'ল, যি তাতে গুৰুত্ব দিলে যে তেওঁৰ সেৱাবাবে শেষ গাঁও আৰু শেষ ঘৰৰ দিক পৰা পৰ্যাৱৰণৰ সম্পূৰ্ণ সেৱা নিশ্চিত হৈছে। পিৰামল স্বাস্থ্যৰ বাবে ২২৬০ কৰ্মচাৰী থাকে, যাতে ২৫০ চিকিৎসা ডাক্তৰ থাকে, যি লাভার্থী-মুখী মৌল্য স্থাপন সুচীকৰণৰ আৰু ফলাফল-উদ্দেশ্যবাদী উপায়ে কাম কৰে। গত বারো বছৰৰ দিশত লক্ষ্য স্থাপন কৰা হৈছে, স্থায়ী প্ৰভাৱ পৰা মঞ্চ বানাব বাবে, মডেলিং, পিলটিং আৰু উম্মূখন প্ৰযুক্তি, নীতি, শাসন আৰু সার্বজনীন স্বাস্থ্য প্ৰণালীৰ দায়িত্ব, জ্ঞান আৰু কৰ্মৰ অনুযায়ী সহযোগী হৈ পৰা মঞ্চ হিচাপে পিৰামল স্বাস্থ্য। পিৰামল স্বাস্থ্য প্ৰাথমিক স্বাস্থ্য যত্ন নোলোৱা, প্ৰাপ্য আৰু সকলৰ বাবে নিশ্চিত কৰাৰ বাবে মন্তৱ্য দিছে।</string>
+    <string name="about_us_powered">পৰায়ণীত দ্বাৰা </string>
+    <string name="text_help">
+        <b>Q - এই অ্যাপ অফলাইনে উপলব্ধ আছে কি?</b>
+        \n হ্যাঁ, অ্যাপটি ডাউনলোড করা এবং লগইন করা হলে, আপনি অফলাইনে ডেটা সংগ্রহ করতে পারেন। দয়া করে নোটিশ করুন যে ডাউনলোড এবং প্রথম লগইনের জন্য ইন্টারনেট প্রয়োজন। \n\n
+        <b>Q - সব বিবরণ পূরণ করা আবশ্যক কি?</b> \n না, সব বিবরণ পূরণ করা আবশ্যক নয়। কিন্তু কিছু ফিল্ড * (তারকা আকৃতি) দ্বারা চিহ্নিত হয়েছে এবং তাদের পূরণ করা আবশ্যক, অন্যথায় আপনি বিবরণ জমা দিতে পারবেন না। \n\n
+        <b>Q - সিংক ব্যাক বিকল্পটি কি কাজ করে?</b> \n সিংক ব্যাক বিকল্পে ক্লিক করলে, স্ক্রিনে বাসাগৃহে অপেক্ষমাণ রেকর্ড, লাভকারী অপেক্ষমাণ রেকর্ড এবং সিব্যাক রেকর্ড দেখাবে, যা সিংক হোয়া নেই। OK বাটনে ক্লিক করার পরে, যে সমস্ত ডেটা আপনি সংগ্রহ করেছেন, স্বয়ংক্রিয়ভাবে সার্ভারে স্টোর হয়ে যাবে। \n\n
+        <b>Q - সিংক স্থিতি বিকল্পটি কি কাজ করে?</b> \n সিংক স্থিতি বিকল্পে ক্লিক করলে, ব্যবহারকারী দ্বারা সিংক করা রেকর্ডগুলি দেখাবে। \n\n
+        <b>Q - পরবর্তী ট্যাবে নেভিগেট করতে কীভাবে?</b> \n পরবর্তী ট্যাবে নেভিগেট করতে \n
+        1. আপনি অ্যাপের শীর্ষে ট্যাবের নামে ক্লিক করতে পারেন \n
+        2. আপনি স্ক্রিন সোয়াইপ করতে পারেন এবং পরবর্তী ট্যাব দেখা দেবে (অ্যাপে বাম থেকে ডানে সোয়াইপ করানোর সুযোগ আছে) \n\n
+        <b>Q - পরবর্তী ট্যাবে নেভিগেট করার পর, আমরা পূর্বের ট্যাবে দিয়ে এন্ট্রি করা ডেটা সম্পাদনা করতে পারি কি?</b> \n
+        হ্যাঁ, আপনি যেকোনো পূর্ববর্তী ট্যাবে দিয়ে এন্ট্রি করা ডেটা সম্পাদনা করতে পারেন। ডেটা একবার সাবমিট হওয়ার পর, আপনি তা সম্পাদনা করতে পারবেন না। \n\n
+        <b>Q - Piramal Swasthya সাইটে নেভিগেট করার জন্য কীভাবে?</b> \n
+<!--        হ্যামবার মেনুতে ক্লিক করার পর, দয়া করে 'আমাদের সম্পর্কে' বিকল্পে ক্লিক করুন। এই বিকল্পটি নির্বাচন করার পর, ব্যবহারকারীকে ঐপে প্রমাণিত প্রতিরূপে পোঁচানো হয়। \n\n-->
+        যদি কোনও সন্দেহ এবং চিংতা থাকে, তবে দয়া করে আইটি সাপোর্ট টিমকে একটি ইমেল লেখুন \n
+        <b>it.support@piramalfoundation.org</b>
+    </string>
 
 
     <string name="cd_icon_grid_icon">চিহ্ন</string>
     <string name="nav_item_1_text">নাম : <b>%s</b></string>
-    <string name="nav_item_2_text">ব্যৱহাৰকাৰী নাম : <b>%s</b></string>
+    <string name="nav_item_2_text">ব্যৱহাৰকাৰী : <b>%s</b></string>
     <string name="nav_item_3_text">ব্যৱহাৰকাৰী আইডি :  <b>%d</b></string>
     <string name="nav_item_4_text">ভাৰ্সন : %s</string>
     <string name="tv_required_text_asterisk">*</string>
@@ -64,14 +62,21 @@
     <string name="tv_tb_status_ph">টিবি স্থিতি</string>
     <string name="iv_sync_state_tv">সময়সৰণি স্থিতি</string>
     <string name="version">2.0.0</string>
-    <string name="tv_text_select_village">Please select the village below.</string>
+    <string name="tv_text_select_village">দয়া করে নীচের গ্রাম নির্বাচন করুন।</string>
     <string name="form_input_empty_error">"প্ৰয়োজনীয় ক্ষেত্ৰখন খালী হ’ব নোৱাৰে !</string>
-    <string name="form_input_upper_case_error">Only Alphabets in upper case allowed!</string>
-    <string name="form_input_min_limit_error">%1s should be greater than or equal to %2d</string>
-    <string name="form_input_max_limit_error">%1s should be lesser than or equal to %2d</string>
-    <string name="form_input_error_invalid_mobile">Invalid Mobile Number !</string>
-    <string name="form_input_error_invalid_rch">Invalid RCH ID !</string>
-    <string name="form_input_error_invalid_aadhar">Invalid Aadhar Number</string>
+    <string name="form_input_upper_case_error">শুধুমাত্র বড় অক্ষরে অক্ষর অনুমোদিত!</string>
+    <string name="form_input_missing_entry_error">ঘরে %1d টি সংখ্যা থাকা আবশ্যক।</string>
+    <string name="form_input_alphabet_space_only_error">শুধুমাত্র বর্ণমালা এবং শূন্যস্থানের অক্ষর অনুমোদিত!</string>
+    <string name="form_input_min_limit_error">%1s অবশ্যই %2d এর সমান অথবা বেশি হতে হবে</string>
+    <string name="form_input_alph_numeric_space_only_error">শুধুমাত্র বর্ণমালা এবং সংখ্যাগুলি অনুমোদিত!</string>
+    <string name="form_input_min_limit_error_decimal">%1s অবশ্যই %2.1f এর সমান অথবা বেশি হতে হবে</string>
+    <string name="form_input_max_limit_error">%1s অবশ্যই %2d এর সমান অথবা কম হতে হবে</string>
+    <string name="form_input_max_limit_error_decimal">%1s অবশ্যই %2.1f এর সমান অথবা কম হতে হবে</string>
+    <string name="form_input_error_invalid_mobile">অবৈধ মোবাইল নম্বর !</string>
+    <string name="form_input_error_invalid_rch">অবৈধ RCH আইডি !</string>
+    <string name="form_input_error_invalid_mcp">অবৈধ MCP নম্বর !</string>
+    <string name="form_input_error_invalid_aadhar">অবৈধ আধার নম্বর</string>
+    <string name="no_records_found_hh">কোনও পরিবারের রেকর্ড পাওয়া যায়নি। দয়া করে নীচের বোতামে ক্লিক করে পরিবার নিবন্ধন শুরু করুন।</string>
 
 
     <string name="tracking_date">দৰমাহাৰ তাৰিখ</string>
@@ -102,8 +107,8 @@
     <string name="do_you_want_to_exit_application">আপুনি অপৰ্যাপ্ত আছে আপুনি অ্যাপ্লিকেশন প্ৰস্থান কৰিব বিচাৰিছে নেকি?</string>
     <string name="downloading">ডাউনলোড হৈছে …</string>
     <string name="choose_application_language">অ্যাপ্লিকেশনৰ ভাষা চয়ন কৰক</string>
-    <string name="english">ইংৰাজী</string>
-    <string name="hindi">হিন্দী</string>
+    <string name="english">English</string>
+    <string name="hindi">हिन्दी</string>
     <string name="assamese">অসমীয়া</string>
     <string name="sync">সময়সৰণি</string>
     <string name="tap_to_change">স্পৰ্শ কৰক পৰিবৰ্তন কৰিবলৈ</string>
@@ -189,6 +194,16 @@
     <string name="dashboard">ডেশবৰ্ড</string>
     <string name="sign_in">ছাইন ইন কৰক</string>
     <string name="service_location">সেৱা অবস্থান</string>
+    <string-array name="sync_records">
+        <item>লাভানী</item>
+        <item>সিবিএসি</item>
+        <item>টি বি স্ক্রীনিং</item>
+        <item>টি বি সন্দেহভবিত</item>
+        <item>ইসি নিবন্ধন</item>
+        <item>ইসি ট্র্যাকিং</item>
+        <item>পি ডাব্লু নিবন্ধন</item>
+        <item>পি ডাব্লু এ এন সি</item>
+    </string-array>
 
     <string-array name="temp_array">
         <item>Item 1</item>

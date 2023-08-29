@@ -114,5 +114,9 @@ class TBScreeningFormViewModel @Inject constructor(
         _state.value = State.IDLE
     }
 
+    fun getIndexOfDate(): Int {
+        return dataset.getIndexOfDate()
+    }
+
 }
 

@@ -3,9 +3,14 @@ package org.piramalswasthya.sakhi.adapters
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.res.Resources
+import android.graphics.Color
 import android.os.Build
 import android.text.Editable
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -20,35 +25,23 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.databinding.RvItemFormCheckV2Binding
-import org.piramalswasthya.sakhi.databinding.RvItemFormDatepickerV2Binding
-import org.piramalswasthya.sakhi.databinding.RvItemFormDropdownV2Binding
-import org.piramalswasthya.sakhi.databinding.RvItemFormEditTextV2Binding
-import org.piramalswasthya.sakhi.databinding.RvItemFormHeadlineV2Binding
-import org.piramalswasthya.sakhi.databinding.RvItemFormImageViewV2Binding
-import org.piramalswasthya.sakhi.databinding.RvItemFormRadioV2Binding
-import org.piramalswasthya.sakhi.databinding.RvItemFormTextViewV2Binding
-import org.piramalswasthya.sakhi.databinding.RvItemFormTimepickerV2Binding
+import org.piramalswasthya.sakhi.databinding.*
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.FormElement
-import org.piramalswasthya.sakhi.model.InputType.CHECKBOXES
-import org.piramalswasthya.sakhi.model.InputType.DATE_PICKER
-import org.piramalswasthya.sakhi.model.InputType.DROPDOWN
-import org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT
-import org.piramalswasthya.sakhi.model.InputType.HEADLINE
-import org.piramalswasthya.sakhi.model.InputType.IMAGE_VIEW
-import org.piramalswasthya.sakhi.model.InputType.RADIO
-import org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW
-import org.piramalswasthya.sakhi.model.InputType.TIME_PICKER
-import org.piramalswasthya.sakhi.model.InputType.values
+import org.piramalswasthya.sakhi.model.InputType.*
 import timber.log.Timber
-import java.util.Calendar
+import java.util.*
 
 class FormInputAdapter(
     private val imageClickListener: ImageClickListener? = null,
     private val formValueListener: FormValueListener? = null,
     private val isEnabled: Boolean = true
 ) : ListAdapter<FormElement, ViewHolder>(FormInputDiffCallBack) {
+
+    //    @Inject
+//    lateinit var preferenceDao: PreferenceDao
+//    @Inject
+//    lateinit var context: Context
     object FormInputDiffCallBack : DiffUtil.ItemCallback<FormElement>() {
         override fun areItemsTheSame(oldItem: FormElement, newItem: FormElement) =
             oldItem.id == newItem.id
@@ -362,6 +355,34 @@ class FormInputAdapter(
 
             //item.errorText?.let { binding.rg.error = it }
             binding.executePendingBindings()
+            val str = binding.tvNullable.text
+//            val str = binding.tvNullableHr.text
+            val spannableString = SpannableString(str)
+
+            val colorSpan = ForegroundColorSpan(Color.parseColor("#B00020"))
+            val sizeSpan = RelativeSizeSpan(1.2f)
+
+            if (item.required && item.doubleStar) {
+                spannableString.setSpan(
+                    colorSpan,
+                    str.length - 2,
+                    str.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+//                spannableString.setSpan(sizeSpan, str.length - 2, str.length,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                binding.tvNullable.text = spannableString
+//                binding.tvNullableHr.text = spannableString
+            } else if (item.required) {
+                spannableString.setSpan(
+                    colorSpan,
+                    str.length - 1,
+                    str.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+//                spannableString.setSpan(sizeSpan, str.length - 1, str.length,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                binding.tvNullableHr.text = spannableString
+                binding.tvNullable.text = spannableString
+            }
 
         }
     }
@@ -463,6 +484,7 @@ class FormInputAdapter(
             item: FormElement, isEnabled: Boolean, formValueListener: FormValueListener?
         ) {
             binding.form = item
+            binding.invalidateAll()
             if (!isEnabled) {
                 binding.et.isFocusable = false
                 binding.et.isClickable = false

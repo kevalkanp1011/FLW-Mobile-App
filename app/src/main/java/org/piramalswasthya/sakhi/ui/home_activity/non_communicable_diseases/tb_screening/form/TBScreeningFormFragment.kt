@@ -63,9 +63,10 @@ class TBScreeningFormFragment : Fragment() {
                 binding.form.rvInputForm.adapter = adapter
                 lifecycleScope.launch {
                     viewModel.formList.collect {
-                        if (it.isNotEmpty())
-
+                        if (it.isNotEmpty()) {
+                            adapter.notifyItemChanged(viewModel.getIndexOfDate())
                             adapter.submitList(it)
+                        }
 
                     }
                 }
