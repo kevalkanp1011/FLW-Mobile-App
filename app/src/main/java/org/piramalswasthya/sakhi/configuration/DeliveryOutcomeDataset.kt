@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.*
 
@@ -11,7 +12,7 @@ class DeliveryOutcomeDataset(
     private val dateOfDelivery = FormElement(
         id = 1,
         inputType = InputType.DATE_PICKER,
-        title = "Date of Delivery",
+        title = resources.getString(R.string.do_delivery_date),
         arrayId = -1,
         required = true,
         max = System.currentTimeMillis(),
@@ -21,7 +22,7 @@ class DeliveryOutcomeDataset(
     private val timeOfDelivery = FormElement(
         id = 2,
         inputType = InputType.TIME_PICKER,
-        title = "Time of Delivery",
+        title = resources.getString(R.string.do_delivery_time),
         arrayId = -1,
         required = true,
         max = System.currentTimeMillis(),
@@ -31,10 +32,8 @@ class DeliveryOutcomeDataset(
     private var placeOfDelivery = FormElement(
         id = 3,
         inputType = InputType.DROPDOWN,
-        title = "Place of Delivery",
-        entries = arrayOf("District Hospital", "Community Health Centre", "Primary Health Centre", "Sub Centre",
-                "Other Public Facility", "Accredited Private Hospital", "Other Private Hospital", "Home",
-                "Sub District Hospital", "Medical College Hospital", "In Transit"),
+        title = resources.getString(R.string.do_delivery_place),
+        entries = resources.getStringArray(R.array.do_place_of_delivery_array),
         required = false,
         hasDependants = false
     )
@@ -42,8 +41,8 @@ class DeliveryOutcomeDataset(
     private var typeOfDelivery = FormElement(
         id = 4,
         inputType = InputType.RADIO,
-        title = "Type of Delivery",
-        entries = arrayOf("Normal", "Caesarean", "Assisted"),
+        title = resources.getString(R.string.do_delivery_type),
+        entries = resources.getStringArray(R.array.do_type_of_delivery_array),
         required = false,
         hasDependants = false
     )
@@ -51,8 +50,8 @@ class DeliveryOutcomeDataset(
     private var hadComplications = FormElement(
         id = 5,
         inputType = InputType.RADIO,
-        title = "Complications during Delivery?",
-        entries = arrayOf("Yes", "No"),
+        title = resources.getString(R.string.do_had_complication),
+        entries = resources.getStringArray(R.array.do_had_complications_array),
         required = false,
         hasDependants = true
     )
@@ -60,9 +59,8 @@ class DeliveryOutcomeDataset(
     private var complication = FormElement(
         id = 6,
         inputType = InputType.DROPDOWN,
-        title = "Delivery Complication",
-        entries = arrayOf("PPH", "RETAINED PLACENTA", "OBSTRUCTED DELIVERY", "PROLAPSED CORD", "TWINS PREGNANCY",
-                    "CONVULSIONS", "DEATH", "ANY OTHER (SPECIFY)", "DON'T KNOW"),
+        title = resources.getString(R.string.do_delivery_complication),
+        entries = resources.getStringArray(R.array.do_complications_array),
         required = true,
         hasDependants = true
     )
@@ -70,8 +68,8 @@ class DeliveryOutcomeDataset(
     private var causeOfDeath = FormElement(
         id = 7,
         inputType = InputType.DROPDOWN,
-        title = "Probable Cause of Death",
-        entries = arrayOf("Eclampcia", "Haemorrahge", "Obstructed Labour", "Prolonged Labour", "Other", "High Fever"),
+        title = resources.getString(R.string.do_death_cause),
+        entries = resources.getStringArray(R.array.do_cause_of_death_array),
         required = true,
         hasDependants = true
     )
@@ -79,7 +77,7 @@ class DeliveryOutcomeDataset(
     private var otherCauseOfDeath = FormElement(
         id = 8,
         inputType = InputType.EDIT_TEXT,
-        title = "Other Cause of Death",
+        title = resources.getString(R.string.do_other_death_cause),
         required = true,
         hasDependants = false
     )
@@ -87,7 +85,7 @@ class DeliveryOutcomeDataset(
     private var otherComplication = FormElement(
         id = 9,
         inputType = InputType.EDIT_TEXT,
-        title = "Other Delivery Complication",
+        title = resources.getString(R.string.do_other_delivery_complication),
         required = true,
         hasDependants = false
     )
@@ -95,7 +93,7 @@ class DeliveryOutcomeDataset(
     private var deliveryOutcome = FormElement(
         id = 10,
         inputType = InputType.EDIT_TEXT,
-        title = "Outcomes of Delivery",
+        title = resources.getString(R.string.do_delivery_outcome),
         required = false,
         hasDependants = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -107,7 +105,7 @@ class DeliveryOutcomeDataset(
     private var liveBirth = FormElement(
         id = 11,
         inputType = InputType.EDIT_TEXT,
-        title = "Live Birth",
+        title = resources.getString(R.string.do_live_birth),
         required = false,
         hasDependants = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -119,7 +117,7 @@ class DeliveryOutcomeDataset(
     private var stillBirth = FormElement(
         id = 12,
         inputType = InputType.EDIT_TEXT,
-        title = "Still Birth",
+        title = resources.getString(R.string.do_still_birth),
         required = false,
         hasDependants = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -131,7 +129,7 @@ class DeliveryOutcomeDataset(
     private val dateOfDischarge = FormElement(
         id = 13,
         inputType = InputType.DATE_PICKER,
-        title = "Date of Discharge",
+        title = resources.getString(R.string.do_discharge_date),
         arrayId = -1,
         required = true,
         max = System.currentTimeMillis(),
@@ -142,7 +140,7 @@ class DeliveryOutcomeDataset(
     private val timeOfDischarge = FormElement(
         id = 14,
         inputType = InputType.TIME_PICKER,
-        title = "Time of Discharge",
+        title = resources.getString(R.string.do_discharge_time),
         arrayId = -1,
         required = true,
         max = System.currentTimeMillis(),
@@ -152,8 +150,8 @@ class DeliveryOutcomeDataset(
     private var isJSYBenificiary = FormElement(
         id = 15,
         inputType = InputType.RADIO,
-        title = "Is the Pregnant Woman a JSY Beneficiary?",
-        entries = arrayOf("Yes", "No"),
+        title = resources.getString(R.string.do_is_jsy_beneficiary),
+        entries = resources.getStringArray(R.array.do_is_jsy_beneficiary_array),
         required = false,
         hasDependants = false
     )

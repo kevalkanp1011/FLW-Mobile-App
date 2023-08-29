@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import org.piramalswasthya.sakhi.model.DeliveryOutcomeCache
 
 @Dao
@@ -14,4 +15,10 @@ interface DeliveryOutcomeDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun saveDeliveryOutcome(deliveryOutcomeCache: DeliveryOutcomeCache)
+
+    @Query("SELECT * FROM DELIVERY_OUTCOME WHERE processed = 'N'")
+    suspend fun getAllUnprocessedDeliveryOutcomes(): List<DeliveryOutcomeCache>
+
+    @Update
+    suspend fun updateDeliveryOutcome(it: DeliveryOutcomeCache)
 }

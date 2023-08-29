@@ -80,7 +80,7 @@ interface AmritApiService {
     suspend fun getEctFormData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
     @POST("/flw-0.0.1/maternalCare/deliveryOutcome/saveAll")
-    suspend fun postDeliveryOutcomeForm(@Body deliveryOutcomeList: List<DeliveryOutcomeCache>): Response<ResponseBody>
+    suspend fun postDeliveryOutcomeForm(@Body deliveryOutcomeList: List<DeliveryOutcomePost>): Response<ResponseBody>
 
     @POST("/flw-0.0.1/maternalCare/deliveryOutcome/getAll")
     suspend fun getDeliverOutcomeData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
@@ -96,5 +96,11 @@ interface AmritApiService {
 
     @POST("/flw-0.0.1/maternalCare/pregnantWoman/getAll")
     suspend fun getPwrData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/pmsma//saveAll")
+    suspend fun postPmsmaForm(@Body ecrPostList: List<PmsmaPost>): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/pmsma/getAll")
+    suspend fun getPmsmaData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
 }

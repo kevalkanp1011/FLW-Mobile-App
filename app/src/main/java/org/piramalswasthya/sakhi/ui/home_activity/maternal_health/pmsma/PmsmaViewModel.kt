@@ -16,6 +16,7 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.configuration.PMSMAFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.FormInputOld
@@ -80,7 +81,7 @@ class PmsmaViewModel @Inject constructor(
     val popupString: LiveData<String?>
         get() = _popupString
 
-    private val form = PMSMAFormDataset(context)
+    private val form = PMSMAFormDataset(context, preferenceDao.getCurrentLanguage())
 
     private fun toggleFieldOnTrigger(
         causeField: FormInputOld,
@@ -111,7 +112,8 @@ class PmsmaViewModel @Inject constructor(
 
     fun submitForm() {
         _state.value = State.LOADING
-        val pmsmaCache = PMSMACache(benId = benId, hhId = hhId, processed = "N")
+        val pmsmaCache = PMSMACache(benId = benId, processed = "N",
+                                    createdBy = user.name, updatedBy = user.name, syncState = SyncState.UNSYNCED)
         form.mapValues(pmsmaCache)
         viewModelScope.launch {
             val saved = pmsmaRepo.savePmsmaData(pmsmaCache)
@@ -130,7 +132,7 @@ class PmsmaViewModel @Inject constructor(
                 household = benRepo.getHousehold(hhId)!!
                 user = preferenceDao.getLoggedInUser()!!
                 Timber.d("pmsma ben: $ben")
-                pmsma = database.pmsmaDao.getPmsma(hhId,benId)
+                pmsma = database.pmsmaDao.getPmsma(benId)
                 Timber.d("init after assigning pmsma ! ")
 
             }
