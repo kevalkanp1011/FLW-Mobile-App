@@ -164,7 +164,7 @@ class MaternalHealthRepo @Inject constructor(
 
                         val errormessage = jsonObj.getString("message")
                         if (jsonObj.isNull("status")) throw IllegalStateException("Amrit server not responding properly, Contact Service Administrator!!")
-                        val responsestatuscode = jsonObj.getInt("status")
+                        val responsestatuscode = jsonObj.getInt("statusCode")
 
                         when (responsestatuscode) {
                             200 -> {
@@ -446,9 +446,9 @@ class MaternalHealthRepo @Inject constructor(
         var ancList = Gson().fromJson(dataObj, Array<ANCPost>::class.java).toList()
         ancList.forEach { ancDTO ->
             ancDTO.createdDate?.let {
-                var pwrCache: PregnantWomanRegistrationCache? =
-                    maternalHealthDao.getSavedRecord(ancDTO.benId)
-                if (pwrCache == null) {
+                var ancCache: PregnantWomanAncCache? =
+                    maternalHealthDao.getSavedRecord(ancDTO.benId, ancDTO.ancVisit)
+                if (ancCache == null) {
                     maternalHealthDao.saveRecord(ancDTO.toAncCache())
                 }
             }
