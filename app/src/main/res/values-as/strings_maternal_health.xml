@@ -1,2 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+
+    <!--  PMSMA  -->
+    <string name="pmsma_mcts_rch_number">MCTS নম্বৰ / RCH নম্বৰ</string>
+    <string name="pmsma_have_mcp_card">লাভকাৰীক কোৰকৈ এটি মুখ্যীয়া স্বাস্থ্য কাৰ্ড আছে?</string>
+    <string name="pmsma_given_mcp_card">এটি মুখ্যীয়া স্বাস্থ্য কাৰ্ড প্ৰদান কৰা হৈছে</string>
+    <string name="pmsma_husband_name">স্বামীৰ নাম</string>
+    <string name="pmsma_address">ঠাই</string>
+    <string name="pmsma_mobile_number">ম\'বাইল নম্বৰ</string>
+    <string name="pmsma_num_anc">ডেলিভাৰীৰ পূৰ্বে আণ্বিক চিকিৎসা সম্পূৰ্ণ হোৱা আণি হোৱা আণি যায়?</string>
+    <string name="pmsma_mother_status">মাতৃৰ স্থিতি</string>
+    <string name="pmsma_weight">ওজন (কেজিৰে)</string>
+    <string name="pmsma_sys_bp">সিষ্টলিক ব্লাড প্ৰেছাৰ</string>
+    <string name="pmsma_dia_bp">ডায়াষ্টলিক ব্লাড প্ৰেছাৰ</string>
+    <string name="pmsma_abdominal_check_up">পেটৰ পৰীক্ষা</string>
+    <string name="pmsma_fetal_status">ভৰালীৰ স্থিতি</string>
+    <string name="pmsma_fetal_hrpm">ভৰালীৰ হাৰ্ট ৰেট (প্ৰতি মিনিটত)</string>
+    <string name="pmsma_twin_pregnancy">দ্বৈত গৰ্ভাবস্থা</string>
+    <string name="pmsma_investigation">অনুসন্ধানসমূহ</string>
+    <string name="pmsma_urine_albumin">মূত্ৰতলে এলবুমিন</string>
+    <string name="pmsma_haemoglobin_and_blood_group">হেমোগ্ল\'বিন আৰু রক্তৰ গোটি</string>
+    <string name="pmsma_hiv">এইচআইভি</string>
+    <string name="pmsma_vdrl">ভিডিআৰএল</string>
+    <string name="pmsma_hbsc">এইচবিএছছ (হেপাটাইটিছ বি)</string>
+    <string name="pmsma_malaria">মেলেৰিয়া</string>
+    <string name="pmsma_hiv_test_during_anc">ANC চেক-আপৰ সময় HIV পৰীক্ষা কৰা হৈছে নেকি?</string>
+    <string name="pmsma_swollen_condition">সোজা স্থিতি</string>
+    <string name="pmsma_blood_sugar_test">ৰক্ত শৰ্কৰ পৰীক্ষা</string>
+    <string name="pmsma_ultrasound">আল্ট্ৰাছাউণ্ড</string>
+    <string name="pmsma_intervention_details">ইণ্টাৰভেণচন বিৱৰণ</string>
+    <string name="pmsma_iron_folic_acid">আৰণী আৰু ফ’লিক এছিড</string>
+    <string name="pmsma_calcium_supplementation">কেলচিয়াম সুপ্লিমেণ্টেচন</string>
+    <string name="pmsma_tetanus_toxoid">টেটেনাছ ট’কচইড</string>
+    <string name="pmsma_lmp">LMP (আদি মাসিকৰ দিন)</string>
+    <string name="pmsma_last_mestrual_period">শেষ মাসিকৰ সময়</string>
+    <string name="pmsma_expected_delivery_date">পৰামিতা ডেলিভাৰীৰ তাৰিখ</string>
+    <string name="pmsma_high_risk_factors">উচ্চ আপাতকাৰী সাঁচ</string>
+    <string name="pmsma_high_risk_symbols">উচ্চ আপাতকাৰী চিহ্নসমূহ</string>
+    <string name="pmsma_high_risk_reason">যদি হোৱা, তেন্তে নিম্নলিখিত কাৰণ বাচনি কৰক আৰু লিখক</string>
+    <string name="pmsma_high_risk_pregnant">উচ্চ আপাতকাৰী শ্ৰেণীত গৰ্ভিণী</string>
+    <string name="pmsma_high_risk_pregnancy_referred">উচ্চ আপাতকাৰী শ্ৰেণীত গৰ্ভিণী উপায়ী উলঁঘন কৰা হৈছে</string>
+    <string name="pmsma_advice">পৰামর্শ</string>
+    <string name="pmsma_birth_complications_and_planning">জন্মদিনৰ সময় সমস্যা আৰু পৰিকল্পনা, পুষ্টি আৰু পৰিবাৰ পৰিকল্পনা</string>
+    <string name="pmsma_medical_officer_sign">চিকিৎসক অধিদপ্তৰ চিহ্ন</string>
+    <string-array name="pmsma_tetanus_toxoid_array">
+        <item>প্ৰথম</item>
+        <item>দ্বিতীয়</item>
+        <item>বুষ্টাৰ</item>
+    </string-array>
+    <string-array name="pmsma_confirmation_array">
+        <item>হোৱ</item>
+        <item>নহয়</item>
+    </string-array>
+
+    <!--  Delivery Outcome  -->
+    <string name="do_delivery_date">ডেলিভাৰীৰ তাৰিখ</string>
+    <string name="do_delivery_time">ডেলিভাৰীৰ সময়</string>
+    <string name="do_delivery_place">ডেলিভাৰীৰ ঠাই</string>
+    <string name="do_delivery_type">ডেলিভাৰীৰ প্ৰকাৰ</string>
+    <string name="do_had_complication">ডেলিভাৰীৰ সময় সমস্যা আছে?</string>
+    <string name="do_delivery_complication">ডেলিভাৰীৰ সমস্যা</string>
+    <string name="do_death_cause">মৃত্যুৰ সম্ভাৱনা</string>
+    <string name="do_other_death_cause">অন্য মৃত্যুৰ কাৰণ</string>
+    <string name="do_other_delivery_complication">অন্য ডেলিভাৰীৰ সমস্যা</string>
+    <string name="do_delivery_outcome">ডেলিভাৰীৰ ফলাফল</string>
+    <string name="do_live_birth">জীৱন সন্তান</string>
+    <string name="do_still_birth">শাবলা সন্তান</string>
+    <string name="do_discharge_date">মুকৰাপৰ তাৰিখ</string>
+    <string name="do_discharge_time">মুকৰাপৰ সময়</string>
+    <string name="do_is_jsy_beneficiary">গৰ্ভিণী মহিলা এটি JSY লাভকাৰী?</string>
+    <string-array name="do_place_of_delivery_array">
+        <item>জিলা চিকিৎসালয়</item>
+        <item>কমিউনিটি স্বাস্থ্য কেন্দ্ৰ</item>
+        <item>প্ৰাথমিক স্বাস্থ্য কেন্দ্ৰ</item>
+        <item>ছাব সেণ্টাৰ</item>
+        <item>অন্য প্ৰশাসনিক সুবিধা</item>
+        <item>মন্যতৰ প্ৰাইভেট চিকিৎসালয়</item>
+        <item>অন্য প্ৰাইভেট চিকিৎসালয়</item>
+        <item>ঘৰ</item>
+        <item>উপ-জিলা চিকিৎসালয়</item>
+        <item>মেডিকেল কলেজ চিকিৎসালয়</item>
+        <item>পৰিয়ালে</item>
+    </string-array>
+    <string-array name="do_type_of_delivery_array">
+        <item>নর্মল</item>
+        <item>চেছেৰিয়ান</item>
+        <item>সহায়ক</item>
+    </string-array>
+    <string-array name="do_had_complications_array">
+        <item>হোৱ</item>
+        <item>নহয়</item>
+    </string-array>
+    <string-array name="do_complications_array">
+        <item>পিপিহ</item>
+        <item>ৰিটেইনড প্লেচেণ্টা</item>
+        <item>অবস্থান দ্বাৰা ডেলিভাৰী</item>
+        <item>প্ৰলাপ্স ক\'ৰ্ড</item>
+        <item>দ্বৈত গৰ্ভাবস্থা</item>
+        <item>গলাঘৰ প্ৰসারণ</item>
+        <item>মৃত্যু</item>
+        <item>অন্য যিকোনো (স্পষ্ট কৰক)</item>
+        <item>জানোৱা নাই</item>
+    </string-array>
+    <string-array name="do_cause_of_death_array">
+        <item>ইক্লেম্পছিয়া</item>
+        <item>বন্ধবাদৰ পৰাৰু</item>
+        <item>অবস্থান দ্বাৰা শ্ৰমবন্ধ</item>
+        <item>দীৰ্ঘ শ্ৰমবন্ধ</item>
+        <item>অন্য</item>
+        <item>উচ্চ জ্বৰ</item>
+    </string-array>
+    <string-array name="do_is_jsy_beneficiary_array">
+        <item>হোৱ</item>
+        <item>নহয়</item>
+    </string-array>
+</resources>
