@@ -34,6 +34,7 @@
             android:hint="@{form.title}"
             app:layout_constraintEnd_toStartOf="@id/tv_nullable"
             app:layout_constraintStart_toStartOf="parent"
+            app:errorEnabled="false"
             app:endIconMode="custom"
             app:layout_constraintTop_toTopOf="@+id/tv_hint">
 

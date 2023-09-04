@@ -507,14 +507,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         setUpPage(list)
     }
 
-    private fun getDoMFromDoR(ageAtMarriage: Int?, regDate: Long): Long? {
-        if (ageAtMarriage == null) return null
-        val cal = Calendar.getInstance()
-        cal.timeInMillis = regDate
-        cal.add(Calendar.YEAR, -1 * ageAtMarriage)
-        return cal.timeInMillis
 
-    }
 
     fun hasThirdPage(): Boolean {
         return gender.value == gender.entries!![1] && maritalStatus.value != maritalStatus.entries!!.first()

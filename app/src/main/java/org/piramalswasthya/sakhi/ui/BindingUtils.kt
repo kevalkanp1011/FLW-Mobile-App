@@ -13,6 +13,7 @@ import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.google.android.material.color.MaterialColors
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -119,6 +120,27 @@ fun TextView.setBenIdText(benId: Long?, syncState: SyncState?) {
     else
         text = benId.toString()
 }
+
+@BindingAdapter("showBasedOnNumMembers")
+fun TextView.showBasedOnNumMembers(numMembers: Int?) {
+    numMembers?.let {
+        visibility = if (it > 0) View.VISIBLE else View.GONE
+    }
+}
+@BindingAdapter("backgroundTintBasedOnNumMembers")
+fun CardView.setBackgroundTintBasedOnNumMembers(numMembers: Int?) {
+    numMembers?.let {
+        val color = MaterialColors.getColor(this,if(it>0) androidx.appcompat.R.attr.colorPrimary else androidx.appcompat.R.attr.colorError)
+        setCardBackgroundColor(color)
+    }
+}
+@BindingAdapter("textBasedOnNumMembers")
+fun TextView.textBasedOnNumMembers(numMembers: Int?) {
+    numMembers?.let {
+        text = if (it > 0) "Add Members" else "Add Head-Of-Family"
+    }
+}
+
 
 @BindingAdapter("listItems")
 fun AutoCompleteTextView.setSpinnerItems(list: Array<String>?) {

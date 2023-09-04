@@ -73,6 +73,9 @@
         <action
             android:id="@+id/action_allHouseholdFragment_to_householdMembersFragment"
             app:destination="@id/householdMembersFragment" />
+        <action
+            android:id="@+id/action_allHouseholdFragment_to_newBenRegFragment"
+            app:destination="@id/newBenRegFragment" />
     </fragment>
     <fragment
         android:id="@+id/allBenFragment"
@@ -229,6 +232,9 @@
             android:name="hhId"
             android:defaultValue="0L"
             app:argType="long" />
+        <action
+            android:id="@+id/action_newHouseholdFragment_to_newBenRegFragment"
+            app:destination="@id/newBenRegFragment" />
     </fragment>
     <fragment
         android:id="@+id/newBenRegTypeFragment"
@@ -803,5 +809,20 @@
         android:name="org.piramalswasthya.sakhi.ui.home_activity.dashboard.DashboardFragment"
         android:label="@string/dashboard"
         tools:layout="@layout/fragment_dashboard" />
+    <fragment
+        android:id="@+id/newBenRegFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_form.NewBenRegFragment"
+        android:label="NewBenRegFragment" >
+        <argument
+            android:name="hhId"
+            app:argType="long" />
+        <argument
+            android:name="isHoF"
+            app:argType="boolean" />
+        <argument
+            android:name="benId"
+            app:argType="long"
+            android:defaultValue="0L" />
+    </fragment>
 
 </navigation>

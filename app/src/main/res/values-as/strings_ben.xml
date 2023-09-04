@@ -53,6 +53,8 @@
     <string name="agree">সম্মত</string>
     <string name="name_ben">নাম</string>
     <string name="age_ben">বয়স</string>
+    <string name="title_new_ben_reg_hof">HoF Registration</string>
+    <string name="title_new_ben_reg_non_hof">Family Member Registration</string>
 
 
     <string-array name="nbr_gender_array">

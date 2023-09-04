@@ -28,6 +28,8 @@
     <string name="nbr_dor">पंजीकरण की तारीख</string>
     <string name="nbr_nb_first_name">पहला नाम</string>
     <string name="nbr_nb_last_name">अंतिम नाम / उपनाम</string>
+    <string name="title_new_ben_reg_hof">HoF Registration</string>
+    <string name="title_new_ben_reg_non_hof">Family Member Registration</string>
 
     <string-array name="nbr_gender_array">
         <item name="nbr_gender_1">पुरुष</item>

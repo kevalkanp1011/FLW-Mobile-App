@@ -26,8 +26,9 @@ import org.piramalswasthya.sakhi.BuildConfig
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.contracts.SpeechToTextContract
-import org.piramalswasthya.sakhi.databinding.FragmentInputFormPageHhBinding
+import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.helpers.Konstants
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_form.NewBenRegViewModel.State
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
@@ -36,9 +37,9 @@ import java.io.File
 @AndroidEntryPoint
 class NewBenRegFragment : Fragment() {
 
-    private var _binding: FragmentInputFormPageHhBinding? = null
+    private var _binding: FragmentNewFormBinding? = null
 
-    private val binding: FragmentInputFormPageHhBinding
+    private val binding: FragmentNewFormBinding
         get() = _binding!!
 
     private val viewModel: NewBenRegViewModel by viewModels()
@@ -49,7 +50,7 @@ class NewBenRegFragment : Fragment() {
         val listIndex =
             viewModel.updateValueByIdAndReturnListIndex(micClickedElementId, formattedValue)
         listIndex.takeIf { it >= 0 }?.let {
-            binding.inputForm.rvInputForm.adapter?.notifyItemChanged(it)
+            binding.form.rvInputForm.adapter?.notifyItemChanged(it)
         }
     }
 
@@ -69,12 +70,8 @@ class NewBenRegFragment : Fragment() {
             if (success) {
                 latestTmpUri?.let { uri ->
                     viewModel.setImageUriToFormElement(uri)
-//                    context?.openFileOutput("Hello", Context.MODE_PRIVATE)?.use {
-//                        context?.contentResolver?.openInputStream(uri)!!
-//                        it.write(byteArray.)
-//                    }
 
-                    binding.inputForm.rvInputForm.apply {
+                    binding.form.rvInputForm.apply {
                         val adapter = this.adapter as FormInputAdapter
                         adapter.notifyItemChanged(0)
                     }
@@ -112,106 +109,17 @@ class NewBenRegFragment : Fragment() {
     }
 
 
-//    private val errorAlert by lazy {
-//        MaterialAlertDialogBuilder(requireContext()).setTitle("Error Input")
-//            //.setMessage("Do you want to continue with previous form, or create a new form and discard the previous form?")
-//            .setPositiveButton("OK") { dialog, _ ->
-//                dialog.dismiss()
-//            }
-//
-//            .create()
-//    }
-//
-//    private val pageChangeCallback: ViewPager2.OnPageChangeCallback by lazy {
-//        object : ViewPager2.OnPageChangeCallback() {
-//            override fun onPageSelected(i: Int) {
-//                onPageChange(i)
-//            }
-//        }
-//    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentInputFormPageHhBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentNewFormBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        binding.btnSubmitForm.text = context?.getString(R.string.btn_submit)
-//        binding.vp2Nhhr.adapter = NewBenKidPagerAdapter(this)
-//        when (viewModel.mTabPosition) {
-//            0 -> {
-//                binding.btnPrev.visibility = View.GONE
-//                binding.btnNext.visibility = View.VISIBLE
-//            }
-//            2 -> {
-//                binding.btnPrev.visibility = View.VISIBLE
-//                binding.btnNext.visibility = View.GONE
-//            }
-//        }
-//        TabLayoutMediator(binding.tlNhhr, binding.vp2Nhhr) { tab, position ->
-//            tab.text = when (position) {
-//                0 -> "Registration"
-//                1 -> "Birth Details"
-//                else -> "NA"
-//            }
-//            tab.view.isClickable = false
-//        }.attach()
-        lifecycleScope.launch {
-            viewModel.currentPage.collect {
-                binding.tvTitle.text = when (it) {
-                    1 -> getString(R.string.beneficiary_details)
-                    2 -> getString(R.string.birth_details)
-                    else -> null
-                }
-//                binding.tlNhhr.selectTab(binding.tlNhhr.getTabAt(it - 1), true)
-//                when (it) {
-//                    1 -> {
-//                        binding.btnPrev.visibility = View.INVISIBLE
-//                        binding.btnNext.visibility = View.VISIBLE
-//                        binding.btnSubmitForm.visibility = View.INVISIBLE
-//                    }
-//                    2 -> {
-//                        binding.btnNext.visibility = View.VISIBLE
-//                        binding.btnPrev.visibility = View.VISIBLE
-//                        binding.btnSubmitForm.visibility = View.INVISIBLE
-//                    }
-//                    3 -> {
-//                        binding.btnPrev.visibility = View.VISIBLE
-//                        binding.btnNext.visibility = View.INVISIBLE
-//                        binding.btnSubmitForm.visibility = View.VISIBLE
-//                    }
-//                }
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.prevPageButtonVisibility.collect {
-                binding.btnPrev.visibility = if (it) View.VISIBLE else View.INVISIBLE
-
-            }
-        }
-        lifecycleScope.launch {
-            viewModel.nextPageButtonVisibility.collect {
-                binding.btnNext.visibility = if (it) View.VISIBLE else View.INVISIBLE
-
-            }
-        }
-        lifecycleScope.launch {
-            viewModel.submitPageButtonVisibility.collect {
-                binding.btnSubmitForm.visibility = if (it) View.VISIBLE else View.INVISIBLE
-
-            }
-        }
-        binding.btnPrev.setOnClickListener {
-            goToPrevPage()
-        }
-        binding.btnNext.setOnClickListener {
-            goToNextPage()
-        }
-        binding.btnSubmitForm.setOnClickListener {
+        binding.cvPatientInformation.visibility = View.GONE
+        binding.btnSubmit.setOnClickListener {
             submitBenForm()
         }
 
@@ -236,7 +144,7 @@ class NewBenRegFragment : Fragment() {
 
                     }, isEnabled = !recordExists
                     )
-                binding.inputForm.rvInputForm.adapter = adapter
+                binding.form.rvInputForm.adapter = adapter
                 lifecycleScope.launch {
                     viewModel.formList.collect {
                         Timber.d("Collecting $it")
@@ -255,13 +163,13 @@ class NewBenRegFragment : Fragment() {
                 }
 
                 State.SAVING -> {
-                    binding.clContent.visibility = View.GONE
-                    binding.rlSaving.visibility = View.VISIBLE
+                    binding.llContent.visibility = View.GONE
+                    binding.pbForm.visibility = View.VISIBLE
                 }
 
                 State.SAVE_SUCCESS -> {
-                    binding.clContent.visibility = View.VISIBLE
-                    binding.rlSaving.visibility = View.GONE
+                    binding.llContent.visibility = View.VISIBLE
+                    binding.pbForm.visibility = View.GONE
                     Toast.makeText(
                         context,
                         resources.getString(R.string.save_successful),
@@ -277,25 +185,34 @@ class NewBenRegFragment : Fragment() {
                         resources.getString(R.string.something_wend_wong_contact_testing),
                         Toast.LENGTH_LONG
                     ).show()
-                    binding.clContent.visibility = View.VISIBLE
-                    binding.rlSaving.visibility = View.GONE
+                    binding.llContent.visibility = View.VISIBLE
+                    binding.pbForm.visibility = View.GONE
                 }
             }
         }
 
-//        viewModel.errorMessage.observe(viewLifecycleOwner) {
-//            it?.let {
-//                errorAlert.setMessage(it)
-//                errorAlert.show()
-//                viewModel.resetErrorMessage()
-//            }
-//        }
 
     }
 
     private fun hardCodedListUpdate(formId: Int) {
-        binding.inputForm.rvInputForm.adapter?.apply {
+        binding.form.rvInputForm.adapter?.apply {
             when (formId) {
+                1008 -> {
+                    notifyDataSetChanged()
+                    /*viewModel.getIndexOfFatherName().takeIf { it > 0 }?.let {
+                        Timber.d("Update Father index called! $it")
+                        notifyItemChanged(it)
+                    }
+                    viewModel.getIndexOfMotherName().takeIf { it > 0 }?.let {
+                        Timber.d("Update Mother index called! $it")
+                        notifyItemChanged(it)
+                    }
+                    viewModel.getIndexOfSpouseName().takeIf { it > 0 }?.let {
+                        Timber.d("Update Spouse index called! $it")
+                        notifyItemChanged(it)
+                    }*/
+
+                }
                 8 -> {
 
                     notifyItemChanged(5)
@@ -349,23 +266,15 @@ class NewBenRegFragment : Fragment() {
         }
     }
 
-    private fun goToPrevPage() {
-        viewModel.goToPreviousPage()
-    }
-
-    private fun goToNextPage() {
-        if (validateCurrentPage()) viewModel.goToNextPage()
-    }
-
     private fun validateCurrentPage(): Boolean {
-        val result = binding.inputForm.rvInputForm.adapter?.let {
+        val result = binding.form.rvInputForm.adapter?.let {
             (it as FormInputAdapter).validateInput(resources)
         }
         Timber.d("Validation : $result")
         return if (result == -1) true
         else {
             if (result != null) {
-                binding.inputForm.rvInputForm.scrollToPosition(result)
+                binding.form.rvInputForm.scrollToPosition(result)
             }
             false
         }
@@ -374,6 +283,12 @@ class NewBenRegFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         requestLocationPermission()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__ben,
+                getString(if (viewModel.isHoF) R.string.title_new_ben_reg_hof else R.string.title_new_ben_reg_non_hof)
+            )
+        }
 //        binding.vp2Nhhr.registerOnPageChangeCallback(pageChangeCallback)
 
     }

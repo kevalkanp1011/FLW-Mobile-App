@@ -112,34 +112,24 @@ class NewHouseholdFragment : Fragment() {
         }
         alertDialog
     }
-
     private val nextScreenAlert by lazy {
-        val alertDialog: AlertDialog.Builder = AlertDialog.Builder(requireContext())
 
-        // Setting Dialog Title
-        alertDialog.setTitle("Add HoF")
-
-        // Setting Dialog Message
-        // On pressing Settings button
-        alertDialog.setPositiveButton("OK") { d, _ ->
-            findNavController().navigate(
-                NewHouseholdFragmentDirections.actionNewHouseholdFragmentToNewBenRegTypeFragment(
-                    viewModel.getHHId()
+        MaterialAlertDialogBuilder(requireContext()).setTitle(resources.getString(R.string.add_head_of_family))
+//            .setMessage(str)
+            .setPositiveButton(resources.getString(R.string.yes)) { dialog, _ ->
+                findNavController().navigate(
+                    NewHouseholdFragmentDirections.actionNewHouseholdFragmentToNewBenRegFragment(
+                        viewModel.getHHId(),
+                        true
+                    )
                 )
-            )
-        }
-
-        // on pressing cancel button
-        alertDialog.setNegativeButton(
-            resources.getString(R.string.cancel)
-        ) { _, _ ->
-            findNavController().navigateUp()
-        }
-        alertDialog.setOnCancelListener {
-            findNavController().navigateUp()
-        }
-        alertDialog.create()
+                dialog.dismiss()
+            }.setNegativeButton(resources.getString(R.string.no)) { dialog, _ ->
+                findNavController().navigateUp()
+                dialog.dismiss()
+            }.create()
     }
+
 
     private fun validateCurrentPage(): Boolean {
         val result = binding.form.rvInputForm.adapter?.let {
@@ -219,7 +209,12 @@ class NewHouseholdFragment : Fragment() {
                         resources.getString(R.string.save_successful),
                         Toast.LENGTH_LONG
                     ).show()
-                    nextScreenAlert.setMessage("Would you like to add ${viewModel.getHoFName()} as a HoF Beneficiary ?")
+                    nextScreenAlert.setMessage(
+                        resources.getString(
+                            R.string.add_head_of_family_message,
+                            viewModel.getHoFName()
+                        )
+                    )
                     nextScreenAlert.show()
 
 
@@ -241,6 +236,7 @@ class NewHouseholdFragment : Fragment() {
     }
 
     private fun submitHouseholdForm() {
+        activity?.currentFocus?.clearFocus()
         if (validateCurrentPage()) {
             viewModel.saveForm()
         }

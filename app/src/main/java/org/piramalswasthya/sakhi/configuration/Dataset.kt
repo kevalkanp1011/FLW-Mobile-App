@@ -285,7 +285,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         addItems.forEach {
             if (list.contains(it)) list.remove(it)
         }
-        val addPosition = position.takeIf { it != -1 } ?: (list.indexOf(source) + 1)
+        val addPosition = if(position==-2) list.lastIndex+1 else position.takeIf { it != -1 } ?: (list.indexOf(source) + 1)
         list.addAll(addPosition, addItems)
         return addPosition
 //        return if (age in ageTriggerRange && ageUnit.value == ageUnit.entries?.get(
@@ -425,6 +425,15 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         } else
             ageElement.value = "0"
         return -1
+    }
+
+    protected fun getDoMFromDoR(ageAtMarriage: Int?, regDate: Long): Long? {
+        if (ageAtMarriage == null) return null
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = regDate
+        cal.add(Calendar.YEAR, -1 * ageAtMarriage)
+        return cal.timeInMillis
+
     }
 
 
@@ -606,6 +615,8 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
             list.indexOf(it)
         } ?: -1
     }
+
+    fun getListSize() = list.size
 
     fun setValueById(id: Int, value: String?) {
         list.find { it.id == id }?.let {

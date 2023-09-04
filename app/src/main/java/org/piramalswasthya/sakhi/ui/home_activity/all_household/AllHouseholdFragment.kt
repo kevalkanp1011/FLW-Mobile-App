@@ -22,9 +22,9 @@ import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 @AndroidEntryPoint
 class AllHouseholdFragment : Fragment() {
 
-    private var _binding : FragmentDisplaySearchRvButtonBinding? = null
+    private var _binding: FragmentDisplaySearchRvButtonBinding? = null
 
-    private val binding  : FragmentDisplaySearchRvButtonBinding
+    private val binding: FragmentDisplaySearchRvButtonBinding
         get() = _binding!!
 
     private val viewModel: AllHouseholdViewModel by viewModels()
@@ -36,13 +36,11 @@ class AllHouseholdFragment : Fragment() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(resources.getString(R.string.incomplete_form_found))
             .setMessage(resources.getString(R.string.do_you_want_to_continue_with_previous_form_or_create_a_new_form_and_discard_the_previous_form))
-            .setPositiveButton(resources.getString(R.string.open_draft)){
-                    dialog,_->
+            .setPositiveButton(resources.getString(R.string.open_draft)) { dialog, _ ->
                 viewModel.navigateToNewHouseholdRegistration(false)
                 dialog.dismiss()
             }
-            .setNegativeButton(resources.getString(R.string.create_new)){
-                    dialog,_->
+            .setNegativeButton(resources.getString(R.string.create_new)) { dialog, _ ->
                 viewModel.navigateToNewHouseholdRegistration(true)
                 dialog.dismiss()
             }
@@ -54,14 +52,14 @@ class AllHouseholdFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater,container, false)
+        _binding = FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false)
         viewModel.checkDraft()
         return binding.root
     }
 
     override fun onStart() {
         super.onStart()
-        activity?.let{
+        activity?.let {
             (it as HomeActivity).updateActionBar(R.drawable.ic__hh)
         }
     }
@@ -72,19 +70,31 @@ class AllHouseholdFragment : Fragment() {
         binding.tvEmptyContent.text = resources.getString(R.string.no_records_found_hh)
         val householdAdapter = HouseHoldListAdapter(HouseHoldListAdapter.HouseholdClickListener(
             {
-            findNavController().navigate(AllHouseholdFragmentDirections.actionAllHouseholdFragmentToNewHouseholdFragment(it))
-        },
+                findNavController().navigate(
+                    AllHouseholdFragmentDirections.actionAllHouseholdFragmentToNewHouseholdFragment(
+                        it
+                    )
+                )
+            },
             {
-            findNavController().navigate(AllHouseholdFragmentDirections.actionAllHouseholdFragmentToHouseholdMembersFragment(it))
-        },
+                findNavController().navigate(
+                    AllHouseholdFragmentDirections.actionAllHouseholdFragmentToHouseholdMembersFragment(
+                        it
+                    )
+                )
+            },
             {
-            findNavController().navigate(AllHouseholdFragmentDirections.actionAllHouseholdFragmentToNewBenRegTypeFragment(it))
-        }
+                findNavController().navigate(
+                    AllHouseholdFragmentDirections.actionAllHouseholdFragmentToNewBenRegFragment(
+                        it.hhId, it.numMembers == 0
+                    )
+                )
+            }
         ))
         binding.rvAny.adapter = householdAdapter
 
         lifecycleScope.launch {
-            viewModel.householdList.collect{
+            viewModel.householdList.collect {
                 if (it.isEmpty())
                     binding.flEmpty.visibility = View.VISIBLE
                 else
@@ -94,11 +104,11 @@ class AllHouseholdFragment : Fragment() {
         }
 
 
-        viewModel.hasDraft.observe(viewLifecycleOwner){
+        viewModel.hasDraft.observe(viewLifecycleOwner) {
             hasDraft = it
         }
-        viewModel.navigateToNewHouseholdRegistration.observe(viewLifecycleOwner){
-            if(it) {
+        viewModel.navigateToNewHouseholdRegistration.observe(viewLifecycleOwner) {
+            if (it) {
                 findNavController().navigate(AllHouseholdFragmentDirections.actionAllHouseholdFragmentToNewHouseholdFragment())
                 viewModel.navigateToNewHouseholdRegistrationCompleted()
             }

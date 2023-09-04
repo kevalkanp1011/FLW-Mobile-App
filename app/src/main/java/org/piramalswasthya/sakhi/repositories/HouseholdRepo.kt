@@ -86,5 +86,11 @@ class HouseholdRepo @Inject constructor(
         }
     }
 
+    suspend fun updateHousehold(household: HouseholdCache) {
+        withContext(Dispatchers.IO){
+            dao.update(household)
+        }
+    }
+
 
 }

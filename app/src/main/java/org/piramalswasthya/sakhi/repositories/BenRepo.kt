@@ -318,8 +318,17 @@ class BenRepo @Inject constructor(
                     val resBenId = jsonObjectData.getString("response")
                     val benNumber = resBenId.substring(resBenId.length - 12)
                     val newBenId = java.lang.Long.valueOf(benNumber)
+                    //FIX TO UPDATE IMAGE-NAME WITH NEW BEN-ID
+                    ImageUtils.renameImage(context, ben.beneficiaryId, newBenId)
                     benDao.updateToFinalBenId(ben.householdId, ben.beneficiaryId, newBenId)
+                    //FIX TO MAP UPDATED BEN-ID FOR HOF
+                    householdDao.getHousehold(ben.householdId)
+                        ?.takeIf { it.benId == ben.beneficiaryId }?.let {
+                        it.benId = newBenId
+                        householdDao.update(it)
+                    }
                     ben.beneficiaryId = newBenId
+
                     return true
                 }
                 if (responseStatusCode == 5002) {
@@ -1382,5 +1391,11 @@ class BenRepo @Inject constructor(
         } catch (_: java.lang.Exception) {
         }
         return null
+    }
+
+    suspend fun getMinBenId(): Long {
+        return withContext(Dispatchers.IO) {
+            benDao.getMinBenId() ?: 0L
+        }
     }
 }
