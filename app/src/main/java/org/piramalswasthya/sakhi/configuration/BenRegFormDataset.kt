@@ -5,6 +5,7 @@ import android.net.Uri
 import android.text.InputType
 import android.util.Range
 import android.widget.LinearLayout
+import androidx.core.text.isDigitsOnly
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.helpers.Languages
@@ -395,7 +396,14 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
         arrayId = R.array.nbr_reproductive_status_array,
         entries = resources.getStringArray(R.array.nbr_reproductive_status_array),
         required = true,
-        hasDependants = true
+        hasDependants = false
+    )
+    private val birthCertificateNumber = FormElement(
+        id = 1029,
+        inputType = EDIT_TEXT,
+        title = resources.getString(R.string.birth_certificate_number),
+        arrayId = -1,
+        required = false,
     )
     val firstPage by lazy {
         listOf(
@@ -555,6 +563,19 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             gender.value = gender.getStringFromPosition(saved.genderId)
             fatherName.value = saved.fatherName
             motherName.value = saved.motherName
+            saved.genDetails?.spouseName?.let {
+                when (saved.genderId) {
+                    1 -> wifeName.value = it
+                    2 -> husbandName.value = it
+                    3 -> spouseName.value = it
+                }
+            }
+            maritalStatus.value =
+                maritalStatus.getStringFromPosition(saved.genDetails?.maritalStatusId ?: 0)
+            ageAtMarriage.value = saved.genDetails?.ageAtMarriage.toString()
+            dateOfMarriage.value = getDateFromLong(
+                saved.genDetails?.marriageDate ?: 0
+            )
             mobileNoOfRelation.value =
                 mobileNoOfRelation.getStringFromPosition(saved.mobileNoOfRelationId)
             otherMobileNoOfRelation.value = saved.mobileOthers
@@ -1018,7 +1039,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             }
 
             dob.id -> {
-                assignValuesToAgeAndAgeUnitFromDob(getLongFromDate(dob.value), age, ageUnit)
+                assignValuesToAgeAndAgeUnitFromDob(getLongFromDate(dob.value), age, ageUnit, ageAtMarriage)
 
 //                val case1 = triggerDependants(
 //                    age = age.value!!.toInt(),
@@ -1084,9 +1105,12 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                 }
                 validateIntMinMax(age)
                 if (age.errorText == null) {
+
                     val cal = Calendar.getInstance()
                     when (ageUnit.value) {
                         ageUnit.entries?.get(2) -> {
+                            ageAtMarriage.value = null
+                            ageAtMarriage.max = age.value!!.toLong()
                             cal.add(
                                 Calendar.YEAR, -1 * age.value!!.toInt()
                             )
@@ -1135,11 +1159,43 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                     placeAfter = religion,
                     targetSideEffect = listOf(typeOfSchool)
                 ) != -1
-                if (listChanged || listChanged2)
+                val listChanged3 =
+                    if (ageUnit.value != ageUnit.entries!!.last() || age.value!!.toInt() <= Konstants.maxAgeForAdolescent) triggerDependants(
+                        source = rchId,
+                        addItems = listOf(birthCertificateNumber, placeOfBirth),
+                        removeItems = listOf(husbandName, wifeName, spouseName, ageAtMarriage, dateOfMarriage, maritalStatus),
+                        position = -2
+                    ) else {
+                        maritalStatus.value = null
+                        triggerDependants(
+                            source = gender,
+                            removeItems = listOf(birthCertificateNumber, placeOfBirth),
+                            addItems = listOf(maritalStatus)
+                        )
+                    } != -1
+                if (listChanged || listChanged2 || listChanged3)
                     1
                 else
                     -1
             }
+            ageAtMarriage.id -> age.value?.takeIf { it.isNotEmpty() && it.isDigitsOnly() && !ageAtMarriage.value.isNullOrEmpty() }
+                ?.toInt()?.let {
+                    validateEmptyOnEditText(ageAtMarriage)
+                    validateIntMinMax(ageAtMarriage)
+                    if (it == ageAtMarriage.value?.toInt()) {
+                        val cal = Calendar.getInstance()
+                        dateOfMarriage.max = cal.timeInMillis
+                        cal.add(Calendar.YEAR, -1)
+                        dateOfMarriage.min = cal.timeInMillis
+
+                    }
+                    triggerDependants(
+                        source = ageAtMarriage,
+                        passedIndex = ageAtMarriage.value!!.toInt(),
+                        triggerIndex = it,
+                        target = dateOfMarriage
+                    )
+                } ?: -1
 
             childRegisteredAtSchool.id -> {
                 triggerDependants(
@@ -1438,6 +1494,9 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             else -> -1
         }
     }
+
+    fun getIndexOfAgeAtMarriage() = getIndexOfElement(ageAtMarriage)
+
 
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
         (cacheModel as BenRegCache).let { ben ->

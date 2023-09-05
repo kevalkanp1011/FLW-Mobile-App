@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="relation_with_family_head">Relation with family head</string>
+    <string name="relation_with_family_head">Relation with Family Head</string>
     <string name="other_enter_relation_to_head">Other - Enter relation to head</string>
     <string name="community">Community</string>
     <string name="religion">Religion</string>
@@ -8,6 +8,7 @@
     <string name="has_aadhaar_number">Has Aadhaar Number</string>
     <string name="enter_aadhaar_number_ben">Enter Aadhaar Number</string>
     <string name="reproductive_status">Reproductive Status</string>
+    <string name="birth_certificate_number">Birth Certificate No.</string>
     <string name="beneficiary_details">Beneficiary Details</string>
     <string name="wife_s_name">Wife\'s Name</string>
     <string name="spouse_s_name">Spouse\'s Name</string>

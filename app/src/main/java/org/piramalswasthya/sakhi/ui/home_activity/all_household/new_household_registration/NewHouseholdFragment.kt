@@ -120,7 +120,7 @@ class NewHouseholdFragment : Fragment() {
                 findNavController().navigate(
                     NewHouseholdFragmentDirections.actionNewHouseholdFragmentToNewBenRegFragment(
                         viewModel.getHHId(),
-                        true
+                        0
                     )
                 )
                 dialog.dismiss()

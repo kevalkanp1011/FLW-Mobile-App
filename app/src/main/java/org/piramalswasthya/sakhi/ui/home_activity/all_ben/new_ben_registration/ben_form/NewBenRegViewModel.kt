@@ -43,7 +43,7 @@ class NewBenRegViewModel @Inject constructor(
     }
 
     private val hhId = NewBenRegFragmentArgs.fromSavedStateHandle(savedStateHandle).hhId
-    val isHoF = NewBenRegFragmentArgs.fromSavedStateHandle(savedStateHandle).isHoF
+    val isHoF = NewBenRegFragmentArgs.fromSavedStateHandle(savedStateHandle).relToHeadId==0
     private val benIdFromArgs =
         NewBenRegFragmentArgs.fromSavedStateHandle(savedStateHandle).benId
 
@@ -162,6 +162,6 @@ class NewBenRegViewModel @Inject constructor(
         dataset.setValueById(id, value)
         return dataset.getIndexById(id)
     }
-
+    fun getIndexOfAgeAtMarriage() = dataset.getIndexOfAgeAtMarriage()
 
 }

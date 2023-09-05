@@ -817,8 +817,8 @@
             android:name="hhId"
             app:argType="long" />
         <argument
-            android:name="isHoF"
-            app:argType="boolean" />
+            android:name="relToHeadId"
+            app:argType="integer" />
         <argument
             android:name="benId"
             app:argType="long"

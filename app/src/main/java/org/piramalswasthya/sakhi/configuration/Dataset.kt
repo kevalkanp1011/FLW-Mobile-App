@@ -379,7 +379,8 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     }
 
     protected fun assignValuesToAgeAndAgeUnitFromDob(
-        dob: Long, ageElement: FormElement, ageUnitElement: FormElement
+        dob: Long, ageElement: FormElement, ageUnitElement: FormElement,
+        ageAtMarriageElement : FormElement? = null
     ): Int {
         ageUnitElement.errorText = null
         ageElement.errorText = null
@@ -388,6 +389,8 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         }.setToStartOfTheDay()
         val calNow = Calendar.getInstance().setToStartOfTheDay()
         val yearsDiff = getDiffYears(calDob, calNow)
+        ageAtMarriageElement?.value = null
+        ageAtMarriageElement?.max = yearsDiff.toLong()
         if (yearsDiff > 0) {
             ageUnitElement.value = ageUnitElement.entries?.last()
             ageElement.value = yearsDiff.toString()

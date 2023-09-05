@@ -214,13 +214,14 @@ class NewBenRegFragment : Fragment() {
 
                 }
                 8 -> {
-
+                    notifyItemChanged(viewModel.getIndexOfAgeAtMarriage())
                     notifyItemChanged(5)
                     notifyItemChanged(6)
                 }
 
                 7 -> {
                     notifyItemChanged(4)
+                    notifyItemChanged(viewModel.getIndexOfAgeAtMarriage())
                 }
 
                 5 -> {

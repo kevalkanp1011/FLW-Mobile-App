@@ -86,7 +86,7 @@ class AllHouseholdFragment : Fragment() {
             {
                 findNavController().navigate(
                     AllHouseholdFragmentDirections.actionAllHouseholdFragmentToNewBenRegFragment(
-                        it.hhId, it.numMembers == 0
+                        it.hhId, 0
                     )
                 )
             }
