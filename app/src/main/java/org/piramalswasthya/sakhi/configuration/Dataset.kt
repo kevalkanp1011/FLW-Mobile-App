@@ -52,9 +52,9 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
             val date = dateString?.let { f.parse(it) }
             return date?.let {
                 if (it.month >= 3) {
-                    "" + (it.year + 1900) + " - " + (it.year + 1902)
+                    "" + (it.year + 1900) + " - " + (it.year + 1901)
                 } else {
-                    "" + (it.year + 1899) + " - " + (it.year + 1901)
+                    "" + (it.year + 1899) + " - " + (it.year + 1900)
                 }
             }
         }
@@ -673,7 +673,8 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
 
     protected fun validateMobileNumberOnEditText(formElement: FormElement): Int {
         formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.toLong()?.let {
-            if (it < 6_000_000_000L) resources.getString(R.string.form_input_error_invalid_mobile) else null
+            if (it < 6_000_000_000L || it == 6666666666L || it == 7777777777L || it == 8888888888L
+                || it == 9999999999L) resources.getString(R.string.form_input_error_invalid_mobile) else null
         }
         return -1
     }

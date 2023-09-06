@@ -31,7 +31,7 @@ class PregnantWomanRegistrationDataset(
     private val dateOfReg = FormElement(
         id = 1,
         inputType = InputType.DATE_PICKER,
-        title = context.getString(R.string.nbr_dor),
+        title = resources.getString(R.string.nbr_dor),
         arrayId = -1,
         required = true,
         max = System.currentTimeMillis(),
@@ -42,7 +42,7 @@ class PregnantWomanRegistrationDataset(
     private val rchId = FormElement(
         id = 2,
         inputType = InputType.EDIT_TEXT,
-        title = "RCH ID",
+        title = resources.getString(R.string.pwrdst_rich_id),
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         isMobileNumber = true,
@@ -51,7 +51,7 @@ class PregnantWomanRegistrationDataset(
     private val mcpCardNumber = FormElement(
         id = 3,
         inputType = InputType.EDIT_TEXT,
-        title = "MCP Card No",
+        title = resources.getString(R.string.pwrdst_mcp_card_no),
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         isMobileNumber = true,
@@ -60,7 +60,7 @@ class PregnantWomanRegistrationDataset(
     private val name = FormElement(
         id = 4,
         inputType = InputType.TEXT_VIEW,
-        title = "Name of Pregnant Women",
+        title = resources.getString(R.string.pwrdst_name_prag_wo),
         arrayId = -1,
         required = false,
         allCaps = true,
@@ -71,7 +71,7 @@ class PregnantWomanRegistrationDataset(
     private val husbandName = FormElement(
         id = 5,
         inputType = InputType.TEXT_VIEW,
-        title = "Name of Husband",
+        title = resources.getString(R.string.pwrdst_name_hus),
         arrayId = -1,
         required = false,
         allCaps = true,
@@ -81,7 +81,7 @@ class PregnantWomanRegistrationDataset(
     private val age = FormElement(
         id = 6,
         inputType = InputType.TEXT_VIEW,
-        title = "Current Age of Woman",
+        title = resources.getString(R.string.pwrdst_curr_age_wo),
         arrayId = -1,
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -93,7 +93,7 @@ class PregnantWomanRegistrationDataset(
     private val lmp = FormElement(
         id = 7,
         inputType = InputType.DATE_PICKER,
-        title = "LMP Date",
+        title = resources.getString(R.string.pwrdst_lmp_date),
         arrayId = -1,
         required = true,
         max = System.currentTimeMillis(),
@@ -103,20 +103,20 @@ class PregnantWomanRegistrationDataset(
     private val weekOfPregnancy = FormElement(
         id = 8,
         inputType = InputType.TEXT_VIEW,
-        title = "Weeks of Pregnancy at the time of Registration",
+        title = resources.getString(R.string.pwrdst_wk_of_prag_reg),
         required = false,
     )
     private val edd = FormElement(
         id = 9,
         inputType = InputType.TEXT_VIEW,
-        title = "EDD",
+        title = resources.getString(R.string.pwrdst_edd),
         arrayId = -1,
         required = false,
     )
     private val bloodGroup = FormElement(
         id = 10,
         inputType = InputType.DROPDOWN,
-        title = "Blood Group",
+        title = resources.getString(R.string.pwrdst_bld_grp),
         arrayId = R.array.maternal_health_blood_group,
         entries = resources.getStringArray(R.array.maternal_health_blood_group),
         required = false
@@ -124,7 +124,7 @@ class PregnantWomanRegistrationDataset(
     private val weight = FormElement(
         id = 11,
         inputType = InputType.EDIT_TEXT,
-        title = "Weight of PW (Kg) at time Registration",
+        title = resources.getString(R.string.pwrdst_wht_of_tm_reg),
         arrayId = -1,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 3,
@@ -135,7 +135,7 @@ class PregnantWomanRegistrationDataset(
     private val height = FormElement(
         id = 12,
         inputType = InputType.EDIT_TEXT,
-        title = "Height of PW (Cm)",
+        title = resources.getString(R.string.pwrdst_hht_of_pw),
         arrayId = -1,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 3,
@@ -146,7 +146,7 @@ class PregnantWomanRegistrationDataset(
     private val vdrlrprTestResult = FormElement(
         id = 13,
         inputType = InputType.DROPDOWN,
-        title = "VDRL/RPR Test result",
+        title = resources.getString(R.string.pwrdst_vdrl_rpr_tst_rlts),
         arrayId = R.array.maternal_health_test_result,
         entries = resources.getStringArray(R.array.maternal_health_test_result),
         required = false,
@@ -156,7 +156,7 @@ class PregnantWomanRegistrationDataset(
     private val dateOfVdrlTestDone = FormElement(
         id = 14,
         inputType = InputType.DATE_PICKER,
-        title = "Date of VDRL Test done",
+        title = resources.getString(R.string.pwrdst_vdrl_tst_done),
         arrayId = -1,
         required = false,
         max = System.currentTimeMillis(),
@@ -164,7 +164,7 @@ class PregnantWomanRegistrationDataset(
     private val hivTestResult = FormElement(
         id = 15,
         inputType = InputType.DROPDOWN,
-        title = "HIV Test result",
+        title = resources.getString(R.string.pwrdst_hiv_tst_rlt),
         arrayId = R.array.maternal_health_test_result,
         entries = resources.getStringArray(R.array.maternal_health_test_result),
         required = false,
@@ -174,7 +174,7 @@ class PregnantWomanRegistrationDataset(
     private val dateOfhivTestDone = FormElement(
         id = 16,
         inputType = InputType.DATE_PICKER,
-        title = "Date of HIV Test done",
+        title = resources.getString(R.string.pwrdst_date_hiv_tst_done),
         arrayId = -1,
         required = false,
         max = System.currentTimeMillis(),
@@ -182,7 +182,7 @@ class PregnantWomanRegistrationDataset(
     private val hbsAgTestResult = FormElement(
         id = 17,
         inputType = InputType.DROPDOWN,
-        title = "HBsAg Test result",
+        title = resources.getString(R.string.pwrdst_hbsag_tst_rlt),
         arrayId = R.array.maternal_health_test_result_2,
         entries = resources.getStringArray(R.array.maternal_health_test_result_2),
         required = false,
@@ -192,7 +192,7 @@ class PregnantWomanRegistrationDataset(
     private val dateOfhbsAgTestDone = FormElement(
         id = 18,
         inputType = InputType.DATE_PICKER,
-        title = "Date of HbsAg Test done",
+        title = resources.getString(R.string.pwrdst_hbsag_tst_done),
         arrayId = -1,
         required = false,
         max = System.currentTimeMillis(),
@@ -201,7 +201,7 @@ class PregnantWomanRegistrationDataset(
     private val pastIllness = FormElement(
         id = 19,
         inputType = InputType.CHECKBOXES,
-        title = "Past Illness",
+        title = resources.getString(R.string.pwrdst_pst_illness),
         arrayId = R.array.maternal_health_past_illness,
         entries = resources.getStringArray(R.array.maternal_health_past_illness),
         required = true,
@@ -212,15 +212,15 @@ class PregnantWomanRegistrationDataset(
     private val otherPastIllness = FormElement(
         id = 20,
         inputType = InputType.EDIT_TEXT,
-        title = "other",
+        title = resources.getString(R.string.pwrdst_other),
         required = true,
     )
 
     private val isFirstPregnancy = FormElement(
         id = 21,
         inputType = InputType.RADIO,
-        title = "Is this your 1st pregnancy?",
-        entries = arrayOf("Yes", "No"),
+        title = resources.getString(R.string.pwrdst_is_prag),
+        entries = resources.getStringArray(R.array.pwrdst_yes_no),
         required = true,
         hasDependants = true
     )
@@ -228,7 +228,7 @@ class PregnantWomanRegistrationDataset(
     private val totalNumberOfPreviousPregnancy = FormElement(
         id = 22,
         inputType = InputType.EDIT_TEXT,
-        title = "Total no. of previous Pregnancy",
+        title = resources.getString(R.string.pwrdst_no_of_prev_prag),
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 2,
@@ -238,7 +238,7 @@ class PregnantWomanRegistrationDataset(
     private val complicationsDuringLastPregnancy = FormElement(
         id = 23,
         inputType = InputType.DROPDOWN,
-        title = "Any complications in Last Pregnancy",
+        title = resources.getString(R.string.pwrdst_any_lst_pregnancy),
         arrayId = R.array.maternal_health_past_del_complications,
         entries = resources.getStringArray(R.array.maternal_health_past_del_complications),
         required = false,
@@ -248,15 +248,15 @@ class PregnantWomanRegistrationDataset(
     private val otherComplicationsDuringLastPregnancy = FormElement(
         id = 24,
         inputType = InputType.EDIT_TEXT,
-        title = "Any other Complication",
+        title = resources.getString(R.string.pwrdst_any_other_comp),
         required = true,
     )
 
     private val isHrpCase = FormElement(
         id = 25,
         inputType = InputType.RADIO,
-        title = "Is Identified as HRP cases?",
-        entries = arrayOf("Yes", "No"),
+        title = resources.getString(R.string.pwrdst_is_id_as_hrp_cse),
+        entries = resources.getStringArray(R.array.pwrdst_yes_no),
         hasDependants = true,
         required = false,
         isEnabled = false
@@ -264,7 +264,7 @@ class PregnantWomanRegistrationDataset(
     private val assignedAsHrpBy = FormElement(
         id = 26,
         inputType = InputType.DROPDOWN,
-        title = "Who had identified as HRP?",
+        title = resources.getString(R.string.pwrdst_who_id_as_hrp),
         arrayId = R.array.maternal_health_reg_hrp_confirm_by,
         entries = resources.getStringArray(R.array.maternal_health_reg_hrp_confirm_by),
         required = true
@@ -540,7 +540,7 @@ class PregnantWomanRegistrationDataset(
 
         }
 
-        saved?.let {
+        saved?.let { it ->
             dateOfReg.apply {
                 value = getDateFromLong(it.dateOfRegistration)
                 inputType = InputType.TEXT_VIEW
@@ -813,8 +813,8 @@ class PregnantWomanRegistrationDataset(
                     value = entries!!.first()
                 }
                 if (isFirstPregnancy.value == resources.getStringArray(R.array.yes_no)[0]) {
-                    multiplePregnancy.value = resources.getStringArray(R.array.yes_no)[1]
-                    multiplePregnancy.isEnabled = false
+//                    multiplePregnancy.value = resources.getStringArray(R.array.yes_no)[1]
+//                    multiplePregnancy.isEnabled = false
                     homeDelivery.value = resources.getStringArray(R.array.yes_no)[1]
                     homeDelivery.isEnabled = false
                     noOfDeliveries.value = resources.getStringArray(R.array.yes_no)[1]
@@ -824,8 +824,8 @@ class PregnantWomanRegistrationDataset(
                     badObstetric.value = resources.getStringArray(R.array.yes_no)[1]
                     badObstetric.isEnabled = false
                 } else {
-                    multiplePregnancy.value = resources.getStringArray(R.array.yes_no)[0]
-                    multiplePregnancy.isEnabled = false
+//                    multiplePregnancy.value = resources.getStringArray(R.array.yes_no)[0]
+//                    multiplePregnancy.isEnabled = false
                     homeDelivery.value = homeDeliverydbVal
                     homeDelivery.isEnabled = true
                     noOfDeliveries.value = noOfDeliveriesdbVal
@@ -835,7 +835,7 @@ class PregnantWomanRegistrationDataset(
                     badObstetric.value = badObstetricdbVal
                     badObstetric.isEnabled = true
                 }
-                handleListOnValueChanged(multiplePregnancy.id, 0)
+//                handleListOnValueChanged(multiplePregnancy.id, 0)
                 handleListOnValueChanged(homeDelivery.id, 0)
                 handleListOnValueChanged(noOfDeliveries.id, 0)
                 handleListOnValueChanged(timeLessThan18m.id, 0)
@@ -931,31 +931,31 @@ class PregnantWomanRegistrationDataset(
             form.mcpCardNumber = mcpCardNumber.value?.takeIf { it.isNotEmpty() }?.toLong() ?: 0
             form.rchId = rchId.value?.takeIf { it.isNotEmpty() }?.toLong() ?: 0
             form.lmpDate = getLongFromDate(lmp.value)
-            form.bloodGroup = bloodGroup.value
+            form.bloodGroup = getEnglishValueInArray(R.array.maternal_health_blood_group, bloodGroup.value)
             form.bloodGroupId = bloodGroup.getPosition()
             form.weight = weight.value?.toInt()
             form.height = height.value?.toInt()
-            form.vdrlRprTestResult = vdrlrprTestResult.value
+            form.vdrlRprTestResult = getEnglishValueInArray(R.array.maternal_health_test_result, vdrlrprTestResult.value)
             form.vdrlRprTestResultId = vdrlrprTestResult.getPosition()
             form.dateOfVdrlRprTest =
                 dateOfVdrlTestDone.value?.let { getLongFromDate(dateOfVdrlTestDone.value) }
-            form.hivTestResult = hivTestResult.value
+            form.hivTestResult = getEnglishValueInArray(R.array.maternal_health_test_result, hivTestResult.value)
             form.hivTestResultId = hivTestResult.getPosition()
             form.dateOfHivTest =
                 dateOfhivTestDone.value?.let { getLongFromDate(dateOfhivTestDone.value) }
-            form.hbsAgTestResult = hbsAgTestResult.value
+            form.hbsAgTestResult = getEnglishValueInArray(R.array.maternal_health_test_result_2, hbsAgTestResult.value)
             form.hbsAgTestResultId = hbsAgTestResult.getPosition()
             form.dateOfHbsAgTest =
                 dateOfhbsAgTestDone.value?.let { getLongFromDate(dateOfhbsAgTestDone.value) }
-            form.pastIllness = pastIllness.value
+            form.pastIllness = getEnglishValueInArray(R.array.maternal_health_past_illness, pastIllness.value)
             form.otherPastIllness = otherPastIllness.value
             form.is1st = isFirstPregnancy.value == isFirstPregnancy.entries!!.first()
             form.numPrevPregnancy = totalNumberOfPreviousPregnancy.value?.toInt()
-            form.complicationPrevPregnancy = complicationsDuringLastPregnancy.value
+            form.complicationPrevPregnancy = getEnglishValueInArray(R.array.maternal_health_past_del_complications, complicationsDuringLastPregnancy.value)
             form.complicationPrevPregnancyId = complicationsDuringLastPregnancy.getPosition()
             form.otherComplication = otherComplicationsDuringLastPregnancy.value
             form.isHrp = isHrpCase.value == isHrpCase.entries!!.first()
-            form.hrpIdBy = assignedAsHrpBy.value
+            form.hrpIdBy = getEnglishValueInArray(R.array.maternal_health_reg_hrp_confirm_by, assignedAsHrpBy.value)
             form.hrpIdById = assignedAsHrpBy.getPosition()
         }
     }

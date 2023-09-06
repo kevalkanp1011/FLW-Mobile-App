@@ -13,7 +13,7 @@ plugins {
 
 android {
     namespace 'org.piramalswasthya.sakhi'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "org.piramalswasthya.sakhi"
@@ -55,6 +55,8 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:31.2.2')
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'androidx.room:room-testing:2.6.0'
+    implementation 'androidx.test.ext:junit-ktx:1.1.5'
 
     def nav_version = "2.5.3"
     def frag_version = "1.5.5"

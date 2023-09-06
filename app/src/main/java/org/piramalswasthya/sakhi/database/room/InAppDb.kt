@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
 import org.piramalswasthya.sakhi.database.converters.LocationEntityListConverter
 import org.piramalswasthya.sakhi.database.converters.SyncStateConverter
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
@@ -132,6 +133,10 @@ abstract class InAppDb : RoomDatabase() {
 
         fun getInstance(appContext: Context): InAppDb {
 
+            val MIGRATION_1_2 = Migration(1, 2, migrate = {
+                it.execSQL("select count(*) from beneficiary")
+            })
+
             synchronized(this) {
                 var instance = INSTANCE
                 if (instance == null) {
@@ -140,15 +145,9 @@ abstract class InAppDb : RoomDatabase() {
                         InAppDb::class.java,
                         "Sakhi-2.0-In-app-database"
                     )
-                        .fallbackToDestructiveMigration()
-//                        .setQueryCallback(
-//                            object : QueryCallback {
-//                                override fun onQuery(sqlQuery: String, bindArgs: List<Any?>) {
-//                                    Timber.d("Query to Room : sqlQuery=$sqlQuery with arguments : $bindArgs")
-//                                }
-//                            },
-//                            Dispatchers.IO.asExecutor()
-//                        )
+                        .addMigrations(
+//                            MIGRATION_1_2
+                        )
                         .build()
 
                     INSTANCE = instance

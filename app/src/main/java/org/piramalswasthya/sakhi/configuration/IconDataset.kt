@@ -7,8 +7,6 @@ import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.Icon
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import org.piramalswasthya.sakhi.ui.home_activity.child_care.ChildCareFragmentDirections
-import org.piramalswasthya.sakhi.ui.home_activity.cho.beneficiary.non_pregnant_women.HRPNonPregnantFragmentDirections
-import org.piramalswasthya.sakhi.ui.home_activity.cho.beneficiary.pregnant_women.HRPPregnantFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.communicable_diseases.CdFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.eligible_couple.EligibleCoupleFragmentDirections
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeFragmentDirections
@@ -182,13 +180,13 @@ class IconDataset @Inject constructor(
             R.drawable.ic__assess_high_risk,
             resources.getString(R.string.icon_title_hrp_pregnant_assess),
             recordsRepo.hrpPregnantWomenListCount,
-            HRPPregnantFragmentDirections.actionHRPPregnantFragmentToPregnantListFragment()
+            HrpCasesFragmentDirections.actionHrpCasesFragmentToPregnantListFragment()
         ),
         Icon(
             R.drawable.ic__follow_up_hrp,
             resources.getString(R.string.icon_title_hrp_pregnant_track),
             recordsRepo.hrpTrackingPregListCount,
-            HRPPregnantFragmentDirections.actionHRPPregnantFragmentToHRPPregnantListFragment()
+            HrpCasesFragmentDirections.actionHrpCasesFragmentToHRPPregnantListFragment()
         )
     )
 
@@ -197,13 +195,13 @@ class IconDataset @Inject constructor(
             R.drawable.ic__assess_high_risk,
             resources.getString(R.string.icon_title_hrp_non_pregnant_assess),
             recordsRepo.hrpNonPregnantWomenListCount,
-            HRPNonPregnantFragmentDirections.actionHRPNonPregnantFragmentToNonPregnantListFragment()
+            HrpCasesFragmentDirections.actionHrpCasesFragmentToNonPregnantListFragment()
         ),
         Icon(
             R.drawable.ic__follow_up_high_risk_non_preg,
             resources.getString(R.string.icon_title_hrp_non_pregnant_track),
             recordsRepo.hrpTrackingNonPregListCount,
-            HRPNonPregnantFragmentDirections.actionHRPNonPregnantFragmentToHRPNonPregnantListFragment()
+            HrpCasesFragmentDirections.actionHrpCasesFragmentToHRPNonPregnantListFragment()
         )
     )
 

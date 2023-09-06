@@ -180,6 +180,18 @@
         <action
             android:id="@+id/action_hrpCasesFragment_to_HRPNonPregnantFragment"
             app:destination="@id/HRPNonPregnantFragment" />
+        <action
+            android:id="@+id/action_hrpCasesFragment_to_nonPregnantListFragment"
+            app:destination="@id/nonPregnantListFragment" />
+        <action
+            android:id="@+id/action_hrpCasesFragment_to_HRPNonPregnantListFragment"
+            app:destination="@id/HRPNonPregnantListFragment" />
+        <action
+            android:id="@+id/action_hrpCasesFragment_to_pregnantListFragment"
+            app:destination="@id/pregnantListFragment" />
+        <action
+            android:id="@+id/action_hrpCasesFragment_to_HRPPregnantListFragment"
+            app:destination="@id/HRPPregnantListFragment" />
     </fragment>
 
     <fragment

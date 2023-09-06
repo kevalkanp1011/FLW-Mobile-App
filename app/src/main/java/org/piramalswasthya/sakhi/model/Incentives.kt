@@ -22,8 +22,8 @@ data class IncentiveActivityCache(
     val state: Int,
     val district: Int,
     val group: String,
-    val fmrCode: String,
-    val fmrCodeOld: String,
+    val fmrCode: String?,
+    val fmrCodeOld: String?,
 //    val createdDate: Long,
 //    val createdBy: String,
 //    val updatedDate: Long,
@@ -40,8 +40,8 @@ data class IncentiveActivityNetwork(
     val state: Int,
     val district: Int,
     val group: String,
-    val fmrCode: String,
-    val fmrCodeOld: String,
+    val fmrCode: String?,
+    val fmrCodeOld: String?,
     val createdDate: String,
     val createdBy: String,
     val updatedDate: String,
@@ -188,7 +188,7 @@ data class IncentiveDomainDTO(
     val rate: Long,
     var noOfClaims: Int,
     var amountClaimed: Long,
-    var fmrCode: String
+    var fmrCode: String?
 )
 
 

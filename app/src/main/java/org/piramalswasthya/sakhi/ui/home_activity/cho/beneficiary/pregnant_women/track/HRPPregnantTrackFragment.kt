@@ -155,6 +155,17 @@ class HRPPregnantTrackFragment : Fragment() {
                 8 -> notifyItemChanged(viewModel.getIndexOfAntepartum())
                 9 -> notifyItemChanged(viewModel.getIndexOfMalPre())
                 10 -> notifyItemChanged(viewModel.getIndexOfHiv())
+                18 -> {
+                    notifyItemChanged(viewModel.getIndexOfRbg())
+                    notifyItemChanged(viewModel.getIndexOfFbg())
+                    notifyItemChanged(viewModel.getIndexOfPpbg())
+                    notifyItemChanged(viewModel.getIndexOfOgttLabel())
+                    notifyItemChanged(viewModel.getIndexOfFasting())
+                    notifyItemChanged(viewModel.getIndexOfAfter())
+                }
+                26 -> {
+                    notifyItemChanged(viewModel.getIndexOfIfaQuantity())
+                }
             }
         }
     }

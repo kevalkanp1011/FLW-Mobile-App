@@ -18,7 +18,7 @@ class EligibleCoupleTrackingDataset(
     private var dateOfVisit = FormElement(
         id = 1,
         inputType = InputType.DATE_PICKER,
-        title = context.getString(R.string.tracking_date),
+        title = resources.getString(R.string.tracking_date),
         arrayId = -1,
         required = true,
         max = System.currentTimeMillis(),
@@ -29,14 +29,14 @@ class EligibleCoupleTrackingDataset(
     private val financialYear = FormElement(
         id = 2,
         inputType = InputType.TEXT_VIEW,
-        title = "Financial Year",
+        title = resources.getString(R.string.ectdset_fin_yrs),
         required = false,
     )
 
     private val month = FormElement(
         id = 3,
         inputType = InputType.TEXT_VIEW,
-        title = "Month",
+        title = resources.getString(R.string.ectdset_month),
         arrayId = R.array.visit_months,
         entries = resources.getStringArray(R.array.visit_months),
         required = false
@@ -45,8 +45,8 @@ class EligibleCoupleTrackingDataset(
     private val isPregnancyTestDone = FormElement(
         id = 4,
         inputType = InputType.RADIO,
-        title = "Is Pregnancy Test done?",
-        entries = arrayOf("Yes", "No", "Don't Know"),
+        title = resources.getString(R.string.ectdset_is_preg_tst_done),
+        entries = resources.getStringArray(R.array.ectdset_yes_no_dont),
         required = false,
         hasDependants = true
     )
@@ -54,8 +54,8 @@ class EligibleCoupleTrackingDataset(
     private val pregnancyTestResult = FormElement(
         id = 5,
         inputType = InputType.RADIO,
-        title = "Pregnancy Test Result",
-        entries = arrayOf("Positive", "Negative"),
+        title = resources.getString(R.string.ectdset_preg_tst_rlt),
+        entries = resources.getStringArray(R.array.ectdset_po_neg),
         required = true,
         hasDependants = true
     )
@@ -63,8 +63,8 @@ class EligibleCoupleTrackingDataset(
     private val isPregnant = FormElement(
         id = 6,
         inputType = InputType.RADIO,
-        title = "Is the woman pregnant?",
-        entries = arrayOf("Yes", "No", "Don't Know"),
+        title = resources.getString(R.string.ectdset_name_wo_preg),
+        entries = resources.getStringArray(R.array.ectdset_yes_no_dont),
         required = false,
         hasDependants = true
     )
@@ -72,8 +72,8 @@ class EligibleCoupleTrackingDataset(
     private val usingFamilyPlanning = FormElement(
         id = 7,
         inputType = InputType.RADIO,
-        title = "Are you using Family Planning Method?",
-        entries = arrayOf("Yes", "No"),
+        title = resources.getString(R.string.ectdset_fly_plan_mthd),
+        entries = resources.getStringArray(R.array.ectdset_yes_no),
         required = false,
         hasDependants = true
     )
@@ -81,7 +81,7 @@ class EligibleCoupleTrackingDataset(
     private val methodOfContraception = FormElement(
         id = 8,
         inputType = InputType.DROPDOWN,
-        title = "Method of Contraception",
+        title = resources.getString(R.string.ectdset_mthd_conpt),
         arrayId = R.array.method_of_contraception,
         entries = resources.getStringArray(R.array.method_of_contraception),
         required = false,
@@ -92,7 +92,7 @@ class EligibleCoupleTrackingDataset(
     private val anyOtherMethod = FormElement(
         id = 9,
         inputType = InputType.EDIT_TEXT,
-        title = "Any Other Method",
+        title = resources.getString(R.string.ectdset_other_mthd),
         required = true,
         etInputType = android.text.InputType.TYPE_CLASS_TEXT,
         etMaxLength = 50
@@ -142,18 +142,18 @@ class EligibleCoupleTrackingDataset(
             financialYear.value = getFinancialYear(dateString = dateOfVisit.value)
             month.value =
                 resources.getStringArray(R.array.visit_months)[Companion.getMonth(dateOfVisit.value)!!]
-            isPregnancyTestDone.value = saved.isPregnancyTestDone
-            if (isPregnancyTestDone.value == "Yes") {
+            isPregnancyTestDone.value = getLocalValueInArray(R.array.yes_no, saved.isPregnancyTestDone)
+            if (isPregnancyTestDone.value == resources.getStringArray(R.array.yes_no)[0]) {
                 list.add(list.indexOf(isPregnancyTestDone) + 1, pregnancyTestResult)
                 pregnancyTestResult.value = saved.pregnancyTestResult
             }
-            isPregnant.value = saved.isPregnant
-            if (isPregnant.value == "No") {
+            isPregnant.value = getLocalValueInArray(R.array.yes_no, saved.isPregnant)
+            if (isPregnant.value == resources.getStringArray(R.array.yes_no)[1]) {
                 list.add(usingFamilyPlanning)
                 saved.usingFamilyPlanning?.let {
-                    usingFamilyPlanning.value = if (it) "Yes" else "No"
+                    usingFamilyPlanning.value = if (it) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(R.array.yes_no)[1]
                 }
-                usingFamilyPlanning.value = if (saved.usingFamilyPlanning == true) "Yes" else "No"
+                usingFamilyPlanning.value = if (saved.usingFamilyPlanning == true) resources.getStringArray(R.array.yes_no)[1] else resources.getStringArray(R.array.yes_no)[1]
                 if (saved.usingFamilyPlanning == true) {
                     list.add(methodOfContraception)
                     if (saved.methodOfContraception in resources.getStringArray(R.array.method_of_contraception)) {
@@ -192,8 +192,8 @@ class EligibleCoupleTrackingDataset(
             }
 
             pregnancyTestResult.id -> {
-                if (pregnancyTestResult.value == "Positive") {
-                    isPregnant.value = "Yes"
+                if (pregnancyTestResult.value == resources.getStringArray(R.array.ectdset_po_neg)[0]) {
+                    isPregnant.value = resources.getStringArray(R.array.yes_no)[0]
                     isPregnant.isEnabled = false
                 } else {
                     isPregnant.value = null
@@ -246,8 +246,8 @@ class EligibleCoupleTrackingDataset(
             form.isPregnancyTestDone = isPregnancyTestDone.value
             form.pregnancyTestResult = pregnancyTestResult.value
             form.isPregnant = isPregnant.value
-            form.usingFamilyPlanning = usingFamilyPlanning.value?.let { it == "Yes" }
-            if (methodOfContraception.value == "Any Other Method") {
+            form.usingFamilyPlanning = usingFamilyPlanning.value?.let { it == resources.getStringArray(R.array.yes_no)[0] }
+            if (methodOfContraception.value == resources.getStringArray(R.array.method_of_contraception).last()) {
                 form.methodOfContraception = anyOtherMethod.value
             } else {
                 form.methodOfContraception = methodOfContraception.value

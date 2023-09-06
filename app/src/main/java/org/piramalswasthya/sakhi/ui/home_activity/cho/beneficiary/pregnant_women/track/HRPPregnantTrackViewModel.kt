@@ -179,4 +179,11 @@ constructor(
     fun getIndexOfAntepartum() = dataset.getIndexOfAntepartum()
     fun getIndexOfMalPre() = dataset.getIndexOfMalPre()
     fun getIndexOfHiv() = dataset.getIndexOfHiv()
+    fun getIndexOfRbg() = dataset.getIndexOfRbg()
+    fun getIndexOfFbg() = dataset.getIndexOfFbg()
+    fun getIndexOfPpbg() = dataset.getIndexOfPpbg()
+    fun getIndexOfOgttLabel() = dataset.getIndexOfOgttLabel()
+    fun getIndexOfFasting() = dataset.getIndexOfFasting()
+    fun getIndexOfAfter() = dataset.getIndexOfafter()
+    fun getIndexOfIfaQuantity() = dataset.getIndexOfIfaQuantity()
 }

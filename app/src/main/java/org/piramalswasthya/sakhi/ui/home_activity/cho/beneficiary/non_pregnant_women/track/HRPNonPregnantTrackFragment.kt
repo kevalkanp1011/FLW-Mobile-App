@@ -129,6 +129,15 @@ class HRPNonPregnantTrackFragment : Fragment() {
                     notifyItemChanged(viewModel.getIndexOfRisk())
                 }
 
+                17 -> {
+                    notifyItemChanged(viewModel.getIndexOfRbg())
+                    notifyItemChanged(viewModel.getIndexOfFbg())
+                    notifyItemChanged(viewModel.getIndexOfPpbg())
+                }
+
+                22 -> {
+                    notifyItemChanged(viewModel.getIndexOfIfaQuantity())
+                }
             }
         }
     }

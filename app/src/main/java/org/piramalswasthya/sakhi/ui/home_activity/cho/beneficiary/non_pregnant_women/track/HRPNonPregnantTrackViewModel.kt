@@ -172,4 +172,8 @@ constructor(
     fun getIndexOfRisk() = dataset.getIndexOfRisk()
 
     fun getIndexOfLmp() = dataset.getIndexOfLmp()
+    fun getIndexOfRbg() = dataset.getIndexOfRbg()
+    fun getIndexOfFbg() = dataset.getIndexOfFbg()
+    fun getIndexOfPpbg() = dataset.getIndexOfPpbg()
+    fun getIndexOfIfaQuantity() = dataset.getIndexOfIfaQuantity()
 }

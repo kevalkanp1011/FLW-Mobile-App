@@ -526,7 +526,7 @@ class IncentivesFragment : Fragment() {
                     it.noOfClaims.toString(),
                     it.amountClaimed.toString(),
                     "",
-                    it.fmrCode,
+                    it.fmrCode ?: "",
                     "lia"
                 )
                 total += it.amountClaimed

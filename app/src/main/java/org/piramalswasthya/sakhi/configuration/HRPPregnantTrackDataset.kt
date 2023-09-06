@@ -140,16 +140,152 @@ class HRPPregnantTrackDataset(
         hasDependants = true
     )
 
+    private val bpLabel = FormElement(
+        id = 15,
+        inputType = InputType.HEADLINE,
+        title = "Blood Pressure (BP)",
+        required = false
+    )
+
+    private val systolic = FormElement(
+        id = 16,
+        inputType = InputType.EDIT_TEXT,
+        title = "Systolic (mm Hg)",
+        arrayId = -1,
+        required = false,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
+        etMaxLength = 3
+    )
+
+    private val diastolic = FormElement(
+        id = 17,
+        inputType = InputType.EDIT_TEXT,
+        title = "Diastolic (mm Hg)",
+        arrayId = -1,
+        required = false,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
+        etMaxLength = 4
+    )
+
+    private val bloodGlucoseTest = FormElement(
+        id = 18,
+        inputType = InputType.RADIO,
+        title = "Blood Glucose (Sugar) Test",
+        entries = resources.getStringArray(R.array.sugar_test_preg_types),
+        required = false,
+        hasDependants = true
+    )
+
+    private val rbg = FormElement(
+        id = 19,
+        inputType = InputType.EDIT_TEXT,
+        title = "Random blood Glucose (RBG) (mg/dL)",
+        arrayId = -1,
+        required = false,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
+        etMaxLength = 3
+    )
+
+    private val fbg = FormElement(
+        id = 20,
+        inputType = InputType.EDIT_TEXT,
+        title = "Fasting Blood Glucose Test (FBG) (mg/dL)",
+        arrayId = -1,
+        required = false,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
+        etMaxLength = 3
+    )
+
+    private val ppbg = FormElement(
+        id = 21,
+        inputType = InputType.EDIT_TEXT,
+        title = "Post-Prandial Blood Glucose Test (PPBG) (mg/dL)",
+        arrayId = -1,
+        required = false,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
+        etMaxLength = 3
+    )
+
+    private val usingOgttLabel = FormElement(
+        id = 22,
+        inputType = InputType.HEADLINE,
+        title = "Using 75 gm OGTT",
+        required = false
+    )
+
+    private val fastingGlucose = FormElement(
+        id = 23,
+        inputType = InputType.EDIT_TEXT,
+        title = "Fasting Glucose (mg/dL)",
+        arrayId = -1,
+        required = false,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
+        etMaxLength = 3
+    )
+
+    private val after2hrs = FormElement(
+        id = 24,
+        inputType = InputType.EDIT_TEXT,
+        title = "After 2 Hours (mg/dL)",
+        arrayId = -1,
+        required = false,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
+        etMaxLength = 3
+    )
+
+    private val hemoglobinTest = FormElement(
+        id = 25,
+        inputType = InputType.EDIT_TEXT,
+        title = "Hemoglobin (Hb) Test (g/dl)",
+        arrayId = -1,
+        required = false,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER  or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL,
+        etMaxLength = 4
+    )
+
+    private val ifaGiven = FormElement(
+        id = 26,
+        inputType = InputType.RADIO,
+        title = "Whether IFA supplement is provided ?",
+        entries = resources.getStringArray(R.array.yes_no),
+        required = true,
+        hasDependants = true
+    )
+
+    private val ifaQuantity = FormElement(
+        id = 27,
+        inputType = InputType.EDIT_TEXT,
+        title = "Issued quantity of IFA supplement",
+        arrayId = -1,
+        required = false,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
+        etMaxLength = 3
+    )
+
+    private val highRiskLabel = FormElement(
+        id = 28,
+        inputType = InputType.HEADLINE,
+        title = resources.getString(R.string.high_risk_conditions),
+        required = false
+    )
+
     suspend fun setUpPage(ben: BenRegCache?, saved: HRPPregnantTrackCache?, dateOfVisitMin: Long?) {
         val list = mutableListOf(
             followUpLabel,
+            highRiskLabel,
             dateOfVisit,
             rdPmsa,
             rdDengue,
             rdFilaria,
             severeAnemia,
+            hemoglobinTest,
+            ifaGiven,
             pregInducedHypertension,
+            bpLabel,
+            systolic,
+            diastolic,
             gestDiabetesMellitus,
+            bloodGlucoseTest,
             hypothyroidism,
             polyhydromnios,
             oligohydromnios,
@@ -157,6 +293,7 @@ class HRPPregnantTrackDataset(
             malPresentation,
             hivsyph
         )
+
         ben?.let {
             dateOfVisit.min = it.regDate
             dateOfVisitMin?.let { dov ->
@@ -177,7 +314,6 @@ class HRPPregnantTrackDataset(
             dateOfVisit.max = System.currentTimeMillis()
         }
 
-
         saved?.let {
             dateOfVisit.value = it.visitDate?.let { it1 -> getDateFromLong(it1) }
             rdPmsa.value = getLocalValueInArray(R.array.yes_no, it.rdPmsa)
@@ -195,16 +331,47 @@ class HRPPregnantTrackDataset(
             severeAnemia.showHighRisk =
                 it.severeAnemia == englishResources.getStringArray(R.array.yes_no)[0]
 
+            hemoglobinTest.value = it.hemoglobinTest
+            ifaGiven.value = getLocalValueInArray(R.array.yes_no, it.ifaGiven)
+            if (ifaGiven.value == resources.getStringArray(R.array.yes_no)[0]) {
+                list.add(list.indexOf(ifaGiven) + 1, ifaQuantity)
+                ifaQuantity.value = it.ifaQuantity?.toString()
+            }
             pregInducedHypertension.value =
                 getLocalValueInArray(R.array.yes_no, it.pregInducedHypertension)
             pregInducedHypertension.showHighRisk =
                 it.pregInducedHypertension == englishResources.getStringArray(R.array.yes_no)[0]
+            systolic.value = it.systolic?.toString()
+            diastolic.value = it.diastolic?.toString()
 
             gestDiabetesMellitus.value =
                 getLocalValueInArray(R.array.yes_no, it.gestDiabetesMellitus)
             gestDiabetesMellitus.showHighRisk =
                 it.gestDiabetesMellitus == englishResources.getStringArray(R.array.yes_no)[0]
 
+            bloodGlucoseTest.value = getLocalValueInArray(R.array.sugar_test_preg_types, it.bloodGlucoseTest)
+            when(bloodGlucoseTest.value) {
+                resources.getStringArray(R.array.sugar_test_preg_types)[0] -> {
+                    list.add(list.indexOf(bloodGlucoseTest) + 1, rbg)
+                    rbg.value = it.rbg?.toString()
+                }
+                resources.getStringArray(R.array.sugar_test_preg_types)[1] -> {
+                    list.add(list.indexOf(bloodGlucoseTest) + 1, fbg)
+                    list.add(list.indexOf(fbg) + 1, ppbg)
+                    fbg.value = it.fbg?.toString()
+                    ppbg.value = it.ppbg?.toString()
+                }
+                resources.getStringArray(R.array.sugar_test_preg_types)[2] -> {
+                    list.add(list.indexOf(bloodGlucoseTest) + 1, usingOgttLabel)
+                    list.add(list.indexOf(usingOgttLabel) + 1, fastingGlucose)
+                    list.add(list.indexOf(fastingGlucose) + 1, after2hrs)
+                    fastingGlucose.value = it.fastingOgtt?.toString()
+                    after2hrs.value = it.after2hrsOgtt?.toString()
+                }
+                else -> {
+                    // not expected
+                }
+            }
             hypothyroidism.value = getLocalValueInArray(R.array.yes_no, it.hypothyrodism)
             hypothyroidism.showHighRisk =
                 it.hypothyrodism == englishResources.getStringArray(R.array.yes_no)[0]
@@ -228,6 +395,7 @@ class HRPPregnantTrackDataset(
             hivsyph.value = getLocalValueInArray(R.array.yes_no, it.hivsyph)
             hivsyph.showHighRisk = it.hivsyph == englishResources.getStringArray(R.array.yes_no)[0]
         }
+
         setUpPage(list)
     }
 
@@ -303,6 +471,61 @@ class HRPPregnantTrackDataset(
                 -1
             }
 
+            bloodGlucoseTest.id -> {
+                when(bloodGlucoseTest.value) {
+                    resources.getStringArray(R.array.sugar_test_preg_types)[0] -> {
+                        triggerDependants(
+                            source = bloodGlucoseTest,
+                            addItems = listOf(
+                                rbg
+                            ),
+                            removeItems = listOf(
+                                fbg, ppbg, usingOgttLabel, fastingGlucose, after2hrs
+                            )
+                        )
+                    }
+                    resources.getStringArray(R.array.sugar_test_preg_types)[1] -> {
+                        triggerDependants(
+                            source = bloodGlucoseTest,
+                            addItems = listOf(
+                                fbg, ppbg
+                            ),
+                            removeItems = listOf(
+                                rbg, usingOgttLabel, fastingGlucose, after2hrs
+                            )
+                        )
+                    }
+                    resources.getStringArray(R.array.sugar_test_preg_types)[2] -> {
+                        triggerDependants(
+                            source = bloodGlucoseTest,
+                            addItems = listOf(
+                                usingOgttLabel, fastingGlucose, after2hrs
+                            ),
+                            removeItems = listOf(
+                                rbg, fbg, ppbg
+                            )
+                        )
+                    }
+                }
+                1
+            }
+
+            ifaGiven.id -> {
+                if (ifaGiven.value == resources.getStringArray(R.array.yes_no)[0]) {
+                    triggerDependants(
+                        source = ifaGiven,
+                        addItems = listOf(ifaQuantity),
+                        removeItems = listOf()
+                    )
+                } else if (ifaGiven.value == resources.getStringArray(R.array.yes_no)[1]) {
+                    triggerDependants(
+                        source = ifaGiven,
+                        addItems = listOf(),
+                        removeItems = listOf(ifaQuantity)
+                    )
+                }
+                1
+            }
             else -> -1
         }
     }
@@ -314,10 +537,21 @@ class HRPPregnantTrackDataset(
             form.rdDengue = getEnglishValueInArray(R.array.yes_no, rdDengue.value)
             form.rdFilaria = getEnglishValueInArray(R.array.yes_no, rdFilaria.value)
             form.severeAnemia = getEnglishValueInArray(R.array.yes_no, severeAnemia.value)
+            form.hemoglobinTest = hemoglobinTest.value
+            form.ifaGiven = getEnglishValueInArray(R.array.yes_no, ifaGiven.value)
+            form.ifaQuantity = ifaQuantity.value?.toInt()
             form.pregInducedHypertension =
                 getEnglishValueInArray(R.array.yes_no, pregInducedHypertension.value)
+            form.systolic = systolic.value?.toInt()
+            form.diastolic = diastolic.value?.toInt()
             form.gestDiabetesMellitus =
                 getEnglishValueInArray(R.array.yes_no, gestDiabetesMellitus.value)
+            form.bloodGlucoseTest = getEnglishValueInArray(R.array.sugar_test_preg_types, bloodGlucoseTest.value)
+            form.rbg = rbg.value?.toInt()
+            form.fbg = fbg.value?.toInt()
+            form.ppbg = ppbg.value?.toInt()
+            form.fastingOgtt = fastingGlucose.value?.toInt()
+            form.after2hrsOgtt = after2hrs.value?.toInt()
             form.hypothyrodism = getEnglishValueInArray(R.array.yes_no, hypothyroidism.value)
             form.polyhydromnios = getEnglishValueInArray(R.array.yes_no, polyhydromnios.value)
             form.oligohydromnios = getEnglishValueInArray(R.array.yes_no, oligohydromnios.value)
@@ -340,4 +574,12 @@ class HRPPregnantTrackDataset(
     fun getIndexOfMalPre() = getIndexById(malPresentation.id)
     fun getIndexOfHiv() = getIndexById(hivsyph.id)
 
+    fun getIndexOfRbg() = getIndexById(rbg.id)
+    fun getIndexOfFbg() = getIndexById(fbg.id)
+    fun getIndexOfPpbg() = getIndexById(ppbg.id)
+
+    fun getIndexOfOgttLabel() = getIndexById(usingOgttLabel.id)
+    fun getIndexOfFasting() = getIndexById(fastingGlucose.id)
+    fun getIndexOfafter() = getIndexById(after2hrs.id)
+    fun getIndexOfIfaQuantity() = getIndexById(ifaQuantity.id)
 }

@@ -37,7 +37,8 @@
     <string name="obstetric_history">Obstetric History</string>
     <string name="assess_for_high_risk_conditions_in_the_non_pregnant_women">Assess for High Risk Conditions in the Non-Pregnant Women</string>
     <string name="visible_signs_of_anemia_as_per_appearance">Visible signs of Anemia as per appearance</string>
-    <string name="for_clinical_assessment_to_be_filled_consulting_with_anm">For Clinical Assessment (to be filled consulting with ANM)</string>
+    <string name="for_clinical_assessment_to_be_filled_consulting_with_anm">For Clinical Assessment</string>
+    <string name="to_be_filled_consulting_with_anm">(to be filled consulting with ANM)</string>
     <string name="hypertension">Hypertension</string>
     <string name="risk_status">RISK STATUS</string>
     <string name="missed_period">Missed Period</string>
@@ -89,5 +90,17 @@
     <string name="micro_birth_plan_for_all_pregnant_women">Micro Birth Plan (For All Pregnant Women)</string>
     <string name="follow_up_for_high_risk_conditions_in_the_non_pregnant_women">Follow-up for High Risk Conditions in the Non-Pregnant Women</string>
     <string name="follow_up_for_high_risk_conditions_in_the_pregnant_women">Follow-up for High Risk Conditions in the Pregnant Women</string>
+    <string name="high_risk_conditions">High risk conditions</string>
     <string name="beneficiaries">Beneficiaries</string>
+
+    <string-array name="sugar_test_types">
+        <item>RBG</item>
+        <item>FBG &amp; PPBG</item>
+    </string-array>
+
+    <string-array name="sugar_test_preg_types">
+        <item>RBG</item>
+        <item>FBG &amp; PPBG</item>
+        <item>OGTT</item>
+    </string-array>
 </resources>

@@ -12,7 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.IconGridAdapter
 import org.piramalswasthya.sakhi.configuration.IconDataset
-import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
+import org.piramalswasthya.sakhi.databinding.RvIconGridHrpBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import javax.inject.Inject
 
@@ -26,7 +26,7 @@ class HrpCasesFragment : Fragment() {
     }
 
     private val viewModel: HrpCasesViewModel by viewModels()
-    private val binding by lazy { RvIconGridBinding.inflate(layoutInflater) }
+    private val binding by lazy { RvIconGridHrpBinding.inflate(layoutInflater) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,19 +72,33 @@ class HrpCasesFragment : Fragment() {
     }
 
     private fun getHrpIconsDataset() {
-        val rvLayoutManager = GridLayoutManager(
+        val rvLayoutManager1 = GridLayoutManager(
             context,
             requireContext().resources.getInteger(R.integer.icon_grid_span)
         )
-        binding.rvIconGrid.layoutManager = rvLayoutManager
-        val rvAdapter = IconGridAdapter(
+        binding.rvIconGrid1.layoutManager = rvLayoutManager1
+        val rvAdapter1 = IconGridAdapter(
             IconGridAdapter.GridIconClickListener {
                 findNavController().navigate(it)
             },
             viewModel.scope
         )
-        binding.rvIconGrid.adapter = rvAdapter
-        rvAdapter.submitList(iconDataset.getHrpIconsDataset(resources))
+        binding.rvIconGrid1.adapter = rvAdapter1
+        rvAdapter1.submitList(iconDataset.getHRPPregnantWomenDataset(resources))
+
+        val rvLayoutManager2 = GridLayoutManager(
+            context,
+            requireContext().resources.getInteger(R.integer.icon_grid_span)
+        )
+        binding.rvIconGrid2.layoutManager = rvLayoutManager2
+        val rvAdapter2 = IconGridAdapter(
+            IconGridAdapter.GridIconClickListener {
+                findNavController().navigate(it)
+            },
+            viewModel.scope
+        )
+        binding.rvIconGrid2.adapter = rvAdapter2
+        rvAdapter2.submitList(iconDataset.getHRPNonPregnantWomenDataset(resources))
 
     }
 

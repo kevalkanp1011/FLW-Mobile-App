@@ -57,7 +57,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val dateOfReg = FormElement(
         id = 0,
         inputType = DATE_PICKER,
-        title = "Date of Registration",
+        title = resources.getString(R.string.ecrdset_date_of_reg),
         arrayId = -1,
         required = true,
         max = System.currentTimeMillis(),
@@ -68,7 +68,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val rchId = FormElement(
         id = 1,
         inputType = EDIT_TEXT,
-        title = "RCH ID No. of Woman",
+        title = resources.getString(R.string.ecrdset_rch_id_wo),
         arrayId = -1,
         required = false,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -81,7 +81,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val name = FormElement(
         id = 2,
         inputType = TEXT_VIEW,
-        title = "Name of Woman",
+        title = resources.getString(R.string.ecrdset_name_of_wo),
         arrayId = -1,
         required = false,
         allCaps = true,
@@ -93,7 +93,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val husbandName = FormElement(
         id = 3,
         inputType = TEXT_VIEW,
-        title = "Name of Husband",
+        title = resources.getString(R.string.ecrdset_name_of_hu),
         arrayId = -1,
         required = false,
         allCaps = true,
@@ -105,7 +105,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val age = FormElement(
         id = 4,
         inputType = TEXT_VIEW,
-        title = "Current Age of Woman",
+        title = resources.getString(R.string.ecrdset_cur_ag_of_wo),
         arrayId = -1,
         required = false,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -117,7 +117,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val ageAtMarriage = FormElement(
         id = 5,
         inputType = TEXT_VIEW,
-        title = "Age of Woman at Marriage",
+        title = resources.getString(R.string.ecrdset_cur_ag_of_wo_marr),
         arrayId = -1,
         required = false,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -130,7 +130,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val womanDetails = FormElement(
         id = 6,
         inputType = HEADLINE,
-        title = "Details of Woman",
+        title = resources.getString(R.string.ecrdset_dts_of_wo),
         arrayId = -1,
         required = false
     )
@@ -138,7 +138,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val aadharNo = FormElement(
         id = 7,
         inputType = EDIT_TEXT,
-        title = "Aadhaar Number of Woman",
+        title = resources.getString(R.string.ecrdset_aad_num_of_wo),
         arrayId = -1,
         required = false,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -151,7 +151,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val bankAccount = FormElement(
         id = 8,
         inputType = EDIT_TEXT,
-        title = "Bank AC No or Post Office AC No",
+        title = resources.getString(R.string.ecrdset_bank_ac),
         arrayId = -1,
         required = false,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -164,7 +164,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val bankName = FormElement(
         id = 9,
         inputType = EDIT_TEXT,
-        title = "Bank Name",
+        title = resources.getString(R.string.ecrdset_bank_name),
         arrayId = -1,
         required = false,
         etMaxLength = 50
@@ -173,7 +173,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val branchName = FormElement(
         id = 10,
         inputType = EDIT_TEXT,
-        title = "Branch Name",
+        title = resources.getString(R.string.ecrdset_branch_name),
         arrayId = -1,
         required = false,
         etMaxLength = 50
@@ -182,7 +182,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val ifsc = FormElement(
         id = 11,
         inputType = EDIT_TEXT,
-        title = "IFSC Code",
+        title = resources.getString(R.string.ecrdset_ifsc_code),
         arrayId = -1,
         required = false,
         etMaxLength = 11,
@@ -191,7 +191,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val noOfChildren = FormElement(
         id = 12,
         inputType = EDIT_TEXT,
-        title = "Total No. of Children Born",
+        title = resources.getString(R.string.ecrdset_ttl_child_born),
         arrayId = -1,
         required = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -203,7 +203,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val noOfLiveChildren = FormElement(
         id = 13,
         inputType = EDIT_TEXT,
-        title = "No. of Live Children",
+        title = resources.getString(R.string.ecrdset_no_live_child),
         arrayId = -1,
         required = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -215,7 +215,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val numMale = FormElement(
         id = 14,
         inputType = TEXT_VIEW,
-        title = "Male",
+        title = resources.getString(R.string.ecrdset_male),
         arrayId = -1,
         required = false,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -227,7 +227,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val numFemale = FormElement(
         id = 15,
         inputType = TEXT_VIEW,
-        title = "Female",
+        title = resources.getString(R.string.ecrdset_female),
         arrayId = -1,
         required = false,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -239,7 +239,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val firstChildDetails = FormElement(
         id = 16,
         inputType = HEADLINE,
-        title = "Details of 1st Child",
+        title = resources.getString(R.string.ecrdset_dls_1_child),
         arrayId = -1,
         required = false
     )
@@ -247,7 +247,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val dob1 = FormElement(
         id = 17,
         inputType = DATE_PICKER,
-        title = "1st Child Date of Birth",
+        title = resources.getString(R.string.ecrdset_1_child_bth),
         arrayId = -1,
         required = true,
         hasDependants = true,
@@ -258,7 +258,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val age1 = FormElement(
         id = 18,
         inputType = TEXT_VIEW,
-        title = "1st Child Age ( in Years)",
+        title = resources.getString(R.string.ecrdset_1_child_age_in_yrs),
         arrayId = -1,
         required = true,
         hasDependants = true,
@@ -271,7 +271,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val gender1 = FormElement(
         id = 19,
         inputType = RADIO,
-        title = "1st Child Sex",
+        title = resources.getString(R.string.ecrdset_1_child_sex),
         arrayId = -1,
         entries = resources.getStringArray(R.array.ecr_gender_array),
         required = true,
@@ -281,7 +281,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val marriageFirstChildGap = FormElement(
         id = 20,
         inputType = TEXT_VIEW,
-        title = "Gap between Date of marriage and 1st child",
+        title = resources.getString(R.string.ecrdset_gap_1_child_marr),
         arrayId = -1,
         required = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -293,7 +293,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val secondChildDetails = FormElement(
         id = 21,
         inputType = HEADLINE,
-        title = "Details of 2nd Child",
+        title = resources.getString(R.string.ecrdset_dts_2_child),
         arrayId = -1,
         required = false
     )
@@ -301,7 +301,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val dob2 = FormElement(
         id = 22,
         inputType = DATE_PICKER,
-        title = "2nd Child Date of Birth",
+        title = resources.getString(R.string.ecrdset_2_child_bth),
         arrayId = -1,
         required = true,
         hasDependants = true,
@@ -312,7 +312,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val age2 = FormElement(
         id = 23,
         inputType = TEXT_VIEW,
-        title = "2nd Child Age ( in Years)",
+        title = resources.getString(R.string.ecrdset_2_child_age_yrs),
         arrayId = -1,
         required = true,
         hasDependants = true,
@@ -325,7 +325,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val gender2 = FormElement(
         id = 24,
         inputType = RADIO,
-        title = "2nd Child Sex",
+        title = resources.getString(R.string.ecrdset_2_child_sex),
         arrayId = -1,
         entries = resources.getStringArray(R.array.ecr_gender_array),
         required = true,
@@ -335,7 +335,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val firstAndSecondChildGap = FormElement(
         id = 25,
         inputType = TEXT_VIEW,
-        title = "Gap between 1st child and 2nd Child",
+        title = resources.getString(R.string.ecrdset_gap_1_child_2_child),
         arrayId = -1,
         required = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -347,7 +347,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val thirdChildDetails = FormElement(
         id = 26,
         inputType = HEADLINE,
-        title = "Details of 3rd Child",
+        title = resources.getString(R.string.ecrdset_dts_3_child),
         arrayId = -1,
         required = false
     )
@@ -355,7 +355,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val dob3 = FormElement(
         id = 27,
         inputType = DATE_PICKER,
-        title = "3rd Child Date of Birth",
+        title = resources.getString(R.string.ecrdset_3_child_bth),
         arrayId = -1,
         required = true,
         hasDependants = true,
@@ -366,7 +366,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val age3 = FormElement(
         id = 28,
         inputType = TEXT_VIEW,
-        title = "3rd Child Age ( in Years)",
+        title = resources.getString(R.string.ecrdset_3_child_age_yrs),
         arrayId = -1,
         required = true,
         hasDependants = true,
@@ -379,7 +379,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val gender3 = FormElement(
         id = 29,
         inputType = RADIO,
-        title = "3rd Child Sex",
+        title = resources.getString(R.string.ecrdset_3_child_sex),
         arrayId = -1,
         entries = resources.getStringArray(R.array.ecr_gender_array),
         required = true,
@@ -389,7 +389,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val secondAndThirdChildGap = FormElement(
         id = 30,
         inputType = TEXT_VIEW,
-        title = "Gap between 2nd child and 3rd Child",
+        title = resources.getString(R.string.ecrdset_gap_bet_2_3_child_sex),
         arrayId = -1,
         required = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -401,7 +401,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val fourthChildDetails = FormElement(
         id = 31,
         inputType = HEADLINE,
-        title = "Details of 4th Child",
+        title = resources.getString(R.string.ecrdset_dts_4_child),
         arrayId = -1,
         required = false
     )
@@ -409,7 +409,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val dob4 = FormElement(
         id = 32,
         inputType = DATE_PICKER,
-        title = "4th Child Date of Birth",
+        title = resources.getString(R.string.ecrdset_4_child_bth),
         arrayId = -1,
         required = true,
         hasDependants = true,
@@ -420,7 +420,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val age4 = FormElement(
         id = 33,
         inputType = TEXT_VIEW,
-        title = "4th Child Age ( in Years)",
+        title = resources.getString(R.string.ecrdset_4_child_age_yrs),
         arrayId = -1,
         required = true,
         hasDependants = true,
@@ -433,7 +433,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val gender4 = FormElement(
         id = 34,
         inputType = RADIO,
-        title = "4th Child Sex",
+        title = resources.getString(R.string.ecrdset_4_child_sex),
         arrayId = -1,
         entries = resources.getStringArray(R.array.ecr_gender_array),
         required = true,
@@ -443,7 +443,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val thirdAndFourthChildGap = FormElement(
         id = 35,
         inputType = TEXT_VIEW,
-        title = "Gap between 3rd Child and 4th Child",
+        title = resources.getString(R.string.ecrdset_bet_3_4_child),
         arrayId = -1,
         required = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -455,7 +455,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val fifthChildDetails = FormElement(
         id = 36,
         inputType = HEADLINE,
-        title = "Details of 5th Child",
+        title = resources.getString(R.string.ecrdset_dts_5_child),
         arrayId = -1,
         required = false
     )
@@ -463,7 +463,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val dob5 = FormElement(
         id = 37,
         inputType = DATE_PICKER,
-        title = "5th Child Date of Birth",
+        title = resources.getString(R.string.ecrdset_5_child_bth),
         arrayId = -1,
         required = true,
         hasDependants = true,
@@ -474,7 +474,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val age5 = FormElement(
         id = 38,
         inputType = TEXT_VIEW,
-        title = "5th Child Age ( in Years)",
+        title = resources.getString(R.string.ecrdset_5_child_age_yrs),
         arrayId = -1,
         required = true,
         hasDependants = true,
@@ -487,7 +487,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val gender5 = FormElement(
         id = 39,
         inputType = RADIO,
-        title = "5th Child Sex",
+        title = resources.getString(R.string.ecrdset_5_child_sex),
         arrayId = -1,
         entries = resources.getStringArray(R.array.ecr_gender_array),
         required = true,
@@ -497,7 +497,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val fourthAndFifthChildGap = FormElement(
         id = 40,
         inputType = TEXT_VIEW,
-        title = "Gap between 4th child and 5th Child",
+        title = resources.getString(R.string.ecrdset_gap_4_5_child),
         arrayId = -1,
         required = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -509,7 +509,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val sixthChildDetails = FormElement(
         id = 41,
         inputType = HEADLINE,
-        title = "Details of 6th Child",
+        title = resources.getString(R.string.ecrdset_dts_6_child),
         arrayId = -1,
         required = false
     )
@@ -517,7 +517,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val dob6 = FormElement(
         id = 42,
         inputType = DATE_PICKER,
-        title = "6th Child Date of Birth",
+        title = resources.getString(R.string.ecrdset_dts_6_bth),
         arrayId = -1,
         required = true,
         hasDependants = true,
@@ -528,7 +528,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val age6 = FormElement(
         id = 43,
         inputType = TEXT_VIEW,
-        title = "6th Child Age ( in Years)",
+        title = resources.getString(R.string.ecrdset_6_child_age),
         arrayId = -1,
         required = true,
         hasDependants = true,
@@ -541,7 +541,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val gender6 = FormElement(
         id = 44,
         inputType = RADIO,
-        title = "6th Child Sex",
+        title = resources.getString(R.string.ecrdset_6_child_sex),
         arrayId = -1,
         entries = resources.getStringArray(R.array.ecr_gender_array),
         required = true,
@@ -551,7 +551,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val fifthAndSixthChildGap = FormElement(
         id = 45,
         inputType = TEXT_VIEW,
-        title = "Gap between 5th child and 6th Child",
+        title = resources.getString(R.string.ecrdset_gap_5_6_child),
         arrayId = -1,
         required = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -563,7 +563,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val seventhChildDetails = FormElement(
         id = 46,
         inputType = HEADLINE,
-        title = "Details of 7th Child",
+        title = resources.getString(R.string.ecrdset_7_dts_child),
         arrayId = -1,
         required = false
     )
@@ -571,7 +571,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val dob7 = FormElement(
         id = 47,
         inputType = DATE_PICKER,
-        title = "7th Child Date of Birth",
+        title = resources.getString(R.string.ecrdset_7_child_bth),
         arrayId = -1,
         required = true,
         hasDependants = true,
@@ -582,7 +582,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val age7 = FormElement(
         id = 48,
         inputType = TEXT_VIEW,
-        title = "7th Child Age ( in Years)",
+        title = resources.getString(R.string.ecrdset_7_child_age_yrs),
         arrayId = -1,
         required = true,
         hasDependants = true,
@@ -595,7 +595,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val gender7 = FormElement(
         id = 49,
         inputType = RADIO,
-        title = "7th Child Sex",
+        title = resources.getString(R.string.ecrdset_7_child_sex),
         arrayId = -1,
         entries = resources.getStringArray(R.array.ecr_gender_array),
         required = true,
@@ -605,7 +605,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val sixthAndSeventhChildGap = FormElement(
         id = 50,
         inputType = TEXT_VIEW,
-        title = "Gap between 6th child and 7th Child",
+        title = resources.getString(R.string.ecrdset_gap_6_7_child),
         arrayId = -1,
         required = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -617,7 +617,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val eighthChildDetails = FormElement(
         id = 51,
         inputType = HEADLINE,
-        title = "Details of 8th Child",
+        title = resources.getString(R.string.ecrdset_dts_8_child),
         arrayId = -1,
         required = false
     )
@@ -625,7 +625,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val dob8 = FormElement(
         id = 52,
         inputType = DATE_PICKER,
-        title = "8th Child Date of Birth",
+        title = resources.getString(R.string.ecrdset_8_child_bth),
         arrayId = -1,
         required = true,
         hasDependants = true,
@@ -636,7 +636,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val age8 = FormElement(
         id = 53,
         inputType = TEXT_VIEW,
-        title = "8th Child Age ( in Years)",
+        title = resources.getString(R.string.ecrdset_8_child_age),
         arrayId = -1,
         required = true,
         hasDependants = true,
@@ -649,7 +649,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val gender8 = FormElement(
         id = 54,
         inputType = RADIO,
-        title = "8th Child Sex",
+        title = resources.getString(R.string.ecrdset_8_child_sex),
         arrayId = -1,
         entries = resources.getStringArray(R.array.ecr_gender_array),
         required = true,
@@ -659,7 +659,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val seventhAndEighthChildGap = FormElement(
         id = 55,
         inputType = TEXT_VIEW,
-        title = "Gap between 7th child and 8th Child",
+        title = resources.getString(R.string.ecrdset_gap_7_8_child),
         arrayId = -1,
         required = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -671,7 +671,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val ninthChildDetails = FormElement(
         id = 56,
         inputType = HEADLINE,
-        title = "Details of 9th Child",
+        title = resources.getString(R.string.ecrdset_dts_9_child),
         arrayId = -1,
         required = false
     )
@@ -679,7 +679,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val dob9 = FormElement(
         id = 57,
         inputType = DATE_PICKER,
-        title = "9th Child Date of Birth",
+        title = resources.getString(R.string.ecrdset_9_bth),
         arrayId = -1,
         required = true,
         hasDependants = true,
@@ -690,7 +690,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val age9 = FormElement(
         id = 58,
         inputType = TEXT_VIEW,
-        title = "9th Child Age ( in Years)",
+        title = resources.getString(R.string.ecrdset_9_age_yrs),
         arrayId = -1,
         required = true,
         hasDependants = true,
@@ -703,7 +703,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val gender9 = FormElement(
         id = 59,
         inputType = RADIO,
-        title = "9th Child Sex",
+        title = resources.getString(R.string.ecrdset_9_child_sex),
         arrayId = -1,
         entries = resources.getStringArray(R.array.ecr_gender_array),
         required = true,
@@ -714,7 +714,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private val eighthAndNinthChildGap = FormElement(
         id = 60,
         inputType = TEXT_VIEW,
-        title = "Gap between 8th child and 9th Child",
+        title = resources.getString(R.string.ecrdset_gap_8_9_child),
         arrayId = -1,
         required = true,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
@@ -943,8 +943,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     setSiblingAgeDiff(timeAtMarriage, it, marriageFirstChildGap)
                 }
                 ecCache.gender1?.let {
-                    gender1.value =
-                        if (it == Gender.MALE) gender1.entries!![0] else gender1.entries!![1]
+                    gender1.value = getLocalValueInArray(R.array.ecr_gender_array, it.name)
+//                        if (it == Gender.MALE) gender1.entries!![0] else gender1.entries!![1]
                 }
 
 //                marriageFirstChildGap.value = ecCache.marriageFirstChildGap?.toString()
@@ -965,8 +965,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ecCache.dob1?.let { it1 -> setSiblingAgeDiff(it1, it, firstAndSecondChildGap) }
                 }
                 ecCache.gender2?.let {
-                    gender2.value =
-                        if (it == Gender.MALE) gender2.entries!![0] else gender2.entries!![1]
+                    gender2.value = getLocalValueInArray(R.array.ecr_gender_array, it.name)
+//                        if (it == Gender.MALE) gender2.entries!![0] else gender2.entries!![1]
                 }
 
 //                firstAndSecondChildGap.value = ecCache.firstAndSecondChildGap?.toString()
@@ -988,8 +988,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
                 }
                 ecCache.gender3?.let {
-                    gender3.value =
-                        if (it == Gender.MALE) gender3.entries!![0] else gender3.entries!![1]
+                    gender3.value = getLocalValueInArray(R.array.ecr_gender_array, it.name)
+//                        if (it == Gender.MALE) gender3.entries!![0] else gender3.entries!![1]
                 }
 
 //                secondAndThirdChildGap.value = ecCache.secondAndThirdChildGap?.toString()
@@ -1011,8 +1011,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
                 }
                 ecCache.gender4?.let {
-                    gender4.value =
-                        if (it == Gender.MALE) gender4.entries!![0] else gender4.entries!![1]
+                    gender4.value = getLocalValueInArray(R.array.ecr_gender_array, it.name)
+//                        if (it == Gender.MALE) gender4.entries!![0] else gender4.entries!![1]
                 }
 
 //                thirdAndFourthChildGap.value = ecCache.thirdAndFourthChildGap?.toString()
@@ -1033,8 +1033,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ecCache.dob4?.let { it1 -> setSiblingAgeDiff(it1, it, fourthAndFifthChildGap) }
                 }
                 ecCache.gender5?.let {
-                    gender5.value =
-                        if (it == Gender.MALE) gender5.entries!![0] else gender5.entries!![1]
+                    gender5.value = getLocalValueInArray(R.array.ecr_gender_array, it.name)
+//                        if (it == Gender.MALE) gender5.entries!![0] else gender5.entries!![1]
                 }
 
                 fourthAndFifthChildGap.value = ecCache.fourthAndFifthChildGap?.toString()
@@ -1055,8 +1055,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ecCache.dob5?.let { it1 -> setSiblingAgeDiff(it1, it, fifthAndSixthChildGap) }
                 }
                 ecCache.gender6?.let {
-                    gender6.value =
-                        if (it == Gender.MALE) gender6.entries!![0] else gender6.entries!![1]
+                    gender6.value = getLocalValueInArray(R.array.ecr_gender_array, it.name)
+//                        if (it == Gender.MALE) gender6.entries!![0] else gender6.entries!![1]
                 }
 
 //                fifthAndSixthChildGap.value = ecCache.fifthANdSixthChildGap?.toString()
@@ -1078,8 +1078,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
                 }
                 ecCache.gender7?.let {
-                    gender7.value =
-                        if (it == Gender.MALE) gender7.entries!![0] else gender7.entries!![1]
+                    gender7.value = getLocalValueInArray(R.array.ecr_gender_array, it.name)
+//                        if (it == Gender.MALE) gender7.entries!![0] else gender7.entries!![1]
                 }
 
 //                sixthAndSeventhChildGap.value = ecCache.sixthAndSeventhChildGap?.toString()
@@ -1106,8 +1106,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     }
                 }
                 ecCache.gender8?.let {
-                    gender8.value =
-                        if (it == Gender.MALE) gender8.entries!![0] else gender8.entries!![1]
+                    gender8.value = getLocalValueInArray(R.array.ecr_gender_array, it.name)
+//                        if (it == Gender.MALE) gender8.entries!![0] else gender8.entries!![1]
                 }
 
 //                seventhAndEighthChildGap.value = ecCache.seventhAndEighthChildGap?.toString()
@@ -1128,8 +1128,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ecCache.dob8?.let { it1 -> setSiblingAgeDiff(it1, it, eighthAndNinthChildGap) }
                 }
                 ecCache.gender9?.let {
-                    gender9.value =
-                        if (it == Gender.MALE) gender9.entries!![0] else gender9.entries!![1]
+                    gender9.value = getLocalValueInArray(R.array.ecr_gender_array, it.name)
+//                        if (it == Gender.MALE) gender9.entries!![0] else gender9.entries!![1]
                 }
 
 //                eighthAndNinthChildGap.value = ecCache.eighthAndNinthChildGap?.toString()
@@ -1601,57 +1601,57 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                 maleChild = 0
                 femaleChild = 0
 
-                if (gender1.value == "Male") {
+                if (gender1.value == resources.getStringArray(R.array.ecr_gender_array)[0]) {
                     maleChild += 1
-                } else if (gender1.value == "Female") {
+                } else if (gender1.value == resources.getStringArray(R.array.ecr_gender_array)[1]) {
                     femaleChild += 1
                 }
 
-                if (gender2.value == "Male") {
+                if (gender2.value == resources.getStringArray(R.array.ecr_gender_array)[0]) {
                     maleChild += 1
-                } else if (gender2.value == "Female") {
+                } else if (gender2.value == resources.getStringArray(R.array.ecr_gender_array)[1]) {
                     femaleChild += 1
                 }
 
-                if (gender3.value == "Male") {
+                if (gender3.value == resources.getStringArray(R.array.ecr_gender_array)[0]) {
                     maleChild += 1
-                } else if (gender3.value == "Female") {
+                } else if (gender3.value == resources.getStringArray(R.array.ecr_gender_array)[1]) {
                     femaleChild += 1
                 }
 
-                if (gender4.value == "Male") {
+                if (gender4.value == resources.getStringArray(R.array.ecr_gender_array)[0]) {
                     maleChild += 1
-                } else if (gender4.value == "Female") {
+                } else if (gender4.value == resources.getStringArray(R.array.ecr_gender_array)[1]) {
                     femaleChild += 1
                 }
 
-                if (gender5.value == "Male") {
+                if (gender5.value == resources.getStringArray(R.array.ecr_gender_array)[0]) {
                     maleChild += 1
-                } else if (gender5.value == "Female") {
+                } else if (gender5.value == resources.getStringArray(R.array.ecr_gender_array)[1]) {
                     femaleChild += 1
                 }
 
-                if (gender6.value == "Male") {
+                if (gender6.value == resources.getStringArray(R.array.ecr_gender_array)[0]) {
                     maleChild += 1
-                } else if (gender6.value == "Female") {
+                } else if (gender6.value == resources.getStringArray(R.array.ecr_gender_array)[1]) {
                     femaleChild += 1
                 }
 
-                if (gender7.value == "Male") {
+                if (gender7.value == resources.getStringArray(R.array.ecr_gender_array)[0]) {
                     maleChild += 1
-                } else if (gender7.value == "Female") {
+                } else if (gender7.value == resources.getStringArray(R.array.ecr_gender_array)[1]) {
                     femaleChild += 1
                 }
 
-                if (gender8.value == "Male") {
+                if (gender8.value == resources.getStringArray(R.array.ecr_gender_array)[0]) {
                     maleChild += 1
-                } else if (gender8.value == "Female") {
+                } else if (gender8.value == resources.getStringArray(R.array.ecr_gender_array)[1]) {
                     femaleChild += 1
                 }
 
-                if (gender9.value == "Male") {
+                if (gender9.value == resources.getStringArray(R.array.ecr_gender_array)[0]) {
                     maleChild += 1
-                } else if (gender9.value == "Female") {
+                } else if (gender9.value == resources.getStringArray(R.array.ecr_gender_array)[1]) {
                     femaleChild += 1
                 }
 
