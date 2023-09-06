@@ -16,9 +16,13 @@ interface SyncDao {
                 + "UNION SELECT 2 as id, 'EC Registration' as name,  ecr.syncState as syncState, count(*) as count from eligible_couple_reg ecr group by ecr.syncState "
                 + "UNION SELECT 3 as id, 'EC Tracking' as name,  ect.syncState as syncState, count(*) as count from eligible_couple_tracking ect group by ect.syncState "
                 + "UNION SELECT 4 as id, 'PW Registration' as name,  pwr.syncState as syncState, count(*) as count from pregnancy_register pwr group by pwr.syncState "
-                + "UNION SELECT 5 as id, 'PW ANC' as name,  pwanc.syncState as syncState, count(*) as count from pregnancy_anc pwanc group by pwanc.syncState"
-                + " ORDER by id"
-    )
+                + "UNION SELECT 5 as id, 'PW ANC' as name,  pwanc.syncState as syncState, count(*) as count from pregnancy_anc pwanc group by pwanc.syncState "
+                + "UNION SELECT 6 as id, 'HRP Assess' as name,  hrpa.syncState as syncState, count(*) as count from HRP_PREGNANT_ASSESS hrpa group by hrpa.syncState "
+                + "UNION SELECT 7 as id, 'HRP Track' as name,  hrpt.syncState as syncState, count(*) as count from HRP_PREGNANT_TRACK hrpt group by hrpt.syncState "
+                + "UNION SELECT 8 as id, 'HR NonPreg. Assess' as name,  hrnpa.syncState as syncState, count(*) as count from HRP_NON_PREGNANT_ASSESS hrnpa group by hrnpa.syncState "
+                + "UNION SELECT 9 as id, 'HR NonPreg Track' as name,  hrnpt.syncState as syncState, count(*) as count from HRP_NON_PREGNANT_TRACK hrnpt group by hrnpt.syncState "
+                 + " ORDER by id"
+
 //    @Query(
 //        "       SELECT count(*) as ben_synced from beneficiary b1 where b1.syncState = 2 union " +
 //                "SELECT count(*) as ben_not_synced from beneficiary b2 where b2.syncState = 0 union " +

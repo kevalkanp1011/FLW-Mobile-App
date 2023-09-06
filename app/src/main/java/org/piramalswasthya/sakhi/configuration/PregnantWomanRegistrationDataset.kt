@@ -266,6 +266,81 @@ class PregnantWomanRegistrationDataset(
         required = true
     )
 
+    private val noOfDeliveries = FormElement(
+        id = 27,
+        inputType = InputType.RADIO,
+        title = resources.getString(R.string.no_of_deliveries_is_more_than_3),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+    private val timeLessThan18m = FormElement(
+        id = 28,
+        inputType = InputType.RADIO,
+        title = resources.getString(R.string.time_from_last_delivery_is_less_than_18_months),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+    private val heightShort = FormElement(
+        id = 29,
+        inputType = InputType.RADIO,
+        title = resources.getString(R.string.height_is_very_short_or_less_than_140_cms),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+    private val ageCheck = FormElement(
+        id = 30,
+        inputType = InputType.RADIO,
+        title = resources.getString(R.string.age_is_less_than_18_or_more_than_35_years),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+    private val rhNegative = FormElement(
+        id = 31,
+        inputType = InputType.RADIO,
+        title = resources.getString(R.string.rh_negative),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+    private val homeDelivery = FormElement(
+        id = 32,
+        inputType = InputType.RADIO,
+        title = resources.getString(R.string.home_delivery_of_previous_pregnancy),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+    private val badObstetric = FormElement(
+        id = 33,
+        inputType = InputType.RADIO,
+        title = resources.getString(R.string.bad_obstetric_history),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+
+    private val multiplePregnancy = FormElement(
+        id = 34,
+        inputType = InputType.RADIO,
+        title = resources.getString(R.string.multiple_pregnancy),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        isEnabled = false,
+        showHighRisk = true,
+        hasDependants = true
+    )
+
     suspend fun setUpPage(ben: BenRegCache?, saved: PregnantWomanRegistrationCache?) {
         val list = mutableListOf(
             dateOfReg,
@@ -288,6 +363,14 @@ class PregnantWomanRegistrationDataset(
 //            dateOfhbsAgTestDone,
             pastIllness,
             isFirstPregnancy,
+            noOfDeliveries,
+            timeLessThan18m,
+            heightShort,
+            ageCheck,
+            rhNegative,
+            homeDelivery,
+            badObstetric,
+            multiplePregnancy,
             isHrpCase
         )
         dateOfReg.value = getDateFromLong(System.currentTimeMillis())

@@ -88,6 +88,7 @@
     <string name="tv_husband_name_ph">Husband Name</string>
     <string name="tv_spouse_name_ph">Spouse Name</string>
     <string name="tv_family_head_name_ph">Family Head Name</string>
+    <string name="tv_spouse">Spouse</string>
     <string name="tv_ben_id_ph">Ben ID</string>
     <string name="tv_mob_no_ph">Mobile Number</string>
     <string name="tv_age_ph">Age</string>
@@ -329,6 +330,10 @@
         <item>EC Tracking</item>
         <item>PW Registration</item>
         <item>PW ANC</item>
+        <item>HRP Assess</item>
+        <item>HRP Track</item>
+        <item>HR NonPreg. Assess</item>
+        <item>HR NonPreg Track</item>
     </string-array>
     <!-- Eligible couple registration -->
     <string-array name="ecr_gender_array">

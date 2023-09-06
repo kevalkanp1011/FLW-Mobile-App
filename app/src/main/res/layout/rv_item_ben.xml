@@ -38,6 +38,10 @@
             name="spouse"
             type="Boolean"/>
 
+        <variable
+            name="role"
+            type="Integer" />
+
     </data>
 
     <androidx.cardview.widget.CardView

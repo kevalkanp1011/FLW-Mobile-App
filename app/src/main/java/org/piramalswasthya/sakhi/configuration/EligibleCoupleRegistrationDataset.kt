@@ -720,6 +720,79 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         min = 0,
     )
 
+    private val noOfDeliveries = FormElement(
+        id = 61,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        title = resources.getString(R.string.no_of_deliveries_is_more_than_3),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+    private val timeLessThan18m = FormElement(
+        id = 62,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        title = resources.getString(R.string.time_from_last_delivery_is_less_than_18_months),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+    private val heightShort = FormElement(
+        id = 63,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        title = resources.getString(R.string.height_is_very_short_or_less_than_140_cms),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+    private val ageCheck = FormElement(
+        id = 64,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        title = resources.getString(R.string.age_is_less_than_18_or_more_than_35_years),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+    private val misCarriage = FormElement(
+        id = 65,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        title = resources.getString(R.string.miscarriage_abortion),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+    private val homeDelivery = FormElement(
+        id = 66,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        title = resources.getString(R.string.home_delivery_of_previous_pregnancy),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+    private val medicalIssues = FormElement(
+        id = 67,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        title = resources.getString(R.string.during_pregnancy_or_delivery_you_faced_any_medical_issues),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+
+    private val pastCSection = FormElement(
+        id = 68,
+        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        title = resources.getString(R.string.past_c_section_cs),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
     private var maleChild = 0
 
     private var femaleChild = 0
@@ -738,6 +811,14 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             bankName,
             branchName,
             ifsc,
+            noOfDeliveries,
+            timeLessThan18m,
+            heightShort,
+            ageCheck,
+            misCarriage,
+            homeDelivery,
+            medicalIssues,
+            pastCSection,
             noOfChildren,
             noOfLiveChildren,
             numMale,

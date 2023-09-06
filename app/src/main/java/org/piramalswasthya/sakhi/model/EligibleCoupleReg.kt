@@ -9,6 +9,7 @@ import androidx.room.Relation
 import com.squareup.moshi.Json
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.utils.HelperUtil.getDateStringFromLong
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -137,16 +138,7 @@ data class EligibleCoupleRegCache(
     }
 }
 
-private fun getDateStringFromLong(dateLong: Long?): String? {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-    dateLong?.let {
-        val dateString = dateFormat.format(dateLong)
-        return dateString
-    } ?: run {
-        return null
-    }
 
-}
 
 
 data class BenWithECRCache(

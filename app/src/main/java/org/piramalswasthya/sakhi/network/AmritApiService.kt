@@ -20,6 +20,9 @@ interface AmritApiService {
     @POST("tmapi-v1.0/registrar/registrarBeneficaryRegistrationNew")
     suspend fun getBenIdFromBeneficiarySending(@Body beneficiaryDataSending: BeneficiaryDataSending): Response<ResponseBody>
 
+    @POST("hwc-facility-service/registrar/registrarBeneficaryRegistrationNew")
+    suspend fun getBenIdFromBeneficiarySending(@Body benCHOPost: BenCHOPost): Response<ResponseBody>
+
     @POST("identity-0.0.1/rmnch/syncDataToAmrit")
     suspend fun submitRmnchDataAmrit(@Body sendingRMNCHData: SendingRMNCHData): Response<ResponseBody>
 
@@ -48,6 +51,35 @@ interface AmritApiService {
     @POST("flw-0.0.1/tb/suspected/saveAll")
 //    @POST("tb/suspected/saveAll")
     suspend fun saveTBSuspectedData(@Body tbSuspectedRequestDTO: TBSuspectedRequestDTO): Response<ResponseBody>
+
+    @POST("flw-0.0.1/highRisk/pregnant/assess/getAll")
+//    @POST("highRisk/pregnant/assess/getAll")
+    suspend fun getHRPAssessData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+    @POST("flw-0.0.1/highRisk/pregnant/assess/saveAll")
+//    @POST("highRisk/pregnant/assess/saveAll")
+    suspend fun saveHRPAssessData(@Body userDataDTO: UserDataDTO<Any?>): Response<ResponseBody>
+
+    @POST("flw-0.0.1/highRisk/pregnant/track/getAll")
+//    @POST("highRisk/pregnant/track/getAll")
+    suspend fun getHRPTrackData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+    @POST("flw-0.0.1/highRisk/pregnant/track/saveAll")
+//    @POST("highRisk/pregnant/track/saveAll")
+    suspend fun saveHRPTrackData(@Body userDataDTO: UserDataDTO<Any?>): Response<ResponseBody>
+
+    @POST("flw-0.0.1/highRisk/nonPregnant/assess/getAll")
+//    @POST("highRisk/nonPregnant/assess/getAll")
+    suspend fun getHRNonPAssessData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+    @POST("flw-0.0.1/highRisk/nonPregnant/assess/saveAll")
+//    @POST("highRisk/nonPregnant/assess/saveAll")
+    suspend fun saveHRNonPAssessData(@Body userDataDTO: UserDataDTO<Any?>): Response<ResponseBody>
+
+
+    @POST("flw-0.0.1/highRisk/nonPregnant/track/getAll")
+//    @POST("highRisk/nonPregnant/track/getAll")
+    suspend fun getHRNonPTrackData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+    @POST("flw-0.0.1/highRisk/nonPregnant/track/saveAll")
+//    @POST("highRisk/nonPregnant/track/saveAll")
+    suspend fun saveHRNonPTrackData(@Body userDataDTO: UserDataDTO<Any?>): Response<ResponseBody>
 
     @POST("identity-0.0.1/id/getByBenId")
     suspend fun getBeneficiaryWithId(@Query("benId") benId: Long): Response<ResponseBody>

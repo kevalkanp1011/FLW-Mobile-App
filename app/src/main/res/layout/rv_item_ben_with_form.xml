@@ -13,6 +13,13 @@
             name="clickListener"
             type="org.piramalswasthya.sakhi.adapters.BenListAdapterForForm.ClickListener" />
 
+        <variable
+            name="role"
+            type="Integer" />
+
+        <variable
+            name="hasLmp"
+            type="Boolean" />
     </data>
 
     <androidx.cardview.widget.CardView

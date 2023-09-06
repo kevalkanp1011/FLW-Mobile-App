@@ -12,6 +12,7 @@ import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.InputType
 import org.piramalswasthya.sakhi.utils.HelperUtil
+import org.piramalswasthya.sakhi.utils.HelperUtil.getLocalizedResources
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -32,8 +33,8 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     protected var englishResources: Resources
 
     init {
-        englishResources = HelperUtil().getLocalizedResources(context, Languages.ENGLISH)
-        resources = HelperUtil().getLocalizedResources(context, currentLanguage)
+        englishResources = getLocalizedResources(context, Languages.ENGLISH)
+        resources = getLocalizedResources(context, currentLanguage)
     }
 
     /**
@@ -647,5 +648,36 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         }
     }
 
+
+    protected fun calculateAge(date: Long): Int {
+        val dob = Calendar.getInstance()
+        dob.timeInMillis = date
+        val today = Calendar.getInstance()
+        var age = today[Calendar.YEAR] - dob[Calendar.YEAR]
+        if (today[Calendar.DAY_OF_MONTH] < dob[Calendar.DAY_OF_MONTH]) {
+            age--
+        }
+        return age
+    }
+
+    protected fun calculateDob(age: Int): Long {
+        val dob = Calendar.getInstance()
+        dob.set(Calendar.YEAR, dob[Calendar.YEAR] - age)
+        return dob.timeInMillis
+    }
+
+    fun getLocalValueInArray(arrayId: Int, entry: String?): String? {
+        entry?.let {
+            return resources.getStringArray(arrayId)[englishResources.getStringArray(arrayId).indexOf(it)]
+        }
+        return null
+    }
+
+    fun getEnglishValueInArray(arrayId: Int, entry: String?): String? {
+        entry?.let {
+            return englishResources.getStringArray(arrayId)[resources.getStringArray(arrayId).indexOf(it)]
+        }
+        return null
+    }
 
 }

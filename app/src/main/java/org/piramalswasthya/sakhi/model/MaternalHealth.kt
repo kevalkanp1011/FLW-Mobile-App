@@ -12,6 +12,8 @@ import org.piramalswasthya.sakhi.helpers.getDateString
 import org.piramalswasthya.sakhi.helpers.getWeeksOfPregnancy
 import org.piramalswasthya.sakhi.network.getLongFromDate
 import org.piramalswasthya.sakhi.utils.HelperUtil
+import org.piramalswasthya.sakhi.utils.HelperUtil.getDateStringFromLong
+import org.piramalswasthya.sakhi.utils.HelperUtil
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -352,17 +354,6 @@ data class PregnantWomanAncCache(
             updatedBy = updatedBy
         )
     }
-}
-
-private fun getDateStringFromLong(dateLong: Long?): String? {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-    dateLong?.let {
-        val dateString = dateFormat.format(dateLong)
-        return dateString
-    } ?: run {
-        return null
-    }
-
 }
 
 data class ANCPost (
