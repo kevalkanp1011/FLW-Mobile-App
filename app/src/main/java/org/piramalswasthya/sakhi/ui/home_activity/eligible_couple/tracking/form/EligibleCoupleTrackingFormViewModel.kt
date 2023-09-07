@@ -125,7 +125,7 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
 
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
-                    Timber.d("saving PWR data failed!!")
+                    Timber.d("saving ECT data failed due to $e")
                     _state.postValue(State.SAVE_FAILED)
                 }
             }

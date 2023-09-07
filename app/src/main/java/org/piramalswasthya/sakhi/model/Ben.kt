@@ -56,19 +56,19 @@ enum class Gender {
             " cbac.benId is not null as cbacFilled, cbac.syncState as cbacSyncState," +
             " cdr.benId is not null as cdrFilled, cdr.syncState as cdrSyncState, " +
             " mdsr.benId is not null as mdsrFilled, mdsr.syncState as mdsrSyncState," +
-            " pmsma.benId is not null as pmsmaFilled, " +//" pmsma.sync as mdsrSyncState, " +
+            " pmsma.benId is not null as pmsmaFilled, pmsma.syncState as pmsmaSyncState, " +
             " hbnc.benId is not null as hbncFilled,  " +
             " hbyc.benId is not null as hbycFilled,  " +
             " pwr.benId is not null as pwrFilled, pwr.syncState as pwrSyncState," +
-            " pwa.pregnantWomanDelivered as isDelivered, " +
+            " pwa.pregnantWomanDelivered as isDelivered, pwa.hrpConfirmed as pwHrp," +
             " ecr.benId is not null as ecrFilled, " +
             " ect.benId is not null as ectFilled, " +
             " ect.benId is not null as ectFilled, " +
             " tbsn.benId is not null as tbsnFilled, tbsn.syncState as tbsnSyncState," +
             " tbsp.benId is not null as tbspFilled, tbsp.syncState as tbspSyncState, " +
-            " ir.motherBenId is not null as irFilled, " +
-            " cr.motherBenId is not null as crFilled, " +
-            " do.benId is not null as doFilled " +
+            " ir.motherBenId is not null as irFilled, ir.syncState as irSyncState, " +
+            " cr.motherBenId is not null as crFilled, cr.syncState as crSyncState, " +
+            " do.benId is not null as doFilled, do.syncState as doSyncState " +
             "from BENEFICIARY b " +
             "JOIN HOUSEHOLD h ON b.householdId = h.householdId " +
             "LEFT OUTER JOIN CBAC cbac on b.beneficiaryId = cbac.benId " +
@@ -78,7 +78,7 @@ enum class Gender {
             "LEFT OUTER JOIN HBNC hbnc on b.beneficiaryId = hbnc.benId " +
             "LEFT OUTER JOIN HBYC hbyc on b.beneficiaryId = hbyc.benId " +
             "LEFT OUTER JOIN PREGNANCY_REGISTER pwr on b.beneficiaryId = pwr.benId " +
-            "LEFT OUTER JOIN PREGNANCY_ANC pwa on b.beneficiaryId = pwr.benId " +
+            "LEFT OUTER JOIN PREGNANCY_ANC pwa on b.beneficiaryId = pwa.benId " +
             "LEFT OUTER JOIN ELIGIBLE_COUPLE_REG ecr on b.beneficiaryId = ecr.benId " +
             "LEFT OUTER JOIN ELIGIBLE_COUPLE_TRACKING ect on (b.beneficiaryId = ect.benId  and CAST((strftime('%s','now') - ect.visitDate/1000)/60/60/24 AS INTEGER) < 30 )" +
             "LEFT OUTER JOIN TB_SCREENING tbsn on b.beneficiaryId = tbsn.benId " +
@@ -114,11 +114,15 @@ data class BenBasicCache(
     val cdrSyncState: SyncState?,
     val mdsrFilled: Boolean,
     val mdsrSyncState: SyncState?,
+    val pmsmaSyncState: SyncState?,
     val pmsmaFilled: Boolean,
     val hbncFilled: Boolean,
     val hbycFilled: Boolean,
     val pwrFilled: Boolean,
     val pwrSyncState: SyncState?,
+    val doSyncState: SyncState?,
+    val irSyncState: SyncState?,
+    val crSyncState: SyncState?,
     val ecrFilled: Boolean,
     val ectFilled: Boolean,
     val tbsnFilled: Boolean,
@@ -126,6 +130,7 @@ data class BenBasicCache(
     val tbspFilled: Boolean,
     val tbspSyncState: SyncState?,
     val isDelivered: Boolean,
+    val pwHrp: Boolean,
     val irFilled: Boolean,
     val crFilled: Boolean,
     val doFilled: Boolean,
@@ -455,7 +460,7 @@ data class BenBasicCache(
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             form1Filled = irFilled,
-            syncState = syncState
+            syncState = irSyncState
         )
     }
 
@@ -475,7 +480,7 @@ data class BenBasicCache(
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             form1Filled = irFilled,
-            syncState = syncState
+            syncState = crSyncState
         )
     }
 
@@ -495,7 +500,7 @@ data class BenBasicCache(
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
             form1Filled = doFilled,
-            syncState = syncState
+            syncState = doSyncState
         )
     }
 

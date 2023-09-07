@@ -9,10 +9,10 @@ data class SyncStatusCache(
 )
 
 
-fun List<SyncStatusCache>.asDomainModel(): List<SyncStatusDomain> {
+fun List<SyncStatusCache>.asDomainModel(localNames: Array<String>, englishNames: Array<String>): List<SyncStatusDomain> {
     return groupBy { it.name }.map { mapEntry ->
         SyncStatusDomain(
-            name = mapEntry.key,
+            name = if (englishNames.contains(mapEntry.key)) localNames[englishNames.indexOf(mapEntry.key)] else mapEntry.key,
             synced = mapEntry.value.firstOrNull { it.syncState == SyncState.SYNCED }?.count ?: 0,
             notSynced = mapEntry.value.firstOrNull { it.syncState == SyncState.UNSYNCED }?.count
                 ?: 0,

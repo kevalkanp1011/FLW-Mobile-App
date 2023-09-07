@@ -72,7 +72,11 @@ class ServiceLocationActivity : AppCompatActivity() {
         val pref = EntryPointAccessors.fromApplication(
             newBase, WrapperEntryPoint::class.java
         ).pref
-        super.attachBaseContext(MyContextWrapper.wrap(newBase, pref.getCurrentLanguage().symbol))
+        super.attachBaseContext(MyContextWrapper.wrap(
+            newBase,
+            newBase.applicationContext,
+            pref.getCurrentLanguage().symbol
+        ))
     }
 
 

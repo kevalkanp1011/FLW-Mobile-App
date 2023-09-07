@@ -16,8 +16,8 @@ interface PmsmaDao {
     @Query("select count(*) from PMSMA")
     suspend fun pmsmaCount(): Int
 
-    @Query("SELECT * FROM PMSMA WHERE benId =:benId AND hhId = :hhId LIMIT 1")
-    suspend fun getPmsma(hhId: Long, benId: Long): PMSMACache?
+    @Query("SELECT * FROM PMSMA WHERE benId =:benId LIMIT 1")
+    suspend fun getPmsma(benId: Long): PMSMACache?
 
     @Update
     abstract fun updatePmsmaRecord(it: PMSMACache)

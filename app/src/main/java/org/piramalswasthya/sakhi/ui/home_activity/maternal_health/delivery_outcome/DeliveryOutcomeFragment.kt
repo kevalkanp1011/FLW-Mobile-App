@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -12,6 +13,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
+import org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pregnant_women_registration.form.PregnancyRegistrationFormViewModel
+import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -60,12 +63,32 @@ class DeliveryOutcomeFragment : Fragment() {
             submitDeliveryOutcomeForm()
         }
 
-        viewModel.state.observe(viewLifecycleOwner) {
-            when (it) {
+        viewModel.state.observe(viewLifecycleOwner) {state ->
+            when (state!!) {
+                DeliveryOutcomeViewModel.State.IDLE -> {
+                }
+
+                DeliveryOutcomeViewModel.State.SAVING -> {
+                    binding.llContent.visibility = View.GONE
+                    binding.pbForm.visibility = View.VISIBLE
+                }
+
                 DeliveryOutcomeViewModel.State.SAVE_SUCCESS -> {
+                    binding.llContent.visibility = View.VISIBLE
+                    binding.pbForm.visibility = View.GONE
+                    Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
+                    WorkerUtils.triggerDeliveryOutcomePushWorker(requireContext())
                     findNavController().navigateUp()
                 }
 
+                DeliveryOutcomeViewModel.State.SAVE_FAILED -> {
+                    Toast.makeText(
+
+                        context, "Something wend wong! Contact testing!", Toast.LENGTH_LONG
+                    ).show()
+                    binding.llContent.visibility = View.VISIBLE
+                    binding.pbForm.visibility = View.GONE
+                }
                 else -> {}
             }
         }

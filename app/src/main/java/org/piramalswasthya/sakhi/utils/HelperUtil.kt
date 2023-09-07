@@ -20,6 +20,7 @@ class HelperUtil {
 
     fun getLocalizedContext(context: Context, currentLanguage: Languages): Context {
         val desiredLocale = Locale(currentLanguage.symbol)
+        Locale.setDefault(desiredLocale)
         var conf = context.resources.configuration
         conf = Configuration(conf)
         conf.setLocale(desiredLocale)

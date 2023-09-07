@@ -103,7 +103,7 @@ class TBSuspectedViewModel @Inject constructor(
                     tbRepo.saveTBSuspected(tbSuspected)
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
-                    Timber.d("saving PWR data failed!!")
+                    Timber.d("saving TB Suspected data failed due to $e")
                     _state.postValue(State.SAVE_FAILED)
                 }
             }
