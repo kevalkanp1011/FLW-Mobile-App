@@ -372,6 +372,8 @@ class PregnantWomanRegistrationDataset(
         showHighRisk = false
     )
 
+    private var dateOfBirth = 0L
+
     suspend fun setUpPage(ben: BenRegCache?, assess: HRPPregnantAssessCache?, saved: PregnantWomanRegistrationCache?) {
         val list = mutableListOf(
             dateOfReg,
@@ -425,6 +427,8 @@ class PregnantWomanRegistrationDataset(
             name.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
             husbandName.value = ben.genDetails?.spouseName
             age.value = "${BenBasicCache.getAgeFromDob(ben.dob)} YEARS"
+            dateOfBirth = ben.dob
+            updateAgeCheck(dateOfBirth, Calendar.getInstance().timeInMillis)
         }
         assess?.let {
             noOfDeliveries.value = getLocalValueInArray(R.array.yes_no, it.noOfDeliveries)
@@ -556,6 +560,7 @@ class PregnantWomanRegistrationDataset(
                     dateOfVdrlTestDone.min = dateOfRegLong
                     dateOfhivTestDone.min = dateOfRegLong
                     hbsAgTestResult.min = dateOfRegLong
+                    updateAgeCheck(dateOfBirth, dateOfRegLong)
                 }
                 -1
             }
@@ -596,7 +601,18 @@ class PregnantWomanRegistrationDataset(
             }
 
             weight.id -> validateIntMinMax(weight)
-            height.id -> validateIntMinMax(height)
+            height.id -> {
+                validateIntMinMax(height)
+                height.value?.takeIf { it.isNotEmpty() }?.toLong()?.let {
+                    if (it in 1..139) {
+                        heightShort.value = resources.getStringArray(R.array.yes_no)[0]
+                    } else {
+                        heightShort.value = resources.getStringArray(R.array.yes_no)[0]
+                    }
+                    handleListOnValueChanged(height.id, 0)
+                }
+                -1
+            }
 
             vdrlrprTestResult.id -> {
                 triggerDependantsReverse(
@@ -658,6 +674,14 @@ class PregnantWomanRegistrationDataset(
                 complicationsDuringLastPregnancy.apply {
                     value = entries!!.first()
                 }
+                if (isFirstPregnancy.value == resources.getStringArray(R.array.yes_no)[0]) {
+                    multiplePregnancy.value = resources.getStringArray(R.array.yes_no)[1]
+                    multiplePregnancy.isEnabled = false
+                } else {
+                    multiplePregnancy.value = resources.getStringArray(R.array.yes_no)[0]
+                    multiplePregnancy.isEnabled = false
+                }
+                handleListOnValueChanged(multiplePregnancy.id, 0)
                 triggerDependants(
                     source = isFirstPregnancy,
                     passedIndex = index,
@@ -784,6 +808,23 @@ class PregnantWomanRegistrationDataset(
                 badObstetric.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
                 multiplePregnancy.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
     }
+
+    private suspend fun updateAgeCheck(dob:Long, current: Long) {
+        val calReg = Calendar.getInstance()
+        calReg.timeInMillis = current
+        val calDob = Calendar.getInstance()
+        calDob.timeInMillis = dateOfBirth
+
+        if (getDiffYears(calDob, calReg) < 18 || getDiffYears(calDob, calReg) > 35) {
+            ageCheck.value = resources.getStringArray(R.array.yes_no)[0]
+            ageCheck.isEnabled = false
+        } else {
+            ageCheck.value = resources.getStringArray(R.array.yes_no)[1]
+            ageCheck.isEnabled = false
+        }
+        handleListOnValueChanged(ageCheck.id, 0)
+    }
+
     fun mapValueToBenRegId(ben: BenRegCache?): Boolean {
         val rchIdFromBen = ben?.rchId?.takeIf { it.isNotEmpty() }?.toLong()
         rchId.value?.takeIf {
@@ -791,8 +832,17 @@ class PregnantWomanRegistrationDataset(
         }?.toLong()?.let {
             if (it != rchIdFromBen) {
                 ben?.rchId = it.toString()
+                ben?.isHrpStatus = isHighRisk()
                 ben?.syncState = SyncState.UNSYNCED
                 if (ben?.processed != "N") ben?.processed = "U"
+                return true
+            }
+        }
+        ben?.isHrpStatus?.let {
+            if (!it && isHighRisk()) {
+                ben.isHrpStatus = isHighRisk()
+                ben.syncState = SyncState.UNSYNCED
+                if (ben.processed != "N") ben.processed = "U"
                 return true
             }
         }

@@ -11,8 +11,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.piramalswasthya.sakhi.configuration.Dataset
 import org.piramalswasthya.sakhi.configuration.HRPNonPregnantAssessDataset
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.HRPNonPregnantAssessCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.HRPRepo
@@ -58,9 +61,11 @@ constructor(
 
     private lateinit var hrpNonPregnantAssess: HRPNonPregnantAssessCache
 
+    private var ben: BenRegCache? = null
+
     init {
         viewModelScope.launch {
-            val ben = benRepo.getBenFromId(benId)?.also { ben ->
+            ben = benRepo.getBenFromId(benId)?.also { ben ->
                 _benName.value =
                     "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
                 _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
@@ -104,6 +109,10 @@ constructor(
                     dataset.mapValues(hrpNonPregnantAssess, 1)
                     hrpNonPregnantAssess.isHighRisk = isHighRiskStatus()
                     hrpReo.saveRecord(hrpNonPregnantAssess)
+                    ben?.let {
+                        updateBen(it)
+                        benRepo.updateRecord(it)
+                    }
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
                     Timber.d("saving PWR data failed!!")
@@ -125,6 +134,12 @@ constructor(
 
     fun resetState() {
         _state.value = State.IDLE
+    }
+
+    fun updateBen(benRegCache: BenRegCache) {
+        if (!benRegCache.isHrpStatus) benRegCache.isHrpStatus = isHighRiskStatus()
+        if (benRegCache.processed != "N") benRegCache.processed = "U"
+        benRegCache.syncState = SyncState.UNSYNCED
     }
 
 }

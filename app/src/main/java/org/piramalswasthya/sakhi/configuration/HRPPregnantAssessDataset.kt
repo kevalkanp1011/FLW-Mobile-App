@@ -276,6 +276,7 @@ class HRPPregnantAssessDataset(
         benRegCache.genDetails?.let {
             it.lastMenstrualPeriod = getLongFromDate(lmpDate.value)
         }
+        if (!benRegCache.isHrpStatus) benRegCache.isHrpStatus = isHighRisk()
         if (benRegCache.processed != "N") benRegCache.processed = "U"
         benRegCache.syncState = SyncState.UNSYNCED
     }

@@ -872,15 +872,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             husbandName.value = ben.genDetails?.spouseName
             age.value = BenBasicCache.getAgeFromDob(ben.dob).toString()
             dateOfBirth = ben.dob
-            val dobCal = Calendar.getInstance()
-            dobCal.timeInMillis = ben.dob
-            if (getDiffYears(dobCal, Calendar.getInstance()) < 18 || getDiffYears(dobCal, Calendar.getInstance()) > 35) {
-                ageCheck.value = resources.getStringArray(R.array.yes_no)[0]
-                ageCheck.isEnabled = false
-            } else {
-                ageCheck.value = resources.getStringArray(R.array.yes_no)[1]
-                ageCheck.isEnabled = false
-            }
+            updateAgeCheck(dateOfBirth, Calendar.getInstance().timeInMillis)
             ben.genDetails?.ageAtMarriage?.let { it1 ->
                 ageAtMarriage.value = it1.toString()
                 val cal = Calendar.getInstance()
@@ -1119,15 +1111,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
             dateOfReg.id -> {
                 updateTimeLessThan18()
-                val calReg = Calendar.getInstance()
-                calReg.timeInMillis = getLongFromDate(dateOfReg.value)
-                val calDob = Calendar.getInstance()
-                calDob.timeInMillis = dateOfBirth
-                if (getDiffYears(calDob, calReg) < 18 || getDiffYears(calDob, calReg) > 35) {
-                    ageCheck.value = resources.getStringArray(R.array.yes_no)[0]
-                } else {
-                    ageCheck.value = resources.getStringArray(R.array.yes_no)[1]
-                }
+                updateAgeCheck(dateOfBirth, getLongFromDate(dateOfReg.value))
                 -1
             }
             rchId.id -> {
@@ -1666,6 +1650,22 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             }
             else -> -1
         }
+    }
+
+    private suspend fun updateAgeCheck(dob:Long, current: Long) {
+        val calReg = Calendar.getInstance()
+        calReg.timeInMillis = current
+        val calDob = Calendar.getInstance()
+        calDob.timeInMillis = dateOfBirth
+
+        if (getDiffYears(calDob, calReg) < 18 || getDiffYears(calDob, calReg) > 35) {
+            ageCheck.value = resources.getStringArray(R.array.yes_no)[0]
+            ageCheck.isEnabled = false
+        } else {
+            ageCheck.value = resources.getStringArray(R.array.yes_no)[1]
+            ageCheck.isEnabled = false
+        }
+        handleListOnValueChanged(ageCheck.id, 0)
     }
 
     private suspend fun updateTimeLessThan18() {
