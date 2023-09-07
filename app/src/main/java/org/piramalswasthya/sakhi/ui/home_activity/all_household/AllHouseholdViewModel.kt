@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.HouseHoldBasicDomain
 import org.piramalswasthya.sakhi.repositories.HouseholdRepo
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
@@ -32,6 +33,15 @@ class AllHouseholdViewModel @Inject constructor(
     val householdList = recordsRepo.hhList.combine(filter) { list, filter ->
         filterHH(list, filter)
     }
+    private var _selectedHouseholdId: Long = 0
+
+    private val _householdBenList = mutableListOf<BenRegCache>()
+    val householdBenList : List<BenRegCache>
+        get() = _householdBenList
+
+    val selectedHouseholdId: Long
+        get() = _selectedHouseholdId
+
 
     fun checkDraft() {
         viewModelScope.launch {
@@ -68,6 +78,19 @@ class AllHouseholdViewModel @Inject constructor(
                 it.hhId.toString().contains(filterText) || it.headFullName.lowercase()
                     .contains(filterText) || it.contactNumber.lowercase().contains(filterText)
             }
+        }
+    }
+
+    fun resetSelectedHouseholdId() {
+        _selectedHouseholdId = 0
+        _householdBenList.clear()
+    }
+
+    fun setSelectedHouseholdId(id: Long) {
+        _selectedHouseholdId = id
+        viewModelScope.launch {
+            _householdBenList.clear()
+            _householdBenList.addAll(householdRepo.getAllBenOfHousehold(id))
         }
     }
 }

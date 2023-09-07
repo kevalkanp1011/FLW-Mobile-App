@@ -9,9 +9,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.HouseholdFormDataset
@@ -46,26 +43,13 @@ class NewHouseholdViewModel @Inject constructor(
 
     private val hhIdFromArgs = NewHouseholdFragmentArgs.fromSavedStateHandle(savedStateHandle).hhId
 
-    private val _currentPage = MutableStateFlow(1)
-    val currentPage = _currentPage.asStateFlow()
-    val prevPageButtonVisibility = currentPage.transform {
-        emit(it > 1)
-    }
-    val nextPageButtonVisibility = currentPage.transform {
-        emit(it < 3)
-    }
-    val submitPageButtonVisibility = currentPage.transform {
-        emit(it == 3 && recordExists.value == false)
-    }
-
-
     private val _state = MutableLiveData(State.IDLE)
     val state: LiveData<State>
         get() = _state
 
-    private val _recordExists = MutableLiveData(hhIdFromArgs > 0)
-    val recordExists: LiveData<Boolean>
-        get() = _recordExists
+    private val _readRecord = MutableLiveData(hhIdFromArgs > 0)
+    val readRecord: LiveData<Boolean>
+        get() = _readRecord
 
     private lateinit var user: User
     private val dataset = HouseholdFormDataset(context, preferenceDao.getCurrentLanguage())
@@ -86,29 +70,10 @@ class NewHouseholdViewModel @Inject constructor(
                     processed = "N",
                     locationRecord = locationRecord
                 )
-                currentPage.collect {
-                    when (it) {
-                        1 -> dataset.setFirstPage(household.family)
-                        2 -> {
-                            dataset.setSecondPage(household.details)
-                            if (household.householdId == 0L) {
-                                dataset.mapValues(household, 1)
-                                householdRepo.persistRecord(household)
-                            }
-                        }
-
-                        3 -> {
-                            dataset.setThirdPage(household.amenities)
-                            if (household.householdId == 0L) {
-                                dataset.mapValues(household, 2)
-                                householdRepo.persistRecord(household)
-                            }
-                        }
-                    }
-                }
+                dataset.setupPage(household)
             }
-
         }
+
     }
 
     fun saveForm() {
@@ -151,18 +116,7 @@ class NewHouseholdViewModel @Inject constructor(
      * Household Id to be passed to Ben registration upon persisting household data to Room
      */
     fun getHHId() = household.householdId
-
-    fun goToPreviousPage() {
-        viewModelScope.launch {
-            _currentPage.emit(currentPage.value - 1)
-        }
-    }
-
-    fun goToNextPage() {
-        viewModelScope.launch {
-            _currentPage.emit(currentPage.value + 1)
-        }
-    }
+    fun getHoFName() = "${household.family?.familyHeadName} ${household.family?.familyName ?: ""}"
 
 
     fun updateListOnValueChanged(formId: Int, index: Int) {
@@ -173,7 +127,7 @@ class NewHouseholdViewModel @Inject constructor(
     }
 
     fun setRecordExists(b: Boolean) {
-        _recordExists.value = b
+        _readRecord.value = b
 
 
     }
@@ -182,110 +136,5 @@ class NewHouseholdViewModel @Inject constructor(
         dataset.setValueById(id, value)
         return dataset.getIndexById(id)
     }
-
-
-//    suspend fun getFirstPage(): List<FormElement> {
-//        return dataset.firstPage
-//    }
-
-//    suspend fun getThirdPage(adapter: FormInputAdapterOld): List<FormElement> {
-//        viewModelScope.launch {
-//            launch {
-//                dataset.fuelForCookingTrigger.value.collect {
-//                    toggleFieldOnTrigger(
-//                        dataset.fuelForCookingTrigger, dataset.otherFuelForCooking, it, adapter
-//                    )
-//                }
-//            }
-//            launch {
-//                dataset.sourceOfWaterTrigger.value.collect {
-//                    toggleFieldOnTrigger(
-//                        dataset.sourceOfWaterTrigger, dataset.otherSourceOfWater, it, adapter
-//                    )
-//                }
-//            }
-//            launch {
-//                dataset.sourceOfElectricityTrigger.value.collect {
-//                    toggleFieldOnTrigger(
-//                        dataset.sourceOfElectricityTrigger, dataset.otherSourceOfElectricity, it, adapter
-//                    )
-//                }
-//            }
-//            launch {
-//                dataset.availOfToiletTrigger.value.collect {
-//                    toggleFieldOnTrigger(
-//                        dataset.availOfToiletTrigger, dataset.otherAvailOfToilet, it, adapter
-//                    )
-//                }
-//            }
-//
-//        }
-//        dataset.setThirdPage(household?.amenities)
-//    }
-
-//    private fun toggleFieldOnTrigger(
-//        causeField: FormInputOld,
-//        effectField: FormInputOld,
-//        value: String?,
-//        adapter: FormInputAdapterOld
-//    ) {
-//        value?.let {
-//            if (it == context.getString(R.string.nhhr_fuel_cooking_7)) {
-//                val list = adapter.currentList.toMutableList()
-//                if (!list.contains(effectField)) {
-//                    list.add(
-//                        adapter.currentList.indexOf(causeField) + 1, effectField
-//                    )
-//                    adapter.submitList(list)
-//                }
-//            } else {
-//                if (adapter.currentList.contains(effectField)) {
-//                    val list = adapter.currentList.toMutableList()
-//                    list.remove(effectField)
-//                    adapter.submitList(list)
-//                }
-//            }
-//        }
-//    }
-
-
-//    fun persistFirstPage() {
-//        viewModelScope.launch {
-//            withContext(Dispatchers.IO) {
-//                household?.let {
-//                    dataset.mapValues(it, mTabPosition)
-//                    householdRepo.persistRegisterRecord(it)
-//                }
-//
-//            }
-//        }
-//    }
-//
-//    fun persistSecondPage() {
-//        viewModelScope.launch {
-//            withContext(Dispatchers.IO) {
-//                householdRepo.persistSecondPage(dataset)
-//            }
-//        }
-//    }
-//
-//
-//    fun saveForm(locationRecord: LocationRecord) {
-//        viewModelScope.launch {
-//            _state.value = State.SAVING
-//            withContext(Dispatchers.IO) {
-//                try {
-//                    hhId = householdRepo.persistThirdPage(dataset, locationRecord)
-//                    _state.postValue(State.SAVE_SUCCESS)
-//                } catch (e: Exception) {
-//                    Timber.d("saving HH data failed!!")
-//                    _state.postValue(State.SAVE_FAILED)
-//                }
-//            }
-//        }
-//
-//    }
-//
-
 
 }

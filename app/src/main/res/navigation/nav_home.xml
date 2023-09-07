@@ -73,6 +73,9 @@
         <action
             android:id="@+id/action_allHouseholdFragment_to_householdMembersFragment"
             app:destination="@id/householdMembersFragment" />
+        <action
+            android:id="@+id/action_allHouseholdFragment_to_newBenRegFragment"
+            app:destination="@id/newBenRegFragment" />
     </fragment>
     <fragment
         android:id="@+id/allBenFragment"
@@ -88,6 +91,9 @@
         <action
             android:id="@+id/action_allBenFragment_to_newBenRegL15Fragment"
             app:destination="@id/newBenRegL15Fragment" />
+        <action
+            android:id="@+id/action_allBenFragment_to_newBenRegFragment"
+            app:destination="@id/newBenRegFragment" />
     </fragment>
     <fragment
         android:id="@+id/eligibleCoupleFragment"
@@ -232,6 +238,10 @@
             android:name="hhId"
             android:defaultValue="0L"
             app:argType="long" />
+        <action
+            android:id="@+id/action_newHouseholdFragment_to_newBenRegFragment"
+            app:destination="@id/newBenRegFragment"
+            app:popUpTo="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/newBenRegTypeFragment"
@@ -806,6 +816,29 @@
         android:name="org.piramalswasthya.sakhi.ui.home_activity.dashboard.DashboardFragment"
         android:label="@string/dashboard"
         tools:layout="@layout/fragment_dashboard" />
+    <fragment
+        android:id="@+id/newBenRegFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_form.NewBenRegFragment"
+        android:label="NewBenRegFragment" >
+        <argument
+            android:name="hhId"
+            app:argType="long" />
+        <argument
+            android:name="relToHeadId"
+            app:argType="integer" />
+        <argument
+            android:name="benId"
+            app:argType="long"
+            android:defaultValue="0L" />
+        <argument
+            android:name="gender"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <action
+            android:id="@+id/action_newBenRegFragment_self"
+            app:destination="@id/newBenRegFragment"
+            app:launchSingleTop="true" />
+    </fragment>
     <fragment
         android:id="@+id/pmsmaListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pmsma.list.PmsmaListFragment"

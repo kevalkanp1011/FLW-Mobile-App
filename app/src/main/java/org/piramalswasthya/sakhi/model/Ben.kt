@@ -651,7 +651,7 @@ data class BenRegKid(
     var vitaminKGivenDueDate: String? = null,
     var vitaminKDate: String? = null,
     var deliveryTypeOther: String? = null,
-
+    var birthCertificateNumber : String? = null,
     var motherBenId: Long? = null,
     var childMotherName: String? = null,
     var motherPosition: Int? = null,

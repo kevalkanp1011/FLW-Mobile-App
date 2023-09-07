@@ -57,11 +57,11 @@ class HouseHoldListAdapter(private val clickListener: HouseholdClickListener) :
     class HouseholdClickListener(
         val hhDetails: (hhId: Long) -> Unit,
         val showMember: (hhId: Long) -> Unit,
-        val newBen: (hhId: Long) -> Unit
+        val newBen: (hh: HouseHoldBasicDomain) -> Unit
     ) {
         fun onClickedForHHDetails(item: HouseHoldBasicDomain) = hhDetails(item.hhId)
         fun onClickedForMembers(item: HouseHoldBasicDomain) = showMember(item.hhId)
-        fun onClickedForNewBen(item: HouseHoldBasicDomain) = newBen(item.hhId)
+        fun onClickedForNewBen(item: HouseHoldBasicDomain) = newBen(item)
 
     }
 }

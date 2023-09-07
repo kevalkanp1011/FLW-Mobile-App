@@ -136,6 +136,8 @@
     <string name="nhhr_avail_toilet_other">शौचालय की उपलब्धता दर्ज करें</string>
     <string name="btn_frag_nhhr_to_ben">लाभार्थी रजिस्टर करने के लिए जारी रखें</string>
     <string name="consent_alert_title">कृपया सहमति फॉर्म की जांच करें</string>
+    <string name="add_head_of_family">ADD Head Of Family</string>
+    <string name="add_head_of_family_message">Would you like to add <b>%1s</b> as a HoF Beneficiary ?</string>
 
 
 </resources>

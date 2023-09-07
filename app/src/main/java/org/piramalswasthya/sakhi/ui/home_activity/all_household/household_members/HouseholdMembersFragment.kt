@@ -38,7 +38,7 @@ class HouseholdMembersFragment : Fragment() {
         binding.btnNextPage.visibility = View.GONE
         binding.searchView.visibility  = View.GONE
         val benAdapter = BenListAdapter(
-            BenListAdapter.BenClickListener(
+            clickListener = BenListAdapter.BenClickListener(
                 { hhId, benId, isKid ->
                     findNavController().navigate(
                         if (isKid) HouseholdMembersFragmentDirections.actionHouseholdMembersFragmentToNewBenRegL15Fragment(

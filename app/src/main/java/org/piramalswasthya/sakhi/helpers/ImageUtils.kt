@@ -43,6 +43,7 @@ object ImageUtils {
             it.delete()
         }
     }
+
     private fun removeAllStoredBenImages(context: Context) {
         context.filesDir.absoluteFile.listFiles { file ->
             file.name.isDigitsOnly() && file.name.endsWith("jpeg")
@@ -51,7 +52,7 @@ object ImageUtils {
         }
     }
 
-    fun removeAllBenImages(context: Context){
+    fun removeAllBenImages(context: Context) {
         removeAllStoredBenImages(context)
         removeAllTemporaryBenImages(context)
     }
@@ -88,6 +89,11 @@ object ImageUtils {
             Base64.encodeToString(byteArray, Base64.DEFAULT)
         }
 
+    }
+
+    fun renameImage(context: Context, oldBenId: Long, newBenId: Long) {
+        File(context.filesDir, "${oldBenId}.jpeg").takeIf { it.exists() }
+            ?.renameTo(File(context.filesDir, "${newBenId}.jpeg"))
     }
 
 

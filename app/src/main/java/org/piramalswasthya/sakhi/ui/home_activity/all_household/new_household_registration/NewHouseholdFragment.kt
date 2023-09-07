@@ -25,7 +25,7 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.contracts.SpeechToTextContract
 import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
-import org.piramalswasthya.sakhi.databinding.FragmentInputFormPageHhBinding
+import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_registration.NewHouseholdViewModel.State
 import timber.log.Timber
@@ -34,9 +34,9 @@ import timber.log.Timber
 @AndroidEntryPoint
 class NewHouseholdFragment : Fragment() {
 
-    private var _binding: FragmentInputFormPageHhBinding? = null
+    private var _binding: FragmentNewFormBinding? = null
 
-    private val binding: FragmentInputFormPageHhBinding
+    private val binding: FragmentNewFormBinding
         get() = _binding!!
 
 
@@ -56,7 +56,7 @@ class NewHouseholdFragment : Fragment() {
         val listIndex =
             viewModel.updateValueByIdAndReturnListIndex(micClickedElementId, formattedValue)
         listIndex.takeIf { it >= 0 }?.let {
-            binding.inputForm.rvInputForm.adapter?.notifyItemChanged(it)
+            binding.form.rvInputForm.adapter?.notifyItemChanged(it)
         }
     }
 
@@ -104,79 +104,42 @@ class NewHouseholdFragment : Fragment() {
                 requestLocationPermission()
                 alertDialog.dismiss()
             } else
-                Toast.makeText(context, resources.getString(R.string.please_tick_the_checkbox), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    resources.getString(R.string.please_tick_the_checkbox),
+                    Toast.LENGTH_SHORT
+                ).show()
         }
         alertDialog
     }
+    private val nextScreenAlert by lazy {
 
+        MaterialAlertDialogBuilder(requireContext()).setTitle(resources.getString(R.string.add_head_of_family))
+//            .setMessage(str)
+            .setPositiveButton(resources.getString(R.string.yes)) { dialog, _ ->
+                findNavController().navigate(
+                    NewHouseholdFragmentDirections.actionNewHouseholdFragmentToNewBenRegFragment(
+                        viewModel.getHHId(),
+                        18
+                    )
+                )
+                dialog.dismiss()
+            }.setNegativeButton(resources.getString(R.string.no)) { dialog, _ ->
+                findNavController().navigateUp()
+                dialog.dismiss()
+            }.create()
+    }
 
-//    private val pageChangeCallback: OnPageChangeCallback by lazy {
-//        object : OnPageChangeCallback() {
-//
-//            override fun onPageSelected(i: Int) {
-//                onPageChange(i)
-//
-//            }
-//        }
-//    }
-
-//    private fun onPageChange(i: Int) {
-//        Timber.d("OnPageChange $i called with mTab ${viewModel.mTabPosition}")
-//        if (i == viewModel.mTabPosition) {
-//            return
-//        }
-//        if (i < viewModel.mTabPosition)
-//            viewModel.setMTabPosition(i)
-//        else {
-//            val validated =
-//                validateFormForPage(i)
-//            if (validated) {
-//                viewModel.setMTabPosition(i)
-//                if(viewModel.recordExists.value==false){
-//                    if(viewModel.mTabPosition ==1 || viewModel.mTabPosition==2)
-//                        viewModel.saveForm()
-//                    when (viewModel.mTabPosition) {
-//                        1 -> {
-//                            viewModel.saveForm()
-//                        }
-//                        2 -> {
-//                            viewModel.saveForm()
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        binding.vp2Nhhr.currentItem = viewModel.mTabPosition
-//        //binding.tlNhhr.setScrollPosition(mTabPosition, 0f, false)
-//        when (viewModel.mTabPosition) {
-//            0 -> {
-//                binding.btnPrev.visibility = View.GONE
-//                binding.btnNext.visibility = View.VISIBLE
-//                binding.btnSubmitForm.visibility = View.GONE
-//            }
-//            1 -> {
-//                binding.btnNext.visibility = View.VISIBLE
-//                binding.btnPrev.visibility = View.VISIBLE
-//                binding.btnSubmitForm.visibility = View.GONE
-//            }
-//            2 -> {
-//                binding.btnPrev.visibility = View.VISIBLE
-//                binding.btnNext.visibility = View.GONE
-//                if(viewModel.recordExists.value==false)
-//                    binding.btnSubmitForm.visibility = View.VISIBLE
-//            }
-//        }
-//    }
 
     private fun validateCurrentPage(): Boolean {
-        val result = binding.inputForm.rvInputForm.adapter?.let {
+        val result = binding.form.rvInputForm.adapter?.let {
             (it as FormInputAdapter).validateInput(resources)
         }
         Timber.d("Validation : $result")
         return if (result == -1) true
         else {
             if (result != null) {
-                binding.inputForm.rvInputForm.scrollToPosition(result)
+                binding.form.rvInputForm.scrollToPosition(result)
             }
             false
         }
@@ -186,77 +149,17 @@ class NewHouseholdFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentInputFormPageHhBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentNewFormBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-//        binding.tlNhhr.apply {
-//            addTab(newTab().also {
-//                it.text = "Family Details"
-//                it.view.isEnabled = false
-//            })
-//            addTab(newTab().also {
-//                it.text = "Household Details"
-//                it.view.isEnabled = false
-//            })
-//            addTab(newTab().also {
-//                it.text = "Household Amenities"
-//                it.view.isEnabled = false
-//            })
-//        }
-        lifecycleScope.launch {
-            viewModel.currentPage.collect {
-                binding.tvTitle.text = when (it) {
-                    1 -> resources.getString(R.string.nhhr_title_page_1)
-                    2 -> resources.getString(R.string.nhhr_title_page_2)
-                    3 -> resources.getString(R.string.nhhr_title_page_3)
-                    else -> null
-                }
-//                binding.tlNhhr.selectTab(binding.tlNhhr.getTabAt(it - 1), true)
-//                when (it) {
-//                    1 -> {
-//                        binding.btnPrev.visibility = View.INVISIBLE
-//                        binding.btnNext.visibility = View.VISIBLE
-//                        binding.btnSubmitForm.visibility = View.INVISIBLE
-//                    }
-//                    2 -> {
-//                        binding.btnNext.visibility = View.VISIBLE
-//                        binding.btnPrev.visibility = View.VISIBLE
-//                        binding.btnSubmitForm.visibility = View.INVISIBLE
-//                    }
-//                    3 -> {
-//                        binding.btnPrev.visibility = View.VISIBLE
-//                        binding.btnNext.visibility = View.INVISIBLE
-//                        binding.btnSubmitForm.visibility = View.VISIBLE
-//                    }
-//                }
-            }
-        }
-        lifecycleScope.launch {
-            viewModel.prevPageButtonVisibility.collect {
-                binding.btnPrev.visibility = if (it) View.VISIBLE else View.INVISIBLE
-
-            }
-        }
-        lifecycleScope.launch {
-            viewModel.nextPageButtonVisibility.collect {
-                binding.btnNext.visibility = if (it) View.VISIBLE else View.INVISIBLE
-
-            }
-        }
-        lifecycleScope.launch {
-            viewModel.submitPageButtonVisibility.collect {
-                binding.btnSubmitForm.visibility = if (it) View.VISIBLE else View.INVISIBLE
-
-            }
-        }
-        viewModel.recordExists.observe(viewLifecycleOwner) { notIt ->
+        binding.cvPatientInformation.visibility = View.GONE
+        viewModel.readRecord.observe(viewLifecycleOwner) { notIt ->
             notIt?.let { recordExists ->
                 binding.fabEdit.visibility = if (recordExists) View.VISIBLE else View.GONE
-                if (viewModel.currentPage.value == 3 && !recordExists) binding.btnSubmitForm.visibility = View.VISIBLE
+                binding.btnSubmit.visibility = if (!recordExists) View.VISIBLE else View.GONE
                 val adapter = FormInputAdapter(
                     formValueListener = FormInputAdapter.FormValueListener { formId, index ->
                         when (index) {
@@ -267,13 +170,12 @@ class NewHouseholdFragment : Fragment() {
 
                             else -> {
                                 viewModel.updateListOnValueChanged(formId, index)
-//                                hardCodedListUpdate(formId)
                             }
                         }
                     },
                     isEnabled = !recordExists
                 )
-                binding.inputForm.rvInputForm.adapter = adapter
+                binding.form.rvInputForm.adapter = adapter
                 lifecycleScope.launch {
                     viewModel.formList.collect {
                         if (it.isNotEmpty())
@@ -286,78 +188,36 @@ class NewHouseholdFragment : Fragment() {
         binding.fabEdit.setOnClickListener {
             viewModel.setRecordExists(false)
         }
-//        binding.vp2Nhhr.adapter = NewHouseholdPagerAdapter(this)
-//        binding.vp2Nhhr.isUserInputEnabled = false
-//        when (viewModel.mTabPosition) {
-//            0 -> {
-//                binding.btnPrev.visibility = View.GONE
-//                binding.btnNext.visibility = View.VISIBLE
-//            }
-//            1 -> {
-//                binding.btnNext.visibility = View.VISIBLE
-//                binding.btnPrev.visibility = View.VISIBLE
-//            }
-//            2 -> {
-//                binding.btnPrev.visibility = View.VISIBLE
-//                binding.btnNext.visibility = View.GONE
-//            }
-//        }
-
-//        binding.tlNhhr.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-//            override fun onTabSelected(tab: TabLayout.Tab?) {
-//                tab?.position?.takeIf {viewModel.tabSelectedPosition(it+1)  }?.let {
-//                    goToNextPage()
-//                }?:
-//            }
-//
-//            override fun onTabUnselected(tab: TabLayout.Tab?) {
-//
-//            }
-//
-//            override fun onTabReselected(tab: TabLayout.Tab?) {
-//
-//            }
-//
-//        })
-//        TabLayoutMediator(binding.tlNhhr, binding.vp2Nhhr) { tab, position ->
-//            tab.text = when (position) {
-//                0 -> "Family Details"
-//                1 -> "Household Details"
-//                2 -> "Household Amenities"
-//                else -> "NA"
-//            }
-//            tab.view.isClickable = false
-//        }.attach()
-
-        binding.btnPrev.setOnClickListener {
-            goToPrevPage()
-        }
-        binding.btnNext.setOnClickListener {
-            goToNextPage()
-        }
-        binding.btnSubmitForm.setOnClickListener {
+        binding.btnSubmit.setOnClickListener {
             submitHouseholdForm()
         }
-
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state!!) {
                 State.IDLE -> {
                 }
 
                 State.SAVING -> {
-                    binding.clContent.visibility = View.GONE
-                    binding.rlSaving.visibility = View.VISIBLE
+                    binding.llContent.visibility = View.GONE
+                    binding.pbForm.visibility = View.VISIBLE
                 }
 
                 State.SAVE_SUCCESS -> {
-                    binding.clContent.visibility = View.VISIBLE
-                    binding.rlSaving.visibility = View.GONE
-                    Toast.makeText(context, resources.getString(R.string.save_successful), Toast.LENGTH_LONG).show()
-                    findNavController().navigate(
-                        NewHouseholdFragmentDirections.actionNewHouseholdFragmentToNewBenRegTypeFragment(
-                            viewModel.getHHId()
+                    binding.llContent.visibility = View.VISIBLE
+                    binding.pbForm.visibility = View.GONE
+                    Toast.makeText(
+                        context,
+                        resources.getString(R.string.save_successful),
+                        Toast.LENGTH_LONG
+                    ).show()
+                    nextScreenAlert.setMessage(
+                        resources.getString(
+                            R.string.add_head_of_family_message,
+                            viewModel.getHoFName()
                         )
                     )
+                    nextScreenAlert.show()
+
+
                 }
 
                 State.SAVE_FAILED -> {
@@ -366,8 +226,8 @@ class NewHouseholdFragment : Fragment() {
                         resources.getString(R.string.something_wend_wong_contact_testing),
                         Toast.LENGTH_LONG
                     ).show()
-                    binding.clContent.visibility = View.VISIBLE
-                    binding.rlSaving.visibility = View.GONE
+                    binding.llContent.visibility = View.VISIBLE
+                    binding.pbForm.visibility = View.GONE
                 }
             }
         }
@@ -376,23 +236,15 @@ class NewHouseholdFragment : Fragment() {
     }
 
     private fun submitHouseholdForm() {
+        activity?.currentFocus?.clearFocus()
         if (validateCurrentPage()) {
             viewModel.saveForm()
         }
     }
 
-    private fun goToPrevPage() {
-        viewModel.goToPreviousPage()
-    }
-
-    private fun goToNextPage() {
-        if (validateCurrentPage())
-            viewModel.goToNextPage()
-    }
-
     override fun onStart() {
         super.onStart()
-        viewModel.recordExists.observe(viewLifecycleOwner) {
+        viewModel.readRecord.observe(viewLifecycleOwner) {
             if (!it && !viewModel.getIsConsentAgreed()) consentAlert.show()
         }
 

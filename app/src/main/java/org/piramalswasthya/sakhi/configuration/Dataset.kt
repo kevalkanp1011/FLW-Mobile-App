@@ -1,7 +1,6 @@
 package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
-import android.content.res.Configuration
 import android.content.res.Resources
 import android.util.Range
 import androidx.annotation.StringRes
@@ -32,7 +31,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     protected var englishResources: Resources
 
     init {
-        englishResources = HelperUtil().getLocalizedResources( context, Languages.ENGLISH)
+        englishResources = HelperUtil().getLocalizedResources(context, Languages.ENGLISH)
         resources = HelperUtil().getLocalizedResources(context, currentLanguage)
     }
 
@@ -286,7 +285,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         addItems.forEach {
             if (list.contains(it)) list.remove(it)
         }
-        val addPosition = position.takeIf { it != -1 } ?: (list.indexOf(source) + 1)
+        val addPosition = if(position==-2) list.lastIndex+1 else position.takeIf { it != -1 } ?: (list.indexOf(source) + 1)
         list.addAll(addPosition, addItems)
         return addPosition
 //        return if (age in ageTriggerRange && ageUnit.value == ageUnit.entries?.get(
@@ -380,7 +379,8 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     }
 
     protected fun assignValuesToAgeAndAgeUnitFromDob(
-        dob: Long, ageElement: FormElement, ageUnitElement: FormElement
+        dob: Long, ageElement: FormElement, ageUnitElement: FormElement,
+        ageAtMarriageElement : FormElement? = null, timeStampDateOfMarriage : Long? = null
     ): Int {
         ageUnitElement.errorText = null
         ageElement.errorText = null
@@ -389,6 +389,12 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         }.setToStartOfTheDay()
         val calNow = Calendar.getInstance().setToStartOfTheDay()
         val yearsDiff = getDiffYears(calDob, calNow)
+        ageAtMarriageElement?.value = null
+        ageAtMarriageElement?.max = yearsDiff.toLong()
+        timeStampDateOfMarriage?.let {
+            ageAtMarriageElement?.value =
+                getDiffYears(calDob, Calendar.getInstance().apply { timeInMillis = it } ).toString()
+        }
         if (yearsDiff > 0) {
             ageUnitElement.value = ageUnitElement.entries?.last()
             ageElement.value = yearsDiff.toString()
@@ -426,6 +432,15 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         } else
             ageElement.value = "0"
         return -1
+    }
+
+    protected fun getDoMFromDoR(yearsSinceMarriage: Int?, regDate: Long): Long? {
+        if (yearsSinceMarriage == null) return null
+        val cal = Calendar.getInstance()
+//        cal.timeInMillis = regDate
+        cal.add(Calendar.YEAR, -1 * yearsSinceMarriage)
+        return cal.timeInMillis
+
     }
 
 
@@ -607,6 +622,8 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
             list.indexOf(it)
         } ?: -1
     }
+
+    fun getListSize() = list.size
 
     fun setValueById(id: Int, value: String?) {
         list.find { it.id == id }?.let {
