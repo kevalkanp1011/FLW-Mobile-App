@@ -20,6 +20,7 @@ class PregnantWomanAncVisitDataset(
 ) : Dataset(context, currentLanguage) {
 
     private var lmp: Long = 0L
+    private var lastAncVisitDate: Long = 0L
 
     private val ancDate = FormElement(
         id = 1,
@@ -84,6 +85,17 @@ class PregnantWomanAncVisitDataset(
         min = 30,
         max = 200
     )
+    private val bp = FormElement(
+        id = 991,
+        inputType = InputType.EDIT_TEXT,
+        title = "BP of PW (mm Hg) – Systolic/ Diastolic",
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
+        etMaxLength = 7,
+//        digitsInput = "0123456789-",
+        required = false,
+        min = 50,
+        max = 300
+    )
     private val bpSystolic = FormElement(
         id = 9,
         inputType = InputType.EDIT_TEXT,
@@ -104,6 +116,26 @@ class PregnantWomanAncVisitDataset(
         min = 30,
         max = 200
     )
+    private val bpSystolicReq = FormElement(
+        id = 119,
+        inputType = InputType.EDIT_TEXT,
+        title = "BP of PW (mm Hg) – Systolic",
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 3,
+        required = true,
+        min = 50,
+        max = 300
+    )
+    private val bpDiastolicReq = FormElement(
+        id = 120,
+        inputType = InputType.EDIT_TEXT,
+        title = "BP of PW (mm Hg) – Diastolic",
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 3,
+        required = true,
+        min = 30,
+        max = 200
+    )
 
     private val pulseRate = FormElement(
         id = 11,
@@ -118,6 +150,8 @@ class PregnantWomanAncVisitDataset(
         title = "HB (gm/dl)",
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL,
         etMaxLength = 4,
+        minDecimal = 2.0,
+        maxDecimal = 15.0,
         required = false,
     )
 
@@ -279,6 +313,14 @@ class PregnantWomanAncVisitDataset(
         required = false,
     )
 
+    private var toggleBp = false
+
+    fun resetBpToggle() {
+        toggleBp = false
+    }
+
+    fun triggerBpToggle() = toggleBp
+
 
     suspend fun setUpPage(
         ben: BenRegCache?,
@@ -293,6 +335,7 @@ class PregnantWomanAncVisitDataset(
             ancVisit,
             isAborted,
             weight,
+//            bp,
             bpSystolic,
             bpDiastolic,
             pulseRate,
@@ -313,6 +356,7 @@ class PregnantWomanAncVisitDataset(
         )
         abortionDate.min = lmp + TimeUnit.DAYS.toMillis(5 * 7 + 1)
         abortionDate.max = minOf(System.currentTimeMillis(), lmp + TimeUnit.DAYS.toMillis(21 * 7))
+
         ben?.let {
             if (visitNumber == 1) {
                 ancDate.min = (lmp + TimeUnit.DAYS.toMillis(Konstants.minAnc1Week * 7L + 1L)).also {
@@ -324,6 +368,7 @@ class PregnantWomanAncVisitDataset(
                 )
             } else {
                 lastAnc?.let {
+                    lastAncVisitDate = it.ancDate
                     val minWeekInit = when (visitNumber) {
                         2 -> Konstants.minAnc2Week
                         3 -> Konstants.minAnc3Week
@@ -352,7 +397,10 @@ class PregnantWomanAncVisitDataset(
                     )
                 }
             }
+            maternalDateOfDeath.min = maxOf(lmp, lastAncVisitDate) + TimeUnit.DAYS.toMillis(1)
+            maternalDateOfDeath.max = maxOf(getEddFromLmp(lmp), System.currentTimeMillis())
         }
+
 //        ancDate.value = getDateFromLong(System.currentTimeMillis())
         weekOfPregnancy.value = ancDate.value?.let {
             val long = getLongFromDate(it)
@@ -458,7 +506,16 @@ class PregnantWomanAncVisitDataset(
                             removeItems = listOf(deliveryDone),
                         )
                     }
+                    maternalDateOfDeath.apply {
+                        value = null
+                        min = maxOf(lastAncVisitDate, long) + TimeUnit.DAYS.toMillis(1)
+                    }
                     weekOfPregnancy.value = weeks.toString()
+                    if (weeks > 12) {
+                        triggerDependants(source = dateOfTTOrTdBooster, addItems = emptyList() , removeItems = listOf(numFolicAcidTabGiven))
+                    }else{
+                        triggerDependants(source = dateOfTTOrTdBooster, removeItems = emptyList() , addItems = listOf(numFolicAcidTabGiven))
+                    }
                 }
                 -1
             }
@@ -479,23 +536,81 @@ class PregnantWomanAncVisitDataset(
             )
 
             weight.id -> validateIntMinMax(weight)
+            bpDiastolicReq.id -> {
+                validateIntMinMax(bpDiastolicReq)
+                if (bpSystolicReq.value.isNullOrEmpty() && bpDiastolicReq.value.isNullOrEmpty()) {
+                    bpDiastolicReq.min = null
+                    triggerDependants(
+                        source = weight,
+                        addItems = listOf(bpSystolic, bpDiastolic),
+                        removeItems = listOf(bpSystolicReq, bpDiastolicReq)
+                    )
+                } else {
+                    if (bpSystolicReq.value == null) bpSystolicReq.value = bpSystolic.value
+                    triggerDependants(
+                        source = weight,
+                        addItems = listOf(bpSystolicReq),
+                        removeItems = listOf(bpSystolic)
+                    )
+                }
+            }
+
+            bpSystolicReq.id -> {
+                if (bpSystolicReq.value.isNullOrEmpty() && bpDiastolicReq.value.isNullOrEmpty()) {
+                    bpDiastolicReq.min = null
+                    triggerDependants(
+                        source = weight,
+                        addItems = listOf(bpSystolic, bpDiastolic),
+                        removeItems = listOf(bpSystolicReq, bpDiastolicReq)
+                    )
+                } else {
+                    bpDiastolicReq.value = bpDiastolic.value
+                    triggerDependants(
+                        source = bpSystolicReq,
+                        addItems = listOf(bpDiastolicReq),
+                        removeItems = listOf(bpDiastolic)
+                    )
+                }
+            }
+
             bpSystolic.id, bpDiastolic.id -> {
-                (isBothBpEmpty()).let {
-                    bpDiastolic.required = !it
-                    bpSystolic.required = !it
-                    if(!it){
-                        validateEmptyOnEditText(bpSystolic)
-                        validateEmptyOnEditText(bpDiastolic)
-                    }
-                }
-                if(formId==bpSystolic.id){
-                    bpSystolic.value?.takeIf { it.isNotEmpty() }?.toLong()?.let {
-                        bpDiastolic.max = it
-                    }
-                }
-                validateIntMinMax(bpSystolic)
-                validateIntMinMax(bpDiastolic)
-                -1
+                if (!bpSystolic.value.isNullOrEmpty()) {
+                    bpDiastolicReq.max = bpSystolic.value?.toLong()
+                    return triggerDependants(
+                        source = bpSystolic,
+                        addItems = listOf(bpDiastolicReq),
+                        removeItems = listOf(bpDiastolic)
+                    )
+                } else if (!bpDiastolic.value.isNullOrEmpty()) {
+                    return triggerDependants(
+                        source = weight,
+                        addItems = listOf(bpSystolicReq),
+                        removeItems = listOf(bpSystolic)
+                    )
+                } else
+                    return -1
+//                (isBothBpEmpty()).let {
+//                    if (it) {
+//
+//                        triggerDependants(
+//                            source = weight,
+//                            removeItems = listOf(bpSystolicReq, bpDiastolicReq),
+//                            addItems = listOf(bpSystolic, bpDiastolic),
+//                        )
+//                    }
+//                    else{
+//
+//                    }
+//                    bpDiastolic.required = !it
+//                    bpSystolic.required = !it
+//                    if (currReq == it) {
+//                        toggleBp = true
+//                    }
+//                    if (!it) {
+//                        validateEmptyOnEditText(bpSystolic)
+//                        validateEmptyOnEditText(bpDiastolic)
+//                    }
+//                }
             }
 
             pulseRate.id -> {
@@ -504,6 +619,8 @@ class PregnantWomanAncVisitDataset(
 
             hb.id -> {
                 validateDoubleMinMax(hb)
+                if (hb.errorText == null) validateDouble1DecimalPlaces(hb)
+                -1
             }
 
             numFolicAcidTabGiven.id -> validateIntMinMax(numFolicAcidTabGiven)
@@ -514,7 +631,9 @@ class PregnantWomanAncVisitDataset(
                 triggerIndex = 1,
                 target = highRiskCondition,
                 targetSideEffect = listOf(otherHighRiskCondition)
-            )
+            ).also {
+                highRiskCondition.value = highRiskCondition.entries!!.first()
+            }
 
             highRiskCondition.id -> triggerDependants(
                 source = highRiskCondition,

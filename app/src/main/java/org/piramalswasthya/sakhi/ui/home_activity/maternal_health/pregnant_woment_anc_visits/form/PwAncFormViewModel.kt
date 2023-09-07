@@ -141,6 +141,9 @@ class PwAncFormViewModel @Inject constructor(
 
     fun getBpReq() = dataset.isBpSetToRequired()
     fun isBothBpEmpty() = dataset.isBothBpEmpty()
+    fun triggerBpToggle()=  dataset.triggerBpToggle()
+
+    fun resetBpToggle() = dataset.resetBpToggle()
 
 
 }

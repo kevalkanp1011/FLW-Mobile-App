@@ -542,6 +542,16 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         return -1
     }
 
+    protected fun validateDouble1DecimalPlaces(formElement: FormElement): Int {
+        formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.let {
+            if (it.contains('.') && it.substringAfter(".").length > 1)
+                "Only 1 decimal place allowed"
+            else
+                null
+        }
+        return -1
+    }
+
 
     protected fun validateMobileNumberOnEditText(formElement: FormElement): Int {
         formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.toLong()?.let {

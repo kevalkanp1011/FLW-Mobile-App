@@ -38,7 +38,7 @@
                     android:maxWidth="300dp"
                     android:paddingVertical="@dimen/padding_small"
                     android:text="@{form.title}"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                     app:layout_constraintEnd_toStartOf="@id/tv_nullable"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/ll_content"
@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="@dimen/padding_small"
                     android:text="@{(form.doubleStar? @string/radio_title_ds(form.title) : @string/radio_title(form.title))}"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                     app:layout_constraintStart_toEndOf="@id/tv_title"
                     app:layout_constraintTop_toTopOf="@id/ll_content"
                     app:required="@{form.required}" />

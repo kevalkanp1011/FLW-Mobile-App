@@ -98,9 +98,9 @@ class SuspectedTBDataset(
                 )
                 dateOfVisit.value = getDateFromLong(saved.visitDate)
                 isSputumCollected.value = if (saved.isSputumCollected == true) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(R.array.yes_no)[1]
-                sputumSubmittedAt.value = resources.getStringArray(R.array.tb_submitted_yet)[englishResources.getStringArray(R.array.tb_submitted_yet).indexOf(saved.sputumSubmittedAt)]
+                sputumSubmittedAt.value = if (saved.sputumSubmittedAt == null) null else resources.getStringArray(R.array.tb_submitted_yet)[englishResources.getStringArray(R.array.tb_submitted_yet).indexOf(saved.sputumSubmittedAt)]
                 nikshayId.value = saved.nikshayId
-                sputumTestResult.value = resources.getStringArray(R.array.tb_test_result)[englishResources.getStringArray(R.array.tb_test_result).indexOf(saved.sputumTestResult)]
+                sputumTestResult.value = if (saved.sputumTestResult == null) null else resources.getStringArray(R.array.tb_test_result)[englishResources.getStringArray(R.array.tb_test_result).indexOf(saved.sputumTestResult)]
                 referred.value = if (saved.referred == true) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(R.array.yes_no)[1]
                 followUps.value = saved.followUps
             } else {
@@ -148,9 +148,9 @@ class SuspectedTBDataset(
         (cacheModel as TBSuspectedCache).let { form ->
             form.visitDate = getLongFromDate(dateOfVisit.value)
             form.isSputumCollected = isSputumCollected.value == resources.getStringArray(R.array.yes_no)[0]
-            form.sputumSubmittedAt = englishResources.getStringArray(R.array.tb_submitted_yet)[sputumSubmittedAt.entries!!.indexOf(sputumSubmittedAt.value)]
+            form.sputumSubmittedAt = if (sputumSubmittedAt.value == null) null else englishResources.getStringArray(R.array.tb_submitted_yet)[sputumSubmittedAt.entries!!.indexOf(sputumSubmittedAt.value)]
             form.nikshayId = nikshayId.value
-            form.sputumTestResult = englishResources.getStringArray(R.array.tb_test_result)[sputumTestResult.entries!!.indexOf(sputumTestResult.value)]
+            form.sputumTestResult = if (sputumTestResult.value == null) null else englishResources.getStringArray(R.array.tb_test_result)[sputumTestResult.entries!!.indexOf(sputumTestResult.value)]
             form.referred = referred.value == resources.getStringArray(R.array.yes_no)[0]
             form.followUps = followUps.value
         }
