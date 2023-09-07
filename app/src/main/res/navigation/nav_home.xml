@@ -315,15 +315,6 @@
             app:destination="@id/hbycMonthListFragment" />
     </fragment>
     <fragment
-        android:id="@+id/pregnancyListFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pregnancy_list.PregnancyListFragment"
-        android:label="@string/pregnancy_list"
-        tools:layout="@layout/fragment_pregnancy_list">
-        <action
-            android:id="@+id/action_pregnancyListFragment_to_pmsmaFragment"
-            app:destination="@id/pmsmaFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/deliveryStageListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.delivery_stage_list.DeliveryStageListFragment"
         android:label="@string/delivery_stage_list"

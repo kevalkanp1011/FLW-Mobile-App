@@ -1,9 +1,11 @@
 package org.piramalswasthya.sakhi.model
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import com.squareup.moshi.Json
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
@@ -145,6 +147,30 @@ private fun getDateStringFromLong(dateLong: Long?): String? {
     }
 
 }
+
+
+data class BenWithECRCache(
+    @Embedded
+    val ben: BenBasicCache,
+    @Relation(
+        parentColumn = "benId", entityColumn = "benId"
+    )
+    val ecr: EligibleCoupleRegCache?,
+
+) {
+    fun asDomainModel() : BenWithEcrDomain{
+        return BenWithEcrDomain(
+            ben = ben.asBasicDomainModel(),
+            ecr = ecr
+        )
+    }
+}
+
+data class BenWithEcrDomain(
+//    val benId: Long,
+    val ben: BenBasicDomain,
+    val ecr: EligibleCoupleRegCache?
+)
 
 data class EcrPost(
     val benId: Long,

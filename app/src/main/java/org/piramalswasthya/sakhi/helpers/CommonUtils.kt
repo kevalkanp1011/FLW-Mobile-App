@@ -5,7 +5,9 @@ import org.piramalswasthya.sakhi.model.AncFormState
 import org.piramalswasthya.sakhi.model.AncStatus
 import org.piramalswasthya.sakhi.model.BenBasicDomain
 import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
+import org.piramalswasthya.sakhi.model.BenWithEcrDomain
 import org.piramalswasthya.sakhi.model.BenWithEctListDomain
+import org.piramalswasthya.sakhi.model.BenWithPwrDomain
 import org.piramalswasthya.sakhi.model.PregnantWomenVisitDomain
 import timber.log.Timber
 import java.util.Calendar
@@ -60,6 +62,29 @@ fun filterEcTrackingList(
                 it.ben.age.lowercase().contains(filterText) ||
                 it.ben.benFullName.lowercase().contains(filterText) ||
                 it.numChildren.contains(filterText)
+    }
+fun filterEcRegistrationList(
+    list: List<BenWithEcrDomain>,
+    filterText: String
+) =
+    list.filter {
+        it.ben.benId.toString().lowercase().contains(filterText) ||
+                it.ben.age.lowercase().contains(filterText) ||
+                it.ben.benFullName.lowercase().contains(filterText)
+//                ||
+//                it.numChildren.contains(filterText)
+    }
+
+fun filterPwrRegistrationList(
+    list: List<BenWithPwrDomain>,
+    filterText: String
+) =
+    list.filter {
+        it.ben.benId.toString().lowercase().contains(filterText) ||
+                it.ben.age.lowercase().contains(filterText) ||
+                it.ben.benFullName.lowercase().contains(filterText)
+//                ||
+//                it.numChildren.contains(filterText)
     }
 
 @JvmName("filterBenList1")

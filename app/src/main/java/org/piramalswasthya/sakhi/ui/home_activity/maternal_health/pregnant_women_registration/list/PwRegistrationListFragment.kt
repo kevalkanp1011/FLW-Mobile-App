@@ -14,7 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
+import org.piramalswasthya.sakhi.adapters.PwRegistrationListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 
 @AndroidEntryPoint
@@ -38,8 +38,8 @@ class PwRegistrationListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapterForForm(
-            BenListAdapterForForm.ClickListener(
+        val benAdapter = PwRegistrationListAdapter(
+            PwRegistrationListAdapter.ClickListener(
                 {
                     Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
                 },
@@ -49,7 +49,7 @@ class PwRegistrationListFragment : Fragment() {
                             benId
                         )
                     )
-                }), "Register Pregnancy"
+                })
         )
         binding.rvAny.adapter = benAdapter
 
