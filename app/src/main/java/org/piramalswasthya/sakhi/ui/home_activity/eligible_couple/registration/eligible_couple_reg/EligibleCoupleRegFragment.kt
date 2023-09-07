@@ -105,46 +105,55 @@ class EligibleCoupleRegFragment : Fragment() {
         binding.form.rvInputForm.adapter?.apply {
             when (formId) {
                 17 -> {
+                    notifyItemChanged(viewModel.getIndexOfChildLabel())
                     notifyItemChanged(viewModel.getIndexOfAge1())
                     notifyItemChanged(viewModel.getIndexOfGap1())
                 }
 
                 22 -> {
+                    notifyItemChanged(viewModel.getIndexOfChildLabel())
                     notifyItemChanged(viewModel.getIndexOfAge2())
                     notifyItemChanged(viewModel.getIndexOfGap2())
                 }
 
                 27 -> {
+                    notifyItemChanged(viewModel.getIndexOfChildLabel())
                     notifyItemChanged(viewModel.getIndexOfAge3())
                     notifyItemChanged(viewModel.getIndexOfGap3())
                 }
 
                 32 -> {
+                    notifyItemChanged(viewModel.getIndexOfChildLabel())
                     notifyItemChanged(viewModel.getIndexOfAge4())
                     notifyItemChanged(viewModel.getIndexOfGap4())
                 }
 
                 37 -> {
+                    notifyItemChanged(viewModel.getIndexOfChildLabel())
                     notifyItemChanged(viewModel.getIndexOfAge5())
                     notifyItemChanged(viewModel.getIndexOfGap5())
                 }
 
                 42 -> {
+                    notifyItemChanged(viewModel.getIndexOfChildLabel())
                     notifyItemChanged(viewModel.getIndexOfAge6())
                     notifyItemChanged(viewModel.getIndexOfGap6())
                 }
 
                 47 -> {
+                    notifyItemChanged(viewModel.getIndexOfChildLabel())
                     notifyItemChanged(viewModel.getIndexOfAge7())
                     notifyItemChanged(viewModel.getIndexOfGap7())
                 }
 
                 52 -> {
+                    notifyItemChanged(viewModel.getIndexOfChildLabel())
                     notifyItemChanged(viewModel.getIndexOfAge8())
                     notifyItemChanged(viewModel.getIndexOfGap8())
                 }
 
                 57 -> {
+                    notifyItemChanged(viewModel.getIndexOfChildLabel())
                     notifyItemChanged(viewModel.getIndexOfAge9())
                     notifyItemChanged(viewModel.getIndexOfGap9())
                 }
@@ -162,6 +171,18 @@ class EligibleCoupleRegFragment : Fragment() {
 
                 13 -> {
                     notifyItemChanged(viewModel.getIndexOfChildren())
+                }
+
+                61, 62 -> {
+                    notifyItemChanged(viewModel.getIndexOfChildLabel())
+                }
+
+                63, 64 -> {
+                    notifyItemChanged(viewModel.getIndexOfPhysicalObservationLabel())
+                }
+
+                65, 66, 67, 68 -> {
+                    notifyItemChanged(viewModel.getIndexOfObstetricHistoryLabel())
                 }
             }
         }

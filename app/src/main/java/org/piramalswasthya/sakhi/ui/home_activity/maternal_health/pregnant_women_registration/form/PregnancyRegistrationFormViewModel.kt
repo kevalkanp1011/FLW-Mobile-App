@@ -14,8 +14,10 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.PregnantWomanRegistrationDataset
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.model.HRPPregnantAssessCache
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
+import org.piramalswasthya.sakhi.repositories.HRPRepo
 import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
 import timber.log.Timber
 import javax.inject.Inject
@@ -26,6 +28,7 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
     preferenceDao: PreferenceDao,
     @ApplicationContext context: Context,
     private val maternalHealthRepo: MaternalHealthRepo,
+    private val hrpRepo: HRPRepo,
     private val benRepo: BenRepo
 //    private val householdRepo: HouseholdRepo,
 //    userRepo: UserRepo
@@ -60,6 +63,8 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
 
     private lateinit var pregnancyRegistrationForm: PregnantWomanRegistrationCache
 
+    private var assess: HRPPregnantAssessCache? = null
+
     init {
         viewModelScope.launch {
             val asha  = preferenceDao.getLoggedInUser()!!
@@ -75,6 +80,8 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
                 )
             }
 
+            val assess = hrpRepo.getPregnantAssess(benId)
+
             maternalHealthRepo.getSavedRegistrationRecord(benId)?.let {
                 pregnancyRegistrationForm = it
                 _recordExists.value = true
@@ -84,6 +91,7 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
 
             dataset.setUpPage(
                 ben,
+                assess,
                 if (recordExists.value == true) pregnancyRegistrationForm else null
             )
 
@@ -114,6 +122,10 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
                         val hasBenUpdated = dataset.mapValueToBenRegId(it)
                         if (hasBenUpdated)
                             benRepo.updateRecord(it)
+                    }
+                    dataset.mapValuesForAssess(assess, 1)
+                    assess?.let {
+                        hrpRepo.saveRecord(it)
                     }
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {

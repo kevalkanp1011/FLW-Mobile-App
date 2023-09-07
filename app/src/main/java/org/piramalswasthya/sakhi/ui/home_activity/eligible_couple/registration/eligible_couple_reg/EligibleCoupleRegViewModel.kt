@@ -15,8 +15,11 @@ import org.piramalswasthya.sakhi.configuration.EligibleCoupleRegistrationDataset
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.EligibleCoupleRegCache
+import org.piramalswasthya.sakhi.model.HRPNonPregnantAssessCache
+import org.piramalswasthya.sakhi.model.HRPPregnantAssessCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.EcrRepo
+import org.piramalswasthya.sakhi.repositories.HRPRepo
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -26,6 +29,7 @@ class EligibleCoupleRegViewModel @Inject constructor(
     preferenceDao: PreferenceDao,
     @ApplicationContext context: Context,
     private val ecrRepo: EcrRepo,
+    private val hrpRepo: HRPRepo,
     private val benRepo: BenRepo
 ) : ViewModel() {
 
@@ -58,6 +62,8 @@ class EligibleCoupleRegViewModel @Inject constructor(
 
     private lateinit var ecrForm: EligibleCoupleRegCache
 
+    private var assess: HRPNonPregnantAssessCache? = null
+
     init {
         viewModelScope.launch {
             val asha  = preferenceDao.getLoggedInUser()!!
@@ -73,6 +79,10 @@ class EligibleCoupleRegViewModel @Inject constructor(
                 )
             }
 
+            assess = hrpRepo.getNonPregnantAssess(benId)
+            if (assess == null) {
+                assess = HRPNonPregnantAssessCache(benId = benId, syncState = SyncState.UNSYNCED)
+            }
             ecrRepo.getSavedRecord(benId)?.let {
                 ecrForm = it
                 _recordExists.value = true
@@ -82,6 +92,7 @@ class EligibleCoupleRegViewModel @Inject constructor(
 
             dataset.setUpPage(
                 ben,
+                assess,
                 if (recordExists.value == true) ecrForm else null
             )
         }
@@ -109,9 +120,14 @@ class EligibleCoupleRegViewModel @Inject constructor(
 
                         }
                     }
+                    dataset.mapValuesToAssess(assess, 1)
+                    assess?.let {
+                        hrpRepo.saveRecord(it)
+                    }
+
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
-                    Timber.d("saving ecr data failed!!")
+                    Timber.d("saving ecr data failed!! $e")
                     _state.postValue(State.SAVE_FAILED)
                 }
             }
@@ -185,4 +201,11 @@ class EligibleCoupleRegViewModel @Inject constructor(
     fun getIndexOfGap9(): Int {
         return dataset.getIndexOfGap9()
     }
+
+    fun getIndexOfTimeLessThan18() = dataset.getIndexOfTimeLessThan18m()
+    fun getIndexOfChildLabel() = dataset.getIndexOfChildLabel()
+
+    fun getIndexOfPhysicalObservationLabel() = dataset.getIndexOfPhysicalObservationLabel()
+
+    fun getIndexOfObstetricHistoryLabel() = dataset.getIndexOfObstetricHistoryLabel()
 }

@@ -9,6 +9,7 @@ import org.piramalswasthya.sakhi.helpers.getWeeksOfPregnancy
 import org.piramalswasthya.sakhi.model.BenBasicCache
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.FormElement
+import org.piramalswasthya.sakhi.model.HRPPregnantAssessCache
 import org.piramalswasthya.sakhi.model.InputType
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import java.util.Calendar
@@ -341,7 +342,37 @@ class PregnantWomanRegistrationDataset(
         hasDependants = true
     )
 
-    suspend fun setUpPage(ben: BenRegCache?, saved: PregnantWomanRegistrationCache?) {
+    private var childInfoLabel = FormElement(
+        id = 35,
+        inputType = InputType.HEADLINE,
+        title = resources.getString(R.string.information_on_children),
+        arrayId = -1,
+        required = false,
+        hasDependants = false,
+        showHighRisk = false
+    )
+
+    private var physicalObservationLabel = FormElement(
+        id = 36,
+        inputType = InputType.HEADLINE,
+        title = resources.getString(R.string.physical_observation),
+        arrayId = -1,
+        required = false,
+        hasDependants = false,
+        showHighRisk = false
+    )
+
+    private var obstetricHistoryLabel = FormElement(
+        id = 37,
+        inputType = InputType.HEADLINE,
+        title = resources.getString(R.string.obstetric_history),
+        arrayId = -1,
+        required = false,
+        hasDependants = false,
+        showHighRisk = false
+    )
+
+    suspend fun setUpPage(ben: BenRegCache?, assess: HRPPregnantAssessCache?, saved: PregnantWomanRegistrationCache?) {
         val list = mutableListOf(
             dateOfReg,
             rchId,
@@ -363,10 +394,13 @@ class PregnantWomanRegistrationDataset(
 //            dateOfhbsAgTestDone,
             pastIllness,
             isFirstPregnancy,
+            childInfoLabel,
             noOfDeliveries,
             timeLessThan18m,
+            physicalObservationLabel,
             heightShort,
             ageCheck,
+            obstetricHistoryLabel,
             rhNegative,
             homeDelivery,
             badObstetric,
@@ -392,6 +426,36 @@ class PregnantWomanRegistrationDataset(
             husbandName.value = ben.genDetails?.spouseName
             age.value = "${BenBasicCache.getAgeFromDob(ben.dob)} YEARS"
         }
+        assess?.let {
+            noOfDeliveries.value = getLocalValueInArray(R.array.yes_no, it.noOfDeliveries)
+            timeLessThan18m.value = getLocalValueInArray(R.array.yes_no, it.timeLessThan18m)
+            heightShort.value = getLocalValueInArray(R.array.yes_no, it.heightShort)
+            age.value = getLocalValueInArray(R.array.yes_no, it.age)
+            rhNegative.value = getLocalValueInArray(R.array.yes_no, it.rhNegative)
+            homeDelivery.value = getLocalValueInArray(R.array.yes_no, it.homeDelivery)
+            badObstetric.value = getLocalValueInArray(R.array.yes_no, it.badObstetric)
+            multiplePregnancy.value = getLocalValueInArray(R.array.yes_no, it.multiplePregnancy)
+            lmp.value = getDateFromLong(it.lmpDate)
+            edd.value = getDateFromLong(it.edd)
+
+            childInfoLabel.showHighRisk = (
+                    noOfDeliveries.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            timeLessThan18m.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+                    )
+
+            physicalObservationLabel.showHighRisk = (
+                    heightShort.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            age.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+                    )
+
+            obstetricHistoryLabel.showHighRisk = (
+                    rhNegative.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            homeDelivery.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            badObstetric.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            multiplePregnancy.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+                    )
+        }
+
         saved?.let {
             dateOfReg.apply {
                 value = getDateFromLong(it.dateOfRegistration)
@@ -620,6 +684,25 @@ class PregnantWomanRegistrationDataset(
                 validateAllAlphabetsSpaceOnEditText(otherComplicationsDuringLastPregnancy)
             }
 
+            noOfDeliveries.id, timeLessThan18m.id -> {
+                childInfoLabel.showHighRisk = noOfDeliveries.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                        timeLessThan18m.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+                -1
+            }
+
+            heightShort.id, age.id -> {
+                physicalObservationLabel.showHighRisk = heightShort.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                        age.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+                -1
+            }
+
+            rhNegative.id, homeDelivery.id, badObstetric.id, multiplePregnancy.id -> {
+                obstetricHistoryLabel.showHighRisk = rhNegative.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                        homeDelivery.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                        badObstetric.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                        multiplePregnancy.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+                -1
+            }
             isHrpCase.id -> {
                 triggerDependants(
                     source = isHrpCase,
@@ -670,6 +753,37 @@ class PregnantWomanRegistrationDataset(
         }
     }
 
+    fun mapValuesForAssess(assess: HRPPregnantAssessCache?, pageNumber: Int) {
+        assess?.let { form ->
+            form.noOfDeliveries = getEnglishValueInArray(R.array.yes_no, noOfDeliveries.value)
+            form.timeLessThan18m = getEnglishValueInArray(R.array.yes_no, timeLessThan18m.value)
+            form.heightShort = getEnglishValueInArray(R.array.yes_no, heightShort.value)
+            form.age = getEnglishValueInArray(R.array.yes_no, age.value)
+            form.rhNegative = getEnglishValueInArray(R.array.yes_no, rhNegative.value)
+            form.homeDelivery = getEnglishValueInArray(R.array.yes_no, homeDelivery.value)
+            form.badObstetric = getEnglishValueInArray(R.array.yes_no, badObstetric.value)
+            form.multiplePregnancy = getEnglishValueInArray(R.array.yes_no, multiplePregnancy.value)
+            form.lmpDate = getLongFromDate(lmp.value)
+            form.edd = getLongFromDate(edd.value)
+        }
+    }
+
+    fun getIndexOfChildLabel() = getIndexById(childInfoLabel.id)
+
+    fun getIndexOfPhysicalObservationLabel() = getIndexById(physicalObservationLabel.id)
+
+    fun getIndexOfObstetricHistoryLabel() = getIndexById(obstetricHistoryLabel.id)
+
+    fun isHighRisk(): Boolean {
+        return noOfDeliveries.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                timeLessThan18m.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                heightShort.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                age.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                rhNegative.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                homeDelivery.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                badObstetric.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                multiplePregnancy.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+    }
     fun mapValueToBenRegId(ben: BenRegCache?): Boolean {
         val rchIdFromBen = ben?.rchId?.takeIf { it.isNotEmpty() }?.toLong()
         rchId.value?.takeIf {

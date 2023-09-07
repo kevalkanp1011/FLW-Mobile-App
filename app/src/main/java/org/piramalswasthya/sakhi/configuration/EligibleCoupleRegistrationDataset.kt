@@ -13,6 +13,8 @@ import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.EligibleCoupleRegCache
 import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.Gender
+import org.piramalswasthya.sakhi.model.HRPNonPregnantAssessCache
+import org.piramalswasthya.sakhi.model.HRPPregnantAssessCache
 import org.piramalswasthya.sakhi.model.InputType.DATE_PICKER
 import org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT
 import org.piramalswasthya.sakhi.model.InputType.HEADLINE
@@ -21,6 +23,7 @@ import org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     Dataset(context, language) {
@@ -60,6 +63,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         required = true,
         max = System.currentTimeMillis(),
         min = 0L,
+        hasDependants = true
     )
 
     private val rchId = FormElement(
@@ -793,11 +797,36 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         hasDependants = true
     )
 
+    private val infoChildLabel = FormElement(
+        id = 69,
+        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        title = resources.getString(R.string.information_on_children),
+        required = false
+    )
+
+    private val physicalObsLabel = FormElement(
+        id = 70,
+        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        title = resources.getString(R.string.physical_observation),
+        required = false
+    )
+
+    private val obsHistoryLabel = FormElement(
+        id = 71,
+        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        title = resources.getString(R.string.obstetric_history),
+        required = false
+    )
+
     private var maleChild = 0
 
     private var femaleChild = 0
 
-    suspend fun setUpPage(ben: BenRegCache?, saved: EligibleCoupleRegCache?) {
+    private var dateOfBirth = 0L
+
+    private var lastDeliveryDate = 0L
+
+    suspend fun setUpPage(ben: BenRegCache?, assess: HRPNonPregnantAssessCache?, saved: EligibleCoupleRegCache?) {
         val list = mutableListOf(
             dateOfReg,
             rchId,
@@ -811,18 +840,21 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             bankName,
             branchName,
             ifsc,
+            noOfChildren,
+            noOfLiveChildren,
+            numMale,
+            numFemale,
+            infoChildLabel,
             noOfDeliveries,
             timeLessThan18m,
+            physicalObsLabel,
             heightShort,
             ageCheck,
+            obsHistoryLabel,
             misCarriage,
             homeDelivery,
             medicalIssues,
             pastCSection,
-            noOfChildren,
-            noOfLiveChildren,
-            numMale,
-            numFemale
         )
         dateOfReg.value = getDateFromLong(System.currentTimeMillis())
 //        dateOfReg.value?.let {
@@ -839,6 +871,16 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             name.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
             husbandName.value = ben.genDetails?.spouseName
             age.value = BenBasicCache.getAgeFromDob(ben.dob).toString()
+            dateOfBirth = ben.dob
+            val dobCal = Calendar.getInstance()
+            dobCal.timeInMillis = ben.dob
+            if (getDiffYears(dobCal, Calendar.getInstance()) < 18 || getDiffYears(dobCal, Calendar.getInstance()) > 35) {
+                ageCheck.value = resources.getStringArray(R.array.yes_no)[0]
+                ageCheck.isEnabled = false
+            } else {
+                ageCheck.value = resources.getStringArray(R.array.yes_no)[1]
+                ageCheck.isEnabled = false
+            }
             ben.genDetails?.ageAtMarriage?.let { it1 ->
                 ageAtMarriage.value = it1.toString()
                 val cal = Calendar.getInstance()
@@ -848,6 +890,26 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                 timeAtMarriage = cal.timeInMillis
             }
         }
+        assess?.let {
+            noOfDeliveries.value = getLocalValueInArray(R.array.yes_no, it.noOfDeliveries)
+            timeLessThan18m.value = getLocalValueInArray(R.array.yes_no,it.timeLessThan18m)
+            heightShort.value = getLocalValueInArray(R.array.yes_no,it.heightShort)
+            ageCheck.value = getLocalValueInArray(R.array.yes_no,it.age)
+            misCarriage.value = getLocalValueInArray(R.array.yes_no,it.misCarriage)
+            homeDelivery.value = getLocalValueInArray(R.array.yes_no,it.homeDelivery)
+            medicalIssues.value = getLocalValueInArray(R.array.yes_no,it.medicalIssues)
+            pastCSection.value = getLocalValueInArray(R.array.yes_no,it.pastCSection)
+
+            infoChildLabel.showHighRisk =
+                (noOfDeliveries.value == resources.getStringArray(R.array.yes_no)[0] || timeLessThan18m.value == resources.getStringArray(R.array.yes_no)[0])
+
+            physicalObsLabel.showHighRisk =
+                (heightShort.value == resources.getStringArray(R.array.yes_no)[0] || ageCheck.value == resources.getStringArray(R.array.yes_no)[0])
+
+            obsHistoryLabel.showHighRisk =
+                (misCarriage.value == resources.getStringArray(R.array.yes_no)[0] || homeDelivery.value == resources.getStringArray(R.array.yes_no)[0]
+                        || medicalIssues.value == resources.getStringArray(R.array.yes_no)[0] || pastCSection.value == resources.getStringArray(R.array.yes_no)[0])
+       }
         saved?.let { ecCache ->
             dateOfReg.value = getDateFromLong(ecCache.dateOfReg)
             bankAccount.value = ecCache.bankAccount?.toString()
@@ -1054,6 +1116,20 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
+
+            dateOfReg.id -> {
+                updateTimeLessThan18()
+                val calReg = Calendar.getInstance()
+                calReg.timeInMillis = getLongFromDate(dateOfReg.value)
+                val calDob = Calendar.getInstance()
+                calDob.timeInMillis = dateOfBirth
+                if (getDiffYears(calDob, calReg) < 18 || getDiffYears(calDob, calReg) > 35) {
+                    ageCheck.value = resources.getStringArray(R.array.yes_no)[0]
+                } else {
+                    ageCheck.value = resources.getStringArray(R.array.yes_no)[1]
+                }
+                -1
+            }
             rchId.id -> {
                 validateRchIdOnEditText(rchId)
             }
@@ -1097,10 +1173,27 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 //                    noOfLiveChildren.isEnabled = false
                     numMale.value = "0"
                     numFemale.value = "0"
+                    noOfDeliveries.value = null
+                    noOfDeliveries.isEnabled = true
+                    handleListOnValueChanged(noOfDeliveries.id, 0)
+                    timeLessThan18m.value = null
+                    timeLessThan18m.isEnabled = true
+                    handleListOnValueChanged(timeLessThan18m.id, 0)
+
                 } else {
                     noOfLiveChildren.max = noOfChildren.value?.takeIf { it.isNotEmpty() }?.toLong()
                     validateIntMinMax(noOfLiveChildren)
                     validateIntMinMax(noOfChildren)
+                    noOfChildren.value?.let {
+                        if (it.toInt() >3) {
+                            noOfDeliveries.value = resources.getStringArray(R.array.yes_no)[0]
+                            noOfDeliveries.isEnabled = false
+                        } else {
+                            noOfDeliveries.value = resources.getStringArray(R.array.yes_no)[1]
+                            noOfDeliveries.isEnabled = false
+                        }
+                        handleListOnValueChanged(noOfDeliveries.id, 0)
+                    }
                     if (noOfLiveChildren.value == "0") noOfLiveChildren.value = null
 //                    noOfLiveChildren.isEnabled = true
                     numMale.value = null
@@ -1115,6 +1208,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     assignValuesToAgeFromDob(dob1Long, age1)
                     setSiblingAgeDiff(timeAtMarriage, dob1Long, marriageFirstChildGap)
                     dob2.min = dob1Long
+                    if (dob1Long > lastDeliveryDate) lastDeliveryDate = dob1Long
+                    updateTimeLessThan18()
                 }
                 -1
             }
@@ -1126,6 +1221,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     assignValuesToAgeFromDob(dob2Long, age2)
                     setSiblingAgeDiff(dob1Long, dob2Long, firstAndSecondChildGap)
                     dob3.min = dob2Long
+                    if (dob2Long > lastDeliveryDate) lastDeliveryDate = dob2Long
+                    updateTimeLessThan18()
                 }
                 -1
             }
@@ -1137,6 +1234,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     assignValuesToAgeFromDob(dob3Long, age3)
                     setSiblingAgeDiff(dob2Long, dob3Long, secondAndThirdChildGap)
                     dob4.min = dob3Long
+                    if (dob3Long > lastDeliveryDate) lastDeliveryDate = dob3Long
+                    updateTimeLessThan18()
                 }
                 -1
             }
@@ -1148,6 +1247,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     assignValuesToAgeFromDob(dob4Long, age4)
                     setSiblingAgeDiff(dob3Long, dob4Long, thirdAndFourthChildGap)
                     dob5.min = dob4Long
+                    if (dob4Long > lastDeliveryDate) lastDeliveryDate = dob4Long
+                    updateTimeLessThan18()
                 }
                 -1
             }
@@ -1159,6 +1260,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     assignValuesToAgeFromDob(dob5Long, age5)
                     setSiblingAgeDiff(dob4Long, dob5Long, fourthAndFifthChildGap)
                     dob6.min = dob5Long
+                    if (dob5Long > lastDeliveryDate) lastDeliveryDate = dob5Long
+                    updateTimeLessThan18()
                 }
                 -1
             }
@@ -1170,6 +1273,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     assignValuesToAgeFromDob(dob6Long, age6)
                     setSiblingAgeDiff(dob5Long, dob6Long, fifthAndSixthChildGap)
                     dob7.min = dob6Long
+                    if (dob6Long > lastDeliveryDate) lastDeliveryDate = dob6Long
+                    updateTimeLessThan18()
                 }
                 -1
             }
@@ -1181,6 +1286,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     assignValuesToAgeFromDob(dob7Long, age7)
                     setSiblingAgeDiff(dob6Long, dob7Long, sixthAndSeventhChildGap)
                     dob8.min = dob7Long
+                    if (dob7Long > lastDeliveryDate) lastDeliveryDate = dob7Long
+                    updateTimeLessThan18()
                 }
                 -1
             }
@@ -1192,6 +1299,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     assignValuesToAgeFromDob(dob8Long, age8)
                     setSiblingAgeDiff(dob7Long, dob8Long, seventhAndEighthChildGap)
                     dob9.min = dob8Long
+                    if (dob8Long > lastDeliveryDate) lastDeliveryDate = dob8Long
+                    updateTimeLessThan18()
                 }
                 -1
             }
@@ -1202,6 +1311,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     val dob9Long = getLongFromDate(dob9.value)
                     assignValuesToAgeFromDob(dob9Long, age9)
                     setSiblingAgeDiff(dob8Long, dob9Long, eighthAndNinthChildGap)
+                    if (dob9Long > lastDeliveryDate) lastDeliveryDate = dob9Long
+                    updateTimeLessThan18()
                 }
                 -1
             }
@@ -1535,18 +1646,40 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                 -1
             }
 
+            noOfDeliveries.id, timeLessThan18m.id -> {
+                infoChildLabel.showHighRisk =
+                    (noOfDeliveries.value == resources.getStringArray(R.array.yes_no)[0] || timeLessThan18m.value == resources.getStringArray(R.array.yes_no)[0])
+                -1
+            }
+
+            heightShort.id, age.id -> {
+                physicalObsLabel.showHighRisk =
+                    (heightShort.value == resources.getStringArray(R.array.yes_no)[0] || age.value == resources.getStringArray(R.array.yes_no)[0])
+                -1
+            }
+
+            misCarriage.id, homeDelivery.id, medicalIssues.id, pastCSection.id -> {
+                obsHistoryLabel.showHighRisk =
+                    (misCarriage.value == resources.getStringArray(R.array.yes_no)[0] || homeDelivery.value == resources.getStringArray(R.array.yes_no)[0]
+                            || medicalIssues.value == resources.getStringArray(R.array.yes_no)[0] || pastCSection.value == resources.getStringArray(R.array.yes_no)[0])
+                -1
+            }
             else -> -1
         }
     }
 
-//    private fun setMarriageAndFirstChildGap() {
-//        marriageFirstChildGap.value =
-//            (age1.value?.let { age1 ->
-//                (ageAtMarriage.value?.toInt()?.let { age.value?.toInt()?.minus(it) })?.minus(
-//                    age1.toInt()
-//                )
-//            }).toString()
-//    }
+    private suspend fun updateTimeLessThan18() {
+        if (lastDeliveryDate > 0) {
+            if (lastDeliveryDate - getLongFromDate(dateOfReg.value) <= TimeUnit.DAYS.toMillis(548)) {
+                timeLessThan18m.value = resources.getStringArray(R.array.yes_no)[0]
+                timeLessThan18m.isEnabled = false
+            } else {
+                timeLessThan18m.value = resources.getStringArray(R.array.yes_no)[1]
+                timeLessThan18m.isEnabled = false
+            }
+            handleListOnValueChanged(timeLessThan18m.id, 0)
+        }
+    }
 
     private fun setSiblingAgeDiff(old: Long, new: Long, target: FormElement) {
         val calOld = Calendar.getInstance().setToStartOfTheDay().apply {
@@ -1558,47 +1691,6 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         val diff = getDiffYears(calOld, calNew)
         target.value = diff.toString()
     }
-
-
-//    private fun setFirstChildAndSecondChildGap() {
-//        firstAndSecondChildGap.value =
-//            (age2.value?.toInt()?.let { age1.value?.toInt()?.minus(it) }).toString()
-//    }
-//
-//    private fun setSecondAndThirdChildGap() {
-//        secondAndThirdChildGap.value =
-//            (age3.value?.toInt()?.let { age2.value?.toInt()?.minus(it) }).toString()
-//    }
-//
-//    private fun setThirdAndFourthChildGap() {
-//        thirdAndFourthChildGap.value =
-//            (age4.value?.toInt()?.let { age3.value?.toInt()?.minus(it) }).toString()
-//    }
-//
-//    private fun setFourthAndFifthChildGap() {
-//        fourthAndFifthChildGap.value =
-//            (age5.value?.toInt()?.let { age4.value?.toInt()?.minus(it) }).toString()
-//    }
-//
-//    private fun setFifthAndSixthChildGap() {
-//        fifthAndSixthChildGap.value =
-//            (age6.value?.toInt()?.let { age5.value?.toInt()?.minus(it) }).toString()
-//    }
-//
-//    private fun setSixthAndSeventhChildGap() {
-//        sixthAndSeventhChildGap.value =
-//            (age7.value?.toInt()?.let { age6.value?.toInt()?.minus(it) }).toString()
-//    }
-//
-//    private fun setSeventhAndEighthChildGap() {
-//        seventhAndEighthChildGap.value =
-//            (age8.value?.toInt()?.let { age7.value?.toInt()?.minus(it) }).toString()
-//    }
-//
-//    private fun setEighthAndNinthChildGap() {
-//        eighthAndNinthChildGap.value =
-//            (age9.value?.toInt()?.let { age8.value?.toInt()?.minus(it) }).toString()
-//    }
 
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
         (cacheModel as EligibleCoupleRegCache).let { ecr ->
@@ -1729,12 +1821,48 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                 isUpdated = true
             }
         }
+        isHighRisk().let { highRisk ->
+            if (highRisk) {
+                ben?.isHrpStatus = true
+            }
+        }
         if (isUpdated) {
             if (ben?.processed != "N")
                 ben?.processed = "U"
             ben?.syncState = SyncState.UNSYNCED
         }
         return isUpdated
+    }
+
+    fun mapValuesToAssess(assess: HRPNonPregnantAssessCache?, pageNumber: Int) {
+        assess?.let { form ->
+            form.noOfDeliveries = getEnglishValueInArray(R.array.yes_no, noOfDeliveries.value)
+            form.heightShort = getEnglishValueInArray(R.array.yes_no, heightShort.value)
+            form.age = getEnglishValueInArray(R.array.yes_no, ageCheck.value)
+            form.misCarriage = getEnglishValueInArray(R.array.yes_no, misCarriage.value)
+            form.homeDelivery = getEnglishValueInArray(R.array.yes_no, homeDelivery.value)
+            form.medicalIssues = getEnglishValueInArray(R.array.yes_no, medicalIssues.value)
+            form.timeLessThan18m = getEnglishValueInArray(R.array.yes_no, timeLessThan18m.value)
+            form.pastCSection = getEnglishValueInArray(R.array.yes_no, pastCSection.value)
+        }
+    }
+
+    fun getIndexOfTimeLessThan18m() = getIndexById(timeLessThan18m.id)
+    fun getIndexOfChildLabel() = getIndexById(infoChildLabel.id)
+
+    fun getIndexOfPhysicalObservationLabel() = getIndexById(physicalObsLabel.id)
+
+    fun getIndexOfObstetricHistoryLabel() = getIndexById(obsHistoryLabel.id)
+
+    fun isHighRisk(): Boolean {
+        return noOfDeliveries.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                timeLessThan18m.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                heightShort.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                age.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                misCarriage.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                homeDelivery.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                medicalIssues.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                pastCSection.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
     }
 
     fun getIndexOfChildren() = getIndexById(noOfChildren.id)

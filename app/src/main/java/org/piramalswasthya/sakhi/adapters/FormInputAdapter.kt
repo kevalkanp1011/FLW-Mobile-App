@@ -366,7 +366,7 @@ class FormInputAdapter(
                             )
                         )
 
-                        rdBtn.buttonTintList = colorStateList
+//                        rdBtn.buttonTintList = colorStateList
                         rdBtn.text = it
                         addView(rdBtn)
                         if (item.value == it) rdBtn.isChecked = true

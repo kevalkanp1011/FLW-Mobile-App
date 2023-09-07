@@ -184,7 +184,7 @@ class IconDataset @Inject constructor(
             HRPPregnantFragmentDirections.actionHRPPregnantFragmentToPregnantListFragment()
         ),
         Icon(
-            R.drawable.ic__follow_up_high_risk_preg,
+            R.drawable.ic__follow_up_hrp,
             resources.getString(R.string.icon_title_hrp_pregnant_track),
             recordsRepo.hrpTrackingPregListCount,
             HRPPregnantFragmentDirections.actionHRPPregnantFragmentToHRPPregnantListFragment()
