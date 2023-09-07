@@ -44,8 +44,12 @@ class BenRepo @Inject constructor(
         }
     }
 
-    suspend fun getBenBasicDomainListFromHousehold(hhId: Long): List<BenBasicDomain> {
-        return benDao.getAllBenForHousehold(hhId).map { it.asBasicDomainModel() }
+    suspend fun getBenBasicListFromHousehold(hhId: Long): List<BenBasicCache> {
+        return benDao.getAllBasicBenForHousehold(hhId)
+
+    }
+    suspend fun getBenListFromHousehold(hhId: Long): List<BenRegCache> {
+        return benDao.getAllBenForHousehold(hhId)
 
     }
 

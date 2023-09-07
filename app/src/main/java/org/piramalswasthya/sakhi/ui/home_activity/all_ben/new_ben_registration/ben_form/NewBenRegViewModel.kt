@@ -19,8 +19,11 @@ import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.AgeUnit
 import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.BenRegGen
 import org.piramalswasthya.sakhi.model.BenRegKid
+import org.piramalswasthya.sakhi.model.Gender
 import org.piramalswasthya.sakhi.model.HouseholdCache
+import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.model.User
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.HouseholdRepo
@@ -42,16 +45,38 @@ class NewBenRegViewModel @Inject constructor(
         IDLE, SAVING, SAVE_SUCCESS, SAVE_FAILED
     }
 
-    private val hhId = NewBenRegFragmentArgs.fromSavedStateHandle(savedStateHandle).hhId
-    val isHoF = NewBenRegFragmentArgs.fromSavedStateHandle(savedStateHandle).relToHeadId==0
+    sealed class ListUpdateState {
+        object Idle : ListUpdateState()
+
+        object Updating : ListUpdateState()
+        class Updated(val formElementId: Int) : ListUpdateState()
+    }
+
+    val hhId = NewBenRegFragmentArgs.fromSavedStateHandle(savedStateHandle).hhId
+    private val relToHeadId =
+        NewBenRegFragmentArgs.fromSavedStateHandle(savedStateHandle).relToHeadId
+    private val benGender =
+        when (NewBenRegFragmentArgs.fromSavedStateHandle(savedStateHandle).gender) {
+            1 -> Gender.MALE
+            2 -> Gender.FEMALE
+            3 -> Gender.TRANSGENDER
+            else -> null
+        }
+
+    val isHoF = relToHeadId == 18
+
     private val benIdFromArgs =
         NewBenRegFragmentArgs.fromSavedStateHandle(savedStateHandle).benId
 
     private val _state = MutableLiveData(State.IDLE)
     val state: LiveData<State>
         get() = _state
+    private val _listUpdateState: MutableLiveData<ListUpdateState> =
+        MutableLiveData(ListUpdateState.Idle)
+    val listUpdateState: LiveData<ListUpdateState>
+        get() = _listUpdateState
 
-    private val _recordExists = MutableLiveData(benIdFromArgs > 0)
+    private val _recordExists = MutableLiveData(benIdFromArgs != 0L)
     val recordExists: LiveData<Boolean>
         get() = _recordExists
 
@@ -61,6 +86,7 @@ class NewBenRegViewModel @Inject constructor(
     val formList = dataset.listFlow
     private lateinit var household: HouseholdCache
     private lateinit var ben: BenRegCache
+    private lateinit var locationRecord: LocationRecord
 
     private var lastImageFormId: Int = 0
 
@@ -69,22 +95,43 @@ class NewBenRegViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 user = preferenceDao.getLoggedInUser()!!
                 household = benRepo.getHousehold(hhId)!!
-                val benIdToSet = minOf(benRepo.getMinBenId()-1L, -1L)
-                ben = benRepo.getBeneficiaryRecord(benIdFromArgs, hhId) ?: BenRegCache(
-                    ashaId = user.userId,
-                    beneficiaryId = benIdToSet,
-                    householdId = hhId,
-                    isAdult = false,
-                    isKid = true,
-                    isDraft = true,
-                    kidDetails = BenRegKid(),
-                    syncState = SyncState.UNSYNCED,
-                    locationRecord = preferenceDao.getLocationRecord()!!
-                )
-                if (isHoF) dataset.setPageForHof(ben, household) else {
-                    val hoFBen = household.benId?.let { benRepo.getBenFromId(it) }
-                    dataset.setPageForFamilyMember(ben, household, hoFBen)
+                locationRecord = preferenceDao.getLocationRecord()!!
+
+                if (benIdFromArgs != 0L) {
+                    ben = benRepo.getBeneficiaryRecord(benIdFromArgs, hhId)!!
+                    dataset.setFirstPageToRead(
+                        ben,
+                        familyHeadPhoneNo = household.family?.familyHeadPhoneNo
+                    )
+                } else {
+                    if (isHoF) dataset.setPageForHof(
+                        if (this@NewBenRegViewModel::ben.isInitialized) ben else null,
+                        household
+                    ) else {
+                        val familyList = benRepo.getBenListFromHousehold(hhId)
+                        val hoFBen = familyList.firstOrNull { it.beneficiaryId == household.benId }
+                        dataset.setPageForFamilyMember(
+                            ben = if (this@NewBenRegViewModel::ben.isInitialized) ben else null,
+                            household = household,
+                            hoF = hoFBen, benGender = benGender!!,
+                            relationToHeadId = relToHeadId,
+                            hoFSpouse = familyList.firstOrNull { it.familyHeadRelationPosition == 5 || it.familyHeadRelationPosition == 6 }
+
+                        )
+                    }
                 }
+//                ?: BenRegCache(
+//                    ashaId = user.userId,
+//                    beneficiaryId = benIdToSet,
+//                    householdId = hhId,
+//                    isAdult = false,
+//                    isKid = true,
+//                    isDraft = true,
+//                    kidDetails = BenRegKid(),
+//                    syncState = SyncState.UNSYNCED,
+//                    locationRecord = preferenceDao.getLocationRecord()!!
+//                )
+
             }
         }
 
@@ -97,9 +144,24 @@ class NewBenRegViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 try {
                     _state.postValue(State.SAVING)
+                    if (!this@NewBenRegViewModel::ben.isInitialized) {
+                        val benIdToSet = minOf(benRepo.getMinBenId() - 1L, -1L)
+                        ben = BenRegCache(
+                            ashaId = user.userId,
+                            beneficiaryId = benIdToSet,
+                            householdId = hhId,
+                            isAdult = false,
+                            isKid = false,
+                            isDraft = true,
+                            kidDetails = BenRegKid(),
+                            genDetails = BenRegGen(),
+                            syncState = SyncState.UNSYNCED,
+                            locationRecord = locationRecord
+                        )
+                    }
                     dataset.mapValues(ben, 2)
                     ben.apply {
-                        if (beneficiaryId <0L) {
+                        if (beneficiaryId < 0L) {
                             serverUpdatedStatus = 1
                             processed = "N"
                         } else {
@@ -115,7 +177,7 @@ class NewBenRegViewModel @Inject constructor(
                         updatedBy = user.userName
                     }
                     benRepo.persistRecord(ben)
-                    if(isHoF) {
+                    if (isHoF) {
                         household.benId = ben.beneficiaryId
                         householdRepo.updateHousehold(household)
                     }
@@ -131,10 +193,20 @@ class NewBenRegViewModel @Inject constructor(
 
     fun updateListOnValueChanged(formId: Int, index: Int) {
         viewModelScope.launch {
+            _listUpdateState.value = ListUpdateState.Updating
             dataset.updateList(formId, index)
+            _listUpdateState.value = ListUpdateState.Updated(formId)
         }
 
     }
+
+    fun resetListUpdateState() {
+        _listUpdateState.value = ListUpdateState.Idle
+    }
+    fun getBenGender()  = ben.gender
+    fun getBenName()  = "${ben.firstName} ${ben.lastName?:""}"
+    fun isHoFMarried()  = isHoF && ben.genDetails?.maritalStatusId==2
+
 
     fun setCurrentImageFormId(id: Int) {
         lastImageFormId = id
@@ -162,6 +234,9 @@ class NewBenRegViewModel @Inject constructor(
         dataset.setValueById(id, value)
         return dataset.getIndexById(id)
     }
+
     fun getIndexOfAgeAtMarriage() = dataset.getIndexOfAgeAtMarriage()
+    fun getIndexOfMaritalStatus() = dataset.getIndexOfMaritalStatus()
+    fun getIndexOfContactNumber() = dataset.getIndexOfContactNumber()
 
 }

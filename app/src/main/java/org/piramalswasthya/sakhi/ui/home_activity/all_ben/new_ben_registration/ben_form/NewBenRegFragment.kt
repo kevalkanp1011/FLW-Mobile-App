@@ -1,7 +1,6 @@
 package org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_form
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -20,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.BuildConfig
@@ -28,6 +28,7 @@ import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.contracts.SpeechToTextContract
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.helpers.Konstants
+import org.piramalswasthya.sakhi.model.Gender
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_form.NewBenRegViewModel.State
 import org.piramalswasthya.sakhi.work.WorkerUtils
@@ -81,8 +82,42 @@ class NewBenRegFragment : Fragment() {
         }
 
 
+    private fun showAddSpouseAlert() {
+        val alertDialog = MaterialAlertDialogBuilder(requireContext()).setCancelable(false)
+
+        // Setting Dialog Title
+        alertDialog.setTitle("Add Spouse")
+
+        // Setting Dialog Message
+        alertDialog.setMessage("Would you like to add ${viewModel.getBenName()}'s ${if (viewModel.getBenGender() == Gender.MALE) "Wife" else "Husband"}?")
+
+        // On pressing Settings button
+        alertDialog.setPositiveButton(
+            "Ok"
+        ) { dialog, _ ->
+            val spouseGender = if (viewModel.getBenGender() == Gender.FEMALE) 1 else 2
+            findNavController().navigate(
+                NewBenRegFragmentDirections.actionNewBenRegFragmentSelf(
+                    hhId = viewModel.hhId,
+                    gender = spouseGender,
+                    relToHeadId = if (spouseGender == 1) 5 else 4
+                )
+            )
+            dialog.dismiss()
+        }
+
+        // on pressing cancel button
+        alertDialog.setNegativeButton(
+            resources.getString(R.string.cancel)
+        ) { dialog, _ ->
+            findNavController().navigateUp()
+            dialog.cancel()
+        }
+        alertDialog.show()
+    }
+
     private fun showSettingsAlert() {
-        val alertDialog: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+        val alertDialog = MaterialAlertDialogBuilder(requireContext())
 
         // Setting Dialog Title
         alertDialog.setTitle(resources.getString(R.string.enable_gps))
@@ -125,6 +160,7 @@ class NewBenRegFragment : Fragment() {
 
         viewModel.recordExists.observe(viewLifecycleOwner) { notIt ->
             notIt?.let { recordExists ->
+                if(recordExists) binding.btnSubmit.visibility = View.GONE
                 val adapter =
                     FormInputAdapter(imageClickListener = FormInputAdapter.ImageClickListener {
                         viewModel.setCurrentImageFormId(it)
@@ -153,6 +189,12 @@ class NewBenRegFragment : Fragment() {
                             adapter.submitList(it)
                     }
                 }
+//                viewModel.listUpdateState.observe(viewLifecycleOwner) {
+//                    if (it is NewBenRegViewModel.ListUpdateState.Updated) {
+//                        hardCodedListUpdate(it.formElementId)
+//                        viewModel.resetListUpdateState()
+//                    }
+//                }
             }
         }
 
@@ -176,7 +218,11 @@ class NewBenRegFragment : Fragment() {
                         Toast.LENGTH_LONG
                     ).show()
                     WorkerUtils.triggerAmritPushWorker(requireContext())
-                    findNavController().navigate(viewModel.getNavDirection())
+                    if (viewModel.isHoFMarried()) {
+                        showAddSpouseAlert()
+                    } else {
+                        findNavController().navigateUp()
+                    }
                 }
 
                 State.SAVE_FAILED -> {
@@ -213,6 +259,7 @@ class NewBenRegFragment : Fragment() {
                     }*/
 
                 }
+
                 8 -> {
                     notifyItemChanged(viewModel.getIndexOfAgeAtMarriage())
                     notifyItemChanged(5)
@@ -232,8 +279,13 @@ class NewBenRegFragment : Fragment() {
                 }
 
                 9 -> {
-                    notifyItemChanged(10)
+                    viewModel.getIndexOfMaritalStatus().takeIf { it!=-1 }?.let {
+                        notifyItemChanged(it)
+                    }
                 }
+
+                12 -> notifyDataSetChanged()
+//notifyItemChanged(viewModel.getIndexOfContactNumber())
             }
         }
     }

@@ -90,6 +90,28 @@
         <item>Other</item>
     </string-array>
 
+    <string-array name="nbr_relationship_to_head_src">
+        <item>Mother</item>
+        <item>Father</item>
+        <item>Brother</item>
+        <item>Sister</item>
+        <item>Wife</item>
+        <item>Husband</item>
+        <item>Nephew</item>
+        <item>Niece</item>
+        <item>Son</item>
+        <item>Daughter</item>
+        <item>Grand Father</item>
+        <item>Grand Mother</item>
+        <item>Father in Law</item>
+        <item>Mother in Law</item>
+        <item>Grand Son</item>
+        <item>Grand Daughter</item>
+        <item>Son in Law</item>
+        <item>Daughter in Law</item>
+        <item>Self</item>
+        <item>Other</item>
+    </string-array>
     <string-array name="nbr_relationship_to_head">
         <item>Mother</item>
         <item>Father</item>
@@ -109,8 +131,19 @@
         <item>Grand Daughter</item>
         <item>Son in Law</item>
         <item>Daughter in Law</item>
-        <item>Self</item>
         <item>Other</item>
+    </string-array>
+    <string-array name="nbr_relationship_to_head_unmarried_filter">
+        <item>Wife</item>
+        <item>Husband</item>
+        <item>Son</item>
+        <item>Daughter</item>
+        <item>Father in Law</item>
+        <item>Mother in Law</item>
+        <item>Grand Son</item>
+        <item>Grand Daughter</item>
+        <item>Son in Law</item>
+        <item>Daughter in Law</item>
     </string-array>
 
     <string-array name="nbr_relationship_to_head_male">
@@ -123,14 +156,13 @@
         <item>Father in Law</item>
         <item>Grand Son</item>
         <item>Son in Law</item>
-        <item>Self</item>
         <item>Other</item>
     </string-array>
 
     <string name="marital_status">Marital Status</string>
     <string name="name_ben">Name</string>
     <string name="age_ben">Age</string>
-    <string name="title_new_ben_reg_hof">HoF Registration</string>
+    <string name="title_new_ben_reg_hof">Head Of Family Registration</string>
     <string name="title_new_ben_reg_non_hof">Family Member Registration</string>
 
     <string-array name="nbr_relationship_to_head_female">
@@ -143,7 +175,6 @@
         <item>Mother in Law</item>
         <item>Grand Daughter</item>
         <item>Daughter in Law</item>
-        <item>Self</item>
         <item>Other</item>
     </string-array>
 

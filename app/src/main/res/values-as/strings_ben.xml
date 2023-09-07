@@ -115,6 +115,28 @@
         <item>পৰোৱা গৰুৰ ভেবি</item>
         <item>পৰোৱা পৰী</item>
         <item>পৰোৱা পৰীৰ ভেবি</item>
+        <item>অন্য</item>
+    </string-array>
+
+    <string-array name="nbr_relationship_to_head_src">
+        <item>মা</item>
+        <item>পিতা</item>
+        <item>ভাই</item>
+        <item>বেহীৰ</item>
+        <item>বউ</item>
+        <item>গৰু</item>
+        <item>নেফিউ</item>
+        <item>নিচি</item>
+        <item>মাহ</item>
+        <item>মেহ</item>
+        <item>পৰোৱা পিতা</item>
+        <item>পৰোৱা মা</item>
+        <item>বেহীৰীৰ পিতা</item>
+        <item>বেহীৰীৰ মা</item>
+        <item>পৰোৱা গৰু</item>
+        <item>পৰোৱা গৰুৰ ভেবি</item>
+        <item>পৰোৱা পৰী</item>
+        <item>পৰোৱা পৰীৰ ভেবি</item>
         <item>আত্ম</item>
         <item>অন্য</item>
     </string-array>
@@ -129,7 +151,6 @@
         <item>পৰোৱা গৰুৰ ভেবি</item>
         <item>পৰোৱা পৰী</item>
         <item>পৰোৱা পৰীৰ ভেবি</item>
-        <item>আত্ম</item>
         <item>অন্য</item>
     </string-array>
 
@@ -143,7 +164,6 @@
         <item>পৰোৱা বউ</item>
         <item>পৰোৱা মাহ</item>
         <item>পৰোৱা বেহীৰ</item>
-        <item>আত্ম</item>
         <item>অন্য</item>
     </string-array>
 

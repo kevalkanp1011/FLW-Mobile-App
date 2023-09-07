@@ -43,6 +43,7 @@ class AllBenFragment : Fragment() {
             .setPositiveButton(resources.getString(R.string.ok)) { dialog, _ -> dialog.dismiss() }
             .create()
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,36 +55,48 @@ class AllBenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapter(BenListAdapter.BenClickListener(
-            { hhId, benId, isKid ->
+        val benAdapter = BenListAdapter(
+            clickListener = BenListAdapter.BenClickListener(
+                { hhId, benId, isKid ->
 
-                findNavController().navigate(
-                    if (isKid) AllBenFragmentDirections.actionAllBenFragmentToNewBenRegL15Fragment(
-                        hhId,
-                        benId
-                    )
-                    else
-                        AllBenFragmentDirections.actionAllBenFragmentToNewBenRegG15Fragment(
-                            hhId,
-                            benId
+                    findNavController().navigate(
+                        AllBenFragmentDirections.actionAllBenFragmentToNewBenRegFragment(
+                            hhId = hhId,
+                            benId = benId,
+                            relToHeadId = -1,
+                            gender = 0
+
                         )
-                )
-            },
-            {
-                findNavController().navigate(
-                    AllBenFragmentDirections.actionAllBenFragmentToNewBenRegTypeFragment(
-                        it
                     )
-                )
-            },
-            { benId, hhId ->
-                checkAndGenerateABHA(benId)
-            },
 
-        ),true)
+//                    findNavController().navigate(
+//                        if (isKid) AllBenFragmentDirections.actionAllBenFragmentToNewBenRegL15Fragment(
+//                            hhId,
+//                            benId
+//                        )
+//                        else
+//                            AllBenFragmentDirections.actionAllBenFragmentToNewBenRegG15Fragment(
+//                                hhId,
+//                                benId
+//                            )
+//                    )
+                },
+                {
+                    findNavController().navigate(
+                        AllBenFragmentDirections.actionAllBenFragmentToNewBenRegTypeFragment(
+                            it
+                        )
+                    )
+                },
+                { benId, hhId ->
+                    checkAndGenerateABHA(benId)
+                },
+
+                ), showAbha = true
+        )
         binding.rvAny.adapter = benAdapter
         lifecycleScope.launch {
-            viewModel.benList.collect{
+            viewModel.benList.collect {
                 if (it.isEmpty())
                     binding.flEmpty.visibility = View.VISIBLE
                 else
@@ -119,7 +132,7 @@ class AllBenFragment : Fragment() {
 
         viewModel.abha.observe(viewLifecycleOwner) {
             it.let {
-                if (it != null){
+                if (it != null) {
                     abhaDisclaimer.setMessage(it)
                     abhaDisclaimer.show()
                 }
@@ -128,7 +141,7 @@ class AllBenFragment : Fragment() {
 
         viewModel.benRegId.observe(viewLifecycleOwner) {
             if (it != null) {
-                val intent = Intent (requireActivity(), AbhaIdActivity::class.java)
+                val intent = Intent(requireActivity(), AbhaIdActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 intent.putExtra("benId", viewModel.benId.value)
                 intent.putExtra("benRegId", it)

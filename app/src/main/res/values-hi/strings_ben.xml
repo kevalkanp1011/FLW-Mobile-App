@@ -89,6 +89,27 @@
         <item>पोती</item>
         <item>दामाद</item>
         <item>नातनी</item>
+        <item>अन्य</item>
+    </string-array>
+    <string-array name="nbr_relationship_to_head_src">
+        <item>मां</item>
+        <item>पिता</item>
+        <item>भाई</item>
+        <item>बहन</item>
+        <item>पत्नी</item>
+        <item>पति</item>
+        <item>भतीजा</item>
+        <item>भतीजी</item>
+        <item>बेटा</item>
+        <item>बेटी</item>
+        <item>दादा</item>
+        <item>दादी</item>
+        <item>ससुर</item>
+        <item>सास</item>
+        <item>पोता</item>
+        <item>पोती</item>
+        <item>दामाद</item>
+        <item>नातनी</item>
         <item>स्वयं</item>
         <item>अन्य</item>
     </string-array>
@@ -103,7 +124,6 @@
         <item>ससुर</item>
         <item>पोता</item>
         <item>दामाद</item>
-        <item>स्वयं</item>
         <item>अन्य</item>
     </string-array>
 
@@ -117,7 +137,6 @@
         <item>सास</item>
         <item>पोती</item>
         <item>नातनी</item>
-        <item>स्वयं</item>
         <item>अन्य</item>
     </string-array>
 

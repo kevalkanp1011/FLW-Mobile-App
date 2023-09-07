@@ -91,6 +91,9 @@
         <action
             android:id="@+id/action_allBenFragment_to_newBenRegL15Fragment"
             app:destination="@id/newBenRegL15Fragment" />
+        <action
+            android:id="@+id/action_allBenFragment_to_newBenRegFragment"
+            app:destination="@id/newBenRegFragment" />
     </fragment>
     <fragment
         android:id="@+id/eligibleCoupleFragment"
@@ -234,7 +237,8 @@
             app:argType="long" />
         <action
             android:id="@+id/action_newHouseholdFragment_to_newBenRegFragment"
-            app:destination="@id/newBenRegFragment" />
+            app:destination="@id/newBenRegFragment"
+            app:popUpTo="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/newBenRegTypeFragment"
@@ -823,6 +827,14 @@
             android:name="benId"
             app:argType="long"
             android:defaultValue="0L" />
+        <argument
+            android:name="gender"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <action
+            android:id="@+id/action_newBenRegFragment_self"
+            app:destination="@id/newBenRegFragment"
+            app:launchSingleTop="true" />
     </fragment>
 
 </navigation>

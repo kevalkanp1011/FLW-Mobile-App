@@ -43,7 +43,7 @@ class AdolescentListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.btnNextPage.visibility = View.GONE
         val benAdapter = BenListAdapter(
-            BenListAdapter.BenClickListener(
+            clickListener = BenListAdapter.BenClickListener(
                 { hhId, benId, isKid ->
 
 

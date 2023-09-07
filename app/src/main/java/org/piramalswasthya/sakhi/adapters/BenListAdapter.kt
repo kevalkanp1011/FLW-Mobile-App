@@ -13,6 +13,7 @@ import org.piramalswasthya.sakhi.model.BenBasicDomain
 
 class BenListAdapter(
     private val clickListener: BenClickListener? = null,
+    private val showAddBeneficiaries: Boolean = false,
     private val showAbha: Boolean = false
 ) :
     ListAdapter<BenBasicDomain, BenListAdapter.BenViewHolder>(BenDiffUtilCallBack) {

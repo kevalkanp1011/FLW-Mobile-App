@@ -130,7 +130,7 @@ fun TextView.showBasedOnNumMembers(numMembers: Int?) {
 @BindingAdapter("backgroundTintBasedOnNumMembers")
 fun CardView.setBackgroundTintBasedOnNumMembers(numMembers: Int?) {
     numMembers?.let {
-        val color = MaterialColors.getColor(this,if(it>0) androidx.appcompat.R.attr.colorPrimary else androidx.appcompat.R.attr.colorError)
+        val color = MaterialColors.getColor(this,if(it>0) androidx.appcompat.R.attr.colorPrimary else android.R.attr.colorEdgeEffect)
         setCardBackgroundColor(color)
     }
 }
