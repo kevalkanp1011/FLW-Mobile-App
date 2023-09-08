@@ -560,7 +560,7 @@ data class BenBasicDomain(
     val dob: Long,
     val ageInt: Int = getAgeFromDob(dob),
     val ageUnit: AgeUnit = getAgeUnitFromDob(dob),
-    val age: String = "$ageInt $ageUnit",
+    val age: String = "$ageInt ${ageUnit.name.first()}",
     val mobileNo: String,
     val abhaId: String? = null,
     val fatherName: String? = null,

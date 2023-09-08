@@ -92,7 +92,8 @@ class AllBenFragment : Fragment() {
                     checkAndGenerateABHA(benId)
                 },
 
-                ), showAbha = true
+                ), showAbha = true,
+            showSyncIcon = true
         )
         binding.rvAny.adapter = benAdapter
         lifecycleScope.launch {

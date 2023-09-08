@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -14,6 +15,7 @@ import org.piramalswasthya.sakhi.model.BenBasicDomain
 class BenListAdapter(
     private val clickListener: BenClickListener? = null,
     private val showAddBeneficiaries: Boolean = false,
+    private val showSyncIcon: Boolean = false,
     private val showAbha: Boolean = false
 ) :
     ListAdapter<BenBasicDomain, BenListAdapter.BenViewHolder>(BenDiffUtilCallBack) {
@@ -39,11 +41,15 @@ class BenListAdapter(
         }
 
         fun bind(
-            item: BenBasicDomain, clickListener: BenClickListener?, showAbha: Boolean
+            item: BenBasicDomain,
+            clickListener: BenClickListener?,
+            showAbha: Boolean,
+            showSyncIcon: Boolean
         ) {
             binding.ben = item
             binding.clickListener = clickListener
             binding.showAbha = showAbha
+            binding.ivSyncState.visibility = if(showSyncIcon) View.VISIBLE else View.INVISIBLE
             binding.hasAbha = !item.abhaId.isNullOrEmpty()
             binding.executePendingBindings()
 
@@ -55,7 +61,7 @@ class BenListAdapter(
     ) = BenViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: BenViewHolder, position: Int) {
-        holder.bind(getItem(position), clickListener, showAbha)
+        holder.bind(getItem(position), clickListener, showAbha, showSyncIcon)
     }
 
 

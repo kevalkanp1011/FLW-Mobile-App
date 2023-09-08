@@ -162,6 +162,11 @@ fun Button.setVisibilityOfLayout(show: Boolean?) {
     show?.let {
         visibility = if (it) View.VISIBLE else View.GONE
     }
+}@BindingAdapter("showLayout")
+fun ImageView.setVisibilityOfLayout(show: Boolean?) {
+    show?.let {
+        visibility = if (it) View.VISIBLE else View.GONE
+    }
 }
 
 @BindingAdapter("showLayout")
@@ -279,7 +284,6 @@ private val rotate = RotateAnimation(
 @BindingAdapter("syncState")
 fun ImageView.setSyncState(syncState: SyncState?) {
     syncState?.let {
-        visibility = View.VISIBLE
         val drawable = when (it) {
             SyncState.UNSYNCED -> R.drawable.ic_unsynced
             SyncState.SYNCING -> R.drawable.ic_syncing

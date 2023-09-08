@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.model.BenBasicDomain
+import org.piramalswasthya.sakhi.model.BenHealthIdDetails
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import javax.inject.Inject
 
@@ -27,6 +28,18 @@ class HouseholdMembersViewModel @Inject constructor(
     val benList: LiveData<List<BenBasicDomain>>
         get() = _benList
 
+    private val _abha = MutableLiveData<String?>()
+    val abha: LiveData<String?>
+        get() = _abha
+
+    private val _benId = MutableLiveData<Long?>()
+    val benId: LiveData<Long?>
+        get() = _benId
+
+    private val _benRegId = MutableLiveData<Long?>()
+    val benRegId: LiveData<Long?>
+        get() = _benRegId
+
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -34,6 +47,28 @@ class HouseholdMembersViewModel @Inject constructor(
                     benRepo.getBenBasicListFromHousehold(hhId).map { it.asBasicDomainModel() })
             }
         }
+    }
+
+    fun fetchAbha(benId: Long) {
+        _abha.value = null
+        _benRegId.value = null
+        _benId.value = benId
+        viewModelScope.launch {
+            benRepo.getBenFromId(benId)?.let {
+                val result = benRepo.getBeneficiaryWithId(it.benRegId)
+                if (result != null) {
+                    _abha.value = result.healthIdNumber
+                    it.healthIdDetails = BenHealthIdDetails(result.healthId, result.healthIdNumber)
+                    benRepo.updateRecord(it)
+                } else {
+                    _benRegId.value = it.benRegId
+                }
+            }
+        }
+    }
+
+    fun resetBenRegId() {
+        _benRegId.value = null
     }
 
 

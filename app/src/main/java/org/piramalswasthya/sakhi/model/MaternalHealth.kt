@@ -8,16 +8,23 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.helpers.getDateString
 import org.piramalswasthya.sakhi.helpers.getWeeksOfPregnancy
 import org.piramalswasthya.sakhi.network.getLongFromDate
+import org.piramalswasthya.sakhi.utils.HelperUtil
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 
 data class PregnantWomenVisitCache(
     val benId: Long,
     val name: String,
     val dob: Long,
+    val mobileNo: Long,
+    val rchId: String? = null,
+    val familyHeadName: String? = null,
     val spouseName: String,
     val lmp: Long,
 ) {
@@ -26,7 +33,10 @@ data class PregnantWomenVisitCache(
             benId = benId,
             name = name,
             age = "${BenBasicCache.getAgeFromDob(dob)} Years",
+            familyHeadName = familyHeadName ?: "Not Available",
             spouseName = spouseName,
+            mobileNo = mobileNo.toString(),
+            rchId = rchId?.takeIf { it.isNotBlank() } ?: "Not Available",
             lmp = lmp,
             weeksOfPregnancy = getWeeksOfPregnancy(System.currentTimeMillis(), lmp)
         )
@@ -37,12 +47,19 @@ data class PregnantWomenVisitDomain(
     val benId: Long,
     val name: String,
     val age: String,
+    val familyHeadName: String,
     val spouseName: String,
+    val mobileNo: String,
+    val rchId: String,
     val lmp: Long,
+    val lmpString : String? = getDateString(lmp),
+    val edd : Long = lmp + TimeUnit.DAYS.toMillis(280),
+    val eddString : String? = getDateString(edd),
     val weeksOfPregnancy: Int,
     val weeksOfPregnancyString: String = if(weeksOfPregnancy<=40) weeksOfPregnancy.toString() else "NA",
-)
+) {
 
+}
 data class AncStatus(
     val benId: Long,
     val visitNumber: Int,

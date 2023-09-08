@@ -9,14 +9,15 @@ import org.piramalswasthya.sakhi.model.SyncStatusCache
 interface SyncDao {
 
     @Query(
-        "       SELECT 'Beneficiary' as name, b1.syncState as syncState, count(*) as count from beneficiary b1 group by b1.syncState "
-                + "UNION SELECT 'CBAC' as name,  c1.syncState as syncState, count(*) as count from cbac c1 group by c1.syncState "
-                + "UNION SELECT 'TB Screening' as name,  tbsn.syncState as syncState, count(*) as count from TB_SCREENING tbsn group by tbsn.syncState "
-                + "UNION SELECT 'TB Suspected' as name,  tbsp.syncState as syncState, count(*) as count from TB_SUSPECTED tbsp group by tbsp.syncState "
-                + "UNION SELECT 'EC Registration' as name,  ecr.syncState as syncState, count(*) as count from eligible_couple_reg ecr group by ecr.syncState "
-                + "UNION SELECT 'EC Tracking' as name,  ect.syncState as syncState, count(*) as count from eligible_couple_tracking ect group by ect.syncState "
-                + "UNION SELECT 'PW Registration' as name,  pwr.syncState as syncState, count(*) as count from pregnancy_register pwr group by pwr.syncState "
-                + "UNION SELECT 'PW ANC' as name,  pwanc.syncState as syncState, count(*) as count from pregnancy_anc pwanc group by pwanc.syncState "
+        "       SELECT 1 as id, 'Beneficiary' as name, b1.syncState as syncState, count(*) as count from beneficiary b1 group by b1.syncState "
+                + "UNION SELECT 6 as id ,'CBAC' as name,  c1.syncState as syncState, count(*) as count from cbac c1 group by c1.syncState "
+                + "UNION SELECT 7 as id ,'TB Screening' as name,  tbsn.syncState as syncState, count(*) as count from TB_SCREENING tbsn group by tbsn.syncState "
+                + "UNION SELECT 8 as id,'TB Suspected' as name,  tbsp.syncState as syncState, count(*) as count from TB_SUSPECTED tbsp group by tbsp.syncState "
+                + "UNION SELECT 2 as id, 'EC Registration' as name,  ecr.syncState as syncState, count(*) as count from eligible_couple_reg ecr group by ecr.syncState "
+                + "UNION SELECT 3 as id, 'EC Tracking' as name,  ect.syncState as syncState, count(*) as count from eligible_couple_tracking ect group by ect.syncState "
+                + "UNION SELECT 4 as id, 'PW Registration' as name,  pwr.syncState as syncState, count(*) as count from pregnancy_register pwr group by pwr.syncState "
+                + "UNION SELECT 5 as id, 'PW ANC' as name,  pwanc.syncState as syncState, count(*) as count from pregnancy_anc pwanc group by pwanc.syncState"
+                + " ORDER by id"
     )
 //    @Query(
 //        "       SELECT count(*) as ben_synced from beneficiary b1 where b1.syncState = 2 union " +
