@@ -14,8 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
+import org.piramalswasthya.sakhi.adapters.ECRegistrationAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 
 @AndroidEntryPoint
@@ -39,18 +38,14 @@ class EligibleCoupleListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapterForForm(
-            BenListAdapterForForm.ClickListener(
-                {
-                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
-                },
-                { hhId, benId ->
-                    findNavController().navigate(
-                        EligibleCoupleListFragmentDirections.actionEligibleCoupleListFragmentToEligibleCoupleRegFragment(
-                            benId
-                        )
+        val benAdapter = ECRegistrationAdapter(
+            ECRegistrationAdapter.ClickListener { hhId, benId ->
+                findNavController().navigate(
+                    EligibleCoupleListFragmentDirections.actionEligibleCoupleListFragmentToEligibleCoupleRegFragment(
+                        benId
                     )
-                }), resources.getString(R.string.register)
+                )
+            }
         )
         binding.rvAny.adapter = benAdapter
 

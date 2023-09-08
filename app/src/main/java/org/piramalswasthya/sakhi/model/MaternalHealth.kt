@@ -1,9 +1,11 @@
 package org.piramalswasthya.sakhi.model
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.getWeeksOfPregnancy
@@ -141,6 +143,28 @@ data class PregnantWomanRegistrationCache(
     }
 }
 
+data class BenWithPwrCache(
+    @Embedded
+    val ben: BenBasicCache,
+    @Relation(
+        parentColumn = "benId", entityColumn = "benId"
+    )
+    val pwr: PregnantWomanRegistrationCache?,
+
+    ) {
+    fun asPwrDomainModel() : BenWithPwrDomain{
+        return BenWithPwrDomain(
+            ben = ben.asBasicDomainModel(),
+            pwr = pwr
+        )
+    }
+}
+
+data class BenWithPwrDomain(
+//    val benId: Long,
+    val ben: BenBasicDomain,
+    val pwr: PregnantWomanRegistrationCache?
+)
 data class PwrPost (
     val id: Long = 0,
     val benId: Long = 0,

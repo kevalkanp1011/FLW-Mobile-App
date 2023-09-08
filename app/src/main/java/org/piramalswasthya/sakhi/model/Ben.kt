@@ -50,7 +50,7 @@ enum class Gender {
 @DatabaseView(
     viewName = "BEN_BASIC_CACHE",
     value = "SELECT b.beneficiaryId as benId, b.householdId as hhId, b.regDate, b.firstName as benName, b.lastName as benSurname, b.gender, b.dob as dob" +
-            ", b.contactNumber as mobileNo, b.fatherName, h.fam_familyHeadName as familyHeadName, b.rchId" +
+            ", b.contactNumber as mobileNo, b.fatherName, h.fam_familyHeadName as familyHeadName, b.gen_spouseName as spouseName,b.rchId" +
             ", b.isHrpStatus as hrpStatus, b.syncState, b.gen_reproductiveStatusId as reproductiveStatusId, b.isKid, b.immunizationStatus," +
             " b.loc_village_id as villageId, b.abha_healthIdNumber as abhaId," +
             " cbac.benId is not null as cbacFilled, cbac.syncState as cbacSyncState," +
@@ -100,6 +100,7 @@ data class BenBasicCache(
     val fatherName: String? = null,
     val familyHeadName: String? = null,
 //    val typeOfList: TypeOfList,
+    val spouseName: String? = null,
     val rchId: String? = null,
     val hrpStatus: Boolean,
     val syncState: SyncState?,
@@ -207,6 +208,7 @@ data class BenBasicCache(
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
 //            typeOfList = typeOfList.name,
+            spouseName = spouseName,
             rchId = rchId?.takeIf { it.isNotEmpty() } ?: "Not Available",
             hrpStatus = hrpStatus,
             syncState = syncState
@@ -563,6 +565,7 @@ data class BenBasicDomain(
     val abhaId: String? = null,
     val fatherName: String? = null,
     val familyHeadName: String,
+    val spouseName: String? = null,
 //    val typeOfList: String,
     val rchId: String,
     val hrpStatus: Boolean = false,
