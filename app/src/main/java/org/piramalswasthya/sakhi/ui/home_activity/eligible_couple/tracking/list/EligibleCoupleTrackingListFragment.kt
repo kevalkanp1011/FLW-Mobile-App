@@ -13,8 +13,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.ECTrackingListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 
 @AndroidEntryPoint
 class EligibleCoupleTrackingListFragment : Fragment() {
@@ -97,6 +99,16 @@ class EligibleCoupleTrackingListFragment : Fragment() {
             else
                 (searchView as EditText).removeTextChangedListener(searchTextWatcher)
 
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__eligible_couple,
+                getString(R.string.eligible_couple_tracking_list)
+            )
         }
     }
 

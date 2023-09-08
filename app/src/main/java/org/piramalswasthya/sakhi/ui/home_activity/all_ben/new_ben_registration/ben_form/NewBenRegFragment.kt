@@ -26,6 +26,7 @@ import org.piramalswasthya.sakhi.BuildConfig
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.contracts.SpeechToTextContract
+import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.Gender
@@ -143,6 +144,33 @@ class NewBenRegFragment : Fragment() {
         alertDialog.show()
     }
 
+    private val consentAlert by lazy {
+        val alertBinding = AlertConsentBinding.inflate(layoutInflater, binding.root, false)
+        alertBinding.textView4.text = resources.getString(R.string.consent_alert_title)
+        alertBinding.checkBox.text = resources.getString(R.string.consent_text)
+        val alertDialog = MaterialAlertDialogBuilder(requireContext())
+            .setView(alertBinding.root)
+            .setCancelable(false)
+            .create()
+        alertBinding.btnNegative.setOnClickListener {
+            alertDialog.dismiss()
+            findNavController().navigateUp()
+        }
+        alertBinding.btnPositive.setOnClickListener {
+            if (alertBinding.checkBox.isChecked) {
+                viewModel.setConsentAgreed()
+                requestLocationPermission()
+                alertDialog.dismiss()
+            } else
+                Toast.makeText(
+                    context,
+                    resources.getString(R.string.please_tick_the_checkbox),
+                    Toast.LENGTH_SHORT
+                ).show()
+        }
+        alertDialog
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -160,7 +188,7 @@ class NewBenRegFragment : Fragment() {
 
         viewModel.recordExists.observe(viewLifecycleOwner) { notIt ->
             notIt?.let { recordExists ->
-                if(recordExists) binding.btnSubmit.visibility = View.GONE
+                if (recordExists) binding.btnSubmit.visibility = View.GONE
                 val adapter =
                     FormInputAdapter(imageClickListener = FormInputAdapter.ImageClickListener {
                         viewModel.setCurrentImageFormId(it)
@@ -279,7 +307,7 @@ class NewBenRegFragment : Fragment() {
                 }
 
                 9 -> {
-                    viewModel.getIndexOfMaritalStatus().takeIf { it!=-1 }?.let {
+                    viewModel.getIndexOfMaritalStatus().takeIf { it != -1 }?.let {
                         notifyItemChanged(it)
                     }
                 }
@@ -341,6 +369,10 @@ class NewBenRegFragment : Fragment() {
                 R.drawable.ic__ben,
                 getString(if (viewModel.isHoF) R.string.title_new_ben_reg_hof else R.string.title_new_ben_reg_non_hof)
             )
+        }
+
+        viewModel.recordExists.observe(viewLifecycleOwner) {
+            if (!it && !viewModel.getIsConsentAgreed()) consentAlert.show()
         }
 //        binding.vp2Nhhr.registerOnPageChangeCallback(pageChangeCallback)
 

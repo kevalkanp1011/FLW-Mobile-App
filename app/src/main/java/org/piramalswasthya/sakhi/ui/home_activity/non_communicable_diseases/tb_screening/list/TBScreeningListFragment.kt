@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 
 @AndroidEntryPoint
 class TBScreeningListFragment: Fragment() {
@@ -81,6 +82,16 @@ class TBScreeningListFragment: Fragment() {
             else
                 (searchView as EditText).removeTextChangedListener(searchTextWatcher)
 
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__ncd,
+                getString(R.string.tb_screening_list)
+            )
         }
     }
 

@@ -53,11 +53,11 @@ class CdFragment : Fragment() {
         iconAdapter.submitList(iconDataset.getCDDataset(resources))
     }
 
-override fun onStart() {
-    super.onStart()
-    activity?.let {
-        (it as HomeActivity).updateActionBar(R.drawable.ic__ncd)
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(R.drawable.ic__ncd, getString(R.string.communicable_diseases))
+        }
     }
-}
 
 }

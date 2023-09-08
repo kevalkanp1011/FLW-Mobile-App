@@ -84,7 +84,7 @@ class HrpCasesFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let{
-            (it as HomeActivity).updateActionBar(R.drawable.ic__hrp)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__hrp, getString(R.string.icon_title_hrp))
         }
     }
 }

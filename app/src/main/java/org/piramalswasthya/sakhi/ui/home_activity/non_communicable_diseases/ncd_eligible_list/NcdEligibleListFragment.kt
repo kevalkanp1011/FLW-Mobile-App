@@ -103,7 +103,7 @@ class NcdEligibleListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__ncd_list)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__ncd_list, getString(R.string.ncd_eligible_list))
         }
     }
 

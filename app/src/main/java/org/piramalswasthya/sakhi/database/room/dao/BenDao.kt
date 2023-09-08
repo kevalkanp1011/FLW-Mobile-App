@@ -26,7 +26,7 @@ interface BenDao {
     fun getAllBenCount(selectedVillage: Int): Flow<Int>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE hhId = :hhId")
-    suspend fun getAllBasicBenForHousehold(hhId: Long): List<BenBasicCache>
+    fun getAllBasicBenForHousehold(hhId: Long): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BENEFICIARY WHERE householdId = :hhId")
     suspend fun getAllBenForHousehold(hhId: Long): List<BenRegCache>

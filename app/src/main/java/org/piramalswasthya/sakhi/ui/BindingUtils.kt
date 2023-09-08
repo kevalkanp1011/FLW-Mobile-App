@@ -267,7 +267,7 @@ fun ConstraintLayout.setItemsCheckBox(form: FormInputOld?) {
 @BindingAdapter("required")
 fun TextView.setRequired(required: Boolean?) {
     required?.let {
-        visibility = if (it) View.VISIBLE else View.GONE
+        visibility = if (it) View.VISIBLE else View.INVISIBLE
     }
 }
 

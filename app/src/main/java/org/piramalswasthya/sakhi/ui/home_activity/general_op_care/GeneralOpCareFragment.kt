@@ -32,7 +32,7 @@ class GeneralOpCareFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let{
-            (it as HomeActivity).updateActionBar(R.drawable.ic__general_op)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__general_op, getString(R.string.icon_title_gop))
         }
     }
 

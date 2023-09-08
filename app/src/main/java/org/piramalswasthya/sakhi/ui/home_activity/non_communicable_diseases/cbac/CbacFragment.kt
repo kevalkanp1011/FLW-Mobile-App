@@ -17,6 +17,7 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentCbacBinding
 import org.piramalswasthya.sakhi.model.CbacCache
 import org.piramalswasthya.sakhi.model.Gender
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 import java.text.SimpleDateFormat
@@ -902,5 +903,11 @@ class CbacFragment : Fragment() {
                 ": ", cbac.cbac_little_interest_score + cbac.cbac_feeling_down_score)
     }
 
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(R.drawable.ic__ncd_eligibility, getString(R.string.cbac))
+        }
+    }
 
 }

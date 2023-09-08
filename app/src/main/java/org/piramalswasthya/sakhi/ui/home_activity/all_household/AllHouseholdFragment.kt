@@ -19,6 +19,7 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.HouseHoldListAdapter
 import org.piramalswasthya.sakhi.databinding.AlertNewBenBinding
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
+import org.piramalswasthya.sakhi.model.Gender
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import timber.log.Timber
 
@@ -54,18 +55,19 @@ class AllHouseholdFragment : Fragment() {
         addBenAlertBinding.rgGender.setOnCheckedChangeListener { radioGroup, i ->
             addBenAlertBinding.btnOk.isEnabled = false
             Timber.d("RG Gender selected id : $i")
-            addBenAlertBinding.cvRelToHead.visibility = when (i) {
+            addBenAlertBinding.linearLayout4.visibility = when (i) {
                 addBenAlertBinding.rbMale.id -> View.VISIBLE
                 addBenAlertBinding.rbFemale.id -> View.VISIBLE
                 addBenAlertBinding.rbTrans.id -> View.VISIBLE
                 else -> View.GONE
             }
             addBenAlertBinding.actvRth.text = null
-            val isHoFUnmarried =
+            val hof =
                 viewModel.householdBenList.firstOrNull { it.householdId == viewModel.selectedHouseholdId }
-                    ?.let {
-                        (it.genDetails?.maritalStatusId == 1)
-                    } ?: false
+            val isHoFUnmarried =
+                hof?.let {
+                    (it.genDetails?.maritalStatusId == 1)
+                } ?: false
             val dropdownList = when (i) {
                 addBenAlertBinding.rbMale.id -> resources.getStringArray(R.array.nbr_relationship_to_head_male)
                 addBenAlertBinding.rbFemale.id -> resources.getStringArray(R.array.nbr_relationship_to_head_female)
@@ -74,8 +76,16 @@ class AllHouseholdFragment : Fragment() {
             }?.toMutableList()?.apply {
                 if (isHoFUnmarried)
                     removeAll(
-                        resources.getStringArray(R.array.nbr_relationship_to_head_unmarried_filter).toSet()
+                        resources.getStringArray(R.array.nbr_relationship_to_head_unmarried_filter)
+                            .toSet()
                     )
+                else {
+                    if (hof?.gender == Gender.MALE)
+                        remove(resources.getStringArray(R.array.nbr_relationship_to_head)[5])
+                    else if (hof?.gender == Gender.FEMALE)
+                        remove(resources.getStringArray(R.array.nbr_relationship_to_head)[4])
+
+                }
             }
             dropdownList?.let {
                 addBenAlertBinding.actvRth.setAdapter(
@@ -96,7 +106,7 @@ class AllHouseholdFragment : Fragment() {
             .setOnCancelListener {
                 viewModel.resetSelectedHouseholdId()
                 addBenAlertBinding.rgGender.clearCheck()
-                addBenAlertBinding.cvRelToHead.visibility = View.GONE
+                addBenAlertBinding.linearLayout4.visibility = View.GONE
                 addBenAlertBinding.actvRth.text = null
             }.create()
 
@@ -137,14 +147,14 @@ class AllHouseholdFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__hh)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__hh, getString(R.string.icon_title_household))
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnNextPage.text = resources.getString(R.string.btn_text_frag_home_nhhr)
-        binding.tvEmptyContent.text = resources.getString(R.string.no_records_found_hh)
+//        binding.tvEmptyContent.text = resources.getString(R.string.no_records_found_hh)
         val householdAdapter = HouseHoldListAdapter(HouseHoldListAdapter.HouseholdClickListener({
             findNavController().navigate(
                 AllHouseholdFragmentDirections.actionAllHouseholdFragmentToNewHouseholdFragment(

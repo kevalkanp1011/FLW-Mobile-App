@@ -6,10 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.model.BenBasicDomain
 import org.piramalswasthya.sakhi.model.BenHealthIdDetails
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import javax.inject.Inject
@@ -24,9 +21,7 @@ class HouseholdMembersViewModel @Inject constructor(
 
     val hhId = HouseholdMembersFragmentArgs.fromSavedStateHandle(savedStateHandle).hhId
 
-    private val _benList = MutableLiveData<List<BenBasicDomain>>()
-    val benList: LiveData<List<BenBasicDomain>>
-        get() = _benList
+    val benList = benRepo.getBenBasicListFromHousehold(hhId)
 
     private val _abha = MutableLiveData<String?>()
     val abha: LiveData<String?>
@@ -39,15 +34,6 @@ class HouseholdMembersViewModel @Inject constructor(
     private val _benRegId = MutableLiveData<Long?>()
     val benRegId: LiveData<Long?>
         get() = _benRegId
-
-    init {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                _benList.postValue(
-                    benRepo.getBenBasicListFromHousehold(hhId).map { it.asBasicDomainModel() })
-            }
-        }
-    }
 
     fun fetchAbha(benId: Long) {
         _abha.value = null

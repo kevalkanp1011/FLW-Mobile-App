@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 
 @AndroidEntryPoint
 class CdrListFragment : Fragment() {
@@ -82,6 +83,14 @@ class CdrListFragment : Fragment() {
 
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(R.drawable.ic__death, getString(R.string.cdr_list))
+        }
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()

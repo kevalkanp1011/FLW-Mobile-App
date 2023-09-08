@@ -504,6 +504,9 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                 TRANSGENDER -> R.array.nbr_relationship_to_head
                 null -> -1
             }
+            hasAadharNo.value = hasAadharNo.getStringFromPosition(saved.hasAadharId)
+            aadharNo.value = saved.aadharNum
+            rchId.value = saved.rchId
             reproductiveStatus.value = saved.genDetails?.reproductiveStatusId?.let {
                 reproductiveStatus.getStringFromPosition(it)
             }
@@ -562,6 +565,9 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
         birthCertificateNumber.value = ben?.kidDetails?.birthCertificateNumber
         placeOfBirth.value =
             ben?.kidDetails?.birthPlaceId?.let { placeOfBirth.getStringFromPosition(it) }
+        if (hasAadharNo.value == hasAadharNo.entries!!.first()) list.add(
+            list.indexOf(hasAadharNo) + 1, aadharNo
+        )
         if (hasThirdPage())
             list.add(reproductiveStatus)
         if (isKid()) {
@@ -916,6 +922,8 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                 "${it.firstName} ${it.lastName ?: ""}"
             }
         }
+        fatherName.inputType = TEXT_VIEW
+        motherName.inputType = TEXT_VIEW
         val hoFAge = getAgeFromDob(hoF.dob)
         val hoFSpouseAge = hoFSpouse?.dob?.let { getAgeFromDob(it) }
         val maxAge = (if (hoFSpouseAge == null) hoFAge else minOf(
@@ -934,11 +942,15 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
     private fun setUpForSpouse(hoFSpouse: BenRegCache) {
         if (hoFSpouse.genDetails?.maritalStatusId == 2) {
             firstName.value = hoFSpouse.genDetails?.spouseName
+            firstName.inputType = TEXT_VIEW
             lastName.value = hoFSpouse.lastName
+            lastName.inputType = TEXT_VIEW
             if (hoFSpouse.gender == FEMALE) {
                 wifeName.value = "${hoFSpouse.firstName} ${hoFSpouse.lastName ?: ""}"
+                wifeName.inputType = TEXT_VIEW
             } else {
                 husbandName.value = "${hoFSpouse.firstName} ${hoFSpouse.lastName ?: ""}"
+                husbandName.inputType = TEXT_VIEW
             }
             maritalStatus.value = maritalStatus.getStringFromPosition(2)
             maritalStatus.inputType = TEXT_VIEW
@@ -1779,7 +1791,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             ben.familyHeadRelation =
                 relationToHead.getEnglishStringFromPosition(ben.familyHeadRelationPosition)
             ben.familyHeadRelationOther = otherRelationToHead.value
-            ben.mobileNoOfRelationId = if (isHoF) 5 else mobileNoOfRelation.getPosition()
+            ben.mobileNoOfRelationId = if (isHoF) 1 else mobileNoOfRelation.getPosition()
             ben.mobileNoOfRelation =
                 mobileNoOfRelation.getEnglishStringFromPosition(ben.mobileNoOfRelationId)
             ben.mobileOthers = otherMobileNoOfRelation.value

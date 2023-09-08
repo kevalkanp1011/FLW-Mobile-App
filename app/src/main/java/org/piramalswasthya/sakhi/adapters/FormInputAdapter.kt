@@ -36,10 +36,8 @@ import org.piramalswasthya.sakhi.databinding.RvItemFormImageViewV2Binding
 import org.piramalswasthya.sakhi.databinding.RvItemFormRadioV2Binding
 import org.piramalswasthya.sakhi.databinding.RvItemFormTextViewV2Binding
 import org.piramalswasthya.sakhi.databinding.RvItemFormTimepickerV2Binding
-import org.piramalswasthya.sakhi.databinding.*
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.FormElement
-import org.piramalswasthya.sakhi.model.InputType.*
 import org.piramalswasthya.sakhi.model.InputType.CHECKBOXES
 import org.piramalswasthya.sakhi.model.InputType.DATE_PICKER
 import org.piramalswasthya.sakhi.model.InputType.DROPDOWN
@@ -51,7 +49,6 @@ import org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW
 import org.piramalswasthya.sakhi.model.InputType.TIME_PICKER
 import org.piramalswasthya.sakhi.model.InputType.values
 import timber.log.Timber
-import java.util.*
 import java.util.Calendar
 
 
@@ -649,6 +646,8 @@ class FormInputAdapter(
             item: FormElement,
         ) {
             binding.form = item
+            if(item.subtitle==null)
+                binding.textView8.visibility = View.GONE
             binding.executePendingBindings()
 
         }

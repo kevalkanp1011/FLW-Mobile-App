@@ -143,7 +143,7 @@ class NcdListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__ben)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__ben , getString(R.string.ncd_list))
         }
     }
 

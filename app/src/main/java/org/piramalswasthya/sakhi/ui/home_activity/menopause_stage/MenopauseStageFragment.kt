@@ -3,11 +3,11 @@ package org.piramalswasthya.sakhi.ui.home_activity.menopause_stage
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
@@ -86,7 +86,7 @@ class MenopauseStageFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let{
-            (it as HomeActivity).updateActionBar(R.drawable.ic__menopause)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__menopause, getString(R.string.icon_title_msl))
         }
     }
 

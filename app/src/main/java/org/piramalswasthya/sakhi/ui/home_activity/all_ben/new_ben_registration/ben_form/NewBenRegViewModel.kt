@@ -52,6 +52,7 @@ class NewBenRegViewModel @Inject constructor(
         class Updated(val formElementId: Int) : ListUpdateState()
     }
 
+
     val hhId = NewBenRegFragmentArgs.fromSavedStateHandle(savedStateHandle).hhId
     private val relToHeadId =
         NewBenRegFragmentArgs.fromSavedStateHandle(savedStateHandle).relToHeadId
@@ -79,6 +80,15 @@ class NewBenRegViewModel @Inject constructor(
     private val _recordExists = MutableLiveData(benIdFromArgs != 0L)
     val recordExists: LiveData<Boolean>
         get() = _recordExists
+
+
+    private var isConsentAgreed = false
+
+    fun setConsentAgreed() {
+        isConsentAgreed = true
+    }
+
+    fun getIsConsentAgreed() = isConsentAgreed
 
     private lateinit var user: User
     private val dataset: BenRegFormDataset =
@@ -203,9 +213,10 @@ class NewBenRegViewModel @Inject constructor(
     fun resetListUpdateState() {
         _listUpdateState.value = ListUpdateState.Idle
     }
-    fun getBenGender()  = ben.gender
-    fun getBenName()  = "${ben.firstName} ${ben.lastName?:""}"
-    fun isHoFMarried()  = isHoF && ben.genDetails?.maritalStatusId==2
+
+    fun getBenGender() = ben.gender
+    fun getBenName() = "${ben.firstName} ${ben.lastName ?: ""}"
+    fun isHoFMarried() = isHoF && ben.genDetails?.maritalStatusId == 2
 
 
     fun setCurrentImageFormId(id: Int) {

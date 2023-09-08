@@ -27,6 +27,7 @@ import org.piramalswasthya.sakhi.contracts.SpeechToTextContract
 import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.helpers.Konstants
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.all_household.new_household_registration.NewHouseholdViewModel.State
 import timber.log.Timber
 
@@ -115,6 +116,7 @@ class NewHouseholdFragment : Fragment() {
     private val nextScreenAlert by lazy {
 
         MaterialAlertDialogBuilder(requireContext()).setTitle(resources.getString(R.string.add_head_of_family))
+            .setCancelable(false)
 //            .setMessage(str)
             .setPositiveButton(resources.getString(R.string.yes)) { dialog, _ ->
                 findNavController().navigate(
@@ -244,6 +246,9 @@ class NewHouseholdFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(R.drawable.ic__hh, getString(R.string.frag_nhhr_title))
+        }
         viewModel.readRecord.observe(viewLifecycleOwner) {
             if (!it && !viewModel.getIsConsentAgreed()) consentAlert.show()
         }

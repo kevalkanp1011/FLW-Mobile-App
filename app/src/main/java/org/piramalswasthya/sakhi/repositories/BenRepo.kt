@@ -3,6 +3,8 @@ package org.piramalswasthya.sakhi.repositories
 import android.app.Application
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
@@ -44,8 +46,8 @@ class BenRepo @Inject constructor(
         }
     }
 
-    suspend fun getBenBasicListFromHousehold(hhId: Long): List<BenBasicCache> {
-        return benDao.getAllBasicBenForHousehold(hhId)
+    fun getBenBasicListFromHousehold(hhId: Long): Flow<List<BenBasicDomain>> {
+        return benDao.getAllBasicBenForHousehold(hhId).map { it.map { it.asBasicDomainModel() } }
 
     }
     suspend fun getBenListFromHousehold(hhId: Long): List<BenRegCache> {

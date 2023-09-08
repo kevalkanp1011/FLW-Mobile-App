@@ -10,145 +10,123 @@
         android:id="@+id/textView4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:gravity="center"
         android:padding="@dimen/padding_normal"
         android:text="Add Beneficiary"
-        android:gravity="center"
         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-        android:textColor="?attr/colorOnPrimary"
-        app:layout_constraintTop_toTopOf="parent"
 
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cv_gender"
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_normal"
-        android:elevation="@dimen/padding_normal"
-        app:cardCornerRadius="@dimen/padding_normal"
-        app:cardElevation="@dimen/padding_normal"
+        android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@+id/textView4">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/textView13"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:gravity="center"
+            android:padding="@dimen/padding_normal"
+            android:text="@string/gender"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            android:textColor="?attr/colorOnPrimary" />
+
+        <RadioGroup
+            android:id="@+id/rg_gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView13"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:background="@color/read_only"
-                android:padding="@dimen/padding_normal"
-                android:text="@string/gender"
-                android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
-
-            <RadioGroup
-                android:id="@+id/rg_gender"
+            <RadioButton
+                android:id="@+id/rb_male"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_gravity="center"
-                >
+                android:text="@string/male"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
 
-                <RadioButton
-                    android:id="@+id/rb_male"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/male"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+            <RadioButton
+                android:id="@+id/rb_female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/female"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
 
-                <RadioButton
-                    android:id="@+id/rb_female"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/female"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+            <RadioButton
+                android:id="@+id/rb_trans"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/transgender"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+        </RadioGroup>
 
-                <RadioButton
-                    android:id="@+id/rb_trans"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/transgender"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
-            </RadioGroup>
+    </LinearLayout>
 
-        </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cv_relToHead"
+    <LinearLayout
+        android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_normal"
-        android:visibility="gone"
-        tools:visibility="visible"
-        android:elevation="@dimen/padding_normal"
-        app:cardCornerRadius="@dimen/padding_normal"
-        app:cardElevation="@dimen/padding_normal"
-        app:layout_constraintTop_toBottomOf="@+id/cv_gender">
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_rel_to_head"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:background="?attr/colorPrimary"
+            android:gravity="center"
+            android:padding="@dimen/padding_normal"
+            android:text="@string/relation_with_family_head"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            android:textColor="?attr/colorOnPrimary" />
 
-            <TextView
-                android:id="@+id/tv_rel_to_head"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_rth"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:hint="Head Of Family's"
+            android:labelFor="@id/actv_rv_dropdown"
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_normal">
+
+            <AutoCompleteTextView
+                android:id="@+id/actv_rth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:background="@color/read_only"
-                android:padding="@dimen/padding_normal"
-                android:text="@string/relation_with_family_head"
-                android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_rth"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/padding_normal"
-                android:hint="Head Of Family's"
-                android:layout_gravity="center"
-                android:labelFor="@id/actv_rv_dropdown"
-                android:orientation="horizontal">
-
-                <AutoCompleteTextView
-                    android:id="@+id/actv_rth"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none"
-                    tools:ignore="SpeakableTextPresentCheck" />
+                android:inputType="none"
+                tools:ignore="SpeakableTextPresentCheck" />
 
 
-            </com.google.android.material.textfield.TextInputLayout>
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:gravity="center"-->
-<!--                android:orientation="horizontal"-->
-<!--               >-->
+        </com.google.android.material.textfield.TextInputLayout>
+        <!--            <LinearLayout-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:gravity="center"-->
+        <!--                android:orientation="horizontal"-->
+        <!--               >-->
 
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:padding="@dimen/padding_normal"-->
-<!--                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"-->
-<!--                    android:text="Adding Head Of Family's " />-->
+        <!--                <TextView-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:padding="@dimen/padding_normal"-->
+        <!--                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"-->
+        <!--                    android:text="Adding Head Of Family's " />-->
 
-<!--                <Spinner-->
-<!--                    android:id="@+id/spinner_rel_to_head"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="match_parent" />-->
-<!--            </LinearLayout>-->
+        <!--                <Spinner-->
+        <!--                    android:id="@+id/spinner_rel_to_head"-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="match_parent" />-->
+        <!--            </LinearLayout>-->
 
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
+    </LinearLayout>
 
 
     <com.google.android.material.button.MaterialButton
@@ -156,12 +134,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_normal"
-        android:text="@string/ok"
         android:enabled="false"
+        android:text="@string/ok"
         android:textColor="?attr/colorOnPrimary"
         app:layout_constraintEnd_toStartOf="@+id/btn_cancel"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cv_relToHead" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
 
 
     <com.google.android.material.button.MaterialButton
@@ -173,6 +151,6 @@
         android:textColor="?attr/colorOnPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_ok"
-        app:layout_constraintTop_toBottomOf="@+id/cv_relToHead" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

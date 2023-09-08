@@ -3,12 +3,12 @@ package org.piramalswasthya.sakhi.ui.home_activity.death_reports.mdsr
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,13 +17,14 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 
 @AndroidEntryPoint
 class MdsrListFragment : Fragment() {
 
-    private val binding: FragmentDisplaySearchRvButtonBinding by lazy {
-        FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater)
-    }
+    private var _binding: FragmentDisplaySearchRvButtonBinding? = null
+    private val binding : FragmentDisplaySearchRvButtonBinding
+        get() = _binding!!
 
     private val viewModel: MdsrListViewModel by viewModels()
 
@@ -31,6 +32,7 @@ class MdsrListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        _binding =  FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false )
         return binding.root
     }
 
@@ -81,6 +83,18 @@ class MdsrListFragment : Fragment() {
                 (searchView as EditText).removeTextChangedListener(searchTextWatcher)
 
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(R.drawable.ic__death, getString(R.string.mdsr_list))
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }

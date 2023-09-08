@@ -89,7 +89,7 @@ class AdolescentListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let{
-            (it as HomeActivity).updateActionBar(R.drawable.ic__adolescent)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__adolescent, getString(R.string.child_care_icon_title_adolescent_list))
         }
     }
     override fun onDestroy() {

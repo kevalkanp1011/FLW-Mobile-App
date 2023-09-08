@@ -21,7 +21,7 @@ class AboutUsFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic_info)
+            (it as HomeActivity).updateActionBar(R.drawable.ic_info, getString(R.string.about))
         }
     }
 }

@@ -21,7 +21,7 @@ class HelpFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic_help)
+            (it as HomeActivity).updateActionBar(R.drawable.ic_help, getString(R.string.help))
         }
     }
 

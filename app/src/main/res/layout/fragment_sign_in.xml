@@ -65,6 +65,7 @@
                     android:text="@string/tv_text_sign_in"
                     android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
                     android:textStyle="normal"
+                    android:gravity="center"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView

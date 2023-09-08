@@ -9,7 +9,6 @@ import org.piramalswasthya.sakhi.model.BenWithEcrDomain
 import org.piramalswasthya.sakhi.model.BenWithEctListDomain
 import org.piramalswasthya.sakhi.model.BenWithPwrDomain
 import org.piramalswasthya.sakhi.model.PregnantWomenVisitDomain
-import org.piramalswasthya.sakhi.utils.HelperUtil
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -42,7 +41,9 @@ fun filterForBen(
         ben.rchId.takeIf { it.isDigitsOnly() }?.contains(filterText) ?: false ||
         ben.mobileNo.lowercase().contains(filterText) ||
         ben.gender.lowercase().contains(filterText) ||
-        ben.fatherName?.lowercase()?.contains(filterText) ?: false
+        ben.fatherName?.lowercase()?.contains(filterText) ?: false ||
+        ben.spouseName?.lowercase()?.contains(filterText) ?: false ||
+        ben.abhaId?.lowercase()?.contains(filterText) ?: false
 
 
 fun filterBenFormList(
@@ -65,8 +66,13 @@ fun filterEcTrackingList(
         it.ben.benId.toString().lowercase().contains(filterText) ||
                 it.ben.age.lowercase().contains(filterText) ||
                 it.ben.benFullName.lowercase().contains(filterText) ||
+                it.ben.mobileNo.lowercase().contains(filterText) ||
+                it.ben.rchId.takeIf { it.isDigitsOnly() }?.contains(filterText) ?: false ||
+                it.ben.spouseName?.lowercase()?.contains(filterText) ?: false ||
+                it.ben.familyHeadName.lowercase().contains(filterText) ||
                 it.numChildren.contains(filterText)
     }
+
 fun filterEcRegistrationList(
     list: List<BenWithEcrDomain>,
     filterText: String
@@ -74,7 +80,11 @@ fun filterEcRegistrationList(
     list.filter {
         it.ben.benId.toString().lowercase().contains(filterText) ||
                 it.ben.age.lowercase().contains(filterText) ||
-                it.ben.benFullName.lowercase().contains(filterText)
+                it.ben.benFullName.lowercase().contains(filterText) ||
+                it.ben.rchId.takeIf { it.isDigitsOnly() }?.contains(filterText) ?: false ||
+                it.ben.mobileNo.lowercase().contains(filterText) ||
+                it.ben.spouseName?.lowercase()?.contains(filterText) ?: false ||
+                it.ben.familyHeadName.lowercase().contains(filterText)
 //                ||
 //                it.numChildren.contains(filterText)
     }
@@ -86,7 +96,11 @@ fun filterPwrRegistrationList(
     list.filter {
         it.ben.benId.toString().lowercase().contains(filterText) ||
                 it.ben.age.lowercase().contains(filterText) ||
-                it.ben.benFullName.lowercase().contains(filterText)
+                it.ben.benFullName.lowercase().contains(filterText) ||
+                it.ben.rchId.takeIf { it.isDigitsOnly() }?.contains(filterText) ?: false ||
+                it.ben.mobileNo.lowercase().contains(filterText) ||
+                it.ben.spouseName?.lowercase()?.contains(filterText) ?: false ||
+                it.ben.familyHeadName.lowercase().contains(filterText)
 //                ||
 //                it.numChildren.contains(filterText)
     }
@@ -132,8 +146,14 @@ private fun getAncStatus(
     val weekRange = when (visitNumber) {
         1 -> Konstants.minAnc1Week//..Konstants.maxAnc1Week
         2 -> getMinAncFillDate(Konstants.minAnc2Week, lastAncFilledWeek) //..Konstants.maxAnc2Week
-        3 -> getMinAncFillDate(Konstants.minAnc3Week, lastAncFilledWeek)  //..Konstants.maxAnc2Week//..Konstants.maxAnc3Week
-        4 -> getMinAncFillDate(Konstants.minAnc4Week, lastAncFilledWeek)  //..Konstants.maxAnc2Week//..Konstants.maxAnc4Week
+        3 -> getMinAncFillDate(
+            Konstants.minAnc3Week,
+            lastAncFilledWeek
+        )  //..Konstants.maxAnc2Week//..Konstants.maxAnc3Week
+        4 -> getMinAncFillDate(
+            Konstants.minAnc4Week,
+            lastAncFilledWeek
+        )  //..Konstants.maxAnc2Week//..Konstants.maxAnc4Week
         else -> throw IllegalStateException("visit number not in [1,4]")
     }
     return if (weeks >= weekRange) AncStatus(

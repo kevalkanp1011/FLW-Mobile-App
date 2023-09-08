@@ -378,7 +378,7 @@
     <fragment
         android:id="@+id/surveyRegisterFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.village_level_forms.survey_register.SurveyRegisterFragment"
-        android:label="@string/all_household_list"
+        android:label="@string/survey_register"
         tools:layout="@layout/fragment_survey_register" />
     <fragment
         android:id="@+id/getBenFragment"
@@ -489,6 +489,9 @@
         <action
             android:id="@+id/action_householdMembersFragment_to_newBenRegG15Fragment"
             app:destination="@id/newBenRegG15Fragment" />
+        <action
+            android:id="@+id/action_householdMembersFragment_to_newBenRegFragment"
+            app:destination="@id/newBenRegFragment" />
     </fragment>
     <fragment
         android:id="@+id/fpotFragment"
