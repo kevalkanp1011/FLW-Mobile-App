@@ -55,6 +55,15 @@
                     app:drawableLeftCompat="@drawable/ic__hh"
                     app:drawableTint="?attr/colorPrimary"
                     tools:text="Hello Meister" />
+                <ImageView
+                    android:id="@+id/iv_sync_state"
+                    android:layout_width="24dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginHorizontal="@dimen/padding_small"
+                    android:contentDescription="@string/iv_sync_state_tv"
+                    app:syncState="@{item.allSynced}"
+                    tools:src="@drawable/ic_synced" />
 
             </LinearLayout>
 
@@ -83,7 +92,6 @@
 
 
                         <TextView
-                            android:id="@+id/tv_name_ph"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/name_ben"
@@ -91,7 +99,6 @@
                             android:textColor="?attr/colorOnPrimary" />
 
                         <TextView
-                            android:id="@+id/tv_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{item.ben.benFullName}"
@@ -111,7 +118,6 @@
                         android:padding="@dimen/padding_small">
 
                         <TextView
-                            android:id="@+id/tv_age_ph"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/age"
@@ -119,7 +125,6 @@
                             android:textColor="?attr/colorOnPrimary" />
 
                         <TextView
-                            android:id="@+id/ttv_age_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{item.ben.age}"
@@ -144,7 +149,6 @@
                             android:textColor="?attr/colorOnPrimary" />
 
                         <TextView
-                            android:id="@+id/tv_weeks_of_pregnancy"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@{item.numChildren}"

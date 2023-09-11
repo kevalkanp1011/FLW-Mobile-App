@@ -15,6 +15,7 @@ import org.piramalswasthya.sakhi.model.BenBasicDomain
 class BenListAdapter(
     private val clickListener: BenClickListener? = null,
     private val showAddBeneficiaries: Boolean = false,
+    private val showRegistrationDate: Boolean = false,
     private val showSyncIcon: Boolean = false,
     private val showAbha: Boolean = false
 ) :
@@ -44,12 +45,16 @@ class BenListAdapter(
             item: BenBasicDomain,
             clickListener: BenClickListener?,
             showAbha: Boolean,
-            showSyncIcon: Boolean
+            showSyncIcon: Boolean,
+            showRegistrationDate: Boolean
         ) {
             binding.ben = item
             binding.clickListener = clickListener
             binding.showAbha = showAbha
+            binding.showRegistrationDate = showRegistrationDate
             binding.ivSyncState.visibility = if(showSyncIcon) View.VISIBLE else View.INVISIBLE
+            binding.registrationDate.visibility = if(showRegistrationDate) View.VISIBLE else View.INVISIBLE
+            binding.blankSpace.visibility = if(showRegistrationDate) View.VISIBLE else View.INVISIBLE
             binding.hasAbha = !item.abhaId.isNullOrEmpty()
             binding.executePendingBindings()
 
@@ -61,7 +66,7 @@ class BenListAdapter(
     ) = BenViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: BenViewHolder, position: Int) {
-        holder.bind(getItem(position), clickListener, showAbha, showSyncIcon)
+        holder.bind(getItem(position), clickListener, showAbha, showSyncIcon, showRegistrationDate)
     }
 
 

@@ -61,12 +61,12 @@ class RecordsRepo @Inject constructor(
 //        .map { list -> list.map { it.asBenBasicDomainModelForCbacForm() } }
 //    val ncdNonEligibleListCount = ncdNonEligibleList.map { it.size }
 
-    val tbScreeningList = benDao.getAllBen(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForTbsnForm() } }
+    val tbScreeningList = benDao.getAllTbScreeningBen(selectedVillage)
+        .map { list -> list.map { it.asTbScreeningDomainModel() } }
     val tbScreeningListCount = tbScreeningList.map { it.size }
 
-    val tbSuspectedList = benDao.getScreeningList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForTbspForm() } }
+    val tbSuspectedList = benDao.getTbScreeningList(selectedVillage)
+        .map { list -> list.map { it.asTbSuspectedDomainModel() } }
     val tbSuspectedListCount = tbSuspectedList.map { it.size }
 
     val menopauseList = benDao.getAllMenopauseStageList(selectedVillage)
