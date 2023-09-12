@@ -97,7 +97,7 @@ fun filterPwrRegistrationList(
     list.filter {
         it.ben.benId.toString().lowercase().contains(filterText) ||
                 it.ben.age.lowercase().contains(filterText) ||
-                it.ben.benFullName.lowercase().contains(filterText)
+                it.ben.benFullName.lowercase().contains(filterText) ||
                 it.ben.spouseName?.lowercase()?.contains(filterText) ?: false ||
                 it.ben.benId.toString().lowercase().contains(filterText) ||
                 it.ben.mobileNo.lowercase().contains(filterText) ||
@@ -111,7 +111,7 @@ fun filterTbScreeningList(
     list.filter {
         it.ben.benId.toString().lowercase().contains(filterText) ||
                 it.ben.age.lowercase().contains(filterText) ||
-                it.ben.benFullName.lowercase().contains(filterText)
+                it.ben.benFullName.lowercase().contains(filterText) ||
                 it.ben.spouseName?.lowercase()?.contains(filterText) ?: false ||
                 it.ben.fatherName?.lowercase()?.contains(filterText) ?: false ||
                 it.ben.benId.toString().lowercase().contains(filterText) ||
@@ -127,7 +127,7 @@ fun filterTbSuspectedList(
     list.filter {
         it.ben.benId.toString().lowercase().contains(filterText) ||
                 it.ben.age.lowercase().contains(filterText) ||
-                it.ben.benFullName.lowercase().contains(filterText)
+                it.ben.benFullName.lowercase().contains(filterText) ||
                 it.ben.spouseName?.lowercase()?.contains(filterText) ?: false ||
                 it.ben.fatherName?.lowercase()?.contains(filterText) ?: false ||
                 it.ben.benId.toString().lowercase().contains(filterText) ||

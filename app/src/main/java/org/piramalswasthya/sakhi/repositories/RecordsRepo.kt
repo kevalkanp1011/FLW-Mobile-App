@@ -77,12 +77,18 @@ class RecordsRepo @Inject constructor(
         .map { list -> list.map { it.asBasicDomainModelForFpotForm() } }
     val reproductiveAgeListCount = reproductiveAgeList.map { it.size }
 
+//    val infantList = benDao.getAllInfantList(selectedVillage)
+//        .map { list -> list.map { it.asBenBasicDomainModelForHbncForm() } }
+//    val infantListCount = infantList.map { it.size }
     val infantList = benDao.getAllInfantList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForHbncForm() } }
+    .map { list -> list.map { it.asBasicDomainModel()} }
     val infantListCount = infantList.map { it.size }
 
+//    val childList = benDao.getAllChildList(selectedVillage)
+//        .map { list -> list.map { it.asBenBasicDomainModelForHbycForm() } }
+//    val childListCount = childList.map { it.size }
     val childList = benDao.getAllChildList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForHbycForm() } }
+        .map { list -> list.map { it.asBasicDomainModel() } }
     val childListCount = childList.map { it.size }
 
     val adolescentList =

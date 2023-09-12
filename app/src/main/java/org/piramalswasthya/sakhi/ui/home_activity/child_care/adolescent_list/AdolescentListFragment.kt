@@ -52,7 +52,7 @@ class AdolescentListFragment : Fragment() {
 
                 },
                 {_,_ ->}
-            ))
+            ),true)
         binding.rvAny.adapter = benAdapter
 
         lifecycleScope.launch {

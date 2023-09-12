@@ -284,6 +284,7 @@ private val rotate = RotateAnimation(
 @BindingAdapter("syncState")
 fun ImageView.setSyncState(syncState: SyncState?) {
     syncState?.let {
+        visibility = View.VISIBLE
         val drawable = when (it) {
             SyncState.UNSYNCED -> R.drawable.ic_unsynced
             SyncState.SYNCING -> R.drawable.ic_syncing
