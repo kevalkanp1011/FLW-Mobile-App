@@ -113,12 +113,20 @@ fun CardView.setRedBorder(allowRedBorder: Boolean, scope: CoroutineScope, count:
 //    }
 }
 
-@BindingAdapter("benId", "syncState")
-fun TextView.setBenIdText(benId: Long?, syncState: SyncState?) {
-    if (syncState != SyncState.SYNCED)
-        text = "Pending Sync"
-    else
-        text = benId.toString()
+@BindingAdapter("benIdText")
+fun TextView.setBenIdText(benId: Long?) {
+    benId?.let {
+        if (benId <0L) {
+            text = "Pending Sync"
+            setTextColor(resources.getColor(android.R.color.holo_orange_light))
+        }
+        else {
+            text = benId.toString()
+            setTextColor(MaterialColors.getColor(this,com.google.android.material.R.attr.colorOnPrimary))
+
+        }
+    }
+
 }
 
 @BindingAdapter("showBasedOnNumMembers")
@@ -267,7 +275,7 @@ fun ConstraintLayout.setItemsCheckBox(form: FormInputOld?) {
 @BindingAdapter("required")
 fun TextView.setRequired(required: Boolean?) {
     required?.let {
-        visibility = if (it) View.VISIBLE else View.INVISIBLE
+        visibility = if (it) View.VISIBLE else View.GONE
     }
 }
 

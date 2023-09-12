@@ -330,8 +330,7 @@
                             android:textColor="?attr/colorOnPrimary" />
 
                         <TextView
-                            benId="@{ben.benId}"
-                            syncState="@{ben.syncState}"
+                            benIdText="@{ben.benId}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"

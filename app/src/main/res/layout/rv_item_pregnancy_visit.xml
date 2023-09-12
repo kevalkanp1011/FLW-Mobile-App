@@ -158,13 +158,13 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/tv_ben_id_ph"
+                            android:text="@string/beneficiary_id"
                             android:textColor="?attr/colorOnPrimary"
                             android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{@string/long_to_string(visit.benId)}"
+                            benIdText="@{visit.benId}"
                             android:textColor="?attr/colorOnPrimary"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                             tools:text="TextView" />

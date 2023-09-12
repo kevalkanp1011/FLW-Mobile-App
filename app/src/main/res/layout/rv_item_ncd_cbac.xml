@@ -265,7 +265,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{@string/long_to_string(benWithCbac.ben.benId)}"
+                                benIdText="@{benWithCbac.ben.benId}"
                                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                                 android:textColor="?attr/colorOnPrimary"
                                 tools:text="3546464466" />
