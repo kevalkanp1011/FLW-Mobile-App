@@ -49,6 +49,14 @@
             android:textColor="?attr/colorOnPrimary"
             android:onClick="@{()-> clickListener.onClickedVisit(visit)}"
             anc_state="@{visit.formState}"/>
+<!--        <ImageView-->
+<!--            android:id="@+id/iv_sync_state"-->
+<!--            android:layout_width="24dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical|end"-->
+<!--            android:layout_marginHorizontal="@dimen/padding_small"-->
+<!--            android:contentDescription="@string/iv_sync_state_tv"-->
+<!--            tools:src="@drawable/ic_synced" />-->
 
     </LinearLayout>
 

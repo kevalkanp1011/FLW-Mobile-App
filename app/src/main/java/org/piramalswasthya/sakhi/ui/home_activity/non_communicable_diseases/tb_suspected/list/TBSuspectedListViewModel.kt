@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.helpers.filterBenFormList
+import org.piramalswasthya.sakhi.helpers.filterTbSuspectedList
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import javax.inject.Inject
 
@@ -18,7 +18,7 @@ class TBSuspectedListViewModel @Inject constructor(
     private val allBenList = recordsRepo.tbSuspectedList
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter){
-            list, filter -> filterBenFormList(list, filter)
+            list, filter -> filterTbSuspectedList(list, filter)
     }
 
     fun filterText(text: String) {

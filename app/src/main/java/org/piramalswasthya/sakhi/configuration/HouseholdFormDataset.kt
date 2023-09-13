@@ -12,7 +12,9 @@ import org.piramalswasthya.sakhi.model.HouseholdDetails
 import org.piramalswasthya.sakhi.model.HouseholdFamily
 import org.piramalswasthya.sakhi.model.InputType.DROPDOWN
 import org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT
+import org.piramalswasthya.sakhi.model.InputType.HEADLINE
 import org.piramalswasthya.sakhi.model.InputType.RADIO
+import retrofit2.http.HEAD
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -41,6 +43,15 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
     }
 
     //////////////////////////////// First Page /////////////////////////////////////////
+
+    private val familyHeading = FormElement(
+        id = 17498,
+        inputType = HEADLINE,
+        title = resources.getString(R.string.nhhr_title_page_1),
+        required = false,
+        headingLine = false
+
+    )
 
     private val firstNameHeadOfFamily = FormElement(
         id = 0,
@@ -121,6 +132,7 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
         val list = mutableListOf<FormElement>()
         val firstPage by lazy {
             listOf(
+                familyHeading,
                 firstNameHeadOfFamily,
                 lastNameHeadOfFamily,
                 mobileNoHeadOfFamily,
@@ -146,7 +158,7 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
 
         val secondPage =
             listOf(
-                residentialArea, typeOfHouse, houseOwnership
+                houseHoldDetails, residentialArea, typeOfHouse, houseOwnership
             )
         list.addAll(secondPage)
         hh?.details?.let { saved ->
@@ -160,7 +172,7 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
         }
         val thirdPage =
             listOf(
-                separateKitchen, fuelForCooking, sourceOfWater, sourceOfElectricity, availOfToilet
+                houseHoldDAmenities, separateKitchen, fuelForCooking, sourceOfWater, sourceOfElectricity, availOfToilet
             )
         list.addAll(thirdPage)
         hh?.amenities?.let { saved ->
@@ -217,6 +229,13 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
     }
 
 //////////////////////////////// Second Page /////////////////////////////////////////
+
+    private val houseHoldDetails = FormElement(
+        id = 17498,
+        inputType = HEADLINE,
+        title = resources.getString(R.string.nhhr_title_page_2),
+        required = false
+    )
 
     private val residentialArea = FormElement(
         id = 8,
@@ -277,6 +296,13 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
 
 
 //////////////////////////////// Third Page /////////////////////////////////////////
+
+    private val houseHoldDAmenities = FormElement(
+        id = 17498,
+        inputType = HEADLINE,
+        title = resources.getString(R.string.nhhr_title_page_3),
+        required = false
+    )
 
     private val separateKitchen = FormElement(
         id = 12,

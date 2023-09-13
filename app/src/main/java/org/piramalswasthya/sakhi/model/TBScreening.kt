@@ -1,9 +1,11 @@
 package org.piramalswasthya.sakhi.model
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.network.TBScreeningDTO
@@ -51,3 +53,25 @@ data class TBScreeningCache (
             )
         }
     }
+
+data class BenWithTbScreeningCache(
+    @Embedded
+    val ben: BenBasicCache,
+    @Relation(
+        parentColumn = "benId", entityColumn = "benId"
+    )
+    val tb: TBScreeningCache?,
+
+    ) {
+    fun asTbScreeningDomainModel() : BenWithTbScreeningDomain{
+        return BenWithTbScreeningDomain(
+            ben = ben.asBasicDomainModel(),
+            tb = tb
+        )
+    }
+}
+
+data class BenWithTbScreeningDomain(
+    val ben: BenBasicDomain,
+    val tb: TBScreeningCache?
+)

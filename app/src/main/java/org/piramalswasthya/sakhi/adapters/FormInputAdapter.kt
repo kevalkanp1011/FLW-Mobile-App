@@ -98,6 +98,7 @@ class FormInputAdapter(
                 binding.et.isFocusable = true
             }
             binding.form = item
+            if (item.errorText == null) binding.tilEditText.isErrorEnabled = false
             Timber.d("Bound EditText item ${item.title} with ${item.required}")
             binding.tilEditText.error = item.errorText
             handleHintLength(item)

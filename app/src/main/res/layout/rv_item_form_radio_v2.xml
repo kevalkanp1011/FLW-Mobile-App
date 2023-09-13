@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:baselineAligned="false"
-        android:padding="@dimen/padding_wide">
+        android:paddingHorizontal="@dimen/padding_wide">
 
         <LinearLayout
             android:id="@+id/ll_content"
@@ -42,7 +42,7 @@
                     app:layout_constraintEnd_toStartOf="@id/tv_nullable"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/ll_content"
-                    app:required="@{!form.required}"
+                    app:required2="@{!form.required}"
                     tools:text="Hello you@" />
 
                 <TextView
@@ -54,7 +54,7 @@
                     android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                     app:layout_constraintStart_toEndOf="@id/tv_title"
                     app:layout_constraintTop_toTopOf="@id/ll_content"
-                    app:required="@{form.required}" />
+                    app:required2="@{form.required}" />
 
 <!--                <TextView-->
 <!--                    android:id="@+id/tv_ds"-->

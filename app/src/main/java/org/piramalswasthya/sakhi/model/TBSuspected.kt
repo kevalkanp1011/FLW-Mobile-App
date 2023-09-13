@@ -1,9 +1,11 @@
 package org.piramalswasthya.sakhi.model
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.network.TBSuspectedDTO
@@ -47,3 +49,25 @@ data class TBSuspectedCache (
         )
     }
 }
+
+data class BenWithTbSuspectedCache(
+    @Embedded
+    val ben: BenBasicCache,
+    @Relation(
+        parentColumn = "benId", entityColumn = "benId"
+    )
+    val tb: TBSuspectedCache?,
+
+    ) {
+    fun asTbSuspectedDomainModel() : BenWithTbSuspectedDomain{
+        return BenWithTbSuspectedDomain(
+            ben = ben.asBasicDomainModel(),
+            tb = tb
+        )
+    }
+}
+
+data class BenWithTbSuspectedDomain(
+    val ben: BenBasicDomain,
+    val tb: TBSuspectedCache?
+)

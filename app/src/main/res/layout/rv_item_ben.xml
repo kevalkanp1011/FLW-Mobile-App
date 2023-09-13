@@ -25,6 +25,19 @@
             name="hasAbha"
             type="Boolean" />
 
+        <variable
+            name="showRegistrationDate"
+            type="Boolean" />
+        <variable
+            name="father"
+            type="Boolean" />
+        <variable
+            name="husband"
+            type="Boolean" />
+        <variable
+            name="spouse"
+            type="Boolean"/>
+
     </data>
 
     <androidx.cardview.widget.CardView
@@ -93,7 +106,7 @@
                     android:paddingHorizontal="@dimen/padding_tiny"
                     android:text="@string/btn_rv_item_hh_add_ben"
                     android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                    android:visibility="invisible"
+                    android:visibility="gone"
                     app:cornerRadius="@dimen/padding_normal"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_hh_id" />
 
@@ -104,7 +117,6 @@
                     android:layout_gravity="center_vertical|end"
                     android:layout_marginHorizontal="@dimen/padding_small"
                     android:contentDescription="@string/iv_sync_state_tv"
-                    showLayout="@{showSyncIcon}"
                     app:syncState="@{ben.syncState}"
                     tools:src="@drawable/ic_synced" />
 
@@ -204,6 +216,8 @@
                     app:layout_constraintTop_toBottomOf="@+id/ll_ben_details">
 
                     <LinearLayout
+                        android:id="@+id/registration_date"
+                        showLayout="@{showRegistrationDate}"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -226,6 +240,80 @@
                             tools:text="12-12-4523" />
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/ncd_husband_name"
+                        showLayout="@{husband}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="@dimen/padding_small">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tv_husband_name_ph"
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                            android:textColor="?attr/colorOnPrimary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{ben.spouseName}"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnPrimary"
+                            tools:text="Dummy" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ncd_father_name"
+                        showLayout="@{father}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="@dimen/padding_small">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tv_father_name_ph"
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                            android:textColor="?attr/colorOnPrimary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{ben.fatherName}"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnPrimary"
+                            tools:text="Dummy" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ncd_spouse_name"
+                        showLayout="@{spouse}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="@dimen/padding_small">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tv_spouse_name_ph"
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                            android:textColor="?attr/colorOnPrimary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{ben.spouseName}"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnPrimary"
+                            tools:text="Dummy" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -242,7 +330,7 @@
                             android:textColor="?attr/colorOnPrimary" />
 
                         <TextView
-                            android:text="@{ben.benId>0 ? @string/long_to_string(ben.benId) : @string/ben_pending_sync}"
+                            benIdText="@{ben.benId}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
@@ -306,6 +394,8 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/blank_space"
+                        showLayout="@{showRegistrationDate}"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

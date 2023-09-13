@@ -43,7 +43,7 @@ class IconDataset @Inject constructor(
                 Icon(
                     R.drawable.ic__eligible_couple,
                     resources.getString(R.string.icon_title_ec),
-                    recordsRepo.eligibleCoupleListCount,
+                    null,
                     HomeFragmentDirections.actionNavHomeToEligibleCoupleFragment()
                 ),
                 Icon(

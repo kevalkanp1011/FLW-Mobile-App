@@ -15,7 +15,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
+import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
@@ -46,20 +46,22 @@ class ChildListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapterForForm(
-            BenListAdapterForForm.ClickListener(
-                {
-                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
-                },
-                { hhId, benId ->
-                    Timber.d("benId : $benId hhId : $hhId")
-                    findNavController().navigate(
-                        ChildListFragmentDirections.actionChildListFragmentToHbycMonthListFragment(
-                            hhId = hhId,
-                            benId = benId
-                        )
-                    )
-                }), resources.getString(R.string.hbyc_form))
+        val benAdapter = BenListAdapter(
+//            BenListAdapterForForm.ClickListener(
+//                {
+//                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
+//                },
+//                { hhId, benId ->
+//                    Timber.d("benId : $benId hhId : $hhId")
+//                    findNavController().navigate(
+//                        ChildListFragmentDirections.actionChildListFragmentToHbycMonthListFragment(
+//                            hhId = hhId,
+//                            benId = benId
+//                        )
+//                    )
+//                }), resources.getString(R.string.hbyc_form)
+        showBeneficiaries = true
+                )
         binding.rvAny.adapter = benAdapter
 
         lifecycleScope.launch {

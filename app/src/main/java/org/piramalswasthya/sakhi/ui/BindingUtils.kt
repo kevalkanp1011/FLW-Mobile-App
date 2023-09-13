@@ -14,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.google.android.material.color.MaterialColors
+import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -113,12 +114,20 @@ fun CardView.setRedBorder(allowRedBorder: Boolean, scope: CoroutineScope, count:
 //    }
 }
 
-@BindingAdapter("benId", "syncState")
-fun TextView.setBenIdText(benId: Long?, syncState: SyncState?) {
-    if (syncState != SyncState.SYNCED)
-        text = "Pending Sync"
-    else
-        text = benId.toString()
+@BindingAdapter("benIdText")
+fun TextView.setBenIdText(benId: Long?) {
+    benId?.let {
+        if (benId <0L) {
+            text = "Pending Sync"
+            setTextColor(resources.getColor(android.R.color.holo_orange_light))
+        }
+        else {
+            text = benId.toString()
+            setTextColor(MaterialColors.getColor(this,com.google.android.material.R.attr.colorOnPrimary))
+
+        }
+    }
+
 }
 
 @BindingAdapter("showBasedOnNumMembers")
@@ -271,6 +280,20 @@ fun TextView.setRequired(required: Boolean?) {
     }
 }
 
+@BindingAdapter("required2")
+fun TextView.setRequired2(required2: Boolean?) {
+    required2?.let {
+        visibility = if (it) View.VISIBLE else View.GONE
+    }
+}
+
+@BindingAdapter("headingLine")
+fun MaterialDivider.setHeadingLine(required: Boolean?) {
+    required?.let {
+        visibility = if (it) View.VISIBLE else View.GONE
+    }
+}
+
 
 private val rotate = RotateAnimation(
     360F, 0F, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f
@@ -284,6 +307,7 @@ private val rotate = RotateAnimation(
 @BindingAdapter("syncState")
 fun ImageView.setSyncState(syncState: SyncState?) {
     syncState?.let {
+        visibility = View.VISIBLE
         val drawable = when (it) {
             SyncState.UNSYNCED -> R.drawable.ic_unsynced
             SyncState.SYNCING -> R.drawable.ic_syncing

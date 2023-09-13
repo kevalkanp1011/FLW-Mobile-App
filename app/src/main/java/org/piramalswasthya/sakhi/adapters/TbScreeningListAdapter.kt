@@ -6,40 +6,44 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.piramalswasthya.sakhi.databinding.RvItemNcdCbacBinding
-import org.piramalswasthya.sakhi.model.BenWithCbacDomain
+import org.piramalswasthya.sakhi.databinding.RvItemTbScreeningListBinding
+import org.piramalswasthya.sakhi.model.BenWithTbScreeningDomain
 
-class NcdCbacBenListAdapter(
-    private val clickListener: CbacFormClickListener
-) : ListAdapter<BenWithCbacDomain, NcdCbacBenListAdapter.BenCbacViewHolder>(
-    BenDiffUtilCallBack
-) {
-    private object BenDiffUtilCallBack : DiffUtil.ItemCallback<BenWithCbacDomain>() {
+class TbScreeningListAdapter(
+    private val clickListener: ClickListener? = null
+) :
+    ListAdapter<BenWithTbScreeningDomain, TbScreeningListAdapter.BenViewHolder>
+        (BenDiffUtilCallBack) {
+    private object BenDiffUtilCallBack : DiffUtil.ItemCallback<BenWithTbScreeningDomain>() {
         override fun areItemsTheSame(
-            oldItem: BenWithCbacDomain, newItem: BenWithCbacDomain
+            oldItem: BenWithTbScreeningDomain,
+            newItem: BenWithTbScreeningDomain
         ) = oldItem.ben.benId == newItem.ben.benId
 
         override fun areContentsTheSame(
-            oldItem: BenWithCbacDomain, newItem: BenWithCbacDomain
+            oldItem: BenWithTbScreeningDomain,
+            newItem: BenWithTbScreeningDomain
         ) = oldItem == newItem
 
     }
 
-    class BenCbacViewHolder private constructor(private val binding: RvItemNcdCbacBinding) :
+    class BenViewHolder private constructor(private val binding: RvItemTbScreeningListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         companion object {
-            fun from(parent: ViewGroup): BenCbacViewHolder {
+            fun from(parent: ViewGroup): BenViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RvItemNcdCbacBinding.inflate(layoutInflater, parent, false)
-                return BenCbacViewHolder(binding)
+                val binding = RvItemTbScreeningListBinding.inflate(layoutInflater, parent, false)
+                return BenViewHolder(binding)
             }
         }
 
         fun bind(
-            item: BenWithCbacDomain, clickListener: CbacFormClickListener?
+            item: BenWithTbScreeningDomain,
+            clickListener: ClickListener?,
         ) {
-            binding.benWithCbac = item
-            binding.clickListener = clickListener
+            binding.benWithTb = item
+
+            binding.ivSyncState.visibility = if(item.tb==null) View.INVISIBLE else View.VISIBLE
 
             if (item.ben.spouseName == "Not Available" && item.ben.fatherName == "Not Available") {
                 binding.father = true
@@ -67,34 +71,33 @@ class NcdCbacBenListAdapter(
                 }
             }
 
+            binding.btnFormTb.text = if(item.tb==null) "Screen" else "View Screen"
+            binding.btnFormTb.setBackgroundColor(binding.root.resources.getColor(if (item.tb == null) android.R.color.holo_red_dark else android.R.color.holo_green_dark))
+            binding.clickListener = clickListener
+
             binding.executePendingBindings()
 
         }
+
     }
 
     override fun onCreateViewHolder(
-        parent: ViewGroup, viewType: Int
-    ): BenCbacViewHolder = BenCbacViewHolder.from(parent)
+        parent: ViewGroup,
+        viewType: Int
+    ) =
+        BenViewHolder.from(parent)
 
-    override fun onBindViewHolder(holder: BenCbacViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BenViewHolder, position: Int) {
         holder.bind(getItem(position), clickListener)
     }
 
 
-    class CbacFormClickListener(
-        private val clickedView: (benId: Long) -> Unit,
-        private val clickedNew: (benId: Long) -> Unit,
+    class ClickListener(
+        private val clickedForm: ((hhId: Long, benId: Long) -> Unit)? = null
 
-        ) {
-        fun onClickedView(item: BenWithCbacDomain) = clickedView(
-            item.ben.benId
-        )
-
-        fun onClickedNew(item: BenWithCbacDomain) = clickedNew(
-            item.ben.benId
-        )
-
-
+    ) {
+        fun onClickForm(item: BenWithTbScreeningDomain) =
+            clickedForm?.let { it(item.ben.hhId, item.ben.benId) }
     }
 
 }

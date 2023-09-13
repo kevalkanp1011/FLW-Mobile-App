@@ -78,7 +78,7 @@ class NcdListFragment : Fragment() {
 //                checkAndGenerateABHA(benId)
             },
 
-            ),false)
+            ),true)
         binding.rvAny.adapter = benAdapter
         lifecycleScope.launch {
             viewModel.benList.collect{

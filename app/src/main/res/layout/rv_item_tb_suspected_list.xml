@@ -5,11 +5,11 @@
 
     <data>
         <variable
-            name="benWithCbac"
-            type="org.piramalswasthya.sakhi.model.BenWithCbacDomain" />
+            name="benWithTb"
+            type="org.piramalswasthya.sakhi.model.BenWithTbSuspectedDomain" />
         <variable
             name="clickListener"
-            type="org.piramalswasthya.sakhi.adapters.NcdCbacBenListAdapter.CbacFormClickListener" />
+            type="org.piramalswasthya.sakhi.adapters.TbSuspectedListAdapter.ClickListener" />
         <variable
             name="father"
             type="Boolean" />
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:id="@+id/ll_title_ncd_eligible_bar"
+                    android:id="@+id/ll_title_tb_suspected_list_bar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/colorOnPrimary"
@@ -51,7 +51,6 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
-                        android:id="@+id/tv_hh_ec_id"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -59,7 +58,7 @@
                         android:drawablePadding="@dimen/padding_small"
                         android:gravity="center_vertical"
                         android:padding="@dimen/padding_small"
-                        android:text="@{benWithCbac.ben.familyHeadName}"
+                        android:text="@{benWithTb.ben.familyHeadName}"
                         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                         android:textColor="?attr/colorPrimaryVariant"
                         app:drawableLeftCompat="@drawable/ic__hh"
@@ -69,26 +68,26 @@
                     <ImageView
                         android:id="@+id/iv_sync_state"
                         android:layout_width="24dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|end"
                         android:layout_marginHorizontal="@dimen/padding_small"
                         android:contentDescription="@string/iv_sync_state_tv"
-                        syncState="@{benWithCbac.allSynced}"
+                        app:syncState="@{benWithTb.tb.syncState}"
                         tools:src="@drawable/ic_synced" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linear_ncd_eligible_Layout"
+                    android:id="@+id/linear_tb_suspected_list_Layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="@dimen/padding_normal"
-                    app:layout_constraintTop_toBottomOf="@id/ll_title_ncd_eligible_bar">
+                    app:layout_constraintTop_toBottomOf="@id/ll_title_tb_suspected_list_bar">
 
 
                     <LinearLayout
-                        android:id="@+id/ll_ncd_eligible_details"
+                        android:id="@+id/ll_tb_suspected_list_details"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:baselineAligned="false"
@@ -112,7 +111,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{benWithCbac.ben.benFullName}"
+                                android:text="@{benWithTb.ben.benFullName}"
                                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                                 android:textColor="?attr/colorOnPrimary"
                                 tools:text="TextView" />
@@ -137,7 +136,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{benWithCbac.ben.age}"
+                                android:text="@{benWithTb.ben.age}"
                                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                                 android:textColor="?attr/colorOnPrimary"
                                 tools:text="TextView" />
@@ -160,14 +159,15 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{benWithCbac.ben.gender}"
+                                android:text="@{benWithTb.ben.gender}"
                                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                                 android:textColor="?attr/colorOnPrimary"
                                 tools:text="Female" />
                         </LinearLayout>
                     </LinearLayout>
+
                     <LinearLayout
-                        android:id="@+id/ll_ncd_eligible_details_2"
+                        android:id="@+id/ll_tb_suspected_list_details_2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:baselineAligned="false"
@@ -192,7 +192,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{benWithCbac.ben.spouseName}"
+                                android:text="@{benWithTb.ben.spouseName}"
                                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                                 android:textColor="?attr/colorOnPrimary"
                                 tools:text="Dummy" />
@@ -217,7 +217,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{benWithCbac.ben.fatherName}"
+                                android:text="@{benWithTb.ben.fatherName}"
                                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                                 android:textColor="?attr/colorOnPrimary"
                                 tools:text="Dummy" />
@@ -242,7 +242,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{benWithCbac.ben.spouseName}"
+                                android:text="@{benWithTb.ben.spouseName}"
                                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                                 android:textColor="?attr/colorOnPrimary"
                                 tools:text="Dummy" />
@@ -265,7 +265,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                benIdText="@{benWithCbac.ben.benId}"
+                                benIdText="@{benWithTb.ben.benId}"
                                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                                 android:textColor="?attr/colorOnPrimary"
                                 tools:text="3546464466" />
@@ -288,14 +288,15 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{benWithCbac.ben.mobileNo}"
+                                android:text="@{benWithTb.ben.mobileNo}"
                                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                                 android:textColor="?attr/colorOnPrimary"
                                 tools:text="9999999999" />
                         </LinearLayout>
                     </LinearLayout>
+
                     <LinearLayout
-                        android:id="@+id/ll_ncd_eligible_details_3"
+                        android:id="@+id/ll_tb_suspected_list_details_3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:baselineAligned="false"
@@ -318,7 +319,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{benWithCbac.ben.rchId}"
+                                android:text="@{benWithTb.ben.rchId}"
                                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                                 android:textColor="?attr/colorOnPrimary"
                                 tools:text="511616166" />
@@ -327,34 +328,18 @@
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_form_tb"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@android:color/holo_green_dark"
-                    android:layout_marginStart="@dimen/margin_normal"
-                    android:layout_marginBottom="@dimen/margin_normal"
-                    android:onClick="@{() -> clickListener.onClickedNew(benWithCbac)}"
-                    android:text="@string/add_cbac"
-                    android:textColor="?attr/colorOnPrimary"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linear_ncd_eligible_Layout"/>
-
-                <com.google.android.material.button.MaterialButton
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    list_avail="@{benWithCbac.savedCbacRecords}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/margin_normal"
                     android:layout_marginBottom="@dimen/margin_normal"
-                    android:backgroundTint="@android:color/holo_green_dark"
-                    android:onClick="@{() -> clickListener.onClickedView(benWithCbac)}"
-                    android:text="@string/view_cbac"
+                    android:onClick="@{()-> clickListener.onClickForm(benWithTb)}"
                     android:textColor="?attr/colorOnPrimary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/linear_ncd_eligible_Layout"/>
-
+                    app:layout_constraintTop_toBottomOf="@+id/linear_tb_suspected_list_Layout"
+                    tools:backgroundTint="@android:color/holo_red_dark" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

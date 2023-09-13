@@ -73,7 +73,9 @@ class HouseholdMembersFragment : Fragment() {
                 }
             ),
             showSyncIcon = true,
-            showAbha = true)
+            showAbha = true,
+            showRegistrationDate = true
+        )
         binding.rvAny.adapter = benAdapter
 
         lifecycleScope.launch {

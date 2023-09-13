@@ -207,36 +207,16 @@ data class BenBasicCache(
             abhaId = abhaId,
             relToHeadId = relToHeadId,
             mobileNo = mobileNo.toString(),
-            fatherName = fatherName,
+            fatherName = fatherName?.takeIf { it.isNotEmpty() }  ?: "Not Available",
             familyHeadName = familyHeadName ?: "Not Available",
 //            typeOfList = typeOfList.name,
-            spouseName = spouseName,
+            spouseName = spouseName?.takeIf { it.isNotEmpty() }  ?: "Not Available",
             rchId = rchId?.takeIf { it.isNotEmpty() } ?: "Not Available",
             hrpStatus = hrpStatus,
             syncState = syncState
         )
     }
 
-    fun asBenBasicDomainModelForCbacForm(): BenBasicDomainForForm {
-        return BenBasicDomainForForm(
-            benId = benId,
-            hhId = hhId,
-            regDate = dateFormat.format(Date(regDate)),
-            benName = benName,
-            benSurname = benSurname ?: "Not Available",
-            gender = gender.name,
-            dob = dob,
-            mobileNo = mobileNo.toString(),
-            fatherName = fatherName,
-            familyHeadName = familyHeadName ?: "Not Available",
-//            typeOfList = typeOfList.name,
-            rchId = rchId ?: "Not Available",
-            hrpStatus = hrpStatus,
-            form1Filled = cbacFilled,
-            syncState = cbacSyncState
-                ?: throw IllegalStateException("Sync state for cbac is null!!")
-        )
-    }
 
     fun asBenBasicDomainModelForTbsnForm(): BenBasicDomainForForm {
         return BenBasicDomainForForm(
