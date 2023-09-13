@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -45,12 +46,14 @@ class EligibleCoupleTrackingListFragment : Fragment() {
 
         binding.btnNextPage.visibility = View.GONE
         val benAdapter = ECTrackingListAdapter(
-            ECTrackingListAdapter.ECTrackListClickListener(addNewTrack = {
-                findNavController().navigate(
+            ECTrackingListAdapter.ECTrackListClickListener(addNewTrack = {benId, canAdd ->
+                if(canAdd)
+                    findNavController().navigate(
                     EligibleCoupleTrackingListFragmentDirections.actionEligibleCoupleTrackingListFragmentToEligibleCoupleTrackingFormFragment(
-                        it
+                        benId
                     )
-                )
+                )else
+                    Toast.makeText(requireContext(), "Already filled for Today!", Toast.LENGTH_LONG).show()
             }, showAllTracks = {
                 viewModel.setClickedBenId(it)
                 bottomSheet.show(childFragmentManager,"ECT")

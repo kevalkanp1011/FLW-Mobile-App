@@ -563,6 +563,12 @@ class EcrRepo @Inject constructor(
         }
         return list
     }
+
+    suspend fun getLatestEctByBenId(benId: Long): EligibleCoupleTrackingCache? {
+        return withContext(Dispatchers.IO){
+            database.ecrDao.getLatestEct(benId)
+        }
+    }
 //    private suspend fun saveECRCacheFromResponse(dataObj: String): MutableList<EligibleCoupleRegCache> {
 //        val tbScreeningList = mutableListOf<TBScreeningCache>()
 //        var requestDTO = Gson().fromJson(dataObj, TBScreeningRequestDTO::class.java)

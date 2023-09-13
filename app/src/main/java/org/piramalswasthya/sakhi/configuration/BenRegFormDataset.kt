@@ -800,7 +800,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                 setUpForChild(it, hoFSpouse.firstOrNull())
             }
             if (relationToHeadId == 0 || relationToHeadId == 1) hoF?.let {
-                setUpForParents(it)
+                setUpForParents(it, benGender)
             }
 
 
@@ -954,7 +954,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
         lastName.value = hoF.lastName
     }
 
-    private fun setUpForParents(hoF: BenRegCache) {
+    private fun setUpForParents(hoF: BenRegCache, benGender: Gender) {
         val hoFAge = getAgeFromDob(hoF.dob)
         ageUnit.value = ageUnit.entries!!.last()
         ageUnit.inputType = TEXT_VIEW
@@ -965,6 +965,12 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             it.timeInMillis
         }
         minAgeYear = minAge
+        firstName.value =
+            when (benGender) {
+                MALE -> hoF.fatherName
+                FEMALE -> hoF.motherName
+                else -> null
+            }
         lastName.value = hoF.lastName
     }
 
@@ -1845,7 +1851,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
         }
     }
 
-    fun updateHouseholdWithHoFDetails(household: HouseholdCache, ben: BenRegCache){
+    fun updateHouseholdWithHoFDetails(household: HouseholdCache, ben: BenRegCache) {
         household.family?.familyHeadName = ben.firstName
         household.family?.familyName = ben.lastName
     }

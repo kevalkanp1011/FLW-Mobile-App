@@ -127,9 +127,11 @@ class EligibleCoupleTrackingFormFragment : Fragment() {
                     notifyItemChanged(2)
 
                 }
-                5 -> {
-                    notifyItemChanged(viewModel.getIndexOfIsPregnant())
+                4,5 -> {
+                    notifyDataSetChanged()
+                    //notifyItemChanged(viewModel.getIndexOfIsPregnant())
                 }
+
             }
         }
     }
