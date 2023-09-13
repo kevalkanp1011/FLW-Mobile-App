@@ -336,6 +336,7 @@
                     android:onClick="@{() -> clickListener.onClickedNew(benWithCbac)}"
                     android:text="@string/add_cbac"
                     android:textColor="?attr/colorOnPrimary"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/linear_ncd_eligible_Layout"/>
 
@@ -350,6 +351,7 @@
                     android:onClick="@{() -> clickListener.onClickedView(benWithCbac)}"
                     android:text="@string/view_cbac"
                     android:textColor="?attr/colorOnPrimary"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/linear_ncd_eligible_Layout"/>
 

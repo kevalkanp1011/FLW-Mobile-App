@@ -18,14 +18,15 @@
         >
 
         <com.google.android.material.divider.MaterialDivider
+            headingLine="@{form.headingLine}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp" />
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="25dp"
             tools:text="TextView"
             android:text="@{form.title}"
             android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall" />

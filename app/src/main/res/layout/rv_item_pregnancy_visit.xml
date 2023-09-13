@@ -304,6 +304,7 @@
                 android:onClick="@{() -> clickListener.onClickedVisit(visit)}"
                 android:text="@string/anc_visits"
                 android:textColor="?attr/colorOnPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linear_pwr_tracking_Layout" />
 

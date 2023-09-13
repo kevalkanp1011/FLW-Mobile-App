@@ -48,7 +48,9 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
         id = 17498,
         inputType = HEADLINE,
         title = resources.getString(R.string.nhhr_title_page_1),
-        required = false
+        required = false,
+        headingLine = false
+
     )
 
     private val firstNameHeadOfFamily = FormElement(

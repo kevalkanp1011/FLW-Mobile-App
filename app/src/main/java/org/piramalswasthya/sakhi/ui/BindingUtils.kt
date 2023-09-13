@@ -14,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.google.android.material.color.MaterialColors
+import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -274,6 +275,20 @@ fun ConstraintLayout.setItemsCheckBox(form: FormInputOld?) {
 
 @BindingAdapter("required")
 fun TextView.setRequired(required: Boolean?) {
+    required?.let {
+        visibility = if (it) View.VISIBLE else View.INVISIBLE
+    }
+}
+
+@BindingAdapter("required2")
+fun TextView.setRequired2(required2: Boolean?) {
+    required2?.let {
+        visibility = if (it) View.VISIBLE else View.GONE
+    }
+}
+
+@BindingAdapter("headingLine")
+fun MaterialDivider.setHeadingLine(required: Boolean?) {
     required?.let {
         visibility = if (it) View.VISIBLE else View.GONE
     }
