@@ -274,6 +274,10 @@ class FormInputAdapter(
 
         fun bind(item: FormElement, isEnabled: Boolean, formValueListener: FormValueListener?) {
             binding.form = item
+            if(item.errorText==null) {
+                binding.tilRvDropdown.error = null
+                binding.tilRvDropdown.isErrorEnabled = false
+            }
             if (!isEnabled) {
                 binding.tilRvDropdown.visibility = View.GONE
                 binding.tilEditText.visibility = View.VISIBLE
@@ -286,11 +290,11 @@ class FormInputAdapter(
             binding.actvRvDropdown.setOnItemClickListener { _, _, index, _ ->
                 item.value = item.entries?.get(index)
                 Timber.d("Item DD : $item")
-                if (item.hasDependants || item.hasAlertError) {
+//                if (item.hasDependants || item.hasAlertError) {
                     formValueListener?.onValueChanged(item, index)
-                }
-                item.errorText = null
-                binding.tilRvDropdown.error = null
+//                }
+                binding.tilRvDropdown.isErrorEnabled = item.errorText!=null
+                binding.tilRvDropdown.error = item.errorText
             }
 
             item.errorText?.let { binding.tilRvDropdown.error = it }

@@ -242,8 +242,7 @@
                             android:textColor="?attr/colorOnPrimary" />
 
                         <TextView
-                            benId="@{ben.benId}"
-                            syncState="@{ben.syncState}"
+                            android:text="@{ben.benId>0 ? @string/long_to_string(ben.benId) : @string/ben_pending_sync}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"

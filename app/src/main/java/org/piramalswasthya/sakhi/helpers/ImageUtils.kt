@@ -91,9 +91,13 @@ object ImageUtils {
 
     }
 
-    fun renameImage(context: Context, oldBenId: Long, newBenId: Long) {
-        File(context.filesDir, "${oldBenId}.jpeg").takeIf { it.exists() }
-            ?.renameTo(File(context.filesDir, "${newBenId}.jpeg"))
+    fun renameImage(context: Context, oldBenId: Long, newBenId: Long) : String{
+        val renamedFile = File(context.filesDir, "${oldBenId}.jpeg").apply {
+            takeIf { it.exists() }
+                ?.renameTo(File(context.filesDir, "${newBenId}.jpeg"))
+
+        }
+        return Uri.fromFile(renamedFile).toString()
     }
 
 

@@ -57,13 +57,13 @@ class AllBenFragment : Fragment() {
         binding.btnNextPage.visibility = View.GONE
         val benAdapter = BenListAdapter(
             clickListener = BenListAdapter.BenClickListener(
-                { hhId, benId, isKid ->
+                { hhId, benId, relToHeadId ->
 
                     findNavController().navigate(
                         AllBenFragmentDirections.actionAllBenFragmentToNewBenRegFragment(
                             hhId = hhId,
                             benId = benId,
-                            relToHeadId = -1,
+                            relToHeadId = relToHeadId,
                             gender = 0
 
                         )

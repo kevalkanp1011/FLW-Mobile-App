@@ -325,8 +325,13 @@ class BenRepo @Inject constructor(
                     val benNumber = resBenId.substring(resBenId.length - 12)
                     val newBenId = java.lang.Long.valueOf(benNumber)
                     //FIX TO UPDATE IMAGE-NAME WITH NEW BEN-ID
-                    ImageUtils.renameImage(context, ben.beneficiaryId, newBenId)
-                    benDao.updateToFinalBenId(ben.householdId, ben.beneficiaryId, newBenId)
+                    val photoUri = ImageUtils.renameImage(context, ben.beneficiaryId, newBenId)
+                    benDao.updateToFinalBenId(
+                        hhId = ben.householdId,
+                        oldId = ben.beneficiaryId,
+                        newId = newBenId,
+                        imageUri = photoUri
+                    )
                     //FIX TO MAP UPDATED BEN-ID FOR HOF
                     householdDao.getHousehold(ben.householdId)
                         ?.takeIf { it.benId == ben.beneficiaryId }?.let {
@@ -677,6 +682,7 @@ class BenRepo @Inject constructor(
 //                                            typeOfList = benDataObj.getString("registrationType"),
                                             syncState = if (benExists) SyncState.SYNCED else SyncState.SYNCING,
                                             dob = 0L,
+                                            relToHeadId = 0
                                         )
                                     )
                                 }

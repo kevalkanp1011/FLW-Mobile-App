@@ -49,7 +49,7 @@ enum class Gender {
 
 @DatabaseView(
     viewName = "BEN_BASIC_CACHE",
-    value = "SELECT b.beneficiaryId as benId, b.householdId as hhId, b.regDate, b.firstName as benName, b.lastName as benSurname, b.gender, b.dob as dob" +
+    value = "SELECT b.beneficiaryId as benId, b.householdId as hhId, b.regDate, b.firstName as benName, b.lastName as benSurname, b.gender, b.dob as dob, b.familyHeadRelationPosition as relToHeadId" +
             ", b.contactNumber as mobileNo, b.fatherName, h.fam_familyHeadName as familyHeadName, b.gen_spouseName as spouseName,b.rchId" +
             ", b.isHrpStatus as hrpStatus, b.syncState, b.gen_reproductiveStatusId as reproductiveStatusId, b.isKid, b.immunizationStatus," +
             " b.loc_village_id as villageId, b.abha_healthIdNumber as abhaId," +
@@ -96,6 +96,7 @@ data class BenBasicCache(
     val benSurname: String? = null,
     val gender: Gender,
     val dob: Long,
+    val relToHeadId : Int,
     val mobileNo: Long,
     val fatherName: String? = null,
     val familyHeadName: String? = null,
@@ -204,6 +205,7 @@ data class BenBasicCache(
             gender = gender.name,
             dob = dob,
             abhaId = abhaId,
+            relToHeadId = relToHeadId,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
             familyHeadName = familyHeadName ?: "Not Available",
@@ -561,6 +563,7 @@ data class BenBasicDomain(
     val ageInt: Int = getAgeFromDob(dob),
     val ageUnit: AgeUnit = getAgeUnitFromDob(dob),
     val age: String = "$ageInt ${ageUnit.name.first()}",
+    val relToHeadId : Int,
     val mobileNo: String,
     val abhaId: String? = null,
     val fatherName: String? = null,

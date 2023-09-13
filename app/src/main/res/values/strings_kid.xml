@@ -64,8 +64,16 @@
 
     <string-array name="place_of_birth">
         <item>Home</item>
-        <item>Health Facility</item>
-        <item>Any other Place</item>
+        <item>Sub-Centre</item>
+        <item>PHC</item>
+        <item>CHC</item>
+        <item>Sub-District Hospital,</item>
+        <item>District Hospital,</item>
+        <item>Medical College Hospital</item>
+        <item>In Transit</item>
+        <item>Private Hospital</item>
+        <item>Accredited Private Hospital</item>
+        <item>Other</item>
     </string-array>
 
     <string-array name="facility_place">

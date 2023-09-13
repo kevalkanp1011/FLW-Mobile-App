@@ -7,8 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.piramalswasthya.sakhi.databinding.RvItemBenBinding
-import org.piramalswasthya.sakhi.helpers.Konstants
-import org.piramalswasthya.sakhi.model.AgeUnit
 import org.piramalswasthya.sakhi.model.BenBasicDomain
 
 
@@ -66,14 +64,14 @@ class BenListAdapter(
 
 
     class BenClickListener(
-        private val clickedBen: (hhId: Long, benId: Long, isKid: Boolean) -> Unit,
+        private val clickedBen: (hhId: Long, benId: Long, relToHeadId: Int) -> Unit,
         private val clickedHousehold: (hhId: Long) -> Unit,
         private val clickedABHA: (benId: Long, hhId: Long) -> Unit,
     ) {
         fun onClickedBen(item: BenBasicDomain) = clickedBen(
             item.hhId,
             item.benId,
-            (item.ageUnit != AgeUnit.YEARS || item.ageInt <= Konstants.maxAgeForAdolescent)
+            item.relToHeadId -1
         )
 
         fun onClickedHouseHold(item: BenBasicDomain) = clickedHousehold(item.hhId)

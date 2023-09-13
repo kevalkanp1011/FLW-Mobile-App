@@ -125,7 +125,7 @@ class NewBenRegViewModel @Inject constructor(
                             household = household,
                             hoF = hoFBen, benGender = benGender!!,
                             relationToHeadId = relToHeadId,
-                            hoFSpouse = familyList.firstOrNull { it.familyHeadRelationPosition == 5 || it.familyHeadRelationPosition == 6 }
+                            hoFSpouse = familyList.filter { it.familyHeadRelationPosition == 5 || it.familyHeadRelationPosition == 6 }
 
                         )
                     }
@@ -170,6 +170,10 @@ class NewBenRegViewModel @Inject constructor(
                         )
                     }
                     dataset.mapValues(ben, 2)
+                    if(isHoF) {
+                        dataset.updateHouseholdWithHoFDetails(household, ben)
+                        householdRepo.updateHousehold(household)
+                    }
                     ben.apply {
                         if (beneficiaryId < 0L) {
                             serverUpdatedStatus = 1

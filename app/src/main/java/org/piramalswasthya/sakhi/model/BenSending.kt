@@ -81,7 +81,7 @@ data class BeneficiaryDataSending(
 //    val providerServiceMapID: String,
 
     @Json(name = "maritalStatusID")
-    val maritalStatusID: String = "",
+    val maritalStatusID: String? = null,
 
     @Json(name = "vanID")
     val vanID: Int = 4,
@@ -106,7 +106,7 @@ data class BeneficiaryDataSending(
 
 
     @Json(name = "maritalStatusName")
-    val maritalStatusName: String = "",
+    val maritalStatusName: String? = null,
 
     )
 
@@ -224,9 +224,11 @@ fun BenRegCache.asNetworkSendingModel(
     locationRecord: LocationRecord,
     context: Context
 ): BeneficiaryDataSending {
+    val isKid = (ageUnit != null && (ageUnit != AgeUnit.YEARS || age < 15))
 
     return BeneficiaryDataSending(
-        benImage = ImageUtils.getEncodedStringForBenImage(context, beneficiaryId)?:"", //Base64.encodeToString(userImageBlob, Base64.DEFAULT),
+        benImage = ImageUtils.getEncodedStringForBenImage(context, beneficiaryId)
+            ?: "", //Base64.encodeToString(userImageBlob, Base64.DEFAULT),
         firstName = firstName!!,
         lastName = lastName ?: "",
         dob = getDateTimeStringFromLong(dob) ?: "",
@@ -251,8 +253,8 @@ fun BenRegCache.asNetworkSendingModel(
             TRANSGENDER -> "Transgender"
             null -> "NA"
         },
-        maritalStatusID = genDetails?.maritalStatusId?.toString() ?: "",
-        maritalStatusName = genDetails?.maritalStatus ?: "",
+        maritalStatusID = if (isKid) null else genDetails?.maritalStatusId?.toString() ?: "",
+        maritalStatusName = if(isKid) null else genDetails?.maritalStatus ?: "",
         email = "",
 //        providerServiceMapID = user.serviceMapId.toString(),
 //        providerServiceMapId = user.serviceMapId.toString(),

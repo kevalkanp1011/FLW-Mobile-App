@@ -13,6 +13,11 @@ import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.EligibleCoupleRegCache
 import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.Gender
+import org.piramalswasthya.sakhi.model.InputType.DATE_PICKER
+import org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT
+import org.piramalswasthya.sakhi.model.InputType.HEADLINE
+import org.piramalswasthya.sakhi.model.InputType.RADIO
+import org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -49,7 +54,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val dateOfReg = FormElement(
         id = 0,
-        inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
+        inputType = DATE_PICKER,
         title = "Date of Registration",
         arrayId = -1,
         required = true,
@@ -59,7 +64,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val rchId = FormElement(
         id = 1,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "RCH ID No. of Woman",
         arrayId = -1,
         required = false,
@@ -72,7 +77,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val name = FormElement(
         id = 2,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "Name of Woman",
         arrayId = -1,
         required = false,
@@ -84,7 +89,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val husbandName = FormElement(
         id = 3,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "Name of Husband",
         arrayId = -1,
         required = false,
@@ -96,7 +101,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age = FormElement(
         id = 4,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "Current Age of Woman",
         arrayId = -1,
         required = false,
@@ -108,7 +113,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val ageAtMarriage = FormElement(
         id = 5,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "Age of Woman at Marriage",
         arrayId = -1,
         required = false,
@@ -121,7 +126,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val womanDetails = FormElement(
         id = 6,
-        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        inputType = HEADLINE,
         title = "Details of Woman",
         arrayId = -1,
         required = false
@@ -129,7 +134,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val aadharNo = FormElement(
         id = 7,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "Aadhaar Number of Woman",
         arrayId = -1,
         required = false,
@@ -142,7 +147,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val bankAccount = FormElement(
         id = 8,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "Bank AC No or Post Office AC No",
         arrayId = -1,
         required = false,
@@ -155,7 +160,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val bankName = FormElement(
         id = 9,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "Bank Name",
         arrayId = -1,
         required = false,
@@ -164,7 +169,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val branchName = FormElement(
         id = 10,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "Branch Name",
         arrayId = -1,
         required = false,
@@ -173,7 +178,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val ifsc = FormElement(
         id = 11,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "IFSC Code",
         arrayId = -1,
         required = false,
@@ -182,7 +187,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val noOfChildren = FormElement(
         id = 12,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "Total No. of Children Born",
         arrayId = -1,
         required = true,
@@ -194,7 +199,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val noOfLiveChildren = FormElement(
         id = 13,
-        inputType = org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT,
+        inputType = EDIT_TEXT,
         title = "No. of Live Children",
         arrayId = -1,
         required = true,
@@ -206,7 +211,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val numMale = FormElement(
         id = 14,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "Male",
         arrayId = -1,
         required = true,
@@ -218,7 +223,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val numFemale = FormElement(
         id = 15,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "Female",
         arrayId = -1,
         required = true,
@@ -230,7 +235,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val firstChildDetails = FormElement(
         id = 16,
-        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        inputType = HEADLINE,
         title = "Details of 1st Child",
         arrayId = -1,
         required = false
@@ -238,7 +243,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val dob1 = FormElement(
         id = 17,
-        inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
+        inputType = DATE_PICKER,
         title = "1st Child Date of Birth",
         arrayId = -1,
         required = true,
@@ -249,7 +254,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age1 = FormElement(
         id = 18,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "1st Child Age ( in Years)",
         arrayId = -1,
         required = true,
@@ -262,7 +267,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val gender1 = FormElement(
         id = 19,
-        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        inputType = RADIO,
         title = "1st Child Sex",
         arrayId = -1,
         entries = resources.getStringArray(R.array.ecr_gender_array),
@@ -272,7 +277,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val marriageFirstChildGap = FormElement(
         id = 20,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "Gap between Date of marriage and 1st child",
         arrayId = -1,
         required = true,
@@ -284,7 +289,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val secondChildDetails = FormElement(
         id = 21,
-        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        inputType = HEADLINE,
         title = "Details of 2nd Child",
         arrayId = -1,
         required = false
@@ -292,7 +297,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val dob2 = FormElement(
         id = 22,
-        inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
+        inputType = DATE_PICKER,
         title = "2nd Child Date of Birth",
         arrayId = -1,
         required = true,
@@ -303,7 +308,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age2 = FormElement(
         id = 23,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "2nd Child Age ( in Years)",
         arrayId = -1,
         required = true,
@@ -316,7 +321,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val gender2 = FormElement(
         id = 24,
-        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        inputType = RADIO,
         title = "2nd Child Sex",
         arrayId = -1,
         entries = resources.getStringArray(R.array.ecr_gender_array),
@@ -326,7 +331,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val firstAndSecondChildGap = FormElement(
         id = 25,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "Gap between 1st child and 2nd Child",
         arrayId = -1,
         required = true,
@@ -338,7 +343,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val thirdChildDetails = FormElement(
         id = 26,
-        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        inputType = HEADLINE,
         title = "Details of 3rd Child",
         arrayId = -1,
         required = false
@@ -346,7 +351,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val dob3 = FormElement(
         id = 27,
-        inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
+        inputType = DATE_PICKER,
         title = "3rd Child Date of Birth",
         arrayId = -1,
         required = true,
@@ -357,7 +362,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age3 = FormElement(
         id = 28,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "3rd Child Age ( in Years)",
         arrayId = -1,
         required = true,
@@ -370,7 +375,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val gender3 = FormElement(
         id = 29,
-        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        inputType = RADIO,
         title = "3rd Child Sex",
         arrayId = -1,
         entries = resources.getStringArray(R.array.ecr_gender_array),
@@ -380,7 +385,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val secondAndThirdChildGap = FormElement(
         id = 30,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "Gap between 2nd child and 3rd Child",
         arrayId = -1,
         required = true,
@@ -392,7 +397,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val fourthChildDetails = FormElement(
         id = 31,
-        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        inputType = HEADLINE,
         title = "Details of 4th Child",
         arrayId = -1,
         required = false
@@ -400,7 +405,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val dob4 = FormElement(
         id = 32,
-        inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
+        inputType = DATE_PICKER,
         title = "4th Child Date of Birth",
         arrayId = -1,
         required = true,
@@ -411,7 +416,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age4 = FormElement(
         id = 33,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "4th Child Age ( in Years)",
         arrayId = -1,
         required = true,
@@ -424,7 +429,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val gender4 = FormElement(
         id = 34,
-        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        inputType = RADIO,
         title = "4th Child Sex",
         arrayId = -1,
         entries = resources.getStringArray(R.array.ecr_gender_array),
@@ -434,7 +439,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val thirdAndFourthChildGap = FormElement(
         id = 35,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "Gap between 3rd Child and 4th Child",
         arrayId = -1,
         required = true,
@@ -446,7 +451,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val fifthChildDetails = FormElement(
         id = 36,
-        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        inputType = HEADLINE,
         title = "Details of 5th Child",
         arrayId = -1,
         required = false
@@ -454,7 +459,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val dob5 = FormElement(
         id = 37,
-        inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
+        inputType = DATE_PICKER,
         title = "5th Child Date of Birth",
         arrayId = -1,
         required = true,
@@ -465,7 +470,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age5 = FormElement(
         id = 38,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "5th Child Age ( in Years)",
         arrayId = -1,
         required = true,
@@ -478,7 +483,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val gender5 = FormElement(
         id = 39,
-        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        inputType = RADIO,
         title = "5th Child Sex",
         arrayId = -1,
         entries = resources.getStringArray(R.array.ecr_gender_array),
@@ -488,7 +493,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val fourthAndFifthChildGap = FormElement(
         id = 40,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "Gap between 4th child and 5th Child",
         arrayId = -1,
         required = true,
@@ -500,7 +505,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val sixthChildDetails = FormElement(
         id = 41,
-        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        inputType = HEADLINE,
         title = "Details of 6th Child",
         arrayId = -1,
         required = false
@@ -508,7 +513,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val dob6 = FormElement(
         id = 42,
-        inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
+        inputType = DATE_PICKER,
         title = "6th Child Date of Birth",
         arrayId = -1,
         required = true,
@@ -519,7 +524,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age6 = FormElement(
         id = 43,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "6th Child Age ( in Years)",
         arrayId = -1,
         required = true,
@@ -532,7 +537,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val gender6 = FormElement(
         id = 44,
-        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        inputType = RADIO,
         title = "6th Child Sex",
         arrayId = -1,
         entries = resources.getStringArray(R.array.ecr_gender_array),
@@ -542,7 +547,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val fifthAndSixthChildGap = FormElement(
         id = 45,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "Gap between 5th child and 6th Child",
         arrayId = -1,
         required = true,
@@ -554,7 +559,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val seventhChildDetails = FormElement(
         id = 46,
-        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        inputType = HEADLINE,
         title = "Details of 7th Child",
         arrayId = -1,
         required = false
@@ -562,7 +567,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val dob7 = FormElement(
         id = 47,
-        inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
+        inputType = DATE_PICKER,
         title = "7th Child Date of Birth",
         arrayId = -1,
         required = true,
@@ -573,7 +578,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age7 = FormElement(
         id = 48,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "7th Child Age ( in Years)",
         arrayId = -1,
         required = true,
@@ -586,7 +591,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val gender7 = FormElement(
         id = 49,
-        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        inputType = RADIO,
         title = "7th Child Sex",
         arrayId = -1,
         entries = resources.getStringArray(R.array.ecr_gender_array),
@@ -596,7 +601,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val sixthAndSeventhChildGap = FormElement(
         id = 50,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "Gap between 6th child and 7th Child",
         arrayId = -1,
         required = true,
@@ -608,7 +613,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val eighthChildDetails = FormElement(
         id = 51,
-        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        inputType = HEADLINE,
         title = "Details of 8th Child",
         arrayId = -1,
         required = false
@@ -616,7 +621,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val dob8 = FormElement(
         id = 52,
-        inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
+        inputType = DATE_PICKER,
         title = "8th Child Date of Birth",
         arrayId = -1,
         required = true,
@@ -627,7 +632,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age8 = FormElement(
         id = 53,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "8th Child Age ( in Years)",
         arrayId = -1,
         required = true,
@@ -640,7 +645,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val gender8 = FormElement(
         id = 54,
-        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        inputType = RADIO,
         title = "8th Child Sex",
         arrayId = -1,
         entries = resources.getStringArray(R.array.ecr_gender_array),
@@ -650,7 +655,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val seventhAndEighthChildGap = FormElement(
         id = 55,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "Gap between 7th child and 8th Child",
         arrayId = -1,
         required = true,
@@ -662,7 +667,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val ninthChildDetails = FormElement(
         id = 56,
-        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        inputType = HEADLINE,
         title = "Details of 9th Child",
         arrayId = -1,
         required = false
@@ -670,7 +675,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val dob9 = FormElement(
         id = 57,
-        inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
+        inputType = DATE_PICKER,
         title = "9th Child Date of Birth",
         arrayId = -1,
         required = true,
@@ -681,7 +686,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val age9 = FormElement(
         id = 58,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "9th Child Age ( in Years)",
         arrayId = -1,
         required = true,
@@ -694,7 +699,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private val gender9 = FormElement(
         id = 59,
-        inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
+        inputType = RADIO,
         title = "9th Child Sex",
         arrayId = -1,
         entries = resources.getStringArray(R.array.ecr_gender_array),
@@ -705,7 +710,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     private var timeAtMarriage: Long = 0L
     private val eighthAndNinthChildGap = FormElement(
         id = 60,
-        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
+        inputType = TEXT_VIEW,
         title = "Gap between 8th child and 9th Child",
         arrayId = -1,
         required = true,
@@ -747,7 +752,9 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         ben?.let {
             dateOfReg.min = it.regDate
             rchId.value = ben.rchId
-            aadharNo.value = ben.aadharNum
+            aadharNo.value = ben.aadharNum?.takeIf { it.isNotEmpty() }?.also {
+                aadharNo.inputType = TEXT_VIEW
+            }
             name.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
             husbandName.value = ben.genDetails?.spouseName
             age.value = BenBasicCache.getAgeFromDob(ben.dob).toString()
@@ -1617,7 +1624,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     fun mapValueToBen(ben: BenRegCache?): Boolean {
         var isUpdated = false;
         val rchIdFromBen = ben?.rchId?.takeIf { it.isNotEmpty() }?.toLong()
-        val aadharNoFromBen = ben?.aadharNum?.takeIf { it.isNotEmpty() }?.toLong()
+        val aadharNoFromBen = ben?.aadharNum?.takeIf { it.isNotEmpty() }
         rchId.value?.takeIf {
             it.isNotEmpty()
         }?.toLong()?.let {
@@ -1627,15 +1634,22 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             }
         }
         aadharNo.value?.takeIf {
-            it.isNotEmpty()
-        }?.toLong()?.let {
-            if (it != aadharNoFromBen) {
-                ben?.aadharNum = it.toString()
+            aadharNo.inputType == EDIT_TEXT &&
+                    it.isNotEmpty()
+        }?.let {
+            val last4 = "*".repeat(8) + it.takeLast(4)
+            if (
+                last4
+                != aadharNoFromBen
+            ) {
+                ben?.hasAadhar = true
+                ben?.hasAadharId=1
+                ben?.aadharNum = last4
                 isUpdated = true
             }
         }
         if (isUpdated) {
-            if(ben?.processed!="N")
+            if (ben?.processed != "N")
                 ben?.processed = "U"
             ben?.syncState = SyncState.UNSYNCED
         }

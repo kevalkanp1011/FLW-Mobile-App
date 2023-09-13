@@ -10,6 +10,7 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.model.FormElement
+import org.piramalswasthya.sakhi.model.InputType
 import org.piramalswasthya.sakhi.utils.HelperUtil
 import timber.log.Timber
 import java.text.SimpleDateFormat
@@ -119,6 +120,11 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     abstract fun mapValues(cacheModel: FormDataModel, pageNumber: Int = 0)
     protected fun getIndexOfElement(element: FormElement) = list.indexOf(element)
     suspend fun updateList(formId: Int, index: Int) {
+        list.find { it.id == formId }?.let {
+            if (it.inputType == InputType.DROPDOWN) {
+                it.errorText = null
+            }
+        }
         val updateIndex = handleListOnValueChanged(formId, index)
         if (updateIndex != -1) {
             val newList = list.toMutableList()
@@ -285,7 +291,8 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         addItems.forEach {
             if (list.contains(it)) list.remove(it)
         }
-        val addPosition = if(position==-2) list.lastIndex+1 else position.takeIf { it != -1 } ?: (list.indexOf(source) + 1)
+        val addPosition = if (position == -2) list.lastIndex + 1 else position.takeIf { it != -1 }
+            ?: (list.indexOf(source) + 1)
         list.addAll(addPosition, addItems)
         return addPosition
 //        return if (age in ageTriggerRange && ageUnit.value == ageUnit.entries?.get(
@@ -380,7 +387,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
 
     protected fun assignValuesToAgeAndAgeUnitFromDob(
         dob: Long, ageElement: FormElement, ageUnitElement: FormElement,
-        ageAtMarriageElement : FormElement? = null, timeStampDateOfMarriage : Long? = null
+        ageAtMarriageElement: FormElement? = null, timeStampDateOfMarriage: Long? = null
     ): Int {
         ageUnitElement.errorText = null
         ageElement.errorText = null
@@ -393,7 +400,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         ageAtMarriageElement?.max = yearsDiff.toLong()
         timeStampDateOfMarriage?.let {
             ageAtMarriageElement?.value =
-                getDiffYears(calDob, Calendar.getInstance().apply { timeInMillis = it } ).toString()
+                getDiffYears(calDob, Calendar.getInstance().apply { timeInMillis = it }).toString()
         }
         if (yearsDiff > 0) {
             ageUnitElement.value = ageUnitElement.entries?.last()
@@ -511,6 +518,15 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
             if (it) formElement.errorText = null
             else formElement.errorText =
                 resources.getString(R.string.form_input_alph_numeric_space_only_error)
+        }
+        return -1
+    }
+
+    protected fun validateAllDigitOnEditText(formElement: FormElement): Int {
+        formElement.value?.takeIf { it.isNotEmpty() }?.all { it.isDigit() }?.let {
+            if (it) formElement.errorText = null
+            else formElement.errorText =
+                resources.getString(R.string.form_input_digit_only_error)
         }
         return -1
     }

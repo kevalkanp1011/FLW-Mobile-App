@@ -68,10 +68,14 @@ class AllHouseholdFragment : Fragment() {
                 hof?.let {
                     (it.genDetails?.maritalStatusId == 1)
                 } ?: false
+            val isHoFMarried =
+                hof?.let {
+                    (it.genDetails?.maritalStatusId == 2)
+                } ?: false
             val dropdownList = when (i) {
                 addBenAlertBinding.rbMale.id -> resources.getStringArray(R.array.nbr_relationship_to_head_male)
                 addBenAlertBinding.rbFemale.id -> resources.getStringArray(R.array.nbr_relationship_to_head_female)
-                addBenAlertBinding.rbTrans.id -> resources.getStringArray(R.array.nbr_relationship_to_head)
+                addBenAlertBinding.rbTrans.id -> resources.getStringArray(R.array.nbr_relationship_to_head_male)
                 else -> null
             }?.toMutableList()?.apply {
                 if (isHoFUnmarried)
@@ -80,9 +84,14 @@ class AllHouseholdFragment : Fragment() {
                             .toSet()
                     )
                 else {
-                    if (hof?.gender == Gender.MALE)
+                    if(!isHoFMarried){
                         remove(resources.getStringArray(R.array.nbr_relationship_to_head)[5])
-                    else if (hof?.gender == Gender.FEMALE)
+                        remove(resources.getStringArray(R.array.nbr_relationship_to_head)[4])
+
+                    }
+                    if (hof?.gender == Gender.MALE && addBenAlertBinding.rgGender.checkedRadioButtonId == addBenAlertBinding.rbMale.id)
+                        remove(resources.getStringArray(R.array.nbr_relationship_to_head)[5])
+                    else if (hof?.gender == Gender.FEMALE && addBenAlertBinding.rgGender.checkedRadioButtonId == addBenAlertBinding.rbFemale.id)
                         remove(resources.getStringArray(R.array.nbr_relationship_to_head)[4])
 
                 }
@@ -147,7 +156,10 @@ class AllHouseholdFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__hh, getString(R.string.icon_title_household))
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__hh,
+                getString(R.string.icon_title_household)
+            )
         }
     }
 
