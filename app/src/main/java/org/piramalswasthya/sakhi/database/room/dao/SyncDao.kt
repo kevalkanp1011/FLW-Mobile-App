@@ -17,6 +17,8 @@ interface SyncDao {
                 + "UNION SELECT 'EC Tracking' as name,  ect.syncState as syncState, count(*) as count from eligible_couple_tracking ect group by ect.syncState "
                 + "UNION SELECT 'PW Registration' as name,  pwr.syncState as syncState, count(*) as count from pregnancy_register pwr group by pwr.syncState "
                 + "UNION SELECT 'PW ANC' as name,  pwanc.syncState as syncState, count(*) as count from pregnancy_anc pwanc group by pwanc.syncState "
+                + "UNION SELECT 'Delivery Out' as name,  do.syncState as syncState, count(*) as count from delivery_outcome do group by do.syncState "
+                + "UNION SELECT 'Infant Reg' as name,  ir.syncState as syncState, count(*) as count from infant_reg ir group by ir.syncState "
     )
 //    @Query(
 //        "       SELECT count(*) as ben_synced from beneficiary b1 where b1.syncState = 2 union " +

@@ -114,4 +114,51 @@
         <item>হোৱ</item>
         <item>নহয়</item>
     </string-array>
+
+
+    <!--  Infant Registration  -->
+    <string name="ir_baby_name">শিশুৰ নাম</string>
+    <string name="ir_infant_term">শিশুৰ আয়োজন</string>
+    <string name="ir_corticosteroid_given">কৰ্টিকোষ্টেৰোইড ইঞ্জেক্টন দেওঁক?</string>
+    <string name="ir_gender">শিশুৰ লিংগ</string>
+    <string name="ir_baby_cried_at_birth">শিশুৰ জন্মদিনৰ সময় শিশু আপোনা গোৱা?</string>
+    <string name="ir_resuscitation">যদি নহয়, পুনৰুজ্জীৱন কৰা হৈছে নাকৰে</string>
+    <string name="ir_referred">আগামী পৰিচালনাকৰণৰ বাবে উচ্চ সুযোগস্থানলৈ পৰিপ্ৰেষিত কৰা হৈছে</string>
+    <string name="ir_had_birth_defect">জন্মদিনৰ সময় কোনো জন্ম দোষ দেখা হৈছে নাকৰে?</string>
+    <string name="ir_birth_defect">জন্মদিনৰ সময় দোষ দেখা হৈছে</string>
+    <string name="ir_other_defect">জন্মদিনৰ সময় অন্য দোষ দেখা হৈছে</string>
+    <string name="ir_weight">জন্মদিনত শ্ৰেণী(কেজি)</string>
+    <string name="ir_breast_feeding_started">শিশুৰ জন্মদিনৰ পাছৰ দ্বাৰা শিশুৰ শ্ৰেণী</string>
+    <string name="ir_opv0_dose">OPV0 ডোচ</string>
+    <string name="ir_bcg_dose">BCG ডোচ</string>
+    <string name="ir_hepb_dose">HEP B-0 ডোচ</string>
+    <string name="ir_vitk_dose">VITK ডোচ</string>
+    <string-array name="ir_infant_term">
+        <item>পূৰ্ণ আয়োজন</item>
+        <item>পূৰ্বাভাসী</item>
+    </string-array>
+    <string-array name="ir_confirmation_array1">
+        <item>হোৱ</item>
+        <item>নহয়</item>
+    </string-array>
+    <string-array name="ir_confirmation_array2">
+        <item>হোৱ</item>
+        <item>নহয়</item>
+        <item>NA</item>
+    </string-array>
+    <string-array name="ir_confirmation_array3">
+        <item>হোৱ</item>
+        <item>নহয়</item>
+        <item>জানোৱা নাই</item>
+    </string-array>
+    <string-array name="ir_birth_defect_array">
+        <item>চেফট লিপ / চেফট পেলেট</item>
+        <item>ক্লাব ফুট</item>
+        <item>ডাউন্‌চ সিণড্‌ৰম</item>
+        <item>হাইড্ৰোসেফেলাছ</item>
+        <item>ইম্পাৰফৰেট এনাছ</item>
+        <item>নিউৰেল টিউব ডিফেক্ট (স্পাইনেল বিফাইদা)</item>
+        <item>অন্য দোষ</item>
+    </string-array>
+
 </resources>

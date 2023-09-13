@@ -12,13 +12,13 @@ import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.DeliveryOutcomeCache
 import org.piramalswasthya.sakhi.model.DeliveryOutcomePost
-import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
-import org.piramalswasthya.sakhi.model.PwrPost
 import org.piramalswasthya.sakhi.network.AmritApiService
 import org.piramalswasthya.sakhi.network.GetDataPaginatedRequest
 import timber.log.Timber
 import java.io.IOException
 import java.net.SocketTimeoutException
+import java.text.SimpleDateFormat
+import java.util.Locale
 import javax.inject.Inject
 
 class DeliveryOutcomeRepo @Inject constructor(
@@ -90,7 +90,7 @@ class DeliveryOutcomeRepo @Inject constructor(
 
                         val errormessage = jsonObj.getString("message")
                         if (jsonObj.isNull("status")) throw IllegalStateException("Amrit server not responding properly, Contact Service Administrator!!")
-                        val responsestatuscode = jsonObj.getInt("status")
+                        val responsestatuscode = jsonObj.getInt("statusCode")
 
                         when (responsestatuscode) {
                             200 -> {
@@ -137,12 +137,12 @@ class DeliveryOutcomeRepo @Inject constructor(
                     ?: throw IllegalStateException("No user logged in!!")
             val lastTimeStamp = Konstants.defaultTimeStamp
             try {
-                val response = amritApiService.getDeliverOutcomeData(
+                val response = amritApiService.getDeliveryOutcomeData(
                     GetDataPaginatedRequest(
                         ashaId = user.userId,
                         pageNo = 0,
-                        fromDate = MaternalHealthRepo.getCurrentDate(lastTimeStamp),
-                        toDate = MaternalHealthRepo.getCurrentDate()
+                        fromDate = getCurrentDate(lastTimeStamp),
+                        toDate = getCurrentDate()
                     )
                 )
                 val statusCode = response.code()
@@ -212,4 +212,13 @@ class DeliveryOutcomeRepo @Inject constructor(
         return deliveryOutcomeList
     }
 
+    companion object {
+        private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        private val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
+        fun getCurrentDate(millis: Long = System.currentTimeMillis()): String {
+            val dateString = dateFormat.format(millis)
+            val timeString = timeFormat.format(millis)
+            return "${dateString}T${timeString}.000Z"
+        }
+    }
 }

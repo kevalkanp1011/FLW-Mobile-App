@@ -114,4 +114,49 @@
         <item>हाँ</item>
         <item>नहीं</item>
     </string-array>
+
+    <!--  Infant Registration  -->
+    <string name="ir_baby_name">शिशु का नाम</string>
+    <string name="ir_infant_term">शिशु की अवधि</string>
+    <string name="ir_corticosteroid_given">क्या कॉर्टिकोस्टेरॉइड इंजेक्शन दिया गया था?</string>
+    <string name="ir_gender">शिशु का लिंग</string>
+    <string name="ir_baby_cried_at_birth">शिशु प्रसव के समय तुरंत रोता था</string>
+    <string name="ir_resuscitation">अगर नहीं, फिर जिन्होंने पुनर्जीवन किया?</string>
+    <string name="ir_referred">उच्च सुविधा के लिए और प्रबंधन के लिए संदर्भित किया गया?</string>
+    <string name="ir_had_birth_defect">प्रसव के समय क्या कोई जन्म दोष दिखा?</string>
+    <string name="ir_birth_defect">प्रसव के समय दोष दिखा</string>
+    <string name="ir_other_defect">प्रसव के समय अन्य दोष दिखा</string>
+    <string name="ir_weight">जन्म पर वजन (किलोग्राम में)</string>
+    <string name="ir_breast_feeding_started">शिशु का दूध पीना प्रसव के एक घंटे के भीतर शुरू हुआ</string>
+    <string name="ir_opv0_dose">OPV0 डोज</string>
+    <string name="ir_bcg_dose">BCG डोज</string>
+    <string name="ir_hepb_dose">HEP B-0 डोज</string>
+    <string name="ir_vitk_dose">VITK डोज</string>
+    <string-array name="ir_infant_term">
+        <item>पूरी अवधि</item>
+        <item>पूर्व अवधि</item>
+    </string-array>
+    <string-array name="ir_confirmation_array1">
+        <item>हाँ</item>
+        <item>नहीं</item>
+    </string-array>
+    <string-array name="ir_confirmation_array2">
+        <item>हाँ</item>
+        <item>नहीं</item>
+        <item>नहीं लागू</item>
+    </string-array>
+    <string-array name="ir_confirmation_array3">
+        <item>हाँ</item>
+        <item>नहीं</item>
+        <item>मालूम नहीं</item>
+    </string-array>
+    <string-array name="ir_birth_defect_array">
+        <item>क्लेफ्ट लिप / क्लेफ्ट पैलेट</item>
+        <item>क्लब पैर</item>
+        <item>डाउन सिंड्रोम</item>
+        <item>हाइड्रोसेफालस</item>
+        <item>अंक नलिका दोष (स्पाइनल बिफिडा)</item>
+        <item>अन्य</item>
+    </string-array>
+
 </resources>

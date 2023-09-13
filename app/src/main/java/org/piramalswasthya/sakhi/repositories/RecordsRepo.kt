@@ -135,6 +135,8 @@ class RecordsRepo @Inject constructor(
 
     fun getRegisteredInfants() = childRegistrationDao.getAllRegisteredInfants(selectedVillage)
 
+    fun getRegisteredInfantsCount() = childRegistrationDao.getAllRegisteredInfantsCount(selectedVillage)
+
     //        .map { list -> list.map { it.ben } }
     fun getPregnantWomenListCount() = benDao.getAllPregnancyWomenListCount(selectedVillage)
     fun getRegisteredPregnantWomanList() =
@@ -150,13 +152,15 @@ class RecordsRepo @Inject constructor(
     fun getDeliveredWomenList() = benDao.getAllDeliveredWomenList(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForDeliveryOutcomeForm() } }
 
+    fun getDeliveredWomenListCount() = benDao.getAllDeliveredWomenListCount(selectedVillage)
+
     fun getWomenListForPmsma() = benDao.getAllWomenListForPmsma(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForDeliveryOutcomeForm() } }
 
     fun getAllWomenForPmsmaCount() = benDao.getAllWomenListForPmsmaCount(selectedVillage)
-    fun getListForInfantReg() = benDao.getAllDeliveredWomenList(selectedVillage)
+    fun getListForInfantReg() = benDao.getListForInfantRegister(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForInfantRegistrationForm() } }
-    fun getDeliveredWomenListCount() = benDao.getAllDeliveredWomenListCount(selectedVillage)
+    fun getInfantRegisterCount() = benDao.getInfantRegisterCount(selectedVillage)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val hrpCount = maternalHealthDao.getAllPregnancyRecords().transformLatest {

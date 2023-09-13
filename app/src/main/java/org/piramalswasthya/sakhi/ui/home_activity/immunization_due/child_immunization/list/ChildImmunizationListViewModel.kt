@@ -33,18 +33,13 @@ class ChildImmunizationListViewModel @Inject constructor(
             set(Calendar.MILLISECOND, 0)
             add(Calendar.YEAR, -16)
         }.timeInMillis,
-        maxDob = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
-        }.timeInMillis,
+        maxDob = System.currentTimeMillis(),
     )
     private lateinit var vaccinesList: List<Vaccine>
 
     val benWithVaccineDetails = pastRecords.map { vaccineIdList ->
         vaccineIdList.map { cache ->
-            val ageMillis = getTodayMillis() - cache.ben.dob
+            val ageMillis = System.currentTimeMillis() - cache.ben.dob
             ImmunizationDetailsDomain(ben = cache.ben.asBasicDomainModel(),
                 vaccineStateList = vaccinesList.filter {
                     it.minAllowedAgeInMillis < ageMillis

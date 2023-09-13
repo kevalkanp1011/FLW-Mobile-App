@@ -106,6 +106,12 @@ interface BenDao {
     @Query("SELECT COUNT(*) FROM BEN_BASIC_CACHE WHERE isDelivered = 1 and villageId=:selectedVillage")
     fun getAllDeliveredWomenListCount(selectedVillage: Int): Flow<Int>
 
+    @Query("SELECT * FROM BEN_BASIC_CACHE  WHERE isDelivered = 1 and doFilled = 1 and villageId=:selectedVillage")
+    fun getListForInfantRegister(selectedVillage: Int): Flow<List<BenBasicCache>>
+
+    @Query("SELECT COUNT(*) FROM BEN_BASIC_CACHE WHERE isDelivered = 1 and doFilled = 1 and villageId=:selectedVillage")
+    fun getInfantRegisterCount(selectedVillage: Int): Flow<Int>
+
     @Query("SELECT * FROM BEN_BASIC_CACHE  WHERE pwHrp = 1 and villageId=:selectedVillage")
     fun getAllWomenListForPmsma(selectedVillage: Int): Flow<List<BenBasicCache>>
 
@@ -186,7 +192,7 @@ interface BenDao {
         selectedVillage: Int, max: Int = Konstants.maxAgeForCdr
     ): Flow<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId in (2, 3, 4) and villageId=:selectedVillage")
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId in (2, 3, 4) and isMdsr = 1 and villageId=:selectedVillage")
     fun getAllMDSRList(selectedVillage: Int): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE  CAST((strftime('%s','now') - dob/1000)/60/60/24/365 AS INTEGER)<=:max and villageId=:selectedVillage")

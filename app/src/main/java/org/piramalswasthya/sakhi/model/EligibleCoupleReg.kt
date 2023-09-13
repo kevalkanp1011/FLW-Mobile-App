@@ -148,6 +148,7 @@ private fun getDateStringFromLong(dateLong: Long?): String? {
 
 data class EcrPost(
     val benId: Long,
+    @Json(name = "registrationDate")
     val dateOfReg: String,
     @Json(name = "bankAccountNumber")
     val bankAccount: Long? = null,

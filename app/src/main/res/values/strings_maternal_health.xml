@@ -217,4 +217,50 @@
         <item>No</item>
     </string-array>
 
+
+    <!--  Delivery Outcome  -->
+    <string name="ir_baby_name">Name of Baby</string>
+    <string name="ir_infant_term">Infant Term</string>
+    <string name="ir_corticosteroid_given">Was Corticosteroid Inj. given?</string>
+    <string name="ir_gender">Sex of Infant</string>
+    <string name="ir_baby_cried_at_birth">Baby Cried Immediately at Birth</string>
+    <string name="ir_resuscitation">If No, Resuscitation Done</string>
+    <string name="ir_referred">Referred to higher facility for further management</string>
+    <string name="ir_had_birth_defect">Any birth defect seen in at birth?</string>
+    <string name="ir_birth_defect">Defect seen at birth</string>
+    <string name="ir_other_defect">Other defect seen at Birth</string>
+    <string name="ir_weight">Weight at Birth(kg)</string>
+    <string name="ir_breast_feeding_started">Breast feeding started within one hour of birth</string>
+    <string name="ir_opv0_dose">OPV0 Dose</string>
+    <string name="ir_bcg_dose">BCG Dose</string>
+    <string name="ir_hepb_dose">HEP B-0 Dose</string>
+    <string name="ir_vitk_dose">VITK Dose</string>
+    <string-array name="ir_infant_term">
+        <item>Full Term</item>
+        <item>Pre Term</item>
+    </string-array>
+    <string-array name="ir_confirmation_array1">
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+    <string-array name="ir_confirmation_array2">
+        <item>Yes</item>
+        <item>No</item>
+        <item>NA</item>
+    </string-array>
+    <string-array name="ir_confirmation_array3">
+        <item>Yes</item>
+        <item>No</item>
+        <item>Don\'t Know</item>
+    </string-array>
+    <string-array name="ir_birth_defect_array">
+        <item>Cleft Lip / Cleft Palate</item>
+        <item>Club Foot</item>
+        <item>Down\'s Syndrome</item>
+        <item>Hydrocephalus</item>
+        <item>Imperforate Anus</item>
+        <item>Neural Tube Defect (Spinal Bifida)</item>
+        <item>Other</item>
+    </string-array>
+
 </resources>

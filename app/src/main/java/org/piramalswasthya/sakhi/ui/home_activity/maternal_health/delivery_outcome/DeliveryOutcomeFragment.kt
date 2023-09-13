@@ -77,7 +77,7 @@ class DeliveryOutcomeFragment : Fragment() {
                     binding.llContent.visibility = View.VISIBLE
                     binding.pbForm.visibility = View.GONE
                     Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
-                    WorkerUtils.triggerDeliveryOutcomePushWorker(requireContext())
+                    WorkerUtils.triggerAmritPushWorker(requireContext())
                     findNavController().navigateUp()
                 }
 

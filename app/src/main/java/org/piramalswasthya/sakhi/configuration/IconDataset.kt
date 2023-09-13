@@ -206,13 +206,13 @@ class IconDataset @Inject constructor(
         Icon(
             R.drawable.ic__pregnancy,
             resources.getString(R.string.icon_title_pmir),
-            recordsRepo.getDeliveredWomenListCount(),
+            recordsRepo.getInfantRegisterCount(),
             MotherCareFragmentDirections.actionMotherCareFragmentToInfantRegListFragment()
         ),
         Icon(
             R.drawable.ic__pregnancy,
             resources.getString(R.string.icon_title_pmcr),
-            recordsRepo.getDeliveredWomenListCount(),
+            recordsRepo.getRegisteredInfantsCount(),
             MotherCareFragmentDirections.actionMotherCareFragmentToChildRegListFragment()
         ),
 //        , Icon(
