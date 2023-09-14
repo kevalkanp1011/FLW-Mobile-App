@@ -24,7 +24,8 @@
 
         <TextView
             style="@style/cbac_ed_hint"
-            android:text="@{numAsterisk==1 ? @string/radio_title_cbac(fieldName) : numAsterisk==2 ? @string/radio_title_cbac_ds(fieldName) : fieldName}" />
+            cbac_name="@{fieldName}"
+            asteriskColor="@{numAsterisk}" />
 
         <RadioGroup
             android:id="@+id/cbac_ed_rg"

@@ -19,7 +19,8 @@
             android:layout_width="0dp"
 
             android:layout_height="wrap_content"
-            android:hint="@{form.required ? @string/radio_title_cbac(form.title) : form.title}"
+            asteriskRequired="@{form.required}"
+            hintText="@{form.title}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">

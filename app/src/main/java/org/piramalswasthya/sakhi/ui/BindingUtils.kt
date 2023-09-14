@@ -2,6 +2,7 @@ package org.piramalswasthya.sakhi.ui
 
 import android.net.Uri
 import android.os.Build
+import android.text.Html
 import android.text.InputType
 import android.view.View
 import android.view.animation.Animation
@@ -9,6 +10,7 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import android.widget.*
 import android.widget.RadioGroup.LayoutParams
+import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
@@ -16,6 +18,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -394,6 +397,53 @@ fun ImageView.setAncState(ancFormState: AncFormState?) {
                 }
             }
         )
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.N)
+@BindingAdapter("cbac_name", "asteriskColor")
+fun TextView.setAsteriskText(fieldName: String?, numAsterisk: Int?) {
+
+    fieldName?.let {
+        numAsterisk?.let {
+            text = if(numAsterisk ==1) {
+                Html.fromHtml(resources.getString(R.string.radio_title_cbac,fieldName), Html.FROM_HTML_MODE_LEGACY)
+            } else if (numAsterisk == 2) {
+                Html.fromHtml(resources.getString(R.string.radio_title_cbac_ds,fieldName), Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                fieldName
+            }
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.N)
+@BindingAdapter("asteriskRequired", "hintText")
+fun TextInputLayout.setAsteriskFormText(required: Boolean?, title: String?) {
+
+    required?.let {
+        title?.let {
+            hint = if(required) {
+                Html.fromHtml(resources.getString(R.string.radio_title_cbac,title), Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                title
+            }
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.N)
+@BindingAdapter("asteriskRequired", "hintText")
+fun TextView.setAsteriskTextView(required: Boolean?, title: String?) {
+
+    required?.let {
+        title?.let {
+            text = if(required) {
+                Html.fromHtml(resources.getString(R.string.radio_title_cbac,title), Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                title
+            }
+        }
     }
 }
 
