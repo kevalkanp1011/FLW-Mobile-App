@@ -50,7 +50,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:hint="@{form.required ? @string/radio_title_cbac(form.title) : form.title}">
+            asteriskRequired="@{form.required}"
+            hintText="@{form.title}">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et"

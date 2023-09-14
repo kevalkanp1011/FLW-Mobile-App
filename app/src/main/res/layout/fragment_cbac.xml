@@ -506,18 +506,6 @@
 
 
                             <include
-                                android:id="@+id/cbac_fh_tb"
-                                layout="@layout/fragment_cbac_element_radio"
-                                app:fieldName="@{@string/cbac_fh_tb}"
-                                app:numAsterisk="@{2}" />
-
-                            <include
-                                android:id="@+id/cbac_taking_tb_drug"
-                                layout="@layout/fragment_cbac_element_radio"
-                                app:fieldName="@{@string/cbac_taking_tb_drug}"
-                                app:numAsterisk="@{2}" />
-
-                            <include
                                 android:id="@+id/cbac_histb"
                                 layout="@layout/fragment_cbac_element_radio"
                                 app:fieldName="@{@string/cbac_histb}"
@@ -552,6 +540,18 @@
                                 layout="@layout/fragment_cbac_element_radio"
                                 app:fieldName="@{@string/cbac_ntswets}"
                                 app:numAsterisk="@{1}" />
+
+                            <include
+                                android:id="@+id/cbac_fh_tb"
+                                layout="@layout/fragment_cbac_element_radio"
+                                app:fieldName="@{@string/cbac_fh_tb}"
+                                app:numAsterisk="@{2}" />
+
+                            <include
+                                android:id="@+id/cbac_taking_tb_drug"
+                                layout="@layout/fragment_cbac_element_radio"
+                                app:fieldName="@{@string/cbac_taking_tb_drug}"
+                                app:numAsterisk="@{2}" />
 
                             <include
                                 android:id="@+id/cbac_recurrent_ulceration"

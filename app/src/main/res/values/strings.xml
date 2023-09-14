@@ -219,8 +219,8 @@
     <string name="anc_visits">ANC VISITS</string>
     <string name="id">ID</string>
     <string name="no_of_children">No.of Children</string>
-    <string name="view_trackings">View Trackings</string>
-    <string name="add_tracking">Add Tracking</string>
+    <string name="view_visit">View Visit</string>
+    <string name="add_visit">Add Visit</string>
     <string name="household_id">Household ID</string>
     <string name="contact_number">Contact Number</string>
     <string name="kcuf">KCUF</string>
@@ -274,9 +274,9 @@
     <string name="eligible_couple_tracking_list">Eligible Couple Tracking List</string>
     <string name="eligible_couple_tracking_form">Eligible Couple Tracking Form</string>
     <string name="tb_screening_list">TB Screening List</string>
-    <string name="tb_suspected_list">TB Suspected List</string>
+    <string name="tb_suspected_list">Suspected TB cases</string>
     <string name="tb_screening_form">TB Screening Form</string>
-    <string name="tb_suspected_form">TB Suspected Form</string>
+    <string name="tb_suspected_form">Suspected TB case</string>
     <string name="mother_immunization">Mother Immunization</string>
     <string name="delivery_outcome">Delivery Outcome</string>
     <string name="delivery_outcome_list">Delivery Outcome List</string>
@@ -317,6 +317,9 @@
     <string name="child_immunization">Child Immunization</string>
     <string name="pregnancy_registration">Pregnancy Registration</string>
     <string name="mother_immunizationlist">Mother ImmunizationList</string>
+    <string name="family_member_registration">Family Member Registration</string>
+    <string name="relation_with_hof">Relation with HOF</string>
+    <string name="add_family_member">Add Family Member</string>
     <string-array name="sync_records">
         <item>Beneficiary</item>
         <item>CBAC</item>

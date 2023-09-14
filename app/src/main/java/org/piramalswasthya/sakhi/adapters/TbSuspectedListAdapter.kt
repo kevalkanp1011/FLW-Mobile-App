@@ -71,7 +71,7 @@ class TbSuspectedListAdapter(
                 }
             }
 
-            binding.btnFormTb.text = if(item.tb==null) "Track" else "View Track"
+            binding.btnFormTb.text = if(item.tb==null) "Track" else "View"
             binding.btnFormTb.setBackgroundColor(binding.root.resources.getColor(if (item.tb == null) android.R.color.holo_red_dark else android.R.color.holo_green_dark))
             binding.clickListener = clickListener
 

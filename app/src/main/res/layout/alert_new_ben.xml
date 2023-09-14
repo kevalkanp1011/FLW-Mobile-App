@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="@dimen/padding_normal"
-        android:text="Add Beneficiary"
+        android:text="@string/add_family_member"
         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
 
         app:layout_constraintTop_toTopOf="parent" />
@@ -82,7 +82,7 @@
             android:background="?attr/colorPrimary"
             android:gravity="center"
             android:padding="@dimen/padding_normal"
-            android:text="@string/relation_with_family_head"
+            android:text="@string/nbr_rel_to_head"
             android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
             android:textColor="?attr/colorOnPrimary" />
 
@@ -92,7 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:hint="Head Of Family's"
+            android:hint="@string/relation_with_hof"
             android:labelFor="@id/actv_rv_dropdown"
             android:orientation="horizontal"
             android:padding="@dimen/padding_normal">

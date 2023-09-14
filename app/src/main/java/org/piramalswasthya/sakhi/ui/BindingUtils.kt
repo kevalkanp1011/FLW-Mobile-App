@@ -149,7 +149,7 @@ fun CardView.setBackgroundTintBasedOnNumMembers(numMembers: Int?) {
 @BindingAdapter("textBasedOnNumMembers")
 fun TextView.textBasedOnNumMembers(numMembers: Int?) {
     numMembers?.let {
-        text = if (it > 0) "Add Members" else "Add Head-Of-Family"
+        text = if (it > 0) "Add Member" else "Add Head-Of-Family"
     }
 }
 
