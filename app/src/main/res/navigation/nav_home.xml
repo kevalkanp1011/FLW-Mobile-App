@@ -67,6 +67,12 @@
         <action
             android:id="@+id/action_homeFragment_to_HRPNonPregnantFragment"
             app:destination="@id/HRPNonPregnantFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_HRPPregnantListFragment"
+            app:destination="@id/HRPPregnantListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_HRPNonPregnantListFragment"
+            app:destination="@id/HRPNonPregnantListFragment" />
     </fragment>
     <fragment
         android:id="@+id/allHouseholdFragment"

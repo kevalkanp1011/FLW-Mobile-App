@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.network.HRPPregnantAssessDTO
+import org.piramalswasthya.sakhi.utils.HelperUtil
 
 @Entity(
     tableName = "HRP_PREGNANT_ASSESS",
@@ -57,4 +58,29 @@ data class HRPPregnantAssessCache(
             visitDate = getDateTimeStringFromLong(visitDate)
         )
     }
+
+    fun toHighRiskAssessDTO(): HighRiskAssessDTO {
+        return HighRiskAssessDTO(
+            id = id,
+            benId = benId,
+            noOfDeliveries = noOfDeliveries,
+            timeLessThan18m = timeLessThan18m,
+            heightShort = heightShort,
+            age = age,
+            createdDate = HelperUtil.getDateStringFromLong(visitDate)
+        )
+    }
 }
+
+data class HighRiskAssessDTO (
+    val id: Int = 0,
+    val benId: Long = 0,
+    var noOfDeliveries: String? = null,
+    var timeLessThan18m: String? = null,
+    var heightShort: String? = null,
+    var age: String? = null,
+    val createdDate: String? = null,
+    val createdBy: String? = null,
+    val updatedDate: String? = null,
+    val updatedBy: String? = null
+)

@@ -127,7 +127,7 @@ data class PregnantWomanRegistrationCache(
     var active: Boolean = true,
     var processed: String? = "N",
     var createdBy: String,
-    val createdDate: Long = System.currentTimeMillis(),
+    var createdDate: Long = System.currentTimeMillis(),
     var updatedBy: String,
     val updatedDate: Long = System.currentTimeMillis(),
     var syncState: SyncState
@@ -154,6 +154,8 @@ data class PregnantWomanRegistrationCache(
             numPrevPregnancy = numPrevPregnancy,
             pregComplication = complicationPrevPregnancy,
             otherComplication = otherComplication,
+            isHrpCase = isHrp,
+            assignedAsHrpBy = hrpIdBy,
             createdDate = getDateStringFromLong(createdDate),
             createdBy = createdBy,
             updatedDate = getDateStringFromLong(updatedDate),
@@ -190,7 +192,7 @@ data class PwrPost (
     val registrationDate: String? = null,
     val rchId: Long? = null,
     val mcpCardId: Long? = null,
-    val lmpDate: String? = null,
+    var lmpDate: String? = null,
     val bloodGroup: String? = null,
     val weight: Int? = null,
     val height: Int? = null,
@@ -202,14 +204,20 @@ data class PwrPost (
     val dateOfHbsAgTest: String? = null,
     val pastIllness: String? = null,
     val otherPastIllness: String? = null,
-    val isFirstPregnancyTest: Boolean = true,
+    var isFirstPregnancyTest: Boolean = true,
     val numPrevPregnancy: Int? = null,
     val pregComplication: String? = null,
     val otherComplication: String? = null,
+    var isRegistered : Boolean = true,
+    var rhNegative : String? = null,
+    var homeDelivery : String? = null,
+    var badObstetric : String? = null,
+    var isHrpCase : Boolean = false,
+    var assignedAsHrpBy : String? = null,
     val createdDate: String? = null,
     val createdBy: String,
-    val updatedDate: String? = null,
-    val updatedBy: String
+    var updatedDate: String? = null,
+    var updatedBy: String
 ) {
     fun toPwrCache(): PregnantWomanRegistrationCache {
         return PregnantWomanRegistrationCache(
@@ -237,11 +245,9 @@ data class PwrPost (
             is1st = isFirstPregnancyTest,
             numPrevPregnancy = numPrevPregnancy,
             complicationPrevPregnancy = pregComplication,
-//            complicationPrevPregnancyId = otherComplication,
             otherComplication = otherComplication,
-//            isHrp =
-//            hrpIdBy
-//            hrpIdById
+            isHrp = isHrpCase,
+            hrpIdBy = assignedAsHrpBy,
             active = true,
             processed = "P",
             createdBy = createdBy,

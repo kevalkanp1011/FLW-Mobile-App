@@ -59,6 +59,14 @@ interface AmritApiService {
 //    @POST("highRisk/pregnant/assess/saveAll")
     suspend fun saveHRPAssessData(@Body userDataDTO: UserDataDTO<Any?>): Response<ResponseBody>
 
+    @POST("flw-0.0.1/highRisk/assess/getAll")
+//    @POST("highRisk/pregnant/assess/getAll")
+    suspend fun getHighRiskAssessData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+    @POST("flw-0.0.1/highRisk/assess/saveAll")
+//    @POST("highRisk/pregnant/assess/saveAll")
+    suspend fun saveHighRiskAssessData(@Body userDataDTO: UserDataDTO<Any?>): Response<ResponseBody>
+
+
     @POST("flw-0.0.1/highRisk/pregnant/track/getAll")
 //    @POST("highRisk/pregnant/track/getAll")
     suspend fun getHRPTrackData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>

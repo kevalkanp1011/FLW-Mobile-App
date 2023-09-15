@@ -27,6 +27,8 @@ import javax.inject.Inject
 class HRPRepo @Inject constructor(
     private val database: InAppDb,
     private val userRepo: UserRepo,
+    private val maternalHealthRepo: MaternalHealthRepo,
+    private val ecrRepo: EcrRepo,
     private val preferenceDao: PreferenceDao,
     private val tmcNetworkApiService: AmritApiService
 
@@ -511,20 +513,25 @@ class HRPRepo @Inject constructor(
 
             val entities = database.hrpDao.getHRPAssess(SyncState.UNSYNCED)
 
-            val dtos = mutableListOf<Any>()
+            val assessDtos = mutableListOf<Any>()
+
+            val pwrDtos = mutableListOf<Any>()
+
             entities?.let {
                 it.forEach { cache ->
-                    dtos.add(cache.toDTO())
+                    assessDtos.add(cache.toHighRiskAssessDTO())
+                    pwrDtos.add(mapPWR(cache))
                     cache.syncState = SyncState.SYNCED
                 }
             }
 
-            if (dtos.isEmpty()) return@withContext 1
+            if (pwrDtos.isNotEmpty())
+            if (assessDtos.isEmpty()) return@withContext 1
             try {
-                val response = tmcNetworkApiService.saveHRPAssessData(
+                val response = tmcNetworkApiService.saveHighRiskAssessData(
                     UserDataDTO(
                         userId = user.userId,
-                        entries = dtos
+                        entries = assessDtos
                     )
                 )
                 val statusCode = response.code()
@@ -664,9 +671,11 @@ class HRPRepo @Inject constructor(
             val entities = database.hrpDao.getNonPregnantAssess(SyncState.UNSYNCED)
 
             val dtos = mutableListOf<Any>()
+            val ecrDTOs = mutableListOf<Any>()
             entities?.let {
                 it.forEach { cache ->
                     dtos.add(cache.toDTO())
+                    ecrDTOs.add(mapECR(cache))
                     cache.syncState = SyncState.SYNCED
                 }
             }
@@ -729,6 +738,8 @@ class HRPRepo @Inject constructor(
             -1
         }
     }
+
+
 
     private suspend fun pushUnSyncedRecordsHRNonPTrack(): Int {
 
@@ -838,6 +849,70 @@ class HRPRepo @Inject constructor(
         }
     }
 
+    private suspend fun mapPWR(cache: HRPPregnantAssessCache): PwrPost {
+        val pwr : PregnantWomanRegistrationCache? =
+            maternalHealthRepo.getSavedRegistrationRecord(cache.benId)
+
+        val pwrPost: PwrPost
+        val user = preferenceDao.getLoggedInUser()!!
+        if (pwr == null) {
+            pwrPost = PwrPost(
+                benId = cache.benId,
+                createdBy = user.userName,
+                createdDate = getCurrentDate(System.currentTimeMillis()),
+                updatedBy = user.userName,
+                updatedDate = getCurrentDate(System.currentTimeMillis()),
+                isFirstPregnancyTest = cache.multiplePregnancy.equals("Yes"),
+                lmpDate = getCurrentDate(cache.lmpDate),
+                rhNegative = cache.rhNegative,
+                homeDelivery = cache.homeDelivery,
+                badObstetric = cache.badObstetric,
+                isRegistered = false
+            )
+        } else {
+            pwrPost = pwr.asPwrPost()
+            pwrPost.isFirstPregnancyTest = cache.multiplePregnancy.equals("Yes")
+            pwrPost.rhNegative = cache.rhNegative
+            pwrPost.homeDelivery = cache.homeDelivery
+            pwrPost.badObstetric = cache.badObstetric
+            pwrPost.lmpDate = getCurrentDate(cache.lmpDate)
+            pwrPost.updatedBy = user.userName
+            pwrPost.updatedDate = getCurrentDate(System.currentTimeMillis())
+        }
+
+        return pwrPost
+    }
+
+    private suspend fun mapECR(cache: HRPNonPregnantAssessCache): EcrPost {
+        var ecr : EligibleCoupleRegCache? = ecrRepo.getSavedRecord(cache.benId)
+
+        val ecrPost : EcrPost
+        val user = preferenceDao.getLoggedInUser()!!
+
+        if (ecr == null) {
+            ecrPost = EcrPost(
+                benId = cache.benId,
+                createdBy = user.userName,
+                createdDate = getCurrentDate(System.currentTimeMillis()),
+                updatedBy = user.userName,
+                updatedDate = getCurrentDate(System.currentTimeMillis()),
+                misCarriage = cache.misCarriage,
+                homeDelivery = cache.homeDelivery,
+                medicalIssues = cache.medicalIssues,
+                pastCSection = cache.pastCSection,
+                isHighRisk = cache.isHighRisk,
+                isRegistered = false
+            )
+        } else {
+            ecrPost = ecr.asPostModel()
+            ecrPost.misCarriage = cache.misCarriage
+            ecrPost.homeDelivery = cache.homeDelivery
+            ecrPost.medicalIssues = cache.medicalIssues
+            ecrPost.pastCSection = cache.pastCSection
+            ecrPost.isHighRisk = cache.isHighRisk
+        }
+        return ecrPost
+    }
     companion object {
         private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
         private val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)

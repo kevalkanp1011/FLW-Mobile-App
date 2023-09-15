@@ -62,7 +62,10 @@ class SchedulerFragment : Fragment() {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToPwAncVisitsFragment())
         }
         binding.cvHrp.setOnClickListener {
-            findNavController().navigate(HomeFragmentDirections.actionNavHomeToHrpCasesFragment())
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToHRPPregnantListFragment())
+        }
+        binding.cvNonHrp.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToHRPNonPregnantListFragment())
         }
         lifecycleScope.launch {
             viewModel.hrpDueCount.collect{

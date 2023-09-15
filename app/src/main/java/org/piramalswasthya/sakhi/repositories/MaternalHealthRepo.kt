@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
+import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.MaternalHealthDao
@@ -16,6 +17,7 @@ import org.piramalswasthya.sakhi.helpers.hasPendingAncVisit
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.network.AmritApiService
 import org.piramalswasthya.sakhi.network.GetDataPaginatedRequest
+import org.piramalswasthya.sakhi.network.getLongFromDate
 import timber.log.Timber
 import java.io.IOException
 import java.net.SocketTimeoutException
@@ -27,6 +29,7 @@ import javax.inject.Inject
 class MaternalHealthRepo @Inject constructor(
     private val amritApiService: AmritApiService,
     private val maternalHealthDao: MaternalHealthDao,
+    private val database: InAppDb,
     private val userRepo: UserRepo,
     private val benDao: BenDao,
     private val preferenceDao: PreferenceDao,
@@ -368,6 +371,33 @@ class MaternalHealthRepo @Inject constructor(
                     maternalHealthDao.getSavedRecord(pwrDTO.benId)
                 if (pwrCache == null) {
                     maternalHealthDao.saveRecord(pwrDTO.toPwrCache())
+                }
+                var assess = database.hrpDao.getPregnantAssess(pwrDTO.benId)
+                if (assess == null) {
+                    database.hrpDao.saveRecord(
+                        HRPPregnantAssessCache(
+                            benId = pwrDTO.benId,
+                            visitDate = getLongFromDate(pwrDTO.createdDate),
+                            rhNegative = pwrDTO.rhNegative,
+                            homeDelivery = pwrDTO.homeDelivery,
+                            badObstetric = pwrDTO.badObstetric,
+                            multiplePregnancy = if (pwrDTO.isFirstPregnancyTest) "Yes" else "No",
+                            isHighRisk = pwrDTO.isHrpCase
+                        )
+                    )
+                } else {
+                    pwrDTO.rhNegative?.let {
+                        assess.rhNegative = pwrDTO.rhNegative
+                    }
+                    pwrDTO.homeDelivery?.let {
+                        assess.homeDelivery = pwrDTO.homeDelivery
+                    }
+                    pwrDTO.badObstetric?.let {
+                        assess.badObstetric = pwrDTO.badObstetric
+                    }
+                    assess.multiplePregnancy = if (pwrDTO.isFirstPregnancyTest) "Yes" else "No"
+                    assess.isHighRisk = pwrDTO.isHrpCase
+                    database.hrpDao.saveRecord(assess)
                 }
             }
         }

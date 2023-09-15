@@ -52,4 +52,15 @@ data class HRPNonPregnantAssessCache(
             visitDate = getDateTimeStringFromLong(visitDate)
         )
     }
+
+    fun toHighRiskAssessDTO(): HighRiskAssessDTO {
+        return HighRiskAssessDTO(
+            id = id,
+            benId = benId,
+            noOfDeliveries = noOfDeliveries,
+            timeLessThan18m = timeLessThan18m,
+            heightShort = heightShort,
+            age = age
+        )
+    }
 }

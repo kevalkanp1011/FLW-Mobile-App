@@ -70,7 +70,7 @@ enum class Gender {
             " ir.motherBenId is not null as irFilled, ir.syncState as irSyncState, " +
             " cr.motherBenId is not null as crFilled, cr.syncState as crSyncState, " +
             " do.benId is not null as doFilled, do.syncState as doSyncState, " +
-            " hrppa.benId is not null as hrppaFilled, hrppa.syncState as hrppaSyncState," +
+            " (hrppa.benId is not null and hrppa.noOfDeliveries is not null) as hrppaFilled, hrppa.syncState as hrppaSyncState," +
             " hrpnpa.benId is not null as hrpnpaFilled, hrpnpa.syncState as hrpnpaSyncState," +
             " hrpmbp.benId is not null as hrpmbpFilled, hrpmbp.syncState as hrpmbpSyncState," +
             " hrpt.benId is not null as hrptFilled, (count(distinct hrpt.id) > 3) as trackingDone, hrpt.syncState as hrptSyncState," +

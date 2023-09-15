@@ -336,6 +336,7 @@ class FormInputAdapter(
             binding.form = item
 
             binding.rg.removeAllViews()
+
             binding.rg.apply {
                 item.entries?.let { items ->
                     orientation = item.orientation ?: LinearLayout.HORIZONTAL
@@ -352,21 +353,21 @@ class FormInputAdapter(
                         rdBtn.id = View.generateViewId()
                         val colorStateList = ColorStateList(
                             arrayOf<IntArray>(
-                                intArrayOf(-android.R.attr.state_enabled),
-                                intArrayOf(android.R.attr.state_enabled)
+                                intArrayOf(-android.R.attr.state_checked),
+                                intArrayOf(android.R.attr.state_checked)
                             ), intArrayOf(
                                 binding.root.resources.getColor(
-                                    android.R.color.holo_red_light,
+                                    android.R.color.darker_gray,
                                     binding.root.context.theme
                                 ),  // disabled
                                 binding.root.resources.getColor(
-                                    android.R.color.holo_green_dark,
+                                    android.R.color.darker_gray,
                                     binding.root.context.theme
                                 ) // enabled
                             )
                         )
 
-//                        rdBtn.buttonTintList = colorStateList
+                        if (!isEnabled) rdBtn.buttonTintList = colorStateList
                         rdBtn.text = it
                         addView(rdBtn)
                         if (item.value == it) rdBtn.isChecked = true
@@ -400,8 +401,6 @@ class FormInputAdapter(
 //                    }
                 }
             }
-
-
 
             if (!isEnabled) {
                 binding.rg.children.forEach {

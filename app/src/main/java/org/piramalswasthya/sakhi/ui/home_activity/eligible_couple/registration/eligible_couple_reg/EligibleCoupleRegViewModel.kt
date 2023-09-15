@@ -80,8 +80,9 @@ class EligibleCoupleRegViewModel @Inject constructor(
             }
 
             assess = hrpRepo.getNonPregnantAssess(benId)
-            if (assess == null) {
-                assess = HRPNonPregnantAssessCache(benId = benId, syncState = SyncState.UNSYNCED)
+
+            assess?.let {
+                ecrForm.createdDate = it.visitDate
             }
             ecrRepo.getSavedRecord(benId)?.let {
                 ecrForm = it
@@ -119,6 +120,9 @@ class EligibleCoupleRegViewModel @Inject constructor(
                             benRepo.updateRecord(it)
 
                         }
+                    }
+                    if (assess == null) {
+                        assess = HRPNonPregnantAssessCache(benId = benId, syncState = SyncState.UNSYNCED)
                     }
                     dataset.mapValuesToAssess(assess, 1)
                     assess?.let {

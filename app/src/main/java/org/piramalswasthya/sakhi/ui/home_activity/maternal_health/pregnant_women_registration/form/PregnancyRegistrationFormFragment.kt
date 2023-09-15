@@ -132,6 +132,9 @@ class PregnancyRegistrationFormFragment : Fragment() {
                 }
 
                 19 -> notifyItemChanged(viewModel.getIndexOfPastIllness())
+                27,28 -> notifyItemChanged(viewModel.getIndexOfChildLabel())
+                29, 30 -> notifyItemChanged(viewModel.getIndexOfPhysicalObservationLabel())
+                31, 32, 33, 34 -> notifyItemChanged(viewModel.getIndexOfObstetricHistoryLabel())
             }
         }
     }

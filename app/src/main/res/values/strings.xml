@@ -205,6 +205,7 @@
     <string name="_0">0</string>
     <string name="high_risk_cases">High Risk Cases</string>
     <string name="high_risk_pregnant_women">High Risk Pregnant Women</string>
+    <string name="high_risk_non_pregnant_women">High Risk Eligible Couple</string>
     <string name="high_risk_babies">High Risk Babies</string>
     <string name="low_birth_weight_babies">Low Birth Weight Babies</string>
     <string name="age">Age</string>

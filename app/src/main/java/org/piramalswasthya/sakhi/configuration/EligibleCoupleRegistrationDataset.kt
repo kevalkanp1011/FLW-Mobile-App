@@ -266,7 +266,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 2,
         max = Konstants.maxAgeForAdolescent.toLong(),
-        min = 1,
+        min = 0,
     )
 
     private val gender1 = FormElement(
@@ -320,7 +320,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 2,
         max = Konstants.maxAgeForAdolescent.toLong(),
-        min = 1,
+        min = 0,
     )
 
     private val gender2 = FormElement(
@@ -374,7 +374,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 2,
         max = Konstants.maxAgeForAdolescent.toLong(),
-        min = 1,
+        min = 0,
     )
 
     private val gender3 = FormElement(
@@ -428,7 +428,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 2,
         max = Konstants.maxAgeForAdolescent.toLong(),
-        min = 1,
+        min = 0,
     )
 
     private val gender4 = FormElement(
@@ -482,7 +482,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 2,
         max = Konstants.maxAgeForAdolescent.toLong(),
-        min = 1,
+        min = 0,
     )
 
     private val gender5 = FormElement(
@@ -536,7 +536,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 2,
         max = Konstants.maxAgeForAdolescent.toLong(),
-        min = 1,
+        min = 0,
     )
 
     private val gender6 = FormElement(
@@ -590,7 +590,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 2,
         max = Konstants.maxAgeForAdolescent.toLong(),
-        min = 1,
+        min = 0,
     )
 
     private val gender7 = FormElement(
@@ -644,7 +644,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 2,
         max = Konstants.maxAgeForAdolescent.toLong(),
-        min = 1,
+        min = 0,
     )
 
     private val gender8 = FormElement(
@@ -698,7 +698,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 2,
         max = Konstants.maxAgeForAdolescent.toLong(),
-        min = 1,
+        min = 0,
     )
 
     private val gender9 = FormElement(
@@ -1836,14 +1836,15 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     fun mapValuesToAssess(assess: HRPNonPregnantAssessCache?, pageNumber: Int) {
         assess?.let { form ->
-            form.noOfDeliveries = getEnglishValueInArray(R.array.yes_no, noOfDeliveries.value)
-            form.heightShort = getEnglishValueInArray(R.array.yes_no, heightShort.value)
-            form.age = getEnglishValueInArray(R.array.yes_no, ageCheck.value)
-            form.misCarriage = getEnglishValueInArray(R.array.yes_no, misCarriage.value)
-            form.homeDelivery = getEnglishValueInArray(R.array.yes_no, homeDelivery.value)
-            form.medicalIssues = getEnglishValueInArray(R.array.yes_no, medicalIssues.value)
-            form.timeLessThan18m = getEnglishValueInArray(R.array.yes_no, timeLessThan18m.value)
-            form.pastCSection = getEnglishValueInArray(R.array.yes_no, pastCSection.value)
+            form.noOfDeliveries = if (noOfDeliveries.value != null) getEnglishValueInArray(R.array.yes_no, noOfDeliveries.value) else null
+            form.heightShort = if (heightShort.value != null) getEnglishValueInArray(R.array.yes_no, heightShort.value) else null
+            form.age = if (ageCheck.value != null) getEnglishValueInArray(R.array.yes_no, ageCheck.value) else null
+            form.misCarriage = if (misCarriage.value != null) getEnglishValueInArray(R.array.yes_no, misCarriage.value) else null
+            form.homeDelivery = if (homeDelivery.value != null) getEnglishValueInArray(R.array.yes_no, homeDelivery.value) else null
+            form.medicalIssues = if (medicalIssues.value != null) getEnglishValueInArray(R.array.yes_no, medicalIssues.value) else null
+            form.timeLessThan18m = if (timeLessThan18m.value != null) getEnglishValueInArray(R.array.yes_no, timeLessThan18m.value) else null
+            form.pastCSection = if (pastCSection.value != null) getEnglishValueInArray(R.array.yes_no, pastCSection.value) else null
+            form.isHighRisk = isHighRisk()
         }
     }
 
