@@ -151,6 +151,7 @@
     <string name="form_input_alphabet_space_only_error">Only Alphabets and whitespace allowed!</string>
     <string name="form_input_min_limit_error">%1s should be greater than or equal to %2d</string>
     <string name="form_input_alph_numeric_space_only_error">Only Alphabets and Numerics allowed!</string>
+    <string name="form_input__no_alpha_space_error">No Alphabets or spaces allowed!</string>
     <string name="form_input_digit_only_error">Only Digits allowed!</string>
     <string name="form_input_min_limit_error_decimal">%1s should be greater than or equal to %2.1f</string>
     <string name="form_input_max_limit_error">%1s should be lesser than or equal to %2d</string>
@@ -158,7 +159,7 @@
     <string name="form_input_error_invalid_mobile">Invalid Mobile Number !</string>
     <string name="form_input_error_invalid_rch">Invalid RCH ID !</string>
     <string name="form_input_error_invalid_mcp">Invalid MCP Number !</string>
-    <string name="form_input_error_invalid_aadhar">Invalid Aadhaar Number</string>
+    <string name="form_input_error_invalid_aadhar">Invalid Aadhaar Number !</string>
     <string name="no_records_found_hh">No Household records found. Please start registering households by clicking on the button below.</string>
     <string name="something_went_wrong_nunable_to_connect_to_server_ntry_again_later">Something went wrong !\nUnable to connect to server !\nTry again later!</string>
     <string name="try_again">Try Again!</string>

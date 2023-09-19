@@ -5,11 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.HouseHoldBasicDomain
+import org.piramalswasthya.sakhi.model.HouseholdCache
 import org.piramalswasthya.sakhi.repositories.HouseholdRepo
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import javax.inject.Inject
@@ -41,6 +44,11 @@ class AllHouseholdViewModel @Inject constructor(
 
     val selectedHouseholdId: Long
         get() = _selectedHouseholdId
+
+    private var _selectedHousehold : HouseholdCache? = null
+    val selectedHousehold : HouseholdCache?
+        get() = _selectedHousehold
+
 
 
     fun checkDraft() {
@@ -89,6 +97,9 @@ class AllHouseholdViewModel @Inject constructor(
     fun setSelectedHouseholdId(id: Long) {
         _selectedHouseholdId = id
         viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                _selectedHousehold = householdRepo.getRecord(id)
+            }
             _householdBenList.clear()
             _householdBenList.addAll(householdRepo.getAllBenOfHousehold(id))
         }

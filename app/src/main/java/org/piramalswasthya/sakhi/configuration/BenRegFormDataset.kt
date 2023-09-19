@@ -11,7 +11,6 @@ import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.model.AgeUnit
-import org.piramalswasthya.sakhi.model.BenBasicCache
 import org.piramalswasthya.sakhi.model.BenBasicCache.Companion.getAgeFromDob
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.FormElement
@@ -451,7 +450,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             firstName.value = saved.firstName
             lastName.value = saved.lastName
             dob.value = getDateFromLong(saved.dob)
-            age.value = BenBasicCache.getAgeFromDob(saved.dob).toString()
+            age.value = getAgeFromDob(saved.dob).toString()
             ageUnit.value = ageUnit.getStringFromPosition(saved.ageUnitId)
             gender.value = gender.getStringFromPosition(saved.genderId)
             fatherName.value = saved.fatherName
@@ -649,13 +648,14 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
 
 
 
+
         ben?.takeIf { !it.isDraft }?.let { saved ->
             pic.value = saved.userImage
             dateOfReg.value = getDateFromLong(saved.regDate)
             firstName.value = saved.firstName
             lastName.value = saved.lastName
             dob.value = getDateFromLong(saved.dob)
-            age.value = BenBasicCache.getAgeFromDob(saved.dob).toString()
+            age.value = getAgeFromDob(saved.dob).toString()
             ageUnit.value = ageUnit.getStringFromPosition(saved.ageUnitId)
             gender.value = gender.getStringFromPosition(saved.genderId)
             fatherName.value = saved.fatherName
@@ -814,7 +814,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             firstName.value = saved.firstName
             lastName.value = saved.lastName
             dob.value = getDateFromLong(saved.dob)
-            age.value = BenBasicCache.getAgeFromDob(saved.dob).toString()
+            age.value = getAgeFromDob(saved.dob).toString()
             ageUnit.value = ageUnit.getStringFromPosition(saved.ageUnitId)
             gender.value = gender.getStringFromPosition(saved.genderId)
             fatherName.value = saved.fatherName
@@ -967,11 +967,11 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
         minAgeYear = minAge
         firstName.value =
             when (benGender) {
-                MALE -> hoF.fatherName
-                FEMALE -> hoF.motherName
+                MALE -> hoF.fatherName?.also { firstName.inputType = TEXT_VIEW }
+                FEMALE -> hoF.motherName?.also { firstName.inputType = TEXT_VIEW }
                 else -> null
             }
-        lastName.value = hoF.lastName
+        lastName.value = hoF.lastName?.also { firstName.inputType = TEXT_VIEW }
     }
 
     private fun setUpForSpouse(hoFSpouse: BenRegCache, hoFSpouse1: List<BenRegCache>) {
@@ -1308,7 +1308,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                     ageAtMarriage,
                     timeStampDateOfMarriageFromSpouse
                 )
-                handleForAgeDob()
+                handleForAgeDob(formId = dob.id)
 
             }
 
@@ -1318,7 +1318,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                     validateEmptyOnEditText(ageUnit)
                     return -1
                 }
-                handleForAgeDob()
+                handleForAgeDob(formId = age.id)
             }
 
             ageAtMarriage.id -> age.value?.takeIf { it.isNotEmpty() && it.isDigitsOnly() && !ageAtMarriage.value.isNullOrEmpty() }
@@ -1479,6 +1479,21 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                 validateAllCapsOrSpaceOnEditText(motherName)
             }
 
+            husbandName.id -> {
+                validateEmptyOnEditText(husbandName)
+                validateAllCapsOrSpaceOnEditText(husbandName)
+            }
+
+            wifeName.id -> {
+                validateEmptyOnEditText(wifeName)
+                validateAllCapsOrSpaceOnEditText(wifeName)
+            }
+
+            spouseName.id -> {
+                validateEmptyOnEditText(spouseName)
+                validateAllCapsOrSpaceOnEditText(spouseName)
+            }
+
             contactNumber.id -> {
                 validateEmptyOnEditText(contactNumber)
                 validateMobileNumberOnEditText(contactNumber)
@@ -1492,7 +1507,13 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                             index == 1 && relationToHead.value == relationToHead.getStringFromPosition(
                                 5
                             )
-                        if (isHusbandNumberForWifeHoF) {
+                        val isSonOrDaughterOfHoF =
+                            index == 3 && (relationToHead.value == relationToHead.getStringFromPosition(
+                                9
+                            ) || relationToHead.value == relationToHead.getStringFromPosition(
+                                10
+                            ))
+                        if (isHusbandNumberForWifeHoF || isSonOrDaughterOfHoF) {
                             contactNumber.value = familyHeadPhoneNo
                         }
                         triggerDependants(
@@ -1526,6 +1547,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                 }
             }
 
+
             relationToHead.id -> {
                 triggerDependants(
                     source = relationToHead,
@@ -1549,64 +1571,67 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             )
 
             aadharNo.id -> validateAadharNoOnEditText(aadharNo)
+            birthCertificateNumber.id -> validateNoAlphabetSpaceOnEditText(birthCertificateNumber)
 
             else -> -1
         }
     }
 
-    private fun handleForAgeDob(): Int {
-        when (ageUnit.value) {
-            ageUnit.entries?.get(0) -> {
-                age.min = 0
-                age.max = 31
-            }
-
-            ageUnit.entries?.get(1) -> {
-                age.min = 1
-                age.max = 11
-            }
-
-            ageUnit.entries?.get(2) -> {
-                age.min = minAgeYear.toLong()
-                age.max = maxAgeYear.toLong()
-            }
-
-            else -> return -1
-        }
-
-        validateIntMinMax(age)
-        if (age.errorText == null) {
-
-            val cal = Calendar.getInstance()
+    private fun handleForAgeDob(formId: Int): Int {
+        if (formId == age.id) {
             when (ageUnit.value) {
-                ageUnit.entries?.get(2) -> {
-                    ageAtMarriage.value = null
-                    ageAtMarriage.max = age.value!!.toLong()
-                    cal.add(
-                        Calendar.YEAR, -1 * age.value!!.toInt()
-                    )
+                ageUnit.entries?.get(0) -> {
+                    age.min = 0
+                    age.max = 31
                 }
 
                 ageUnit.entries?.get(1) -> {
-                    cal.add(
-                        Calendar.MONTH, -1 * age.value!!.toInt()
-                    )
+                    age.min = 1
+                    age.max = 11
                 }
 
-                ageUnit.entries?.get(0) -> {
-                    cal.add(
-                        Calendar.DAY_OF_YEAR, -1 * age.value!!.toInt()
-                    )
+                ageUnit.entries?.get(2) -> {
+                    age.min = minAgeYear.toLong()
+                    age.max = maxAgeYear.toLong()
                 }
+
+                else -> return -1
             }
-            val year = cal.get(Calendar.YEAR)
-            val month = cal.get(Calendar.MONTH) + 1
-            val day = cal.get(Calendar.DAY_OF_MONTH)
-            val newDob =
-                "${if (day > 9) day else "0$day"}-${if (month > 9) month else "0$month"}-$year"
-            if (dob.value != newDob) {
-                dob.value = newDob
-                dob.errorText = null
+
+            validateIntMinMax(age)
+            if (age.errorText == null) {
+
+                val cal = Calendar.getInstance()
+                when (ageUnit.value) {
+                    ageUnit.entries?.get(2) -> {
+                        ageAtMarriage.value = null
+                        ageAtMarriage.max = age.value!!.toLong()
+                        cal.add(
+                            Calendar.YEAR, -1 * age.value!!.toInt()
+                        )
+                    }
+
+                    ageUnit.entries?.get(1) -> {
+                        cal.add(
+                            Calendar.MONTH, -1 * age.value!!.toInt()
+                        )
+                    }
+
+                    ageUnit.entries?.get(0) -> {
+                        cal.add(
+                            Calendar.DAY_OF_YEAR, -1 * age.value!!.toInt()
+                        )
+                    }
+                }
+                val year = cal.get(Calendar.YEAR)
+                val month = cal.get(Calendar.MONTH) + 1
+                val day = cal.get(Calendar.DAY_OF_MONTH)
+                val newDob =
+                    "${if (day > 9) day else "0$day"}-${if (month > 9) month else "0$month"}-$year"
+                if (dob.value != newDob) {
+                    dob.value = newDob
+                    dob.errorText = null
+                }
             }
         }
         val listChanged = if (hasThirdPage()) triggerDependants(

@@ -55,15 +55,20 @@ class AllHouseholdFragment : Fragment() {
         addBenAlertBinding.rgGender.setOnCheckedChangeListener { radioGroup, i ->
             addBenAlertBinding.btnOk.isEnabled = false
             Timber.d("RG Gender selected id : $i")
-            addBenAlertBinding.linearLayout4.visibility = when (i) {
-                addBenAlertBinding.rbMale.id -> View.VISIBLE
-                addBenAlertBinding.rbFemale.id -> View.VISIBLE
-                addBenAlertBinding.rbTrans.id -> View.VISIBLE
-                else -> View.GONE
+            val selectedGender = when (i) {
+                addBenAlertBinding.rbMale.id -> Gender.MALE
+                addBenAlertBinding.rbFemale.id -> Gender.FEMALE
+                addBenAlertBinding.rbTrans.id -> Gender.TRANSGENDER
+                else -> null
             }
+            addBenAlertBinding.linearLayout4.visibility =
+                selectedGender?.let { View.VISIBLE } ?: View.GONE
             addBenAlertBinding.actvRth.text = null
+
             val hof =
-                viewModel.householdBenList.firstOrNull { it.householdId == viewModel.selectedHouseholdId }
+                viewModel.householdBenList.firstOrNull { it.beneficiaryId == viewModel.selectedHousehold?.benId }
+            val hofFatherRegistered = viewModel.householdBenList.any { it.familyHeadRelationPosition == 2 }
+            val hofMotherRegistered = viewModel.householdBenList.any { it.familyHeadRelationPosition == 1 }
             val isHoFUnmarried =
                 hof?.let {
                     (it.genDetails?.maritalStatusId == 1)
@@ -72,29 +77,33 @@ class AllHouseholdFragment : Fragment() {
                 hof?.let {
                     (it.genDetails?.maritalStatusId == 2)
                 } ?: false
-            val dropdownList = when (i) {
-                addBenAlertBinding.rbMale.id -> resources.getStringArray(R.array.nbr_relationship_to_head_male)
-                addBenAlertBinding.rbFemale.id -> resources.getStringArray(R.array.nbr_relationship_to_head_female)
-                addBenAlertBinding.rbTrans.id -> resources.getStringArray(R.array.nbr_relationship_to_head_male)
+            val dropdownList = when (selectedGender) {
+                Gender.MALE -> resources.getStringArray(R.array.nbr_relationship_to_head_male)
+                Gender.FEMALE -> resources.getStringArray(R.array.nbr_relationship_to_head_female)
+                Gender.TRANSGENDER -> resources.getStringArray(R.array.nbr_relationship_to_head_male)
                 else -> null
             }?.toMutableList()?.apply {
+                if(hofFatherRegistered)
+                    remove(resources.getStringArray(R.array.nbr_relationship_to_head)[1])
+                if(hofMotherRegistered)
+                    remove(resources.getStringArray(R.array.nbr_relationship_to_head)[0])
                 if (isHoFUnmarried)
                     removeAll(
                         resources.getStringArray(R.array.nbr_relationship_to_head_unmarried_filter)
                             .toSet()
                     )
                 else {
-                    if(!isHoFMarried){
+                    if (!isHoFMarried) {
                         remove(resources.getStringArray(R.array.nbr_relationship_to_head)[5])
                         remove(resources.getStringArray(R.array.nbr_relationship_to_head)[4])
 
                     }
-                    if (hof?.gender == Gender.MALE && addBenAlertBinding.rgGender.checkedRadioButtonId == addBenAlertBinding.rbMale.id)
-                        remove(resources.getStringArray(R.array.nbr_relationship_to_head)[5])
-                    else if (hof?.gender == Gender.FEMALE && addBenAlertBinding.rgGender.checkedRadioButtonId == addBenAlertBinding.rbFemale.id)
-                        remove(resources.getStringArray(R.array.nbr_relationship_to_head)[4])
 
                 }
+                if (hof?.gender == Gender.MALE && selectedGender == Gender.MALE)
+                    remove(resources.getStringArray(R.array.nbr_relationship_to_head)[5])
+                else if (hof?.gender == Gender.FEMALE && selectedGender == Gender.FEMALE)
+                    remove(resources.getStringArray(R.array.nbr_relationship_to_head)[4])
             }
             dropdownList?.let {
                 addBenAlertBinding.actvRth.setAdapter(

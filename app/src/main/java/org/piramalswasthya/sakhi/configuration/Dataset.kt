@@ -476,6 +476,11 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
             ?.all { it.isWhitespace() || it.isLetter() || it.isDigit() }
             ?: false
 
+    private fun String.isAnyAlphabetOrSpace() =
+        takeIf { it.isNotEmpty() }?.toCharArray()
+            ?.any { it.isWhitespace() || it.isLetter() }
+            ?: false
+
     protected fun validateAllCapsOrSpaceOnEditText(formElement: FormElement): Int {
         if (formElement.allCaps) {
             formElement.value?.takeIf { it.isNotEmpty() }?.isAllUppercaseOrSpace()?.let {
@@ -518,6 +523,16 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
             if (it) formElement.errorText = null
             else formElement.errorText =
                 resources.getString(R.string.form_input_alph_numeric_space_only_error)
+        }
+        return -1
+    }
+
+    protected fun validateNoAlphabetSpaceOnEditText(formElement: FormElement): Int {
+        formElement.value?.takeIf { it.isNotEmpty() }?.isAnyAlphabetOrSpace()?.let {
+            if (it) formElement.errorText =
+                resources.getString(R.string.form_input__no_alpha_space_error)
+            else formElement.errorText =
+                null
         }
         return -1
     }
