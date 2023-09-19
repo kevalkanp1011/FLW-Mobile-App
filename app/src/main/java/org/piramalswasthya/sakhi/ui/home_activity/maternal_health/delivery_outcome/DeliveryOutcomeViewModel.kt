@@ -14,6 +14,7 @@ import org.piramalswasthya.sakhi.model.DeliveryOutcomeCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.DeliveryOutcomeRepo
 import org.piramalswasthya.sakhi.repositories.EcrRepo
+import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -24,6 +25,7 @@ class DeliveryOutcomeViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val deliveryOutcomeRepo: DeliveryOutcomeRepo,
     private val ecrRepo: EcrRepo,
+    private val pwrRepo: MaternalHealthRepo,
     private val benRepo: BenRepo
 ) : ViewModel() {
     val benId =
@@ -108,6 +110,11 @@ class DeliveryOutcomeViewModel @Inject constructor(
                     }
                     ecr.processed = "U"
                     ecrRepo.persistRecord(ecr)
+
+                    val pwr = pwrRepo.getSavedRegistrationRecord(deliveryOutcome.benId)!!
+                    pwr.active = false;
+                    pwr.processed = "U"
+                    pwrRepo.persistRegisterRecord(pwr)
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
                     Timber.d("saving delivery outcome data failed!!")

@@ -133,6 +133,7 @@ data class PregnantWomanRegistrationCache(
             numPrevPregnancy = numPrevPregnancy,
             pregComplication = complicationPrevPregnancy,
             otherComplication = otherComplication,
+            isActive = active,
             createdDate = getDateStringFromLong(createdDate),
             createdBy = createdBy,
             updatedDate = getDateStringFromLong(updatedDate),
@@ -163,6 +164,7 @@ data class PwrPost (
     val numPrevPregnancy: Int? = null,
     val pregComplication: String? = null,
     val otherComplication: String? = null,
+    val isActive: Boolean = true,
     val createdDate: String? = null,
     val createdBy: String,
     val updatedDate: String? = null,
@@ -199,7 +201,7 @@ data class PwrPost (
 //            isHrp =
 //            hrpIdBy
 //            hrpIdById
-            active = true,
+            active = isActive,
             processed = "P",
             createdBy = createdBy,
             createdDate = getLongFromDate(createdDate),

@@ -7,7 +7,7 @@ import org.piramalswasthya.sakhi.model.*
 @Dao
 interface MaternalHealthDao {
 
-    @Query("select * from pregnancy_register where benId = :benId limit 1")
+    @Query("select * from pregnancy_register where benId = :benId and active = 1 limit 1")
     fun getSavedRecord(benId: Long): PregnantWomanRegistrationCache?
 
     @Query("select * from pregnancy_anc where benId = :benId and visitNumber = :visitNumber limit 1")
@@ -28,10 +28,10 @@ interface MaternalHealthDao {
     @Query("select * from pregnancy_register reg left outer join pregnancy_anc anc on reg.benId=anc.benId ")
     fun getAllPregnancyRecords(): Flow<Map<PregnantWomanRegistrationCache, List<PregnantWomanAncCache>>>
 
-    @Query("SELECT * FROM pregnancy_anc WHERE processed = 'N'")
+    @Query("SELECT * FROM pregnancy_anc WHERE processed in ('N', 'U')")
     suspend fun getAllUnprocessedAncVisits(): List<PregnantWomanAncCache>
 
-    @Query("SELECT * FROM pregnancy_register WHERE processed = 'N'")
+    @Query("SELECT * FROM pregnancy_register WHERE processed in ('N', 'U')")
     suspend fun getAllUnprocessedPWRs(): List<PregnantWomanRegistrationCache>
     @Update
     suspend fun updateANC(it: PregnantWomanAncCache)
