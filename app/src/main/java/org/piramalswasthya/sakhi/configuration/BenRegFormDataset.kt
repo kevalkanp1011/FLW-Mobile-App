@@ -65,6 +65,8 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
     private var timeStampDateOfMarriageFromSpouse: Long? = null
     private var isHoF: Boolean = false
 
+    private var hof: BenRegCache? = null
+
     private var minAgeYear: Int = 0
     private var maxAgeYear: Int = Konstants.maxAgeForGenBen
 
@@ -626,9 +628,9 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             firstName.value = it.familyHeadName?.also {
                 firstName.inputType = TEXT_VIEW
             }
-            lastName.value = it.familyName?.also {
+            lastName.value = it.familyName/*?.also {
                 lastName.inputType = TEXT_VIEW
-            }
+            }*/
             contactNumber.value = it.familyHeadPhoneNo?.toString()?.also {
                 contactNumber.inputType = TEXT_VIEW
             }
@@ -764,6 +766,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             hasAadharNo,
         )
         this.familyHeadPhoneNo = household.family?.familyHeadPhoneNo?.toString()
+        this.hof = hoF
         if (ben == null) {
             dateOfReg.value = getCurrentDateString()
             ageUnit.value = ageUnit.entries!!.last()
@@ -1412,6 +1415,12 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                     }
 
                     maritalStatus.entries!![1] -> {
+                        if (relationToHead.value == relationToHead.entries!![0]) {
+                            husbandName.value = hof?.fatherName
+                        }
+                        if (relationToHead.value == relationToHead.entries!![1]) {
+                            wifeName.value = hof?.motherName
+                        }
                         if (gender.value == gender.entries!![1]) {
                             fatherName.required = false
                             motherName.required = false
