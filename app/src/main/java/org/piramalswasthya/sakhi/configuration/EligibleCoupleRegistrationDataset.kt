@@ -920,13 +920,14 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ) {
                         BenBasicCache.getAgeFromDob(it).toString()
                     } else "0"
-
+                    setSiblingAgeDiff(timeAtMarriage, it, marriageFirstChildGap)
                 }
                 ecCache.gender1?.let {
                     gender1.value =
                         if (it == Gender.MALE) gender1.entries!![0] else gender1.entries!![1]
                 }
-                marriageFirstChildGap.value = ecCache.marriageFirstChildGap?.toString()
+
+//                marriageFirstChildGap.value = ecCache.marriageFirstChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(noOfLiveChildren) + 1,
@@ -941,14 +942,14 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ) {
                         BenBasicCache.getAgeFromDob(it).toString()
                     } else "0"
-
+                    ecCache.dob1?.let { it1 -> setSiblingAgeDiff(it1, it, firstAndSecondChildGap) }
                 }
                 ecCache.gender2?.let {
                     gender2.value =
                         if (it == Gender.MALE) gender2.entries!![0] else gender2.entries!![1]
                 }
 
-                firstAndSecondChildGap.value = ecCache.firstAndSecondChildGap?.toString()
+//                firstAndSecondChildGap.value = ecCache.firstAndSecondChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(marriageFirstChildGap) + 1,
@@ -963,13 +964,15 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ) {
                         BenBasicCache.getAgeFromDob(it).toString()
                     } else "0"
+                    ecCache.dob2?.let { it1 -> setSiblingAgeDiff(it1, it, secondAndThirdChildGap) }
+
                 }
                 ecCache.gender3?.let {
                     gender3.value =
                         if (it == Gender.MALE) gender3.entries!![0] else gender3.entries!![1]
                 }
 
-                secondAndThirdChildGap.value = ecCache.secondAndThirdChildGap?.toString()
+//                secondAndThirdChildGap.value = ecCache.secondAndThirdChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(firstAndSecondChildGap) + 1,
@@ -984,13 +987,15 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ) {
                         BenBasicCache.getAgeFromDob(it).toString()
                     } else "0"
+                    ecCache.dob3?.let { it1 -> setSiblingAgeDiff(it1, it, thirdAndFourthChildGap) }
+
                 }
                 ecCache.gender4?.let {
                     gender4.value =
                         if (it == Gender.MALE) gender4.entries!![0] else gender4.entries!![1]
                 }
 
-                thirdAndFourthChildGap.value = ecCache.thirdAndFourthChildGap?.toString()
+//                thirdAndFourthChildGap.value = ecCache.thirdAndFourthChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(secondAndThirdChildGap) + 1,
@@ -1005,6 +1010,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ) {
                         BenBasicCache.getAgeFromDob(it).toString()
                     } else "0"
+                    ecCache.dob4?.let { it1 -> setSiblingAgeDiff(it1, it, fourthAndFifthChildGap) }
                 }
                 ecCache.gender5?.let {
                     gender5.value =
@@ -1026,13 +1032,14 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ) {
                         BenBasicCache.getAgeFromDob(it).toString()
                     } else "0"
+                    ecCache.dob5?.let { it1 -> setSiblingAgeDiff(it1, it, fifthAndSixthChildGap) }
                 }
                 ecCache.gender6?.let {
                     gender6.value =
                         if (it == Gender.MALE) gender6.entries!![0] else gender6.entries!![1]
                 }
 
-                fifthAndSixthChildGap.value = ecCache.fifthANdSixthChildGap?.toString()
+//                fifthAndSixthChildGap.value = ecCache.fifthANdSixthChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(fourthAndFifthChildGap) + 1,
@@ -1047,13 +1054,15 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ) {
                         BenBasicCache.getAgeFromDob(it).toString()
                     } else "0"
+                    ecCache.dob6?.let { it1 -> setSiblingAgeDiff(it1, it, sixthAndSeventhChildGap) }
+
                 }
                 ecCache.gender7?.let {
                     gender7.value =
                         if (it == Gender.MALE) gender7.entries!![0] else gender7.entries!![1]
                 }
 
-                sixthAndSeventhChildGap.value = ecCache.sixthAndSeventhChildGap?.toString()
+//                sixthAndSeventhChildGap.value = ecCache.sixthAndSeventhChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(fifthAndSixthChildGap) + 1,
@@ -1068,13 +1077,14 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ) {
                         BenBasicCache.getAgeFromDob(it).toString()
                     } else "0"
+                    ecCache.dob7?.let { it1 -> setSiblingAgeDiff(it1, it, seventhAndEighthChildGap) }
                 }
                 ecCache.gender8?.let {
                     gender8.value =
                         if (it == Gender.MALE) gender8.entries!![0] else gender8.entries!![1]
                 }
 
-                seventhAndEighthChildGap.value = ecCache.seventhAndEighthChildGap?.toString()
+//                seventhAndEighthChildGap.value = ecCache.seventhAndEighthChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(sixthAndSeventhChildGap) + 1,
@@ -1089,13 +1099,14 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ) {
                         BenBasicCache.getAgeFromDob(it).toString()
                     } else "0"
+                    ecCache.dob8?.let { it1 -> setSiblingAgeDiff(it1, it, eighthAndNinthChildGap) }
                 }
                 ecCache.gender9?.let {
                     gender9.value =
                         if (it == Gender.MALE) gender9.entries!![0] else gender9.entries!![1]
                 }
 
-                eighthAndNinthChildGap.value = ecCache.eighthAndNinthChildGap?.toString()
+//                eighthAndNinthChildGap.value = ecCache.eighthAndNinthChildGap?.toString()
                 list.addAll(
                     list.indexOf(seventhAndEighthChildGap) + 1,
                     listOf(ninthChildDetails, dob9, age9, gender9, eighthAndNinthChildGap)

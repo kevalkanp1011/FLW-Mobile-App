@@ -253,4 +253,9 @@ class HRPNonPregnantTrackDataset(
         if (benRegCache.processed != "N") benRegCache.processed = "U"
         benRegCache.syncState = SyncState.UNSYNCED
     }
+
+    fun updateAssess(hrpPregnantAssessCache: HRPPregnantAssessCache) {
+        hrpPregnantAssessCache.lmpDate = getLongFromDate(lmp.value)
+        hrpPregnantAssessCache.syncState = SyncState.UNSYNCED
+    }
 }

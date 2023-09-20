@@ -101,8 +101,8 @@ class PregnantListFragment : Fragment() {
         super.onStart()
         activity?.let {
             (it as HomeActivity).updateActionBar(
-                R.drawable.ic__assess_high_risk,
-                getString(R.string.assess)
+                R.drawable.ic__high_risk_preg,
+                getString(R.string.pregnant_women)
             )
         }
     }

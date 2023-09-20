@@ -60,7 +60,10 @@ class HRPPregnantFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__maternal_health)
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__high_risk_preg,
+                getString(R.string.pregnant_women)
+            )
         }
     }
 

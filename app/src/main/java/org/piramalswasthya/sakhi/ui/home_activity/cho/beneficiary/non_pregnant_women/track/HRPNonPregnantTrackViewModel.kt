@@ -15,6 +15,7 @@ import org.piramalswasthya.sakhi.configuration.HRPNonPregnantTrackDataset
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.HRPNonPregnantTrackCache
+import org.piramalswasthya.sakhi.model.HRPPregnantAssessCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.HRPRepo
 import timber.log.Timber
@@ -119,6 +120,13 @@ constructor(
                             dataset.updateBen(it)
                             benRepo.updateRecord(it)
                         }
+
+                        val pregAssessCache = HRPPregnantAssessCache(
+                            benId = hrpNonPregnantTrackCache.benId,
+                        )
+
+                        dataset.updateAssess(pregAssessCache)
+                        hrpReo.saveRecord(pregAssessCache)
                     }
 
                     _state.postValue(State.SAVE_SUCCESS)

@@ -198,4 +198,5 @@ class RecordsRepo @Inject constructor(
         emit(count)
     }
 
+    fun getHRECCount() = maternalHealthDao.getAllECRecords()
 }

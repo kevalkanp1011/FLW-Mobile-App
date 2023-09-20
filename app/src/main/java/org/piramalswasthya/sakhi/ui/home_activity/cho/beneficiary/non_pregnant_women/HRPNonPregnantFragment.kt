@@ -64,7 +64,10 @@ class HRPNonPregnantFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__maternal_health)
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__high_risk_non_prg,
+                getString(R.string.non_pregnant_women)
+            )
         }
     }
 }

@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentVerifyMobileOtpBinding
+import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdActivity
 import org.piramalswasthya.sakhi.ui.abha_id_activity.verify_mobile_otp.VerifyMobileOtpViewModel.State
 
 @AndroidEntryPoint
@@ -138,6 +139,16 @@ class VerifyMobileOtpFragment : Fragment() {
                 binding.tvErrorText.text = it
                 viewModel.resetErrorMessage()
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as AbhaIdActivity).updateActionBar(
+                R.drawable.ic__abha_logo_v1_24,
+                getString(R.string.generate_abha)
+            )
         }
     }
 

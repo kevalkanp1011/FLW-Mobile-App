@@ -71,6 +71,9 @@ class SchedulerFragment : Fragment() {
             viewModel.hrpDueCount.collect{
                 binding.tvHrp.text = it.toString()
             }
+            viewModel.hrpCountEC.collect{
+                binding.tvHrEcCount.text = it.toString()
+            }
         }
         binding.calendarView.setOnDateChangeListener { a, b, c, d ->
             val calLong = Calendar.getInstance().apply {

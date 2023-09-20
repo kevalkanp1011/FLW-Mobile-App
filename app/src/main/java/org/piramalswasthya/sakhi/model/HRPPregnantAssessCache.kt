@@ -23,7 +23,7 @@ import org.piramalswasthya.sakhi.utils.HelperUtil
 
 data class HRPPregnantAssessCache(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    var id: Int = 0,
     val benId: Long,
     var noOfDeliveries: String? = null,
     var timeLessThan18m: String? = null,

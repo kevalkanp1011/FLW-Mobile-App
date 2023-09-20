@@ -288,12 +288,11 @@
                         android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
                     <TextView
-                        android:id="@+id/tv_hr_npw_1"
+                        android:id="@+id/tv_hr_ec_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_hr_npw"
                         android:layout_alignParentEnd="false"
-
                         android:layout_centerHorizontal="true"
                         android:text="@string/_0"
                         android:textAppearance="@style/TextAppearance.Material3.DisplayMedium" />
