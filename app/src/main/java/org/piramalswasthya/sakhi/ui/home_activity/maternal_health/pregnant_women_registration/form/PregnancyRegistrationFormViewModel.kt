@@ -16,6 +16,7 @@ import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
+import org.piramalswasthya.sakhi.repositories.EcrRepo
 import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
 import timber.log.Timber
 import javax.inject.Inject
@@ -26,6 +27,7 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
     preferenceDao: PreferenceDao,
     @ApplicationContext context: Context,
     private val maternalHealthRepo: MaternalHealthRepo,
+    ecrRepo: EcrRepo,
     private val benRepo: BenRepo
 //    private val householdRepo: HouseholdRepo,
 //    userRepo: UserRepo
@@ -82,9 +84,13 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
                 _recordExists.value = false
             }
 
+            val latestTrack = ecrRepo.getLatestEctByBenId(benId)
+
             dataset.setUpPage(
                 ben,
-                if (recordExists.value == true) pregnancyRegistrationForm else null
+                if (recordExists.value == true) pregnancyRegistrationForm else null,
+                latestTrack?.visitDate
+
             )
 
 

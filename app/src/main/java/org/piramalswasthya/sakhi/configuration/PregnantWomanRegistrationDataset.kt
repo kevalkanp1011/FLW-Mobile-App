@@ -266,7 +266,7 @@ class PregnantWomanRegistrationDataset(
         required = true
     )
 
-    suspend fun setUpPage(ben: BenRegCache?, saved: PregnantWomanRegistrationCache?) {
+    suspend fun setUpPage(ben: BenRegCache?, saved: PregnantWomanRegistrationCache?, lastTrackTimestamp : Long? = null) {
         val list = mutableListOf(
             dateOfReg,
             rchId,
@@ -308,6 +308,9 @@ class PregnantWomanRegistrationDataset(
             name.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
             husbandName.value = ben.genDetails?.spouseName
             age.value = "${BenBasicCache.getAgeFromDob(ben.dob)} YEARS"
+        }
+        lastTrackTimestamp?.let {
+            dateOfReg.min = it
         }
         saved?.let {
             dateOfReg.apply {

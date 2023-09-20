@@ -35,7 +35,7 @@ data class CbacCache(
     @ColumnInfo(index = true)
     val ashaId: Int,
 //    var gender : Gender?,
-    var fillDate: Long = System.currentTimeMillis(),
+    var fillDate: Long = 0,
     var cbac_age_posi: Int = 0,
     var cbac_smoke_posi: Int = 0,
     var cbac_alcohol_posi: Int = 0,

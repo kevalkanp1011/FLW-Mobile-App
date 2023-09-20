@@ -19,10 +19,9 @@ interface MaternalHealthDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveRecord(ancCache: PregnantWomanAncCache)
 
-    @Query("select benId, visitNumber, :filled as formState, 0 as filledWeek from pregnancy_anc where benId = :benId order by visitNumber")
+    @Query("select benId, visitNumber, 0 as filledWeek from pregnancy_anc where benId = :benId order by visitNumber")
     suspend fun getAllAncRecordsFor(
         benId: Long,
-        filled: AncFormState = AncFormState.ALREADY_FILLED
     ): List<AncStatus>
 
     @Query("select * from pregnancy_register reg left outer join pregnancy_anc anc on reg.benId=anc.benId ")

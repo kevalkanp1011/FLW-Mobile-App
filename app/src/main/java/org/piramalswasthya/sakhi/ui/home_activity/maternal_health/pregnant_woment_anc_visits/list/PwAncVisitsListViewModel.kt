@@ -7,14 +7,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.helpers.filterBenFormList
-import org.piramalswasthya.sakhi.helpers.getAncStatusList
-import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.model.AncStatus
 import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
-import timber.log.Timber
-import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,10 +19,19 @@ class PwAncVisitsListViewModel @Inject constructor(
     private val allBenList = recordsRepo.getRegisteredPregnantWomanList()
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter) { list, filter ->
-        filterBenFormList(list, filter)
+//        filterBenFormList(list, filter)
+        //TODO(Add filter)
+        list
     }
 
-    private val _bottomSheetList = MutableStateFlow<List<AncStatus>>(emptyList())
+    private val benIdSelected = MutableStateFlow(0L)
+
+    private val _bottomSheetList = benList.combine(benIdSelected) { list, benId ->
+        if (benId != 0L)
+            list.first { it.ben.benId == benId }.anc
+        else
+            emptyList()
+    }
     val bottomSheetList: Flow<List<AncStatus>>
         get() = _bottomSheetList
 
@@ -41,17 +45,18 @@ class PwAncVisitsListViewModel @Inject constructor(
 
     fun updateBottomSheetData(benId: Long) {
         viewModelScope.launch {
-            val _list = mutableListOf<AncStatus>()
-            val regis = maternalHealthRepo.getSavedRegistrationRecord(benId)!!
-            val filledForms = maternalHealthRepo.getAllAncRecords(benId)
-            val millisToday = Calendar.getInstance().setToStartOfTheDay().timeInMillis
-            val list = getAncStatusList(filledForms, regis.lmpDate, benId, millisToday)
+//            val _list = mutableListOf<AncStatus>()
+//            val regis = maternalHealthRepo.getSavedRegistrationRecord(benId)!!
+//            val filledForms = maternalHealthRepo.getAllAncRecords(benId)
+//            val millisToday = Calendar.getInstance().setToStartOfTheDay().timeInMillis
+//            val list = getAncStatusList(filledForms, regis.lmpDate, benId, millisToday)
 //                listOf(1, 2, 3, 4).map {
 //                getAncStatus(filledForms, regis.lmpDate, it, benId, millisToday)
 //            }
-            Timber.d("list emitted $list")
-            _bottomSheetList.emit(emptyList())
-            _bottomSheetList.emit(list)
+//            Timber.d("list emitted $list")
+//            _bottomSheetList.emit(emptyList())
+//            _bottomSheetList.emit(list)
+            benIdSelected.emit(benId)
         }
     }
 

@@ -66,9 +66,11 @@ class AllHouseholdFragment : Fragment() {
             addBenAlertBinding.actvRth.text = null
 
             val hof =
-                viewModel.householdBenList.firstOrNull { it.beneficiaryId == viewModel.selectedHousehold?.benId }
-            val hofFatherRegistered = viewModel.householdBenList.any { it.familyHeadRelationPosition == 2 }
-            val hofMotherRegistered = viewModel.householdBenList.any { it.familyHeadRelationPosition == 1 }
+                viewModel.householdBenList.firstOrNull { it.familyHeadRelationPosition==19}
+            val hofFatherRegistered =
+                viewModel.householdBenList.any { it.familyHeadRelationPosition == 2 }
+            val hofMotherRegistered =
+                viewModel.householdBenList.any { it.familyHeadRelationPosition == 1 }
             val isHoFUnmarried =
                 hof?.let {
                     (it.genDetails?.maritalStatusId == 1)
@@ -82,10 +84,11 @@ class AllHouseholdFragment : Fragment() {
                 Gender.FEMALE -> resources.getStringArray(R.array.nbr_relationship_to_head_female)
                 Gender.TRANSGENDER -> resources.getStringArray(R.array.nbr_relationship_to_head_male)
                 else -> null
-            }?.toMutableList()?.apply {
-                if(hofFatherRegistered)
+            }
+            val filteredDropdownList = dropdownList?.takeIf { hof != null }?.toMutableList()?.apply {
+                if (hofFatherRegistered)
                     remove(resources.getStringArray(R.array.nbr_relationship_to_head)[1])
-                if(hofMotherRegistered)
+                if (hofMotherRegistered)
                     remove(resources.getStringArray(R.array.nbr_relationship_to_head)[0])
                 if (isHoFUnmarried)
                     removeAll(
@@ -104,8 +107,8 @@ class AllHouseholdFragment : Fragment() {
                     remove(resources.getStringArray(R.array.nbr_relationship_to_head)[5])
                 else if (hof?.gender == Gender.FEMALE && selectedGender == Gender.FEMALE)
                     remove(resources.getStringArray(R.array.nbr_relationship_to_head)[4])
-            }
-            dropdownList?.let {
+            }?:dropdownList?.toList()
+            filteredDropdownList?.let {
                 addBenAlertBinding.actvRth.setAdapter(
                     ArrayAdapter(
                         requireContext(), android.R.layout.simple_spinner_dropdown_item,

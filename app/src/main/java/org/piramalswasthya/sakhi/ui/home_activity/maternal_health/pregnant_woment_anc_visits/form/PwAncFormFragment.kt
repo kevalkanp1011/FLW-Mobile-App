@@ -127,6 +127,7 @@ class PwAncFormFragment : Fragment() {
             when (formId) {
                 1 -> {
                     notifyItemChanged(viewModel.getIndexOfWeeksOfPregnancy())
+                    notifyItemChanged(viewModel.getIndexOfWeeksOfPregnancy()+1)
                 }
 //                9 ->{
 //                    notifyItemChanged(viewModel.getIndexOfDiastolic())

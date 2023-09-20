@@ -328,11 +328,7 @@
         android:id="@+id/deliveryStageListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.delivery_stage_list.DeliveryStageListFragment"
         android:label="@string/delivery_stage_list"
-        tools:layout="@layout/fragment_delivery_stage_list">
-        <action
-            android:id="@+id/action_deliveryStageListFragment_to_pmsmaFragment"
-            app:destination="@id/pmsmaFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_delivery_stage_list"/>
     <fragment
         android:id="@+id/pncMotherListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pnc_mother_list.PncMotherListFragment"
@@ -643,6 +639,9 @@
         <action
             android:id="@+id/action_pwAncVisitsFragment_to_pwAncFormFragment"
             app:destination="@id/pwAncFormFragment" />
+        <action
+            android:id="@+id/action_pwAncVisitsFragment_to_pmsmaFragment"
+            app:destination="@id/pmsmaFragment" />
     </fragment>
     <fragment
         android:id="@+id/pregnancyRegistrationFormFragment"
@@ -836,10 +835,6 @@
     <fragment
         android:id="@+id/pmsmaListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pmsma.list.PmsmaListFragment"
-        android:label="PmsmaListFragment" >
-        <action
-            android:id="@+id/action_pmsmaListFragment_to_pmsmaFragment"
-            app:destination="@id/pmsmaFragment" />
-    </fragment>
+        android:label="PmsmaListFragment" />
 
 </navigation>

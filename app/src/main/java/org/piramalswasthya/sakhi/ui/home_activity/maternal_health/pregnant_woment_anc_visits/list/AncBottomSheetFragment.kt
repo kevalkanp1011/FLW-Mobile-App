@@ -4,13 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.adapters.AncVisitAdapter
 import org.piramalswasthya.sakhi.databinding.BottomSheetAncBinding
-import org.piramalswasthya.sakhi.model.AncStatus
-import timber.log.Timber
 
 @AndroidEntryPoint
 class AncBottomSheetFragment : BottomSheetDialogFragment() {
@@ -18,6 +21,9 @@ class AncBottomSheetFragment : BottomSheetDialogFragment() {
     private var _binding: BottomSheetAncBinding? = null
     private val binding: BottomSheetAncBinding
         get() = _binding!!
+
+    private val viewModel: PwAncVisitsListViewModel by viewModels({ requireParentFragment() })
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,13 +45,22 @@ class AncBottomSheetFragment : BottomSheetDialogFragment() {
                 )
                 this.dismiss()
             })
+
+        val divider = DividerItemDecoration(context, LinearLayout.VERTICAL)
+        binding.rvAnc.addItemDecoration(divider)
+        observeList()
     }
 
 
-    fun submitListToAncRv(list : List<AncStatus>){
-        Timber.d("Called list at bottom sheet $list")
-        (_binding?.rvAnc?.adapter as AncVisitAdapter?)?.submitList(list)
+    private fun observeList() {
+        lifecycleScope.launch {
+            viewModel.bottomSheetList.collect {
+                (_binding?.rvAnc?.adapter as AncVisitAdapter?)?.submitList(it)
+            }
+        }
     }
+
+
 
     override fun dismiss() {
 //        submitListToAncRv(emptyList())

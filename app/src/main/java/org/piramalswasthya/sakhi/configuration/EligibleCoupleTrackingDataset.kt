@@ -137,7 +137,7 @@ class EligibleCoupleTrackingDataset(
                 resources.getStringArray(R.array.visit_months)[Companion.getMonth(dateOfVisit.value)!!]
             isPregnancyTestDone.value = saved.isPregnancyTestDone
             if (isPregnancyTestDone.value == "Yes") {
-                list.add(list.indexOf(pregnancyTestResult) + 1, pregnancyTestResult)
+                list.add(list.indexOf(isPregnancyTestDone) + 1, pregnancyTestResult)
                 pregnancyTestResult.value = saved.pregnancyTestResult
             }
             isPregnant.value = saved.isPregnant
