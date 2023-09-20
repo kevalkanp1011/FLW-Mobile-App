@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pmsma.list
+package org.piramalswasthya.sakhi.ui.home_activity.cho.beneficiary.pregnant_women.list_hrp
 
 import android.os.Bundle
 import android.text.Editable
@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,14 +19,15 @@ import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBindin
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 
 @AndroidEntryPoint
-class PmsmaListFragment : Fragment() {
+class HRPPregnantListFragment : Fragment() {
 
     private var _binding: FragmentDisplaySearchRvButtonBinding? = null
     private val binding: FragmentDisplaySearchRvButtonBinding
         get() = _binding!!
 
-    private val viewModel: PmsmaListViewModel by viewModels()
+    private val viewModel: HRPPregnantListViewModel by viewModels()
 
+    private val bottomSheet: HRPPregnantTrackBottomSheet by lazy { HRPPregnantTrackBottomSheet() }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,17 +41,32 @@ class PmsmaListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.btnNextPage.visibility = View.GONE
         val benAdapter = BenListAdapterForForm(
-            BenListAdapterForForm.ClickListener(
+            clickListener = BenListAdapterForForm.ClickListener(
                 {
-                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
                 },
-                { hhId, benId ->
+                { _, benId ->
                     findNavController().navigate(
-                        PmsmaListFragmentDirections.actionPmsmaListFragmentToPmsmaFragment(
-                            benId, hhId
+                        HRPPregnantListFragmentDirections.actionHRPPregnantListFragmentToHRPPregnantTrackFragment(
+                            benId = benId,
+                            trackId = 0
                         )
                     )
-                }), resources.getString(R.string.register)
+                },
+                { _, benId ->
+                    viewModel.benId = benId
+                    if (!bottomSheet.isVisible)
+                        bottomSheet.show(
+                            childFragmentManager,
+                            resources.getString(R.string.follow_up)
+                        )
+                }
+            ),
+            formButtonText = arrayOf(
+                resources.getString(R.string.follow_up),
+                resources.getString(R.string.history)
+            ),
+            role = 1
         )
         binding.rvAny.adapter = benAdapter
 
@@ -61,6 +76,7 @@ class PmsmaListFragment : Fragment() {
                     binding.flEmpty.visibility = View.VISIBLE
                 else
                     binding.flEmpty.visibility = View.GONE
+
                 benAdapter.submitList(it)
             }
         }
@@ -91,8 +107,8 @@ class PmsmaListFragment : Fragment() {
         super.onStart()
         activity?.let {
             (it as HomeActivity).updateActionBar(
-                R.drawable.ic__pregnancy,
-                getString(R.string.pmsma)
+                R.drawable.ic__high_risk_preg,
+                getString(R.string.high_risk_list_pw)
             )
         }
     }
@@ -101,5 +117,4 @@ class PmsmaListFragment : Fragment() {
         super.onDestroy()
         _binding = null
     }
-
 }

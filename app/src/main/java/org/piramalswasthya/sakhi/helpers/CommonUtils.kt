@@ -43,6 +43,7 @@ fun filterForBen(
         ben.rchId.takeIf { it.isDigitsOnly() }?.contains(filterText) ?: false ||
         ben.mobileNo.lowercase().contains(filterText) ||
         ben.gender.lowercase().contains(filterText) ||
+        ben.spouseName?.lowercase()?.contains(filterText) == true ||
         ben.fatherName?.lowercase()?.contains(filterText) ?: false
 
 
@@ -159,6 +160,7 @@ fun filterBenFormList(
                     it.rchId.takeIf { it1 -> it1.isDigitsOnly() }?.contains(filterText) ?: false ||
                     it.benName.lowercase().contains(filterText) ||
                     it.familyHeadName.lowercase().contains(filterText) ||
+                    it.spouseName?.lowercase()?.contains(filterText) == true ||
                     it.benSurname?.lowercase()?.contains(filterText) ?: false ||
 //                    it.typeOfList.lowercase().contains(filterText) ||
                     it.mobileNo.lowercase().contains(filterText) ||

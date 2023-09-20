@@ -8,6 +8,7 @@ import org.piramalswasthya.sakhi.database.room.dao.SyncDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.utils.HelperUtil
+import org.piramalswasthya.sakhi.utils.HelperUtil.getLocalizedResources
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,10 +21,10 @@ class SyncViewModel @Inject constructor(
 
     val lang = preferenceDao.getCurrentLanguage()
     fun getLocalNames(context: Context): Array<String> {
-        return HelperUtil().getLocalizedResources(context, lang).getStringArray(R.array.sync_records)
+        return getLocalizedResources(context, lang).getStringArray(R.array.sync_records)
     }
 
     fun getEnglishNames(context: Context): Array<String> {
-        return HelperUtil().getLocalizedResources(context, Languages.ENGLISH).getStringArray(R.array.sync_records)
+        return getLocalizedResources(context, Languages.ENGLISH).getStringArray(R.array.sync_records)
     }
 }

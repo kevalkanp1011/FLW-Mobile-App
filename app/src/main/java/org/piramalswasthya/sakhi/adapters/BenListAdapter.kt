@@ -16,7 +16,7 @@ class BenListAdapter(
     private val showRegistrationDate: Boolean = false,
     private val showSyncIcon: Boolean = false,
     private val showAbha: Boolean = false,
-) :
+ private val role: Int? = 0) :
     ListAdapter<BenBasicDomain, BenListAdapter.BenViewHolder>(BenDiffUtilCallBack) {
     private object BenDiffUtilCallBack : DiffUtil.ItemCallback<BenBasicDomain>() {
         override fun areItemsTheSame(
@@ -45,7 +45,7 @@ class BenListAdapter(
             showAbha: Boolean,
             showSyncIcon: Boolean,
             showRegistrationDate: Boolean,
-            showBeneficiaries: Boolean
+            showBeneficiaries: Boolean, role: Int?
         ) {
             if(!showSyncIcon) item.syncState = null
             binding.ben = item
@@ -55,6 +55,7 @@ class BenListAdapter(
             binding.registrationDate.visibility = if(showRegistrationDate) View.VISIBLE else View.INVISIBLE
             binding.blankSpace.visibility = if(showRegistrationDate) View.VISIBLE else View.INVISIBLE
             binding.hasAbha = !item.abhaId.isNullOrEmpty()
+            binding.role = role
 
             if (showBeneficiaries) {
                 if (item.spouseName == "Not Available" && item.fatherName == "Not Available") {
@@ -97,7 +98,7 @@ class BenListAdapter(
     ) = BenViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: BenViewHolder, position: Int) {
-        holder.bind(getItem(position), clickListener, showAbha, showSyncIcon, showRegistrationDate, showBeneficiaries)
+        holder.bind(getItem(position), clickListener, showAbha, showSyncIcon, showRegistrationDate, showBeneficiaries, role)
     }
 
 

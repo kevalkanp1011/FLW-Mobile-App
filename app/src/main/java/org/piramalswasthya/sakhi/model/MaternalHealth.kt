@@ -11,10 +11,8 @@ import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.getDateString
 import org.piramalswasthya.sakhi.helpers.getWeeksOfPregnancy
 import org.piramalswasthya.sakhi.network.getLongFromDate
-import org.piramalswasthya.sakhi.utils.HelperUtil
-import java.text.SimpleDateFormat
+import org.piramalswasthya.sakhi.utils.HelperUtil.getDateStringFromLong
 import java.util.Date
-import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 
@@ -125,7 +123,7 @@ data class PregnantWomanRegistrationCache(
     var active: Boolean = true,
     var processed: String? = "N",
     var createdBy: String,
-    val createdDate: Long = System.currentTimeMillis(),
+    var createdDate: Long = System.currentTimeMillis(),
     var updatedBy: String,
     val updatedDate: Long = System.currentTimeMillis(),
     var syncState: SyncState
@@ -152,6 +150,8 @@ data class PregnantWomanRegistrationCache(
             numPrevPregnancy = numPrevPregnancy,
             pregComplication = complicationPrevPregnancy,
             otherComplication = otherComplication,
+            isHrpCase = isHrp,
+            assignedAsHrpBy = hrpIdBy,
             createdDate = getDateStringFromLong(createdDate),
             createdBy = createdBy,
             updatedDate = getDateStringFromLong(updatedDate),
@@ -175,6 +175,33 @@ data class BenWithPwrCache(
             pwr = pwr
         )
     }
+
+    fun asBenBasicDomainModelForHRPPregAssessmentForm(): BenBasicDomainForForm {
+
+        return BenBasicDomainForForm(
+            benId = ben.benId,
+            hhId = ben.hhId,
+            regDate = BenBasicCache.dateFormat.format(Date(ben.regDate)),
+            benName = ben.benName,
+            benSurname = ben.benSurname ?: "",
+            gender = ben.gender.name,
+            dob = ben.dob,
+            mobileNo = ben.mobileNo.toString(),
+            fatherName = ben.fatherName,
+            familyHeadName = ben.familyHeadName?: "",
+            spouseName = ben.spouseName?: "",
+            lastMenstrualPeriod = getDateStringFromLong(ben.lastMenstrualPeriod),
+            edd = getEddFromLmp(ben.lastMenstrualPeriod),
+//            typeOfList = typeOfList.name,
+            rchId = ben.rchId ?: "Not Available",
+            hrpStatus = ben.hrpStatus,
+            form1Filled = ben.hrppaFilled,
+            syncState = ben.hrppaSyncState,
+            form2Enabled = true,
+            form2Filled = ben.hrpmbpFilled
+        )
+    }
+
 }
 
 data class BenWithPwrDomain(
@@ -188,7 +215,7 @@ data class PwrPost (
     val registrationDate: String? = null,
     val rchId: Long? = null,
     val mcpCardId: Long? = null,
-    val lmpDate: String? = null,
+    var lmpDate: String? = null,
     val bloodGroup: String? = null,
     val weight: Int? = null,
     val height: Int? = null,
@@ -200,14 +227,20 @@ data class PwrPost (
     val dateOfHbsAgTest: String? = null,
     val pastIllness: String? = null,
     val otherPastIllness: String? = null,
-    val isFirstPregnancyTest: Boolean = true,
+    var isFirstPregnancyTest: Boolean = true,
     val numPrevPregnancy: Int? = null,
     val pregComplication: String? = null,
     val otherComplication: String? = null,
+    var isRegistered : Boolean = true,
+    var rhNegative : String? = null,
+    var homeDelivery : String? = null,
+    var badObstetric : String? = null,
+    var isHrpCase : Boolean = false,
+    var assignedAsHrpBy : String? = null,
     val createdDate: String? = null,
     val createdBy: String,
-    val updatedDate: String? = null,
-    val updatedBy: String
+    var updatedDate: String? = null,
+    var updatedBy: String
 ) {
     fun toPwrCache(): PregnantWomanRegistrationCache {
         return PregnantWomanRegistrationCache(
@@ -235,11 +268,9 @@ data class PwrPost (
             is1st = isFirstPregnancyTest,
             numPrevPregnancy = numPrevPregnancy,
             complicationPrevPregnancy = pregComplication,
-//            complicationPrevPregnancyId = otherComplication,
             otherComplication = otherComplication,
-//            isHrp =
-//            hrpIdBy
-//            hrpIdById
+            isHrp = isHrpCase,
+            hrpIdBy = assignedAsHrpBy,
             active = true,
             processed = "P",
             createdBy = createdBy,
@@ -352,17 +383,6 @@ data class PregnantWomanAncCache(
             updatedBy = updatedBy
         )
     }
-}
-
-private fun getDateStringFromLong(dateLong: Long?): String? {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-    dateLong?.let {
-        val dateString = dateFormat.format(dateLong)
-        return dateString
-    } ?: run {
-        return null
-    }
-
 }
 
 data class ANCPost (

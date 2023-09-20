@@ -58,6 +58,21 @@
         <action
             android:id="@+id/action_homeFragment_to_cdFragment"
             app:destination="@id/cdFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_benListCHOFragment"
+            app:destination="@id/benListCHOFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_HRPPregnantFragment"
+            app:destination="@id/HRPPregnantFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_HRPNonPregnantFragment"
+            app:destination="@id/HRPNonPregnantFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_HRPPregnantListFragment"
+            app:destination="@id/HRPPregnantListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_HRPNonPregnantListFragment"
+            app:destination="@id/HRPNonPregnantListFragment" />
     </fragment>
     <fragment
         android:id="@+id/allHouseholdFragment"
@@ -180,7 +195,15 @@
         android:id="@+id/hrpCasesFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.hrp_cases.HrpCasesFragment"
         android:label="@string/icon_title_hrp"
-        tools:layout="@layout/fragment_hrp_cases" />
+        tools:layout="@layout/fragment_hrp_cases" >
+        <action
+            android:id="@+id/action_hrpCasesFragment_to_HRPPregnantFragment"
+            app:destination="@id/HRPPregnantFragment" />
+        <action
+            android:id="@+id/action_hrpCasesFragment_to_HRPNonPregnantFragment"
+            app:destination="@id/HRPNonPregnantFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/immunizationDueTypeFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.immunization_due.ImmunizationDueTypeFragment"
@@ -840,6 +863,145 @@
         <action
             android:id="@+id/action_pmsmaListFragment_to_pmsmaFragment"
             app:destination="@id/pmsmaFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/benListCHOFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.cho.beneficiary.list.BenListCHOFragment"
+        android:label="@string/beneficiaries" >
+        <action
+            android:id="@+id/action_benListCHOFragment_to_benRegisterCHOFragment"
+            app:destination="@id/benRegisterCHOFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/benRegisterCHOFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.cho.beneficiary.register.BenRegisterCHOFragment"
+        android:label="@string/register_new" >
+        <action
+            android:id="@+id/action_benRegisterCHOFragment_to_benListCHOFragment"
+            app:destination="@id/benListCHOFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/HRPNonPregnantFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.cho.beneficiary.non_pregnant_women.HRPNonPregnantFragment"
+        android:label="@string/non_pregnant_women" >
+        <action
+            android:id="@+id/action_HRPNonPregnantFragment_to_nonPregnantListFragment"
+            app:destination="@id/nonPregnantListFragment" />
+        <action
+            android:id="@+id/action_HRPNonPregnantFragment_to_HRPNonPregnantListFragment"
+            app:destination="@id/HRPNonPregnantListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/HRPPregnantFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.cho.beneficiary.pregnant_women.HRPPregnantFragment"
+        android:label="@string/pregnant_women" >
+        <action
+            android:id="@+id/action_HRPPregnantFragment_to_pregnantListFragment"
+            app:destination="@id/pregnantListFragment" />
+        <action
+            android:id="@+id/action_HRPPregnantFragment_to_HRPPregnantListFragment"
+            app:destination="@id/HRPPregnantListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/HRPNonPregnantTrackFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.cho.beneficiary.non_pregnant_women.track.HRPNonPregnantTrackFragment"
+        android:label="@string/follow_up_non_pregnant" >
+        <argument
+            android:name="benId"
+            app:argType="long" />
+        <argument
+            android:name="trackId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_HRPNonPregnantTrackFragment_to_HRPNonPregnantListFragment"
+            app:destination="@id/HRPNonPregnantListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/HRPPregnantTrackFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.cho.beneficiary.pregnant_women.track.HRPPregnantTrackFragment"
+        android:label="@string/follow_up_pregnant" >
+        <argument
+            android:name="benId"
+            app:argType="long" />
+        <argument
+            android:name="trackId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_HRPPregnantTrackFragment_to_HRPPregnantListFragment"
+            app:destination="@id/HRPPregnantListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/nonPregnantListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.cho.beneficiary.non_pregnant_women.list.NonPregnantListFragment"
+        android:label="@string/non_pregnant_list" >
+        <action
+            android:id="@+id/action_nonPregnantListFragment_to_HRPNonPregnantAssessFragment"
+            app:destination="@id/HRPNonPregnantAssessFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/HRPNonPregnantAssessFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.cho.beneficiary.non_pregnant_women.assess.HRPNonPregnantAssessFragment"
+        android:label="@string/assess" >
+        <argument
+            android:name="benId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_HRPNonPregnantAssessFragment_to_nonPregnantListFragment"
+            app:destination="@id/nonPregnantListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/HRPNonPregnantListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.cho.beneficiary.non_pregnant_women.list_hrp.HRPNonPregnantListFragment"
+        android:label="@string/high_risk_list_npw" >
+        <action
+            android:id="@+id/action_HRPNonPregnantListFragment_to_HRPNonPregnantTrackFragment"
+            app:destination="@id/HRPNonPregnantTrackFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/HRPPregnantAssessFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.cho.beneficiary.pregnant_women.assess.HRPPregnantAssessFragment"
+        android:label="@string/assess">
+        <argument
+            android:name="benId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_HRPPregnantAssessFragment_to_pregnantListFragment"
+            app:destination="@id/pregnantListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/HRPPregnantListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.cho.beneficiary.pregnant_women.list_hrp.HRPPregnantListFragment"
+        android:label="@string/high_risk_list_pw" >
+        <action
+            android:id="@+id/action_HRPPregnantListFragment_to_HRPPregnantTrackFragment"
+            app:destination="@id/HRPPregnantTrackFragment" />
+        <action
+            android:id="@+id/action_HRPPregnantListFragment_to_HRPMicroBirthPlanFragment"
+            app:destination="@id/HRPMicroBirthPlanFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pregnantListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.cho.beneficiary.pregnant_women.list.PregnantListFragment"
+        android:label="@string/pregnant_women" >
+        <action
+            android:id="@+id/action_pregnantListFragment_to_HRPPregnantAssessFragment"
+            app:destination="@id/HRPPregnantAssessFragment" />
+        <action
+            android:id="@+id/action_pregnantListFragment_to_HRPMicroBirthPlanFragment"
+            app:destination="@id/HRPMicroBirthPlanFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/HRPMicroBirthPlanFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.cho.beneficiary.pregnant_women.micro_birth_plan.HRPMicroBirthPlanFragment"
+        android:label="@string/micro_birth_plan" >
+        <argument
+            android:name="benId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_HRPMicroBirthPlanFragment_to_pregnantListFragment"
+            app:destination="@id/pregnantListFragment" />
     </fragment>
 
 </navigation>

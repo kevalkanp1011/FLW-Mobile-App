@@ -14,6 +14,7 @@ import org.piramalswasthya.sakhi.model.EcrPost
 import org.piramalswasthya.sakhi.model.EligibleCoupleRegCache
 import org.piramalswasthya.sakhi.model.EligibleCoupleTrackingCache
 import org.piramalswasthya.sakhi.model.Gender
+import org.piramalswasthya.sakhi.model.HRPNonPregnantAssessCache
 import org.piramalswasthya.sakhi.network.AmritApiService
 import org.piramalswasthya.sakhi.network.GetDataPaginatedRequest
 import timber.log.Timber
@@ -70,6 +71,7 @@ class EcrRepo @Inject constructor(
                 ecrPostList.clear()
                 val ben = database.benDao.getBen(it.benId)
                     ?: throw IllegalStateException("No beneficiary exists for benId: ${it.benId}!!")
+
                 ecrPostList.add(it.asPostModel())
                 it.syncState = SyncState.SYNCING
                 database.ecrDao.update(it)
@@ -87,7 +89,7 @@ class EcrRepo @Inject constructor(
         }
     }
 
-    private suspend fun postECRDataToAmritServer(ecrPostList: MutableSet<EcrPost>): Boolean {
+    suspend fun postECRDataToAmritServer(ecrPostList: MutableSet<EcrPost>): Boolean {
         if (ecrPostList.isEmpty()) return false
 
         val user =
@@ -256,15 +258,40 @@ class EcrRepo @Inject constructor(
                                 try {
                                     val dataObj = jsonObj.getJSONArray("data")
                                     val ecrList = getEcrCacheFromServerResponse(dataObj)
-                                    ecrList.filter {
-                                        database.benDao.getBen(
-                                            it.benId
-                                        ) != null
-                                    }.takeIf { it.isNotEmpty() }?.let {
-                                        database.ecrDao.upsert(*it.toTypedArray())
+                                    val assessList = getHighRiskAssess(dataObj)
+
+                                    ecrList.forEach { ecr ->
+                                        database.benDao.getBen(ecr.benId)?.let {
+                                            if (database.ecrDao.getSavedECR(ecr.benId) == null) {
+                                                database.ecrDao.upsert(ecr)
+                                            }
+                                        }
+                                    }
+                                    assessList.forEach { it1 ->
+                                        val assess = database.hrpDao.getNonPregnantAssess(it1.benId)
+                                        database.benDao.getBen(it1.benId)?.let {
+                                            if (assess == null) {
+                                                database.hrpDao.saveRecord(it1)
+                                            } else {
+                                                it1.misCarriage?.let {
+                                                    assess.misCarriage = it1.misCarriage
+                                                }
+                                                it1.homeDelivery?.let {
+                                                    assess.homeDelivery = it1.homeDelivery
+                                                }
+                                                it1.medicalIssues?.let {
+                                                    assess.medicalIssues = it1.medicalIssues
+                                                }
+                                                it1.pastCSection?.let {
+                                                    assess.pastCSection = it1.pastCSection
+                                                }
+                                                assess.isHighRisk = it1.isHighRisk
+                                                database.hrpDao.saveRecord(assess)
+                                            }
+                                        }
                                     }
                                 } catch (e: Exception) {
-                                    Timber.d("TB Screening entries not synced $e")
+                                    Timber.d("Eligible Couple entries not synced $e")
                                     return@withContext 0
                                 }
 
@@ -336,7 +363,7 @@ class EcrRepo @Inject constructor(
                                         database.ecrDao.upsert(*it.toTypedArray())
                                     }
                                 } catch (e: Exception) {
-                                    Timber.d("TB Screening entries not synced $e")
+                                    Timber.d("EC entries not synced $e")
                                     return@withContext 0
                                 }
 
@@ -671,6 +698,36 @@ class EcrRepo @Inject constructor(
 //        }
 //        return tbSuspectedList
 //    }
+
+    private fun getHighRiskAssess(dataObj: JSONArray): List<HRPNonPregnantAssessCache> {
+//        TODO()
+        val list = mutableListOf<HRPNonPregnantAssessCache>()
+
+        for (i in 0 until dataObj.length()) {
+            val ecrJson = dataObj.getJSONObject(i)
+
+            try {
+                val hrnpa = HRPNonPregnantAssessCache(
+                    benId = ecrJson.getLong("benId"),
+                    misCarriage = if (ecrJson.has("misCarriage")) ecrJson.getString("misCarriage") else null,
+                    homeDelivery = if (ecrJson.has("homeDelivery")) ecrJson.getString("homeDelivery") else null,
+                    medicalIssues = if (ecrJson.has("medicalIssues")) ecrJson.getString("medicalIssues") else null,
+                    pastCSection = if (ecrJson.has("pastCSection")) ecrJson.getString("pastCSection") else null,
+                    isHighRisk = if (ecrJson.has("isHighRisk")) ecrJson.getBoolean("isHighRisk") else false,
+                    visitDate = getLongFromDate(
+                        ecrJson.getString("createdDate")
+                    ),
+                    syncState = SyncState.SYNCED
+                )
+                list.add(hrnpa)
+            } catch (e: Exception) {
+                Timber.e("Caught $e at ECR PULL")
+            }
+
+        }
+
+        return list
+    }
 
     companion object {
         private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)

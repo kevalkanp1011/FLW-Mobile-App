@@ -3,6 +3,7 @@ package org.piramalswasthya.sakhi.adapters
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context.INPUT_METHOD_SERVICE
+import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
@@ -12,6 +13,7 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
+import android.view.*
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -236,6 +238,13 @@ class FormInputAdapter(
                     imm!!.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
                 }
             }
+            binding.et.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_ENTER && (event.action == KeyEvent.ACTION_UP || event.action == KeyEvent.ACTION_DOWN)) {
+                    return@OnKeyListener true
+                }
+                false
+            })
+
 //            item.errorText?.also { binding.tilEditText.error = it }
 //                ?: run { binding.tilEditText.error = null }
 //            val etFilters = mutableListOf<InputFilter>(InputFilter.LengthFilter(item.etMaxLength))
@@ -326,6 +335,7 @@ class FormInputAdapter(
             binding.form = item
 
             binding.rg.removeAllViews()
+
             binding.rg.apply {
                 item.entries?.let { items ->
                     orientation = item.orientation ?: LinearLayout.HORIZONTAL
@@ -340,7 +350,23 @@ class FormInputAdapter(
                             gravity = Gravity.CENTER_HORIZONTAL
                         }
                         rdBtn.id = View.generateViewId()
+                        val colorStateList = ColorStateList(
+                            arrayOf<IntArray>(
+                                intArrayOf(-android.R.attr.state_checked),
+                                intArrayOf(android.R.attr.state_checked)
+                            ), intArrayOf(
+                                binding.root.resources.getColor(
+                                    android.R.color.darker_gray,
+                                    binding.root.context.theme
+                                ),  // disabled
+                                binding.root.resources.getColor(
+                                    android.R.color.darker_gray,
+                                    binding.root.context.theme
+                                ) // enabled
+                            )
+                        )
 
+                        if (!isEnabled) rdBtn.buttonTintList = colorStateList
                         rdBtn.text = it
                         addView(rdBtn)
                         if (item.value == it) rdBtn.isChecked = true
@@ -375,8 +401,6 @@ class FormInputAdapter(
                 }
             }
 
-
-
             if (!isEnabled) {
                 binding.rg.children.forEach {
                     it.isClickable = false
@@ -403,7 +427,7 @@ class FormInputAdapter(
                 )
 //                spannableString.setSpan(sizeSpan, str.length - 2, str.length,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 binding.tvNullable.text = spannableString
-//                binding.tvNullableHr.text = spannableString
+                binding.tvNullableHr.text = spannableString
             } else if (item.required) {
                 spannableString.setSpan(
                     colorSpan,
@@ -412,7 +436,7 @@ class FormInputAdapter(
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
 //                spannableString.setSpan(sizeSpan, str.length - 1, str.length,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-//                binding.tvNullableHr.text = spannableString
+                binding.tvNullableHr.text = spannableString
                 binding.tvNullable.text = spannableString
             }
 
@@ -649,10 +673,12 @@ class FormInputAdapter(
 
         fun bind(
             item: FormElement,
+            formValueListener: FormValueListener?,
         ) {
             binding.form = item
             if(item.subtitle==null)
                 binding.textView8.visibility = View.GONE
+            formValueListener?.onValueChanged(item, -1)
             binding.executePendingBindings()
 
         }
@@ -715,7 +741,7 @@ class FormInputAdapter(
             )
 
             TIME_PICKER -> (holder as TimePickerInputViewHolder).bind(item, isEnabled)
-            HEADLINE -> (holder as HeadlineViewHolder).bind(item)
+            HEADLINE -> (holder as HeadlineViewHolder).bind(item, formValueListener)
         }
     }
 

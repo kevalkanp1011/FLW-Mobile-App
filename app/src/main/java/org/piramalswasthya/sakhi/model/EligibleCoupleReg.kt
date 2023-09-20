@@ -9,6 +9,7 @@ import androidx.room.Relation
 import com.squareup.moshi.Json
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.utils.HelperUtil.getDateStringFromLong
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -76,7 +77,7 @@ data class EligibleCoupleRegCache(
     var eighthAndNinthChildGap: Int? = null,
     var processed: String? = "N",
     var createdBy: String,
-    val createdDate: Long = System.currentTimeMillis(),
+    var createdDate: Long = System.currentTimeMillis(),
     var updatedBy: String,
     val updatedDate: Long = System.currentTimeMillis(),
     var syncState: SyncState
@@ -137,16 +138,7 @@ data class EligibleCoupleRegCache(
     }
 }
 
-private fun getDateStringFromLong(dateLong: Long?): String? {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-    dateLong?.let {
-        val dateString = dateFormat.format(dateLong)
-        return dateString
-    } ?: run {
-        return null
-    }
 
-}
 
 
 data class BenWithECRCache(
@@ -174,16 +166,16 @@ data class BenWithEcrDomain(
 
 data class EcrPost(
     val benId: Long,
-    val dateOfReg: String,
+    val dateOfReg: String? = null,
     @Json(name = "bankAccountNumber")
     val bankAccount: Long? = null,
     val bankName: String? = null,
     val branchName: String? = null,
     val ifsc: String? = null,
-    val numChildren: Int,
-    val numLiveChildren: Int,
-    val numMaleChildren: Int,
-    val numFemaleChildren: Int,
+    val numChildren: Int? = null,
+    val numLiveChildren: Int? = null,
+    val numMaleChildren: Int? = null,
+    val numFemaleChildren: Int? = null,
     val dob1: String? = null,
     val age1: Int? = null,
     val gender1: Gender? = null,
@@ -220,6 +212,12 @@ data class EcrPost(
     val age9: Int? = null,
     val gender9: Gender? = null,
     val eighthAndNinthChildGap: Int? = null,
+    var misCarriage: String? = null,
+    var homeDelivery: String? = null,
+    var medicalIssues: String? = null,
+    var pastCSection: String? = null,
+    var isHighRisk: Boolean = false,
+    var isRegistered: Boolean = true,
     var createdBy: String,
     val createdDate: String,
     var updatedBy: String,

@@ -9,6 +9,7 @@ import org.piramalswasthya.sakhi.helpers.getWeeksOfPregnancy
 import org.piramalswasthya.sakhi.model.BenBasicCache
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.FormElement
+import org.piramalswasthya.sakhi.model.HRPPregnantAssessCache
 import org.piramalswasthya.sakhi.model.InputType
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import java.util.Calendar
@@ -255,7 +256,8 @@ class PregnantWomanRegistrationDataset(
         title = "Is Identified as HRP cases?",
         entries = arrayOf("Yes", "No"),
         hasDependants = true,
-        required = false
+        required = false,
+        isEnabled = false
     )
     private val assignedAsHrpBy = FormElement(
         id = 26,
@@ -266,7 +268,116 @@ class PregnantWomanRegistrationDataset(
         required = true
     )
 
-    suspend fun setUpPage(ben: BenRegCache?, saved: PregnantWomanRegistrationCache?) {
+    private val noOfDeliveries = FormElement(
+        id = 27,
+        inputType = InputType.RADIO,
+        title = resources.getString(R.string.no_of_deliveries_is_more_than_3),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+    private val timeLessThan18m = FormElement(
+        id = 28,
+        inputType = InputType.RADIO,
+        title = resources.getString(R.string.time_from_last_delivery_is_less_than_18_months),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+    private val heightShort = FormElement(
+        id = 29,
+        inputType = InputType.RADIO,
+        title = resources.getString(R.string.height_is_very_short_or_less_than_140_cms),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+    private val ageCheck = FormElement(
+        id = 30,
+        inputType = InputType.RADIO,
+        title = resources.getString(R.string.age_is_less_than_18_or_more_than_35_years),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+    private val rhNegative = FormElement(
+        id = 31,
+        inputType = InputType.RADIO,
+        title = resources.getString(R.string.rh_negative),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+    private val homeDelivery = FormElement(
+        id = 32,
+        inputType = InputType.RADIO,
+        title = resources.getString(R.string.home_delivery_of_previous_pregnancy),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+    private val badObstetric = FormElement(
+        id = 33,
+        inputType = InputType.RADIO,
+        title = resources.getString(R.string.bad_obstetric_history),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+
+    private val multiplePregnancy = FormElement(
+        id = 34,
+        inputType = InputType.RADIO,
+        title = resources.getString(R.string.multiple_pregnancy),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = false,
+        hasDependants = true
+    )
+
+    private var childInfoLabel = FormElement(
+        id = 35,
+        inputType = InputType.HEADLINE,
+        title = resources.getString(R.string.information_on_children),
+        arrayId = -1,
+        required = false,
+        hasDependants = false,
+        showHighRisk = false
+    )
+
+    private var physicalObservationLabel = FormElement(
+        id = 36,
+        inputType = InputType.HEADLINE,
+        title = resources.getString(R.string.physical_observation),
+        arrayId = -1,
+        required = false,
+        hasDependants = false,
+        showHighRisk = false
+    )
+
+    private var obstetricHistoryLabel = FormElement(
+        id = 37,
+        inputType = InputType.HEADLINE,
+        title = resources.getString(R.string.obstetric_history),
+        arrayId = -1,
+        required = false,
+        hasDependants = false,
+        showHighRisk = false
+    )
+
+    private var dateOfBirth = 0L
+
+    private var heightShortdbVal: String? = null
+
+    private var homeDeliverydbVal: String? = null
+
+    suspend fun setUpPage(ben: BenRegCache?, assess: HRPPregnantAssessCache?, saved: PregnantWomanRegistrationCache?) {
         val list = mutableListOf(
             dateOfReg,
             rchId,
@@ -288,6 +399,17 @@ class PregnantWomanRegistrationDataset(
 //            dateOfhbsAgTestDone,
             pastIllness,
             isFirstPregnancy,
+            childInfoLabel,
+            noOfDeliveries,
+            timeLessThan18m,
+            physicalObservationLabel,
+            heightShort,
+            ageCheck,
+            obstetricHistoryLabel,
+            rhNegative,
+            homeDelivery,
+            badObstetric,
+            multiplePregnancy,
             isHrpCase
         )
         dateOfReg.value = getDateFromLong(System.currentTimeMillis())
@@ -308,7 +430,52 @@ class PregnantWomanRegistrationDataset(
             name.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
             husbandName.value = ben.genDetails?.spouseName
             age.value = "${BenBasicCache.getAgeFromDob(ben.dob)} YEARS"
+            dateOfBirth = ben.dob
+
+            if (it.isHrpStatus) {
+                isHrpCase.value = resources.getStringArray(R.array.yes_no)[0]
+            }
+            isHrpCase.value = isHrpCase.getStringFromPosition(if (it.isHrpStatus) 1 else 2)
+
+            updateAgeCheck(dateOfBirth, Calendar.getInstance().timeInMillis)
         }
+        assess?.let {
+            noOfDeliveries.value = getLocalValueInArray(R.array.yes_no, it.noOfDeliveries)
+            timeLessThan18m.value = getLocalValueInArray(R.array.yes_no, it.timeLessThan18m)
+            heightShort.value = getLocalValueInArray(R.array.yes_no, it.heightShort)
+            heightShortdbVal = getLocalValueInArray(R.array.yes_no, it.heightShort)
+            age.value = getLocalValueInArray(R.array.yes_no, it.age)
+            rhNegative.value = getLocalValueInArray(R.array.yes_no, it.rhNegative)
+            homeDelivery.value = getLocalValueInArray(R.array.yes_no, it.homeDelivery)
+            homeDeliverydbVal = getLocalValueInArray(R.array.yes_no, it.homeDelivery)
+            badObstetric.value = getLocalValueInArray(R.array.yes_no, it.badObstetric)
+            multiplePregnancy.value = getLocalValueInArray(R.array.yes_no, it.multiplePregnancy)
+            lmp.value = getDateFromLong(it.lmpDate)
+            edd.value = getDateFromLong(it.edd)
+
+            childInfoLabel.showHighRisk = (
+                    noOfDeliveries.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            timeLessThan18m.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+                    )
+
+            physicalObservationLabel.showHighRisk = (
+                    heightShort.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            age.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+                    )
+
+            obstetricHistoryLabel.showHighRisk = (
+                    rhNegative.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            homeDelivery.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            badObstetric.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            multiplePregnancy.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+                    )
+
+            if (isHighRisk()) {
+                isHrpCase.value = resources.getStringArray(R.array.yes_no)[0]
+            }
+
+        }
+
         saved?.let {
             dateOfReg.apply {
                 value = getDateFromLong(it.dateOfRegistration)
@@ -377,7 +544,6 @@ class PregnantWomanRegistrationDataset(
             isHrpCase.value = isHrpCase.getStringFromPosition(if (it.isHrp) 1 else 2)
             if (it.isHrp) {
                 assignedAsHrpBy.value = assignedAsHrpBy.getStringFromPosition(it.hrpIdById)
-                list.add(assignedAsHrpBy)
             }
 
 
@@ -386,6 +552,12 @@ class PregnantWomanRegistrationDataset(
             hivTestResult.inputType = InputType.TEXT_VIEW
             hbsAgTestResult.inputType = InputType.TEXT_VIEW
         }
+
+//        ben?.isHrpStatus?.let {
+//            if (it || isHighRisk()) {
+//                list.add(assignedAsHrpBy)
+//            }
+//        }
         setUpPage(list)
 
     }
@@ -409,6 +581,7 @@ class PregnantWomanRegistrationDataset(
                     dateOfVdrlTestDone.min = dateOfRegLong
                     dateOfhivTestDone.min = dateOfRegLong
                     hbsAgTestResult.min = dateOfRegLong
+                    updateAgeCheck(dateOfBirth, dateOfRegLong)
                 }
                 -1
             }
@@ -449,7 +622,22 @@ class PregnantWomanRegistrationDataset(
             }
 
             weight.id -> validateIntMinMax(weight)
-            height.id -> validateIntMinMax(height)
+            height.id -> {
+                validateIntMinMax(height)
+                heightShort.value = heightShortdbVal
+                heightShort.isEnabled = true
+                height.value?.takeIf { it.isNotEmpty() }?.toLong()?.let {
+                    if (it in 1..139) {
+                        heightShort.value = resources.getStringArray(R.array.yes_no)[0]
+                        heightShort.isEnabled = false
+                    } else {
+                        heightShort.value = resources.getStringArray(R.array.yes_no)[1]
+                        heightShort.isEnabled = false
+                    }
+                }
+                handleListOnValueChanged(heightShort.id, 0)
+                -1
+            }
 
             vdrlrprTestResult.id -> {
                 triggerDependantsReverse(
@@ -477,7 +665,6 @@ class PregnantWomanRegistrationDataset(
                     target = listOf(dateOfhbsAgTestDone)
                 )
             }
-
 
             pastIllness.id -> {
                 val entries = pastIllness.entries!!
@@ -511,6 +698,19 @@ class PregnantWomanRegistrationDataset(
                 complicationsDuringLastPregnancy.apply {
                     value = entries!!.first()
                 }
+                if (isFirstPregnancy.value == resources.getStringArray(R.array.yes_no)[0]) {
+                    multiplePregnancy.value = resources.getStringArray(R.array.yes_no)[1]
+                    multiplePregnancy.isEnabled = false
+                    homeDelivery.value = resources.getStringArray(R.array.yes_no)[1]
+                    homeDelivery.isEnabled = false
+                } else {
+                    multiplePregnancy.value = resources.getStringArray(R.array.yes_no)[0]
+                    multiplePregnancy.isEnabled = false
+                    homeDelivery.value = homeDeliverydbVal
+                    homeDelivery.isEnabled = true
+                }
+                handleListOnValueChanged(multiplePregnancy.id, 0)
+                handleListOnValueChanged(homeDelivery.id, 0)
                 triggerDependants(
                     source = isFirstPregnancy,
                     passedIndex = index,
@@ -537,10 +737,40 @@ class PregnantWomanRegistrationDataset(
                 validateAllAlphabetsSpaceOnEditText(otherComplicationsDuringLastPregnancy)
             }
 
+            noOfDeliveries.id, timeLessThan18m.id -> {
+                childInfoLabel.showHighRisk = noOfDeliveries.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                        timeLessThan18m.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+                isHrpCase.value?.let {
+
+                    if (it.contentEquals(resources.getStringArray(R.array.yes_no)[0]) || isHighRisk()) {
+                        isHrpCase.value = resources.getStringArray(R.array.yes_no)[0]
+                        return handleListOnValueChanged(isHrpCase.id, resources.getStringArray(R.array.yes_no).indexOf(isHrpCase.value))
+                    }
+
+                }
+
+                -1
+            }
+
+            heightShort.id, ageCheck.id -> {
+                physicalObservationLabel.showHighRisk = heightShort.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                        ageCheck.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+                isHrpCase.value = if (isHighRisk()) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(R.array.yes_no)[1]
+                handleListOnValueChanged(isHrpCase.id, resources.getStringArray(R.array.yes_no).indexOf(isHrpCase.value))
+            }
+
+            rhNegative.id, homeDelivery.id, badObstetric.id, multiplePregnancy.id -> {
+                obstetricHistoryLabel.showHighRisk = rhNegative.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                        homeDelivery.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                        badObstetric.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                        multiplePregnancy.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+                isHrpCase.value = if (isHighRisk()) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(R.array.yes_no)[1]
+                handleListOnValueChanged(isHrpCase.id, resources.getStringArray(R.array.yes_no).indexOf(isHrpCase.value))
+            }
             isHrpCase.id -> {
                 triggerDependants(
                     source = isHrpCase,
-                    passedIndex = index,
+                    passedIndex = resources.getStringArray(R.array.yes_no).indexOf(isHrpCase.value),
                     triggerIndex = 0,
                     target = assignedAsHrpBy
                 )
@@ -587,6 +817,58 @@ class PregnantWomanRegistrationDataset(
         }
     }
 
+    fun mapValuesForAssess(assess: HRPPregnantAssessCache?, pageNumber: Int) {
+        assess?.let { form ->
+            form.noOfDeliveries = if (noOfDeliveries.value != null) getEnglishValueInArray(R.array.yes_no, noOfDeliveries.value) else null
+            form.timeLessThan18m = if (timeLessThan18m.value != null) getEnglishValueInArray(R.array.yes_no, timeLessThan18m.value) else null
+            form.heightShort = if (heightShort.value != null) getEnglishValueInArray(R.array.yes_no, heightShort.value) else null
+            form.age = if (ageCheck.value != null) getEnglishValueInArray(R.array.yes_no, ageCheck.value) else null
+            form.rhNegative = if (rhNegative.value != null) getEnglishValueInArray(R.array.yes_no, rhNegative.value) else null
+            form.homeDelivery = if (homeDelivery.value != null) getEnglishValueInArray(R.array.yes_no, homeDelivery.value) else null
+            form.badObstetric = if (badObstetric.value != null) getEnglishValueInArray(R.array.yes_no, badObstetric.value) else null
+            form.multiplePregnancy = if (multiplePregnancy.value != null) getEnglishValueInArray(R.array.yes_no, multiplePregnancy.value) else null
+            form.lmpDate = getLongFromDate(lmp.value)
+            form.edd = getLongFromDate(edd.value)
+            form.isHighRisk = isHighRisk()
+            form.syncState = SyncState.UNSYNCED
+        }
+    }
+
+    fun getIndexOfHRP() = getIndexById(isHrpCase.id)
+
+    fun getIndexOfChildLabel() = getIndexById(childInfoLabel.id)
+
+    fun getIndexOfPhysicalObservationLabel() = getIndexById(physicalObservationLabel.id)
+
+    fun getIndexOfObstetricHistoryLabel() = getIndexById(obstetricHistoryLabel.id)
+
+    fun isHighRisk(): Boolean {
+        return noOfDeliveries.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                timeLessThan18m.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                heightShort.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                age.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                rhNegative.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                homeDelivery.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                badObstetric.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                multiplePregnancy.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+    }
+
+    private suspend fun updateAgeCheck(dob:Long, current: Long) {
+        val calReg = Calendar.getInstance()
+        calReg.timeInMillis = current
+        val calDob = Calendar.getInstance()
+        calDob.timeInMillis = dateOfBirth
+
+        if (getDiffYears(calDob, calReg) < 18 || getDiffYears(calDob, calReg) > 35) {
+            ageCheck.value = resources.getStringArray(R.array.yes_no)[0]
+            ageCheck.isEnabled = false
+        } else {
+            ageCheck.value = resources.getStringArray(R.array.yes_no)[1]
+            ageCheck.isEnabled = false
+        }
+        handleListOnValueChanged(ageCheck.id, 0)
+    }
+
     fun mapValueToBenRegId(ben: BenRegCache?): Boolean {
         val rchIdFromBen = ben?.rchId?.takeIf { it.isNotEmpty() }?.toLong()
         rchId.value?.takeIf {
@@ -594,8 +876,17 @@ class PregnantWomanRegistrationDataset(
         }?.toLong()?.let {
             if (it != rchIdFromBen) {
                 ben?.rchId = it.toString()
+                ben?.isHrpStatus = isHighRisk()
                 ben?.syncState = SyncState.UNSYNCED
                 if (ben?.processed != "N") ben?.processed = "U"
+                return true
+            }
+        }
+        ben?.isHrpStatus?.let {
+            if (!it && isHighRisk()) {
+                ben.isHrpStatus = isHighRisk()
+                ben.syncState = SyncState.UNSYNCED
+                if (ben.processed != "N") ben.processed = "U"
                 return true
             }
         }

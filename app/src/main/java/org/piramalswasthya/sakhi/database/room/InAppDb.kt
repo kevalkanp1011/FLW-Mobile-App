@@ -18,6 +18,7 @@ import org.piramalswasthya.sakhi.database.room.dao.FpotDao
 import org.piramalswasthya.sakhi.database.room.dao.HbncDao
 import org.piramalswasthya.sakhi.database.room.dao.HbycDao
 import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
+import org.piramalswasthya.sakhi.database.room.dao.HrpDao
 import org.piramalswasthya.sakhi.database.room.dao.ImmunizationDao
 import org.piramalswasthya.sakhi.database.room.dao.InfantRegDao
 import org.piramalswasthya.sakhi.database.room.dao.MaternalHealthDao
@@ -37,6 +38,11 @@ import org.piramalswasthya.sakhi.model.EligibleCoupleTrackingCache
 import org.piramalswasthya.sakhi.model.FPOTCache
 import org.piramalswasthya.sakhi.model.HBNCCache
 import org.piramalswasthya.sakhi.model.HBYCCache
+import org.piramalswasthya.sakhi.model.HRPMicroBirthPlanCache
+import org.piramalswasthya.sakhi.model.HRPNonPregnantAssessCache
+import org.piramalswasthya.sakhi.model.HRPNonPregnantTrackCache
+import org.piramalswasthya.sakhi.model.HRPPregnantAssessCache
+import org.piramalswasthya.sakhi.model.HRPPregnantTrackCache
 import org.piramalswasthya.sakhi.model.HouseholdCache
 import org.piramalswasthya.sakhi.model.ImmunizationCache
 import org.piramalswasthya.sakhi.model.InfantRegCache
@@ -73,6 +79,11 @@ import org.piramalswasthya.sakhi.model.Vaccine
         DeliveryOutcomeCache::class,
         InfantRegCache::class,
         ChildRegCache::class,
+        HRPPregnantAssessCache::class,
+        HRPNonPregnantAssessCache::class,
+        HRPPregnantTrackCache::class,
+        HRPNonPregnantTrackCache::class,
+        HRPMicroBirthPlanCache::class
     ],
     views = [BenBasicCache::class],
     version = 10, exportSchema = false
@@ -97,6 +108,7 @@ abstract class InAppDb : RoomDatabase() {
     abstract val vaccineDao: ImmunizationDao
     abstract val maternalHealthDao : MaternalHealthDao
     abstract val tbDao : TBDao
+    abstract val hrpDao : HrpDao
     abstract val deliveryOutcomeDao: DeliveryOutcomeDao
     abstract val infantRegDao: InfantRegDao
     abstract val childRegistrationDao : ChildRegistrationDao

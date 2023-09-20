@@ -76,6 +76,10 @@ class AbhaIdActivity : AppCompatActivity() {
         binding.btnTryAgain.setOnClickListener {
             mainViewModel.generateAccessToken()
         }
+
+        binding.toolbarMenuHome.setOnClickListener{
+            finish()
+        }
         countDownTimer = object : CountDownTimer(30*60*1000, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
@@ -102,6 +106,15 @@ class AbhaIdActivity : AppCompatActivity() {
                 navController.popBackStack()
                 navController.navigateUp() || super.onSupportNavigateUp()
             }
+        }
+    }
+
+    fun updateActionBar(logoResource: Int, title: String? = null) {
+//        binding.ivToolbarAbha.setImageResource(logoResource)
+//        binding.toolbar.setLogo(logoResource)
+        title?.let {
+            binding.toolbar.title= null
+            binding.tvToolbarAbha.text = it
         }
     }
 

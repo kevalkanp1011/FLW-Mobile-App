@@ -203,6 +203,10 @@
         <item>ইসি ট্র্যাকিং</item>
         <item>পি ডাব্লু নিবন্ধন</item>
         <item>পি ডাব্লু এ এন সি</item>
+        <item>এইচআরপি মূল্যায়ন</item>
+        <item>এইচআরপি ট্র্যাক</item>
+        <item>এইচআর গৈরগর্ভ মূল্যায়ন</item>
+        <item>এইচআর গৈরগর্ভ ট্র্যাক</item>
     </string-array>
 
     <string-array name="temp_array">

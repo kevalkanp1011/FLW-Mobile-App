@@ -5,9 +5,10 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import org.piramalswasthya.sakhi.helpers.Languages
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
 import java.util.Locale
 
-class HelperUtil {
+object HelperUtil {
 
     fun getLocalizedResources(context: Context, currentLanguage: Languages): Resources {
         val desiredLocale = Locale(currentLanguage.symbol)
@@ -33,4 +34,14 @@ class HelperUtil {
         return numberFormatter.format(number).replace(",","").toInt()
     }
 
+    fun getDateStringFromLong(dateLong: Long?): String? {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        dateLong?.let {
+            val dateString = dateFormat.format(dateLong)
+            return dateString
+        } ?: run {
+            return null
+        }
+
+    }
 }
