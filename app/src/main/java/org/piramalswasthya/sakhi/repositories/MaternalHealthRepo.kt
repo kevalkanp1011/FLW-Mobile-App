@@ -382,7 +382,7 @@ class MaternalHealthRepo @Inject constructor(
                                 rhNegative = pwrDTO.rhNegative,
                                 homeDelivery = pwrDTO.homeDelivery,
                                 badObstetric = pwrDTO.badObstetric,
-                                multiplePregnancy = if (pwrDTO.isFirstPregnancyTest) "Yes" else "No",
+                                multiplePregnancy = if (!pwrDTO.isFirstPregnancyTest) "Yes" else "No",
                                 isHighRisk = pwrDTO.isHrpCase,
                                 syncState = SyncState.SYNCED
                             )
@@ -397,7 +397,7 @@ class MaternalHealthRepo @Inject constructor(
                         pwrDTO.badObstetric?.let {
                             assess.badObstetric = pwrDTO.badObstetric
                         }
-                        assess.multiplePregnancy = if (pwrDTO.isFirstPregnancyTest) "Yes" else "No"
+                        assess.multiplePregnancy = if (!pwrDTO.isFirstPregnancyTest) "Yes" else "No"
                         assess.isHighRisk = pwrDTO.isHrpCase
                         database.hrpDao.saveRecord(assess)
                     }

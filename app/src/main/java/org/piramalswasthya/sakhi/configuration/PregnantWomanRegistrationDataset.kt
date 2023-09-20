@@ -438,6 +438,9 @@ class PregnantWomanRegistrationDataset(
             isHrpCase.value = isHrpCase.getStringFromPosition(if (it.isHrpStatus) 1 else 2)
 
             updateAgeCheck(dateOfBirth, Calendar.getInstance().timeInMillis)
+
+            isHrpCase.value = if (isHighRisk()) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(R.array.yes_no)[1]
+
         }
         assess?.let {
             noOfDeliveries.value = getLocalValueInArray(R.array.yes_no, it.noOfDeliveries)
@@ -582,6 +585,7 @@ class PregnantWomanRegistrationDataset(
                     dateOfhivTestDone.min = dateOfRegLong
                     hbsAgTestResult.min = dateOfRegLong
                     updateAgeCheck(dateOfBirth, dateOfRegLong)
+                    return handleListOnValueChanged(isHrpCase.id, 0)
                 }
                 -1
             }
@@ -846,7 +850,7 @@ class PregnantWomanRegistrationDataset(
         return noOfDeliveries.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
                 timeLessThan18m.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
                 heightShort.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
-                age.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                ageCheck.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
                 rhNegative.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
                 homeDelivery.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
                 badObstetric.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||

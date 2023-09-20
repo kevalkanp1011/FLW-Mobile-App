@@ -968,7 +968,7 @@ class HRPRepo @Inject constructor(
                 createdDate = getCurrentDate(System.currentTimeMillis()),
                 updatedBy = user.userName,
                 updatedDate = getCurrentDate(System.currentTimeMillis()),
-                isFirstPregnancyTest = cache.multiplePregnancy.equals("Yes"),
+                isFirstPregnancyTest = !cache.multiplePregnancy.equals("Yes"),
                 lmpDate = getCurrentDate(cache.lmpDate),
                 rhNegative = cache.rhNegative,
                 homeDelivery = cache.homeDelivery,
@@ -977,7 +977,7 @@ class HRPRepo @Inject constructor(
             )
         } else {
             pwrPost = pwr.asPwrPost()
-            pwrPost.isFirstPregnancyTest = cache.multiplePregnancy.equals("Yes")
+            pwrPost.isFirstPregnancyTest = !cache.multiplePregnancy.equals("Yes")
             pwrPost.rhNegative = cache.rhNegative
             pwrPost.homeDelivery = cache.homeDelivery
             pwrPost.badObstetric = cache.badObstetric

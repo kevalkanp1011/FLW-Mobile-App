@@ -100,6 +100,7 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
                 assess,
                 if (recordExists.value == true) pregnancyRegistrationForm else null
             )
+            dataset.updateList(30,getIndexOfHRP())
 
 
         }
