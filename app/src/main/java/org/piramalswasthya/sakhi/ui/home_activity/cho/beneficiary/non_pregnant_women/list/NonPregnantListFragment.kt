@@ -8,8 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
-import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -95,8 +93,8 @@ class NonPregnantListFragment : Fragment() {
         super.onStart()
         activity?.let {
             (it as HomeActivity).updateActionBar(
-                R.drawable.ic__pregnancy,
-                getString(R.string.pmsma)
+                R.drawable.ic__high_risk_non_prg,
+                getString(R.string.non_pregnant_women)
             )
         }
     }

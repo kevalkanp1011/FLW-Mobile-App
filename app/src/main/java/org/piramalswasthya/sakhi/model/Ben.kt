@@ -70,8 +70,8 @@ enum class Gender {
             " ir.motherBenId is not null as irFilled, ir.syncState as irSyncState, " +
             " cr.motherBenId is not null as crFilled, cr.syncState as crSyncState, " +
             " do.benId is not null as doFilled, do.syncState as doSyncState, " +
-            " (hrppa.benId is not null and hrppa.noOfDeliveries is not null) as hrppaFilled, hrppa.syncState as hrppaSyncState," +
-            " hrpnpa.benId is not null as hrpnpaFilled, hrpnpa.syncState as hrpnpaSyncState," +
+            " (hrppa.benId is not null and hrppa.noOfDeliveries is not null and hrppa.timeLessThan18m is not null and hrppa.heightShort is not null and hrppa.age is not null and hrppa.rhNegative is not null and hrppa.homeDelivery is not null and hrppa.badObstetric is not null and hrppa.multiplePregnancy is not null) as hrppaFilled, hrppa.syncState as hrppaSyncState," +
+            " (hrpnpa.benId is not null and hrpnpa.noOfDeliveries is not null and hrpnpa.timeLessThan18m is not null and hrpnpa.heightShort is not null and hrpnpa.age is not null and hrpnpa.misCarriage is not null and hrpnpa.homeDelivery is not null and hrpnpa.medicalIssues is not null and hrpnpa.pastCSection is not null )as hrpnpaFilled, hrpnpa.syncState as hrpnpaSyncState," +
             " hrpmbp.benId is not null as hrpmbpFilled, hrpmbp.syncState as hrpmbpSyncState," +
             " hrpt.benId is not null as hrptFilled, (count(distinct hrpt.id) > 3) as trackingDone, hrpt.syncState as hrptSyncState," +
             " hrnpt.benId is not null as hrnptFilled, hrnpt.syncState as hrnptSyncState " +
@@ -105,7 +105,6 @@ data class BenBasicCache(
     val regDate: Long,
     val benName: String,
     val benSurname: String? = null,
-    val spouseName: String? = null,
     val gender: Gender,
     val dob: Long,
     val relToHeadId : Int,
@@ -162,7 +161,7 @@ data class BenBasicCache(
     val doFilled: Boolean,
 ) {
     companion object {
-        private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
         fun getAgeFromDob(dob: Long): Int {
             val diffLong = System.currentTimeMillis() - dob
             val diffDays = TimeUnit.MILLISECONDS.toDays(diffLong).toInt()
@@ -257,6 +256,7 @@ data class BenBasicCache(
             familyHeadName = familyHeadName ?: "",
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
+            relToHeadId = 0,
             syncState = syncState
         )
     }
@@ -678,7 +678,6 @@ data class BenBasicDomain(
     val benName: String,
     val benSurname: String? = null,
     val benFullName: String = "$benName $benSurname",
-    var spouseName: String? = null,
     val gender: String,
     val dob: Long,
     val ageInt: Int = getAgeFromDob(dob),

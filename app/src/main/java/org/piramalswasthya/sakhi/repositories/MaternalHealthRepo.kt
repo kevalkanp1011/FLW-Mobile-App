@@ -237,7 +237,7 @@ class MaternalHealthRepo @Inject constructor(
         }
     }
 
-    private suspend fun postPwrToAmritServer(pwrPostList: MutableSet<PwrPost>): Boolean {
+    suspend fun postPwrToAmritServer(pwrPostList: MutableSet<PwrPost>): Boolean {
         if (pwrPostList.isEmpty()) return false
         val user =
             preferenceDao.getLoggedInUser()
@@ -325,7 +325,7 @@ class MaternalHealthRepo @Inject constructor(
                                     val dataObj = jsonObj.getString("data")
                                     savePwrCacheFromResponse(dataObj)
                                 } catch (e: Exception) {
-                                    Timber.d("TB Screening entries not synced $e")
+                                    Timber.d("PWR entries not synced $e")
                                     return@withContext 0
                                 }
 
@@ -369,35 +369,38 @@ class MaternalHealthRepo @Inject constructor(
             pwrDTO.createdDate?.let {
                 var pwrCache: PregnantWomanRegistrationCache? =
                     maternalHealthDao.getSavedRecord(pwrDTO.benId)
-                if (pwrCache == null) {
-                    maternalHealthDao.saveRecord(pwrDTO.toPwrCache())
-                }
-                var assess = database.hrpDao.getPregnantAssess(pwrDTO.benId)
-                if (assess == null) {
-                    database.hrpDao.saveRecord(
-                        HRPPregnantAssessCache(
-                            benId = pwrDTO.benId,
-                            visitDate = getLongFromDate(pwrDTO.createdDate),
-                            rhNegative = pwrDTO.rhNegative,
-                            homeDelivery = pwrDTO.homeDelivery,
-                            badObstetric = pwrDTO.badObstetric,
-                            multiplePregnancy = if (pwrDTO.isFirstPregnancyTest) "Yes" else "No",
-                            isHighRisk = pwrDTO.isHrpCase
+                benDao.getBen(pwrDTO.benId)?.let {
+                    if (pwrCache == null) {
+                        maternalHealthDao.saveRecord(pwrDTO.toPwrCache())
+                    }
+                    var assess = database.hrpDao.getPregnantAssess(pwrDTO.benId)
+                    if (assess == null) {
+                        database.hrpDao.saveRecord(
+                            HRPPregnantAssessCache(
+                                benId = pwrDTO.benId,
+                                visitDate = getLongFromDate(pwrDTO.createdDate),
+                                rhNegative = pwrDTO.rhNegative,
+                                homeDelivery = pwrDTO.homeDelivery,
+                                badObstetric = pwrDTO.badObstetric,
+                                multiplePregnancy = if (pwrDTO.isFirstPregnancyTest) "Yes" else "No",
+                                isHighRisk = pwrDTO.isHrpCase,
+                                syncState = SyncState.SYNCED
+                            )
                         )
-                    )
-                } else {
-                    pwrDTO.rhNegative?.let {
-                        assess.rhNegative = pwrDTO.rhNegative
+                    } else {
+                        pwrDTO.rhNegative?.let {
+                            assess.rhNegative = pwrDTO.rhNegative
+                        }
+                        pwrDTO.homeDelivery?.let {
+                            assess.homeDelivery = pwrDTO.homeDelivery
+                        }
+                        pwrDTO.badObstetric?.let {
+                            assess.badObstetric = pwrDTO.badObstetric
+                        }
+                        assess.multiplePregnancy = if (pwrDTO.isFirstPregnancyTest) "Yes" else "No"
+                        assess.isHighRisk = pwrDTO.isHrpCase
+                        database.hrpDao.saveRecord(assess)
                     }
-                    pwrDTO.homeDelivery?.let {
-                        assess.homeDelivery = pwrDTO.homeDelivery
-                    }
-                    pwrDTO.badObstetric?.let {
-                        assess.badObstetric = pwrDTO.badObstetric
-                    }
-                    assess.multiplePregnancy = if (pwrDTO.isFirstPregnancyTest) "Yes" else "No"
-                    assess.isHighRisk = pwrDTO.isHrpCase
-                    database.hrpDao.saveRecord(assess)
                 }
             }
         }

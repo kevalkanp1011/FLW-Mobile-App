@@ -122,6 +122,8 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
     fun getIndexOfWeeksOfPregnancy(): Int = dataset.getIndexOfWeeksPregnancy()
     fun getIndexOfPastIllness(): Int = dataset.getIndexOfPastIllness()
 
+    fun getIndexOfHRP(): Int = dataset.getIndexOfHRP()
+
     fun saveForm() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {

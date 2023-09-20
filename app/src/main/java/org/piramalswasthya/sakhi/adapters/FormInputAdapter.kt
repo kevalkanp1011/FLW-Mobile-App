@@ -14,7 +14,6 @@ import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.view.*
-import android.view.inputmethod.InputMethodManager
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View

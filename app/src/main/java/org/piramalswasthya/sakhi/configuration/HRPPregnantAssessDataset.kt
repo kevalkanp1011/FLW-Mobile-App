@@ -168,13 +168,37 @@ class HRPPregnantAssessDataset(
             //
         } else {
             noOfDeliveries.value = getLocalValueInArray(R.array.yes_no, saved.noOfDeliveries)
+            saved.noOfDeliveries?.let {
+                noOfDeliveries.isEnabled = false
+            }
             timeLessThan18m.value = getLocalValueInArray(R.array.yes_no, saved.timeLessThan18m)
+            saved.timeLessThan18m?.let {
+                timeLessThan18m.isEnabled = false
+            }
             heightShort.value = getLocalValueInArray(R.array.yes_no, saved.heightShort)
+            saved.heightShort?.let {
+                heightShort.isEnabled = false
+            }
             age.value = getLocalValueInArray(R.array.yes_no, saved.age)
+            saved.age?.let {
+                age.isEnabled = false
+            }
             rhNegative.value = getLocalValueInArray(R.array.yes_no, saved.rhNegative)
+            saved.rhNegative?.let {
+                rhNegative.isEnabled = false
+            }
             homeDelivery.value = getLocalValueInArray(R.array.yes_no, saved.homeDelivery)
+            saved.homeDelivery?.let {
+                homeDelivery.isEnabled = false
+            }
             badObstetric.value = getLocalValueInArray(R.array.yes_no, saved.badObstetric)
+            saved.badObstetric?.let {
+                badObstetric.isEnabled = false
+            }
             multiplePregnancy.value = getLocalValueInArray(R.array.yes_no, saved.multiplePregnancy)
+            saved.multiplePregnancy?.let {
+                multiplePregnancy.isEnabled = false
+            }
             lmpDate.value = getDateFromLong(saved.lmpDate)
             edd.value = getDateFromLong(saved.edd)
 
@@ -250,6 +274,7 @@ class HRPPregnantAssessDataset(
             form.multiplePregnancy = getEnglishValueInArray(R.array.yes_no, multiplePregnancy.value)
             form.lmpDate = getLongFromDate(lmpDate.value)
             form.edd = getLongFromDate(edd.value)
+            form.syncState = SyncState.UNSYNCED
         }
     }
 

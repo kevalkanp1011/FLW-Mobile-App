@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 
 @AndroidEntryPoint
 class HRPPregnantListFragment : Fragment() {
@@ -99,6 +100,16 @@ class HRPPregnantListFragment : Fragment() {
             else
                 (searchView as EditText).removeTextChangedListener(searchTextWatcher)
 
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__high_risk_preg,
+                getString(R.string.high_risk_list_pw)
+            )
         }
     }
 

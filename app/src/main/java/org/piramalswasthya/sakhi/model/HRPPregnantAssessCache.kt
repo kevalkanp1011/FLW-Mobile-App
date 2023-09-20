@@ -83,4 +83,26 @@ data class HighRiskAssessDTO (
     val createdBy: String? = null,
     val updatedDate: String? = null,
     val updatedBy: String? = null
-)
+) {
+    fun toPregnantAssess(): HRPPregnantAssessCache {
+        return HRPPregnantAssessCache(
+            benId = benId,
+            noOfDeliveries = noOfDeliveries,
+            timeLessThan18m = timeLessThan18m,
+            heightShort = heightShort,
+            age = age,
+            syncState = SyncState.SYNCED
+        )
+    }
+
+    fun toNonPregnantAssess(): HRPNonPregnantAssessCache {
+        return HRPNonPregnantAssessCache(
+            benId = benId,
+            noOfDeliveries = noOfDeliveries,
+            timeLessThan18m = timeLessThan18m,
+            heightShort = heightShort,
+            age = age,
+            syncState = SyncState.SYNCED
+        )
+    }
+}

@@ -89,7 +89,7 @@ class EcrRepo @Inject constructor(
         }
     }
 
-    private suspend fun postECRDataToAmritServer(ecrPostList: MutableSet<EcrPost>): Boolean {
+    suspend fun postECRDataToAmritServer(ecrPostList: MutableSet<EcrPost>): Boolean {
         if (ecrPostList.isEmpty()) return false
 
         val user =
@@ -259,32 +259,35 @@ class EcrRepo @Inject constructor(
                                     val dataObj = jsonObj.getJSONArray("data")
                                     val ecrList = getEcrCacheFromServerResponse(dataObj)
                                     val assessList = getHighRiskAssess(dataObj)
-                                    ecrList.filter {
-                                        database.benDao.getBen(
-                                            it.benId
-                                        ) != null
-                                    }.takeIf { it.isNotEmpty() }?.let {
-                                        database.ecrDao.upsert(*it.toTypedArray())
+
+                                    ecrList.forEach { ecr ->
+                                        database.benDao.getBen(ecr.benId)?.let {
+                                            if (database.ecrDao.getSavedECR(ecr.benId) == null) {
+                                                database.ecrDao.upsert(ecr)
+                                            }
+                                        }
                                     }
                                     assessList.forEach { it1 ->
                                         val assess = database.hrpDao.getNonPregnantAssess(it1.benId)
-                                        if (assess == null) {
-                                            database.hrpDao.saveRecord(it1)
-                                        } else {
-                                            it1.misCarriage?.let {
-                                                assess.misCarriage = it1.misCarriage
+                                        database.benDao.getBen(it1.benId)?.let {
+                                            if (assess == null) {
+                                                database.hrpDao.saveRecord(it1)
+                                            } else {
+                                                it1.misCarriage?.let {
+                                                    assess.misCarriage = it1.misCarriage
+                                                }
+                                                it1.homeDelivery?.let {
+                                                    assess.homeDelivery = it1.homeDelivery
+                                                }
+                                                it1.medicalIssues?.let {
+                                                    assess.medicalIssues = it1.medicalIssues
+                                                }
+                                                it1.pastCSection?.let {
+                                                    assess.pastCSection = it1.pastCSection
+                                                }
+                                                assess.isHighRisk = it1.isHighRisk
+                                                database.hrpDao.saveRecord(assess)
                                             }
-                                            it1.homeDelivery?.let {
-                                                assess.homeDelivery = it1.homeDelivery
-                                            }
-                                            it1.medicalIssues?.let {
-                                                assess.medicalIssues = it1.medicalIssues
-                                            }
-                                            it1.pastCSection?.let {
-                                                assess.pastCSection = it1.pastCSection
-                                            }
-                                            assess.isHighRisk = it1.isHighRisk
-                                            database.hrpDao.saveRecord(assess)
                                         }
                                     }
                                 } catch (e: Exception) {
@@ -360,7 +363,7 @@ class EcrRepo @Inject constructor(
                                         database.ecrDao.upsert(*it.toTypedArray())
                                     }
                                 } catch (e: Exception) {
-                                    Timber.d("TB Screening entries not synced $e")
+                                    Timber.d("EC entries not synced $e")
                                     return@withContext 0
                                 }
 

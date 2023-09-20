@@ -131,10 +131,22 @@ class PregnancyRegistrationFormFragment : Fragment() {
                     notifyItemChanged(viewModel.getIndexOfWeeksOfPregnancy())
                 }
 
-                19 -> notifyItemChanged(viewModel.getIndexOfPastIllness())
-                27,28 -> notifyItemChanged(viewModel.getIndexOfChildLabel())
-                29, 30 -> notifyItemChanged(viewModel.getIndexOfPhysicalObservationLabel())
-                31, 32, 33, 34 -> notifyItemChanged(viewModel.getIndexOfObstetricHistoryLabel())
+                19 -> {
+                    notifyItemChanged(viewModel.getIndexOfPastIllness())
+                    notifyItemChanged(viewModel.getIndexOfHRP())
+                }
+                27,28 -> {
+                    notifyItemChanged(viewModel.getIndexOfChildLabel())
+                    notifyItemChanged(viewModel.getIndexOfHRP())
+                }
+                29, 30 -> {
+                    notifyItemChanged(viewModel.getIndexOfPhysicalObservationLabel())
+                    notifyItemChanged(viewModel.getIndexOfHRP())
+                }
+                31, 32, 33, 34 -> {
+                    notifyItemChanged(viewModel.getIndexOfObstetricHistoryLabel())
+                    notifyItemChanged(viewModel.getIndexOfHRP())
+                }
             }
         }
     }

@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.network.HRPNonPregnantAssessDTO
+import org.piramalswasthya.sakhi.utils.HelperUtil
 
 @Entity(
     tableName = "HRP_NON_PREGNANT_ASSESS",
@@ -60,7 +61,8 @@ data class HRPNonPregnantAssessCache(
             noOfDeliveries = noOfDeliveries,
             timeLessThan18m = timeLessThan18m,
             heightShort = heightShort,
-            age = age
+            age = age,
+            createdDate = HelperUtil.getDateStringFromLong(visitDate)
         )
     }
 }

@@ -147,6 +147,111 @@ class HRPRepo @Inject constructor(
         }
     }
 
+    suspend fun getHighRiskAssessDetailsFromServer(): Int {
+        return withContext(Dispatchers.IO) {
+            val user =
+                preferenceDao.getLoggedInUser()
+                    ?: throw IllegalStateException("No user logged in!!")
+            try {
+                val response = tmcNetworkApiService.getHighRiskAssessData(
+                    GetDataPaginatedRequest(
+                        user.userId,
+                        0,
+                        getCurrentDate(Konstants.defaultTimeStamp),
+                        getCurrentDate()
+                    )
+                )
+                val statusCode = response.code()
+                if (statusCode == 200) {
+                    val responseString = response.body()?.string()
+                    if (responseString != null) {
+                        val jsonObj = JSONObject(responseString)
+
+                        val errorMessage = jsonObj.getString("errorMessage")
+                        val responseStatusCode = jsonObj.getInt("statusCode")
+                        Timber.d("Pull from amrit assess data : $responseStatusCode")
+                        when (responseStatusCode) {
+                            200 -> {
+                                try {
+                                    val dataObj = jsonObj.getString("data")
+                                    saveHighRiskAssess(dataObj)
+                                } catch (e: Exception) {
+                                    Timber.d("Assess entries not synced $e")
+                                    return@withContext 0
+                                }
+
+                                return@withContext 1
+                            }
+
+                            5002 -> {
+                                if (userRepo.refreshTokenTmc(
+                                        user.userName, user.password
+                                    )
+                                ) throw SocketTimeoutException("Refreshed Token!")
+                                else throw IllegalStateException("User Logged out!!")
+                            }
+
+                            5000 -> {
+                                if (errorMessage == "No record found") return@withContext 0
+                            }
+
+                            else -> {
+                                throw IllegalStateException("$responseStatusCode received, dont know what todo!?")
+                            }
+                        }
+                    }
+                }
+
+            } catch (e: SocketTimeoutException) {
+                Timber.d("get data error : $e")
+                return@withContext getHighRiskAssessDetailsFromServer()
+
+            } catch (e: java.lang.IllegalStateException) {
+                Timber.d("get data error : $e")
+                return@withContext -1
+            }
+            -1
+        }
+    }
+
+    private fun saveHighRiskAssess(dataObj: String) {
+        val requestDTO = Gson().fromJson(dataObj, JsonObject::class.java)
+        val entries = requestDTO.getAsJsonArray("entries")
+        for (dto in entries) {
+            try {
+                val entry = Gson().fromJson(dto.toString(), HighRiskAssessDTO::class.java)
+                entry.createdDate?.let {
+                    val hrpPregnantAssessCache = database
+                        .hrpDao.getPregnantAssess(entry.benId)
+                    if (hrpPregnantAssessCache == null) {
+                        database.hrpDao.saveRecord(entry.toPregnantAssess())
+                    } else {
+                        if (hrpPregnantAssessCache.noOfDeliveries == null) hrpPregnantAssessCache.noOfDeliveries = entry.noOfDeliveries
+                        if (hrpPregnantAssessCache.timeLessThan18m == null) hrpPregnantAssessCache.timeLessThan18m = entry.timeLessThan18m
+                        if (hrpPregnantAssessCache.heightShort == null) hrpPregnantAssessCache.heightShort = entry.heightShort
+                        if (hrpPregnantAssessCache.age == null) hrpPregnantAssessCache.age = entry.age
+                        database.hrpDao.saveRecord(hrpPregnantAssessCache)
+                    }
+
+                    val hrpNonPregnantAssessCache = database
+                        .hrpDao.getNonPregnantAssess(entry.benId)
+                    if (hrpNonPregnantAssessCache == null) {
+                        database.hrpDao.saveRecord(entry.toNonPregnantAssess())
+                    } else {
+                        if (hrpNonPregnantAssessCache.noOfDeliveries == null) hrpNonPregnantAssessCache.noOfDeliveries = entry.noOfDeliveries
+                        if (hrpNonPregnantAssessCache.timeLessThan18m == null) hrpNonPregnantAssessCache.timeLessThan18m = entry.timeLessThan18m
+                        if (hrpNonPregnantAssessCache.heightShort == null) hrpNonPregnantAssessCache.heightShort = entry.heightShort
+                        if (hrpNonPregnantAssessCache.age == null) hrpNonPregnantAssessCache.age = entry.age
+                        database.hrpDao.saveRecord(hrpNonPregnantAssessCache)
+                    }
+
+                }
+            } catch (e: java.lang.Exception) {
+                Timber.d("cannot save entry $dto due to : $e")
+            }
+        }
+    }
+
     suspend fun getHRPAssessDetailsFromServer(): Int {
         return withContext(Dispatchers.IO) {
             val user =
@@ -232,7 +337,6 @@ class HRPRepo @Inject constructor(
             }
         }
     }
-
 
     suspend fun getHRPTrackDetailsFromServer(): Int {
         return withContext(Dispatchers.IO) {
@@ -515,7 +619,7 @@ class HRPRepo @Inject constructor(
 
             val assessDtos = mutableListOf<Any>()
 
-            val pwrDtos = mutableListOf<Any>()
+            val pwrDtos = mutableSetOf<PwrPost>()
 
             entities?.let {
                 it.forEach { cache ->
@@ -525,7 +629,8 @@ class HRPRepo @Inject constructor(
                 }
             }
 
-            if (pwrDtos.isNotEmpty())
+            maternalHealthRepo.postPwrToAmritServer(pwrDtos)
+
             if (assessDtos.isEmpty()) return@withContext 1
             try {
                 val response = tmcNetworkApiService.saveHighRiskAssessData(
@@ -671,18 +776,19 @@ class HRPRepo @Inject constructor(
             val entities = database.hrpDao.getNonPregnantAssess(SyncState.UNSYNCED)
 
             val dtos = mutableListOf<Any>()
-            val ecrDTOs = mutableListOf<Any>()
+            val ecrDTOs = mutableSetOf<EcrPost>()
             entities?.let {
                 it.forEach { cache ->
-                    dtos.add(cache.toDTO())
+                    dtos.add(cache.toHighRiskAssessDTO())
                     ecrDTOs.add(mapECR(cache))
                     cache.syncState = SyncState.SYNCED
                 }
             }
 
+            ecrRepo.postECRDataToAmritServer(ecrDTOs)
             if (dtos.isEmpty()) return@withContext 1
             try {
-                val response = tmcNetworkApiService.saveHRNonPAssessData(
+                val response = tmcNetworkApiService.saveHighRiskAssessData(
                     UserDataDTO(
                         userId = user.userId,
                         entries = dtos

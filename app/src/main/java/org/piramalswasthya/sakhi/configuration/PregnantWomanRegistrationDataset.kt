@@ -553,11 +553,11 @@ class PregnantWomanRegistrationDataset(
             hbsAgTestResult.inputType = InputType.TEXT_VIEW
         }
 
-        ben?.isHrpStatus?.let {
-            if (it || isHighRisk()) {
-                list.add(assignedAsHrpBy)
-            }
-        }
+//        ben?.isHrpStatus?.let {
+//            if (it || isHighRisk()) {
+//                list.add(assignedAsHrpBy)
+//            }
+//        }
         setUpPage(list)
 
     }
@@ -744,7 +744,7 @@ class PregnantWomanRegistrationDataset(
 
                     if (it.contentEquals(resources.getStringArray(R.array.yes_no)[0]) || isHighRisk()) {
                         isHrpCase.value = resources.getStringArray(R.array.yes_no)[0]
-                        handleListOnValueChanged(isHrpCase.id, 0)
+                        return handleListOnValueChanged(isHrpCase.id, resources.getStringArray(R.array.yes_no).indexOf(isHrpCase.value))
                     }
 
                 }
@@ -755,7 +755,8 @@ class PregnantWomanRegistrationDataset(
             heightShort.id, ageCheck.id -> {
                 physicalObservationLabel.showHighRisk = heightShort.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
                         ageCheck.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
-                -1
+                isHrpCase.value = if (isHighRisk()) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(R.array.yes_no)[1]
+                handleListOnValueChanged(isHrpCase.id, resources.getStringArray(R.array.yes_no).indexOf(isHrpCase.value))
             }
 
             rhNegative.id, homeDelivery.id, badObstetric.id, multiplePregnancy.id -> {
@@ -763,12 +764,13 @@ class PregnantWomanRegistrationDataset(
                         homeDelivery.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
                         badObstetric.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
                         multiplePregnancy.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
-                -1
+                isHrpCase.value = if (isHighRisk()) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(R.array.yes_no)[1]
+                handleListOnValueChanged(isHrpCase.id, resources.getStringArray(R.array.yes_no).indexOf(isHrpCase.value))
             }
             isHrpCase.id -> {
                 triggerDependants(
                     source = isHrpCase,
-                    passedIndex = index,
+                    passedIndex = resources.getStringArray(R.array.yes_no).indexOf(isHrpCase.value),
                     triggerIndex = 0,
                     target = assignedAsHrpBy
                 )
@@ -828,8 +830,11 @@ class PregnantWomanRegistrationDataset(
             form.lmpDate = getLongFromDate(lmp.value)
             form.edd = getLongFromDate(edd.value)
             form.isHighRisk = isHighRisk()
+            form.syncState = SyncState.UNSYNCED
         }
     }
+
+    fun getIndexOfHRP() = getIndexById(isHrpCase.id)
 
     fun getIndexOfChildLabel() = getIndexById(childInfoLabel.id)
 

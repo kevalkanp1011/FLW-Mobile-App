@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
@@ -35,7 +36,7 @@ class HRPNonPregnantAssessFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.recordExists.observe(viewLifecycleOwner) { notIt ->
+        viewModel.fullyFilled.observe(viewLifecycleOwner) { notIt ->
             notIt?.let { recordExists ->
 //                binding.fabEdit.visibility = if(recordExists) View.VISIBLE else View.GONE
                 val adapter = FormInputAdapter(
@@ -122,4 +123,13 @@ class HRPNonPregnantAssessFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__assess_high_risk,
+                getString(R.string.assess)
+            )
+        }
+    }
 }

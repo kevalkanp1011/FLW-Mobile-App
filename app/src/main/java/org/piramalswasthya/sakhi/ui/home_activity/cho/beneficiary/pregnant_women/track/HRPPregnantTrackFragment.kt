@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
@@ -101,6 +102,16 @@ class HRPPregnantTrackFragment : Fragment() {
             }
         }
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__follow_up_high_risk_preg,
+                getString(R.string.follow_up_pregnant)
+            )
+        }
     }
 
     override fun onResume() {

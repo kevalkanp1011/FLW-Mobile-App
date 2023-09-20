@@ -48,9 +48,10 @@ class PullHRPFromAmritWorker @AssistedInject constructor(
                 try {
                     val result1 =
                         awaitAll(
-                            async { getHRPAssess() },
+                            async { getHighRiskAssess() },
+//                            async { getHRPAssess() },
                             async { getHRPTrack() },
-                            async { getHRNonPAssess() },
+//                            async { getHRNonPAssess() },
                             async { getHRNonPTrack() }
                         )
 
@@ -105,6 +106,17 @@ class PullHRPFromAmritWorker @AssistedInject constructor(
         }
     }
 
+    private suspend fun getHighRiskAssess() : Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                val res = hrpRepo.getHighRiskAssessDetailsFromServer()
+                return@withContext res == 1
+            } catch (e: Exception) {
+                Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
+            }
+            true
+        }
+    }
     private suspend fun getHRPTrack() : Boolean {
         return withContext(Dispatchers.IO) {
             try {

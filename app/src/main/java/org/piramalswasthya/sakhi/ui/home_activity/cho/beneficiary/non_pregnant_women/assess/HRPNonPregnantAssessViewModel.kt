@@ -52,6 +52,10 @@ constructor(
     val recordExists: LiveData<Boolean>
         get() = _recordExists
 
+    private val _fullyFilled = MutableLiveData<Boolean>()
+    val fullyFilled: LiveData<Boolean>
+        get() = _fullyFilled
+
     //    private lateinit var user: UserDomain
     private val dataset =
         HRPNonPregnantAssessDataset(context, preferenceDao.getCurrentLanguage())
@@ -77,8 +81,18 @@ constructor(
             hrpReo.getNonPregnantAssess(benId)?.let {
                 hrpNonPregnantAssess = it
                 _recordExists.value = true
+                _fullyFilled.value = (
+                        it.noOfDeliveries != null
+                                && it.timeLessThan18m != null
+                                && it.heightShort != null
+                                && it.age != null
+                                && it.misCarriage  != null
+                                && it.homeDelivery != null
+                                && it.medicalIssues != null
+                                && it.pastCSection != null)
             } ?: run {
                 _recordExists.value = false
+                _fullyFilled.value = false
             }
 
             dataset.setUpPage(

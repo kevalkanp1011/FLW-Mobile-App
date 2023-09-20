@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 
 @AndroidEntryPoint
 class PregnantListFragment : Fragment() {
@@ -96,6 +97,15 @@ class PregnantListFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__assess_high_risk,
+                getString(R.string.assess)
+            )
+        }
+    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

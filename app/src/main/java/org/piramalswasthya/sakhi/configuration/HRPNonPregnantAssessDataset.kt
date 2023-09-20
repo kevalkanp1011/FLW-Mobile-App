@@ -2,6 +2,7 @@ package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.FormElement
@@ -132,13 +133,37 @@ class HRPNonPregnantAssessDataset(
 
         saved?.let {
             noOfDeliveries.value = getLocalValueInArray(R.array.yes_no, it.noOfDeliveries)
+            it.noOfDeliveries?.let {
+                noOfDeliveries.isEnabled = false
+            }
             timeLessThan18m.value = getLocalValueInArray(R.array.yes_no,it.timeLessThan18m)
+            it.timeLessThan18m?.let {
+                timeLessThan18m.isEnabled = false
+            }
             heightShort.value = getLocalValueInArray(R.array.yes_no,it.heightShort)
+            it.heightShort?.let {
+                heightShort.isEnabled = false
+            }
             age.value = getLocalValueInArray(R.array.yes_no,it.age)
+            it.age?.let {
+                age.isEnabled = false
+            }
             misCarriage.value = getLocalValueInArray(R.array.yes_no,it.misCarriage)
+            it.misCarriage?.let {
+                misCarriage.isEnabled = false
+            }
             homeDelivery.value = getLocalValueInArray(R.array.yes_no,it.homeDelivery)
+            it.homeDelivery?.let {
+                homeDelivery.isEnabled = false
+            }
             medicalIssues.value = getLocalValueInArray(R.array.yes_no,it.medicalIssues)
+            it.medicalIssues?.let {
+                medicalIssues.isEnabled = false
+            }
             pastCSection.value = getLocalValueInArray(R.array.yes_no,it.pastCSection)
+            it.pastCSection?.let {
+                pastCSection.isEnabled = false
+            }
 
             infoChildLabel.showHighRisk =
                 (noOfDeliveries.value == resources.getStringArray(R.array.yes_no)[0] || timeLessThan18m.value == resources.getStringArray(R.array.yes_no)[0])
@@ -188,6 +213,7 @@ class HRPNonPregnantAssessDataset(
             form.medicalIssues = getEnglishValueInArray(R.array.yes_no, medicalIssues.value)
             form.timeLessThan18m = getEnglishValueInArray(R.array.yes_no, timeLessThan18m.value)
             form.pastCSection = getEnglishValueInArray(R.array.yes_no, pastCSection.value)
+            form.syncState = SyncState.UNSYNCED
         }
     }
 

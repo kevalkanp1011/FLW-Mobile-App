@@ -1190,6 +1190,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                 if (dob1.value != null && timeAtMarriage != 0L) {
                     val dob1Long = getLongFromDate(dob1.value)
                     assignValuesToAgeFromDob(dob1Long, age1)
+                    validateIntMinMax(age1)
                     setSiblingAgeDiff(timeAtMarriage, dob1Long, marriageFirstChildGap)
                     dob2.min = dob1Long
                     if (dob1Long > lastDeliveryDate) lastDeliveryDate = dob1Long
@@ -1845,6 +1846,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             form.timeLessThan18m = if (timeLessThan18m.value != null) getEnglishValueInArray(R.array.yes_no, timeLessThan18m.value) else null
             form.pastCSection = if (pastCSection.value != null) getEnglishValueInArray(R.array.yes_no, pastCSection.value) else null
             form.isHighRisk = isHighRisk()
+            form.syncState = SyncState.UNSYNCED
         }
     }
 

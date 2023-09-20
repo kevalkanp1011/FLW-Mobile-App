@@ -11,12 +11,8 @@ import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.getDateString
 import org.piramalswasthya.sakhi.helpers.getWeeksOfPregnancy
 import org.piramalswasthya.sakhi.network.getLongFromDate
-import org.piramalswasthya.sakhi.utils.HelperUtil
 import org.piramalswasthya.sakhi.utils.HelperUtil.getDateStringFromLong
-import org.piramalswasthya.sakhi.utils.HelperUtil
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 
@@ -179,6 +175,33 @@ data class BenWithPwrCache(
             pwr = pwr
         )
     }
+
+    fun asBenBasicDomainModelForHRPPregAssessmentForm(): BenBasicDomainForForm {
+
+        return BenBasicDomainForForm(
+            benId = ben.benId,
+            hhId = ben.hhId,
+            regDate = BenBasicCache.dateFormat.format(Date(ben.regDate)),
+            benName = ben.benName,
+            benSurname = ben.benSurname ?: "",
+            gender = ben.gender.name,
+            dob = ben.dob,
+            mobileNo = ben.mobileNo.toString(),
+            fatherName = ben.fatherName,
+            familyHeadName = ben.familyHeadName?: "",
+            spouseName = ben.spouseName?: "",
+            lastMenstrualPeriod = getDateStringFromLong(ben.lastMenstrualPeriod),
+            edd = getEddFromLmp(ben.lastMenstrualPeriod),
+//            typeOfList = typeOfList.name,
+            rchId = ben.rchId ?: "Not Available",
+            hrpStatus = ben.hrpStatus,
+            form1Filled = ben.hrppaFilled,
+            syncState = ben.hrppaSyncState,
+            form2Enabled = true,
+            form2Filled = ben.hrpmbpFilled
+        )
+    }
+
 }
 
 data class BenWithPwrDomain(

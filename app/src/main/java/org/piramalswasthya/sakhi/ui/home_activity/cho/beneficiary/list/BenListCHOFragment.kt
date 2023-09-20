@@ -80,8 +80,9 @@ class BenListCHOFragment : Fragment() {
                     checkAndGenerateABHA(benId)
                 },
 
-                ), true,
-            1
+                ),
+            showAbha = true,
+            role = 1
         )
         binding.rvAny.adapter = benAdapter
         lifecycleScope.launch {
