@@ -40,4 +40,6 @@ interface MaternalHealthDao {
 
     @Update
     suspend fun updatePwr(it: PregnantWomanRegistrationCache)
+    @Query("select * from HRP_NON_PREGNANT_ASSESS assess")
+    fun getAllNonPregnancyRecords(): Flow<List<HRPNonPregnantAssessCache>>
 }

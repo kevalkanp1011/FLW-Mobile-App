@@ -71,6 +71,8 @@ class SchedulerFragment : Fragment() {
             viewModel.hrpDueCount.collect{
                 binding.tvHrp.text = it.toString()
             }
+        }
+        lifecycleScope.launch {
             viewModel.hrpCountEC.collect{
                 binding.tvHrEcCount.text = it.toString()
             }

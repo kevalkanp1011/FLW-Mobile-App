@@ -198,5 +198,14 @@ class RecordsRepo @Inject constructor(
         emit(count)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val hrpNonPCount = maternalHealthDao.getAllNonPregnancyRecords().transformLatest { it ->
+        var count = 0
+        it.map { it1 ->
+            if (it1.isHighRisk)
+                count++
+        }
+        emit(count)
+    }
     fun getHRECCount() = maternalHealthDao.getAllECRecords()
 }
