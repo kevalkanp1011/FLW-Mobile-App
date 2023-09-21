@@ -35,9 +35,6 @@
             android:id="@+id/action_nav_home_to_immunizationDueFragment"
             app:destination="@id/immunizationDueTypeFragment" />
         <action
-            android:id="@+id/action_nav_home_to_menopauseStageFragment"
-            app:destination="@id/menopauseStageFragment" />
-        <action
             android:id="@+id/action_nav_home_to_ncdFragment"
             app:destination="@id/ncdFragment" />
         <action
@@ -171,8 +168,8 @@
             android:id="@+id/action_motherCareFragment_to_childRegListFragment"
             app:destination="@id/childRegListFragment" />
         <action
-            android:id="@+id/action_motherCareFragment_to_pmsmaListFragment"
-            app:destination="@id/pmsmaListFragment" />
+            android:id="@+id/action_motherCareFragment_to_pncMotherListFragment"
+            app:destination="@id/pncMotherListFragment" />
     </fragment>
     <fragment
         android:id="@+id/deathReportsFragment"
@@ -216,11 +213,6 @@
             android:id="@+id/action_immunizationDueTypeFragment_to_motherImmunizationListFragment"
             app:destination="@id/motherImmunizationListFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/menopauseStageFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.menopause_stage.MenopauseStageFragment"
-        android:label="@string/icon_title_msl"
-        tools:layout="@layout/fragment_menopause_stage" />
     <fragment
         android:id="@+id/ncdFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.non_communicable_diseases.NcdFragment"
@@ -348,27 +340,10 @@
             app:destination="@id/hbycMonthListFragment" />
     </fragment>
     <fragment
-        android:id="@+id/deliveryStageListFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.delivery_stage_list.DeliveryStageListFragment"
-        android:label="@string/delivery_stage_list"
-        tools:layout="@layout/fragment_delivery_stage_list"/>
-    <fragment
         android:id="@+id/pncMotherListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pnc_mother_list.PncMotherListFragment"
         android:label="@string/pnc_mother_list"
         tools:layout="@layout/fragment_pnc_mother_list">
-        <action
-            android:id="@+id/action_pncMotherListFragment_to_pmjayFragment"
-            app:destination="@id/pmjayFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/reproductiveAgeListFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.reproductive_age_list.ReproductiveAgeListFragment"
-        android:label="@string/reproductive_age_list"
-        tools:layout="@layout/fragment_reproductive_age_list">
-        <action
-            android:id="@+id/action_reproductiveAgeListFragment_to_fpotFragment"
-            app:destination="@id/fpotFragment" />
     </fragment>
     <fragment
         android:id="@+id/ncdEligibleListFragment"
@@ -480,18 +455,6 @@
             app:argType="long" />
     </fragment>
     <fragment
-        android:id="@+id/pmjayFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pmjay.PmjayFragment"
-        android:label="@string/pmjay_form"
-        tools:layout="@layout/fragment_new_form">
-        <argument
-            android:name="hhId"
-            app:argType="long" />
-        <argument
-            android:name="benId"
-            app:argType="long" />
-    </fragment>
-    <fragment
         android:id="@+id/householdMembersFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.all_household.household_members.HouseholdMembersFragment"
         android:label="@string/household_members"
@@ -512,19 +475,6 @@
             android:id="@+id/action_householdMembersFragment_to_newBenRegFragment"
             app:destination="@id/newBenRegFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/fpotFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.fpot.FpotFragment"
-        android:label="@string/fp_ot_register"
-        tools:layout="@layout/fragment_fpot">
-        <argument
-            android:name="hhId"
-            app:argType="long" />
-        <argument
-            android:name="benId"
-            app:argType="long" />
-    </fragment>
-
     <fragment
         android:id="@+id/hbncDayListFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.HbncDayListFragment"
@@ -855,10 +805,6 @@
             app:destination="@id/newBenRegFragment"
             app:launchSingleTop="true" />
     </fragment>
-    <fragment
-        android:id="@+id/pmsmaListFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pmsma.list.PmsmaListFragment"
-        android:label="PmsmaListFragment" />
     <fragment
         android:id="@+id/benListCHOFragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.cho.beneficiary.list.BenListCHOFragment"

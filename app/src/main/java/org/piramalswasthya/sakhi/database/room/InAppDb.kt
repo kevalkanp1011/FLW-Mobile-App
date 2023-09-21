@@ -86,7 +86,7 @@ import org.piramalswasthya.sakhi.model.Vaccine
         HRPMicroBirthPlanCache::class
     ],
     views = [BenBasicCache::class],
-    version = 10, exportSchema = false
+    version = 11, exportSchema = false
 )
 
 @TypeConverters(LocationEntityListConverter::class, SyncStateConverter::class)

@@ -14,8 +14,8 @@ import org.piramalswasthya.sakhi.helpers.getTodayMillis
 import org.piramalswasthya.sakhi.helpers.getWeeksOfPregnancy
 import org.piramalswasthya.sakhi.network.getLongFromDate
 import org.piramalswasthya.sakhi.utils.HelperUtil.getDateStringFromLong
-import java.util.Date
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
@@ -192,8 +192,8 @@ data class BenWithPwrCache(
             dob = ben.dob,
             mobileNo = ben.mobileNo.toString(),
             fatherName = ben.fatherName,
-            familyHeadName = ben.familyHeadName?: "",
-            spouseName = ben.spouseName?: "",
+            familyHeadName = ben.familyHeadName ?: "",
+            spouseName = ben.spouseName ?: "",
             lastMenstrualPeriod = getDateStringFromLong(ben.lastMenstrualPeriod),
             edd = getEddFromLmp(ben.lastMenstrualPeriod),
 //            typeOfList = typeOfList.name,
@@ -236,12 +236,12 @@ data class PwrPost(
     val numPrevPregnancy: Int? = null,
     val pregComplication: String? = null,
     val otherComplication: String? = null,
-    var isRegistered : Boolean = true,
-    var rhNegative : String? = null,
-    var homeDelivery : String? = null,
-    var badObstetric : String? = null,
-    var isHrpCase : Boolean = false,
-    var assignedAsHrpBy : String? = null,
+    var isRegistered: Boolean = true,
+    var rhNegative: String? = null,
+    var homeDelivery: String? = null,
+    var badObstetric: String? = null,
+    var isHrpCase: Boolean = false,
+    var assignedAsHrpBy: String? = null,
     val createdDate: String? = null,
     val createdBy: String,
     var updatedDate: String? = null,
@@ -493,7 +493,7 @@ data class BenWithAncVisitCache(
     val pwr: PregnantWomanRegistrationCache,
 
     @Relation(
-        parentColumn = "benId", entityColumn = "benId",  entity = PMSMACache::class
+        parentColumn = "benId", entityColumn = "benId", entity = PMSMACache::class
     )
     val pmsma: PMSMACache?,
 
@@ -524,13 +524,15 @@ data class BenWithAncVisitCache(
                 )
             }.sortedBy { it.visitNumber },
             pmsmaFillable = if (pmsma == null) savedAncRecords.any { it.visitNumber == 1 } else false,
-            hasPmsma = pmsma!=null,
-            showAddAnc = (savedAncRecords.isEmpty() && TimeUnit.MILLISECONDS.toDays(
-                getTodayMillis() - pwr.lmpDate
-            ) >= Konstants.minAnc1Week * 7)
-                    || savedAncRecords.maxBy { it.ancDate }.visitNumber < 4 && TimeUnit.MILLISECONDS.toDays(
-                getTodayMillis() - savedAncRecords.maxBy { it.ancDate }.ancDate
-            ) > 28,
+            hasPmsma = pmsma != null,
+            showAddAnc = if (savedAncRecords.isEmpty())
+                TimeUnit.MILLISECONDS.toDays(
+                    getTodayMillis() - pwr.lmpDate
+                ) >= Konstants.minAnc1Week * 7
+            else
+                savedAncRecords.maxBy { it.ancDate }.visitNumber < 4 && TimeUnit.MILLISECONDS.toDays(
+                    getTodayMillis() - savedAncRecords.maxBy { it.ancDate }.ancDate
+                ) > 28,
             syncState = if (pmsma == null && savedAncRecords.isEmpty()) null else if (pmsma?.syncState == SyncState.UNSYNCED || savedAncRecords.any { it.syncState != SyncState.SYNCED }) SyncState.UNSYNCED else SyncState.SYNCED
         )
 
@@ -548,7 +550,7 @@ data class BenWithAncListDomain(
         ?.toString() ?: "NA",
     val showAddAnc: Boolean,
     val pmsmaFillable: Boolean,
-    val hasPmsma : Boolean,
+    val hasPmsma: Boolean,
     val showViewAnc: Boolean = anc.isEmpty(),
     val syncState: SyncState?
 )
