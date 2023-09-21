@@ -1,7 +1,6 @@
 package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
-import android.content.res.Configuration
 import android.content.res.Resources
 import android.util.Range
 import androidx.annotation.StringRes
@@ -11,7 +10,9 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.model.FormElement
+import org.piramalswasthya.sakhi.model.InputType
 import org.piramalswasthya.sakhi.utils.HelperUtil
+import org.piramalswasthya.sakhi.utils.HelperUtil.getLocalizedResources
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -32,8 +33,8 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     protected var englishResources: Resources
 
     init {
-        englishResources = HelperUtil().getLocalizedResources( context, Languages.ENGLISH)
-        resources = HelperUtil().getLocalizedResources(context, currentLanguage)
+        englishResources = getLocalizedResources(context, Languages.ENGLISH)
+        resources = getLocalizedResources(context, currentLanguage)
     }
 
     /**
@@ -120,6 +121,11 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     abstract fun mapValues(cacheModel: FormDataModel, pageNumber: Int = 0)
     protected fun getIndexOfElement(element: FormElement) = list.indexOf(element)
     suspend fun updateList(formId: Int, index: Int) {
+        list.find { it.id == formId }?.let {
+            if (it.inputType == InputType.DROPDOWN) {
+                it.errorText = null
+            }
+        }
         val updateIndex = handleListOnValueChanged(formId, index)
         if (updateIndex != -1) {
             val newList = list.toMutableList()
@@ -286,7 +292,8 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         addItems.forEach {
             if (list.contains(it)) list.remove(it)
         }
-        val addPosition = position.takeIf { it != -1 } ?: (list.indexOf(source) + 1)
+        val addPosition = if (position == -2) list.lastIndex + 1 else position.takeIf { it != -1 }
+            ?: (list.indexOf(source) + 1)
         list.addAll(addPosition, addItems)
         return addPosition
 //        return if (age in ageTriggerRange && ageUnit.value == ageUnit.entries?.get(
@@ -380,7 +387,8 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     }
 
     protected fun assignValuesToAgeAndAgeUnitFromDob(
-        dob: Long, ageElement: FormElement, ageUnitElement: FormElement
+        dob: Long, ageElement: FormElement, ageUnitElement: FormElement,
+        ageAtMarriageElement: FormElement? = null, timeStampDateOfMarriage: Long? = null
     ): Int {
         ageUnitElement.errorText = null
         ageElement.errorText = null
@@ -389,6 +397,12 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         }.setToStartOfTheDay()
         val calNow = Calendar.getInstance().setToStartOfTheDay()
         val yearsDiff = getDiffYears(calDob, calNow)
+        ageAtMarriageElement?.value = null
+        ageAtMarriageElement?.max = yearsDiff.toLong()
+        timeStampDateOfMarriage?.let {
+            ageAtMarriageElement?.value =
+                getDiffYears(calDob, Calendar.getInstance().apply { timeInMillis = it }).toString()
+        }
         if (yearsDiff > 0) {
             ageUnitElement.value = ageUnitElement.entries?.last()
             ageElement.value = yearsDiff.toString()
@@ -428,6 +442,15 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         return -1
     }
 
+    protected fun getDoMFromDoR(yearsSinceMarriage: Int?, regDate: Long): Long? {
+        if (yearsSinceMarriage == null) return null
+        val cal = Calendar.getInstance()
+//        cal.timeInMillis = regDate
+        cal.add(Calendar.YEAR, -1 * yearsSinceMarriage)
+        return cal.timeInMillis
+
+    }
+
 
     protected fun validateEmptyOnEditText(formElement: FormElement): Int {
         if (formElement.required) {
@@ -452,6 +475,11 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     private fun String.isAllAlphaNumericAndSpace() =
         takeIf { it.isNotEmpty() }?.toCharArray()
             ?.all { it.isWhitespace() || it.isLetter() || it.isDigit() }
+            ?: false
+
+    private fun String.isAnyAlphabetOrSpace() =
+        takeIf { it.isNotEmpty() }?.toCharArray()
+            ?.any { it.isWhitespace() || it.isLetter() }
             ?: false
 
     protected fun validateAllCapsOrSpaceOnEditText(formElement: FormElement): Int {
@@ -500,6 +528,25 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         return -1
     }
 
+    protected fun validateNoAlphabetSpaceOnEditText(formElement: FormElement): Int {
+        formElement.value?.takeIf { it.isNotEmpty() }?.isAnyAlphabetOrSpace()?.let {
+            if (it) formElement.errorText =
+                resources.getString(R.string.form_input__no_alpha_space_error)
+            else formElement.errorText =
+                null
+        }
+        return -1
+    }
+
+    protected fun validateAllDigitOnEditText(formElement: FormElement): Int {
+        formElement.value?.takeIf { it.isNotEmpty() }?.all { it.isDigit() }?.let {
+            if (it) formElement.errorText = null
+            else formElement.errorText =
+                resources.getString(R.string.form_input_digit_only_error)
+        }
+        return -1
+    }
+
     protected fun validateIntMinMax(formElement: FormElement): Int {
         formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.toLong()?.let {
             formElement.min?.let { min ->
@@ -538,6 +585,16 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
                     } else null
                 }
             }
+        }
+        return -1
+    }
+
+    protected fun validateDouble1DecimalPlaces(formElement: FormElement): Int {
+        formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.let {
+            if (it.contains('.') && it.substringAfter(".").length > 1)
+                "Only 1 decimal place allowed"
+            else
+                null
         }
         return -1
     }
@@ -598,11 +655,44 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         } ?: -1
     }
 
+    fun getListSize() = list.size
+
     fun setValueById(id: Int, value: String?) {
         list.find { it.id == id }?.let {
             it.value = value
         }
     }
 
+
+    protected fun calculateAge(date: Long): Int {
+        val dob = Calendar.getInstance()
+        dob.timeInMillis = date
+        val today = Calendar.getInstance()
+        var age = today[Calendar.YEAR] - dob[Calendar.YEAR]
+        if (today[Calendar.DAY_OF_MONTH] < dob[Calendar.DAY_OF_MONTH]) {
+            age--
+        }
+        return age
+    }
+
+    protected fun calculateDob(age: Int): Long {
+        val dob = Calendar.getInstance()
+        dob.set(Calendar.YEAR, dob[Calendar.YEAR] - age)
+        return dob.timeInMillis
+    }
+
+    fun getLocalValueInArray(arrayId: Int, entry: String?): String? {
+        entry?.let {
+            return resources.getStringArray(arrayId)[englishResources.getStringArray(arrayId).indexOf(it)]
+        }
+        return null
+    }
+
+    fun getEnglishValueInArray(arrayId: Int, entry: String?): String? {
+        entry?.let {
+            return englishResources.getStringArray(arrayId)[resources.getStringArray(arrayId).indexOf(it)]
+        }
+        return null
+    }
 
 }

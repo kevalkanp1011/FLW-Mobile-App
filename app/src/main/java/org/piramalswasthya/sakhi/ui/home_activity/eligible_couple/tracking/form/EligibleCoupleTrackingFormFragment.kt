@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
@@ -126,11 +127,28 @@ class EligibleCoupleTrackingFormFragment : Fragment() {
                     notifyItemChanged(2)
 
                 }
-                5 -> {
-                    notifyItemChanged(viewModel.getIndexOfIsPregnant())
+                4,5 -> {
+                    notifyDataSetChanged()
+                    //notifyItemChanged(viewModel.getIndexOfIsPregnant())
                 }
+
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__eligible_couple,
+                getString(R.string.eligible_couple_tracking_form)
+            )
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }

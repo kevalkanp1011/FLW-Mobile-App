@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="track"
+            type="org.piramalswasthya.sakhi.model.HRPPregnantTrackDomain" />
+
+        <variable
+            name="visit"
+            type="String" />
+
+        <variable
+            name="clickListener"
+            type="org.piramalswasthya.sakhi.adapters.HRPPregTrackAdapter.HRPTrackClickListener" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_wide">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{visit.concat(track.dateOfVisit)}"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            tools:text="hrp tracking" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/padding_normal"
+            android:backgroundTint="?attr/colorPrimary"
+            android:onClick="@{() -> clickListener.onClickedBen(track)}"
+            android:text="@string/show_details"
+            android:textColor="?attr/colorOnPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </LinearLayout>
+
+
+</layout>

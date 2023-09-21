@@ -1,20 +1,22 @@
 package org.piramalswasthya.sakhi.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.piramalswasthya.sakhi.databinding.RvItemBenBinding
-import org.piramalswasthya.sakhi.helpers.Konstants
-import org.piramalswasthya.sakhi.model.AgeUnit
 import org.piramalswasthya.sakhi.model.BenBasicDomain
 
 
 class BenListAdapter(
     private val clickListener: BenClickListener? = null,
-    private val showAbha: Boolean = false
-) :
+    private val showBeneficiaries: Boolean = false,
+    private val showRegistrationDate: Boolean = false,
+    private val showSyncIcon: Boolean = false,
+    private val showAbha: Boolean = false,
+ private val role: Int? = 0) :
     ListAdapter<BenBasicDomain, BenListAdapter.BenViewHolder>(BenDiffUtilCallBack) {
     private object BenDiffUtilCallBack : DiffUtil.ItemCallback<BenBasicDomain>() {
         override fun areItemsTheSame(
@@ -38,12 +40,54 @@ class BenListAdapter(
         }
 
         fun bind(
-            item: BenBasicDomain, clickListener: BenClickListener?, showAbha: Boolean
+            item: BenBasicDomain,
+            clickListener: BenClickListener?,
+            showAbha: Boolean,
+            showSyncIcon: Boolean,
+            showRegistrationDate: Boolean,
+            showBeneficiaries: Boolean, role: Int?
         ) {
+            if(!showSyncIcon) item.syncState = null
             binding.ben = item
             binding.clickListener = clickListener
             binding.showAbha = showAbha
+            binding.showRegistrationDate = showRegistrationDate
+            binding.registrationDate.visibility = if(showRegistrationDate) View.VISIBLE else View.INVISIBLE
+            binding.blankSpace.visibility = if(showRegistrationDate) View.VISIBLE else View.INVISIBLE
             binding.hasAbha = !item.abhaId.isNullOrEmpty()
+            binding.role = role
+
+            if (showBeneficiaries) {
+                if (item.spouseName == "Not Available" && item.fatherName == "Not Available") {
+                    binding.father = true
+                    binding.husband = false
+                    binding.spouse = false
+                } else {
+                    if (item.gender == "MALE") {
+                        binding.father = true
+                        binding.husband = false
+                        binding.spouse = false
+                    } else if (item.gender == "FEMALE") {
+                        if (item.ageInt > 15) {
+                            binding.father = item.fatherName != "Not Available"  && item.spouseName == "Not Available"
+                            binding.husband = item.spouseName != "Not Available"
+                            binding.spouse = false
+                        } else {
+                            binding.father = true
+                            binding.husband = false
+                            binding.spouse = false
+                        }
+                    } else {
+                        binding.father = item.fatherName != "Not Available"  && item.spouseName == "Not Available"
+                        binding.spouse = item.spouseName != "Not Available"
+                        binding.husband = false
+                    }
+                }
+            } else {
+                binding.father = false
+                binding.husband = false
+                binding.spouse = false
+            }
             binding.executePendingBindings()
 
         }
@@ -54,19 +98,19 @@ class BenListAdapter(
     ) = BenViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: BenViewHolder, position: Int) {
-        holder.bind(getItem(position), clickListener, showAbha)
+        holder.bind(getItem(position), clickListener, showAbha, showSyncIcon, showRegistrationDate, showBeneficiaries, role)
     }
 
 
     class BenClickListener(
-        private val clickedBen: (hhId: Long, benId: Long, isKid: Boolean) -> Unit,
+        private val clickedBen: (hhId: Long, benId: Long, relToHeadId: Int) -> Unit,
         private val clickedHousehold: (hhId: Long) -> Unit,
         private val clickedABHA: (benId: Long, hhId: Long) -> Unit,
     ) {
         fun onClickedBen(item: BenBasicDomain) = clickedBen(
             item.hhId,
             item.benId,
-            (item.ageUnit != AgeUnit.YEARS || item.ageInt <= Konstants.maxAgeForAdolescent)
+            item.relToHeadId -1
         )
 
         fun onClickedHouseHold(item: BenBasicDomain) = clickedHousehold(item.hhId)

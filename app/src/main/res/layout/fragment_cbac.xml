@@ -170,6 +170,7 @@
                                 android:id="@+id/dd_age_score"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_alignBaseline="@+id/til_age_dropdown"
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerInParent="true"
                                 android:paddingHorizontal="@dimen/padding_wide"
@@ -219,6 +220,7 @@
                                 android:id="@+id/dd_smoke_score"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:layout_alignBaseline="@+id/til_smoke_dropdown"
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerInParent="true"
                                 android:paddingHorizontal="@dimen/padding_wide"
@@ -267,6 +269,7 @@
                                 android:id="@+id/dd_alcohol_score"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_alignBaseline="@+id/til_alcohol_dropdown"
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerInParent="true"
                                 android:paddingHorizontal="@dimen/padding_wide"
@@ -315,6 +318,7 @@
                                 android:id="@+id/dd_waist_score"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_alignBaseline="@+id/til_waist_dropdown"
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerInParent="true"
                                 android:paddingHorizontal="@dimen/padding_wide"
@@ -363,6 +367,7 @@
                                 android:id="@+id/dd_pa_score"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_alignBaseline="@+id/til_pa_dropdown"
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerInParent="true"
                                 android:paddingHorizontal="@dimen/padding_wide"
@@ -411,6 +416,7 @@
                                 android:id="@+id/dd_fh_score"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_alignBaseline="@+id/til_fh_dropdown"
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerInParent="true"
                                 android:paddingHorizontal="@dimen/padding_wide"
@@ -500,18 +506,6 @@
 
 
                             <include
-                                android:id="@+id/cbac_fh_tb"
-                                layout="@layout/fragment_cbac_element_radio"
-                                app:fieldName="@{@string/cbac_fh_tb}"
-                                app:numAsterisk="@{2}" />
-
-                            <include
-                                android:id="@+id/cbac_taking_tb_drug"
-                                layout="@layout/fragment_cbac_element_radio"
-                                app:fieldName="@{@string/cbac_taking_tb_drug}"
-                                app:numAsterisk="@{2}" />
-
-                            <include
                                 android:id="@+id/cbac_histb"
                                 layout="@layout/fragment_cbac_element_radio"
                                 app:fieldName="@{@string/cbac_histb}"
@@ -546,6 +540,18 @@
                                 layout="@layout/fragment_cbac_element_radio"
                                 app:fieldName="@{@string/cbac_ntswets}"
                                 app:numAsterisk="@{1}" />
+
+                            <include
+                                android:id="@+id/cbac_fh_tb"
+                                layout="@layout/fragment_cbac_element_radio"
+                                app:fieldName="@{@string/cbac_fh_tb}"
+                                app:numAsterisk="@{2}" />
+
+                            <include
+                                android:id="@+id/cbac_taking_tb_drug"
+                                layout="@layout/fragment_cbac_element_radio"
+                                app:fieldName="@{@string/cbac_taking_tb_drug}"
+                                app:numAsterisk="@{2}" />
 
                             <include
                                 android:id="@+id/cbac_recurrent_ulceration"
@@ -1013,6 +1019,7 @@
                                 android:id="@+id/dd_li_score"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_alignBaseline="@+id/til_li_dropdown"
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerInParent="true"
                                 android:paddingHorizontal="@dimen/padding_wide"
@@ -1060,6 +1067,7 @@
                                 android:id="@+id/dd_fd_score"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_alignBaseline="@+id/til_fd_dropdown"
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerInParent="true"
                                 android:paddingHorizontal="@dimen/padding_wide"

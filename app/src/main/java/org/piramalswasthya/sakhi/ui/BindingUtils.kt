@@ -2,18 +2,24 @@ package org.piramalswasthya.sakhi.ui
 
 import android.net.Uri
 import android.os.Build
+import android.text.Html
 import android.text.InputType
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import android.widget.*
 import android.widget.RadioGroup.LayoutParams
+import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.google.android.material.color.MaterialColors
+import com.google.android.material.divider.MaterialDivider
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -112,13 +118,42 @@ fun CardView.setRedBorder(allowRedBorder: Boolean, scope: CoroutineScope, count:
 //    }
 }
 
-@BindingAdapter("benId", "syncState")
-fun TextView.setBenIdText(benId: Long?, syncState: SyncState?) {
-    if (syncState != SyncState.SYNCED)
-        text = "Pending Sync"
-    else
-        text = benId.toString()
+@BindingAdapter("benIdText")
+fun TextView.setBenIdText(benId: Long?) {
+    benId?.let {
+        if (benId <0L) {
+            text = "Pending Sync"
+            setTextColor(resources.getColor(android.R.color.holo_orange_light))
+        }
+        else {
+            text = benId.toString()
+            setTextColor(MaterialColors.getColor(this,com.google.android.material.R.attr.colorOnPrimary))
+
+        }
+    }
+
 }
+
+@BindingAdapter("showBasedOnNumMembers")
+fun TextView.showBasedOnNumMembers(numMembers: Int?) {
+    numMembers?.let {
+        visibility = if (it > 0) View.VISIBLE else View.GONE
+    }
+}
+@BindingAdapter("backgroundTintBasedOnNumMembers")
+fun CardView.setBackgroundTintBasedOnNumMembers(numMembers: Int?) {
+    numMembers?.let {
+        val color = MaterialColors.getColor(this,if(it>0) androidx.appcompat.R.attr.colorPrimary else android.R.attr.colorEdgeEffect)
+        setCardBackgroundColor(color)
+    }
+}
+@BindingAdapter("textBasedOnNumMembers")
+fun TextView.textBasedOnNumMembers(numMembers: Int?) {
+    numMembers?.let {
+        text = if (it > 0) "Add Member" else "Add Head of Family"
+    }
+}
+
 
 @BindingAdapter("listItems")
 fun AutoCompleteTextView.setSpinnerItems(list: Array<String>?) {
@@ -140,10 +175,15 @@ fun Button.setVisibilityOfLayout(show: Boolean?) {
     show?.let {
         visibility = if (it) View.VISIBLE else View.GONE
     }
+}@BindingAdapter("showLayout")
+fun ImageView.setVisibilityOfLayout(show: Boolean?) {
+    show?.let {
+        visibility = if (it) View.VISIBLE else View.GONE
+    }
 }
 
 @BindingAdapter("showLayout")
-fun LinearLayout.setVisibilityOfLayout(show: Boolean?) {
+fun ViewGroup.setVisibilityOfLayout(show: Boolean?) {
     show?.let {
         visibility = if (it) View.VISIBLE else View.GONE
     }
@@ -240,7 +280,28 @@ fun ConstraintLayout.setItemsCheckBox(form: FormInputOld?) {
 @BindingAdapter("required")
 fun TextView.setRequired(required: Boolean?) {
     required?.let {
-        visibility = if (it) View.VISIBLE else View.INVISIBLE
+        visibility = if (it) View.VISIBLE else View.GONE
+    }
+}
+
+@BindingAdapter("imgRequired")
+fun ImageView.setRequired(required: Boolean?) {
+    required?.let {
+        visibility = if (it) View.VISIBLE else View.GONE
+    }
+}
+
+@BindingAdapter("required2")
+fun TextView.setRequired2(required2: Boolean?) {
+    required2?.let {
+        visibility = if (it) View.VISIBLE else View.GONE
+    }
+}
+
+@BindingAdapter("headingLine")
+fun MaterialDivider.setHeadingLine(required: Boolean?) {
+    required?.let {
+        visibility = if (it) View.VISIBLE else View.GONE
     }
 }
 
@@ -296,25 +357,6 @@ fun ImageView.setBenImage(uriString: String?) {
 //    })
 //}
 
-@BindingAdapter("anc_state")
-fun Button.setAncState(ancFormState: AncFormState?) {
-    ancFormState?.let {
-        visibility = View.VISIBLE
-        when (it) {
-            ALLOW_FILL -> {
-                text = "FILL"
-            }
-
-            ALREADY_FILLED -> {
-                text = "VIEW"
-            }
-
-            NO_FILL -> {
-                visibility = View.INVISIBLE
-            }
-        }
-    }
-}
 
 @BindingAdapter("list_avail")
 fun Button.setCbacListAvail(list: List<Any>?) {
@@ -344,6 +386,53 @@ fun ImageView.setAncState(ancFormState: AncFormState?) {
                 }
             }
         )
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.N)
+@BindingAdapter("cbac_name", "asteriskColor")
+fun TextView.setAsteriskText(fieldName: String?, numAsterisk: Int?) {
+
+    fieldName?.let {
+        numAsterisk?.let {
+            text = if(numAsterisk ==1) {
+                Html.fromHtml(resources.getString(R.string.radio_title_cbac,fieldName), Html.FROM_HTML_MODE_LEGACY)
+            } else if (numAsterisk == 2) {
+                Html.fromHtml(resources.getString(R.string.radio_title_cbac_ds,fieldName), Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                fieldName
+            }
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.N)
+@BindingAdapter("asteriskRequired", "hintText")
+fun TextInputLayout.setAsteriskFormText(required: Boolean?, title: String?) {
+
+    required?.let {
+        title?.let {
+            hint = if(required) {
+                Html.fromHtml(resources.getString(R.string.radio_title_cbac,title), Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                title
+            }
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.N)
+@BindingAdapter("asteriskRequired", "hintText")
+fun TextView.setAsteriskTextView(required: Boolean?, title: String?) {
+
+    required?.let {
+        title?.let {
+            text = if(required) {
+                Html.fromHtml(resources.getString(R.string.radio_title_cbac,title), Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                title
+            }
+        }
     }
 }
 

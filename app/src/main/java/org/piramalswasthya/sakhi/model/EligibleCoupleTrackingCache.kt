@@ -109,7 +109,8 @@ data class BenWithEcTrackingCache(
                     it.benId,
                     it.createdDate,
                     it.visitDate,
-                    getECTFilledDateFromLong(it.visitDate)
+                    getECTFilledDateFromLong(it.visitDate),
+                    it.syncState
                 )
             }
         )
@@ -119,13 +120,18 @@ data class BenWithEcTrackingCache(
 data class ECTDomain(
     val benId: Long,
     val created: Long,
-    val visited : Long,
-    val filledOnString: String
+    val visited: Long,
+    val filledOnString: String,
+    val syncState: SyncState
 )
 
 data class BenWithEctListDomain(
 //    val benId: Long,
     val ben: BenBasicDomain,
     val numChildren: String,
-    val savedECTRecords: List<ECTDomain>
+    val savedECTRecords: List<ECTDomain>,
+    val allSynced: SyncState? = if (savedECTRecords.isEmpty()) null else
+        if (savedECTRecords.map { it.syncState }
+                .all { it == SyncState.SYNCED}) SyncState.SYNCED else SyncState.UNSYNCED
+
 )

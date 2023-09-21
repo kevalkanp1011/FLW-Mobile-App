@@ -26,7 +26,7 @@
     <string name="nbr_child_defect_at_birth">Any Defect Seen at Birth</string>
     <string name="child_immunization_list">Child Immunization List</string>
     <string name="child_reg_list">Child Reg List</string>
-    <string name="child_reg">Child Reg.</string>
+    <string name="child_reg">Child Registration</string>
     <string name="weight_at_birth_kg">Weight at birth ( Kg )</string>
     <string name="height_at_birth_cm">Height at birth ( cm )</string>
     <string name="mother_of_the_child">Mother of the child</string>
@@ -64,8 +64,16 @@
 
     <string-array name="place_of_birth">
         <item>Home</item>
-        <item>Health Facility</item>
-        <item>Any other Place</item>
+        <item>Sub-Centre</item>
+        <item>PHC</item>
+        <item>CHC</item>
+        <item>Sub-District Hospital</item>
+        <item>District Hospital</item>
+        <item>Medical College Hospital</item>
+        <item>In Transit</item>
+        <item>Private Hospital</item>
+        <item>Accredited Private Hospital</item>
+        <item>Other</item>
     </string-array>
 
     <string-array name="facility_place">

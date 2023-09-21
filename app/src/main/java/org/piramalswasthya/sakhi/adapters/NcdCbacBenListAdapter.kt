@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -39,6 +40,33 @@ class NcdCbacBenListAdapter(
         ) {
             binding.benWithCbac = item
             binding.clickListener = clickListener
+
+            if (item.ben.spouseName == "Not Available" && item.ben.fatherName == "Not Available") {
+                binding.father = true
+                binding.husband = false
+                binding.spouse = false
+            } else {
+                if (item.ben.gender == "MALE") {
+                    binding.father = true
+                    binding.husband = false
+                    binding.spouse = false
+                } else if (item.ben.gender == "FEMALE") {
+                    if (item.ben.ageInt > 15) {
+                        binding.father = item.ben.fatherName != "Not Available"  && item.ben.spouseName == "Not Available"
+                        binding.husband = item.ben.spouseName != "Not Available"
+                        binding.spouse = false
+                    } else {
+                        binding.father = true
+                        binding.husband = false
+                        binding.spouse = false
+                    }
+                } else {
+                    binding.father = item.ben.fatherName != "Not Available"  && item.ben.spouseName == "Not Available"
+                    binding.spouse = item.ben.spouseName != "Not Available"
+                    binding.husband = false
+                }
+            }
+
             binding.executePendingBindings()
 
         }

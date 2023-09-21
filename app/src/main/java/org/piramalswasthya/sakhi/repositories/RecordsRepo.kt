@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.transformLatest
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.ChildRegistrationDao
 import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
+import org.piramalswasthya.sakhi.database.room.dao.HrpDao
 import org.piramalswasthya.sakhi.database.room.dao.MaternalHealthDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import javax.inject.Inject
@@ -28,10 +29,13 @@ class RecordsRepo @Inject constructor(
     val allBenList =
         benDao.getAllBen(selectedVillage).map { list -> list.map { it.asBasicDomainModel() } }
     val allBenListCount = benDao.getAllBenCount(selectedVillage)
+    fun getBenList() = benDao.getAllBen(selectedVillage).map { list -> list.map { it.asBasicDomainModel() } }
+    fun getBenListCHO() = benDao.getAllBenGender(selectedVillage, "FEMALE").map { list -> list.map { it.asBasicDomainModelCHO() } }
+    fun getBenListCount() = benDao.getAllBenGenderCount(selectedVillage, "FEMALE")
 
-    val pregnantList = benDao.getAllPregnancyWomenList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForPmsmaForm() } }
-    val pregnantListCount = pregnantList.map { it.size }
+//    val pregnantList = benDao.getAllPregnancyWomenList(selectedVillage)
+//        .map { list -> list.map { it.asBenBasicDomainModelForPmsmaForm() } }
+//    val pregnantListCount = pregnantList.map { it.size }
 
     val deliveryList = benDao.getAllDeliveryStageWomenList(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForPmsmaForm() } }
@@ -61,12 +65,12 @@ class RecordsRepo @Inject constructor(
 //        .map { list -> list.map { it.asBenBasicDomainModelForCbacForm() } }
 //    val ncdNonEligibleListCount = ncdNonEligibleList.map { it.size }
 
-    val tbScreeningList = benDao.getAllBen(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForTbsnForm() } }
+    val tbScreeningList = benDao.getAllTbScreeningBen(selectedVillage)
+        .map { list -> list.map { it.asTbScreeningDomainModel() } }
     val tbScreeningListCount = tbScreeningList.map { it.size }
 
-    val tbSuspectedList = benDao.getScreeningList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForTbspForm() } }
+    val tbSuspectedList = benDao.getTbScreeningList(selectedVillage)
+        .map { list -> list.map { it.asTbSuspectedDomainModel() } }
     val tbSuspectedListCount = tbSuspectedList.map { it.size }
 
     val menopauseList = benDao.getAllMenopauseStageList(selectedVillage)
@@ -77,12 +81,18 @@ class RecordsRepo @Inject constructor(
         .map { list -> list.map { it.asBasicDomainModelForFpotForm() } }
     val reproductiveAgeListCount = reproductiveAgeList.map { it.size }
 
+//    val infantList = benDao.getAllInfantList(selectedVillage)
+//        .map { list -> list.map { it.asBenBasicDomainModelForHbncForm() } }
+//    val infantListCount = infantList.map { it.size }
     val infantList = benDao.getAllInfantList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForHbncForm() } }
+    .map { list -> list.map { it.asBasicDomainModel()} }
     val infantListCount = infantList.map { it.size }
 
+//    val childList = benDao.getAllChildList(selectedVillage)
+//        .map { list -> list.map { it.asBenBasicDomainModelForHbycForm() } }
+//    val childListCount = childList.map { it.size }
     val childList = benDao.getAllChildList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForHbycForm() } }
+        .map { list -> list.map { it.asBasicDomainModel() } }
     val childListCount = childList.map { it.size }
 
     val adolescentList =
@@ -118,8 +128,8 @@ class RecordsRepo @Inject constructor(
         .map { list -> list.map { it.asBasicDomainModel() } }
     val motherImmunizationListCount = motherImmunizationList.map { it.size }
 
-    val eligibleCoupleList = benDao.getAllEligibleCoupleList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForEligibleCoupleRegistrationForm() } }
+    val eligibleCoupleList = benDao.getAllEligibleRegistrationList(selectedVillage)
+        .map { list -> list.map { it.asDomainModel() } }
     val eligibleCoupleListCount = eligibleCoupleList.map { it.size }
 
     val eligibleCoupleTrackingList = benDao.getAllEligibleTrackingList(selectedVillage).map { list -> list.map { it.asDomainModel() } }
@@ -130,8 +140,26 @@ class RecordsRepo @Inject constructor(
 //        .map { list -> list.map { it.asBenBasicDomainModelECTForm() } }
 //    val deliveredWomenListCount = deliveredWomenList.map { it.size }
 
+    var hrpPregnantWomenList = benDao.getAllPregnancyWomenList(selectedVillage)
+        .map { list -> list.map { it.asBenBasicDomainModelForHRPPregAssessmentForm() } }
+    val hrpPregnantWomenListCount = benDao.getAllPregnancyWomenListCount(selectedVillage)
+
+    var hrpTrackingPregList = benDao.getAllHRPTrackingPregList(selectedVillage)
+        .map { list -> list.map { it.asBenBasicDomainModelForHRPPregTrackForm() } }
+    val hrpTrackingPregListCount = benDao.getAllHRPTrackingPregListCount(selectedVillage)
+
+//    val hrpTrackingPregHistCount = hrpDao.getHRPTrackHist(ben)
+
+    var hrpNonPregnantWomenList = benDao.getAllNonPregnancyWomenList(selectedVillage)
+        .map { list -> list.map { it.asBenBasicDomainModelForHRPNonPregAssessmentForm() } }
+    val hrpNonPregnantWomenListCount = benDao.getAllNonPregnancyWomenListCount(selectedVillage)
+
+    var hrpTrackingNonPregList = benDao.getAllHRPTrackingNonPregList(selectedVillage)
+        .map { list -> list.map { it.asBenBasicDomainModelForHRPNonPregTrackForm() } }
+    val hrpTrackingNonPregListCount = benDao.getAllHRPTrackingNonPregListCount(selectedVillage)
+
     fun getPregnantWomenList() = benDao.getAllPregnancyWomenList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForPregnantWomanRegistrationForm() } }
+        .map { list -> list.map { it.asPwrDomainModel() } }
 
     fun getRegisteredInfants() = childRegistrationDao.getAllRegisteredInfants(selectedVillage)
 
@@ -174,4 +202,14 @@ class RecordsRepo @Inject constructor(
         emit(count)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val hrpNonPCount = maternalHealthDao.getAllNonPregnancyRecords().transformLatest { it ->
+        var count = 0
+        it.map { it1 ->
+            if (it1.isHighRisk)
+                count++
+        }
+        emit(count)
+    }
+    fun getHRECCount() = maternalHealthDao.getAllECRecords()
 }

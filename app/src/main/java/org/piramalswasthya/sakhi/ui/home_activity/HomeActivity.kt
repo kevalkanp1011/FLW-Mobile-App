@@ -218,7 +218,7 @@ class HomeActivity : AppCompatActivity() {
 
     fun addClickListenerToHomepageActionBarTitle() {
         binding.toolbar.setOnClickListener(onClickTitleBar)
-        binding.toolbar.subtitle = resources.getString(R.string.tap_to_change)
+//        binding.toolbar.subtitle = resources.getString(R.string.tap_to_change)
     }
 
     fun removeClickListenerToHomepageActionBarTitle() {
@@ -333,9 +333,11 @@ class HomeActivity : AppCompatActivity() {
 
 
     fun updateActionBar(logoResource: Int, title: String? = null) {
-        binding.toolbar.setLogo(logoResource)
+        binding.ivToolbar.setImageResource(logoResource)
+//        binding.toolbar.setLogo(logoResource)
         title?.let {
-            binding.toolbar.title = it
+            binding.toolbar.title= null
+            binding.tvToolbar.text = it
         }
     }
 

@@ -14,9 +14,14 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.PregnantWomanRegistrationDataset
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.model.HRPNonPregnantAssessCache
+import org.piramalswasthya.sakhi.model.HRPPregnantAssessCache
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
+import org.piramalswasthya.sakhi.repositories.EcrRepo
+import org.piramalswasthya.sakhi.repositories.HRPRepo
 import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
+import org.piramalswasthya.sakhi.utils.HelperUtil
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -26,6 +31,8 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
     preferenceDao: PreferenceDao,
     @ApplicationContext context: Context,
     private val maternalHealthRepo: MaternalHealthRepo,
+    ecrRepo: EcrRepo,
+    private val hrpRepo: HRPRepo,
     private val benRepo: BenRepo
 //    private val householdRepo: HouseholdRepo,
 //    userRepo: UserRepo
@@ -60,6 +67,8 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
 
     private lateinit var pregnancyRegistrationForm: PregnantWomanRegistrationCache
 
+    private var assess: HRPPregnantAssessCache? = null
+
     init {
         viewModelScope.launch {
             val asha  = preferenceDao.getLoggedInUser()!!
@@ -75,6 +84,12 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
                 )
             }
 
+            val assess = hrpRepo.getPregnantAssess(benId)
+
+            assess?.let {
+                pregnancyRegistrationForm.createdDate = it.visitDate
+            }
+
             maternalHealthRepo.getSavedRegistrationRecord(benId)?.let {
                 pregnancyRegistrationForm = it
                 _recordExists.value = true
@@ -82,10 +97,15 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
                 _recordExists.value = false
             }
 
+            val latestTrack = ecrRepo.getLatestEctByBenId(benId)
+
             dataset.setUpPage(
                 ben,
-                if (recordExists.value == true) pregnancyRegistrationForm else null
+                assess,
+                if (recordExists.value == true) pregnancyRegistrationForm else null,
+                latestTrack?.visitDate
             )
+            dataset.updateList(30,getIndexOfHRP())
 
 
         }
@@ -98,9 +118,17 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
 
     }
 
+    fun getIndexOfChildLabel() = dataset.getIndexOfChildLabel()
+
+    fun getIndexOfPhysicalObservationLabel() = dataset.getIndexOfPhysicalObservationLabel()
+
+    fun getIndexOfObstetricHistoryLabel() = dataset.getIndexOfObstetricHistoryLabel()
+
     fun getIndexOfEdd(): Int = dataset.getIndexOfEdd()
     fun getIndexOfWeeksOfPregnancy(): Int = dataset.getIndexOfWeeksPregnancy()
     fun getIndexOfPastIllness(): Int = dataset.getIndexOfPastIllness()
+
+    fun getIndexOfHRP(): Int = dataset.getIndexOfHRP()
 
     fun saveForm() {
         viewModelScope.launch {
@@ -115,9 +143,16 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
                         if (hasBenUpdated)
                             benRepo.updateRecord(it)
                     }
+                    if (assess == null) {
+                        assess = HRPPregnantAssessCache(benId = benId, syncState = SyncState.UNSYNCED)
+                    }
+                    dataset.mapValuesForAssess(assess, 1)
+                    assess?.let {
+                        hrpRepo.saveRecord(it)
+                    }
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
-                    Timber.d("saving PWR data failed!!")
+                    Timber.d("saving PWR data failed $e")
                     _state.postValue(State.SAVE_FAILED)
                 }
             }

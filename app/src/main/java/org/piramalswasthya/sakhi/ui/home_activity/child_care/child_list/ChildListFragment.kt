@@ -10,16 +10,15 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
+import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
-import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -47,20 +46,22 @@ class ChildListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapterForForm(
-            BenListAdapterForForm.ClickListener(
-                {
-                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
-                },
-                { hhId, benId ->
-                    Timber.d("benId : $benId hhId : $hhId")
-                    findNavController().navigate(
-                        ChildListFragmentDirections.actionChildListFragmentToHbycMonthListFragment(
-                            hhId = hhId,
-                            benId = benId
-                        )
-                    )
-                }), resources.getString(R.string.hbyc_form))
+        val benAdapter = BenListAdapter(
+//            BenListAdapterForForm.ClickListener(
+//                {
+//                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
+//                },
+//                { hhId, benId ->
+//                    Timber.d("benId : $benId hhId : $hhId")
+//                    findNavController().navigate(
+//                        ChildListFragmentDirections.actionChildListFragmentToHbycMonthListFragment(
+//                            hhId = hhId,
+//                            benId = benId
+//                        )
+//                    )
+//                }), resources.getString(R.string.hbyc_form)
+        showBeneficiaries = true
+                )
         binding.rvAny.adapter = benAdapter
 
         lifecycleScope.launch {
@@ -97,7 +98,7 @@ class ChildListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let{
-            (it as HomeActivity).updateActionBar(R.drawable.ic__child)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__child, getString(R.string.child_care_icon_title_child_list))
         }
     }
 

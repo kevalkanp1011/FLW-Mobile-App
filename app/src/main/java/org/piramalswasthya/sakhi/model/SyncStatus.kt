@@ -4,7 +4,7 @@ import org.piramalswasthya.sakhi.database.room.SyncState
 
 data class SyncStatusCache(
 
-    val name: String, val syncState: SyncState, val count: Int
+   val id : Int, val name: String, val syncState: SyncState, val count: Int
 
 )
 

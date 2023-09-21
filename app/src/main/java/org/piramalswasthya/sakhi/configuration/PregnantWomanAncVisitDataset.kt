@@ -4,22 +4,20 @@ import android.content.Context
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.helpers.Languages
-import org.piramalswasthya.sakhi.helpers.getMinAncFillDate
 import org.piramalswasthya.sakhi.helpers.getWeeksOfPregnancy
-import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.InputType
 import org.piramalswasthya.sakhi.model.PregnantWomanAncCache
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
-import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 class PregnantWomanAncVisitDataset(
-    private val visitNumber: Int, context: Context, currentLanguage: Languages
+    context: Context, currentLanguage: Languages
 ) : Dataset(context, currentLanguage) {
 
     private var lmp: Long = 0L
+    private var lastAncVisitDate: Long = 0L
 
     private val ancDate = FormElement(
         id = 1,
@@ -37,9 +35,9 @@ class PregnantWomanAncVisitDataset(
 
     private val ancVisit = FormElement(
         id = 3,
-        inputType = InputType.TEXT_VIEW,
+        inputType = InputType.DROPDOWN,
         title = "ANC Period",
-        required = false,
+        required = true,
     )
     private val isAborted = FormElement(
         id = 4,
@@ -84,6 +82,17 @@ class PregnantWomanAncVisitDataset(
         min = 30,
         max = 200
     )
+    private val bp = FormElement(
+        id = 991,
+        inputType = InputType.EDIT_TEXT,
+        title = "BP of PW (mm Hg) – Systolic/ Diastolic",
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
+        etMaxLength = 7,
+//        digitsInput = "0123456789-",
+        required = false,
+        min = 50,
+        max = 300
+    )
     private val bpSystolic = FormElement(
         id = 9,
         inputType = InputType.EDIT_TEXT,
@@ -104,6 +113,26 @@ class PregnantWomanAncVisitDataset(
         min = 30,
         max = 200
     )
+    private val bpSystolicReq = FormElement(
+        id = 119,
+        inputType = InputType.EDIT_TEXT,
+        title = "BP of PW (mm Hg) – Systolic",
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 3,
+        required = true,
+        min = 50,
+        max = 300
+    )
+    private val bpDiastolicReq = FormElement(
+        id = 120,
+        inputType = InputType.EDIT_TEXT,
+        title = "BP of PW (mm Hg) – Diastolic",
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 3,
+        required = true,
+        min = 30,
+        max = 200
+    )
 
     private val pulseRate = FormElement(
         id = 11,
@@ -118,6 +147,8 @@ class PregnantWomanAncVisitDataset(
         title = "HB (gm/dl)",
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL,
         etMaxLength = 4,
+        minDecimal = 2.0,
+        maxDecimal = 15.0,
         required = false,
     )
 
@@ -279,8 +310,17 @@ class PregnantWomanAncVisitDataset(
         required = false,
     )
 
+    private var toggleBp = false
+
+    fun resetBpToggle() {
+        toggleBp = false
+    }
+
+    fun triggerBpToggle() = toggleBp
+
 
     suspend fun setUpPage(
+        visitNumber: Int,
         ben: BenRegCache?,
         regis: PregnantWomanRegistrationCache,
         lastAnc: PregnantWomanAncCache?,
@@ -293,6 +333,7 @@ class PregnantWomanAncVisitDataset(
             ancVisit,
             isAborted,
             weight,
+//            bp,
             bpSystolic,
             bpDiastolic,
             pulseRate,
@@ -313,46 +354,22 @@ class PregnantWomanAncVisitDataset(
         )
         abortionDate.min = lmp + TimeUnit.DAYS.toMillis(5 * 7 + 1)
         abortionDate.max = minOf(System.currentTimeMillis(), lmp + TimeUnit.DAYS.toMillis(21 * 7))
-        ben?.let {
-            if (visitNumber == 1) {
-                ancDate.min = (lmp + TimeUnit.DAYS.toMillis(Konstants.minAnc1Week * 7L + 1L)).also {
-                    ancDate.value = getDateFromLong(it)
-                }
-                ancDate.max = minOf(
-                    Calendar.getInstance().setToStartOfTheDay().timeInMillis,
-                    lmp + TimeUnit.DAYS.toMillis((Konstants.maxAnc1Week + 1) * 7L - 1)
-                )
-            } else {
-                lastAnc?.let {
-                    val minWeekInit = when (visitNumber) {
-                        2 -> Konstants.minAnc2Week
-                        3 -> Konstants.minAnc3Week
-                        4 -> Konstants.minAnc4Week
-                        else -> throw IllegalStateException("visit number not in [2,4]")
-                    }
-                    val maxWeek = when (visitNumber) {
-                        2 -> Konstants.maxAnc2Week
-                        3 -> Konstants.maxAnc3Week
-                        4 -> Konstants.maxAnc4Week
-                        else -> throw IllegalStateException("visit number not in [2,4]")
-                    }
-                    val minWeek = getMinAncFillDate(
-                        minWeekInit, getWeeksOfPregnancy(
-                            it.ancDate,
-                            lmp,
 
-                            )
-                    )
-                    ancDate.min = (lmp + TimeUnit.DAYS.toMillis(minWeek * 7L + 1L)).also {
-                        ancDate.value = getDateFromLong(it)
-                    }
-                    ancDate.max = minOf(
-                        Calendar.getInstance().setToStartOfTheDay().timeInMillis,
-                        lmp + TimeUnit.DAYS.toMillis((maxWeek + 1) * 7L - 1)
-                    )
-                }
+        ben?.let {
+            ancDate.min = lmp + TimeUnit.DAYS.toMillis(7 * Konstants.minAnc1Week.toLong() + 1)
+            ancVisit.entries = arrayOf("1", "2", "3", "4")
+            lastAnc?.let { last ->
+                ancDate.min = last.ancDate + TimeUnit.DAYS.toMillis(4 * 7)
+                ancVisit.entries = arrayOf(2, 3, 4).filter {
+                    it > last.visitNumber
+                }.map { it.toString() }.toTypedArray()
             }
+            ancDate.max = minOf(getEddFromLmp(lmp), System.currentTimeMillis())
+            ancDate.value = getDateFromLong(ancDate.max!!)
+            maternalDateOfDeath.min = maxOf(lmp, lastAncVisitDate) + TimeUnit.DAYS.toMillis(1)
+            maternalDateOfDeath.max = minOf(getEddFromLmp(lmp), System.currentTimeMillis())
         }
+
 //        ancDate.value = getDateFromLong(System.currentTimeMillis())
         weekOfPregnancy.value = ancDate.value?.let {
             val long = getLongFromDate(it)
@@ -363,15 +380,24 @@ class PregnantWomanAncVisitDataset(
             weeks.toString()
         }
         ancVisit.value = visitNumber.toString()
-        if (visitNumber == 1) {
-            list.remove(fundalHeight)
-            list.remove(numIfaAcidTabGiven)
-        } else {
-            list.remove(numFolicAcidTabGiven)
+        if (saved == null) {
+            if (visitNumber == 1) {
+                list.remove(fundalHeight)
+                list.remove(numIfaAcidTabGiven)
+            } else {
+                list.remove(numFolicAcidTabGiven)
+            }
         }
         saved?.let {
+            val woP = getWeeksOfPregnancy(it.ancDate, lmp)
+            if (woP <= 12) {
+                list.remove(fundalHeight)
+                list.remove(numIfaAcidTabGiven)
+            } else {
+                list.remove(numFolicAcidTabGiven)
+            }
             ancDate.value = getDateFromLong(it.ancDate)
-            weekOfPregnancy.value = getWeeksOfPregnancy(it.ancDate, lmp).toString()
+            weekOfPregnancy.value = woP.toString()
             isAborted.value =
                 if (it.isAborted) isAborted.entries!!.last() else isAborted.entries!!.first()
             if (it.isAborted) {
@@ -458,9 +484,65 @@ class PregnantWomanAncVisitDataset(
                             removeItems = listOf(deliveryDone),
                         )
                     }
+                    maternalDateOfDeath.apply {
+                        value = null
+                        min = maxOf(lastAncVisitDate, long) + TimeUnit.DAYS.toMillis(1)
+                    }
                     weekOfPregnancy.value = weeks.toString()
+                    val calcVisitNumber = when (weeks) {
+                        in Konstants.minAnc1Week..Konstants.maxAnc1Week -> 1
+                        in Konstants.minAnc2Week..Konstants.maxAnc2Week -> 2
+                        in Konstants.minAnc3Week..Konstants.maxAnc3Week -> 3
+                        in Konstants.minAnc4Week..Konstants.maxAnc4Week -> 4
+                        else -> 0
+                    }
+                    if (ancVisit.entries?.contains(calcVisitNumber.toString()) == true) {
+                        ancVisit.value = calcVisitNumber.toString()
+                        handleListOnValueChanged(
+                            ancVisit.id,
+                            ancVisit.entries!!.indexOf(ancDate.value)
+                        )
+                    }
+                    if (weeks > 12) {
+                        triggerDependants(
+                            source = dateOfTTOrTdBooster,
+                            addItems = emptyList(),
+                            removeItems = listOf(numFolicAcidTabGiven)
+                        )
+                    } else {
+                        triggerDependants(
+                            source = dateOfTTOrTdBooster,
+                            removeItems = emptyList(),
+                            addItems = listOf(numFolicAcidTabGiven)
+                        )
+                    }
                 }
                 -1
+            }
+
+            ancVisit.id -> {
+                if (ancVisit.value == "1")
+                    triggerDependants(
+                        source = ancVisit,
+                        addItems = listOf(numFolicAcidTabGiven),
+                        removeItems = listOf(fundalHeight, numIfaAcidTabGiven),
+                        position = getIndexById(dateOfTTOrTdBooster.id)
+                    )
+                else {
+                    triggerDependants(
+                        source = ancVisit,
+                        removeItems = listOf(numFolicAcidTabGiven),
+                        addItems = listOf(fundalHeight),
+                        position = getIndexById(hb.id) + 1
+                    )
+                    triggerDependants(
+                        source = ancVisit,
+                        removeItems = listOf(),
+                        addItems = listOf(numIfaAcidTabGiven),
+                        position = getIndexById(dateOfTTOrTdBooster.id) + 1
+                    )
+
+                }
             }
 
             isAborted.id -> triggerDependants(
@@ -479,23 +561,81 @@ class PregnantWomanAncVisitDataset(
             )
 
             weight.id -> validateIntMinMax(weight)
+            bpDiastolicReq.id -> {
+                validateIntMinMax(bpDiastolicReq)
+                if (bpSystolicReq.value.isNullOrEmpty() && bpDiastolicReq.value.isNullOrEmpty()) {
+                    bpDiastolicReq.min = null
+                    triggerDependants(
+                        source = weight,
+                        addItems = listOf(bpSystolic, bpDiastolic),
+                        removeItems = listOf(bpSystolicReq, bpDiastolicReq)
+                    )
+                } else {
+                    if (bpSystolicReq.value == null) bpSystolicReq.value = bpSystolic.value
+                    triggerDependants(
+                        source = weight,
+                        addItems = listOf(bpSystolicReq),
+                        removeItems = listOf(bpSystolic)
+                    )
+                }
+            }
+
+            bpSystolicReq.id -> {
+                if (bpSystolicReq.value.isNullOrEmpty() && bpDiastolicReq.value.isNullOrEmpty()) {
+                    bpDiastolicReq.min = null
+                    triggerDependants(
+                        source = weight,
+                        addItems = listOf(bpSystolic, bpDiastolic),
+                        removeItems = listOf(bpSystolicReq, bpDiastolicReq)
+                    )
+                } else {
+                    bpDiastolicReq.value = bpDiastolic.value
+                    triggerDependants(
+                        source = bpSystolicReq,
+                        addItems = listOf(bpDiastolicReq),
+                        removeItems = listOf(bpDiastolic)
+                    )
+                }
+            }
+
             bpSystolic.id, bpDiastolic.id -> {
-                (isBothBpEmpty()).let {
-                    bpDiastolic.required = !it
-                    bpSystolic.required = !it
-                    if(!it){
-                        validateEmptyOnEditText(bpSystolic)
-                        validateEmptyOnEditText(bpDiastolic)
-                    }
-                }
-                if(formId==bpSystolic.id){
-                    bpSystolic.value?.takeIf { it.isNotEmpty() }?.toLong()?.let {
-                        bpDiastolic.max = it
-                    }
-                }
-                validateIntMinMax(bpSystolic)
-                validateIntMinMax(bpDiastolic)
-                -1
+                if (!bpSystolic.value.isNullOrEmpty()) {
+                    bpDiastolicReq.max = bpSystolic.value?.toLong()
+                    return triggerDependants(
+                        source = bpSystolic,
+                        addItems = listOf(bpDiastolicReq),
+                        removeItems = listOf(bpDiastolic)
+                    )
+                } else if (!bpDiastolic.value.isNullOrEmpty()) {
+                    return triggerDependants(
+                        source = weight,
+                        addItems = listOf(bpSystolicReq),
+                        removeItems = listOf(bpSystolic)
+                    )
+                } else
+                    return -1
+//                (isBothBpEmpty()).let {
+//                    if (it) {
+//
+//                        triggerDependants(
+//                            source = weight,
+//                            removeItems = listOf(bpSystolicReq, bpDiastolicReq),
+//                            addItems = listOf(bpSystolic, bpDiastolic),
+//                        )
+//                    }
+//                    else{
+//
+//                    }
+//                    bpDiastolic.required = !it
+//                    bpSystolic.required = !it
+//                    if (currReq == it) {
+//                        toggleBp = true
+//                    }
+//                    if (!it) {
+//                        validateEmptyOnEditText(bpSystolic)
+//                        validateEmptyOnEditText(bpDiastolic)
+//                    }
+//                }
             }
 
             pulseRate.id -> {
@@ -504,6 +644,8 @@ class PregnantWomanAncVisitDataset(
 
             hb.id -> {
                 validateDoubleMinMax(hb)
+                if (hb.errorText == null) validateDouble1DecimalPlaces(hb)
+                -1
             }
 
             numFolicAcidTabGiven.id -> validateIntMinMax(numFolicAcidTabGiven)
@@ -514,7 +656,9 @@ class PregnantWomanAncVisitDataset(
                 triggerIndex = 1,
                 target = highRiskCondition,
                 targetSideEffect = listOf(otherHighRiskCondition)
-            )
+            ).also {
+                highRiskCondition.value = highRiskCondition.entries!!.first()
+            }
 
             highRiskCondition.id -> triggerDependants(
                 source = highRiskCondition,
@@ -566,6 +710,7 @@ class PregnantWomanAncVisitDataset(
 
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
         (cacheModel as PregnantWomanAncCache).let { cache ->
+            cache.visitNumber = ancVisit.value!!.toInt()
             cache.ancDate = getLongFromDate(ancDate.value)
             cache.isAborted = isAborted.value == isAborted.entries!!.last()
             cache.abortionType = abortionType.value
@@ -616,6 +761,6 @@ class PregnantWomanAncVisitDataset(
                 englishResources.getStringArray(R.array.nbr_reproductive_status_array)[2]
             reproductiveStatusId = 3
         }
-        it.processed = "U"
+        if (it.processed != "N") it.processed = "U"
     }
 }

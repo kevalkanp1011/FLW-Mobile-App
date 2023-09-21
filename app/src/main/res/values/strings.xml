@@ -77,14 +77,18 @@
     <string name="notification_sync_channel_id">sakhi-sync0</string>
     <string name="btn_submit">Submit</string>
     <string name="long_to_string">%d</string>
+    <string name="ben_pending_sync">Pending Sync</string>
     <string name="tv_reg_date_ph">Registration Date</string>
     <string name="tv_ben_name_ph">Beneficiary Name</string>
     <string name="tv_type_of_list">Type of List</string>
     <string name="tv_rch_id">RCH ID</string>
     <string name="tv_ben_surname">Beneficiary Surname</string>
     <string name="tv_gender_ph">Gender</string>
-    <string name="tv_father_name_ph">Father\'s Name</string>
+    <string name="tv_father_name_ph">Father Name</string>
+    <string name="tv_husband_name_ph">Husband Name</string>
+    <string name="tv_spouse_name_ph">Spouse Name</string>
     <string name="tv_family_head_name_ph">Family Head Name</string>
+    <string name="tv_spouse">Spouse</string>
     <string name="tv_ben_id_ph">Ben ID</string>
     <string name="tv_mob_no_ph">Mobile Number</string>
     <string name="tv_age_ph">Age</string>
@@ -148,13 +152,15 @@
     <string name="form_input_alphabet_space_only_error">Only Alphabets and whitespace allowed!</string>
     <string name="form_input_min_limit_error">%1s should be greater than or equal to %2d</string>
     <string name="form_input_alph_numeric_space_only_error">Only Alphabets and Numerics allowed!</string>
+    <string name="form_input__no_alpha_space_error">No Alphabets or spaces allowed!</string>
+    <string name="form_input_digit_only_error">Only Digits allowed!</string>
     <string name="form_input_min_limit_error_decimal">%1s should be greater than or equal to %2.1f</string>
     <string name="form_input_max_limit_error">%1s should be lesser than or equal to %2d</string>
     <string name="form_input_max_limit_error_decimal">%1s should be lesser than or equal to %2.1f</string>
     <string name="form_input_error_invalid_mobile">Invalid Mobile Number !</string>
     <string name="form_input_error_invalid_rch">Invalid RCH ID !</string>
     <string name="form_input_error_invalid_mcp">Invalid MCP Number !</string>
-    <string name="form_input_error_invalid_aadhar">Invalid Aadhaar Number</string>
+    <string name="form_input_error_invalid_aadhar">Invalid Aadhaar Number !</string>
     <string name="no_records_found_hh">No Household records found. Please start registering households by clicking on the button below.</string>
     <string name="something_went_wrong_nunable_to_connect_to_server_ntry_again_later">Something went wrong !\nUnable to connect to server !\nTry again later!</string>
     <string name="try_again">Try Again!</string>
@@ -200,6 +206,7 @@
     <string name="_0">0</string>
     <string name="high_risk_cases">High Risk Cases</string>
     <string name="high_risk_pregnant_women">High Risk Pregnant Women</string>
+    <string name="high_risk_non_pregnant_women">High Risk Non Preg Women</string>
     <string name="high_risk_babies">High Risk Babies</string>
     <string name="low_birth_weight_babies">Low Birth Weight Babies</string>
     <string name="age">Age</string>
@@ -211,11 +218,13 @@
     <string name="beneficiary_name">Beneficiary Name</string>
     <string name="husband_s_name">Husband\'s Name</string>
     <string name="weeks_of_pregnancy">Weeks Of Pregnancy</string>
+    <string name="pregnancy_weeks">Pregnancy Weeks</string>
     <string name="anc_visits">ANC VISITS</string>
+    <string name="add_anc_visits">Add ANC visit</string>
     <string name="id">ID</string>
     <string name="no_of_children">No.of Children</string>
-    <string name="view_trackings">View Trackings</string>
-    <string name="add_tracking">Add Tracking</string>
+    <string name="view_visit">View Visit</string>
+    <string name="add_visit">Add Visit</string>
     <string name="household_id">Household ID</string>
     <string name="contact_number">Contact Number</string>
     <string name="kcuf">KCUF</string>
@@ -242,6 +251,7 @@
     <string name="ncd_list">NCD List</string>
     <string name="ncd_non_eligible_list">NCD Non-Eligible List</string>
     <string name="ncd_priority_list">NCD Priority List</string>
+    <string name="survey_register">Survey Register</string>
     <string name="all_household_list">All Household List</string>
     <string name="beneficiaries_data">Beneficiaries Data</string>
     <string name="cdr_list">CDR List</string>
@@ -268,9 +278,9 @@
     <string name="eligible_couple_tracking_list">Eligible Couple Tracking List</string>
     <string name="eligible_couple_tracking_form">Eligible Couple Tracking Form</string>
     <string name="tb_screening_list">TB Screening List</string>
-    <string name="tb_suspected_list">TB Suspected List</string>
+    <string name="tb_suspected_list">Suspected TB cases</string>
     <string name="tb_screening_form">TB Screening Form</string>
-    <string name="tb_suspected_form">TB Suspected Form</string>
+    <string name="tb_suspected_form">Suspected TB case</string>
     <string name="mother_immunization">Mother Immunization</string>
     <string name="delivery_outcome">Delivery Outcome</string>
     <string name="delivery_outcome_list">Delivery Outcome List</string>
@@ -293,7 +303,7 @@
 <!--    <string name="other_mobile_number_of">Other - Mobile Number of</string>-->
 <!--    <string name="form_name">Form Name</string>-->
 
-    <string name="save_successful">Save Successful!!!</string>
+    <string name="save_successful">Save Successful</string>
     <string name="something_wend_wong_contact_testing">Something wend wong! Contact testing!</string>
     <string name="error_input">Error Input</string>
     <string name="exit_application">Exit Application</string>
@@ -311,6 +321,9 @@
     <string name="child_immunization">Child Immunization</string>
     <string name="pregnancy_registration">Pregnancy Registration</string>
     <string name="mother_immunizationlist">Mother ImmunizationList</string>
+    <string name="family_member_registration">Family Member Registration</string>
+    <string name="relation_with_hof">Relation with HOF</string>
+    <string name="add_family_member">Add Family Member</string>
     <string-array name="sync_records">
         <item>Beneficiary</item>
         <item>CBAC</item>
@@ -320,6 +333,10 @@
         <item>EC Tracking</item>
         <item>PW Registration</item>
         <item>PW ANC</item>
+        <item>HRP Assess</item>
+        <item>HRP Track</item>
+        <item>HR NonPreg. Assess</item>
+        <item>HR NonPreg Track</item>
     </string-array>
     <!-- Eligible couple registration -->
     <string-array name="ecr_gender_array">

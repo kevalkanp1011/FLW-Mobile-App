@@ -56,7 +56,7 @@ class PwAncFormViewModel @Inject constructor(
 
     //    private lateinit var user: UserDomain
     private val dataset =
-        PregnantWomanAncVisitDataset(visitNumber, context, preferenceDao.getCurrentLanguage())
+        PregnantWomanAncVisitDataset(context, preferenceDao.getCurrentLanguage())
     val formList = dataset.listFlow
 
     private lateinit var ancCache: PregnantWomanAncCache
@@ -86,6 +86,7 @@ class PwAncFormViewModel @Inject constructor(
             val lastAnc = maternalHealthRepo.getSavedAncRecord(benId, visitNumber - 1)
 
             dataset.setUpPage(
+                visitNumber,
                 ben,
                 registerRecord,
                 lastAnc,
@@ -141,6 +142,9 @@ class PwAncFormViewModel @Inject constructor(
 
     fun getBpReq() = dataset.isBpSetToRequired()
     fun isBothBpEmpty() = dataset.isBothBpEmpty()
+    fun triggerBpToggle() = dataset.triggerBpToggle()
+
+    fun resetBpToggle() = dataset.resetBpToggle()
 
 
 }

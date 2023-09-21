@@ -11,8 +11,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pregnant_women_registration.form.PregnancyRegistrationFormViewModel.State
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
@@ -83,7 +85,7 @@ class PregnancyRegistrationFormFragment : Fragment() {
                 State.SAVE_SUCCESS -> {
                     binding.llContent.visibility = View.VISIBLE
                     binding.pbForm.visibility = View.GONE
-                    Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Save Successful", Toast.LENGTH_LONG).show()
                     WorkerUtils.triggerAmritPushWorker(requireContext())
                     findNavController().navigateUp()
                 }
@@ -129,9 +131,39 @@ class PregnancyRegistrationFormFragment : Fragment() {
                     notifyItemChanged(viewModel.getIndexOfWeeksOfPregnancy())
                 }
 
-                19 -> notifyItemChanged(viewModel.getIndexOfPastIllness())
+                19 -> {
+                    notifyItemChanged(viewModel.getIndexOfPastIllness())
+                    notifyItemChanged(viewModel.getIndexOfHRP())
+                }
+                27,28 -> {
+                    notifyItemChanged(viewModel.getIndexOfChildLabel())
+                    notifyItemChanged(viewModel.getIndexOfHRP())
+                }
+                29, 30 -> {
+                    notifyItemChanged(viewModel.getIndexOfPhysicalObservationLabel())
+                    notifyItemChanged(viewModel.getIndexOfHRP())
+                }
+                31, 32, 33, 34 -> {
+                    notifyItemChanged(viewModel.getIndexOfObstetricHistoryLabel())
+                    notifyItemChanged(viewModel.getIndexOfHRP())
+                }
             }
         }
     }
+
+
+
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(R.drawable.ic__pregnancy, getString(R.string.pregnancy_registration))
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
 
 }

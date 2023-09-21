@@ -15,7 +15,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
+import org.piramalswasthya.sakhi.adapters.TbSuspectedListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 
 @AndroidEntryPoint
 class TBSuspectedListFragment: Fragment() {
@@ -38,18 +40,14 @@ class TBSuspectedListFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapterForForm(
-            BenListAdapterForForm.ClickListener(
-                {
-//                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
-                },
-                { hhId, benId ->
-                    findNavController().navigate(
-                        TBSuspectedListFragmentDirections.actionTBSuspectedListFragmentToTBSuspectedFragment(
-                            benId
-                        )
+        val benAdapter = TbSuspectedListAdapter(
+            TbSuspectedListAdapter.ClickListener { hhId, benId ->
+                findNavController().navigate(
+                    TBSuspectedListFragmentDirections.actionTBSuspectedListFragmentToTBSuspectedFragment(
+                        benId
                     )
-                }), resources.getString(R.string.track)
+                )
+            }
         )
         binding.rvAny.adapter = benAdapter
 
@@ -82,6 +80,16 @@ class TBSuspectedListFragment: Fragment() {
             else
                 (searchView as EditText).removeTextChangedListener(searchTextWatcher)
 
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__ncd,
+                getString(R.string.tb_suspected_list)
+            )
         }
     }
 

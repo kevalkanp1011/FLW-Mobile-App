@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.TBDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
@@ -24,6 +25,7 @@ import javax.inject.Inject
 
 class TBRepo @Inject constructor(
     private val tbDao: TBDao,
+    private val benDao: BenDao,
     private val preferenceDao: PreferenceDao,
     private val userRepo: UserRepo,
     private val tmcNetworkApiService: AmritApiService
@@ -127,9 +129,11 @@ class TBRepo @Inject constructor(
         requestDTO?.tbScreeningList?.forEach { tbScreeningDTO ->
             tbScreeningDTO.visitDate?.let {
                 var tbScreeningCache: TBScreeningCache? =
-                    tbDao.getTbScreening(tbScreeningDTO.benId, getLongFromDate(tbScreeningDTO.visitDate))
+                    tbDao.getTbScreening(tbScreeningDTO.benId, getLongFromDate(tbScreeningDTO.visitDate), getLongFromDate(tbScreeningDTO.visitDate) - 19_800_000)
                 if (tbScreeningCache == null) {
-                    tbDao.saveTbScreening(tbScreeningDTO.toCache())
+                    benDao.getBen(tbScreeningDTO.benId)?.let {
+                        tbDao.saveTbScreening(tbScreeningDTO.toCache())
+                    }
                 }
             }
         }
@@ -212,10 +216,13 @@ class TBRepo @Inject constructor(
                 val tbSuspectedCache: TBSuspectedCache? =
                     tbDao.getTbSuspected(
                         tbSuspectedDTO.benId,
-                        getLongFromDate(tbSuspectedDTO.visitDate)
+                        getLongFromDate(tbSuspectedDTO.visitDate),
+                        getLongFromDate(tbSuspectedDTO.visitDate) - 19_800_000
                     )
                 if (tbSuspectedCache == null) {
-                    tbDao.saveTbSuspected(tbSuspectedDTO.toCache())
+                    benDao.getBen(tbSuspectedDTO.benId)?.let {
+                        tbDao.saveTbSuspected(tbSuspectedDTO.toCache())
+                    }
                 }
             }
         }

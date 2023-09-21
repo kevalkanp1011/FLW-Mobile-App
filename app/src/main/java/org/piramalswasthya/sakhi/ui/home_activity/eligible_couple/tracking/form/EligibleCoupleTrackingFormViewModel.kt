@@ -77,6 +77,8 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
                 )
             }
 
+            val pastTrack = ecrRepo.getLatestEctByBenId(benId)
+
             ecrRepo.getEct(benId, createdDate)?.let {
                 eligibleCoupleTracking = it
                 _recordExists.value = true
@@ -88,6 +90,7 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
                 dataset.setUpPage(
                     ben,
                     it.dateOfReg,
+                    pastTrack,
                     if (recordExists.value == true) eligibleCoupleTracking else null
                 )
             }
@@ -125,7 +128,7 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
 
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
-                    Timber.d("saving PWR data failed!!")
+                    Timber.d("saving ECT data failed due to $e")
                     _state.postValue(State.SAVE_FAILED)
                 }
             }

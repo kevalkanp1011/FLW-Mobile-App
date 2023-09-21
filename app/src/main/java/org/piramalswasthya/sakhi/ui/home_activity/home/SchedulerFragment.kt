@@ -62,11 +62,19 @@ class SchedulerFragment : Fragment() {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToPwAncVisitsFragment())
         }
         binding.cvHrp.setOnClickListener {
-            findNavController().navigate(HomeFragmentDirections.actionNavHomeToHrpCasesFragment())
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToHRPPregnantListFragment())
+        }
+        binding.cvNonHrp.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToHRPNonPregnantListFragment())
         }
         lifecycleScope.launch {
             viewModel.hrpDueCount.collect{
                 binding.tvHrp.text = it.toString()
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.hrpCountEC.collect{
+                binding.tvHrEcCount.text = it.toString()
             }
         }
         binding.calendarView.setOnDateChangeListener { a, b, c, d ->

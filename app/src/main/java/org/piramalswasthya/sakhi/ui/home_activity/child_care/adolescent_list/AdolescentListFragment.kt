@@ -43,7 +43,7 @@ class AdolescentListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.btnNextPage.visibility = View.GONE
         val benAdapter = BenListAdapter(
-            BenListAdapter.BenClickListener(
+            clickListener = BenListAdapter.BenClickListener(
                 { hhId, benId, isKid ->
 
 
@@ -52,7 +52,7 @@ class AdolescentListFragment : Fragment() {
 
                 },
                 {_,_ ->}
-            ))
+            ),true)
         binding.rvAny.adapter = benAdapter
 
         lifecycleScope.launch {
@@ -89,7 +89,7 @@ class AdolescentListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let{
-            (it as HomeActivity).updateActionBar(R.drawable.ic__adolescent)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__adolescent, getString(R.string.child_care_icon_title_adolescent_list))
         }
     }
     override fun onDestroy() {

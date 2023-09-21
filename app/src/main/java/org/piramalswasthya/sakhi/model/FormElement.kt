@@ -5,11 +5,11 @@ import androidx.annotation.ArrayRes
 data class FormElement(
     val id: Int,
     var inputType: InputType,
+    var required: Boolean,
     var title: String,
     val subtitle: String? = null,
     @ArrayRes var arrayId : Int = -1,
     var entries: Array<String>? = null,
-    var required: Boolean,
     var doubleStar: Boolean = false,
     val hasDependants: Boolean = false,
     val hasAlertError: Boolean = false,
@@ -27,5 +27,7 @@ data class FormElement(
     var maxDecimal: Double? = null,
     val orientation: Int? = null,
     var hasSpeechToText: Boolean = false,
-    var isEnabled: Boolean = true
+    var showHighRisk: Boolean = false,
+    var isEnabled: Boolean = true,
+    var headingLine: Boolean = true
 )

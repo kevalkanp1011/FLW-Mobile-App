@@ -39,7 +39,8 @@ class NcdNonEligibleListFragment : Fragment() {
 
         binding.btnNextPage.visibility = View.GONE
         val benAdapter = BenListAdapter(
-            showAbha = false
+            showAbha = false,
+            showBeneficiaries = true
         )
         binding.rvAny.adapter = benAdapter
 
@@ -78,7 +79,7 @@ class NcdNonEligibleListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let{
-            (it as HomeActivity).updateActionBar(R.drawable.ic_ncd_noneligible)
+            (it as HomeActivity).updateActionBar(R.drawable.ic_ncd_noneligible, getString(R.string.ncd_non_eligible_list))
         }
     }
 }

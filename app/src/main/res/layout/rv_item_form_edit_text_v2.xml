@@ -31,37 +31,40 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@{form.title}"
-            app:layout_constraintEnd_toStartOf="@id/tv_nullable"
-            app:layout_constraintStart_toStartOf="parent"
+            asteriskRequired="@{form.required}"
+            hintText="@{form.title}"
             app:endIconMode="custom"
+            app:errorEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_hint">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{form.value}"
-                android:singleLine="true"
-                android:maxLength="@{form.etMaxLength}"
                 android:imeOptions="actionDone"
-                tools:text="lsdkfnsld"
+                android:hint=""
                 android:inputType="@{form.etInputType}"
-                android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+                android:maxLength="@{form.etMaxLength}"
+                android:singleLine="true"
+                android:text="@{form.value}"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                tools:text="lsdkfnsld" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/tv_nullable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/til_edit_text"
-            android:text="@string/tv_required_text_asterisk"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/design_default_color_error"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/til_edit_text"
-            app:required="@{form.required}" />
+<!--        <TextView-->
+<!--            android:id="@+id/tv_nullable"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_toEndOf="@id/til_edit_text"-->
+<!--            android:text="@string/tv_required_text_asterisk"-->
+<!--            android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+<!--            android:textColor="@color/design_default_color_error"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="@id/til_edit_text"-->
+<!--            app:required="@{form.required}" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

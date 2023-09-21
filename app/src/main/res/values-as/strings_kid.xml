@@ -57,9 +57,17 @@
     </string-array>
 
     <string-array name="place_of_birth">
-        <item>ঘৰ</item>
-        <item>স্বাস্থ্য সুবিধা</item>
-        <item>অন্য কোনো স্থান</item>
+        <item>Home</item>
+        <item>Sub-Centre</item>
+        <item>PHC</item>
+        <item>CHC</item>
+        <item>Sub-District Hospital</item>
+        <item>District Hospital</item>
+        <item>Medical College Hospital</item>
+        <item>In Transit</item>
+        <item>Private Hospital</item>
+        <item>Accredited Private Hospital</item>
+        <item>Other</item>
     </string-array>
 
     <string-array name="facility_place">

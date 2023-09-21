@@ -1,11 +1,11 @@
 package org.piramalswasthya.sakhi.ui.home_activity.death_reports
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -65,7 +65,7 @@ class DeathReportsFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let{
-            (it as HomeActivity).updateActionBar(R.drawable.ic__death)
+            (it as HomeActivity).updateActionBar(R.drawable.ic__death, getString(R.string.icon_title_dr))
         }
     }
 

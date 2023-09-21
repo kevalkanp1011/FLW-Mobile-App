@@ -11,8 +11,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pregnant_woment_anc_visits.form.PwAncFormViewModel.State
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
@@ -82,7 +84,7 @@ class PwAncFormFragment : Fragment() {
                 State.SAVE_SUCCESS -> {
                     binding.llContent.visibility = View.VISIBLE
                     binding.pbForm.visibility = View.GONE
-                    Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Save Successful", Toast.LENGTH_LONG).show()
                     WorkerUtils.triggerAmritPushWorker(requireContext())
                     findNavController().navigateUp()
                 }
@@ -125,24 +127,38 @@ class PwAncFormFragment : Fragment() {
             when (formId) {
                 1 -> {
                     notifyItemChanged(viewModel.getIndexOfWeeksOfPregnancy())
+                    notifyItemChanged(viewModel.getIndexOfWeeksOfPregnancy()+1)
                 }
-                9 ->{
-                    notifyItemChanged(viewModel.getIndexOfDiastolic())
-                    if(viewModel.isBothBpEmpty() == viewModel.getBpReq() ){
-                        notifyItemChanged(viewModel.getIndexOfSystolic())
-
-                    }
-                }
-                10 ->{
-                    notifyItemChanged(viewModel.getIndexOfSystolic())
-                    if(viewModel.isBothBpEmpty() == viewModel.getBpReq() ){
-                        notifyItemChanged(viewModel.getIndexOfDiastolic())
-
-                    }
-                }
+//                9 ->{
+//                    notifyItemChanged(viewModel.getIndexOfDiastolic())
+//                    if(viewModel.triggerBpToggle() ){
+//                        notifyItemChanged(viewModel.getIndexOfSystolic())
+//                        viewModel.resetBpToggle()
+//
+//                    }
+//                }
+//                10 ->{
+//                    notifyItemChanged(viewModel.getIndexOfSystolic())
+//                    if(viewModel.triggerBpToggle()){
+//                        notifyItemChanged(viewModel.getIndexOfDiastolic())
+//                        viewModel.resetBpToggle()
+//
+//                    }
+//                }
 //                19 -> notifyItemChanged(viewModel.getIndexOfPastIllness())
             }
         }
+    }
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(R.drawable.ic__pregnancy, getString(R.string.anc_visit))
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 }

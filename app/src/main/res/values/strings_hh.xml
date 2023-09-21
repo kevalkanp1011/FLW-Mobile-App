@@ -20,8 +20,8 @@
     <string name="nhhr_first_name_hof">First Name of Head of the family</string>
     <string name="nhhr_last_name_hof">Last Name / Surname of head of the family</string>
     <string name="nhhr_mob_no_hof">Mobile No of Head of Family</string>
-    <string name="nhhr_house_no">House No.</string>
-    <string name="nhhr_ward_no">Ward No.</string>
+    <string name="nhhr_house_no">House No</string>
+    <string name="nhhr_ward_no">Ward No</string>
     <string name="nhhr_ward_name">Ward Name</string>
     <string name="nhhr_mohalla_name">Mohalla Name</string>
     <string name="nhhr_poverty_line">Economic Status</string>
@@ -64,7 +64,7 @@
         <item>Yes</item>
         <item>No</item>
     </string-array>
-    <string name="nhhr_fuel_cooking">Type of fuel used for Cooking *</string>
+    <string name="nhhr_fuel_cooking">Type of fuel used for Cooking</string>
     <string name="nhhr_fuel_cooking_1">Firewood</string>
     <string name="nhhr_fuel_cooking_2">Crop Residue</string>
     <string name="nhhr_fuel_cooking_3">Cow dung cake</string>
@@ -136,6 +136,9 @@
     <string name="nhhr_avail_toilet_other">Other Availability of Toilet</string>
     <string name="btn_frag_nhhr_to_ben">Continue to Beneficiary</string>
     <string name="consent_alert_title">Consent Form</string>
+    <string name="add_head_of_family">ADD Head Of Family</string>
+    <string name="hh_no_members">Household EMPTY!</string>
+    <string name="add_head_of_family_message">Would you like to add <b>%1s</b> as a HoF Beneficiary ?</string>
 
 
 </resources>

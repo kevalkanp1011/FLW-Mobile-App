@@ -19,7 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_normal"
-        android:backgroundTint="?attr/colorPrimary"
+        backgroundTintBasedOnNumMembers="@{household.numMembers}"
+        tools:backgroundTint="?attr/colorPrimary"
         android:elevation="@dimen/padding_normal"
         android:onClick="@{()->clickListener.onClickedForHHDetails(household)}"
         app:cardCornerRadius="@dimen/padding_normal"
@@ -57,7 +58,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:padding="@dimen/padding_small">
 
@@ -105,7 +106,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="end"
                     android:orientation="vertical"
                     android:padding="@dimen/padding_small">
 
@@ -127,43 +127,45 @@
 
             </LinearLayout>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button4"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                textBasedOnNumMembers="@{household.numMembers}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_big"
+                android:layout_marginBottom="@dimen/margin_normal"
                 android:drawableLeft="@drawable/ic_person"
-                android:layout_margin="@dimen/padding_normal"
                 android:onClick="@{()->clickListener.onClickedForNewBen(household)}"
                 android:text="@string/btn_rv_item_hh_add_ben"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                android:textColor="?attr/colorPrimary"
-                app:backgroundTint="?attr/colorOnPrimary"
+                android:backgroundTint="@android:color/holo_green_dark"
+                android:textColor="?attr/colorOnPrimary"
+                app:drawableTint="@color/md_theme_light_onPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/button3"
-                app:layout_constraintTop_toBottomOf="@id/ll_ben_details" />
+                app:layout_constraintTop_toBottomOf="@+id/ll_ben_details" />
 
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button3"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                showBasedOnNumMembers="@{household.numMembers}"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginHorizontal="@dimen/padding_normal"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_big"
                 android:drawableLeft="@drawable/ic__ben"
                 android:onClick="@{()->clickListener.onClickedForMembers(household)}"
                 android:text="@{@string/hh_members_text(household.numMembers)}"
+                android:backgroundTint="@android:color/holo_green_dark"
+                android:textColor="?attr/colorOnPrimary"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                android:textColor="?attr/colorPrimary"
-                app:backgroundTint="?attr/colorOnPrimary"
                 app:layout_constraintBottom_toBottomOf="@+id/button4"
-                app:layout_constraintEnd_toStartOf="@+id/button4"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintTop_toTopOf="@+id/button4"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintStart_toStartOf="parent"
 
-                app:layout_constraintTop_toBottomOf="@id/ll_ben_details"
-                app:layout_constraintTop_toTopOf="@+id/button4" />
+                />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

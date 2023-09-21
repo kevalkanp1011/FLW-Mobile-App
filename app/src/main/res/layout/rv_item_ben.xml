@@ -18,8 +18,29 @@
             type="Boolean" />
 
         <variable
+            name="showSyncIcon"
+            type="Boolean" />
+
+        <variable
             name="hasAbha"
             type="Boolean" />
+
+        <variable
+            name="showRegistrationDate"
+            type="Boolean" />
+        <variable
+            name="father"
+            type="Boolean" />
+        <variable
+            name="husband"
+            type="Boolean" />
+        <variable
+            name="spouse"
+            type="Boolean"/>
+
+        <variable
+            name="role"
+            type="Integer" />
 
     </data>
 
@@ -73,21 +94,23 @@
                     android:text="@{ben.familyHeadName}"
                     android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     android:textColor="?attr/colorPrimaryVariant"
-                    tools:text="Hello Meister"
                     app:drawableLeftCompat="@drawable/ic__hh"
-                    app:drawableTint="?attr/colorPrimary" />
+                    app:drawableTint="?attr/colorPrimary"
+                    tools:text="Hello Meister" />
 
                 <Button
                     android:id="@+id/btn_new_ben"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_marginHorizontal="@dimen/margin_small"
                     android:drawableStart="@drawable/ic_person"
+                    android:onClick="@{()-> clickListener.onClickedHouseHold(ben)}"
+                    android:padding="@dimen/padding_normal"
                     android:paddingHorizontal="@dimen/padding_tiny"
                     android:text="@string/btn_rv_item_hh_add_ben"
-                    android:onClick="@{()-> clickListener.onClickedHouseHold(ben)}"
                     android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                    android:visibility="gone"
                     app:cornerRadius="@dimen/padding_normal"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_hh_id" />
 
@@ -115,8 +138,8 @@
                     android:id="@+id/ll_ben_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
-                    android:baselineAligned="false">
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -145,7 +168,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="center_horizontal"
                         android:orientation="vertical"
                         android:padding="@dimen/padding_small">
 
@@ -169,7 +191,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="end"
                         android:orientation="vertical"
                         android:padding="@dimen/padding_small">
 
@@ -196,13 +217,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:baselineAligned="false"
-                    android:gravity="fill_horizontal"
                     app:layout_constraintTop_toBottomOf="@+id/ll_ben_details">
 
                     <LinearLayout
+                        android:id="@+id/registration_date"
+                        showLayout="@{showRegistrationDate}"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="start"
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:padding="@dimen/padding_small">
@@ -223,11 +244,85 @@
                             tools:text="12-12-4523" />
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/ncd_husband_name"
+                        showLayout="@{husband}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="@dimen/padding_small">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tv_husband_name_ph"
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                            android:textColor="?attr/colorOnPrimary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{ben.spouseName}"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnPrimary"
+                            tools:text="Dummy" />
+                    </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:id="@+id/ncd_father_name"
+                        showLayout="@{father}"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="@dimen/padding_small">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tv_father_name_ph"
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                            android:textColor="?attr/colorOnPrimary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{ben.fatherName}"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnPrimary"
+                            tools:text="Dummy" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ncd_spouse_name"
+                        showLayout="@{spouse}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="@dimen/padding_small">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tv_spouse_name_ph"
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                            android:textColor="?attr/colorOnPrimary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{ben.spouseName}"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnPrimary"
+                            tools:text="Dummy" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:orientation="vertical"
                         android:padding="@dimen/padding_small">
 
@@ -239,8 +334,7 @@
                             android:textColor="?attr/colorOnPrimary" />
 
                         <TextView
-                            benId="@{ben.benId}"
-                            syncState="@{ben.syncState}"
+                            benIdText="@{ben.benId}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
@@ -252,7 +346,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="end"
                         android:orientation="vertical"
                         android:padding="@dimen/padding_small">
 
@@ -281,51 +374,10 @@
                     android:orientation="horizontal"
                     app:layout_constraintTop_toBottomOf="@id/ll_ben_details_2">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_abha"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        showLayout="@{showAbha? !hasAbha : showAbha}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_small"
-                        android:backgroundTint="@android:color/holo_green_dark"
-                        android:onClick="@{()-> clickListener.onClickABHA(ben)}"
-                        android:text="@string/abha"
-                        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                        android:textColor="?attr/colorOnPrimary"
-                        app:cornerRadius="@dimen/padding_normal"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_hh_id"
-                        app:strokeColor="?attr/colorPrimary" />
-
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="start"
-                        showLayout="@{showAbha? hasAbha: showAbha}"
-                        android:orientation="vertical"
-                        android:padding="@dimen/padding_small">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/abha_number"
-                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                            android:textColor="?attr/colorOnPrimary" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{ben.abhaId}"
-                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                            android:textColor="?attr/colorOnPrimary"
-                            tools:text="0123456789" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="end"
                         android:orientation="vertical"
                         android:padding="@dimen/padding_small">
 
@@ -340,6 +392,66 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{ben.rchId}"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnPrimary"
+                            tools:text="0123456789" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/blank_space"
+                        showLayout="@{showAbha? !hasAbha : showAbha}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="@dimen/padding_small"></LinearLayout>
+
+                    <LinearLayout
+                        showLayout="@{showAbha? !hasAbha : showAbha}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_abha"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:layout_weight="1"
+                            android:backgroundTint="@android:color/holo_green_dark"
+                            android:onClick="@{()-> clickListener.onClickABHA(ben)}"
+                            android:text="@string/abha"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnPrimary"
+                            app:cornerRadius="@dimen/padding_normal"
+                            app:layout_constraintBottom_toBottomOf="@+id/tv_hh_id"
+                            app:strokeColor="?attr/colorPrimary"
+                            tools:ignore="NestedWeights" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        showLayout="@{showAbha? hasAbha: showAbha}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:orientation="vertical"
+                        android:padding="@dimen/padding_small">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="@string/abha_number"
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                            android:textColor="?attr/colorOnPrimary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="@{ben.abhaId}"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                             android:textColor="?attr/colorOnPrimary"
                             tools:text="0123456789" />

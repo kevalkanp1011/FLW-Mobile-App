@@ -66,8 +66,9 @@ class CreateAbhaViewModel @Inject constructor(
                     "","", 0, "", 34, ""))) {
                 is NetworkResult.Success -> {
                     hidResponse.value = result.data
-                    if ((benId != 0L) and (benRegId != 0L)) {
-                        mapBeneficiary(benId, benRegId, result.data.hID.toString(), result.data.healthIdNumber)
+                    Timber.d("mapping abha to beneficiary with id $benId")
+                    if ((benId != 0L) or (benRegId != 0L)) {
+                        mapBeneficiary(benId, if (benRegId != 0L) benRegId else null, result.data.hID.toString(), result.data.healthIdNumber)
                     } else {
                         _state.value = State.ABHA_GENERATE_SUCCESS
                     }
@@ -92,7 +93,7 @@ class CreateAbhaViewModel @Inject constructor(
         _errorMessage.value = null
     }
 
-    private suspend fun mapBeneficiary(benId: Long, benRegId: Long, healthId: String, healthIdNumber: String?) {
+    private suspend fun mapBeneficiary(benId: Long, benRegId: Long?, healthId: String, healthIdNumber: String?) {
         val ben = benRepo.getBenFromId(benId)
 
         val req = MapHIDtoBeneficiary(benRegId, benId, healthId, healthIdNumber,34, "")
@@ -102,7 +103,12 @@ class CreateAbhaViewModel @Inject constructor(
                 abhaIdRepo.mapHealthIDToBeneficiary(req)) {
                 is NetworkResult.Success -> {
                     ben?.let {
-                        _benMapped.value = ben.firstName + " " + ben.lastName
+                        ben.firstName?.let {
+                                firstName -> _benMapped.value = firstName
+                        }
+                        ben.lastName?.let {
+                                lastName -> _benMapped.value = ben.firstName + " $lastName"
+                        }
                         it.healthIdDetails = BenHealthIdDetails(healthId, healthIdNumber)
                         benRepo.updateRecord(ben)
                     }

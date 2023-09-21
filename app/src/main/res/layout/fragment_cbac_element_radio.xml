@@ -18,9 +18,14 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_normal">
 
+<!--        <TextView-->
+<!--            style="@style/cbac_ed_asterisk"-->
+<!--            android:text='@{numAsterisk==1 ? "*" : numAsterisk==2 ? "**" : "" }' />-->
+
         <TextView
             style="@style/cbac_ed_hint"
-            android:text="@{fieldName}" />
+            cbac_name="@{fieldName}"
+            asteriskColor="@{numAsterisk}" />
 
         <RadioGroup
             android:id="@+id/cbac_ed_rg"
@@ -37,11 +42,6 @@
                 style="@style/cbac_ed_rb"
                 android:text="@string/cbac_no" />
         </RadioGroup>
-
-        <TextView
-            style="@style/cbac_ed_asterisk"
-            android:text='@{numAsterisk==1 ? "*" : numAsterisk==2 ? "**" : "" }' />
-
 
     </LinearLayout>
 </layout>

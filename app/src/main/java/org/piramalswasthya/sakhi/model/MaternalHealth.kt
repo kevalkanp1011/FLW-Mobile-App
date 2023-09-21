@@ -1,21 +1,32 @@
 package org.piramalswasthya.sakhi.model
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.helpers.Konstants
+import org.piramalswasthya.sakhi.helpers.getDateString
+import org.piramalswasthya.sakhi.helpers.getTodayMillis
 import org.piramalswasthya.sakhi.helpers.getWeeksOfPregnancy
 import org.piramalswasthya.sakhi.network.getLongFromDate
+import org.piramalswasthya.sakhi.utils.HelperUtil.getDateStringFromLong
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 
 data class PregnantWomenVisitCache(
     val benId: Long,
     val name: String,
     val dob: Long,
+    val mobileNo: Long,
+    val rchId: String? = null,
+    val familyHeadName: String? = null,
     val spouseName: String,
     val lmp: Long,
 ) {
@@ -24,7 +35,10 @@ data class PregnantWomenVisitCache(
             benId = benId,
             name = name,
             age = "${BenBasicCache.getAgeFromDob(dob)} Years",
+            familyHeadName = familyHeadName ?: "Not Available",
             spouseName = spouseName,
+            mobileNo = mobileNo.toString(),
+            rchId = rchId?.takeIf { it.isNotBlank() } ?: "Not Available",
             lmp = lmp,
             weeksOfPregnancy = getWeeksOfPregnancy(System.currentTimeMillis(), lmp)
         )
@@ -35,17 +49,25 @@ data class PregnantWomenVisitDomain(
     val benId: Long,
     val name: String,
     val age: String,
+    val familyHeadName: String,
     val spouseName: String,
+    val mobileNo: String,
+    val rchId: String,
     val lmp: Long,
+    val lmpString: String? = getDateString(lmp),
+    val edd: Long = lmp + TimeUnit.DAYS.toMillis(280),
+    val eddString: String? = getDateString(edd),
     val weeksOfPregnancy: Int,
-    val weeksOfPregnancyString: String = if(weeksOfPregnancy<=40) weeksOfPregnancy.toString() else "NA",
-)
+    val weeksOfPregnancyString: String = if (weeksOfPregnancy <= 40) weeksOfPregnancy.toString() else "NA",
+) {
+
+}
 
 data class AncStatus(
     val benId: Long,
     val visitNumber: Int,
-    val formState: AncFormState,
-    val filledWeek : Int
+    val filledWeek: Int,
+    val syncState: SyncState? = null
 )
 
 enum class AncFormState {
@@ -106,12 +128,12 @@ data class PregnantWomanRegistrationCache(
     var active: Boolean = true,
     var processed: String? = "N",
     var createdBy: String,
-    val createdDate: Long = System.currentTimeMillis(),
+    var createdDate: Long = System.currentTimeMillis(),
     var updatedBy: String,
     val updatedDate: Long = System.currentTimeMillis(),
     var syncState: SyncState
 ) : FormDataModel {
-    fun asPwrPost() : PwrPost {
+    fun asPwrPost(): PwrPost {
         return PwrPost(
             benId = benId,
             registrationDate = getDateStringFromLong(dateOfRegistration),
@@ -134,6 +156,8 @@ data class PregnantWomanRegistrationCache(
             pregComplication = complicationPrevPregnancy,
             otherComplication = otherComplication,
             isActive = active,
+            isHrpCase = isHrp,
+            assignedAsHrpBy = hrpIdBy,
             createdDate = getDateStringFromLong(createdDate),
             createdBy = createdBy,
             updatedDate = getDateStringFromLong(updatedDate),
@@ -142,13 +166,63 @@ data class PregnantWomanRegistrationCache(
     }
 }
 
-data class PwrPost (
+data class BenWithPwrCache(
+    @Embedded
+    val ben: BenBasicCache,
+    @Relation(
+        parentColumn = "benId", entityColumn = "benId"
+    )
+    val pwr: PregnantWomanRegistrationCache?,
+
+    ) {
+    fun asPwrDomainModel(): BenWithPwrDomain {
+        return BenWithPwrDomain(
+            ben = ben.asBasicDomainModel(),
+            pwr = pwr
+        )
+    }
+
+    fun asBenBasicDomainModelForHRPPregAssessmentForm(): BenBasicDomainForForm {
+
+        return BenBasicDomainForForm(
+            benId = ben.benId,
+            hhId = ben.hhId,
+            regDate = BenBasicCache.dateFormat.format(Date(ben.regDate)),
+            benName = ben.benName,
+            benSurname = ben.benSurname ?: "",
+            gender = ben.gender.name,
+            dob = ben.dob,
+            mobileNo = ben.mobileNo.toString(),
+            fatherName = ben.fatherName,
+            familyHeadName = ben.familyHeadName ?: "",
+            spouseName = ben.spouseName ?: "",
+            lastMenstrualPeriod = getDateStringFromLong(ben.lastMenstrualPeriod),
+            edd = getEddFromLmp(ben.lastMenstrualPeriod),
+//            typeOfList = typeOfList.name,
+            rchId = ben.rchId ?: "Not Available",
+            hrpStatus = ben.hrpStatus,
+            form1Filled = ben.hrppaFilled,
+            syncState = ben.hrppaSyncState,
+            form2Enabled = true,
+            form2Filled = ben.hrpmbpFilled
+        )
+    }
+
+}
+
+data class BenWithPwrDomain(
+//    val benId: Long,
+    val ben: BenBasicDomain,
+    val pwr: PregnantWomanRegistrationCache?
+)
+
+data class PwrPost(
     val id: Long = 0,
     val benId: Long = 0,
     val registrationDate: String? = null,
     val rchId: Long? = null,
     val mcpCardId: Long? = null,
-    val lmpDate: String? = null,
+    var lmpDate: String? = null,
     val bloodGroup: String? = null,
     val weight: Int? = null,
     val height: Int? = null,
@@ -160,15 +234,21 @@ data class PwrPost (
     val dateOfHbsAgTest: String? = null,
     val pastIllness: String? = null,
     val otherPastIllness: String? = null,
-    val isFirstPregnancyTest: Boolean = true,
+    var isFirstPregnancyTest: Boolean = true,
     val numPrevPregnancy: Int? = null,
     val pregComplication: String? = null,
     val otherComplication: String? = null,
+    var isRegistered: Boolean = true,
+    var rhNegative: String? = null,
+    var homeDelivery: String? = null,
+    var badObstetric: String? = null,
+    var isHrpCase: Boolean = false,
+    var assignedAsHrpBy: String? = null,
     val isActive: Boolean = true,
     val createdDate: String? = null,
     val createdBy: String,
-    val updatedDate: String? = null,
-    val updatedBy: String
+    var updatedDate: String? = null,
+    var updatedBy: String
 ) {
     fun toPwrCache(): PregnantWomanRegistrationCache {
         return PregnantWomanRegistrationCache(
@@ -196,11 +276,9 @@ data class PwrPost (
             is1st = isFirstPregnancyTest,
             numPrevPregnancy = numPrevPregnancy,
             complicationPrevPregnancy = pregComplication,
-//            complicationPrevPregnancyId = otherComplication,
             otherComplication = otherComplication,
-//            isHrp =
-//            hrpIdBy
-//            hrpIdById
+            isHrp = isHrpCase,
+            hrpIdBy = assignedAsHrpBy,
             active = isActive,
             processed = "P",
             createdBy = createdBy,
@@ -229,7 +307,7 @@ data class PregnantWomanAncCache(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val benId: Long,
-    val visitNumber: Int,
+    var visitNumber: Int,
     var ancDate: Long = System.currentTimeMillis(),
     var isAborted: Boolean = false,
     var abortionType: String? = null,
@@ -260,13 +338,13 @@ data class PregnantWomanAncCache(
     var referralFacilityId: Int = 0,
     var hrpConfirmed: Boolean? = null,
     var hrpConfirmedBy: String? = null,
-    var hrpConfirmedById : Int = 0,
-    var maternalDeath : Boolean = false,
-    var maternalDeathProbableCause : String? = null,
-    var maternalDeathProbableCauseId : Int = 0,
-    var otherMaternalDeathProbableCause : String? = null,
-    var deathDate : Long? = null,
-    var pregnantWomanDelivered : Boolean? = null,
+    var hrpConfirmedById: Int = 0,
+    var maternalDeath: Boolean = false,
+    var maternalDeathProbableCause: String? = null,
+    var maternalDeathProbableCauseId: Int = 0,
+    var otherMaternalDeathProbableCause: String? = null,
+    var deathDate: Long? = null,
+    var pregnantWomanDelivered: Boolean? = null,
     var processed: String? = "N",
     var createdBy: String,
     val createdDate: Long = System.currentTimeMillis(),
@@ -315,18 +393,7 @@ data class PregnantWomanAncCache(
     }
 }
 
-private fun getDateStringFromLong(dateLong: Long?): String? {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-    dateLong?.let {
-        val dateString = dateFormat.format(dateLong)
-        return dateString
-    } ?: run {
-        return null
-    }
-
-}
-
-data class ANCPost (
+data class ANCPost(
     val id: Long = 0,
     val benId: Long = 0,
     val ancDate: String? = null,
@@ -363,7 +430,7 @@ data class ANCPost (
     val createdBy: String,
     val updatedDate: String? = null,
     val updatedBy: String
-        ) {
+) {
     fun toAncCache(): PregnantWomanAncCache {
         return PregnantWomanAncCache(
             id = id,
@@ -382,9 +449,9 @@ data class ANCPost (
             pulseRate = pulseRate.toString(),
             hb = hb,
             fundalHeight = fundalHeight,
-            urineAlbumin = if(urineAlbuminPresent == true) "Present" else "Absent",
+            urineAlbumin = if (urineAlbuminPresent == true) "Present" else "Absent",
 //            urineAlbuminId
-            randomBloodSugarTest = if(bloodSugarTestDone == true) "Done" else "Not Done",
+            randomBloodSugarTest = if (bloodSugarTestDone == true) "Done" else "Not Done",
 //            randomBloodSugarTestId
             tt1 = getLongFromDate(tdDose1Date),
             tt2 = getLongFromDate(tdDose2Date),
@@ -415,3 +482,79 @@ data class ANCPost (
         )
     }
 }
+
+
+data class BenWithAncVisitCache(
+//    @ColumnInfo(name = "benId")
+//    val ecBenId: Long,
+
+    @Embedded
+    val ben: BenBasicCache,
+    @Relation(
+        parentColumn = "benId", entityColumn = "benId"
+    )
+    val pwr: PregnantWomanRegistrationCache,
+
+    @Relation(
+        parentColumn = "benId", entityColumn = "benId", entity = PMSMACache::class
+    )
+    val pmsma: PMSMACache?,
+
+    @Relation(
+        parentColumn = "benId", entityColumn = "benId", entity = PregnantWomanAncCache::class
+    )
+    val savedAncRecords: List<PregnantWomanAncCache>
+) {
+
+    companion object {
+        private val dateFormat = SimpleDateFormat("EEE, MMM dd yyyy", Locale.getDefault())
+
+        private fun getAncVisitedDateFromLong(long: Long): String {
+            return "Visited on ${dateFormat.format(long)}"
+        }
+    }
+
+    fun asDomainModel(): BenWithAncListDomain {
+        return BenWithAncListDomain(
+//            ecBenId,
+            ben.asBasicDomainModel(),
+            pwr,
+            savedAncRecords.map {
+                AncStatus(
+                    benId = it.benId,
+                    visitNumber = it.visitNumber,
+                    filledWeek = (TimeUnit.MILLISECONDS.toDays(it.ancDate - pwr.lmpDate) / 7).toInt(),
+                    syncState = it.syncState
+                )
+            }.sortedBy { it.visitNumber },
+            pmsmaFillable = if (pmsma == null) savedAncRecords.any { it.visitNumber == 1 } else false,
+            hasPmsma = pmsma != null,
+            showAddAnc = if (savedAncRecords.isEmpty())
+                TimeUnit.MILLISECONDS.toDays(
+                    getTodayMillis() - pwr.lmpDate
+                ) >= Konstants.minAnc1Week * 7
+            else
+                savedAncRecords.maxBy { it.ancDate }.visitNumber < 4 && TimeUnit.MILLISECONDS.toDays(
+                    getTodayMillis() - savedAncRecords.maxBy { it.ancDate }.ancDate
+                ) > 28,
+            syncState = if (pmsma == null && savedAncRecords.isEmpty()) null else if (pmsma?.syncState == SyncState.UNSYNCED || savedAncRecords.any { it.syncState != SyncState.SYNCED }) SyncState.UNSYNCED else SyncState.SYNCED
+        )
+
+
+    }
+}
+
+data class BenWithAncListDomain(
+    val ben: BenBasicDomain,
+    val pwr: PregnantWomanRegistrationCache,
+    val anc: List<AncStatus>,
+    val lmpString: String? = getDateString(pwr.lmpDate),
+    val eddString: String? = getDateString(pwr.lmpDate + TimeUnit.DAYS.toMillis(280)),
+    val weeksOfPregnancy: String? = (TimeUnit.MILLISECONDS.toDays(getTodayMillis() - pwr.lmpDate) / 7).takeIf { it <= 40 }
+        ?.toString() ?: "NA",
+    val showAddAnc: Boolean,
+    val pmsmaFillable: Boolean,
+    val hasPmsma: Boolean,
+    val showViewAnc: Boolean = anc.isEmpty(),
+    val syncState: SyncState?
+)

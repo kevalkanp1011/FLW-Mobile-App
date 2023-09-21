@@ -2,6 +2,8 @@ package org.piramalswasthya.sakhi.adapters
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context.INPUT_METHOD_SERVICE
+import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
@@ -11,10 +13,12 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
+import android.view.*
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.RadioButton
@@ -25,12 +29,30 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.databinding.*
+import org.piramalswasthya.sakhi.databinding.RvItemFormCheckV2Binding
+import org.piramalswasthya.sakhi.databinding.RvItemFormDatepickerV2Binding
+import org.piramalswasthya.sakhi.databinding.RvItemFormDropdownV2Binding
+import org.piramalswasthya.sakhi.databinding.RvItemFormEditTextV2Binding
+import org.piramalswasthya.sakhi.databinding.RvItemFormHeadlineV2Binding
+import org.piramalswasthya.sakhi.databinding.RvItemFormImageViewV2Binding
+import org.piramalswasthya.sakhi.databinding.RvItemFormRadioV2Binding
+import org.piramalswasthya.sakhi.databinding.RvItemFormTextViewV2Binding
+import org.piramalswasthya.sakhi.databinding.RvItemFormTimepickerV2Binding
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.FormElement
-import org.piramalswasthya.sakhi.model.InputType.*
+import org.piramalswasthya.sakhi.model.InputType.CHECKBOXES
+import org.piramalswasthya.sakhi.model.InputType.DATE_PICKER
+import org.piramalswasthya.sakhi.model.InputType.DROPDOWN
+import org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT
+import org.piramalswasthya.sakhi.model.InputType.HEADLINE
+import org.piramalswasthya.sakhi.model.InputType.IMAGE_VIEW
+import org.piramalswasthya.sakhi.model.InputType.RADIO
+import org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW
+import org.piramalswasthya.sakhi.model.InputType.TIME_PICKER
+import org.piramalswasthya.sakhi.model.InputType.values
 import timber.log.Timber
-import java.util.*
+import java.util.Calendar
+
 
 class FormInputAdapter(
     private val imageClickListener: ImageClickListener? = null,
@@ -78,6 +100,7 @@ class FormInputAdapter(
                 binding.et.isFocusable = true
             }
             binding.form = item
+            if (item.errorText == null) binding.tilEditText.isErrorEnabled = false
             Timber.d("Bound EditText item ${item.title} with ${item.required}")
             binding.tilEditText.error = item.errorText
             handleHintLength(item)
@@ -118,8 +141,10 @@ class FormInputAdapter(
                     item.value = editable?.toString()
                     Timber.d("editable : $editable Current value : ${item.value}  isNull: ${item.value == null} isEmpty: ${item.value == ""}")
                     formValueListener?.onValueChanged(item, -1)
-                    if (item.errorText != binding.tilEditText.error) binding.tilEditText.error =
-                        item.errorText
+                    if (item.errorText != binding.tilEditText.error) {
+                        binding.tilEditText.isErrorEnabled = item.errorText != null
+                        binding.tilEditText.error = item.errorText
+                    }
 //                        binding.tilEditText.error = null
 //                    else if(item.errorText!= null && binding.tilEditText.error==null)
 //                        binding.tilEditText.error = item.errorText
@@ -206,8 +231,20 @@ class FormInputAdapter(
             }
             binding.et.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) binding.et.addTextChangedListener(textWatcher)
-                else binding.et.removeTextChangedListener(textWatcher)
+                else {
+                    binding.et.removeTextChangedListener(textWatcher)
+                    val imm =
+                        binding.root.context.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager?
+                    imm!!.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
+                }
             }
+            binding.et.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_ENTER && (event.action == KeyEvent.ACTION_UP || event.action == KeyEvent.ACTION_DOWN)) {
+                    return@OnKeyListener true
+                }
+                false
+            })
+
 //            item.errorText?.also { binding.tilEditText.error = it }
 //                ?: run { binding.tilEditText.error = null }
 //            val etFilters = mutableListOf<InputFilter>(InputFilter.LengthFilter(item.etMaxLength))
@@ -247,6 +284,10 @@ class FormInputAdapter(
 
         fun bind(item: FormElement, isEnabled: Boolean, formValueListener: FormValueListener?) {
             binding.form = item
+            if(item.errorText==null) {
+                binding.tilRvDropdown.error = null
+                binding.tilRvDropdown.isErrorEnabled = false
+            }
             if (!isEnabled) {
                 binding.tilRvDropdown.visibility = View.GONE
                 binding.tilEditText.visibility = View.VISIBLE
@@ -259,11 +300,11 @@ class FormInputAdapter(
             binding.actvRvDropdown.setOnItemClickListener { _, _, index, _ ->
                 item.value = item.entries?.get(index)
                 Timber.d("Item DD : $item")
-                if (item.hasDependants || item.hasAlertError) {
+//                if (item.hasDependants || item.hasAlertError) {
                     formValueListener?.onValueChanged(item, index)
-                }
-                item.errorText = null
-                binding.tilRvDropdown.error = null
+//                }
+                binding.tilRvDropdown.isErrorEnabled = item.errorText!=null
+                binding.tilRvDropdown.error = item.errorText
             }
 
             item.errorText?.let { binding.tilRvDropdown.error = it }
@@ -294,6 +335,7 @@ class FormInputAdapter(
             binding.form = item
 
             binding.rg.removeAllViews()
+
             binding.rg.apply {
                 item.entries?.let { items ->
                     orientation = item.orientation ?: LinearLayout.HORIZONTAL
@@ -308,7 +350,23 @@ class FormInputAdapter(
                             gravity = Gravity.CENTER_HORIZONTAL
                         }
                         rdBtn.id = View.generateViewId()
+                        val colorStateList = ColorStateList(
+                            arrayOf<IntArray>(
+                                intArrayOf(-android.R.attr.state_checked),
+                                intArrayOf(android.R.attr.state_checked)
+                            ), intArrayOf(
+                                binding.root.resources.getColor(
+                                    android.R.color.darker_gray,
+                                    binding.root.context.theme
+                                ),  // disabled
+                                binding.root.resources.getColor(
+                                    android.R.color.darker_gray,
+                                    binding.root.context.theme
+                                ) // enabled
+                            )
+                        )
 
+                        if (!isEnabled) rdBtn.buttonTintList = colorStateList
                         rdBtn.text = it
                         addView(rdBtn)
                         if (item.value == it) rdBtn.isChecked = true
@@ -343,8 +401,6 @@ class FormInputAdapter(
                 }
             }
 
-
-
             if (!isEnabled) {
                 binding.rg.children.forEach {
                     it.isClickable = false
@@ -371,7 +427,7 @@ class FormInputAdapter(
                 )
 //                spannableString.setSpan(sizeSpan, str.length - 2, str.length,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 binding.tvNullable.text = spannableString
-//                binding.tvNullableHr.text = spannableString
+                binding.tvNullableHr.text = spannableString
             } else if (item.required) {
                 spannableString.setSpan(
                     colorSpan,
@@ -380,7 +436,7 @@ class FormInputAdapter(
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
 //                spannableString.setSpan(sizeSpan, str.length - 1, str.length,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-//                binding.tvNullableHr.text = spannableString
+                binding.tvNullableHr.text = spannableString
                 binding.tvNullable.text = spannableString
             }
 
@@ -617,8 +673,12 @@ class FormInputAdapter(
 
         fun bind(
             item: FormElement,
+            formValueListener: FormValueListener?,
         ) {
             binding.form = item
+            if(item.subtitle==null)
+                binding.textView8.visibility = View.GONE
+            formValueListener?.onValueChanged(item, -1)
             binding.executePendingBindings()
 
         }
@@ -681,7 +741,7 @@ class FormInputAdapter(
             )
 
             TIME_PICKER -> (holder as TimePickerInputViewHolder).bind(item, isEnabled)
-            HEADLINE -> (holder as HeadlineViewHolder).bind(item)
+            HEADLINE -> (holder as HeadlineViewHolder).bind(item, formValueListener)
         }
     }
 
@@ -694,22 +754,22 @@ class FormInputAdapter(
     fun validateInput(resources: Resources): Int {
         var retVal = -1
         if (!isEnabled) return retVal
-        currentList.forEach {
+        currentList.forEachIndexed { index, it ->
             Timber.d("Error text for ${it.title} ${it.errorText}")
             if (it.errorText != null) {
-                retVal = currentList.indexOf(it)
-                return@forEach
+                retVal = index
+                return@forEachIndexed
             }
         }
         Timber.d("Validation : $retVal")
         if (retVal != -1) return retVal
-        currentList.forEach {
+        currentList.forEachIndexed { index, it ->
             if (it.required) {
                 if (it.value.isNullOrBlank()) {
-                    Timber.d("validateInput called for item $it, with index ${currentList.indexOf(it)}")
+                    Timber.d("validateInput called for item $it, with index ${index}")
                     it.errorText = resources.getString(R.string.form_input_empty_error)
-                    notifyItemChanged(currentList.indexOf(it))
-                    if (retVal == -1) retVal = currentList.indexOf(it)
+                    notifyItemChanged(index)
+                    if (retVal == -1) retVal = index
                 }
             }
             /*            if(it.regex!=null){

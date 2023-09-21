@@ -4,10 +4,12 @@ import android.content.Context
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.Languages
+import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.EligibleCoupleTrackingCache
 import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.InputType
+import java.util.Calendar
 
 class EligibleCoupleTrackingDataset(
     context: Context, currentLanguage: Languages
@@ -99,7 +101,12 @@ class EligibleCoupleTrackingDataset(
 
     fun getIndexOfIsPregnant() = getIndexById(isPregnant.id)
 
-    suspend fun setUpPage(ben: BenRegCache?, dateOfReg: Long, saved: EligibleCoupleTrackingCache?) {
+    suspend fun setUpPage(
+        ben: BenRegCache?,
+        dateOfReg: Long,
+        lastTrack: EligibleCoupleTrackingCache?,
+        saved: EligibleCoupleTrackingCache?
+    ) {
         val list = mutableListOf(
             dateOfVisit,
             financialYear,
@@ -116,7 +123,13 @@ class EligibleCoupleTrackingDataset(
                     resources.getStringArray(R.array.visit_months)[Companion.getMonth(it)!!]
             }
 
-            dateOfVisit.min = dateOfReg
+            dateOfVisit.min = lastTrack?.let {
+                Calendar.getInstance().apply {
+                    timeInMillis = it.visitDate
+                    setToStartOfTheDay()
+                    add(Calendar.DAY_OF_YEAR, 1)
+                }.timeInMillis
+            } ?: dateOfReg
         } else {
             dateOfVisit.value = getDateFromLong(saved.visitDate)
             financialYear.value = getFinancialYear(dateString = dateOfVisit.value)
@@ -124,7 +137,7 @@ class EligibleCoupleTrackingDataset(
                 resources.getStringArray(R.array.visit_months)[Companion.getMonth(dateOfVisit.value)!!]
             isPregnancyTestDone.value = saved.isPregnancyTestDone
             if (isPregnancyTestDone.value == "Yes") {
-                list.add(pregnancyTestResult)
+                list.add(list.indexOf(isPregnancyTestDone) + 1, pregnancyTestResult)
                 pregnancyTestResult.value = saved.pregnancyTestResult
             }
             isPregnant.value = saved.isPregnant
@@ -162,6 +175,7 @@ class EligibleCoupleTrackingDataset(
             }
 
             isPregnancyTestDone.id -> {
+                isPregnant.isEnabled = true
                 triggerDependants(
                     source = isPregnancyTestDone,
                     passedIndex = index,
@@ -225,7 +239,7 @@ class EligibleCoupleTrackingDataset(
             form.isPregnancyTestDone = isPregnancyTestDone.value
             form.pregnancyTestResult = pregnancyTestResult.value
             form.isPregnant = isPregnant.value
-            form.usingFamilyPlanning = usingFamilyPlanning.value == "Yes"
+            form.usingFamilyPlanning = usingFamilyPlanning.value?.let { it == "Yes" }
             if (methodOfContraception.value == "Any Other Method") {
                 form.methodOfContraception = anyOtherMethod.value
             } else {

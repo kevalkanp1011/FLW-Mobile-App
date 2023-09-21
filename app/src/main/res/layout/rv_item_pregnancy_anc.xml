@@ -20,9 +20,9 @@
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal"
         android:padding="@dimen/padding_normal"
-        android:gravity="center_vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -34,21 +34,39 @@
             android:text="@{@string/anc_visit_number(visit.visitNumber)}"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
             tools:text="ANc VISIT 4" />
+        <!--                <TextView-->
+        <!--            android:id="@+id/tv_filled_on"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:padding="@dimen/padding_normal"-->
+        <!--            android:text="@string/filled_on"-->
+        <!--            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"-->
+        <!--            tools:text="ANc VISIT 4" />-->
 
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:padding="@dimen/padding_normal"
-            anc_state_icon="@{visit.formState}"/>
+        <androidx.legacy.widget.Space
+            android:layout_width="30dp"
+            android:layout_height="match_parent"/>
 
         <com.google.android.material.button.MaterialButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="?attr/colorPrimary"
-            android:text="@string/kcuf"
-            android:textColor="?attr/colorOnPrimary"
             android:onClick="@{()-> clickListener.onClickedVisit(visit)}"
-            anc_state="@{visit.formState}"/>
+            android:text="@string/view"
+            android:textColor="?attr/colorOnPrimary" />
+
+        <androidx.legacy.widget.Space
+            android:layout_width="30dp"
+            android:layout_height="match_parent"/>
+        <ImageView
+            android:id="@+id/iv_sync_state"
+            syncState="@{visit.syncState}"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginHorizontal="@dimen/padding_small"
+            android:contentDescription="@string/iv_sync_state_tv"
+            tools:src="@drawable/ic_synced" />
 
     </LinearLayout>
 

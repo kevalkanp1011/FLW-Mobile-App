@@ -12,7 +12,9 @@ import org.piramalswasthya.sakhi.model.HouseholdDetails
 import org.piramalswasthya.sakhi.model.HouseholdFamily
 import org.piramalswasthya.sakhi.model.InputType.DROPDOWN
 import org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT
+import org.piramalswasthya.sakhi.model.InputType.HEADLINE
 import org.piramalswasthya.sakhi.model.InputType.RADIO
+import retrofit2.http.HEAD
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -41,6 +43,15 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
     }
 
     //////////////////////////////// First Page /////////////////////////////////////////
+
+    private val familyHeading = FormElement(
+        id = 17498,
+        inputType = HEADLINE,
+        title = resources.getString(R.string.nhhr_title_page_1),
+        required = false,
+        headingLine = false
+
+    )
 
     private val firstNameHeadOfFamily = FormElement(
         id = 0,
@@ -115,20 +126,95 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
         entries = resources.getStringArray(R.array.nhhr_poverty_line_array),
         required = true
     )
-    private val firstPage by lazy {
-        listOf(
-            firstNameHeadOfFamily,
-            lastNameHeadOfFamily,
-            mobileNoHeadOfFamily,
-            houseNo,
-            wardNo,
-            wardName,
-            mohallaName,
-            povertyLine
-        )
+
+    suspend fun setupPage(hh: HouseholdCache?) {
+
+        val list = mutableListOf<FormElement>()
+        val firstPage by lazy {
+            listOf(
+                familyHeading,
+                firstNameHeadOfFamily,
+                lastNameHeadOfFamily,
+                mobileNoHeadOfFamily,
+                houseNo,
+                wardNo,
+                wardName,
+                mohallaName,
+                povertyLine
+            )
+        }
+        list.addAll(firstPage)
+        hh?.family?.let { saved ->
+            firstNameHeadOfFamily.value = saved.familyHeadName
+            lastNameHeadOfFamily.value = saved.familyName
+            mobileNoHeadOfFamily.value = saved.familyHeadPhoneNo.toString()
+            houseNo.value = saved.houseNo
+            wardNo.value = saved.wardNo
+            wardName.value = saved.wardName
+            mohallaName.value = saved.mohallaName
+            povertyLine.value = povertyLine.getStringFromPosition(saved.povertyLineId)
+        }
+
+
+        val secondPage =
+            listOf(
+                houseHoldDetails, residentialArea, typeOfHouse, houseOwnership
+            )
+        list.addAll(secondPage)
+        hh?.details?.let { saved ->
+            residentialArea.value = residentialArea.getStringFromPosition(saved.residentialAreaId)
+            otherResidentialArea.value = saved.otherResidentialArea
+            typeOfHouse.value = typeOfHouse.getStringFromPosition(saved.houseTypeId)
+            houseOwnership.value = houseOwnership.getStringFromPosition(saved.isHouseOwnedId)
+        }
+        if (residentialArea.value == residentialArea.entries!!.last()) {
+            list.add(list.indexOf(residentialArea) + 1, otherResidentialArea)
+        }
+        val thirdPage =
+            listOf(
+                houseHoldDAmenities, separateKitchen, fuelForCooking, sourceOfWater, sourceOfElectricity, availOfToilet
+            )
+        list.addAll(thirdPage)
+        hh?.amenities?.let { saved ->
+            separateKitchen.value = separateKitchen.getStringFromPosition(saved.separateKitchenId)
+            fuelForCooking.value = fuelForCooking.getStringFromPosition(saved.fuelUsedId)
+            otherFuelForCooking.value = saved.otherFuelUsed
+            sourceOfWater.value = sourceOfWater.getStringFromPosition(saved.sourceOfDrinkingWaterId)
+            otherSourceOfWater.value = saved.otherSourceOfDrinkingWater
+            sourceOfElectricity.value =
+                sourceOfElectricity.getStringFromPosition(saved.availabilityOfElectricityId)
+            otherSourceOfElectricity.value = saved.otherAvailabilityOfElectricity
+            availOfToilet.value = availOfToilet.getStringFromPosition(saved.availabilityOfToiletId)
+            otherAvailOfToilet.value = saved.otherAvailabilityOfToilet
+        }
+        if (fuelForCooking.value == fuelForCooking.entries!!.last()) {
+            list.add(list.indexOf(fuelForCooking) + 1, otherFuelForCooking)
+        }
+        if (sourceOfWater.value == sourceOfWater.entries!!.last()) {
+            list.add(list.indexOf(sourceOfWater) + 1, otherSourceOfWater)
+        }
+        if (sourceOfElectricity.value == sourceOfElectricity.entries!!.last()) {
+            list.add(list.indexOf(sourceOfElectricity) + 1, otherSourceOfElectricity)
+        }
+        if (availOfToilet.value == availOfToilet.entries!!.let { it[it.size - 2] }) {
+            list.add(list.indexOf(availOfToilet) + 1, otherAvailOfToilet)
+        }
+        setUpPage(list)
     }
 
     suspend fun setFirstPage(family: HouseholdFamily?) {
+        val firstPage by lazy {
+            listOf(
+                firstNameHeadOfFamily,
+                lastNameHeadOfFamily,
+                mobileNoHeadOfFamily,
+                houseNo,
+                wardNo,
+                wardName,
+                mohallaName,
+                povertyLine
+            )
+        }
         setUpPage(firstPage)
         family?.let { saved ->
             firstNameHeadOfFamily.value = saved.familyHeadName
@@ -142,7 +228,14 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
         }
     }
 
-    //////////////////////////////// Second Page /////////////////////////////////////////
+//////////////////////////////// Second Page /////////////////////////////////////////
+
+    private val houseHoldDetails = FormElement(
+        id = 17498,
+        inputType = HEADLINE,
+        title = resources.getString(R.string.nhhr_title_page_2),
+        required = false
+    )
 
     private val residentialArea = FormElement(
         id = 8,
@@ -180,13 +273,14 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
         entries = resources.getStringArray(R.array.nhhr_house_own_array),
         required = true
     )
-    private val secondPage by lazy {
-        listOf(
-            residentialArea, typeOfHouse, houseOwnership
-        )
-    }
+
 
     suspend fun setSecondPage(details: HouseholdDetails?) {
+        val secondPage by lazy {
+            listOf(
+                residentialArea, typeOfHouse, houseOwnership
+            )
+        }
         val list = secondPage.toMutableList()
         details?.let { saved ->
             residentialArea.value = residentialArea.getStringFromPosition(saved.residentialAreaId)
@@ -201,7 +295,14 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
     }
 
 
-    //////////////////////////////// Third Page /////////////////////////////////////////
+//////////////////////////////// Third Page /////////////////////////////////////////
+
+    private val houseHoldDAmenities = FormElement(
+        id = 17498,
+        inputType = HEADLINE,
+        title = resources.getString(R.string.nhhr_title_page_3),
+        required = false
+    )
 
     private val separateKitchen = FormElement(
         id = 12,
@@ -291,13 +392,12 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
         etMaxLength = 100
     )
 
-    private val thirdPage by lazy {
-        listOf(
-            separateKitchen, fuelForCooking, sourceOfWater, sourceOfElectricity, availOfToilet
-        )
-    }
 
     suspend fun setThirdPage(amenities: HouseholdAmenities?) {
+        val thirdPage =
+            listOf(
+                separateKitchen, fuelForCooking, sourceOfWater, sourceOfElectricity, availOfToilet
+            )
         val list = thirdPage.toMutableList()
         amenities?.let { saved ->
             separateKitchen.value = separateKitchen.getStringFromPosition(saved.separateKitchenId)
@@ -333,61 +433,73 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
                 validateEmptyOnEditText(firstNameHeadOfFamily)
                 validateAllCapsOrSpaceOnEditText(firstNameHeadOfFamily)
             }
+
             lastNameHeadOfFamily.id -> validateAllCapsOrSpaceOnEditText(lastNameHeadOfFamily)
             mobileNoHeadOfFamily.id -> {
                 validateEmptyOnEditText(mobileNoHeadOfFamily)
                 validateMobileNumberOnEditText(mobileNoHeadOfFamily)
             }
+
             residentialArea.id -> triggerDependants(
                 source = residentialArea,
                 passedIndex = index,
                 triggerIndex = residentialArea.entries!!.size - 1,
                 target = otherResidentialArea
             )
+
             fuelForCooking.id -> triggerDependants(
                 source = fuelForCooking,
                 passedIndex = index,
                 triggerIndex = fuelForCooking.entries!!.size - 1,
                 target = otherFuelForCooking
             )
+
             sourceOfWater.id -> triggerDependants(
                 source = sourceOfWater,
                 passedIndex = index,
                 triggerIndex = sourceOfWater.entries!!.size - 1,
                 target = otherSourceOfWater
             )
+
             sourceOfElectricity.id -> triggerDependants(
                 source = sourceOfElectricity,
                 passedIndex = index,
                 triggerIndex = sourceOfElectricity.entries!!.size - 1,
                 target = otherSourceOfElectricity
             )
+
             availOfToilet.id -> triggerDependants(
                 source = availOfToilet,
                 passedIndex = index,
                 triggerIndex = availOfToilet.entries!!.size - 2,
                 target = otherAvailOfToilet
             )
+
             otherResidentialArea.id -> {
                 validateEmptyOnEditText(otherResidentialArea)
                 //validateAllAlphabetsSpaceOnEditText(otherResidentialArea)
             }
+
             otherFuelForCooking.id -> {
                 validateEmptyOnEditText(otherFuelForCooking)
                 //validateAllAlphabetsSpaceOnEditText(otherFuelForCooking)
             }
+
             otherSourceOfWater.id -> {
                 validateEmptyOnEditText(otherSourceOfWater)
-               // validateAllAlphabetsSpaceOnEditText(otherSourceOfWater)
+                // validateAllAlphabetsSpaceOnEditText(otherSourceOfWater)
             }
+
             otherSourceOfElectricity.id -> {
                 validateEmptyOnEditText(otherSourceOfElectricity)
-              //  validateAllAlphabetsSpaceOnEditText(otherSourceOfElectricity)
+                //  validateAllAlphabetsSpaceOnEditText(otherSourceOfElectricity)
             }
+
             otherAvailOfToilet.id -> {
                 validateEmptyOnEditText(otherAvailOfToilet)
-               // validateAllAlphabetsSpaceOnEditText(otherAvailOfToilet)
+                // validateAllAlphabetsSpaceOnEditText(otherAvailOfToilet)
             }
+
             else -> -1
         }
     }
@@ -397,9 +509,11 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
             1 -> {
                 mapValuesForPage1(cacheModel)
             }
+
             2 -> {
                 mapValuesForPage2(cacheModel)
             }
+
             3 -> {
                 mapValuesForPage3(cacheModel)
             }
@@ -428,21 +542,24 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
         val details = HouseholdDetails()
         details.let { details ->
             details.residentialAreaId = residentialArea.getPosition()
-            details.residentialArea = residentialArea.getEnglishStringFromPosition(details.residentialAreaId)
+            details.residentialArea =
+                residentialArea.getEnglishStringFromPosition(details.residentialAreaId)
             details.otherResidentialArea = otherResidentialArea.value
             details.houseTypeId = typeOfHouse.getPosition()
             details.houseType = typeOfHouse.getEnglishStringFromPosition(details.houseTypeId)
             details.isHouseOwnedId = houseOwnership.getPosition()
-            details.isHouseOwned = houseOwnership.getEnglishStringFromPosition(details.isHouseOwnedId)
+            details.isHouseOwned =
+                houseOwnership.getEnglishStringFromPosition(details.isHouseOwnedId)
         }
         (cacheModel as HouseholdCache).details = details
     }
 
     private fun mapValuesForPage3(cacheModel: FormDataModel) {
         val amenity = HouseholdAmenities()
-        amenity.let {amenities ->
+        amenity.let { amenities ->
             amenities.separateKitchenId = separateKitchen.getPosition()
-            amenities.separateKitchen = separateKitchen.getEnglishStringFromPosition(amenities.separateKitchenId)
+            amenities.separateKitchen =
+                separateKitchen.getEnglishStringFromPosition(amenities.separateKitchenId)
 
 
             amenities.fuelUsedId = fuelForCooking.getPosition()
@@ -450,15 +567,18 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
             amenities.otherFuelUsed = otherFuelForCooking.value
 
             amenities.sourceOfDrinkingWaterId = sourceOfWater.getPosition()
-            amenities.sourceOfDrinkingWater = sourceOfWater.getEnglishStringFromPosition(amenities.sourceOfDrinkingWaterId)
+            amenities.sourceOfDrinkingWater =
+                sourceOfWater.getEnglishStringFromPosition(amenities.sourceOfDrinkingWaterId)
             amenities.otherSourceOfDrinkingWater = otherSourceOfWater.value
 
             amenities.availabilityOfElectricityId = sourceOfElectricity.getPosition()
-            amenities.availabilityOfElectricity = sourceOfElectricity.getEnglishStringFromPosition(amenities.availabilityOfElectricityId)
+            amenities.availabilityOfElectricity =
+                sourceOfElectricity.getEnglishStringFromPosition(amenities.availabilityOfElectricityId)
             amenities.otherAvailabilityOfElectricity = otherSourceOfElectricity.value
 
             amenities.availabilityOfToiletId = availOfToilet.getPosition()
-            amenities.availabilityOfToilet = availOfToilet.getEnglishStringFromPosition(amenities.availabilityOfToiletId)
+            amenities.availabilityOfToilet =
+                availOfToilet.getEnglishStringFromPosition(amenities.availabilityOfToiletId)
             amenities.otherAvailabilityOfToilet = otherAvailOfToilet.value
         }
         (cacheModel as HouseholdCache).apply {

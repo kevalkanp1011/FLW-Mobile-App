@@ -35,7 +35,7 @@ data class CbacCache(
     @ColumnInfo(index = true)
     val ashaId: Int,
 //    var gender : Gender?,
-    var fillDate: Long = System.currentTimeMillis(),
+    var fillDate: Long = 0,
     var cbac_age_posi: Int = 0,
     var cbac_smoke_posi: Int = 0,
     var cbac_alcohol_posi: Int = 0,
@@ -453,7 +453,8 @@ data class CbacCache(
     fun asDomainModel(): CbacDomain {
         return CbacDomain(
             cbacId = this.id,
-            date = "Filled on ${getCbacCreatedDateFromLong(this.fillDate)}"
+            date = "Filled on ${getCbacCreatedDateFromLong(this.fillDate)}",
+            syncState = this.syncState
         )
     }
 
@@ -475,7 +476,8 @@ data class CbacCachePush(
 
 data class CbacDomain(
     val cbacId: Int,
-    val date: String
+    val date: String,
+    val syncState: SyncState
 )
 
 @JsonClass(generateAdapter = true)
@@ -783,4 +785,7 @@ data class BenWithCbacDomain(
 //    @ColumnInfo(name = "benId")
     val ben: BenBasicDomain,
     val savedCbacRecords: List<CbacCache>,
+    val allSynced: SyncState? = if (savedCbacRecords.isEmpty()) null else
+        if (savedCbacRecords.map { it.syncState }
+                .all { it == SyncState.SYNCED}) SyncState.SYNCED else SyncState.UNSYNCED
 )

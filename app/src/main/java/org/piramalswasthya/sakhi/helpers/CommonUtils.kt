@@ -1,14 +1,19 @@
 package org.piramalswasthya.sakhi.helpers
 
 import androidx.core.text.isDigitsOnly
-import org.piramalswasthya.sakhi.model.AncFormState
 import org.piramalswasthya.sakhi.model.AncStatus
 import org.piramalswasthya.sakhi.model.BenBasicDomain
 import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
+import org.piramalswasthya.sakhi.model.BenWithEcrDomain
 import org.piramalswasthya.sakhi.model.BenWithEctListDomain
+import org.piramalswasthya.sakhi.model.BenWithPwrDomain
+import org.piramalswasthya.sakhi.model.BenWithTbScreeningDomain
+import org.piramalswasthya.sakhi.model.BenWithTbSuspectedDomain
 import org.piramalswasthya.sakhi.model.PregnantWomenVisitDomain
-import timber.log.Timber
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 fun filterBenList(list: List<BenBasicDomain>, text: String): List<BenBasicDomain> {
@@ -36,6 +41,7 @@ fun filterForBen(
         ben.rchId.takeIf { it.isDigitsOnly() }?.contains(filterText) ?: false ||
         ben.mobileNo.lowercase().contains(filterText) ||
         ben.gender.lowercase().contains(filterText) ||
+        ben.spouseName?.lowercase()?.contains(filterText) == true ||
         ben.fatherName?.lowercase()?.contains(filterText) ?: false
 
 
@@ -45,6 +51,7 @@ fun filterBenFormList(
 ) =
     list.filter { ben ->
         ben.benId.toString().lowercase().contains(filterText) ||
+                ben.familyHeadName.lowercase().contains(filterText) ||
                 ben.age.lowercase().contains(filterText) ||
                 ben.name.lowercase().contains(filterText) ||
                 ben.spouseName.lowercase().contains(filterText) ||
@@ -58,8 +65,80 @@ fun filterEcTrackingList(
     list.filter {
         it.ben.benId.toString().lowercase().contains(filterText) ||
                 it.ben.age.lowercase().contains(filterText) ||
+                it.ben.familyHeadName.lowercase().contains(filterText) ||
                 it.ben.benFullName.lowercase().contains(filterText) ||
-                it.numChildren.contains(filterText)
+                it.numChildren.contains(filterText) ||
+                it.ben.spouseName?.lowercase()?.contains(filterText) ?: false ||
+                it.ben.benId.toString().lowercase().contains(filterText) ||
+                it.ben.mobileNo.lowercase().contains(filterText) ||
+                it.ben.rchId.takeIf { it1 -> it1.isDigitsOnly() }?.contains(filterText) ?: false
+    }
+fun filterEcRegistrationList(
+    list: List<BenWithEcrDomain>,
+    filterText: String
+) =
+    list.filter {
+        it.ben.benId.toString().lowercase().contains(filterText) ||
+                it.ben.age.lowercase().contains(filterText) ||
+                it.ben.familyHeadName.lowercase().contains(filterText) ||
+                it.ben.benFullName.lowercase().contains(filterText) ||
+                it.ben.spouseName?.lowercase()?.contains(filterText) ?: false ||
+                it.ben.benId.toString().lowercase().contains(filterText) ||
+                it.ben.mobileNo.lowercase().contains(filterText) ||
+                it.ben.rchId.takeIf { it1 -> it1.isDigitsOnly() }?.contains(filterText) ?: false
+
+
+//                ||
+//                it.numChildren.contains(filterText)
+    }
+
+fun filterPwrRegistrationList(
+    list: List<BenWithPwrDomain>,
+    filterText: String
+) =
+    list.filter {
+        it.ben.benId.toString().lowercase().contains(filterText) ||
+                it.ben.age.lowercase().contains(filterText) ||
+                it.ben.familyHeadName.lowercase().contains(filterText) ||
+                it.ben.benFullName.lowercase().contains(filterText) ||
+                it.ben.spouseName?.lowercase()?.contains(filterText) ?: false ||
+                it.ben.benId.toString().lowercase().contains(filterText) ||
+                it.ben.mobileNo.lowercase().contains(filterText) ||
+                it.ben.rchId.takeIf { it1 -> it1.isDigitsOnly() }?.contains(filterText) ?: false
+    }
+
+fun filterTbScreeningList(
+    list: List<BenWithTbScreeningDomain>,
+    filterText: String
+) =
+    list.filter {
+        it.ben.benId.toString().lowercase().contains(filterText) ||
+                it.ben.age.lowercase().contains(filterText) ||
+                it.ben.familyHeadName.lowercase().contains(filterText) ||
+                it.ben.benFullName.lowercase().contains(filterText) ||
+                it.ben.spouseName?.lowercase()?.contains(filterText) ?: false ||
+                it.ben.fatherName?.lowercase()?.contains(filterText) ?: false ||
+                it.ben.benId.toString().lowercase().contains(filterText) ||
+                it.ben.mobileNo.lowercase().contains(filterText) ||
+                it.ben.gender.lowercase().contains(filterText) ||
+                it.ben.rchId.takeIf { it1 -> it1.isDigitsOnly() }?.contains(filterText) ?: false
+    }
+
+fun filterTbSuspectedList(
+    list: List<BenWithTbSuspectedDomain>,
+    filterText: String
+) =
+    list.filter {
+        it.ben.benId.toString().lowercase().contains(filterText) ||
+                it.ben.age.lowercase().contains(filterText) ||
+                it.ben.familyHeadName.lowercase().contains(filterText) ||
+                it.ben.benFullName.lowercase().contains(filterText) ||
+                it.ben.spouseName?.lowercase()?.contains(filterText) ?: false ||
+                it.ben.fatherName?.lowercase()?.contains(filterText) ?: false ||
+                it.ben.benId.toString().lowercase().contains(filterText) ||
+                it.ben.mobileNo.lowercase().contains(filterText) ||
+                it.ben.gender.lowercase().contains(filterText) ||
+                it.ben.rchId.takeIf { it1 -> it1.isDigitsOnly() }?.contains(filterText) ?: false
     }
 
 @JvmName("filterBenList1")
@@ -79,6 +158,7 @@ fun filterBenFormList(
                     it.rchId.takeIf { it1 -> it1.isDigitsOnly() }?.contains(filterText) ?: false ||
                     it.benName.lowercase().contains(filterText) ||
                     it.familyHeadName.lowercase().contains(filterText) ||
+                    it.spouseName?.lowercase()?.contains(filterText) == true ||
                     it.benSurname?.lowercase()?.contains(filterText) ?: false ||
 //                    it.typeOfList.lowercase().contains(filterText) ||
                     it.mobileNo.lowercase().contains(filterText) ||
@@ -91,55 +171,55 @@ fun filterBenFormList(
 fun getWeeksOfPregnancy(regLong: Long, lmpLong: Long) =
     (TimeUnit.MILLISECONDS.toDays(regLong - lmpLong) / 7).toInt()
 
-private fun getAncStatus(
-    list: List<AncStatus>, lmpDate: Long, visitNumber: Int, benId: Long, at: Long
-): AncStatus {
-
-    val currentAnc = list.firstOrNull { it.visitNumber == visitNumber }?.let { return it }
-    val lastAnc =
-        if (visitNumber > 1) list.firstOrNull { it.visitNumber == visitNumber - 1 } else null
-    val lastAncFilledWeek = lastAnc?.filledWeek ?: 0
-    val weeks = getWeeksOfPregnancy(at, lmpDate)
-    val weekRange = when (visitNumber) {
-        1 -> Konstants.minAnc1Week//..Konstants.maxAnc1Week
-        2 -> getMinAncFillDate(Konstants.minAnc2Week, lastAncFilledWeek) //..Konstants.maxAnc2Week
-        3 -> getMinAncFillDate(Konstants.minAnc3Week, lastAncFilledWeek)  //..Konstants.maxAnc2Week//..Konstants.maxAnc3Week
-        4 -> getMinAncFillDate(Konstants.minAnc4Week, lastAncFilledWeek)  //..Konstants.maxAnc2Week//..Konstants.maxAnc4Week
-        else -> throw IllegalStateException("visit number not in [1,4]")
-    }
-    return if (weeks >= weekRange) AncStatus(
-        benId,
-        visitNumber,
-        if (visitNumber == 1) AncFormState.ALLOW_FILL else {
-            if (lastAnc == null) AncFormState.NO_FILL else AncFormState.ALLOW_FILL
-        },
-        0
-    )
-    else AncStatus(
-        benId,
-        visitNumber,
-        AncFormState.NO_FILL,
-        0
-    )
-}
+//private fun getAncStatus(
+//    list: List<AncStatus>, lmpDate: Long, visitNumber: Int, benId: Long, at: Long
+//): AncStatus {
+//
+//    val currentAnc = list.firstOrNull { it.visitNumber == visitNumber }?.let { return it }
+//    val lastAnc =
+//        if (visitNumber > 1) list.firstOrNull { it.visitNumber == visitNumber - 1 } else null
+//    val lastAncFilledWeek = lastAnc?.filledWeek ?: 0
+//    val weeks = getWeeksOfPregnancy(at, lmpDate)
+//    val weekRange = when (visitNumber) {
+//        1 -> Konstants.minAnc1Week//..Konstants.maxAnc1Week
+//        2 -> getMinAncFillDate(Konstants.minAnc2Week, lastAncFilledWeek) //..Konstants.maxAnc2Week
+//        3 -> getMinAncFillDate(Konstants.minAnc3Week, lastAncFilledWeek)  //..Konstants.maxAnc2Week//..Konstants.maxAnc3Week
+//        4 -> getMinAncFillDate(Konstants.minAnc4Week, lastAncFilledWeek)  //..Konstants.maxAnc2Week//..Konstants.maxAnc4Week
+//        else -> throw IllegalStateException("visit number not in [1,4]")
+//    }
+//    return if (weeks >= weekRange) AncStatus(
+//        benId,
+//        visitNumber,
+////        if (visitNumber == 1) AncFormState.ALLOW_FILL else {
+////            if (lastAnc == null) AncFormState.NO_FILL else AncFormState.ALLOW_FILL
+////        },
+//        0
+//    )
+//    else AncStatus(
+//        benId,
+//        visitNumber,
+////        AncFormState.NO_FILL,
+//        0
+//    )
+//}
 
 fun getMinAncFillDate(minWeek: Int, lastAncFilledWeek: Int) =
     if (minWeek - lastAncFilledWeek <= 4) lastAncFilledWeek + 4 else minWeek
 
-fun getAncStatusList(
-    list: List<AncStatus>, lmpDate: Long, benId: Long, at: Long
-) =
-    listOf(1, 2, 3, 4).map {
-        getAncStatus(list, lmpDate, it, benId, at)
-    }
+//fun getAncStatusList(
+//    list: List<AncStatus>, lmpDate: Long, benId: Long, at: Long
+//) =
+//    listOf(1, 2, 3, 4).map {
+//        getAncStatus(list, lmpDate, it, benId, at)
+//    }
 
 fun hasPendingAncVisit(
     list: List<AncStatus>, lmpDate: Long, benId: Long, at: Long
 ): Boolean {
-    val l = getAncStatusList(list, lmpDate, benId, at).map { it.formState }
-    Timber.tag("MaternalHealthRepo").d("Emitted : at CommonUtls : $l")
-    return l.contains(AncFormState.ALLOW_FILL)
-
+//    val l = getAncStatusList(list, lmpDate, benId, at).map { it.formState }
+//    Timber.tag("MaternalHealthRepo").d("Emitted : at CommonUtls : $l")
+//    return l.contains(AncFormState.ALLOW_FILL)
+    return true;
 }
 
 fun getTodayMillis() = Calendar.getInstance().setToStartOfTheDay().timeInMillis
@@ -159,6 +239,15 @@ sealed class NetworkResponse<T>(val data: T? = null, val message: String? = null
     class Success<T>(data: T) : NetworkResponse<T>(data = data)
     class Error<T>(message: String) : NetworkResponse<T>(data = null, message = message)
 
+}
+
+fun getDateString(dateLong: Long?): String? {
+    val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+    dateLong?.let {
+        return dateFormat.format(Date(dateLong))
+    } ?: run {
+        return null
+    }
 }
 
 
