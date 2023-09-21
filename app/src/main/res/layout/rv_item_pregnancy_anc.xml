@@ -43,6 +43,9 @@
         <!--            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"-->
         <!--            tools:text="ANc VISIT 4" />-->
 
+        <androidx.legacy.widget.Space
+            android:layout_width="30dp"
+            android:layout_height="match_parent"/>
 
         <com.google.android.material.button.MaterialButton
             android:layout_width="wrap_content"
@@ -51,14 +54,19 @@
             android:onClick="@{()-> clickListener.onClickedVisit(visit)}"
             android:text="@string/view"
             android:textColor="?attr/colorOnPrimary" />
-        <!--        <ImageView-->
-        <!--            android:id="@+id/iv_sync_state"-->
-        <!--            android:layout_width="24dp"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_gravity="center_vertical|end"-->
-        <!--            android:layout_marginHorizontal="@dimen/padding_small"-->
-        <!--            android:contentDescription="@string/iv_sync_state_tv"-->
-        <!--            tools:src="@drawable/ic_synced" />-->
+
+        <androidx.legacy.widget.Space
+            android:layout_width="30dp"
+            android:layout_height="match_parent"/>
+        <ImageView
+            android:id="@+id/iv_sync_state"
+            syncState="@{visit.syncState}"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginHorizontal="@dimen/padding_small"
+            android:contentDescription="@string/iv_sync_state_tv"
+            tools:src="@drawable/ic_synced" />
 
     </LinearLayout>
 

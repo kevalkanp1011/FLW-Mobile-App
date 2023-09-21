@@ -66,7 +66,8 @@ data class PregnantWomenVisitDomain(
 data class AncStatus(
     val benId: Long,
     val visitNumber: Int,
-    val filledWeek: Int
+    val filledWeek: Int,
+    val syncState: SyncState? = null
 )
 
 enum class AncFormState {
@@ -520,7 +521,8 @@ data class BenWithAncVisitCache(
                 AncStatus(
                     benId = it.benId,
                     visitNumber = it.visitNumber,
-                    filledWeek = (TimeUnit.MILLISECONDS.toDays(it.ancDate - pwr.lmpDate) / 7).toInt()
+                    filledWeek = (TimeUnit.MILLISECONDS.toDays(it.ancDate - pwr.lmpDate) / 7).toInt(),
+                    syncState = it.syncState
                 )
             }.sortedBy { it.visitNumber },
             pmsmaFillable = if (pmsma == null) savedAncRecords.any { it.visitNumber == 1 } else false,
