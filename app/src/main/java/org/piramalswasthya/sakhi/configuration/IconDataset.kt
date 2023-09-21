@@ -82,9 +82,10 @@ class IconDataset @Inject constructor(
                 Icon(
                     icon = R.drawable.ic__hrp,
                     title = resources.getString(R.string.icon_title_hrp),
-                    count = recordsRepo.hrpCount,
+//                    count = recordsRepo.hrpCount,
+                    count = null,
                     navAction = HomeFragmentDirections.actionNavHomeToHrpCasesFragment(),
-                    allowRedBorder = true
+                    allowRedBorder = false
 
                 ),
                 Icon(
