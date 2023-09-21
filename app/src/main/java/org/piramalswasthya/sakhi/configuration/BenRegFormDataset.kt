@@ -974,7 +974,10 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                 FEMALE -> hoF.motherName?.also { firstName.inputType = TEXT_VIEW }
                 else -> null
             }
+        if (benGender == MALE) wifeName.value = hof?.motherName
+        if (benGender == FEMALE) husbandName.value = hof?.fatherName
         lastName.value = hoF.lastName?.also { firstName.inputType = TEXT_VIEW }
+        ageAtMarriage.min = getAgeFromDob(hoF.dob).toLong()
     }
 
     private fun setUpForSpouse(hoFSpouse: BenRegCache, hoFSpouse1: List<BenRegCache>) {
@@ -1415,12 +1418,6 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                     }
 
                     maritalStatus.entries!![1] -> {
-                        if (relationToHead.value == relationToHead.entries!![0]) {
-                            husbandName.value = hof?.fatherName
-                        }
-                        if (relationToHead.value == relationToHead.entries!![1]) {
-                            wifeName.value = hof?.motherName
-                        }
                         if (gender.value == gender.entries!![1]) {
                             fatherName.required = false
                             motherName.required = false
@@ -1441,7 +1438,14 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                                 spouseName,
                                 ageAtMarriage
                             )
-                        )
+                        ).also {
+                            if (relationToHead.value == relationToHead.entries!![0]) {
+                                husbandName.value = hof?.fatherName
+                            }
+                            if (relationToHead.value == relationToHead.entries!![1]) {
+                                wifeName.value = hof?.motherName
+                            }
+                        }
                     }
 
                     else -> {

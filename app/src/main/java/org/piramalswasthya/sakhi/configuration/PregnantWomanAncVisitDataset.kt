@@ -388,77 +388,89 @@ class PregnantWomanAncVisitDataset(
                 list.remove(numFolicAcidTabGiven)
             }
         }
-        saved?.let {
-            val woP = getWeeksOfPregnancy(it.ancDate, lmp)
+        saved?.let { savedAnc ->
+            val woP = getWeeksOfPregnancy(savedAnc.ancDate, lmp)
             if (woP <= 12) {
                 list.remove(fundalHeight)
                 list.remove(numIfaAcidTabGiven)
             } else {
                 list.remove(numFolicAcidTabGiven)
             }
-            ancDate.value = getDateFromLong(it.ancDate)
+            ancDate.value = getDateFromLong(savedAnc.ancDate)
             weekOfPregnancy.value = woP.toString()
             isAborted.value =
-                if (it.isAborted) isAborted.entries!!.last() else isAborted.entries!!.first()
-            if (it.isAborted) {
-                abortionType.value = abortionType.getStringFromPosition(it.abortionTypeId)
+                if (savedAnc.isAborted) isAborted.entries!!.last() else isAborted.entries!!.first()
+            if (savedAnc.isAborted) {
+                abortionType.value = abortionType.getStringFromPosition(savedAnc.abortionTypeId)
                 abortionFacility.value =
-                    abortionFacility.getStringFromPosition(it.abortionFacilityId)
-                abortionDate.value = it.abortionDate?.let { getDateFromLong(it) }
+                    abortionFacility.getStringFromPosition(savedAnc.abortionFacilityId)
+                abortionDate.value = savedAnc.abortionDate?.let { getDateFromLong(it) }
                 list.addAll(
                     list.indexOf(isAborted) + 1,
                     listOf(abortionType, abortionFacility, abortionDate)
                 )
             }
-            weight.value = it.weight?.toString()
-            bpSystolic.value = it.bpSystolic?.toString()
-            bpDiastolic.value = it.bpDiastolic?.toString()
-            pulseRate.value = it.pulseRate
-            hb.value = it.hb?.toString()
-            fundalHeight.value = it.fundalHeight?.toString()
-            urineAlbumin.value = urineAlbumin.getStringFromPosition(it.urineAlbuminId)
+            weight.value = savedAnc.weight?.toString()
+            bpSystolic.value = savedAnc.bpSystolic?.toString()
+            bpDiastolic.value = savedAnc.bpDiastolic?.toString()
+            pulseRate.value = savedAnc.pulseRate
+            hb.value = savedAnc.hb?.toString()
+            fundalHeight.value = savedAnc.fundalHeight?.toString()
+            urineAlbumin.value = urineAlbumin.getStringFromPosition(savedAnc.urineAlbuminId)
             randomBloodSugarTest.value =
-                randomBloodSugarTest.getStringFromPosition(it.randomBloodSugarTestId)
-            dateOfTTOrTd1.value = it.tt1?.let { getDateFromLong(it) }
-            dateOfTTOrTd2.value = it.tt2?.let { getDateFromLong(it) }
-            dateOfTTOrTdBooster.value = it.ttBooster?.let { getDateFromLong(it) }
-            numFolicAcidTabGiven.value = it.numFolicAcidTabGiven.toString()
-            numIfaAcidTabGiven.value = it.numIfaAcidTabGiven.toString()
-            anyHighRisk.value =
-                if (it.anyHighRisk) anyHighRisk.entries!!.last() else anyHighRisk.entries!!.first()
-            if (it.anyHighRisk) {
-                highRiskCondition.value = highRiskCondition.getStringFromPosition(it.highRiskId)
-                list.add(list.indexOf(anyHighRisk) + 1, highRiskCondition)
-                if (highRiskCondition.value == highRiskCondition.entries!!.last()) {
-                    otherHighRiskCondition.value = it.otherHighRisk
-                    list.add(list.indexOf(highRiskCondition) + 1, otherHighRiskCondition)
+                randomBloodSugarTest.getStringFromPosition(savedAnc.randomBloodSugarTestId)
+            dateOfTTOrTd1.value = savedAnc.tt1?.let { getDateFromLong(it) }
+            dateOfTTOrTd2.value = savedAnc.tt2?.let { getDateFromLong(it) }
+            dateOfTTOrTdBooster.value = savedAnc.ttBooster?.let { getDateFromLong(it) }
+            numFolicAcidTabGiven.value = savedAnc.numFolicAcidTabGiven.toString()
+            numIfaAcidTabGiven.value = savedAnc.numIfaAcidTabGiven.toString()
+            savedAnc.anyHighRisk?.let {
+                anyHighRisk.value =
+                    if (it) anyHighRisk.entries!!.last() else anyHighRisk.entries!!.first()
+                if (it) {
+                    highRiskCondition.value =
+                        highRiskCondition.getStringFromPosition(savedAnc.highRiskId)
+                    list.add(list.indexOf(anyHighRisk) + 1, highRiskCondition)
+                    if (highRiskCondition.value == highRiskCondition.entries!!.last()) {
+                        otherHighRiskCondition.value = savedAnc.otherHighRisk
+                        list.add(list.indexOf(highRiskCondition) + 1, otherHighRiskCondition)
+                    }
                 }
             }
+
             highRiskReferralFacility.value =
-                highRiskReferralFacility.getStringFromPosition(it.referralFacilityId)
+                highRiskReferralFacility.getStringFromPosition(savedAnc.referralFacilityId)
             hrpConfirm.value =
-                it.hrpConfirmed?.let { if (it) hrpConfirm.entries!!.last() else hrpConfirm.entries!!.first() }
-            if (it.hrpConfirmed == true) {
-                hrpConfirmedBy.value = hrpConfirmedBy.getStringFromPosition(it.hrpConfirmedById)
+                savedAnc.hrpConfirmed?.let { if (it) hrpConfirm.entries!!.last() else hrpConfirm.entries!!.first() }
+            if (savedAnc.hrpConfirmed == true) {
+                hrpConfirmedBy.value =
+                    hrpConfirmedBy.getStringFromPosition(savedAnc.hrpConfirmedById)
                 list.add(list.indexOf(hrpConfirm) + 1, hrpConfirmedBy)
             }
-            maternalDeath.value =
-                if (it.maternalDeath) maternalDeath.entries!!.last() else maternalDeath.entries!!.first()
-            if (it.maternalDeath) {
-                maternalDeathProbableCause.value =
-                    maternalDeathProbableCause.getStringFromPosition(it.maternalDeathProbableCauseId)
-                maternalDateOfDeath.value = it.deathDate?.let { it1 -> getDateFromLong(it1) }
-                list.addAll(
-                    list.indexOf(maternalDeath) + 1,
-                    listOf(maternalDeathProbableCause, maternalDateOfDeath)
-                )
-                otherMaternalDeathProbableCause.value = it.otherMaternalDeathProbableCause
-                if (maternalDeathProbableCause.value == maternalDeathProbableCause.entries!!.last()) list.add(
-                    list.indexOf(maternalDeathProbableCause) + 1, otherMaternalDeathProbableCause
-                )
+            savedAnc.maternalDeath?.let {
+                maternalDeath.value =
+                    if (it) maternalDeath.entries!!.last() else maternalDeath.entries!!.first()
+                if (it) {
+                    maternalDeathProbableCause.value =
+                        maternalDeathProbableCause.getStringFromPosition(savedAnc.maternalDeathProbableCauseId)
+                    maternalDateOfDeath.value =
+                        savedAnc.deathDate?.let { it1 -> getDateFromLong(it1) }
+                    list.addAll(
+                        list.indexOf(maternalDeath) + 1,
+                        listOf(maternalDeathProbableCause, maternalDateOfDeath)
+                    )
+                    otherMaternalDeathProbableCause.value =
+                        savedAnc.otherMaternalDeathProbableCause
+                    if (maternalDeathProbableCause.value == maternalDeathProbableCause.entries!!.last()) list.add(
+                        list.indexOf(maternalDeathProbableCause) + 1,
+                        otherMaternalDeathProbableCause
+                    )
+                }
+
+
             }
             deliveryDone.value =
-                if (it.pregnantWomanDelivered == true) deliveryDone.entries!!.first() else deliveryDone.entries!!.last()
+                if (savedAnc.pregnantWomanDelivered == true) deliveryDone.entries!!.first() else deliveryDone.entries!!.last()
         }
         setUpPage(list)
 
@@ -733,7 +745,9 @@ class PregnantWomanAncVisitDataset(
             cache.ttBooster = dateOfTTOrTdBooster.value?.let { getLongFromDate(it) }
             cache.numFolicAcidTabGiven = numFolicAcidTabGiven.value?.toInt() ?: 0
             cache.numIfaAcidTabGiven = numFolicAcidTabGiven.value?.toInt() ?: 0
-            cache.anyHighRisk = anyHighRisk.value == anyHighRisk.entries!!.last()
+            anyHighRisk.value?.let {
+                cache.anyHighRisk = it == anyHighRisk.entries!!.last()
+            }
             cache.highRisk = highRiskCondition.value
             cache.highRiskId = highRiskCondition.getPosition()
             cache.otherHighRisk = otherHighRiskCondition.value
@@ -747,8 +761,9 @@ class PregnantWomanAncVisitDataset(
             cache.maternalDeathProbableCauseId = maternalDeathProbableCause.getPosition()
             cache.otherMaternalDeathProbableCause = otherMaternalDeathProbableCause.value
             cache.deathDate = maternalDateOfDeath.value?.let { getLongFromDate(it) }
-            cache.pregnantWomanDelivered =
-                deliveryDone.value?.let { it == deliveryDone.entries!!.first() }
+            deliveryDone.value?.let {
+                cache.pregnantWomanDelivered = it == deliveryDone.entries!!.first()
+            }
         }
     }
 

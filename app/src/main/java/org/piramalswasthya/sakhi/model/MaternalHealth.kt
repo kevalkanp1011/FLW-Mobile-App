@@ -328,7 +328,7 @@ data class PregnantWomanAncCache(
     var ttBooster: Long? = null,
     var numFolicAcidTabGiven: Int = 0,
     var numIfaAcidTabGiven: Int = 0,
-    var anyHighRisk: Boolean = false,
+    var anyHighRisk: Boolean? = null,
     var highRisk: String? = null,
     var highRiskId: Int = 0,
     var otherHighRisk: String? = null,
@@ -337,7 +337,7 @@ data class PregnantWomanAncCache(
     var hrpConfirmed: Boolean? = null,
     var hrpConfirmedBy: String? = null,
     var hrpConfirmedById: Int = 0,
-    var maternalDeath: Boolean = false,
+    var maternalDeath: Boolean? = null,
     var maternalDeathProbableCause: String? = null,
     var maternalDeathProbableCauseId: Int = 0,
     var otherMaternalDeathProbableCause: String? = null,
@@ -413,13 +413,13 @@ data class ANCPost(
     val tdDoseBoosterDate: String? = null,
     val folicAcidTabs: Int = 0,
     val ifaTabs: Int = 0,
-    val isHighRisk: Boolean = false,
+    val isHighRisk: Boolean? = null,
     val highRiskCondition: String? = null,
     val otherHighRiskCondition: String? = null,
     val referralFacility: String? = null,
     val isHrpConfirmed: Boolean? = null,
     val hrpIdentifiedBy: String? = null,
-    val isMaternalDeath: Boolean = false,
+    val isMaternalDeath: Boolean? = null,
     val probableCauseOfDeath: String? = null,
     val otherCauseOfDeath: String? = null,
     val deathDate: String? = null,
@@ -513,6 +513,7 @@ data class BenWithAncVisitCache(
     }
 
     fun asDomainModel(): BenWithAncListDomain {
+        val lastAncRecord = savedAncRecords.maxByOrNull { it.ancDate }
         return BenWithAncListDomain(
 //            ecBenId,
             ben.asBasicDomainModel(),
@@ -525,15 +526,19 @@ data class BenWithAncVisitCache(
                     syncState = it.syncState
                 )
             }.sortedBy { it.visitNumber },
-            pmsmaFillable = if (pmsma == null) savedAncRecords.any { it.visitNumber == 1 } else false,
+            pmsmaFillable = if (pmsma == null) savedAncRecords.any { it.visitNumber == 1 } else true,
             hasPmsma = pmsma != null,
             showAddAnc = if (savedAncRecords.isEmpty())
                 TimeUnit.MILLISECONDS.toDays(
                     getTodayMillis() - pwr.lmpDate
                 ) >= Konstants.minAnc1Week * 7
             else
-                savedAncRecords.maxBy { it.ancDate }.visitNumber < 4 && TimeUnit.MILLISECONDS.toDays(
-                    getTodayMillis() - savedAncRecords.maxBy { it.ancDate }.ancDate
+                lastAncRecord != null &&
+                        (pwr.lmpDate + TimeUnit.DAYS.toMillis(280)) > (lastAncRecord.ancDate + TimeUnit.DAYS.toMillis(
+                    28
+                )) &&
+                        lastAncRecord.visitNumber < 4 && TimeUnit.MILLISECONDS.toDays(
+                    getTodayMillis() - lastAncRecord.ancDate
                 ) > 28,
             syncState = if (pmsma == null && savedAncRecords.isEmpty()) null else if (pmsma?.syncState == SyncState.UNSYNCED || savedAncRecords.any { it.syncState != SyncState.SYNCED }) SyncState.UNSYNCED else SyncState.SYNCED
         )
