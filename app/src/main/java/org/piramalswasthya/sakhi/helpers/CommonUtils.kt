@@ -1,7 +1,6 @@
 package org.piramalswasthya.sakhi.helpers
 
 import androidx.core.text.isDigitsOnly
-import org.piramalswasthya.sakhi.model.AncFormState
 import org.piramalswasthya.sakhi.model.AncStatus
 import org.piramalswasthya.sakhi.model.BenBasicDomain
 import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
@@ -11,7 +10,6 @@ import org.piramalswasthya.sakhi.model.BenWithPwrDomain
 import org.piramalswasthya.sakhi.model.BenWithTbScreeningDomain
 import org.piramalswasthya.sakhi.model.BenWithTbSuspectedDomain
 import org.piramalswasthya.sakhi.model.PregnantWomenVisitDomain
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -192,15 +190,15 @@ private fun getAncStatus(
     return if (weeks >= weekRange) AncStatus(
         benId,
         visitNumber,
-        if (visitNumber == 1) AncFormState.ALLOW_FILL else {
-            if (lastAnc == null) AncFormState.NO_FILL else AncFormState.ALLOW_FILL
-        },
+//        if (visitNumber == 1) AncFormState.ALLOW_FILL else {
+//            if (lastAnc == null) AncFormState.NO_FILL else AncFormState.ALLOW_FILL
+//        },
         0
     )
     else AncStatus(
         benId,
         visitNumber,
-        AncFormState.NO_FILL,
+//        AncFormState.NO_FILL,
         0
     )
 }
@@ -218,10 +216,10 @@ fun getAncStatusList(
 fun hasPendingAncVisit(
     list: List<AncStatus>, lmpDate: Long, benId: Long, at: Long
 ): Boolean {
-    val l = getAncStatusList(list, lmpDate, benId, at).map { it.formState }
-    Timber.tag("MaternalHealthRepo").d("Emitted : at CommonUtls : $l")
-    return l.contains(AncFormState.ALLOW_FILL)
-
+//    val l = getAncStatusList(list, lmpDate, benId, at).map { it.formState }
+//    Timber.tag("MaternalHealthRepo").d("Emitted : at CommonUtls : $l")
+//    return l.contains(AncFormState.ALLOW_FILL)
+    return true;
 }
 
 fun getTodayMillis() = Calendar.getInstance().setToStartOfTheDay().timeInMillis

@@ -413,9 +413,9 @@ class EcrRepo @Inject constructor(
             try {
                 val ecr = EligibleCoupleRegCache(
                     benId = ecrJson.getLong("benId"),
-                    dateOfReg = if (ecrJson.has("dateOfReg")) getLongFromDate(
+                    dateOfReg = if (ecrJson.has("registrationDate")) getLongFromDate(
                         ecrJson.getString(
-                            "dateOfReg"
+                            "registrationDate"
                         )
                     ) else getLongFromDate(
                         ecrJson.getString("createdDate")

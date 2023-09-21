@@ -20,8 +20,8 @@
     <string name="nhhr_first_name_hof">First Name of Head of the family</string>
     <string name="nhhr_last_name_hof">Last Name / Surname of head of the family</string>
     <string name="nhhr_mob_no_hof">Mobile No of Head of Family</string>
-    <string name="nhhr_house_no">House No.</string>
-    <string name="nhhr_ward_no">Ward No.</string>
+    <string name="nhhr_house_no">House No</string>
+    <string name="nhhr_ward_no">Ward No</string>
     <string name="nhhr_ward_name">Ward Name</string>
     <string name="nhhr_mohalla_name">Mohalla Name</string>
     <string name="nhhr_poverty_line">Economic Status</string>

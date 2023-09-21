@@ -377,7 +377,7 @@ class PregnantWomanRegistrationDataset(
 
     private var homeDeliverydbVal: String? = null
 
-    suspend fun setUpPage(ben: BenRegCache?, assess: HRPPregnantAssessCache?, saved: PregnantWomanRegistrationCache?) {
+    suspend fun setUpPage(ben: BenRegCache?, assess: HRPPregnantAssessCache?, saved: PregnantWomanRegistrationCache?, lastTrackTimestamp : Long? = null) {
         val list = mutableListOf(
             dateOfReg,
             rchId,
@@ -441,6 +441,9 @@ class PregnantWomanRegistrationDataset(
 
             isHrpCase.value = if (isHighRisk()) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(R.array.yes_no)[1]
 
+        }
+        lastTrackTimestamp?.let {
+            dateOfReg.min = it
         }
         assess?.let {
             noOfDeliveries.value = getLocalValueInArray(R.array.yes_no, it.noOfDeliveries)

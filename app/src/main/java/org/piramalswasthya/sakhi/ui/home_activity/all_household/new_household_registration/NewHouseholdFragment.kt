@@ -160,7 +160,7 @@ class NewHouseholdFragment : Fragment() {
         binding.cvPatientInformation.visibility = View.GONE
         viewModel.readRecord.observe(viewLifecycleOwner) { notIt ->
             notIt?.let { recordExists ->
-                binding.fabEdit.visibility = if (recordExists) View.VISIBLE else View.GONE
+                binding.fabEdit.visibility = /*if (recordExists) View.VISIBLE else */View.GONE
                 binding.btnSubmit.visibility = if (!recordExists) View.VISIBLE else View.GONE
                 val adapter = FormInputAdapter(
                     formValueListener = FormInputAdapter.FormValueListener { formId, index ->

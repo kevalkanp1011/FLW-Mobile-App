@@ -7,7 +7,7 @@
 
         <variable
             name="visit"
-            type="org.piramalswasthya.sakhi.model.PregnantWomenVisitDomain" />
+            type="org.piramalswasthya.sakhi.model.BenWithAncListDomain" />
 
         <variable
             name="clickListener"
@@ -49,12 +49,22 @@
                 android:drawablePadding="@dimen/padding_small"
                 android:gravity="center_vertical"
                 android:padding="@dimen/padding_small"
-                android:text="@{visit.familyHeadName}"
+                android:text="@{visit.ben.familyHeadName}"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 android:textColor="?attr/colorPrimaryVariant"
                 app:drawableLeftCompat="@drawable/ic__hh"
                 app:drawableTint="?attr/colorPrimary"
                 tools:text="Hello Meister" />
+
+                <ImageView
+                    android:id="@+id/iv_sync_state"
+                    android:layout_width="24dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginHorizontal="@dimen/padding_small"
+                    android:contentDescription="@string/iv_sync_state_tv"
+                    app:syncState="@{visit.syncState}"
+                    tools:src="@drawable/ic_synced" />
 
             </LinearLayout>
 
@@ -89,7 +99,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@{visit.name}"
+                            android:text="@{visit.ben.benFullName}"
                             android:textColor="?attr/colorOnPrimary"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                             tools:text="TextView" />
@@ -111,7 +121,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{visit.age}"
+                            android:text="@{visit.ben.age}"
                             android:textColor="?attr/colorOnPrimary"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                             tools:text="TextView" />
@@ -133,7 +143,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{visit.spouseName}"
+                            android:text="@{visit.ben.spouseName}"
                             android:textColor="?attr/colorOnPrimary"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                             tools:text="TextView" />
@@ -164,7 +174,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            benIdText="@{visit.benId}"
+                            benIdText="@{visit.ben.benId}"
                             android:textColor="?attr/colorOnPrimary"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                             tools:text="TextView" />
@@ -186,7 +196,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{visit.mobileNo}"
+                            android:text="@{visit.ben.mobileNo}"
                             android:textColor="?attr/colorOnPrimary"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                             tools:text="TextView" />
@@ -208,7 +218,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{visit.rchId}"
+                            android:text="@{visit.ben.rchId}"
                             android:textColor="?attr/colorOnPrimary"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                             tools:text="TextView" />
@@ -240,7 +250,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{visit.weeksOfPregnancyString}"
+                            android:text="@{visit.weeksOfPregnancy}"
                             android:textColor="?attr/colorOnPrimary"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                             tools:text="TextView" />
@@ -293,20 +303,56 @@
 
             </LinearLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_visit"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_normal"
-                android:layout_marginBottom="@dimen/margin_normal"
-                android:backgroundTint="@android:color/holo_green_dark"
-                android:onClick="@{() -> clickListener.onClickedVisit(visit)}"
-                android:text="@string/anc_visits"
-                android:textColor="?attr/colorOnPrimary"
+                android:orientation="horizontal"
+                android:layout_marginVertical="@dimen/margin_normal"
+                android:gravity="center_vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linear_pwr_tracking_Layout" />
+                app:layout_constraintTop_toBottomOf="@+id/linear_pwr_tracking_Layout">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_add_anc"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="@dimen/margin_normal"
+
+                    android:backgroundTint="@android:color/holo_green_dark"
+                    android:onClick="@{() -> clickListener.addVisit(visit)}"
+                    android:text="@string/add_anc_visits"
+                    android:textColor="?attr/colorOnPrimary"
+                    />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_pmsma"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="@dimen/margin_normal"
+                    android:backgroundTint="@android:color/holo_green_dark"
+                    android:onClick="@{() -> clickListener.pmsma(visit)}"
+                    android:text="@string/pmsma"
+                    android:textColor="?attr/colorOnPrimary"
+                    />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_view_visits"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="@dimen/margin_normal"
+
+                    android:backgroundTint="@android:color/holo_green_dark"
+                    android:onClick="@{() -> clickListener.showVisits(visit)}"
+                    android:text="@string/anc_visits"
+                    android:textColor="?attr/colorOnPrimary"
+                    />
+            </LinearLayout>
+
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

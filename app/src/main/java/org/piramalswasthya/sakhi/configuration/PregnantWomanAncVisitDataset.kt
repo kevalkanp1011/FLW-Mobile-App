@@ -4,19 +4,16 @@ import android.content.Context
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.helpers.Languages
-import org.piramalswasthya.sakhi.helpers.getMinAncFillDate
 import org.piramalswasthya.sakhi.helpers.getWeeksOfPregnancy
-import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.InputType
 import org.piramalswasthya.sakhi.model.PregnantWomanAncCache
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
-import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 class PregnantWomanAncVisitDataset(
-    private val visitNumber: Int, context: Context, currentLanguage: Languages
+    context: Context, currentLanguage: Languages
 ) : Dataset(context, currentLanguage) {
 
     private var lmp: Long = 0L
@@ -38,9 +35,9 @@ class PregnantWomanAncVisitDataset(
 
     private val ancVisit = FormElement(
         id = 3,
-        inputType = InputType.TEXT_VIEW,
+        inputType = InputType.DROPDOWN,
         title = "ANC Period",
-        required = false,
+        required = true,
     )
     private val isAborted = FormElement(
         id = 4,
@@ -323,6 +320,7 @@ class PregnantWomanAncVisitDataset(
 
 
     suspend fun setUpPage(
+        visitNumber: Int,
         ben: BenRegCache?,
         regis: PregnantWomanRegistrationCache,
         lastAnc: PregnantWomanAncCache?,
@@ -358,47 +356,18 @@ class PregnantWomanAncVisitDataset(
         abortionDate.max = minOf(System.currentTimeMillis(), lmp + TimeUnit.DAYS.toMillis(21 * 7))
 
         ben?.let {
-            if (visitNumber == 1) {
-                ancDate.min = (lmp + TimeUnit.DAYS.toMillis(Konstants.minAnc1Week * 7L + 1L)).also {
-                    ancDate.value = getDateFromLong(it)
-                }
-                ancDate.max = minOf(
-                    Calendar.getInstance().setToStartOfTheDay().timeInMillis,
-                    lmp + TimeUnit.DAYS.toMillis((Konstants.maxAnc1Week + 1) * 7L - 1)
-                )
-            } else {
-                lastAnc?.let {
-                    lastAncVisitDate = it.ancDate
-                    val minWeekInit = when (visitNumber) {
-                        2 -> Konstants.minAnc2Week
-                        3 -> Konstants.minAnc3Week
-                        4 -> Konstants.minAnc4Week
-                        else -> throw IllegalStateException("visit number not in [2,4]")
-                    }
-                    val maxWeek = when (visitNumber) {
-                        2 -> Konstants.maxAnc2Week
-                        3 -> Konstants.maxAnc3Week
-                        4 -> Konstants.maxAnc4Week
-                        else -> throw IllegalStateException("visit number not in [2,4]")
-                    }
-                    val minWeek = getMinAncFillDate(
-                        minWeekInit, getWeeksOfPregnancy(
-                            it.ancDate,
-                            lmp,
-
-                            )
-                    )
-                    ancDate.min = (lmp + TimeUnit.DAYS.toMillis(minWeek * 7L + 1L)).also {
-                        ancDate.value = getDateFromLong(it)
-                    }
-                    ancDate.max = minOf(
-                        Calendar.getInstance().setToStartOfTheDay().timeInMillis,
-                        lmp + TimeUnit.DAYS.toMillis((maxWeek + 1) * 7L - 1)
-                    )
-                }
+            ancDate.min = lmp + TimeUnit.DAYS.toMillis(7 * Konstants.minAnc1Week.toLong() + 1)
+            ancVisit.entries = arrayOf("1", "2", "3", "4")
+            lastAnc?.let { last ->
+                ancDate.min = last.ancDate + TimeUnit.DAYS.toMillis(4 * 7)
+                ancVisit.entries = arrayOf(2, 3, 4).filter {
+                    it > last.visitNumber
+                }.map { it.toString() }.toTypedArray()
             }
+            ancDate.max = minOf(getEddFromLmp(lmp), System.currentTimeMillis())
+            ancDate.value = getDateFromLong(ancDate.max!!)
             maternalDateOfDeath.min = maxOf(lmp, lastAncVisitDate) + TimeUnit.DAYS.toMillis(1)
-            maternalDateOfDeath.max = maxOf(getEddFromLmp(lmp), System.currentTimeMillis())
+            maternalDateOfDeath.max = minOf(getEddFromLmp(lmp), System.currentTimeMillis())
         }
 
 //        ancDate.value = getDateFromLong(System.currentTimeMillis())
@@ -411,15 +380,24 @@ class PregnantWomanAncVisitDataset(
             weeks.toString()
         }
         ancVisit.value = visitNumber.toString()
-        if (visitNumber == 1) {
-            list.remove(fundalHeight)
-            list.remove(numIfaAcidTabGiven)
-        } else {
-            list.remove(numFolicAcidTabGiven)
+        if (saved == null) {
+            if (visitNumber == 1) {
+                list.remove(fundalHeight)
+                list.remove(numIfaAcidTabGiven)
+            } else {
+                list.remove(numFolicAcidTabGiven)
+            }
         }
         saved?.let {
+            val woP = getWeeksOfPregnancy(it.ancDate, lmp)
+            if (woP <= 12) {
+                list.remove(fundalHeight)
+                list.remove(numIfaAcidTabGiven)
+            } else {
+                list.remove(numFolicAcidTabGiven)
+            }
             ancDate.value = getDateFromLong(it.ancDate)
-            weekOfPregnancy.value = getWeeksOfPregnancy(it.ancDate, lmp).toString()
+            weekOfPregnancy.value = woP.toString()
             isAborted.value =
                 if (it.isAborted) isAborted.entries!!.last() else isAborted.entries!!.first()
             if (it.isAborted) {
@@ -511,13 +489,60 @@ class PregnantWomanAncVisitDataset(
                         min = maxOf(lastAncVisitDate, long) + TimeUnit.DAYS.toMillis(1)
                     }
                     weekOfPregnancy.value = weeks.toString()
+                    val calcVisitNumber = when (weeks) {
+                        in Konstants.minAnc1Week..Konstants.maxAnc1Week -> 1
+                        in Konstants.minAnc2Week..Konstants.maxAnc2Week -> 2
+                        in Konstants.minAnc3Week..Konstants.maxAnc3Week -> 3
+                        in Konstants.minAnc4Week..Konstants.maxAnc4Week -> 4
+                        else -> 0
+                    }
+                    if (ancVisit.entries?.contains(calcVisitNumber.toString()) == true) {
+                        ancVisit.value = calcVisitNumber.toString()
+                        handleListOnValueChanged(
+                            ancVisit.id,
+                            ancVisit.entries!!.indexOf(ancDate.value)
+                        )
+                    }
                     if (weeks > 12) {
-                        triggerDependants(source = dateOfTTOrTdBooster, addItems = emptyList() , removeItems = listOf(numFolicAcidTabGiven))
-                    }else{
-                        triggerDependants(source = dateOfTTOrTdBooster, removeItems = emptyList() , addItems = listOf(numFolicAcidTabGiven))
+                        triggerDependants(
+                            source = dateOfTTOrTdBooster,
+                            addItems = emptyList(),
+                            removeItems = listOf(numFolicAcidTabGiven)
+                        )
+                    } else {
+                        triggerDependants(
+                            source = dateOfTTOrTdBooster,
+                            removeItems = emptyList(),
+                            addItems = listOf(numFolicAcidTabGiven)
+                        )
                     }
                 }
                 -1
+            }
+
+            ancVisit.id -> {
+                if (ancVisit.value == "1")
+                    triggerDependants(
+                        source = ancVisit,
+                        addItems = listOf(numFolicAcidTabGiven),
+                        removeItems = listOf(fundalHeight, numIfaAcidTabGiven),
+                        position = getIndexById(dateOfTTOrTdBooster.id)
+                    )
+                else {
+                    triggerDependants(
+                        source = ancVisit,
+                        removeItems = listOf(numFolicAcidTabGiven),
+                        addItems = listOf(fundalHeight),
+                        position = getIndexById(hb.id) + 1
+                    )
+                    triggerDependants(
+                        source = ancVisit,
+                        removeItems = listOf(),
+                        addItems = listOf(numIfaAcidTabGiven),
+                        position = getIndexById(dateOfTTOrTdBooster.id) + 1
+                    )
+
+                }
             }
 
             isAborted.id -> triggerDependants(
@@ -685,6 +710,7 @@ class PregnantWomanAncVisitDataset(
 
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
         (cacheModel as PregnantWomanAncCache).let { cache ->
+            cache.visitNumber = ancVisit.value!!.toInt()
             cache.ancDate = getLongFromDate(ancDate.value)
             cache.isAborted = isAborted.value == isAborted.entries!!.last()
             cache.abortionType = abortionType.value
@@ -735,6 +761,6 @@ class PregnantWomanAncVisitDataset(
                 englishResources.getStringArray(R.array.nbr_reproductive_status_array)[2]
             reproductiveStatusId = 3
         }
-        it.processed = "U"
+        if (it.processed != "N") it.processed = "U"
     }
 }

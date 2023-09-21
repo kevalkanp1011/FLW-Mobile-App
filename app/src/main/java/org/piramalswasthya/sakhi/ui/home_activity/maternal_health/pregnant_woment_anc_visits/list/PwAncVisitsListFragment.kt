@@ -10,6 +10,7 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
@@ -41,18 +42,27 @@ class PwAncVisitsListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.btnNextPage.visibility = View.GONE
         val benAdapter = AncVisitListAdapter(
-            AncVisitListAdapter.PregnancyVisitClickListener {
+            AncVisitListAdapter.PregnancyVisitClickListener(showVisits = {
                 viewModel.updateBottomSheetData(it)
                 if (!bottomSheet.isVisible)
                     bottomSheet.show(childFragmentManager, "ANC")
-            })
+            },
+                addVisit = { benId, visitNumber ->
+                    findNavController().navigate(
+                        PwAncVisitsListFragmentDirections.actionPwAncVisitsFragmentToPwAncFormFragment(
+                            benId, visitNumber
+                        )
+                    )
+                },
+                pmsma = { benId, hhId ->
+                    findNavController().navigate(
+                        PwAncVisitsListFragmentDirections.actionPwAncVisitsFragmentToPmsmaFragment(
+                            benId, hhId
+                        )
+                    )
+                })
+        )
         binding.rvAny.adapter = benAdapter
-        lifecycleScope.launch {
-            viewModel.bottomSheetList.collect {
-//                if(bottomSheet.isVisible)
-                bottomSheet.submitListToAncRv(it)
-            }
-        }
         lifecycleScope.launch {
             viewModel.benList.collect {
                 if (it.isEmpty())
@@ -86,11 +96,13 @@ class PwAncVisitsListFragment : Fragment() {
     }
 
 
-
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__pregnancy, getString(R.string.icon_title_pmt))
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__pregnancy,
+                getString(R.string.icon_title_pmt)
+            )
         }
     }
 

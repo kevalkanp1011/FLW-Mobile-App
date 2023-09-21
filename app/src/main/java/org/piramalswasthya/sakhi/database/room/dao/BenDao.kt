@@ -136,8 +136,9 @@ interface BenDao {
     @Query("SELECT COUNT(*) FROM BEN_BASIC_CACHE WHERE pwHrp = 1 and villageId=:selectedVillage")
     fun getAllWomenListForPmsmaCount(selectedVillage: Int): Flow<Int>
 
-    @Query("SELECT pr.benId as benId, ben.firstName ||\" \"||COALESCE(ben.lastName,'') as name, ben.dob as dob, ben.gen_spouseName as spouseName, ben.contactNumber as mobileNo, ben.rchId, h.fam_familyHeadName as familyHeadName,  pr.lmpDate as lmp FROM PREGNANCY_REGISTER pr INNER JOIN BENEFICIARY  ben ON pr.benId=ben.beneficiaryId JOIN HOUSEHOLD h ON ben.householdId = h.householdId where ben.loc_village_id=:selectedVillage and pr.active=1")
-    fun getAllRegisteredPregnancyWomenList(selectedVillage: Int): Flow<List<PregnantWomenVisitCache>>
+    @Transaction
+    @Query("SELECT *  from BEN_BASIC_CACHE  ben inner join pregnancy_register pwr on pwr.benId = ben.benId where pwr.active = 1 and ben.villageId=:selectedVillage group by ben.benId")
+    fun getAllRegisteredPregnancyWomenList(selectedVillage: Int): Flow<List<BenWithAncVisitCache>>
 
     @Query("SELECT count(*) FROM PREGNANCY_REGISTER pr INNER JOIN BENEFICIARY  ben ON pr.benId=ben.beneficiaryId where ben.loc_village_id=:selectedVillage and pr.active=1")
     fun getAllRegisteredPregnancyWomenListCount(selectedVillage: Int): Flow<Int>

@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
@@ -48,12 +47,12 @@ class DeliveryStageListFragment : Fragment() {
                     Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
                 },
             { hhId, benId ->
-                findNavController().navigate(
-                    DeliveryStageListFragmentDirections.actionDeliveryStageListFragmentToPmsmaFragment(
-                        benId,
-                        hhId
-                    )
-                )
+//                findNavController().navigate(
+//                    DeliveryStageListFragmentDirections.actionDeliveryStageListFragmentToPmsmaFragment(
+//                        benId,
+//                        hhId
+//                    )
+//                )
             }), resources.getString(R.string.pmsma_form))
         binding.rvAny.adapter = benAdapter
 

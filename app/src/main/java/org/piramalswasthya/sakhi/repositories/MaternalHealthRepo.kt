@@ -85,7 +85,6 @@ class MaternalHealthRepo @Inject constructor(
                         AncStatus(
                             it.benId,
                             it.visitNumber,
-                            AncFormState.ALREADY_FILLED,
                             (TimeUnit.MILLISECONDS.toDays(regis.lmpDate - it.ancDate) / 7).toInt()
 
                         )
@@ -98,7 +97,6 @@ class MaternalHealthRepo @Inject constructor(
                     AncStatus(
                         it.benId,
                         it.visitNumber,
-                        AncFormState.ALREADY_FILLED,
                         (TimeUnit.MILLISECONDS.toDays(regis.lmpDate - it.ancDate) / 7).toInt()
 
                     )

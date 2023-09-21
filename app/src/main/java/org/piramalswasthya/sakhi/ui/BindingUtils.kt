@@ -150,7 +150,7 @@ fun CardView.setBackgroundTintBasedOnNumMembers(numMembers: Int?) {
 @BindingAdapter("textBasedOnNumMembers")
 fun TextView.textBasedOnNumMembers(numMembers: Int?) {
     numMembers?.let {
-        text = if (it > 0) "Add Member" else "Add Head-Of-Family"
+        text = if (it > 0) "Add Member" else "Add Head of Family"
     }
 }
 
@@ -357,25 +357,6 @@ fun ImageView.setBenImage(uriString: String?) {
 //    })
 //}
 
-@BindingAdapter("anc_state")
-fun Button.setAncState(ancFormState: AncFormState?) {
-    ancFormState?.let {
-        visibility = View.VISIBLE
-        when (it) {
-            ALLOW_FILL -> {
-                text = "FILL"
-            }
-
-            ALREADY_FILLED -> {
-                text = "VIEW"
-            }
-
-            NO_FILL -> {
-                visibility = View.INVISIBLE
-            }
-        }
-    }
-}
 
 @BindingAdapter("list_avail")
 fun Button.setCbacListAvail(list: List<Any>?) {

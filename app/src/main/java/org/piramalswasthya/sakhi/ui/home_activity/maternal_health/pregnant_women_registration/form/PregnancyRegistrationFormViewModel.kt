@@ -18,6 +18,7 @@ import org.piramalswasthya.sakhi.model.HRPNonPregnantAssessCache
 import org.piramalswasthya.sakhi.model.HRPPregnantAssessCache
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
+import org.piramalswasthya.sakhi.repositories.EcrRepo
 import org.piramalswasthya.sakhi.repositories.HRPRepo
 import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
 import org.piramalswasthya.sakhi.utils.HelperUtil
@@ -30,6 +31,7 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
     preferenceDao: PreferenceDao,
     @ApplicationContext context: Context,
     private val maternalHealthRepo: MaternalHealthRepo,
+    ecrRepo: EcrRepo,
     private val hrpRepo: HRPRepo,
     private val benRepo: BenRepo
 //    private val householdRepo: HouseholdRepo,
@@ -95,10 +97,13 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
                 _recordExists.value = false
             }
 
+            val latestTrack = ecrRepo.getLatestEctByBenId(benId)
+
             dataset.setUpPage(
                 ben,
                 assess,
-                if (recordExists.value == true) pregnancyRegistrationForm else null
+                if (recordExists.value == true) pregnancyRegistrationForm else null,
+                latestTrack?.visitDate
             )
             dataset.updateList(30,getIndexOfHRP())
 

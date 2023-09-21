@@ -24,7 +24,7 @@ class ECTrackingListBottomSheetFragment : BottomSheetDialogFragment() {
     private val binding: BottomSheetEcTrackingListBinding
         get() = _binding!!
 
-    private val viewModel: EligibleCoupleTrackingListViewModel by viewModels({ requireParentFragment() })
+        private val viewModel: EligibleCoupleTrackingListViewModel by viewModels({ requireParentFragment() })
 
     override fun onCreateView(
         inflater: LayoutInflater,
