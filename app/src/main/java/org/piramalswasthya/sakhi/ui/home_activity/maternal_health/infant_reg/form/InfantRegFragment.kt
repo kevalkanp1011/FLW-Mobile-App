@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +15,7 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
+import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -64,10 +66,30 @@ class InfantRegFragment : Fragment() {
 
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
+                InfantRegViewModel.State.IDLE -> {
+                }
+
+                InfantRegViewModel.State.SAVING -> {
+                    binding.llContent.visibility = View.GONE
+                    binding.pbForm.visibility = View.VISIBLE
+                }
+
                 InfantRegViewModel.State.SAVE_SUCCESS -> {
+                    binding.llContent.visibility = View.VISIBLE
+                    binding.pbForm.visibility = View.GONE
+                    Toast.makeText(context, "Save Successful!!!", Toast.LENGTH_LONG).show()
+                    WorkerUtils.triggerAmritPushWorker(requireContext())
                     findNavController().navigateUp()
                 }
 
+                InfantRegViewModel.State.SAVE_FAILED -> {
+                    Toast.makeText(
+
+                        context, "Something wend wong! Contact testing!", Toast.LENGTH_LONG
+                    ).show()
+                    binding.llContent.visibility = View.VISIBLE
+                    binding.pbForm.visibility = View.GONE
+                }
                 else -> {}
             }
         }

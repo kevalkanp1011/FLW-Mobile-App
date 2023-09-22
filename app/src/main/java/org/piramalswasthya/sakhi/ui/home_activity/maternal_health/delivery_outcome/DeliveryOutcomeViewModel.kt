@@ -13,6 +13,8 @@ import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.DeliveryOutcomeCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.DeliveryOutcomeRepo
+import org.piramalswasthya.sakhi.repositories.EcrRepo
+import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -22,6 +24,8 @@ class DeliveryOutcomeViewModel @Inject constructor(
     preferenceDao: PreferenceDao,
     @ApplicationContext context: Context,
     private val deliveryOutcomeRepo: DeliveryOutcomeRepo,
+    private val ecrRepo: EcrRepo,
+    private val pwrRepo: MaternalHealthRepo,
     private val benRepo: BenRepo
 ) : ViewModel() {
     val benId =
@@ -96,9 +100,24 @@ class DeliveryOutcomeViewModel @Inject constructor(
                     _state.postValue(State.SAVING)
                     dataset.mapValues(deliveryOutcome, 1)
                     deliveryOutcomeRepo.saveDeliveryOutcome(deliveryOutcome)
+
+                    val ecr = ecrRepo.getSavedRecord(deliveryOutcome.benId)!!
+                    deliveryOutcome.liveBirth?.let {
+                        ecr.noOfLiveChildren = ecr.noOfLiveChildren + it
+                    }
+                    deliveryOutcome.deliveryOutcome?.let {
+                        ecr.noOfChildren = ecr.noOfChildren + it
+                    }
+                    ecr.processed = "U"
+                    ecrRepo.persistRecord(ecr)
+
+                    val pwr = pwrRepo.getSavedRegistrationRecord(deliveryOutcome.benId)!!
+                    pwr.active = false;
+                    pwr.processed = "U"
+                    pwrRepo.persistRegisterRecord(pwr)
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
-                    Timber.d("saving delivery ooutcome data failed!!")
+                    Timber.d("saving delivery outcome data failed!!")
                     _state.postValue(State.SAVE_FAILED)
                 }
             }

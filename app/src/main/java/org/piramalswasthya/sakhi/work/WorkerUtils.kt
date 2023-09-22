@@ -86,6 +86,15 @@ object WorkerUtils {
         val pushPWWorkRequest = OneTimeWorkRequestBuilder<PushPWRToAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
+        val pushPmsmaWorkRequest = OneTimeWorkRequestBuilder<PushPmsmaToAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
+        val pushDeliverOutcomeWorkRequest = OneTimeWorkRequestBuilder<PushDeliveryOutcomeToAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
+        val pushInfantRegisterWorkRequest = OneTimeWorkRequestBuilder<PushInfantRegisterToAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
         val workManager = WorkManager.getInstance(context)
         workManager
             .beginUniqueWork(syncWorkerUniqueName, ExistingWorkPolicy.APPEND_OR_REPLACE, pushWorkRequest)
@@ -94,6 +103,9 @@ object WorkerUtils {
             .then(pushTBWorkRequest)
             .then(pushECToAmritWorker)
             .then(pushPWWorkRequest)
+            .then(pushPmsmaWorkRequest)
+            .then(pushDeliverOutcomeWorkRequest)
+            .then(pushInfantRegisterWorkRequest)
             .enqueue()
     }
     fun triggerAmritPullWorker(context : Context){
@@ -121,6 +133,9 @@ object WorkerUtils {
         val pullDeliveryOutcomeWorkRequest = OneTimeWorkRequestBuilder<PullDeliveryOutcomeFromAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
+        val pullInfantRegWorkRequest = OneTimeWorkRequestBuilder<PullInfantRegFromAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
         val setSyncCompleteWorker = OneTimeWorkRequestBuilder<UpdatePrefForPullCompleteWorker>()
             .build()
         val workManager = WorkManager.getInstance(context)
@@ -133,6 +148,7 @@ object WorkerUtils {
             .then(pullPWWorkRequest)
 //            .then(pullPMSMAWorkRequest)
             .then(pullDeliveryOutcomeWorkRequest)
+            .then(pullInfantRegWorkRequest)
             .then(setSyncCompleteWorker)
             .enqueue()
     }
@@ -202,6 +218,18 @@ object WorkerUtils {
         WorkManager.getInstance(context)
             .enqueueUniqueWork(
                 PushDeliveryOutcomeToAmritWorker.name,
+                ExistingWorkPolicy.APPEND_OR_REPLACE,
+                workRequest
+            )
+    }
+
+    fun triggerInfantRegPushWorker(context: Context){
+        val workRequest = OneTimeWorkRequestBuilder<PushInfantRegisterToAmritWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
+        WorkManager.getInstance(context)
+            .enqueueUniqueWork(
+                PushInfantRegisterToAmritWorker.name,
                 ExistingWorkPolicy.APPEND_OR_REPLACE,
                 workRequest
             )

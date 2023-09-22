@@ -114,4 +114,117 @@
         <item>हाँ</item>
         <item>नहीं</item>
     </string-array>
+
+
+    <!--  Post Natal Care Strings -->
+    <string name="pnc_period">PNC अवधि</string>
+    <string name="pnc_visit_date">PNC दौरे की तारीख</string>
+    <string name="pnc_ifa_tabs_given">दी गई IFA गोलियों की संख्या</string>
+    <string name="pnc_contraception_method">गर्भनिरोध का तरीका</string>
+    <string name="pnc_any_contraception_method">कोई भी गर्भनिरोध का तरीका</string>
+    <string name="pnc_other_ppc_method">अन्य PPC तरीका</string>
+    <string name="pnc_mother_danger_sign">मां का खतरनाक संकेत</string>
+    <string name="pnc_other_danger_sign">अन्य खतरनाक संकेत</string>
+    <string name="pnc_referral_facility">संदर्भ सुविधा</string>
+    <string name="pnc_mother_death">मां की मौके पर मौत</string>
+    <string name="pnc_death_date">मौत की तारीख</string>
+    <string name="pnc_death_cause">मां की मौत का संभावित कारण</string>
+    <string name="pnc_other_death_cause">अन्य मौत का कारण</string>
+    <string name="pnc_death_place">मौत का स्थान</string>
+    <string name="pnc_remarks">टिप्पणियां</string>
+    <string-array name="pnc_period_array">
+        <item>पहला दिन</item>
+        <item>तीसरा दिन</item>
+        <item>सातवां दिन</item>
+        <item>चौबीसवां दिन</item>
+        <item>इकत्तीसवां दिन</item>
+        <item>अड़तालीसवां दिन</item>
+        <item>बाइसवां दिन</item>
+    </string-array>
+    <string-array name="pnc_confirmation_array">
+        <item>हाँ</item>
+        <item>नहीं</item>
+    </string-array>
+    <string-array name="pnc_contraception_method_array">
+        <item>पोस्ट पार्टम IUCD (PPIUCD) प्रसव के 48 घंटों के भीतर</item>
+        <item>कंडोम</item>
+        <item>पुरुष निषेकरण</item>
+        <item>महिला निषेकरण</item>
+        <item>पोस्ट पार्टम स्टेरिलाइजेशन (PPS प्रसव के 7 दिनों के भीतर)</item>
+        <item>कोई अन्य (स्पष्ट करें)</item>
+    </string-array>
+    <string-array name="pnc_mother_danger_sign_array">
+        <item>PPH (पोस्ट पार्टम हेमोरेज)</item>
+        <item>बुखार</item>
+        <item>सेप्सिस</item>
+        <item>गंभीर पेट दर्द</item>
+        <item>गंभीर सिरदर्द या ब्लर्ड विजन</item>
+        <item>सांस लेने में कठिनाई</item>
+        <item>कोई अन्य</item>
+    </string-array>
+    <string-array name="pnc_referral_facility_array">
+        <item>प्राथमिक स्वास्थ्य केंद्र</item>
+        <item>समुदाय स्वास्थ्य केंद्र</item>
+        <item>जिला अस्पताल</item>
+        <item>अन्य निजी अस्पताल</item>
+        <item>कोई अन्य (स्पष्ट करें)</item>
+    </string-array>
+    <string-array name="pnc_death_cause_array">
+        <item>एक्लैम्प्सिया</item>
+        <item>हेमोरेज (PPH)</item>
+        <item>एनीमिया</item>
+        <item>उच्च बुखार</item>
+        <item>कोई अन्य</item>
+    </string-array>
+    <string-array name="pnc_death_place_array">
+        <item>घर</item>
+        <item>अस्पताल</item>
+        <item>परिवहन में</item>
+    </string-array>
+
+
+    <!--  Infant Registration  -->
+    <string name="ir_baby_name">शिशु का नाम</string>
+    <string name="ir_infant_term">शिशु की अवधि</string>
+    <string name="ir_corticosteroid_given">क्या कॉर्टिकोस्टेरॉइड इंजेक्शन दिया गया था?</string>
+    <string name="ir_gender">शिशु का लिंग</string>
+    <string name="ir_baby_cried_at_birth">शिशु प्रसव के समय तुरंत रोता था</string>
+    <string name="ir_resuscitation">अगर नहीं, फिर जिन्होंने पुनर्जीवन किया?</string>
+    <string name="ir_referred">उच्च सुविधा के लिए और प्रबंधन के लिए संदर्भित किया गया?</string>
+    <string name="ir_had_birth_defect">प्रसव के समय क्या कोई जन्म दोष दिखा?</string>
+    <string name="ir_birth_defect">प्रसव के समय दोष दिखा</string>
+    <string name="ir_other_defect">प्रसव के समय अन्य दोष दिखा</string>
+    <string name="ir_weight">जन्म पर वजन (किलोग्राम में)</string>
+    <string name="ir_breast_feeding_started">शिशु का दूध पीना प्रसव के एक घंटे के भीतर शुरू हुआ</string>
+    <string name="ir_opv0_dose">OPV0 डोज</string>
+    <string name="ir_bcg_dose">BCG डोज</string>
+    <string name="ir_hepb_dose">HEP B-0 डोज</string>
+    <string name="ir_vitk_dose">VITK डोज</string>
+    <string-array name="ir_infant_term">
+        <item>पूरी अवधि</item>
+        <item>पूर्व अवधि</item>
+    </string-array>
+    <string-array name="ir_confirmation_array1">
+        <item>हाँ</item>
+        <item>नहीं</item>
+    </string-array>
+    <string-array name="ir_confirmation_array2">
+        <item>हाँ</item>
+        <item>नहीं</item>
+        <item>नहीं लागू</item>
+    </string-array>
+    <string-array name="ir_confirmation_array3">
+        <item>हाँ</item>
+        <item>नहीं</item>
+        <item>मालूम नहीं</item>
+    </string-array>
+    <string-array name="ir_birth_defect_array">
+        <item>क्लेफ्ट लिप / क्लेफ्ट पैलेट</item>
+        <item>क्लब पैर</item>
+        <item>डाउन सिंड्रोम</item>
+        <item>हाइड्रोसेफालस</item>
+        <item>अंक नलिका दोष (स्पाइनल बिफिडा)</item>
+        <item>अन्य</item>
+    </string-array>
+
 </resources>

@@ -279,8 +279,9 @@ class DeliveryOutcomeDataset(
     }
 
     private fun validateMaxDeliveryOutcome() : Int {
-        if(!liveBirth.value.isNullOrEmpty() && !stillBirth.value.isNullOrEmpty() && !deliveryOutcome.value.isNullOrEmpty()) {
-            if(deliveryOutcome.value!!.toInt() !== liveBirth.value!!.toInt() + stillBirth.value!!.toInt()) {
+        if(!liveBirth.value.isNullOrEmpty() && !stillBirth.value.isNullOrEmpty() &&
+            !deliveryOutcome.value.isNullOrEmpty() && deliveryOutcome.errorText.isNullOrEmpty()) {
+            if(deliveryOutcome.value!!.toInt() != liveBirth.value!!.toInt() + stillBirth.value!!.toInt()) {
                 deliveryOutcome.errorText = "Outcome of Delivery should equal to sum of Live and Still births"
             }
         }

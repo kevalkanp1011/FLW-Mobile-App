@@ -166,6 +166,7 @@ data class BenWithEcrDomain(
 
 data class EcrPost(
     val benId: Long,
+    @Json(name = "registrationDate")
     val dateOfReg: String? = null,
     @Json(name = "bankAccountNumber")
     val bankAccount: Long? = null,

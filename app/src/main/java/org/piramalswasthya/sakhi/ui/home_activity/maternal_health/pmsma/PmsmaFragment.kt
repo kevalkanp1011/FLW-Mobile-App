@@ -120,8 +120,8 @@ class PmsmaFragment : Fragment() {
                     binding.pbForm.visibility = View.VISIBLE
                 }
                 State.SUCCESS -> {
-//                    WorkerUtils.triggerPMSMAPushWorker(requireContext())
                     findNavController().navigateUp()
+                    WorkerUtils.triggerAmritPushWorker(requireContext())
                 }
                 State.FAIL -> {
                     binding.form.rvInputForm.visibility = View.VISIBLE
