@@ -22,12 +22,15 @@ import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.FormInputOld
 import org.piramalswasthya.sakhi.model.HouseholdCache
 import org.piramalswasthya.sakhi.model.PMSMACache
+import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import org.piramalswasthya.sakhi.model.User
 import org.piramalswasthya.sakhi.repositories.BenRepo
+import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
 import org.piramalswasthya.sakhi.repositories.PmsmaRepo
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -38,6 +41,7 @@ class PmsmaViewModel @Inject constructor(
     private val database: InAppDb,
     private val pmsmaRepo: PmsmaRepo,
     private val benRepo: BenRepo,
+    maternalHealthRepo: MaternalHealthRepo,
     private val preferenceDao: PreferenceDao
 ) : ViewModel() {
 
@@ -53,13 +57,14 @@ class PmsmaViewModel @Inject constructor(
         configuration.setLocale(Locale(preferenceDao.getCurrentLanguage().symbol))
         context.createConfigurationContext(configuration).resources
     }
-    
+
     private val benId = PmsmaFragmentArgs.fromSavedStateHandle(state).benId
     private val hhId = PmsmaFragmentArgs.fromSavedStateHandle(state).hhId
     private lateinit var ben: BenRegCache
     private lateinit var household: HouseholdCache
     private lateinit var user: User
     private var pmsma: PMSMACache? = null
+    private lateinit var pwr: PregnantWomanRegistrationCache
 
     private val _benName = MutableLiveData<String>()
     val benName: LiveData<String>
@@ -87,7 +92,7 @@ class PmsmaViewModel @Inject constructor(
         causeField: FormInputOld,
         effectField: FormInputOld,
         value: String?,
-        triggerValue : String,
+        triggerValue: String,
         adapter: FormInputAdapterOld
     ) {
         value?.let {
@@ -112,8 +117,10 @@ class PmsmaViewModel @Inject constructor(
 
     fun submitForm() {
         _state.value = State.LOADING
-        val pmsmaCache = PMSMACache(benId = benId, processed = "N",
-                                    createdBy = user.name, updatedBy = user.name, syncState = SyncState.UNSYNCED)
+        val pmsmaCache = PMSMACache(
+            benId = benId, processed = "N",
+            createdBy = user.name, updatedBy = user.name, syncState = SyncState.UNSYNCED
+        )
         form.mapValues(pmsmaCache)
         viewModelScope.launch {
             val saved = pmsmaRepo.savePmsmaData(pmsmaCache)
@@ -134,10 +141,11 @@ class PmsmaViewModel @Inject constructor(
                 Timber.d("pmsma ben: $ben")
                 pmsma = database.pmsmaDao.getPmsma(benId)
                 Timber.d("init after assigning pmsma ! ")
+                pwr = maternalHealthRepo.getSavedRegistrationRecord(benId)!!
 
             }
             Timber.d("init after IO! ")
-            _benName.value = "${ben.firstName} ${if(ben.lastName == null) "" else ben.lastName}"
+            _benName.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
             _address.value = getAddress(household)
             _exists.value = pmsma != null
@@ -156,9 +164,9 @@ class PmsmaViewModel @Inject constructor(
         val wardNo = household.family?.wardNo
         val name = household.family?.wardName
         val mohalla = household.family?.mohallaName
-        val district = household.locationRecord.district
-        val city = household.locationRecord.village
-        val state = household.locationRecord.state
+        val district = household.locationRecord.district.name
+        val city = household.locationRecord.village.name
+        val state = household.locationRecord.state.name
 
         var address = "$houseNo, $wardNo, $name, $mohalla, $city, $district, $state"
         address = address.replace(", ,", ",")
@@ -185,9 +193,17 @@ class PmsmaViewModel @Inject constructor(
     }
 
     suspend fun getFirstPage(adapter: FormInputAdapterOld): List<FormInputOld> {
+        form.lastMenstrualPeriod.value.emit(getDateFromLong(pwr.lmpDate))
+        form.expectedDateOfDelivery.value.emit(
+            getDateFromLong(
+                pwr.lmpDate + TimeUnit.DAYS.toMillis(
+                    280
+                )
+            )
+        )
         Timber.d("started getFirstPage")
         viewModelScope.launch {
-            launch{
+            launch {
                 form.haveMCPCard.value.collect {
                     it?.let {
                         toggleFieldOnTrigger(
@@ -201,7 +217,7 @@ class PmsmaViewModel @Inject constructor(
                 }
             }
             launch {
-                form.highriskSymbols.value.collect{
+                form.highriskSymbols.value.collect {
                     it?.let {
                         toggleFieldOnTrigger(
                             form.highriskSymbols,
@@ -214,24 +230,24 @@ class PmsmaViewModel @Inject constructor(
                 }
             }
             launch {
-                form.systolicBloodPressure.value.combine(form.diastolicBloodPressure.value){
-                    sysString, diaString ->
-                    if(sysString!=null && diaString!=null) {
+                form.systolicBloodPressure.value.combine(form.diastolicBloodPressure.value) { sysString, diaString ->
+                    if (sysString != null && diaString != null) {
                         val sys = sysString.toInt()
                         val dia = diaString.toInt()
-                        ((sys < 90 || sys > 140) ||(dia <60 || dia >90))
-                    }
-                    else false
-                }.collect{
-                    if(it)
-                        _popupString.value = resources.getString(R.string.hrp_case_please_visit_the_nearest_hwc_or_call_104)
+                        ((sys < 90 || sys > 140) || (dia < 60 || dia > 90))
+                    } else false
+                }.collect {
+                    if (it)
+                        _popupString.value =
+                            resources.getString(R.string.hrp_case_please_visit_the_nearest_hwc_or_call_104)
                 }
             }
             launch {
-                form.lastMenstrualPeriod.value.collect{
+                form.lastMenstrualPeriod.value.collect {
                     it?.let {
                         Timber.d(it)
-                        form.expectedDateOfDelivery.value.value = getDateFromLong((getLongFromDate(it) + 280 * 24 * 60 * 60 * 1000L))
+                        form.expectedDateOfDelivery.value.value =
+                            getDateFromLong((getLongFromDate(it) + 280 * 24 * 60 * 60 * 1000L))
                         adapter.notifyItemChanged(adapter.currentList.indexOf(form.expectedDateOfDelivery))
                     }
                 }

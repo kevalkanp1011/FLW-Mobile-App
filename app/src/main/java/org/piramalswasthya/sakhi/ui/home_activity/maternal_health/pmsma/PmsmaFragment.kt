@@ -18,7 +18,6 @@ import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pmsma.PmsmaViewModel.State
-import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -121,8 +120,8 @@ class PmsmaFragment : Fragment() {
                     binding.pbForm.visibility = View.VISIBLE
                 }
                 State.SUCCESS -> {
-                    WorkerUtils.triggerAmritPushWorker(requireContext())
                     findNavController().navigateUp()
+                    WorkerUtils.triggerAmritPushWorker(requireContext())
                 }
                 State.FAIL -> {
                     binding.form.rvInputForm.visibility = View.VISIBLE

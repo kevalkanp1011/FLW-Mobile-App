@@ -40,21 +40,21 @@
                 android:paddingHorizontal="@dimen/padding_tiny"
                 app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/tv_hh_ec_id"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:drawablePadding="@dimen/padding_small"
-                android:gravity="center_vertical"
-                android:padding="@dimen/padding_small"
-                android:text="@{visit.ben.familyHeadName}"
-                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                android:textColor="?attr/colorPrimaryVariant"
-                app:drawableLeftCompat="@drawable/ic__hh"
-                app:drawableTint="?attr/colorPrimary"
-                tools:text="Hello Meister" />
+                <TextView
+                    android:id="@+id/tv_hh_ec_id"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:drawablePadding="@dimen/padding_small"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/padding_small"
+                    android:text="@{visit.ben.familyHeadName}"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                    android:textColor="?attr/colorPrimaryVariant"
+                    app:drawableLeftCompat="@drawable/ic__hh"
+                    app:drawableTint="?attr/colorPrimary"
+                    tools:text="Hello Meister" />
 
                 <ImageView
                     android:id="@+id/iv_sync_state"
@@ -80,72 +80,75 @@
                     android:id="@+id/ll_ben_pwr_tracking_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:baselineAligned="false">
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_weight="1"
+                        android:orientation="vertical"
                         android:padding="@dimen/padding_small">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/name_ben"
-                            android:textColor="?attr/colorOnPrimary"
-                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                            android:textColor="?attr/colorOnPrimary" />
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@{visit.ben.benFullName}"
-                            android:textColor="?attr/colorOnPrimary"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnPrimary"
                             tools:text="TextView" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_weight="1"
+                        android:orientation="vertical"
                         android:padding="@dimen/padding_small">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/age"
-                            android:textColor="?attr/colorOnPrimary"
-                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                            android:textColor="?attr/colorOnPrimary" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{visit.ben.age}"
-                            android:textColor="?attr/colorOnPrimary"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnPrimary"
                             tools:text="TextView" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_weight="1"
+                        android:orientation="vertical"
                         android:padding="@dimen/padding_small">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tv_husband_name_ph"
-                            android:textColor="?attr/colorOnPrimary"
-                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                            android:textColor="?attr/colorOnPrimary" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{visit.ben.spouseName}"
-                            android:textColor="?attr/colorOnPrimary"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnPrimary"
                             tools:text="TextView" />
                     </LinearLayout>
 
@@ -161,66 +164,69 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_weight="1"
+                        android:orientation="vertical"
                         android:padding="@dimen/padding_small">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/beneficiary_id"
-                            android:textColor="?attr/colorOnPrimary"
-                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                            android:textColor="?attr/colorOnPrimary" />
+
                         <TextView
+                            benIdText="@{visit.ben.benId}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            benIdText="@{visit.ben.benId}"
-                            android:textColor="?attr/colorOnPrimary"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnPrimary"
                             tools:text="TextView" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_weight="1"
+                        android:orientation="vertical"
                         android:padding="@dimen/padding_small">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tv_mob_no_ph"
-                            android:textColor="?attr/colorOnPrimary"
-                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                            android:textColor="?attr/colorOnPrimary" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{visit.ben.mobileNo}"
-                            android:textColor="?attr/colorOnPrimary"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnPrimary"
                             tools:text="TextView" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_weight="1"
+                        android:orientation="vertical"
                         android:padding="@dimen/padding_small">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tv_rch_id"
-                            android:textColor="?attr/colorOnPrimary"
-                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                            android:textColor="?attr/colorOnPrimary" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{visit.ben.rchId}"
-                            android:textColor="?attr/colorOnPrimary"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnPrimary"
                             tools:text="TextView" />
                     </LinearLayout>
 
@@ -237,66 +243,69 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_weight="1"
+                        android:orientation="vertical"
                         android:padding="@dimen/padding_small">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/pregnancy_weeks"
-                            android:textColor="?attr/colorOnPrimary"
-                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                            android:textColor="?attr/colorOnPrimary" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{visit.weeksOfPregnancy}"
-                            android:textColor="?attr/colorOnPrimary"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnPrimary"
                             tools:text="TextView" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_weight="1"
+                        android:orientation="vertical"
                         android:padding="@dimen/padding_small">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/pmsma_lmp"
-                            android:textColor="?attr/colorOnPrimary"
-                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                            android:textColor="?attr/colorOnPrimary" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{visit.lmpString}"
-                            android:textColor="?attr/colorOnPrimary"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnPrimary"
                             tools:text="TextView" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_weight="1"
+                        android:orientation="vertical"
                         android:padding="@dimen/padding_small">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/pmsma_edd"
-                            android:textColor="?attr/colorOnPrimary"
-                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                            android:textColor="?attr/colorOnPrimary" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{visit.eddString}"
-                            android:textColor="?attr/colorOnPrimary"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnPrimary"
                             tools:text="TextView" />
                     </LinearLayout>
                 </LinearLayout>
@@ -306,9 +315,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginVertical="@dimen/margin_normal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linear_pwr_tracking_Layout">
 
@@ -317,42 +326,40 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginHorizontal="@dimen/margin_normal"
+                    android:layout_weight="1"
 
                     android:backgroundTint="@android:color/holo_green_dark"
                     android:onClick="@{() -> clickListener.addVisit(visit)}"
                     android:text="@string/add_anc_visits"
-                    android:textColor="?attr/colorOnPrimary"
-                    />
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_pmsma"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginHorizontal="@dimen/margin_normal"
-                    android:backgroundTint="@android:color/holo_green_dark"
-                    android:onClick="@{() -> clickListener.pmsma(visit)}"
-                    android:text="@string/pmsma"
-                    android:textColor="?attr/colorOnPrimary"
-                    />
+                    android:textColor="?attr/colorOnPrimary" />
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_view_visits"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginHorizontal="@dimen/margin_normal"
+                    android:layout_weight="1"
 
                     android:backgroundTint="@android:color/holo_green_dark"
                     android:onClick="@{() -> clickListener.showVisits(visit)}"
                     android:text="@string/anc_visits"
-                    android:textColor="?attr/colorOnPrimary"
-                    />
+                    android:textColor="?attr/colorOnPrimary" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_pmsma"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_normal"
+                    android:layout_weight="1"
+                    android:backgroundTint="@android:color/holo_green_dark"
+                    android:onClick="@{() -> clickListener.pmsma(visit)}"
+                    android:text="@string/pmsma"
+                    android:textColor="?attr/colorOnPrimary" />
+
             </LinearLayout>
-
-
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

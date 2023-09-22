@@ -7,7 +7,7 @@ import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.FormInputOld
 import org.piramalswasthya.sakhi.model.PMSMACache
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 class PMSMAFormDataset(
     context: Context, currentLanguage: Languages
@@ -196,7 +196,7 @@ class PMSMAFormDataset(
         required = false
     )
     val lastMenstrualPeriod = FormInputOld(
-        inputType = org.piramalswasthya.sakhi.model.InputType.DATE_PICKER,
+        inputType = org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW,
         title = resources.getString(R.string.pmsma_last_mestrual_period),
         min = 0L,
         max = System.currentTimeMillis(),
