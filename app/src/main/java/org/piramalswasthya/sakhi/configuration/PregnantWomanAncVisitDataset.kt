@@ -11,6 +11,7 @@ import org.piramalswasthya.sakhi.model.InputType
 import org.piramalswasthya.sakhi.model.PregnantWomanAncCache
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import java.util.concurrent.TimeUnit
+import kotlin.math.min
 
 class PregnantWomanAncVisitDataset(
     context: Context, currentLanguage: Languages
@@ -348,7 +349,7 @@ class PregnantWomanAncVisitDataset(
         dateOfTTOrTd2.max = abortionDate.max
         dateOfTTOrTdBooster.max = abortionDate.max
 
-        if(lastAnc==null)
+        if (lastAnc == null)
             list.remove(dateOfTTOrTd2)
         ben?.let {
             ancDate.min = lmp + TimeUnit.DAYS.toMillis(7 * Konstants.minAnc1Week.toLong() + 1)
@@ -360,17 +361,18 @@ class PregnantWomanAncVisitDataset(
                 }.map { it.toString() }.toTypedArray()
                 if (last.ttBooster != null) {
                     dateOfTTOrTdBooster.value = getDateFromLong(last.ttBooster!!)
-                    list.remove(dateOfTTOrTd1)
-                    list.remove(dateOfTTOrTd2)
+                    dateOfTTOrTd1.inputType = InputType.TEXT_VIEW
+                    dateOfTTOrTd2.inputType = InputType.TEXT_VIEW
                     dateOfTTOrTdBooster.inputType = InputType.TEXT_VIEW
                 } else if (last.tt1 == null) {
-                    list.remove(dateOfTTOrTd2)
+                    dateOfTTOrTd2.inputType = InputType.TEXT_VIEW
                 } else {
                     dateOfTTOrTd1.value = getDateFromLong(last.tt1!!)
-                    list.remove(dateOfTTOrTdBooster)
+                    dateOfTTOrTdBooster.inputType = InputType.TEXT_VIEW
                     dateOfTTOrTd1.inputType = InputType.TEXT_VIEW
                     if (last.tt2 == null) {
                         dateOfTTOrTd2.min = last.tt1!! + TimeUnit.DAYS.toMillis(28)
+                        dateOfTTOrTd2.max = min(System.currentTimeMillis(), getEddFromLmp(lmp))
                     } else {
                         dateOfTTOrTd2.value = getDateFromLong(last.tt2!!)
                         dateOfTTOrTd2.inputType = InputType.TEXT_VIEW
@@ -392,12 +394,10 @@ class PregnantWomanAncVisitDataset(
                 list.add(deliveryDone)
             }
             if (weeks <= 12) {
-                if (visitNumber == 1) {
-                    list.remove(fundalHeight)
-                    list.remove(numIfaAcidTabGiven)
-                } else {
-                    list.remove(numFolicAcidTabGiven)
-                }
+                list.remove(fundalHeight)
+                list.remove(numIfaAcidTabGiven)
+            } else {
+                list.remove(numFolicAcidTabGiven)
             }
             weeks.toString()
         }

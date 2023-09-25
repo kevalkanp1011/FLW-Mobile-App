@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.transformLatest
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.ChildRegistrationDao
 import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
-import org.piramalswasthya.sakhi.database.room.dao.HrpDao
 import org.piramalswasthya.sakhi.database.room.dao.MaternalHealthDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import javax.inject.Inject
@@ -36,10 +35,6 @@ class RecordsRepo @Inject constructor(
 //    val pregnantList = benDao.getAllPregnancyWomenList(selectedVillage)
 //        .map { list -> list.map { it.asBenBasicDomainModelForPmsmaForm() } }
 //    val pregnantListCount = pregnantList.map { it.size }
-
-    val deliveryList = benDao.getAllDeliveryStageWomenList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForPmsmaForm() } }
-    val deliveryListCount = deliveryList.map { it.size }
 
     val ncdList = allBenList
     val ncdListCount = allBenListCount

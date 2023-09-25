@@ -121,10 +121,10 @@ interface BenDao {
     @Query("SELECT COUNT(*) FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 2 and villageId=:selectedVillage")
     fun getAllPregnancyWomenListCount(selectedVillage: Int): Flow<Int>
 
-    @Query("SELECT ben.* FROM BEN_BASIC_CACHE ben inner join pregnancy_anc anc WHERE ben.reproductiveStatusId =3 and anc.pregnantWomanDelivered =1 and villageId=:selectedVillage group by ben.benId order by anc.updatedDate desc ")
+    @Query("SELECT ben.* FROM BEN_BASIC_CACHE ben inner join pregnancy_anc anc on ben.benId = anc.benId WHERE ben.reproductiveStatusId =3 and anc.pregnantWomanDelivered =1 and villageId=:selectedVillage group by ben.benId order by anc.updatedDate desc ")
     fun getAllDeliveredWomenList(selectedVillage: Int): Flow<List<BenBasicCache>>
 
-    @Query("SELECT count(distinct(ben.benId)) FROM BEN_BASIC_CACHE ben inner join pregnancy_anc anc WHERE ben.reproductiveStatusId =3 and anc.pregnantWomanDelivered =1 and villageId=:selectedVillage group by ben.benId ")
+    @Query("SELECT count(distinct(ben.benId)) FROM BEN_BASIC_CACHE ben inner join pregnancy_anc anc on ben.benId = anc.benId WHERE ben.reproductiveStatusId =3 and anc.pregnantWomanDelivered =1 and villageId=:selectedVillage")
     fun getAllDeliveredWomenListCount(selectedVillage: Int): Flow<Int>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 1 and gender = 'FEMALE' and villageId=:selectedVillage")

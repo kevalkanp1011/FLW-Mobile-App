@@ -46,6 +46,7 @@ class MaternalHealthRepo @Inject constructor(
             maternalHealthDao.getSavedRecord(benId, visitNumber)
         }
     }
+
     suspend fun getAllSavedAncRecords(benId: Long): List<PregnantWomanAncCache> {
         return withContext(Dispatchers.IO) {
             maternalHealthDao.getAllSavedAncRecord(benId)
@@ -373,7 +374,8 @@ class MaternalHealthRepo @Inject constructor(
     }
 
     private suspend fun savePwrCacheFromResponse(dataObj: String): List<PwrPost> {
-        var pwrList = Gson().fromJson(dataObj, Array<PwrPost>::class.java).toList()
+        var pwrList =
+            Gson().fromJson(dataObj, Array<PwrPost>::class.java).toList().filter { it.isActive }
         pwrList.forEach { pwrDTO ->
             pwrDTO.createdDate?.let {
                 var pwrCache: PregnantWomanRegistrationCache? =
@@ -485,7 +487,8 @@ class MaternalHealthRepo @Inject constructor(
     }
 
     private suspend fun saveANCCacheFromResponse(dataObj: String): List<ANCPost> {
-        var ancList = Gson().fromJson(dataObj, Array<ANCPost>::class.java).toList()
+        var ancList =
+            Gson().fromJson(dataObj, Array<ANCPost>::class.java).toList().filter { it.isActive }
         ancList.forEach { ancDTO ->
             ancDTO.createdDate?.let {
                 var ancCache: PregnantWomanAncCache? =

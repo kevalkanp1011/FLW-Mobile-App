@@ -23,9 +23,6 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_icon"
             android:layout_width="match_parent"
-            allowRedBorder="@{homeIcon.allowRedBorder}"
-            recordCount="@{homeIcon.count}"
-            scope="@{scope}"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/padding_small"
             android:background="?attr/selectableItemBackground"
