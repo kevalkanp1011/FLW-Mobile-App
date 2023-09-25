@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.databinding.RvItemFormAgePickerViewV2Binding
 import org.piramalswasthya.sakhi.databinding.RvItemFormCheckV2Binding
 import org.piramalswasthya.sakhi.databinding.RvItemFormDatepickerV2Binding
 import org.piramalswasthya.sakhi.databinding.RvItemFormDropdownV2Binding
@@ -41,6 +42,8 @@ import org.piramalswasthya.sakhi.databinding.RvItemFormTimepickerV2Binding
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.helpers.getDateString
 import org.piramalswasthya.sakhi.model.FormElement
+import org.piramalswasthya.sakhi.model.InputType
+import org.piramalswasthya.sakhi.model.InputType.AGE_PICKER
 import org.piramalswasthya.sakhi.model.InputType.CHECKBOXES
 import org.piramalswasthya.sakhi.model.InputType.DATE_PICKER
 import org.piramalswasthya.sakhi.model.InputType.DROPDOWN
@@ -57,6 +60,7 @@ import java.util.Calendar
 
 class FormInputAdapter(
     private val imageClickListener: ImageClickListener? = null,
+    private val ageClickListener: AgeClickListener? = null,
     private val formValueListener: FormValueListener? = null,
     private val isEnabled: Boolean = true
 ) : ListAdapter<FormElement, ViewHolder>(FormInputDiffCallBack) {
@@ -672,6 +676,30 @@ class FormInputAdapter(
         }
     }
 
+    class AgePickerViewInputViewHolder private constructor(private val binding: RvItemFormAgePickerViewV2Binding) :
+        ViewHolder(binding.root) {
+        companion object {
+            fun from(parent: ViewGroup): ViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = RvItemFormAgePickerViewV2Binding.inflate(layoutInflater, parent, false)
+                return AgePickerViewInputViewHolder(binding)
+            }
+        }
+
+        fun bind(
+            item: FormElement, clickListener: AgeClickListener?, isEnabled: Boolean
+        ) {
+            binding.form = item
+            if (isEnabled) {
+                binding.clickListener = clickListener
+//                if (item.errorText == null) binding.tilEditText.isErrorEnabled = false
+//                Timber.d("Bound EditText item ${item.title} with ${item.required}")
+//                binding.tilEditText.error = item.errorText
+            }
+            binding.executePendingBindings()
+
+        }
+    }
 
     class HeadlineViewHolder private constructor(private val binding: RvItemFormHeadlineV2Binding) :
         ViewHolder(binding.root) {
@@ -702,6 +730,12 @@ class FormInputAdapter(
 
     }
 
+    class AgeClickListener(private val ageClick: (formId: Int) -> Unit) {
+
+        fun onAgeClick(form: FormElement) = ageClick(form.id)
+
+    }
+
     class FormValueListener(private val valueChanged: (id: Int, value: Int) -> Unit) {
 
         fun onValueChanged(form: FormElement, index: Int) {
@@ -724,6 +758,7 @@ class FormInputAdapter(
             CHECKBOXES -> CheckBoxesInputViewHolder.from(parent)
             TIME_PICKER -> TimePickerInputViewHolder.from(parent)
             HEADLINE -> HeadlineViewHolder.from(parent)
+            AGE_PICKER -> AgePickerViewInputViewHolder.from(parent)
         }
     }
 
@@ -754,6 +789,7 @@ class FormInputAdapter(
 
             TIME_PICKER -> (holder as TimePickerInputViewHolder).bind(item, isEnabled)
             HEADLINE -> (holder as HeadlineViewHolder).bind(item, formValueListener)
+            AGE_PICKER -> (holder as AgePickerViewInputViewHolder).bind(item, ageClickListener, isEnabled)
         }
     }
 

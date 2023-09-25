@@ -163,6 +163,8 @@ class RecordsRepo @Inject constructor(
 
     fun getRegisteredInfants() = childRegistrationDao.getAllRegisteredInfants(selectedVillage)
 
+    fun getRegisteredInfantsCount() = childRegistrationDao.getAllRegisteredInfantsCount(selectedVillage)
+
     //        .map { list -> list.map { it.ben } }
     fun getPregnantWomenListCount() = benDao.getAllPregnancyWomenListCount(selectedVillage)
     fun getRegisteredPregnantWomanList() =
@@ -178,28 +180,40 @@ class RecordsRepo @Inject constructor(
     fun getDeliveredWomenList() = benDao.getAllDeliveredWomenList(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForDeliveryOutcomeForm() } }
 
+    fun getDeliveredWomenListCount() = benDao.getAllDeliveredWomenListCount(selectedVillage)
+
     fun getWomenListForPmsma() = benDao.getAllWomenListForPmsma(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForDeliveryOutcomeForm() } }
 
     fun getAllWomenForPmsmaCount() = benDao.getAllWomenListForPmsmaCount(selectedVillage)
-    fun getListForInfantReg() = benDao.getAllDeliveredWomenList(selectedVillage)
+    fun getListForInfantReg() = benDao.getListForInfantRegister(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForInfantRegistrationForm() } }
-    fun getDeliveredWomenListCount() = benDao.getAllDeliveredWomenListCount(selectedVillage)
+    fun getInfantRegisterCount() = benDao.getInfantRegisterCount(selectedVillage)
+
+//    @OptIn(ExperimentalCoroutinesApi::class)
+//    val hrpCount = maternalHealthDao.getAllPregnancyRecords().transformLatest {
+//        var count = 0
+//        it.map {
+//            val regis = it.key
+//            val anc = it.value
+//            if (regis.isHrp || anc.any { it.hrpConfirmed == true })
+//                count++
+//        }
+//        emit(count)
+//    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val hrpCount = maternalHealthDao.getAllPregnancyRecords().transformLatest {
+    val hrpCount = maternalHealthDao.getAllPregnancyAssessRecords().transformLatest { it ->
         var count = 0
-        it.map {
-            val regis = it.key
-            val anc = it.value
-            if (regis.isHrp || anc.any { it.hrpConfirmed == true })
+        it.map { it1 ->
+            if (it1.isHighRisk)
                 count++
         }
         emit(count)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val hrpNonPCount = maternalHealthDao.getAllNonPregnancyRecords().transformLatest { it ->
+    val hrpNonPCount = maternalHealthDao.getAllNonPregnancyAssessRecords().transformLatest { it ->
         var count = 0
         it.map { it1 ->
             if (it1.isHighRisk)

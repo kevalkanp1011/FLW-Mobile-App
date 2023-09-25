@@ -63,7 +63,7 @@ enum class Gender {
             " pwr.benId is not null as pwrFilled, pwr.syncState as pwrSyncState," +
             " pwa.pregnantWomanDelivered as isDelivered, pwa.hrpConfirmed as pwHrp," +
             " ecr.benId is not null as ecrFilled, " +
-            " ect.benId is not null as ectFilled, " +
+            " ect.benId is not null as ectFilled, (pwa.maternalDeath or do.complication = 'death') as isMdsr," +
             " ect.benId is not null as ectFilled, " +
             " tbsn.benId is not null as tbsnFilled, tbsn.syncState as tbsnSyncState," +
             " tbsp.benId is not null as tbspFilled, tbsp.syncState as tbspSyncState, " +
@@ -157,6 +157,7 @@ data class BenBasicCache(
     val isDelivered: Boolean,
     val pwHrp: Boolean,
     val irFilled: Boolean,
+    val isMdsr: Boolean,
     val crFilled: Boolean,
     val doFilled: Boolean,
 ) {

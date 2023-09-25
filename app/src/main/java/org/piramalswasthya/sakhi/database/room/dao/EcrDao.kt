@@ -10,7 +10,7 @@ interface EcrDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(vararg ecrCache: EligibleCoupleRegCache)
 
-    @Query("SELECT * FROM ELIGIBLE_COUPLE_REG WHERE processed = 'N'")
+    @Query("SELECT * FROM ELIGIBLE_COUPLE_REG WHERE processed in ('N', 'U')")
     suspend fun getAllUnprocessedECR(): List<EligibleCoupleRegCache>
 
     @Query("SELECT * FROM ELIGIBLE_COUPLE_TRACKING WHERE processed = 'N'")

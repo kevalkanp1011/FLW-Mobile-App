@@ -15,6 +15,8 @@ interface ChildRegistrationDao {
     @Query("SELECT b.* FROM BEN_BASIC_CACHE b join infant_reg i on b.benId = i.motherBenId where b.villageId = :selectedVillage")
     fun getAllRegisteredInfants(selectedVillage: Int): Flow<List<BenBasicCache>>
 
+    @Query("SELECT count(*) FROM BEN_BASIC_CACHE b join infant_reg i on b.benId = i.motherBenId where b.villageId = :selectedVillage")
+    fun getAllRegisteredInfantsCount(selectedVillage: Int): Flow<Int>
 
     @Query("SELECT * FROM CHILD_REG WHERE motherBenId =:benId limit 1")
     fun getInfantReg(benId: Long) : ChildRegCache?

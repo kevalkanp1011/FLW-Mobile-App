@@ -10,5 +10,6 @@ package org.piramalswasthya.sakhi.model
         IMAGE_VIEW,
         CHECKBOXES,
         TIME_PICKER,
-        HEADLINE
+        HEADLINE,
+        AGE_PICKER
     }

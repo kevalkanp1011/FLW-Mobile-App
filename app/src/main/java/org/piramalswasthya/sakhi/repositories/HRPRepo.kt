@@ -629,7 +629,17 @@ class HRPRepo @Inject constructor(
                 }
             }
 
-            maternalHealthRepo.postPwrToAmritServer(pwrDtos)
+            if (maternalHealthRepo.postPwrToAmritServer(pwrDtos)) {
+                pwrDtos.forEach {
+                    pwr ->
+                    maternalHealthRepo.getSavedRegistrationRecord(pwr.benId)?.let {
+                        pwrCache ->
+                        pwrCache.processed = "P"
+                        pwrCache.syncState = SyncState.SYNCED
+                        maternalHealthRepo.persistRegisterRecord(pwrCache)
+                    }
+                }
+            }
 
             if (assessDtos.isEmpty()) return@withContext 1
             try {
@@ -785,7 +795,17 @@ class HRPRepo @Inject constructor(
                 }
             }
 
-            ecrRepo.postECRDataToAmritServer(ecrDTOs)
+            val uploadDone = ecrRepo.postECRDataToAmritServer(ecrDTOs)
+            if (uploadDone) {
+                ecrDTOs.forEach {
+                    val ecr = ecrRepo.getSavedRecord(it.benId)
+                    ecr?.let { cache ->
+                        cache.processed = "P"
+                        cache.syncState = SyncState.SYNCED
+                        ecrRepo.persistRecord(cache)
+                    }
+                }
+            }
             if (dtos.isEmpty()) return@withContext 1
             try {
                 val response = tmcNetworkApiService.saveHighRiskAssessData(

@@ -127,11 +127,17 @@ interface BenDao {
     @Query("SELECT count(distinct(ben.benId)) FROM BEN_BASIC_CACHE ben inner join pregnancy_anc anc WHERE ben.reproductiveStatusId =3 and anc.pregnantWomanDelivered =1 and villageId=:selectedVillage group by ben.benId ")
     fun getAllDeliveredWomenListCount(selectedVillage: Int): Flow<Int>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId != 2 and gender = 'FEMALE' and villageId=:selectedVillage")
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 1 and gender = 'FEMALE' and villageId=:selectedVillage")
     fun getAllNonPregnancyWomenList(selectedVillage: Int): Flow<List<BenBasicCache>>
 
-    @Query("SELECT COUNT(*) FROM BEN_BASIC_CACHE WHERE reproductiveStatusId != 2 and gender = 'FEMALE' and villageId=:selectedVillage")
+    @Query("SELECT COUNT(*) FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 1 and gender = 'FEMALE' and villageId=:selectedVillage")
     fun getAllNonPregnancyWomenListCount(selectedVillage: Int): Flow<Int>
+
+    @Query("SELECT * FROM BEN_BASIC_CACHE  WHERE isDelivered = 1 and doFilled = 1 and villageId=:selectedVillage")
+    fun getListForInfantRegister(selectedVillage: Int): Flow<List<BenBasicCache>>
+
+    @Query("SELECT COUNT(*) FROM BEN_BASIC_CACHE WHERE isDelivered = 1 and doFilled = 1 and villageId=:selectedVillage")
+    fun getInfantRegisterCount(selectedVillage: Int): Flow<Int>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE  WHERE pwHrp = 1 and villageId=:selectedVillage")
     fun getAllWomenListForPmsma(selectedVillage: Int): Flow<List<BenBasicCache>>
@@ -214,7 +220,7 @@ interface BenDao {
         selectedVillage: Int, max: Int = Konstants.maxAgeForCdr
     ): Flow<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId in (2, 3, 4) and villageId=:selectedVillage")
+    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId in (2, 3, 4) and isMdsr = 1 and villageId=:selectedVillage")
     fun getAllMDSRList(selectedVillage: Int): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE  CAST((strftime('%s','now') - dob/1000)/60/60/24/365 AS INTEGER)<=:max and villageId=:selectedVillage")
@@ -256,10 +262,10 @@ interface BenDao {
     @Query("select count(*) from BEN_BASIC_CACHE where villageId = :villageId and reproductiveStatusId = 2 and gender = 'FEMALE' and benId in (select benId from HRP_PREGNANT_ASSESS where isHighRisk = 1);")
     fun getAllHRPTrackingPregListCount(villageId: Int): Flow<Int>
 
-    @Query("select * from BEN_BASIC_CACHE where villageId = :villageId and reproductiveStatusId != 2 and gender = 'FEMALE' and benId in (select benId from HRP_NON_PREGNANT_ASSESS where isHighRisk = 1);")
+    @Query("select * from BEN_BASIC_CACHE where villageId = :villageId and reproductiveStatusId = 1 and gender = 'FEMALE' and benId in (select benId from HRP_NON_PREGNANT_ASSESS where isHighRisk = 1);")
     fun getAllHRPTrackingNonPregList(villageId: Int): Flow<List<BenBasicCache>>
 
-    @Query("select count(*) from BEN_BASIC_CACHE where villageId = :villageId and reproductiveStatusId != 2 and gender = 'FEMALE' and benId in (select benId from HRP_NON_PREGNANT_ASSESS where isHighRisk = 1);")
+    @Query("select count(*) from BEN_BASIC_CACHE where villageId = :villageId and reproductiveStatusId = 1 and gender = 'FEMALE' and benId in (select benId from HRP_NON_PREGNANT_ASSESS where isHighRisk = 1);")
     fun getAllHRPTrackingNonPregListCount(villageId: Int): Flow<Int>
 
 }

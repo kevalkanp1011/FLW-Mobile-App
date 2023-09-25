@@ -111,7 +111,7 @@ interface AmritApiService {
     suspend fun postEcrForm(@Body ecrPostList: List<EcrPost>): Response<ResponseBody>
 
     @POST("/flw-0.0.1/couple/tracking/saveAll")
-    suspend fun postEctForm(@Body ecrPostList: List<ECTNetwork>): Response<ResponseBody>
+    suspend fun postEctForm(@Body ectPostList: List<ECTNetwork>): Response<ResponseBody>
 
     @POST("/flw-0.0.1/couple/register/getAll")
     suspend fun getEcrFormData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
@@ -120,27 +120,35 @@ interface AmritApiService {
     suspend fun getEctFormData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
     @POST("/flw-0.0.1/maternalCare/deliveryOutcome/saveAll")
-    suspend fun postDeliveryOutcomeForm(@Body deliveryOutcomeList: List<DeliveryOutcomePost>): Response<ResponseBody>
+    suspend fun postDeliveryOutcomeForm(@Body deliveryOutcomeList: List<DeliveryOutcomePost>,
+                                        /*@Url url : String  ="http://192.168.1.105:8081/maternalCare/deliveryOutcome/saveAll"*/): Response<ResponseBody>
 
     @POST("/flw-0.0.1/maternalCare/deliveryOutcome/getAll")
-    suspend fun getDeliverOutcomeData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+    suspend fun getDeliveryOutcomeData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
     @POST("/flw-0.0.1/maternalCare/ancVisit/saveAll")
-    suspend fun postAncForm(@Body ecrPostList: List<ANCPost>): Response<ResponseBody>
+    suspend fun postAncForm(@Body ancPostList: List<ANCPost>,
+                            /*@Url url : String  ="http://192.168.1.105:8081/maternalCare/anc/saveAll"*/): Response<ResponseBody>
 
     @POST("/flw-0.0.1/maternalCare/ancVisit/getAll")
     suspend fun getAncVisitsData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
     @POST("/flw-0.0.1/maternalCare/pregnantWoman/saveAll")
-    suspend fun postPwrForm(@Body ecrPostList: List<PwrPost>): Response<ResponseBody>
+    suspend fun postPwrForm(@Body pwrPostList: List<PwrPost>): Response<ResponseBody>
 
     @POST("/flw-0.0.1/maternalCare/pregnantWoman/getAll")
     suspend fun getPwrData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
-    @POST("/flw-0.0.1/pmsma//saveAll")
-    suspend fun postPmsmaForm(@Body ecrPostList: List<PmsmaPost>): Response<ResponseBody>
+    @POST("/flw-0.0.1/maternalCare/pmsma/saveAll")
+    suspend fun postPmsmaForm(@Body pmsmaPostList: List<PmsmaPost>): Response<ResponseBody>
 
-    @POST("/flw-0.0.1/pmsma/getAll")
+    @POST("/flw-0.0.1/maternalCare/pmsma/getAll")
     suspend fun getPmsmaData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/maternalCare/infant/saveAll")
+    suspend fun postInfantRegForm(@Body deliveryOutcomeList: List<InfantRegPost>): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/maternalCare/infant/getAll")
+    suspend fun getInfantRegData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
 }

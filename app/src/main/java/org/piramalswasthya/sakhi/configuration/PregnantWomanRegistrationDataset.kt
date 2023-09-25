@@ -450,7 +450,7 @@ class PregnantWomanRegistrationDataset(
             timeLessThan18m.value = getLocalValueInArray(R.array.yes_no, it.timeLessThan18m)
             heightShort.value = getLocalValueInArray(R.array.yes_no, it.heightShort)
             heightShortdbVal = getLocalValueInArray(R.array.yes_no, it.heightShort)
-            age.value = getLocalValueInArray(R.array.yes_no, it.age)
+            ageCheck.value = getLocalValueInArray(R.array.yes_no, it.age)
             rhNegative.value = getLocalValueInArray(R.array.yes_no, it.rhNegative)
             homeDelivery.value = getLocalValueInArray(R.array.yes_no, it.homeDelivery)
             homeDeliverydbVal = getLocalValueInArray(R.array.yes_no, it.homeDelivery)
