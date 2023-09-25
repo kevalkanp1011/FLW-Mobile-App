@@ -13,8 +13,8 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
-import android.view.*
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +39,7 @@ import org.piramalswasthya.sakhi.databinding.RvItemFormRadioV2Binding
 import org.piramalswasthya.sakhi.databinding.RvItemFormTextViewV2Binding
 import org.piramalswasthya.sakhi.databinding.RvItemFormTimepickerV2Binding
 import org.piramalswasthya.sakhi.helpers.Konstants
+import org.piramalswasthya.sakhi.helpers.getDateString
 import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.InputType.CHECKBOXES
 import org.piramalswasthya.sakhi.model.InputType.DATE_PICKER
@@ -284,7 +285,7 @@ class FormInputAdapter(
 
         fun bind(item: FormElement, isEnabled: Boolean, formValueListener: FormValueListener?) {
             binding.form = item
-            if(item.errorText==null) {
+            if (item.errorText == null) {
                 binding.tilRvDropdown.error = null
                 binding.tilRvDropdown.isErrorEnabled = false
             }
@@ -301,9 +302,9 @@ class FormInputAdapter(
                 item.value = item.entries?.get(index)
                 Timber.d("Item DD : $item")
 //                if (item.hasDependants || item.hasAlertError) {
-                    formValueListener?.onValueChanged(item, index)
+                formValueListener?.onValueChanged(item, index)
 //                }
-                binding.tilRvDropdown.isErrorEnabled = item.errorText!=null
+                binding.tilRvDropdown.isErrorEnabled = item.errorText != null
                 binding.tilRvDropdown.error = item.errorText
             }
 
@@ -562,8 +563,18 @@ class FormInputAdapter(
                 }
                 val datePickerDialog = DatePickerDialog(
                     it.context, { _, year, month, day ->
-                        item.value =
-                            "${if (day > 9) day else "0$day"}-${if (month > 8) month + 1 else "0${month + 1}"}-$year"
+                        val millis = Calendar.getInstance().apply {
+                            set(Calendar.YEAR, year)
+                            set(Calendar.MONTH, month)
+                            set(Calendar.DAY_OF_MONTH, day)
+                        }.timeInMillis
+                        if (item.min != null && millis < item.min!!) {
+                            item.value = getDateString(item.min)
+                        } else if (item.max != null && millis > item.max!!)
+                            item.value = getDateString(item.max)
+                        else
+                            item.value = getDateString(millis)
+//                            "${if (day > 9) day else "0$day"}-${if (month > 8) month + 1 else "0${month + 1}"}-$year"
                         binding.invalidateAll()
                         if (item.hasDependants) formValueListener?.onValueChanged(item, -1)
                     }, thisYear, thisMonth, thisDay
@@ -572,7 +583,8 @@ class FormInputAdapter(
                 binding.tilEditText.error = null
                 datePickerDialog.datePicker.maxDate = item.max ?: 0
                 datePickerDialog.datePicker.minDate = item.min ?: 0
-                datePickerDialog.datePicker.touchables[0].performClick()
+                if (item.showYearFirstInDatePicker)
+                    datePickerDialog.datePicker.touchables[0].performClick()
                 datePickerDialog.show()
             }
             binding.executePendingBindings()
@@ -676,7 +688,7 @@ class FormInputAdapter(
             formValueListener: FormValueListener?,
         ) {
             binding.form = item
-            if(item.subtitle==null)
+            if (item.subtitle == null)
                 binding.textView8.visibility = View.GONE
             formValueListener?.onValueChanged(item, -1)
             binding.executePendingBindings()

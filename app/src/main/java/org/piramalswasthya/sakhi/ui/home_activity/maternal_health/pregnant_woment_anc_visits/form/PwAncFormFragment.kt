@@ -129,6 +129,15 @@ class PwAncFormFragment : Fragment() {
                     notifyItemChanged(viewModel.getIndexOfWeeksOfPregnancy())
                     notifyItemChanged(viewModel.getIndexOfWeeksOfPregnancy()+1)
                 }
+                16 ->{
+                    notifyItemChanged(viewModel.getIndexOfTTBooster())
+                }
+                18 ->{
+                    notifyItemChanged(viewModel.getIndexOfTT1())
+                    notifyItemChanged(viewModel.getIndexOfTT2())
+
+                }
+
 //                9 ->{
 //                    notifyItemChanged(viewModel.getIndexOfDiastolic())
 //                    if(viewModel.triggerBpToggle() ){

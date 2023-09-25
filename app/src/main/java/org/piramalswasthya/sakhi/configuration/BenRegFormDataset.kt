@@ -137,6 +137,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
         title = resources.getString(R.string.nbr_dob),
         arrayId = -1,
         required = true,
+        showYearFirstInDatePicker = true,
         hasDependants = true,
     )
     val gender = FormElement(
@@ -977,7 +978,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
         if (benGender == MALE) wifeName.value = hof?.motherName
         if (benGender == FEMALE) husbandName.value = hof?.fatherName
         lastName.value = hoF.lastName?.also { firstName.inputType = TEXT_VIEW }
-        ageAtMarriage.min = getAgeFromDob(hoF.dob).toLong()
+        ageAtMarriage.max = getAgeFromDob(hoF.dob).toLong()
     }
 
     private fun setUpForSpouse(hoFSpouse: BenRegCache, hoFSpouse1: List<BenRegCache>) {
@@ -1327,24 +1328,27 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                 handleForAgeDob(formId = age.id)
             }
 
-            ageAtMarriage.id -> age.value?.takeIf { it.isNotEmpty() && it.isDigitsOnly() && !ageAtMarriage.value.isNullOrEmpty() }
-                ?.toInt()?.let {
-                    validateEmptyOnEditText(ageAtMarriage)
-                    validateIntMinMax(ageAtMarriage)
-                    if (it == ageAtMarriage.value?.toInt()) {
-                        val cal = Calendar.getInstance()
-                        dateOfMarriage.max = cal.timeInMillis
-                        cal.add(Calendar.YEAR, -1)
-                        dateOfMarriage.min = cal.timeInMillis
+            ageAtMarriage.id -> {
 
-                    }
-                    triggerDependants(
-                        source = ageAtMarriage,
-                        passedIndex = ageAtMarriage.value!!.toInt(),
-                        triggerIndex = it,
-                        target = dateOfMarriage
-                    )
-                } ?: -1
+                age.value?.takeIf { it.isNotEmpty() && it.isDigitsOnly() && !ageAtMarriage.value.isNullOrEmpty() }
+                    ?.toInt()?.let {
+                        validateEmptyOnEditText(ageAtMarriage)
+                        validateIntMinMax(ageAtMarriage)
+                        if (it == ageAtMarriage.value?.toInt()) {
+                            val cal = Calendar.getInstance()
+                            dateOfMarriage.max = cal.timeInMillis
+                            cal.add(Calendar.YEAR, -1)
+                            dateOfMarriage.min = cal.timeInMillis
+
+                        }
+                        triggerDependants(
+                            source = ageAtMarriage,
+                            passedIndex = ageAtMarriage.value!!.toInt(),
+                            triggerIndex = it,
+                            target = dateOfMarriage
+                        )
+                    } ?: -1
+            }
 
             childRegisteredAtSchool.id -> {
                 triggerDependants(
@@ -1397,7 +1401,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             }
 
             maritalStatus.id -> {
-                if (index == 0 && (relationToHead.value == relationToHead.entries!![0] || relationToHead.value == relationToHead.entries!![1])) {
+                if (index == 0 && isBenParentOfHoF()) {
                     maritalStatus.errorText = "Parents cannot be unmarried!"
                 }
                 when (maritalStatus.value) {
@@ -1618,7 +1622,11 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                 when (ageUnit.value) {
                     ageUnit.entries?.get(2) -> {
                         ageAtMarriage.value = null
-                        ageAtMarriage.max = age.value!!.toLong()
+                        ageAtMarriage.max =
+                            if (isBenParentOfHoF())
+                                age.value!!.toLong() - getAgeFromDob(
+                                    hof!!.dob
+                                ) else age.value!!.toLong()
                         cal.add(
                             Calendar.YEAR, -1 * age.value!!.toInt()
                         )
@@ -1696,6 +1704,9 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
         else
             -1
     }
+
+    private fun isBenParentOfHoF() =
+        relationToHead.value == relationToHead.entries!![0] || relationToHead.value == relationToHead.entries!![1]
 
     fun getIndexOfAgeAtMarriage() = getIndexOfElement(ageAtMarriage)
     fun getIndexOfContactNumber() = getIndexOfElement(contactNumber)

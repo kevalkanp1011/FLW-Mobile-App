@@ -306,6 +306,7 @@ data class PregnantWomanAncCache(
     val id: Long = 0,
     val benId: Long,
     var visitNumber: Int,
+    var isActive: Boolean = true,
     var ancDate: Long = System.currentTimeMillis(),
     var isAborted: Boolean = false,
     var abortionType: String? = null,
