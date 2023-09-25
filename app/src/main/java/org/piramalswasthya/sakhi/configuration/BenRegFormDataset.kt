@@ -119,6 +119,16 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
         required = true,
         hasDependants = true,
     )
+    private val agePopup = FormElement(
+        id = 115,
+        inputType = org.piramalswasthya.sakhi.model.InputType.AGE_PICKER,
+        title = "AGE",
+        arrayId = -1,
+        required = true,
+        allCaps = true,
+        hasSpeechToText = true,
+        etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
+    )
     val age = FormElement(
         id = 7,
         inputType = EDIT_TEXT,
@@ -750,6 +760,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             dateOfReg,
             firstName,
             lastName,
+//            agePopup,
             dob,
             age,
             ageUnit,

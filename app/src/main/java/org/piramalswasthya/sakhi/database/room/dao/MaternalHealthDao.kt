@@ -40,6 +40,9 @@ interface MaternalHealthDao {
 
     @Update
     suspend fun updatePwr(it: PregnantWomanRegistrationCache)
-    @Query("select * from HRP_NON_PREGNANT_ASSESS assess")
-    fun getAllNonPregnancyRecords(): Flow<List<HRPNonPregnantAssessCache>>
+    @Query("select * from HRP_NON_PREGNANT_ASSESS assess where ((select count(*) from BEN_BASIC_CACHE b where benId = assess.benId and b.reproductiveStatusId = 1) = 1)")
+    fun getAllNonPregnancyAssessRecords(): Flow<List<HRPNonPregnantAssessCache>>
+
+    @Query("select * from HRP_PREGNANT_ASSESS assess where ((select count(*) from BEN_BASIC_CACHE b where benId = assess.benId and b.reproductiveStatusId = 2) = 1)")
+    fun getAllPregnancyAssessRecords(): Flow<List<HRPPregnantAssessCache>>
 }

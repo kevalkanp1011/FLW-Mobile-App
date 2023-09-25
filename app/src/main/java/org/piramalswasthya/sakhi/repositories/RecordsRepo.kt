@@ -190,20 +190,30 @@ class RecordsRepo @Inject constructor(
         .map { list -> list.map { it.asBenBasicDomainModelForInfantRegistrationForm() } }
     fun getInfantRegisterCount() = benDao.getInfantRegisterCount(selectedVillage)
 
+//    @OptIn(ExperimentalCoroutinesApi::class)
+//    val hrpCount = maternalHealthDao.getAllPregnancyRecords().transformLatest {
+//        var count = 0
+//        it.map {
+//            val regis = it.key
+//            val anc = it.value
+//            if (regis.isHrp || anc.any { it.hrpConfirmed == true })
+//                count++
+//        }
+//        emit(count)
+//    }
+
     @OptIn(ExperimentalCoroutinesApi::class)
-    val hrpCount = maternalHealthDao.getAllPregnancyRecords().transformLatest {
+    val hrpCount = maternalHealthDao.getAllPregnancyAssessRecords().transformLatest { it ->
         var count = 0
-        it.map {
-            val regis = it.key
-            val anc = it.value
-            if (regis.isHrp || anc.any { it.hrpConfirmed == true })
+        it.map { it1 ->
+            if (it1.isHighRisk)
                 count++
         }
         emit(count)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val hrpNonPCount = maternalHealthDao.getAllNonPregnancyRecords().transformLatest { it ->
+    val hrpNonPCount = maternalHealthDao.getAllNonPregnancyAssessRecords().transformLatest { it ->
         var count = 0
         it.map { it1 ->
             if (it1.isHighRisk)

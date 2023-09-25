@@ -108,54 +108,63 @@ class EligibleCoupleRegFragment : Fragment() {
                     notifyItemChanged(viewModel.getIndexOfChildLabel())
                     notifyItemChanged(viewModel.getIndexOfAge1())
                     notifyItemChanged(viewModel.getIndexOfGap1())
+                    notifyItemChanged(viewModel.getIndexOfTimeLessThan18())
                 }
 
                 22 -> {
                     notifyItemChanged(viewModel.getIndexOfChildLabel())
                     notifyItemChanged(viewModel.getIndexOfAge2())
                     notifyItemChanged(viewModel.getIndexOfGap2())
+                    notifyItemChanged(viewModel.getIndexOfTimeLessThan18())
                 }
 
                 27 -> {
                     notifyItemChanged(viewModel.getIndexOfChildLabel())
                     notifyItemChanged(viewModel.getIndexOfAge3())
                     notifyItemChanged(viewModel.getIndexOfGap3())
+                    notifyItemChanged(viewModel.getIndexOfTimeLessThan18())
                 }
 
                 32 -> {
                     notifyItemChanged(viewModel.getIndexOfChildLabel())
                     notifyItemChanged(viewModel.getIndexOfAge4())
                     notifyItemChanged(viewModel.getIndexOfGap4())
+                    notifyItemChanged(viewModel.getIndexOfTimeLessThan18())
                 }
 
                 37 -> {
                     notifyItemChanged(viewModel.getIndexOfChildLabel())
                     notifyItemChanged(viewModel.getIndexOfAge5())
                     notifyItemChanged(viewModel.getIndexOfGap5())
+                    notifyItemChanged(viewModel.getIndexOfTimeLessThan18())
                 }
 
                 42 -> {
                     notifyItemChanged(viewModel.getIndexOfChildLabel())
                     notifyItemChanged(viewModel.getIndexOfAge6())
                     notifyItemChanged(viewModel.getIndexOfGap6())
+                    notifyItemChanged(viewModel.getIndexOfTimeLessThan18())
                 }
 
                 47 -> {
                     notifyItemChanged(viewModel.getIndexOfChildLabel())
                     notifyItemChanged(viewModel.getIndexOfAge7())
                     notifyItemChanged(viewModel.getIndexOfGap7())
+                    notifyItemChanged(viewModel.getIndexOfTimeLessThan18())
                 }
 
                 52 -> {
                     notifyItemChanged(viewModel.getIndexOfChildLabel())
                     notifyItemChanged(viewModel.getIndexOfAge8())
                     notifyItemChanged(viewModel.getIndexOfGap8())
+                    notifyItemChanged(viewModel.getIndexOfTimeLessThan18())
                 }
 
                 57 -> {
                     notifyItemChanged(viewModel.getIndexOfChildLabel())
                     notifyItemChanged(viewModel.getIndexOfAge9())
                     notifyItemChanged(viewModel.getIndexOfGap9())
+                    notifyItemChanged(viewModel.getIndexOfTimeLessThan18())
                 }
 
                 12 -> {
