@@ -180,7 +180,7 @@ class HRPNonPregnantTrackDataset(
 //                    dateOfVisit.min = cal.timeInMillis
 //                }
                 if (dov > it.regDate - TimeUnit.DAYS.toMillis(60))
-                    dateOfVisit.min = dov + TimeUnit.DAYS.toMillis(1)
+                    dateOfVisit.min = minOf( dov + TimeUnit.DAYS.toMillis(1), System.currentTimeMillis())
             }
             dateOfVisit.max = System.currentTimeMillis()
         }
@@ -256,6 +256,7 @@ class HRPNonPregnantTrackDataset(
 
     fun updateAssess(hrpPregnantAssessCache: HRPPregnantAssessCache) {
         hrpPregnantAssessCache.lmpDate = getLongFromDate(lmp.value)
+        hrpPregnantAssessCache.edd = getLongFromDate(lmp.value) + TimeUnit.DAYS.toMillis(280)
         hrpPregnantAssessCache.syncState = SyncState.UNSYNCED
     }
 }

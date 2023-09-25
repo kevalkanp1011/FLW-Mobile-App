@@ -391,6 +391,7 @@ class MaternalHealthRepo @Inject constructor(
                                 rhNegative = pwrDTO.rhNegative,
                                 homeDelivery = pwrDTO.homeDelivery,
                                 badObstetric = pwrDTO.badObstetric,
+                                lmpDate = getLongFromDate(pwrDTO.lmpDate),
                                 multiplePregnancy = if (!pwrDTO.isFirstPregnancyTest) "Yes" else "No",
                                 isHighRisk = pwrDTO.isHrpCase,
                                 syncState = SyncState.SYNCED

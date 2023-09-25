@@ -144,8 +144,8 @@ class HRPPregnantTrackDataset(
 //                if (cal.timeInMillis > it.regDate) {
 //                    dateOfVisit.min = cal.timeInMillis
 //                }
-                if (dov > it.regDate - TimeUnit.DAYS.toMillis(60)) dateOfVisit.min =
-                    dov + TimeUnit.DAYS.toMillis(1)
+                if (dov > it.regDate - TimeUnit.DAYS.toMillis(60))
+                    dateOfVisit.min = minOf( dov + TimeUnit.DAYS.toMillis(1), System.currentTimeMillis())
             }
             dateOfVisit.max = System.currentTimeMillis()
         }

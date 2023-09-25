@@ -137,17 +137,21 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
                     _state.postValue(State.SAVING)
 
                     dataset.mapValues(pregnancyRegistrationForm, 1)
+                    pregnancyRegistrationForm.processed = "U"
+                    pregnancyRegistrationForm.syncState = SyncState.UNSYNCED
                     maternalHealthRepo.persistRegisterRecord(pregnancyRegistrationForm)
                     maternalHealthRepo.getBenFromId(benId)?.let {
                         val hasBenUpdated = dataset.mapValueToBenRegId(it)
                         if (hasBenUpdated)
                             benRepo.updateRecord(it)
                     }
+                    assess = hrpRepo.getPregnantAssess(benId)
                     if (assess == null) {
                         assess = HRPPregnantAssessCache(benId = benId, syncState = SyncState.UNSYNCED)
                     }
                     dataset.mapValuesForAssess(assess, 1)
                     assess?.let {
+                        it.syncState = SyncState.UNSYNCED
                         hrpRepo.saveRecord(it)
                     }
                     _state.postValue(State.SAVE_SUCCESS)
