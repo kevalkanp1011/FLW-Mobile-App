@@ -13,6 +13,9 @@ interface MaternalHealthDao {
     @Query("select * from pregnancy_anc where benId = :benId and visitNumber = :visitNumber limit 1")
     fun getSavedRecord(benId: Long, visitNumber: Int): PregnantWomanAncCache?
 
+    @Query("select * from pregnancy_anc where benId = :benId order by ancDate desc limit 1")
+    fun getLatestAnc(benId: Long): PregnantWomanAncCache?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveRecord(pregnancyRegistrationForm: PregnantWomanRegistrationCache)
 

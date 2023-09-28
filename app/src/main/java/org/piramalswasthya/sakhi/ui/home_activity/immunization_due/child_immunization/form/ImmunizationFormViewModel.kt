@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.ImmunizationDataset
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.ImmunizationDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
@@ -58,9 +59,15 @@ class ImmunizationFormViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
+                val asha  = preferenceDao.getLoggedInUser()!!
                 val savedRecord = vaccineDao.getImmunizationRecord(benId, vaccineId)
                 immCache = savedRecord?.also { _recordExists.postValue(true) } ?: run {
-                    ImmunizationCache(benId, vaccineId)
+                    ImmunizationCache(
+                        beneficiaryId = benId,
+                        vaccineId = vaccineId,
+                        createdBy = asha.userName,
+                        updatedBy = asha.userName,
+                        syncState = SyncState.UNSYNCED)
                 }.also { _recordExists.postValue(false) }
                 val ben = benDao.getBen(benId)!!
                 _benName.postValue("${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}")

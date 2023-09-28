@@ -6,10 +6,12 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.model.ChildImmunizationDetailsCache
 import org.piramalswasthya.sakhi.model.ImmunizationCache
 import org.piramalswasthya.sakhi.model.ImmunizationCategory
 import org.piramalswasthya.sakhi.model.MotherImmunizationDetailsCache
+import org.piramalswasthya.sakhi.model.TBScreeningCache
 import org.piramalswasthya.sakhi.model.Vaccine
 
 @Dao
@@ -26,6 +28,10 @@ interface ImmunizationDao {
 
     @Query("SELECT * FROM IMMUNIZATION WHERE beneficiaryId=:benId AND vaccineId =:vaccineId limit 1")
     suspend fun getImmunizationRecord(benId: Long, vaccineId: Int): ImmunizationCache?
+
+
+    @Query("SELECT * FROM IMMUNIZATION WHERE  syncState = :syncState")
+    suspend fun getUnsyncedImmunization(syncState: SyncState): List<ImmunizationCache>
 
     @Transaction
     @Query(
@@ -50,4 +56,7 @@ interface ImmunizationDao {
 
     @Query("SELECT * FROM VACCINE WHERE id = :vaccineId limit 1")
     suspend fun getVaccineById(vaccineId: Int): Vaccine?
+
+    @Query("SELECT * FROM VACCINE WHERE name = :name limit 1")
+    suspend fun getVaccineByName(name: String): Vaccine?
 }

@@ -59,6 +59,8 @@ class DeliveryOutcomeViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val asha  = preferenceDao.getLoggedInUser()!!
+            val pwr = pwrRepo.getSavedRegistrationRecord(benId)!!
+            val anc = pwrRepo.getLatestAncRecord(benId)!!
             val ben = benRepo.getBenFromId(benId)?.also { ben ->
                 _benName.value =
                     "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
@@ -78,8 +80,7 @@ class DeliveryOutcomeViewModel @Inject constructor(
                 _recordExists.value = false
             }
 
-            dataset.setUpPage(
-                ben,
+            dataset.setUpPage(pwr, anc,
                 if (recordExists.value == true) deliveryOutcome else null
             )
 
@@ -101,20 +102,25 @@ class DeliveryOutcomeViewModel @Inject constructor(
                     dataset.mapValues(deliveryOutcome, 1)
                     deliveryOutcomeRepo.saveDeliveryOutcome(deliveryOutcome)
 
-                    val ecr = ecrRepo.getSavedRecord(deliveryOutcome.benId)!!
-                    deliveryOutcome.liveBirth?.let {
-                        ecr.noOfLiveChildren = ecr.noOfLiveChildren + it
+                    val ecr = ecrRepo.getSavedRecord(deliveryOutcome.benId)
+                    if (ecr != null) {
+                        deliveryOutcome.liveBirth?.let {
+                            ecr.noOfLiveChildren = ecr.noOfLiveChildren + it
+                        }
+                        deliveryOutcome.deliveryOutcome?.let {
+                            ecr.noOfChildren = ecr.noOfChildren + it
+                        }
+                        ecr.processed = "U"
+                        ecrRepo.persistRecord(ecr)
                     }
-                    deliveryOutcome.deliveryOutcome?.let {
-                        ecr.noOfChildren = ecr.noOfChildren + it
-                    }
-                    ecr.processed = "U"
-                    ecrRepo.persistRecord(ecr)
 
-                    val pwr = pwrRepo.getSavedRegistrationRecord(deliveryOutcome.benId)!!
-                    pwr.active = false;
-                    pwr.processed = "U"
-                    pwrRepo.persistRegisterRecord(pwr)
+                    val pwr = pwrRepo.getSavedRegistrationRecord(deliveryOutcome.benId)
+                    if(pwr != null) {
+                        pwr.active = false;
+                        pwr.processed = "U"
+                        pwrRepo.persistRegisterRecord(pwr)
+                    }
+
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
                     Timber.d("saving delivery outcome data failed!!")

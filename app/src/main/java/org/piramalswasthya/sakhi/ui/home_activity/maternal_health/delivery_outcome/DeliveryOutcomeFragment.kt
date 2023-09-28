@@ -84,7 +84,6 @@ class DeliveryOutcomeFragment : Fragment() {
 
                 DeliveryOutcomeViewModel.State.SAVE_FAILED -> {
                     Toast.makeText(
-
                         context, "Something wend wong! Contact testing!", Toast.LENGTH_LONG
                     ).show()
                     binding.llContent.visibility = View.VISIBLE
@@ -118,8 +117,15 @@ class DeliveryOutcomeFragment : Fragment() {
     private fun hardCodedListUpdate(formId: Int) {
         binding.form.rvInputForm.adapter?.apply {
             when (formId) {
+                1 -> {
+                    notifyItemChanged(13)
+                }
                 11, 12 -> {
                     notifyItemChanged(10)
+                }
+                10 -> {
+                    notifyItemChanged(11)
+                    notifyItemChanged(12)
                 }
             }
         }
