@@ -44,7 +44,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     protected companion object {
         fun getLongFromDate(dateString: String?): Long {
             val f = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
-            val date = dateString?.let { f.parse(it) }
+              val date = dateString?.let { f.parse(it) }
             return date?.time ?: 0L
         }
 

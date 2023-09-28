@@ -13,8 +13,8 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
-import android.view.*
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.databinding.RvItemFormAgePickerViewV2Binding
 import org.piramalswasthya.sakhi.databinding.RvItemFormCheckV2Binding
 import org.piramalswasthya.sakhi.databinding.RvItemFormDatepickerV2Binding
 import org.piramalswasthya.sakhi.databinding.RvItemFormDropdownV2Binding
@@ -39,7 +40,10 @@ import org.piramalswasthya.sakhi.databinding.RvItemFormRadioV2Binding
 import org.piramalswasthya.sakhi.databinding.RvItemFormTextViewV2Binding
 import org.piramalswasthya.sakhi.databinding.RvItemFormTimepickerV2Binding
 import org.piramalswasthya.sakhi.helpers.Konstants
+import org.piramalswasthya.sakhi.helpers.getDateString
 import org.piramalswasthya.sakhi.model.FormElement
+import org.piramalswasthya.sakhi.model.InputType
+import org.piramalswasthya.sakhi.model.InputType.AGE_PICKER
 import org.piramalswasthya.sakhi.model.InputType.CHECKBOXES
 import org.piramalswasthya.sakhi.model.InputType.DATE_PICKER
 import org.piramalswasthya.sakhi.model.InputType.DROPDOWN
@@ -56,6 +60,7 @@ import java.util.Calendar
 
 class FormInputAdapter(
     private val imageClickListener: ImageClickListener? = null,
+    private val ageClickListener: AgeClickListener? = null,
     private val formValueListener: FormValueListener? = null,
     private val isEnabled: Boolean = true
 ) : ListAdapter<FormElement, ViewHolder>(FormInputDiffCallBack) {
@@ -284,7 +289,7 @@ class FormInputAdapter(
 
         fun bind(item: FormElement, isEnabled: Boolean, formValueListener: FormValueListener?) {
             binding.form = item
-            if(item.errorText==null) {
+            if (item.errorText == null) {
                 binding.tilRvDropdown.error = null
                 binding.tilRvDropdown.isErrorEnabled = false
             }
@@ -301,9 +306,9 @@ class FormInputAdapter(
                 item.value = item.entries?.get(index)
                 Timber.d("Item DD : $item")
 //                if (item.hasDependants || item.hasAlertError) {
-                    formValueListener?.onValueChanged(item, index)
+                formValueListener?.onValueChanged(item, index)
 //                }
-                binding.tilRvDropdown.isErrorEnabled = item.errorText!=null
+                binding.tilRvDropdown.isErrorEnabled = item.errorText != null
                 binding.tilRvDropdown.error = item.errorText
             }
 
@@ -562,8 +567,18 @@ class FormInputAdapter(
                 }
                 val datePickerDialog = DatePickerDialog(
                     it.context, { _, year, month, day ->
-                        item.value =
-                            "${if (day > 9) day else "0$day"}-${if (month > 8) month + 1 else "0${month + 1}"}-$year"
+                        val millis = Calendar.getInstance().apply {
+                            set(Calendar.YEAR, year)
+                            set(Calendar.MONTH, month)
+                            set(Calendar.DAY_OF_MONTH, day)
+                        }.timeInMillis
+                        if (item.min != null && millis < item.min!!) {
+                            item.value = getDateString(item.min)
+                        } else if (item.max != null && millis > item.max!!)
+                            item.value = getDateString(item.max)
+                        else
+                            item.value = getDateString(millis)
+//                            "${if (day > 9) day else "0$day"}-${if (month > 8) month + 1 else "0${month + 1}"}-$year"
                         binding.invalidateAll()
                         if (item.hasDependants) formValueListener?.onValueChanged(item, -1)
                     }, thisYear, thisMonth, thisDay
@@ -572,7 +587,8 @@ class FormInputAdapter(
                 binding.tilEditText.error = null
                 datePickerDialog.datePicker.maxDate = item.max ?: 0
                 datePickerDialog.datePicker.minDate = item.min ?: 0
-                datePickerDialog.datePicker.touchables[0].performClick()
+                if (item.showYearFirstInDatePicker)
+                    datePickerDialog.datePicker.touchables[0].performClick()
                 datePickerDialog.show()
             }
             binding.executePendingBindings()
@@ -660,6 +676,30 @@ class FormInputAdapter(
         }
     }
 
+    class AgePickerViewInputViewHolder private constructor(private val binding: RvItemFormAgePickerViewV2Binding) :
+        ViewHolder(binding.root) {
+        companion object {
+            fun from(parent: ViewGroup): ViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = RvItemFormAgePickerViewV2Binding.inflate(layoutInflater, parent, false)
+                return AgePickerViewInputViewHolder(binding)
+            }
+        }
+
+        fun bind(
+            item: FormElement, clickListener: AgeClickListener?, isEnabled: Boolean
+        ) {
+            binding.form = item
+            if (isEnabled) {
+                binding.clickListener = clickListener
+//                if (item.errorText == null) binding.tilEditText.isErrorEnabled = false
+//                Timber.d("Bound EditText item ${item.title} with ${item.required}")
+//                binding.tilEditText.error = item.errorText
+            }
+            binding.executePendingBindings()
+
+        }
+    }
 
     class HeadlineViewHolder private constructor(private val binding: RvItemFormHeadlineV2Binding) :
         ViewHolder(binding.root) {
@@ -676,7 +716,7 @@ class FormInputAdapter(
             formValueListener: FormValueListener?,
         ) {
             binding.form = item
-            if(item.subtitle==null)
+            if (item.subtitle == null)
                 binding.textView8.visibility = View.GONE
             formValueListener?.onValueChanged(item, -1)
             binding.executePendingBindings()
@@ -687,6 +727,12 @@ class FormInputAdapter(
     class ImageClickListener(private val imageClick: (formId: Int) -> Unit) {
 
         fun onImageClick(form: FormElement) = imageClick(form.id)
+
+    }
+
+    class AgeClickListener(private val ageClick: (formId: Int) -> Unit) {
+
+        fun onAgeClick(form: FormElement) = ageClick(form.id)
 
     }
 
@@ -712,6 +758,7 @@ class FormInputAdapter(
             CHECKBOXES -> CheckBoxesInputViewHolder.from(parent)
             TIME_PICKER -> TimePickerInputViewHolder.from(parent)
             HEADLINE -> HeadlineViewHolder.from(parent)
+            AGE_PICKER -> AgePickerViewInputViewHolder.from(parent)
         }
     }
 
@@ -742,6 +789,7 @@ class FormInputAdapter(
 
             TIME_PICKER -> (holder as TimePickerInputViewHolder).bind(item, isEnabled)
             HEADLINE -> (holder as HeadlineViewHolder).bind(item, formValueListener)
+            AGE_PICKER -> (holder as AgePickerViewInputViewHolder).bind(item, ageClickListener, isEnabled)
         }
     }
 

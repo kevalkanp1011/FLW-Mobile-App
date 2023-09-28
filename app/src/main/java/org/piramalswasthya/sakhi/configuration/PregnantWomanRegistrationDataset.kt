@@ -450,14 +450,24 @@ class PregnantWomanRegistrationDataset(
             timeLessThan18m.value = getLocalValueInArray(R.array.yes_no, it.timeLessThan18m)
             heightShort.value = getLocalValueInArray(R.array.yes_no, it.heightShort)
             heightShortdbVal = getLocalValueInArray(R.array.yes_no, it.heightShort)
-            age.value = getLocalValueInArray(R.array.yes_no, it.age)
+            ageCheck.value = getLocalValueInArray(R.array.yes_no, it.age)
             rhNegative.value = getLocalValueInArray(R.array.yes_no, it.rhNegative)
             homeDelivery.value = getLocalValueInArray(R.array.yes_no, it.homeDelivery)
             homeDeliverydbVal = getLocalValueInArray(R.array.yes_no, it.homeDelivery)
             badObstetric.value = getLocalValueInArray(R.array.yes_no, it.badObstetric)
             multiplePregnancy.value = getLocalValueInArray(R.array.yes_no, it.multiplePregnancy)
+            // if there is valid lmp date auto populating edd and weeks of pregnancy
             lmp.value = getDateFromLong(it.lmpDate)
-            edd.value = getDateFromLong(it.edd)
+
+            if (it.lmpDate > 0) {
+                val weekOfPreg = getWeeksOfPregnancy(Calendar.getInstance().timeInMillis, it.lmpDate)
+                weekOfPregnancy.value =
+                    weekOfPreg.toString()
+                if (weekOfPreg > 26)
+                    lmp.inputType = InputType.TEXT_VIEW
+                edd.value = getDateFromLong(getEddFromLmp(it.lmpDate))
+                edd.value = getDateFromLong(it.edd)
+            }
 
             childInfoLabel.showHighRisk = (
                     noOfDeliveries.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
@@ -507,22 +517,31 @@ class PregnantWomanRegistrationDataset(
             if (weekOfPreg > 26)
                 lmp.inputType = InputType.TEXT_VIEW
             edd.value = getDateFromLong(getEddFromLmp(it.lmpDate))
-            bloodGroup.value = bloodGroup.getStringFromPosition(it.bloodGroupId)
+            bloodGroup.value = it.bloodGroup
             weight.value = it.weight?.toString()
             height.value = it.height?.toString()
-            vdrlrprTestResult.value =
-                vdrlrprTestResult.getStringFromPosition(it.vdrlRprTestResultId)
-            if (it.vdrlRprTestResultId == 1 || it.vdrlRprTestResultId == 2)
-                list.add(list.indexOf(vdrlrprTestResult) + 1, dateOfVdrlTestDone)
-            if (it.hivTestResultId == 1 || it.hivTestResultId == 2)
-                list.add(list.indexOf(hivTestResult) + 1, dateOfhivTestDone)
-            if (it.hbsAgTestResultId == 1 || it.hbsAgTestResultId == 2)
-                list.add(list.indexOf(hbsAgTestResult) + 1, dateOfhbsAgTestDone)
-            dateOfVdrlTestDone.value = it.dateOfVdrlRprTest?.let { it1 -> getDateFromLong(it1) }
-            hivTestResult.value = hivTestResult.getStringFromPosition(it.hivTestResultId)
-            dateOfhivTestDone.value = it.dateOfHivTest?.let { it1 -> getDateFromLong(it1) }
-            hbsAgTestResult.value = hbsAgTestResult.getStringFromPosition(it.hbsAgTestResultId)
-            dateOfhbsAgTestDone.value = it.dateOfHbsAgTest?.let { it1 -> getDateFromLong(it1) }
+            vdrlrprTestResult.value = it.vdrlRprTestResult
+            it.vdrlRprTestResult?.let { it1 ->
+                if (it1 == vdrlrprTestResult.entries?.get(0) || it1 == vdrlrprTestResult.entries?.get(1)) {
+                    list.add(list.indexOf(vdrlrprTestResult) + 1, dateOfVdrlTestDone)
+                    dateOfVdrlTestDone.value =
+                        it.dateOfVdrlRprTest?.let { it2 -> getDateFromLong(it2) }
+                }
+            }
+            it.hivTestResult?.let { it1 ->
+                if (it1 == hivTestResult.entries?.get(0) || it1 == hivTestResult.entries?.get(1)) {
+                    list.add(list.indexOf(hivTestResult) + 1, dateOfhivTestDone)
+                    dateOfhivTestDone.value = it.dateOfHivTest?.let { it2 -> getDateFromLong(it2) }
+                }
+            }
+            it.hbsAgTestResult?.let { it1 ->
+                if (it1 == hbsAgTestResult.entries?.get(0) || it1 == hbsAgTestResult.entries?.get(1)) {
+                    list.add(list.indexOf(hbsAgTestResult) + 1, dateOfhbsAgTestDone)
+                    dateOfhbsAgTestDone.value = it.dateOfHbsAgTest?.let { it2 -> getDateFromLong(it2) }
+                }
+            }
+            hivTestResult.value = it.hivTestResult
+            hbsAgTestResult.value = it.hbsAgTestResult
             pastIllness.value = it.pastIllness
             if (pastIllness.value == pastIllness.entries!!.last())
                 list.add(list.indexOf(pastIllness) + 1, otherPastIllness)
@@ -549,14 +568,20 @@ class PregnantWomanRegistrationDataset(
             }
             isHrpCase.value = isHrpCase.getStringFromPosition(if (it.isHrp) 1 else 2)
             if (it.isHrp) {
-                assignedAsHrpBy.value = assignedAsHrpBy.getStringFromPosition(it.hrpIdById)
+//                assignedAsHrpBy.value = assignedAsHrpBy.getStringFromPosition(it.hrpIdById)
+                assignedAsHrpBy.value = it.hrpIdBy
             }
 
 
         } ?: run {
-            vdrlrprTestResult.inputType = InputType.TEXT_VIEW
-            hivTestResult.inputType = InputType.TEXT_VIEW
-            hbsAgTestResult.inputType = InputType.TEXT_VIEW
+            assess?.let {
+                // if there is no lmp date from pwr saved form or hrp assessment form then disabling these fields
+                if (it.lmpDate <= 0L) {
+                    vdrlrprTestResult.inputType = InputType.TEXT_VIEW
+                    hivTestResult.inputType = InputType.TEXT_VIEW
+                    hbsAgTestResult.inputType = InputType.TEXT_VIEW
+                }
+            }
         }
 
 //        ben?.isHrpStatus?.let {
@@ -747,16 +772,8 @@ class PregnantWomanRegistrationDataset(
             noOfDeliveries.id, timeLessThan18m.id -> {
                 childInfoLabel.showHighRisk = noOfDeliveries.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
                         timeLessThan18m.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
-                isHrpCase.value?.let {
-
-                    if (it.contentEquals(resources.getStringArray(R.array.yes_no)[0]) || isHighRisk()) {
-                        isHrpCase.value = resources.getStringArray(R.array.yes_no)[0]
-                        return handleListOnValueChanged(isHrpCase.id, resources.getStringArray(R.array.yes_no).indexOf(isHrpCase.value))
-                    }
-
-                }
-
-                -1
+                isHrpCase.value = if (isHighRisk()) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(R.array.yes_no)[1]
+                handleListOnValueChanged(isHrpCase.id, resources.getStringArray(R.array.yes_no).indexOf(isHrpCase.value))
             }
 
             heightShort.id, ageCheck.id -> {

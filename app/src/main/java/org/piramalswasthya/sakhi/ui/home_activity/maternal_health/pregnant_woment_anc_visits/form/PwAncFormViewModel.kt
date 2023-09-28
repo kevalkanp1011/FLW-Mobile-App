@@ -118,9 +118,26 @@ class PwAncFormViewModel @Inject constructor(
                             maternalHealthRepo.persistRegisterRecord(it)
                         }
                         maternalHealthRepo.getBenFromId(benId)?.let {
-                            dataset.updateBenRecordForDelivered(it)
+                            dataset.updateBenRecordToDelivered(it)
                             benRepo.updateRecord(it)
                         }
+                    }
+                    else if (ancCache.isAborted) {
+                        maternalHealthRepo.getSavedRegistrationRecord(benId)?.let {
+                            it.active = false
+                            maternalHealthRepo.persistRegisterRecord(it)
+                        }
+                        maternalHealthRepo.getAllSavedAncRecords(benId).apply {
+                            forEach {
+                                it.isActive = false
+                            }
+                            maternalHealthRepo.updateAncRecord(toTypedArray())
+                        }
+                        maternalHealthRepo.getBenFromId(benId)?.let {
+                            dataset.updateBenRecordToEligibleCouple(it)
+                            benRepo.updateRecord(it)
+                        }
+
                     }
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
@@ -137,14 +154,9 @@ class PwAncFormViewModel @Inject constructor(
     }
 
     fun getIndexOfWeeksOfPregnancy(): Int = dataset.getWeeksOfPregnancy()
-    fun getIndexOfDiastolic(): Int = dataset.getDiastolicIndex()
-    fun getIndexOfSystolic(): Int = dataset.getSystolicIndex()
-
-    fun getBpReq() = dataset.isBpSetToRequired()
-    fun isBothBpEmpty() = dataset.isBothBpEmpty()
-    fun triggerBpToggle() = dataset.triggerBpToggle()
-
-    fun resetBpToggle() = dataset.resetBpToggle()
+    fun getIndexOfTT1(): Int = dataset.getIndexOfTd1()
+    fun getIndexOfTT2(): Int = dataset.getIndexOfTd2()
+    fun getIndexOfTTBooster(): Int = dataset.getIndexOfTdBooster()
 
 
 }

@@ -31,6 +31,7 @@ import org.piramalswasthya.sakhi.databinding.RvItemFormTextViewBinding
 import org.piramalswasthya.sakhi.databinding.RvItemFormTimepickerBinding
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.FormInputOld
+import org.piramalswasthya.sakhi.model.InputType.AGE_PICKER
 import org.piramalswasthya.sakhi.model.InputType.CHECKBOXES
 import org.piramalswasthya.sakhi.model.InputType.DATE_PICKER
 import org.piramalswasthya.sakhi.model.InputType.DROPDOWN
@@ -523,6 +524,7 @@ class FormInputAdapterOld(
             CHECKBOXES -> CheckBoxesInputViewHolder.from(parent)
             TIME_PICKER -> TimePickerInputViewHolder.from(parent)
             HEADLINE -> HeadlineViewHolder.from(parent)
+            AGE_PICKER -> FormInputAdapter.AgePickerViewInputViewHolder.from(parent)
         }
     }
 
@@ -543,6 +545,7 @@ class FormInputAdapterOld(
             CHECKBOXES -> (holder as CheckBoxesInputViewHolder).bind(item)
             TIME_PICKER -> (holder as TimePickerInputViewHolder).bind(item, isEnabled)
             HEADLINE -> (holder as HeadlineViewHolder).bind(item)
+            AGE_PICKER -> null
         }
     }
 

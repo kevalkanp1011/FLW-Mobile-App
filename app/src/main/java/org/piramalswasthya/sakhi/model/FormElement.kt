@@ -27,7 +27,9 @@ data class FormElement(
     var maxDecimal: Double? = null,
     val orientation: Int? = null,
     var hasSpeechToText: Boolean = false,
+    var showDateNumberPicker: Boolean = false,
     var showHighRisk: Boolean = false,
     var isEnabled: Boolean = true,
-    var headingLine: Boolean = true
+    var headingLine: Boolean = true,
+    val showYearFirstInDatePicker : Boolean = false,
 )

@@ -53,6 +53,12 @@ class MaternalHealthRepo @Inject constructor(
         }
     }
 
+    suspend fun getAllSavedAncRecords(benId: Long): List<PregnantWomanAncCache> {
+        return withContext(Dispatchers.IO) {
+            maternalHealthDao.getAllSavedAncRecord(benId)
+        }
+    }
+
     suspend fun getBenFromId(benId: Long): BenRegCache? {
         return withContext(Dispatchers.IO) {
             benDao.getBen(benId)
@@ -75,6 +81,12 @@ class MaternalHealthRepo @Inject constructor(
     suspend fun persistAncRecord(ancCache: PregnantWomanAncCache) {
         withContext(Dispatchers.IO) {
             maternalHealthDao.saveRecord(ancCache)
+        }
+    }
+
+    suspend fun updateAncRecord(ancCache: Array<PregnantWomanAncCache>) {
+        withContext(Dispatchers.IO) {
+            maternalHealthDao.updateANC(*ancCache)
         }
     }
 
@@ -368,7 +380,8 @@ class MaternalHealthRepo @Inject constructor(
     }
 
     private suspend fun savePwrCacheFromResponse(dataObj: String): List<PwrPost> {
-        var pwrList = Gson().fromJson(dataObj, Array<PwrPost>::class.java).toList()
+        var pwrList =
+            Gson().fromJson(dataObj, Array<PwrPost>::class.java).toList().filter { it.isActive }
         pwrList.forEach { pwrDTO ->
             pwrDTO.createdDate?.let {
                 var pwrCache: PregnantWomanRegistrationCache? =
@@ -386,6 +399,7 @@ class MaternalHealthRepo @Inject constructor(
                                 rhNegative = pwrDTO.rhNegative,
                                 homeDelivery = pwrDTO.homeDelivery,
                                 badObstetric = pwrDTO.badObstetric,
+                                lmpDate = getLongFromDate(pwrDTO.lmpDate),
                                 multiplePregnancy = if (!pwrDTO.isFirstPregnancyTest) "Yes" else "No",
                                 isHighRisk = pwrDTO.isHrpCase,
                                 syncState = SyncState.SYNCED
@@ -480,7 +494,8 @@ class MaternalHealthRepo @Inject constructor(
     }
 
     private suspend fun saveANCCacheFromResponse(dataObj: String): List<ANCPost> {
-        var ancList = Gson().fromJson(dataObj, Array<ANCPost>::class.java).toList()
+        var ancList =
+            Gson().fromJson(dataObj, Array<ANCPost>::class.java).toList().filter { it.isActive }
         ancList.forEach { ancDTO ->
             ancDTO.createdDate?.let {
                 var ancCache: PregnantWomanAncCache? =

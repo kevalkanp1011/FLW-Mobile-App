@@ -88,9 +88,9 @@ fun Button.setVaccineState(syncState: VaccineState?) {
 
 @BindingAdapter("scope", "recordCount")
 fun TextView.setRecordCount(scope: CoroutineScope, count: Flow<Int>?) {
-    count?.let {
+    count?.let {flow->
         scope.launch {
-            it.collect {
+            flow.collect {
                 text = it.toString()
             }
         }

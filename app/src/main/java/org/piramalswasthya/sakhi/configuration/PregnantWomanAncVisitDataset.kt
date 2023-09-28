@@ -11,6 +11,7 @@ import org.piramalswasthya.sakhi.model.InputType
 import org.piramalswasthya.sakhi.model.PregnantWomanAncCache
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import java.util.concurrent.TimeUnit
+import kotlin.math.min
 
 class PregnantWomanAncVisitDataset(
     context: Context, currentLanguage: Languages
@@ -83,56 +84,43 @@ class PregnantWomanAncVisitDataset(
         max = 200
     )
     private val bp = FormElement(
-        id = 991,
-        inputType = InputType.EDIT_TEXT,
-        title = "BP of PW (mm Hg) – Systolic/ Diastolic",
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
-        etMaxLength = 7,
-//        digitsInput = "0123456789-",
-        required = false,
-        min = 50,
-        max = 300
-    )
-    private val bpSystolic = FormElement(
         id = 9,
         inputType = InputType.EDIT_TEXT,
-        title = "BP of PW (mm Hg) – Systolic",
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
-        etMaxLength = 3,
+        title = "BP of PW – Systolic/ Diastolic (mm Hg) ",
+//        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 7,
         required = false,
-        min = 50,
-        max = 300
     )
-    private val bpDiastolic = FormElement(
-        id = 10,
-        inputType = InputType.EDIT_TEXT,
-        title = "BP of PW (mm Hg) – Diastolic",
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
-        etMaxLength = 3,
-        required = false,
-        min = 30,
-        max = 200
-    )
-    private val bpSystolicReq = FormElement(
-        id = 119,
-        inputType = InputType.EDIT_TEXT,
-        title = "BP of PW (mm Hg) – Systolic",
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
-        etMaxLength = 3,
-        required = true,
-        min = 50,
-        max = 300
-    )
-    private val bpDiastolicReq = FormElement(
-        id = 120,
-        inputType = InputType.EDIT_TEXT,
-        title = "BP of PW (mm Hg) – Diastolic",
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
-        etMaxLength = 3,
-        required = true,
-        min = 30,
-        max = 200
-    )
+//    private val bpDiastolic = FormElement(
+//        id = 10,
+//        inputType = InputType.EDIT_TEXT,
+//        title = "BP of PW (mm Hg) – Diastolic",
+//        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+//        etMaxLength = 3,
+//        required = false,
+//        min = 30,
+//        max = 200
+//    )
+//    private val bpSystolicReq = FormElement(
+//        id = 119,
+//        inputType = InputType.EDIT_TEXT,
+//        title = "BP of PW (mm Hg) – Systolic",
+//        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+//        etMaxLength = 3,
+//        required = true,
+//        min = 50,
+//        max = 300
+//    )
+//    private val bpDiastolicReq = FormElement(
+//        id = 120,
+//        inputType = InputType.EDIT_TEXT,
+//        title = "BP of PW (mm Hg) – Diastolic",
+//        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+//        etMaxLength = 3,
+//        required = true,
+//        min = 30,
+//        max = 200
+//    )
 
     private val pulseRate = FormElement(
         id = 11,
@@ -179,6 +167,7 @@ class PregnantWomanAncVisitDataset(
         inputType = InputType.DATE_PICKER,
         title = "Date of Td TT (1st Dose)",
         required = false,
+        hasDependants = true,
         max = System.currentTimeMillis(),
     )
     private val dateOfTTOrTd2 = FormElement(
@@ -193,6 +182,8 @@ class PregnantWomanAncVisitDataset(
         inputType = InputType.DATE_PICKER,
         title = "Date of Td TT (Boooster Dose)",
         required = false,
+        hasDependants = true,
+
         max = System.currentTimeMillis(),
     )
     private val numFolicAcidTabGiven = FormElement(
@@ -281,7 +272,7 @@ class PregnantWomanAncVisitDataset(
         inputType = InputType.DROPDOWN,
         title = "Probable Cause of Death",
         entries = arrayOf(
-            "A. ECLAMPSIA", "B. HAEMORRHAGE", "C. HIGH FEVER", "D. ABORTION", "E. OTHER"
+            "ECLAMPSIA", "HAEMORRHAGE", "HIGH FEVER", "ABORTION", "OTHER"
         ),
         required = true,
         hasDependants = true
@@ -333,9 +324,7 @@ class PregnantWomanAncVisitDataset(
             ancVisit,
             isAborted,
             weight,
-//            bp,
-            bpSystolic,
-            bpDiastolic,
+            bp,
             pulseRate,
             hb,
             fundalHeight,
@@ -353,8 +342,15 @@ class PregnantWomanAncVisitDataset(
 
         )
         abortionDate.min = lmp + TimeUnit.DAYS.toMillis(5 * 7 + 1)
+        dateOfTTOrTd1.min = abortionDate.min
+        dateOfTTOrTdBooster.min = abortionDate.min
         abortionDate.max = minOf(System.currentTimeMillis(), lmp + TimeUnit.DAYS.toMillis(21 * 7))
+        dateOfTTOrTd1.max = abortionDate.max
+        dateOfTTOrTd2.max = abortionDate.max
+        dateOfTTOrTdBooster.max = abortionDate.max
 
+        if (lastAnc == null)
+            list.remove(dateOfTTOrTd2)
         ben?.let {
             ancDate.min = lmp + TimeUnit.DAYS.toMillis(7 * Konstants.minAnc1Week.toLong() + 1)
             ancVisit.entries = arrayOf("1", "2", "3", "4")
@@ -363,8 +359,28 @@ class PregnantWomanAncVisitDataset(
                 ancVisit.entries = arrayOf(2, 3, 4).filter {
                     it > last.visitNumber
                 }.map { it.toString() }.toTypedArray()
+                if (last.ttBooster != null) {
+                    dateOfTTOrTdBooster.value = getDateFromLong(last.ttBooster!!)
+                    dateOfTTOrTd1.inputType = InputType.TEXT_VIEW
+                    dateOfTTOrTd2.inputType = InputType.TEXT_VIEW
+                    dateOfTTOrTdBooster.inputType = InputType.TEXT_VIEW
+                } else if (last.tt1 == null) {
+                    dateOfTTOrTd2.inputType = InputType.TEXT_VIEW
+                } else {
+                    dateOfTTOrTd1.value = getDateFromLong(last.tt1!!)
+                    dateOfTTOrTdBooster.inputType = InputType.TEXT_VIEW
+                    dateOfTTOrTd1.inputType = InputType.TEXT_VIEW
+                    if (last.tt2 == null) {
+                        dateOfTTOrTd2.min = last.tt1!! + TimeUnit.DAYS.toMillis(28)
+                        dateOfTTOrTd2.max = min(System.currentTimeMillis(), getEddFromLmp(lmp))
+                    } else {
+                        dateOfTTOrTd2.value = getDateFromLong(last.tt2!!)
+                        dateOfTTOrTd2.inputType = InputType.TEXT_VIEW
+                    }
+                }
             }
-            ancDate.max = minOf(getEddFromLmp(lmp), System.currentTimeMillis())
+            ancDate.max =
+                minOf(getEddFromLmp(lmp) + TimeUnit.DAYS.toMillis(1), System.currentTimeMillis())
             ancDate.value = getDateFromLong(ancDate.max!!)
             maternalDateOfDeath.min = maxOf(lmp, lastAncVisitDate) + TimeUnit.DAYS.toMillis(1)
             maternalDateOfDeath.max = minOf(getEddFromLmp(lmp), System.currentTimeMillis())
@@ -377,17 +393,16 @@ class PregnantWomanAncVisitDataset(
             if (weeks > 22) {
                 list.add(deliveryDone)
             }
-            weeks.toString()
-        }
-        ancVisit.value = visitNumber.toString()
-        if (saved == null) {
-            if (visitNumber == 1) {
+            if (weeks <= 12) {
                 list.remove(fundalHeight)
                 list.remove(numIfaAcidTabGiven)
             } else {
                 list.remove(numFolicAcidTabGiven)
             }
+            weeks.toString()
         }
+        ancVisit.value = visitNumber.toString()
+
         saved?.let { savedAnc ->
             val woP = getWeeksOfPregnancy(savedAnc.ancDate, lmp)
             if (woP <= 12) {
@@ -396,6 +411,7 @@ class PregnantWomanAncVisitDataset(
             } else {
                 list.remove(numFolicAcidTabGiven)
             }
+
             ancDate.value = getDateFromLong(savedAnc.ancDate)
             weekOfPregnancy.value = woP.toString()
             isAborted.value =
@@ -411,8 +427,9 @@ class PregnantWomanAncVisitDataset(
                 )
             }
             weight.value = savedAnc.weight?.toString()
-            bpSystolic.value = savedAnc.bpSystolic?.toString()
-            bpDiastolic.value = savedAnc.bpDiastolic?.toString()
+            bp.value =
+                if (savedAnc.bpSystolic == null || savedAnc.bpDiastolic == null) null else "${savedAnc.bpSystolic}/${savedAnc.bpDiastolic}"
+//            bpDiastolic.value = savedAnc.bpDiastolic?.toString()
             pulseRate.value = savedAnc.pulseRate
             hb.value = savedAnc.hb?.toString()
             fundalHeight.value = savedAnc.fundalHeight?.toString()
@@ -466,8 +483,6 @@ class PregnantWomanAncVisitDataset(
                         otherMaternalDeathProbableCause
                     )
                 }
-
-
             }
             deliveryDone.value =
                 if (savedAnc.pregnantWomanDelivered == true) deliveryDone.entries!!.first() else deliveryDone.entries!!.last()
@@ -483,7 +498,7 @@ class PregnantWomanAncVisitDataset(
                 ancDate.value?.let {
                     val long = getLongFromDate(it)
                     val weeks = getWeeksOfPregnancy(long, lmp)
-                    if (weeks > 22) {
+                    val listChanged = if (weeks > 22) {
                         triggerDependants(
                             source = maternalDeath,
                             addItems = listOf(deliveryDone),
@@ -510,24 +525,16 @@ class PregnantWomanAncVisitDataset(
                     }
                     if (ancVisit.entries?.contains(calcVisitNumber.toString()) == true) {
                         ancVisit.value = calcVisitNumber.toString()
-                        handleListOnValueChanged(
+                        val listChanged2 = handleListOnValueChanged(
                             ancVisit.id,
                             ancVisit.entries!!.indexOf(ancDate.value)
                         )
+                        if (listChanged >= 0 || listChanged2 >= 0)
+                            return 1
+                        else
+                            return -1
                     }
-                    if (weeks > 12) {
-                        triggerDependants(
-                            source = dateOfTTOrTdBooster,
-                            addItems = emptyList(),
-                            removeItems = listOf(numFolicAcidTabGiven)
-                        )
-                    } else {
-                        triggerDependants(
-                            source = dateOfTTOrTdBooster,
-                            removeItems = emptyList(),
-                            addItems = listOf(numFolicAcidTabGiven)
-                        )
-                    }
+                    return listChanged
                 }
                 -1
             }
@@ -538,7 +545,7 @@ class PregnantWomanAncVisitDataset(
                         source = ancVisit,
                         addItems = listOf(numFolicAcidTabGiven),
                         removeItems = listOf(fundalHeight, numIfaAcidTabGiven),
-                        position = getIndexById(dateOfTTOrTdBooster.id)
+                        position = getIndexById(dateOfTTOrTdBooster.id) + 1
                     )
                 else {
                     triggerDependants(
@@ -572,83 +579,20 @@ class PregnantWomanAncVisitDataset(
                 target = abortionFacility,
             )
 
+            dateOfTTOrTd1.id -> {
+                dateOfTTOrTdBooster.inputType = InputType.TEXT_VIEW
+                -1
+            }
+
+            dateOfTTOrTdBooster.id -> {
+                dateOfTTOrTd1.inputType = InputType.TEXT_VIEW
+                dateOfTTOrTd2.inputType = InputType.TEXT_VIEW
+                -1
+            }
+
+            bp.id -> validateForBp(bp.value, 50, 300, 30, 200)
+
             weight.id -> validateIntMinMax(weight)
-            bpDiastolicReq.id -> {
-                validateIntMinMax(bpDiastolicReq)
-                if (bpSystolicReq.value.isNullOrEmpty() && bpDiastolicReq.value.isNullOrEmpty()) {
-                    bpDiastolicReq.min = null
-                    triggerDependants(
-                        source = weight,
-                        addItems = listOf(bpSystolic, bpDiastolic),
-                        removeItems = listOf(bpSystolicReq, bpDiastolicReq)
-                    )
-                } else {
-                    if (bpSystolicReq.value == null) bpSystolicReq.value = bpSystolic.value
-                    triggerDependants(
-                        source = weight,
-                        addItems = listOf(bpSystolicReq),
-                        removeItems = listOf(bpSystolic)
-                    )
-                }
-            }
-
-            bpSystolicReq.id -> {
-                if (bpSystolicReq.value.isNullOrEmpty() && bpDiastolicReq.value.isNullOrEmpty()) {
-                    bpDiastolicReq.min = null
-                    triggerDependants(
-                        source = weight,
-                        addItems = listOf(bpSystolic, bpDiastolic),
-                        removeItems = listOf(bpSystolicReq, bpDiastolicReq)
-                    )
-                } else {
-                    bpDiastolicReq.value = bpDiastolic.value
-                    triggerDependants(
-                        source = bpSystolicReq,
-                        addItems = listOf(bpDiastolicReq),
-                        removeItems = listOf(bpDiastolic)
-                    )
-                }
-            }
-
-            bpSystolic.id, bpDiastolic.id -> {
-                if (!bpSystolic.value.isNullOrEmpty()) {
-                    bpDiastolicReq.max = bpSystolic.value?.toLong()
-                    return triggerDependants(
-                        source = bpSystolic,
-                        addItems = listOf(bpDiastolicReq),
-                        removeItems = listOf(bpDiastolic)
-                    )
-                } else if (!bpDiastolic.value.isNullOrEmpty()) {
-                    return triggerDependants(
-                        source = weight,
-                        addItems = listOf(bpSystolicReq),
-                        removeItems = listOf(bpSystolic)
-                    )
-                } else
-                    return -1
-//                (isBothBpEmpty()).let {
-//                    if (it) {
-//
-//                        triggerDependants(
-//                            source = weight,
-//                            removeItems = listOf(bpSystolicReq, bpDiastolicReq),
-//                            addItems = listOf(bpSystolic, bpDiastolic),
-//                        )
-//                    }
-//                    else{
-//
-//                    }
-//                    bpDiastolic.required = !it
-//                    bpSystolic.required = !it
-//                    if (currReq == it) {
-//                        toggleBp = true
-//                    }
-//                    if (!it) {
-//                        validateEmptyOnEditText(bpSystolic)
-//                        validateEmptyOnEditText(bpDiastolic)
-//                    }
-//                }
-            }
 
             pulseRate.id -> {
                 validateAllAlphabetsSpaceOnEditText(pulseRate)
@@ -716,8 +660,38 @@ class PregnantWomanAncVisitDataset(
 
     }
 
-    fun isBothBpEmpty() = bpSystolic.value.isNullOrEmpty() && bpDiastolic.value.isNullOrEmpty()
-    fun isBpSetToRequired() = bpSystolic.required
+    fun getIndexOfTd1() = getIndexById(dateOfTTOrTd1.id)
+    fun getIndexOfTd2() = getIndexById(dateOfTTOrTd2.id)
+    fun getIndexOfTdBooster() = getIndexById(dateOfTTOrTdBooster.id)
+
+    private val bpRegex = Regex("(\\d{2,3})/(\\d{2,3})")
+    private fun validateForBp(
+        input: String?,
+        minSys: Int,
+        maxSys: Int,
+        minDia: Int,
+        maxDia: Int
+    ): Int {
+        if (input.isNullOrEmpty()) {
+            bp.errorText = null
+            return -1
+        }
+        val matchResult = bpRegex.matchEntire(input)
+        if (matchResult == null)
+            bp.errorText = "Invalid format. Should be like 123/56"
+        else {
+            val sys = matchResult.groupValues[1].toInt()
+            val dia = matchResult.groupValues[2].toInt()
+            bp.errorText = if (sys < minSys) "Systole should not be less than $minSys"
+            else if (sys > maxSys) "Systole should not be greater than $maxSys"
+            else if (dia < minDia) "Diastole should not be less then $minDia"
+            else if (dia > maxDia) "Diastole should not be greater than $maxDia"
+            else if (dia > sys) "Diastole cannot be greater than systole"
+            else null
+        }
+        return -1
+
+    }
 
 
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
@@ -731,8 +705,8 @@ class PregnantWomanAncVisitDataset(
             cache.abortionFacilityId = abortionFacility.getPosition()
             cache.abortionDate = abortionDate.value?.let { getLongFromDate(it) }
             cache.weight = weight.value?.toInt()
-            cache.bpSystolic = bpSystolic.value?.toInt()
-            cache.bpDiastolic = bpDiastolic.value?.toInt()
+            cache.bpSystolic = bp.value?.substringBefore("/")?.toInt()
+            cache.bpDiastolic = bp.value?.substringAfter("/")?.toInt()
             cache.pulseRate = pulseRate.value
             cache.hb = hb.value?.toDouble()
             cache.fundalHeight = fundalHeight.value?.toInt()
@@ -768,13 +742,21 @@ class PregnantWomanAncVisitDataset(
     }
 
     fun getWeeksOfPregnancy(): Int = getIndexById(weekOfPregnancy.id)
-    fun getSystolicIndex(): Int = getIndexById(bpSystolic.id)
-    fun getDiastolicIndex(): Int = getIndexById(bpDiastolic.id)
-    fun updateBenRecordForDelivered(it: BenRegCache) {
+
+    fun updateBenRecordToDelivered(it: BenRegCache) {
         it.genDetails?.apply {
             reproductiveStatus =
                 englishResources.getStringArray(R.array.nbr_reproductive_status_array)[2]
             reproductiveStatusId = 3
+        }
+        if (it.processed != "N") it.processed = "U"
+    }
+
+    fun updateBenRecordToEligibleCouple(it: BenRegCache) {
+        it.genDetails?.apply {
+            reproductiveStatus =
+                englishResources.getStringArray(R.array.nbr_reproductive_status_array)[0]
+            reproductiveStatusId = 1
         }
         if (it.processed != "N") it.processed = "U"
     }

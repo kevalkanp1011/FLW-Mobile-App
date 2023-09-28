@@ -20,15 +20,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.BuildConfig
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.contracts.SpeechToTextContract
+import org.piramalswasthya.sakhi.databinding.AlertAgePickerBinding
+import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
 import org.piramalswasthya.sakhi.databinding.FragmentInputFormPageHhBinding
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_less_15.NewBenRegL15ViewModel.State
+import org.piramalswasthya.sakhi.ui.home_activity.all_household.AllHouseholdFragmentDirections
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 import java.io.File
@@ -83,6 +87,34 @@ class NewBenRegL15Fragment : Fragment() {
             }
         }
 
+    private val ageAlertDialog by lazy {
+        val alertBinding = AlertAgePickerBinding.inflate(layoutInflater,binding.root,false)
+        alertBinding.dialogNumberPickerYears.minValue = 0
+        alertBinding.dialogNumberPickerYears.maxValue = 10
+
+        alertBinding.dialogNumberPickerMonths.minValue = 0
+        alertBinding.dialogNumberPickerMonths.maxValue = 11
+
+        alertBinding.dialogNumberPickerDays.minValue = 0
+        alertBinding.dialogNumberPickerDays.maxValue = 30
+
+        val alert = MaterialAlertDialogBuilder(requireContext()).setView(alertBinding.root)
+            .setOnCancelListener {
+//                viewModel.resetSelectedHouseholdId()
+//                alertBinding.rgGender.clearCheck()
+//                addBenAlertBinding.linearLayout4.visibility = View.GONE
+//                addBenAlertBinding.actvRth.text = null
+            }.create()
+
+        alertBinding.btnOk.setOnClickListener {
+//            viewModel.resetSelectedHouseholdId()
+            alert.cancel()
+        }
+        alertBinding.btnCancel.setOnClickListener {
+            alert.cancel()
+        }
+        alert
+    }
 
     private fun showSettingsAlert() {
         val alertDialog: AlertDialog.Builder = AlertDialog.Builder(requireContext())
@@ -234,6 +266,8 @@ class NewBenRegL15Fragment : Fragment() {
                             }
                         }
 
+                    }, ageClickListener = FormInputAdapter.AgeClickListener {
+                        ageAlertDialog.show()
                     }, isEnabled = !recordExists
                     )
                 binding.inputForm.rvInputForm.adapter = adapter

@@ -9,7 +9,16 @@ import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
-import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.model.EcrPost
+import org.piramalswasthya.sakhi.model.EligibleCoupleRegCache
+import org.piramalswasthya.sakhi.model.HRPMicroBirthPlanCache
+import org.piramalswasthya.sakhi.model.HRPNonPregnantAssessCache
+import org.piramalswasthya.sakhi.model.HRPNonPregnantTrackCache
+import org.piramalswasthya.sakhi.model.HRPPregnantAssessCache
+import org.piramalswasthya.sakhi.model.HRPPregnantTrackCache
+import org.piramalswasthya.sakhi.model.HighRiskAssessDTO
+import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
+import org.piramalswasthya.sakhi.model.PwrPost
 import org.piramalswasthya.sakhi.network.AmritApiService
 import org.piramalswasthya.sakhi.network.GetDataPaginatedRequest
 import org.piramalswasthya.sakhi.network.HRPNonPregnantAssessDTO
@@ -629,7 +638,17 @@ class HRPRepo @Inject constructor(
                 }
             }
 
-            maternalHealthRepo.postPwrToAmritServer(pwrDtos)
+            if (maternalHealthRepo.postPwrToAmritServer(pwrDtos)) {
+                pwrDtos.forEach {
+                    pwr ->
+                    maternalHealthRepo.getSavedRegistrationRecord(pwr.benId)?.let {
+                        pwrCache ->
+                        pwrCache.processed = "P"
+                        pwrCache.syncState = SyncState.SYNCED
+                        maternalHealthRepo.persistRegisterRecord(pwrCache)
+                    }
+                }
+            }
 
             if (assessDtos.isEmpty()) return@withContext 1
             try {
@@ -785,7 +804,17 @@ class HRPRepo @Inject constructor(
                 }
             }
 
-            ecrRepo.postECRDataToAmritServer(ecrDTOs)
+            val uploadDone = ecrRepo.postECRDataToAmritServer(ecrDTOs)
+            if (uploadDone) {
+                ecrDTOs.forEach {
+                    val ecr = ecrRepo.getSavedRecord(it.benId)
+                    ecr?.let { cache ->
+                        cache.processed = "P"
+                        cache.syncState = SyncState.SYNCED
+                        ecrRepo.persistRecord(cache)
+                    }
+                }
+            }
             if (dtos.isEmpty()) return@withContext 1
             try {
                 val response = tmcNetworkApiService.saveHighRiskAssessData(
@@ -973,6 +1002,7 @@ class HRPRepo @Inject constructor(
                 rhNegative = cache.rhNegative,
                 homeDelivery = cache.homeDelivery,
                 badObstetric = cache.badObstetric,
+                isActive = true,
                 isRegistered = false
             )
         } else {

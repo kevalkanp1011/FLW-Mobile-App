@@ -121,9 +121,24 @@ constructor(
                             benRepo.updateRecord(it)
                         }
 
-                        val pregAssessCache = HRPPregnantAssessCache(
-                            benId = hrpNonPregnantTrackCache.benId,
-                        )
+
+                        var pregAssessCache = hrpReo.getPregnantAssess(hrpNonPregnantTrackCache.benId)
+                        val nonPregAssessCache = hrpReo.getNonPregnantAssess(hrpNonPregnantTrackCache.benId)
+                        if (pregAssessCache == null) {
+                            pregAssessCache = if (nonPregAssessCache == null ) {
+                                HRPPregnantAssessCache(
+                                    benId = hrpNonPregnantTrackCache.benId
+                                )
+                            } else {
+                                HRPPregnantAssessCache(
+                                    benId = hrpNonPregnantTrackCache.benId,
+                                    noOfDeliveries = nonPregAssessCache.noOfDeliveries,
+                                    timeLessThan18m = nonPregAssessCache.timeLessThan18m,
+                                    heightShort = nonPregAssessCache.heightShort,
+                                    age = nonPregAssessCache.age
+                                )
+                            }
+                        }
 
                         dataset.updateAssess(pregAssessCache)
                         hrpReo.saveRecord(pregAssessCache)
