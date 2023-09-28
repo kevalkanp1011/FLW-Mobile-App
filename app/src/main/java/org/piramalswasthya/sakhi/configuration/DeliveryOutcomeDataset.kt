@@ -4,8 +4,10 @@ import android.content.Context
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.*
+import java.lang.Long.min
+import kotlin.math.max
 
-class DeliveryOutcomeDataset(
+open class DeliveryOutcomeDataset(
     context: Context, currentLanguage: Languages
 ) : Dataset(context, currentLanguage) {
 
@@ -24,7 +26,7 @@ class DeliveryOutcomeDataset(
         inputType = InputType.TIME_PICKER,
         title = resources.getString(R.string.do_delivery_time),
         arrayId = -1,
-        required = true,
+        required = false,
         max = System.currentTimeMillis(),
         hasDependants = true
     )
@@ -78,6 +80,8 @@ class DeliveryOutcomeDataset(
         id = 8,
         inputType = InputType.EDIT_TEXT,
         title = resources.getString(R.string.do_other_death_cause),
+        etMaxLength = 50,
+        etInputType = android.text.InputType.TYPE_CLASS_TEXT,
         required = true,
         hasDependants = false
     )
@@ -86,7 +90,9 @@ class DeliveryOutcomeDataset(
         id = 9,
         inputType = InputType.EDIT_TEXT,
         title = resources.getString(R.string.do_other_delivery_complication),
+        etInputType = android.text.InputType.TYPE_CLASS_TEXT,
         required = true,
+        etMaxLength = 50,
         hasDependants = false
     )
 
@@ -131,7 +137,7 @@ class DeliveryOutcomeDataset(
         inputType = InputType.DATE_PICKER,
         title = resources.getString(R.string.do_discharge_date),
         arrayId = -1,
-        required = true,
+        required = false,
         max = System.currentTimeMillis(),
         hasDependants = true
 
@@ -142,7 +148,7 @@ class DeliveryOutcomeDataset(
         inputType = InputType.TIME_PICKER,
         title = resources.getString(R.string.do_discharge_time),
         arrayId = -1,
-        required = true,
+        required = false,
         max = System.currentTimeMillis(),
         hasDependants = true
     )
@@ -156,7 +162,7 @@ class DeliveryOutcomeDataset(
         hasDependants = false
     )
 
-    suspend fun setUpPage(ben: BenRegCache?, saved: DeliveryOutcomeCache?) {
+    suspend fun setUpPage(pwr: PregnantWomanRegistrationCache, anc: PregnantWomanAncCache, saved: DeliveryOutcomeCache?) {
         var list = mutableListOf(
             dateOfDelivery,
             timeOfDelivery,
@@ -176,7 +182,7 @@ class DeliveryOutcomeDataset(
         )
         if (saved == null) {
             dateOfDelivery.value = getDateFromLong(System.currentTimeMillis())
-            dateOfDischarge.value = getDateFromLong(System.currentTimeMillis())
+            dateOfDischarge.min = System.currentTimeMillis()
         } else {
             list = mutableListOf(
                 dateOfDelivery,
@@ -195,7 +201,7 @@ class DeliveryOutcomeDataset(
                 timeOfDischarge,
                 isJSYBenificiary
             )
-            dateOfDelivery.value = getDateFromLong(saved.dateOfDelivery)
+            dateOfDelivery.value = saved.dateOfDelivery?.let { getDateFromLong(it)}
             timeOfDelivery.value = saved.timeOfDelivery
             placeOfDelivery.value = saved.placeOfDelivery
             typeOfDelivery.value = saved.typeOfDelivery
@@ -207,13 +213,13 @@ class DeliveryOutcomeDataset(
             deliveryOutcome.value = saved.deliveryOutcome.toString()
             liveBirth.value = saved.liveBirth.toString()
             stillBirth.value = saved.stillBirth.toString()
-            dateOfDischarge.value = getDateFromLong(saved.dateOfDischarge)
+            dateOfDischarge.value = saved.dateOfDischarge?.let { getDateFromLong(it) }
             timeOfDischarge.value = saved.timeOfDischarge
             isJSYBenificiary.value = if (saved.isJSYBenificiary == true) "Yes" else "No"
         }
-        ben?.let {
-            dateOfDelivery.min = it.regDate
-        }
+        dateOfDelivery.min = max(pwr.lmpDate+ 147*24*60*60*1000, anc.ancDate)
+        dateOfDelivery.max = min(System.currentTimeMillis(), getEddFromLmp(pwr.lmpDate) + 25*24*60*60*1000)
+
         setUpPage(list)
 
     }
@@ -262,28 +268,50 @@ class DeliveryOutcomeDataset(
                     target = otherCauseOfDeath
                 )
             }
+            otherCauseOfDeath.id -> {
+                validateAllAlphabetsSpaceOnEditText(otherCauseOfDeath)
+            }
+            otherComplication.id -> {
+                validateAllAlphabetsSpaceOnEditText(otherComplication)
+            }
             deliveryOutcome.id -> {
-                validateIntMinMax(deliveryOutcome)
-                validateMaxDeliveryOutcome()
+                validateDeliveryOutcome(deliveryOutcome)
             }
             liveBirth.id -> {
-                validateIntMinMax(liveBirth)
-                validateMaxDeliveryOutcome()
+                validateDeliveryOutcome(liveBirth)
             }
             stillBirth.id -> {
-                validateIntMinMax(stillBirth)
-                validateMaxDeliveryOutcome()
+                validateDeliveryOutcome(stillBirth)
             }
             else -> -1
         }
     }
 
-    private fun validateMaxDeliveryOutcome() : Int {
-        if(!liveBirth.value.isNullOrEmpty() && !stillBirth.value.isNullOrEmpty() &&
-            !deliveryOutcome.value.isNullOrEmpty() && deliveryOutcome.errorText.isNullOrEmpty()) {
-            if(deliveryOutcome.value!!.toInt() != liveBirth.value!!.toInt() + stillBirth.value!!.toInt()) {
-                deliveryOutcome.errorText = "Outcome of Delivery should equal to sum of Live and Still births"
+    private fun validateDeliveryOutcome(formElement: FormElement): Int {
+        formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.toLong()?.let {
+            formElement.min?.let { min ->
+                formElement.max?.let { max ->
+                    if (it < min) {
+                        resources.getString(
+                            R.string.form_input_min_limit_error, formElement.title , min
+                        )
+                    } else if (it > max) {
+                        resources.getString(
+                            R.string.form_input_max_limit_error, formElement.title, max
+                        )
+                    } else null
+                }
             }
+        }
+        if(!liveBirth.value.isNullOrEmpty() && !stillBirth.value.isNullOrEmpty() &&
+            !deliveryOutcome.value.isNullOrEmpty() && formElement.errorText.isNullOrEmpty() ) {
+            if(deliveryOutcome.value!!.toInt() != liveBirth.value!!.toInt() + stillBirth.value!!.toInt()) {
+                formElement.errorText = "Outcome of Delivery should be equal to sum of Live and Still births"
+            }
+        }
+        if(!deliveryOutcome.value.isNullOrEmpty()) {
+            stillBirth.max = deliveryOutcome.value?.toLong()
+            liveBirth.max = deliveryOutcome.value?.toLong()
         }
         return -1
     }
