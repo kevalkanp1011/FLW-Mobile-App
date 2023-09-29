@@ -173,12 +173,12 @@ class PncFormDataset(
             motherDeath,
             remarks
         )
-        dateOfDelivery = deliveryOutcomeCache.dateOfDelivery
+        dateOfDelivery = deliveryOutcomeCache.dateOfDelivery!!
         deathDate.min = dateOfDelivery
         deathDate.max = System.currentTimeMillis()
         motherDeath.value = motherDeath.entries!!.last()
         val daysSinceDelivery = Calendar.getInstance()
-            .setToStartOfTheDay().timeInMillis - deliveryOutcomeCache.dateOfDelivery.let {
+            .setToStartOfTheDay().timeInMillis - deliveryOutcomeCache.dateOfDelivery!!.let {
             val cal = Calendar.getInstance()
             cal.timeInMillis = it
             cal.setToStartOfTheDay()
