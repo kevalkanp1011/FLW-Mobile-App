@@ -47,16 +47,17 @@ class BenRepo @Inject constructor(
         }
 
         fun getLongFromDateStr(dateString: String): Long {
-                val f = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH)
-                val date = f.parse(dateString)
-                return date?.time ?: throw IllegalStateException("Invalid date for dateReg")
-            }
+            val f = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH)
+            val date = f.parse(dateString)
+            return date?.time ?: throw IllegalStateException("Invalid date for dateReg")
+        }
     }
 
     fun getBenBasicListFromHousehold(hhId: Long): Flow<List<BenBasicDomain>> {
         return benDao.getAllBasicBenForHousehold(hhId).map { it.map { it.asBasicDomainModel() } }
 
     }
+
     suspend fun getBenListFromHousehold(hhId: Long): List<BenRegCache> {
         return benDao.getAllBenForHousehold(hhId)
 
@@ -124,12 +125,14 @@ class BenRepo @Inject constructor(
             benDao.updateBen(ben)
         }
     }
+
     suspend fun persistBenGen1(
         hhId: Long, form: BenGenRegFormDataset, locationRecord: LocationRecord?
     ) {
 //        val draftBen = benDao.getDraftBenKidForHousehold(hhId)
 //            ?: throw IllegalStateException("no draft saved!!")
-        val user = preferenceDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
+        val user =
+            preferenceDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
 //        val ben = form.getBenForSecondPage(user.userId, hhId)
 
 //        locationRecord?.let {
@@ -229,7 +232,9 @@ class BenRepo @Inject constructor(
 
 
     suspend fun getHousehold(hhId: Long): HouseholdCache? {
-        return householdDao.getHousehold(hhId)
+        return withContext(Dispatchers.IO) {
+            householdDao.getHousehold(hhId)
+        }
 
     }
 
@@ -444,9 +449,9 @@ class BenRepo @Inject constructor(
                     //FIX TO MAP UPDATED BEN-ID FOR HOF
                     householdDao.getHousehold(ben.householdId)
                         ?.takeIf { it.benId == ben.beneficiaryId }?.let {
-                        it.benId = newBenId
-                        householdDao.update(it)
-                    }
+                            it.benId = newBenId
+                            householdDao.update(it)
+                        }
                     ben.beneficiaryId = newBenId
 
                     return true

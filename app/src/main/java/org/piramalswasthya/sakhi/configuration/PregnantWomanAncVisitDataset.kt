@@ -378,6 +378,7 @@ class PregnantWomanAncVisitDataset(
                         dateOfTTOrTd2.inputType = InputType.TEXT_VIEW
                     }
                 }
+                lastAncVisitDate = last.ancDate
             }
             ancDate.max =
                 minOf(getEddFromLmp(lmp) + TimeUnit.DAYS.toMillis(1), System.currentTimeMillis())
@@ -404,6 +405,7 @@ class PregnantWomanAncVisitDataset(
         ancVisit.value = visitNumber.toString()
 
         saved?.let { savedAnc ->
+
             val woP = getWeeksOfPregnancy(savedAnc.ancDate, lmp)
             if (woP <= 12) {
                 list.remove(fundalHeight)
@@ -511,10 +513,6 @@ class PregnantWomanAncVisitDataset(
                             removeItems = listOf(deliveryDone),
                         )
                     }
-                    maternalDateOfDeath.apply {
-                        value = null
-                        min = maxOf(lastAncVisitDate, long) + TimeUnit.DAYS.toMillis(1)
-                    }
                     weekOfPregnancy.value = weeks.toString()
                     val calcVisitNumber = when (weeks) {
                         in Konstants.minAnc1Week..Konstants.maxAnc1Week -> 1
@@ -590,7 +588,7 @@ class PregnantWomanAncVisitDataset(
                 -1
             }
 
-            bp.id -> validateForBp(bp.value, 50, 300, 30, 200)
+            bp.id -> validateForBp(bp)
 
             weight.id -> validateIntMinMax(weight)
 
@@ -613,7 +611,19 @@ class PregnantWomanAncVisitDataset(
                 target = highRiskCondition,
                 targetSideEffect = listOf(otherHighRiskCondition)
             ).also {
-                highRiskCondition.value = highRiskCondition.entries!!.first()
+                hb.value?.takeIf { it.isNotEmpty() && hb.errorText == null }?.toDouble()?.let {
+                    if (it < 7)
+                        highRiskCondition.value = highRiskCondition.entries!![5]
+                }
+                bp.value?.takeIf { it.isNotEmpty() && hb.errorText == null }?.let {
+                    val sys = it.substringBefore("/").toInt()
+                    val dia = it.substringAfter("/").toInt()
+                    if (sys > 140 || dia > 90) {
+                        highRiskCondition.value = highRiskCondition.entries!![1]
+                    }
+                }
+                if (highRiskCondition.value == null)
+                    highRiskCondition.value = highRiskCondition.entries!!.first()
             }
 
             highRiskCondition.id -> triggerDependants(
@@ -664,35 +674,6 @@ class PregnantWomanAncVisitDataset(
     fun getIndexOfTd2() = getIndexById(dateOfTTOrTd2.id)
     fun getIndexOfTdBooster() = getIndexById(dateOfTTOrTdBooster.id)
 
-    private val bpRegex = Regex("(\\d{2,3})/(\\d{2,3})")
-    private fun validateForBp(
-        input: String?,
-        minSys: Int,
-        maxSys: Int,
-        minDia: Int,
-        maxDia: Int
-    ): Int {
-        if (input.isNullOrEmpty()) {
-            bp.errorText = null
-            return -1
-        }
-        val matchResult = bpRegex.matchEntire(input)
-        if (matchResult == null)
-            bp.errorText = "Invalid format. Should be like 123/56"
-        else {
-            val sys = matchResult.groupValues[1].toInt()
-            val dia = matchResult.groupValues[2].toInt()
-            bp.errorText = if (sys < minSys) "Systole should not be less than $minSys"
-            else if (sys > maxSys) "Systole should not be greater than $maxSys"
-            else if (dia < minDia) "Diastole should not be less then $minDia"
-            else if (dia > maxDia) "Diastole should not be greater than $maxDia"
-            else if (dia > sys) "Diastole cannot be greater than systole"
-            else null
-        }
-        return -1
-
-    }
-
 
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
         (cacheModel as PregnantWomanAncCache).let { cache ->
@@ -705,8 +686,8 @@ class PregnantWomanAncVisitDataset(
             cache.abortionFacilityId = abortionFacility.getPosition()
             cache.abortionDate = abortionDate.value?.let { getLongFromDate(it) }
             cache.weight = weight.value?.toInt()
-            cache.bpSystolic = bp.value?.substringBefore("/")?.toInt()
-            cache.bpDiastolic = bp.value?.substringAfter("/")?.toInt()
+            cache.bpSystolic = bp.value?.takeIf { it.isNotEmpty() }?.substringBefore("/")?.toInt()
+            cache.bpDiastolic = bp.value?.takeIf { it.isNotEmpty() }?.substringAfter("/")?.toInt()
             cache.pulseRate = pulseRate.value
             cache.hb = hb.value?.toDouble()
             cache.fundalHeight = fundalHeight.value?.toInt()
@@ -718,7 +699,7 @@ class PregnantWomanAncVisitDataset(
             cache.tt2 = dateOfTTOrTd2.value?.let { getLongFromDate(it) }
             cache.ttBooster = dateOfTTOrTdBooster.value?.let { getLongFromDate(it) }
             cache.numFolicAcidTabGiven = numFolicAcidTabGiven.value?.toInt() ?: 0
-            cache.numIfaAcidTabGiven = numFolicAcidTabGiven.value?.toInt() ?: 0
+            cache.numIfaAcidTabGiven = numIfaAcidTabGiven.value?.toInt() ?: 0
             anyHighRisk.value?.let {
                 cache.anyHighRisk = it == anyHighRisk.entries!!.last()
             }

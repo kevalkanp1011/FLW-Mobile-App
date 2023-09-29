@@ -3,6 +3,7 @@
 
 
     <string name="anc_visit_number">ANC Visit %1d</string>
+    <string name="pnc_visit_number">PNC Visit on Day %1d</string>
     <string name="register">Register</string>
     <string name="tracking_form_filled_successfully">Tracking form filled successfully</string>
     <string name="pmsma_form">PMSMA Form</string>
@@ -119,7 +120,7 @@
     <string name="pmsma_twin_pregnancy">Twins pregnancy</string>
     <string name="pmsma_investigation">Investigations</string>
     <string name="pmsma_urine_albumin">Urine albumin</string>
-    <string name="pmsma_haemoglobin_and_blood_group">Haemoglobin and blood group</string>
+    <string name="pmsma_haemoglobin_and_blood_group">Haemoglobin</string>
     <string name="pmsma_hiv">HIV</string>
     <string name="pmsma_vdrl">Vdrl</string>
     <string name="pmsma_hbsc">HBSC (Hepatitis B) </string>

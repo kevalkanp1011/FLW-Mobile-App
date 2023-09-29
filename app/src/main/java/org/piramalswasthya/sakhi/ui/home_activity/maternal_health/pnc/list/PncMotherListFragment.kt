@@ -1,4 +1,4 @@
-package org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pnc_mother_list
+package org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pnc.list
 
 import android.os.Bundle
 import android.text.Editable
@@ -7,17 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
+import org.piramalswasthya.sakhi.adapters.PncVisitListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
-import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 
 @AndroidEntryPoint
 class PncMotherListFragment : Fragment() {
@@ -28,7 +27,7 @@ class PncMotherListFragment : Fragment() {
 
     private val viewModel: PncMotherListViewModel by viewModels()
 
-    private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
+    private val bottomSheet: PncBottomSheetFragment by lazy { PncBottomSheetFragment() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,23 +40,26 @@ class PncMotherListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapterForForm(
-            BenListAdapterForForm.ClickListener(
-                {
-                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
+        val benAdapter = PncVisitListAdapter(
+            PncVisitListAdapter.PncVisitClickListener(
+                showVisits = {
+                    viewModel.updateBottomSheetData(it)
+                    if (!bottomSheet.isVisible)
+                        bottomSheet.show(childFragmentManager, "PNC")
                 },
-                { _, _ ->
-//                findNavController().navigate(
-//                    PncMotherListFragmentDirections.actionPncMotherListFragmentToPmjayFragment(
-//                        hhId,
-//                        benId
-//                    )
-//                )
-            }), resources.getString(R.string.pmjay_form))
+                addVisit = { benId, visitNumber ->
+                    findNavController().navigate(
+                        PncMotherListFragmentDirections.actionPncMotherListFragmentToPncFormFragment(
+                            benId,
+                            visitNumber
+                        )
+                    )
+                })
+        )
         binding.rvAny.adapter = benAdapter
 
         lifecycleScope.launch {
-            viewModel.benList.collect{
+            viewModel.benList.collect {
                 if (it.isEmpty())
                     binding.flEmpty.visibility = View.VISIBLE
                 else
@@ -87,10 +89,14 @@ class PncMotherListFragment : Fragment() {
 
         }
     }
+
     override fun onStart() {
         super.onStart()
-        activity?.let{
-            (it as HomeActivity).updateActionBar(R.drawable.ic__pnc)
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__pnc,
+                getString(R.string.icon_title_pncmc)
+            )
         }
     }
 

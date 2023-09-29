@@ -105,12 +105,14 @@ class PmsmaRepo @Inject constructor(
                                 Timber.d("Saved Successfully to server")
                                 return true
                             }
+
                             5002 -> {
                                 val user = preferenceDao.getLoggedInUser()
                                     ?: throw IllegalStateException("User seems to be logged out!!")
                                 if (userRepo.refreshTokenTmc(user.userName, user.password))
                                     throw SocketTimeoutException()
                             }
+
                             else -> {
                                 throw IOException("Throwing away IO eXcEpTiOn")
                             }
@@ -215,6 +217,13 @@ class PmsmaRepo @Inject constructor(
             }
         }
         return pmsmaList
+    }
+
+    suspend fun getPmsmaByBenId(benId: Long): PMSMACache? {
+        return withContext(Dispatchers.IO) {
+            pmsmaDao.getPmsma(benId)
+        }
+
     }
 
     companion object {

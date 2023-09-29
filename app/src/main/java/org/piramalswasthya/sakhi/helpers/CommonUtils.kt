@@ -4,6 +4,7 @@ import androidx.core.text.isDigitsOnly
 import org.piramalswasthya.sakhi.model.AncStatus
 import org.piramalswasthya.sakhi.model.BenBasicDomain
 import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
+import org.piramalswasthya.sakhi.model.BenPncDomain
 import org.piramalswasthya.sakhi.model.BenWithAncListDomain
 import org.piramalswasthya.sakhi.model.BenWithEcrDomain
 import org.piramalswasthya.sakhi.model.BenWithEctListDomain
@@ -127,6 +128,23 @@ fun filterPwAncList(
                 it.ben.rchId.takeIf { it1 -> it1.isDigitsOnly() }?.contains(filterText) ?: false
 
     }
+
+fun filterPncDomainList(
+    list: List<BenPncDomain>,
+    filterText: String
+) =
+    list.filter {
+        it.ben.benId.toString().lowercase().contains(filterText) ||
+                it.ben.age.lowercase().contains(filterText) ||
+                it.ben.familyHeadName.lowercase().contains(filterText) ||
+                it.ben.benFullName.lowercase().contains(filterText) ||
+                it.ben.spouseName?.lowercase()?.contains(filterText) ?: false ||
+                it.ben.benId.toString().lowercase().contains(filterText) ||
+                it.ben.mobileNo.lowercase().contains(filterText) ||
+                it.deliveryDate.contains(filterText) ||
+                it.ben.rchId.takeIf { it1 -> it1.isDigitsOnly() }?.contains(filterText) ?: false
+    }
+
 
 fun filterTbScreeningList(
     list: List<BenWithTbScreeningDomain>,

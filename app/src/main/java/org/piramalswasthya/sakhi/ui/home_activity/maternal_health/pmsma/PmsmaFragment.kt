@@ -13,6 +13,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
@@ -24,8 +25,8 @@ import timber.log.Timber
 @AndroidEntryPoint
 class PmsmaFragment : Fragment() {
 
-    private var _binding : FragmentNewFormBinding? = null
-    private val binding : FragmentNewFormBinding
+    private var _binding: FragmentNewFormBinding? = null
+    private val binding: FragmentNewFormBinding
         get() = _binding!!
 
 
@@ -40,7 +41,7 @@ class PmsmaFragment : Fragment() {
             .create()
     }
     private val consentAlert by lazy {
-        val alertBinding = AlertConsentBinding.inflate(layoutInflater,binding.root,false)
+        val alertBinding = AlertConsentBinding.inflate(layoutInflater, binding.root, false)
         alertBinding.textView4.text = resources.getString(R.string.consent_alert_title)
         alertBinding.checkBox.text = resources.getString(R.string.consent_text)
         val alertDialog = MaterialAlertDialogBuilder(requireContext())
@@ -52,15 +53,19 @@ class PmsmaFragment : Fragment() {
             findNavController().navigateUp()
         }
         alertBinding.btnPositive.setOnClickListener {
-            if(alertBinding.checkBox.isChecked) {
+            if (alertBinding.checkBox.isChecked) {
                 alertDialog.dismiss()
                 alertBinding.checkBox.isChecked = false
-            }
-            else
-                Toast.makeText(context, resources.getString(R.string.please_tick_the_checkbox), Toast.LENGTH_SHORT).show()
+            } else
+                Toast.makeText(
+                    context,
+                    resources.getString(R.string.please_tick_the_checkbox),
+                    Toast.LENGTH_SHORT
+                ).show()
         }
         alertDialog
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -82,36 +87,24 @@ class PmsmaFragment : Fragment() {
         binding.btnSubmit.setOnClickListener {
             if (validate()) viewModel.submitForm()
         }
-        viewModel.exists.observe(viewLifecycleOwner) {exists ->
-            Timber.d("observing exists : $exists")
-            val adapter = FormInputAdapterOld(isEnabled = !exists)
+        viewModel.recordExists.observe(viewLifecycleOwner) { exists ->
+            binding.btnSubmit.visibility = if (exists) View.GONE else View.VISIBLE
+            val adapter =
+                FormInputAdapter(formValueListener = FormInputAdapter.FormValueListener { formId, index ->
+                    viewModel.updateListOnValueChanged(formId, index)
+                    hardCodedListUpdate(formId)
+                }, isEnabled = !exists)
             binding.form.rvInputForm.adapter = adapter
-            if (exists) {
-                binding.btnSubmit.visibility = View.GONE
-//                binding.cdrForm.rvInputForm.apply {
-//                    isClickable = false
-//                    isFocusable = false
-//                }
-                viewModel.setExistingValues()
-            }
-            else {
-                consentAlert.show()
-                viewModel.address.observe(viewLifecycleOwner) {
-                    viewModel.setAddress(it, adapter)
+            lifecycleScope.launch {
+                viewModel.formList.collect {
+                    if (it.isNotEmpty())
+
+                        adapter.submitList(it)
+
                 }
             }
-            lifecycleScope.launch {
-                adapter.submitList(viewModel.getFirstPage(adapter))
-            }
         }
-        viewModel.popupString.observe(viewLifecycleOwner){
-            it?.let {
-                errorAlert.setMessage(it)
-                errorAlert.show()
-                viewModel.resetPopUpString()
-            }
 
-        }
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
                 State.LOADING -> {
@@ -120,10 +113,12 @@ class PmsmaFragment : Fragment() {
                     binding.cvPatientInformation.visibility = View.GONE
                     binding.pbForm.visibility = View.VISIBLE
                 }
+
                 State.SUCCESS -> {
                     findNavController().navigateUp()
                     WorkerUtils.triggerAmritPushWorker(requireContext())
                 }
+
                 State.FAIL -> {
                     binding.form.rvInputForm.visibility = View.VISIBLE
                     binding.btnSubmit.visibility = View.VISIBLE
@@ -135,6 +130,7 @@ class PmsmaFragment : Fragment() {
                         Toast.LENGTH_LONG
                     ).show()
                 }
+
                 else -> {
                     binding.form.rvInputForm.visibility = View.VISIBLE
                     binding.btnSubmit.visibility = View.VISIBLE
@@ -146,7 +142,6 @@ class PmsmaFragment : Fragment() {
 
         Timber.d("onViewCreated completed!!")
     }
-
 
 
     fun validate(): Boolean {
@@ -165,11 +160,22 @@ class PmsmaFragment : Fragment() {
         }
     }
 
+    private fun hardCodedListUpdate(formId: Int) {
+//        binding.form.rvInputForm.adapter?.apply {
+//            when (formId) {
+//
+//            }
+//        }
+    }
+
 
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__pregnancy, getString(R.string.pmsma))
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__pregnancy,
+                getString(R.string.pmsma)
+            )
         }
     }
 

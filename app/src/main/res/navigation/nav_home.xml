@@ -341,9 +341,12 @@
     </fragment>
     <fragment
         android:id="@+id/pncMotherListFragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pnc_mother_list.PncMotherListFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pnc.list.PncMotherListFragment"
         android:label="@string/pnc_mother_list"
         tools:layout="@layout/fragment_pnc_mother_list">
+        <action
+            android:id="@+id/action_pncMotherListFragment_to_pncFormFragment"
+            app:destination="@id/pncFormFragment" />
     </fragment>
     <fragment
         android:id="@+id/ncdEligibleListFragment"
@@ -943,6 +946,17 @@
         <action
             android:id="@+id/action_HRPMicroBirthPlanFragment_to_pregnantListFragment"
             app:destination="@id/pregnantListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pncFormFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.maternal_health.pnc.form.PncFormFragment"
+        android:label="PncFormFragment" >
+        <argument
+            android:name="benId"
+            app:argType="long" />
+        <argument
+            android:name="visitNumber"
+            app:argType="integer" />
     </fragment>
 
 </navigation>

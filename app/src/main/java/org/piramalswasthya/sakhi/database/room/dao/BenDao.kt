@@ -184,8 +184,9 @@ interface BenDao {
         female: Gender = Gender.FEMALE
     ): Flow<List<BenBasicCache>>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 4 and villageId=:selectedVillage")
-    fun getAllPNCMotherList(selectedVillage: Int): Flow<List<BenBasicCache>>
+    @Transaction
+    @Query("SELECT ben.* FROM BEN_BASIC_CACHE ben join delivery_outcome del on ben.benId = del.benId left outer join pnc_visit pnc on pnc.benId = ben.benId WHERE reproductiveStatusId = 3 and (pnc.isActive is null or pnc.isActive == 1) and  villageId=:selectedVillage group by ben.benId")
+    fun getAllPNCMotherList(selectedVillage: Int): Flow<List<BenWithDoAndPncCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE CAST((strftime('%s','now') - dob/1000)/60/60/24/365 AS INTEGER) <= :max and villageId=:selectedVillage")
     fun getAllInfantList(
@@ -237,6 +238,7 @@ interface BenDao {
     @Query("select * from BEN_BASIC_CACHE b inner join tb_screening t on  b.benId = t.benId where villageId = :villageId and tbsnFilled = 1 and (t.bloodInSputum =1 or t.coughMoreThan2Weeks = 1 or feverMoreThan2Weeks = 1 or nightSweats = 1 or lossOfWeight = 1 or historyOfTb = 1)")
     fun getScreeningList(villageId: Int): Flow<List<BenBasicCache>>
 
+    @Transaction
     @Query("select * from BEN_BASIC_CACHE b inner join tb_screening t on  b.benId = t.benId where villageId = :villageId and tbsnFilled = 1 and (t.bloodInSputum =1 or t.coughMoreThan2Weeks = 1 or feverMoreThan2Weeks = 1 or nightSweats = 1 or lossOfWeight = 1 or historyOfTb = 1)")
     fun getTbScreeningList(villageId: Int): Flow<List<BenWithTbSuspectedCache>>
 

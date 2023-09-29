@@ -105,7 +105,7 @@ class RecordsRepo @Inject constructor(
     val hrpListCount = menopauseList.map { it.size }
 
     val pncMotherList = benDao.getAllPNCMotherList(selectedVillage)
-        .map { list -> list.map { it.asBasicDomainModelForPmjayForm() } }
+        .map { list -> list.map { it.asBasicDomainModel() } }
     val pncMotherListCount = pncMotherList.map { it.size }
 
     val cdrList = benDao.getAllCDRList(selectedVillage)

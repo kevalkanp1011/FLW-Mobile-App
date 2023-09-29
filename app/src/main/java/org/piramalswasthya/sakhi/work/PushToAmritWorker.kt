@@ -29,6 +29,7 @@ class PushToAmritWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         init()
         try {
+
 //            val workerResult = benRepo.syncUnprocessedRecords()
             val workerResult = benRepo.processNewBen()
 //            val workerResult1 = ecrRepo.pushAndUpdateEcrRecord()

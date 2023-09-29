@@ -3,14 +3,22 @@ package org.piramalswasthya.sakhi.configuration
 import android.content.Context
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Languages
+import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.DeliveryOutcomeCache
 import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.InputType
+import org.piramalswasthya.sakhi.model.PNCVisitCache
+import org.piramalswasthya.sakhi.model.getDateStrFromLong
+import java.util.Calendar
+import java.util.concurrent.TimeUnit
 
 class PncFormDataset(
     context: Context, currentLanguage: Languages
 ) : Dataset(context, currentLanguage) {
+
+    private var visit: Int = 0
+    private var dateOfDelivery: Long = 0L
 
     private val pncPeriod = FormElement(
         id = 1,
@@ -24,11 +32,10 @@ class PncFormDataset(
 
     private val visitDate = FormElement(
         id = 2,
-        inputType = InputType.DATE_PICKER,
+        inputType = InputType.TEXT_VIEW,
         title = resources.getString(R.string.pnc_visit_date),
         arrayId = -1,
         required = true,
-        max = System.currentTimeMillis(),
         hasDependants = false
     )
 
@@ -50,7 +57,7 @@ class PncFormDataset(
         title = resources.getString(R.string.pnc_any_contraception_method),
         entries = resources.getStringArray(R.array.pnc_confirmation_array),
         required = false,
-        hasDependants = false
+        hasDependants = true
     )
 
     private var contraceptionMethod = FormElement(
@@ -67,7 +74,7 @@ class PncFormDataset(
         inputType = InputType.EDIT_TEXT,
         title = resources.getString(R.string.pnc_other_ppc_method),
         required = true,
-        hasDependants = true
+        hasDependants = false
     )
 
     private var motherDangerSign = FormElement(
@@ -75,7 +82,7 @@ class PncFormDataset(
         inputType = InputType.DROPDOWN,
         title = resources.getString(R.string.pnc_mother_danger_sign),
         entries = resources.getStringArray(R.array.pnc_mother_danger_sign_array),
-        required = true,
+        required = false,
         hasDependants = true
     )
 
@@ -92,7 +99,7 @@ class PncFormDataset(
         inputType = InputType.DROPDOWN,
         title = resources.getString(R.string.pnc_referral_facility),
         entries = resources.getStringArray(R.array.pnc_referral_facility_array),
-        required = true,
+        required = false,
         hasDependants = false
     )
 
@@ -102,7 +109,7 @@ class PncFormDataset(
         title = resources.getString(R.string.pnc_mother_death),
         entries = resources.getStringArray(R.array.pnc_confirmation_array),
         required = false,
-        hasDependants = false,
+        hasDependants = true,
     )
 
     private var deathDate = FormElement(
@@ -120,8 +127,8 @@ class PncFormDataset(
         inputType = InputType.DROPDOWN,
         title = resources.getString(R.string.pnc_death_cause),
         entries = resources.getStringArray(R.array.pnc_death_cause_array),
-        required = false,
-        hasDependants = false,
+        required = true,
+        hasDependants = true,
     )
 
     private var otherDeathCause = FormElement(
@@ -137,7 +144,7 @@ class PncFormDataset(
         inputType = InputType.DROPDOWN,
         title = resources.getString(R.string.pnc_death_place),
         entries = resources.getStringArray(R.array.pnc_death_place_array),
-        required = false,
+        required = true,
         hasDependants = false,
     )
 
@@ -145,28 +152,85 @@ class PncFormDataset(
         id = 15,
         inputType = InputType.EDIT_TEXT,
         title = resources.getString(R.string.pnc_remarks),
-        required = true,
+        required = false,
         hasDependants = false
     )
 
-    suspend fun setUpPage(ben: BenRegCache?, saved: DeliveryOutcomeCache?) {
-//        var list = mutableListOf(
-//            dateOfDelivery,
-//            timeOfDelivery,
-//            placeOfDelivery,
-//            typeOfDelivery,
-//            hadComplications,
-////            complication,
-////            causeOfDeath,
-////            otherCauseOfDeath,
-////            otherComplication,
-//            deliveryOutcome,
-//            liveBirth,
-//            stillBirth,
-//            dateOfDischarge,
-//            timeOfDischarge,
-//            isJSYBenificiary
-//        )
+    suspend fun setUpPage(
+        visitNumber: Int,
+        ben: BenRegCache,
+        deliveryOutcomeCache: DeliveryOutcomeCache,
+        previousPnc: PNCVisitCache?,
+        saved: PNCVisitCache?
+    ) {
+        val list = mutableListOf(
+            pncPeriod,
+            visitDate,
+            ifaTabsGiven,
+            anyContraceptionMethod,
+            motherDangerSign,
+            referralFacility,
+            motherDeath,
+            remarks
+        )
+        dateOfDelivery = deliveryOutcomeCache.dateOfDelivery
+        deathDate.min = dateOfDelivery
+        deathDate.max = System.currentTimeMillis()
+        motherDeath.value = motherDeath.entries!!.last()
+        val daysSinceDelivery = Calendar.getInstance()
+            .setToStartOfTheDay().timeInMillis - deliveryOutcomeCache.dateOfDelivery.let {
+            val cal = Calendar.getInstance()
+            cal.timeInMillis = it
+            cal.setToStartOfTheDay()
+            cal.timeInMillis
+        }
+        pncPeriod.entries =
+            listOf(1, 3, 7, 14, 21, 28, 42).filter { if(daysSinceDelivery == 0L) it<=1 else it <= daysSinceDelivery }
+                .filter { it > (previousPnc?.pncPeriod ?: 0) }
+                .map { "Day $it" }.toTypedArray()
+
+        saved?.let {
+            pncPeriod.value = "Day ${it.pncPeriod}"
+            visitDate.value = getDateFromLong(it.pncDate)
+            ifaTabsGiven.value = it.ifaTabsGiven?.toString()
+            anyContraceptionMethod.value = it.anyContraceptionMethod?.let {
+                if (it)
+                    anyContraceptionMethod.entries!!.first()
+                else
+                    anyContraceptionMethod.entries!!.last()
+            }
+            if (it.anyContraceptionMethod == true) {
+                list.add(list.indexOf(anyContraceptionMethod) + 1, contraceptionMethod)
+            }
+            contraceptionMethod.value = it.contraceptionMethod
+            if (it.contraceptionMethod == contraceptionMethod.entries!!.last()) {
+                list.add(list.indexOf(contraceptionMethod) + 1, otherPpcMethod)
+            }
+            otherPpcMethod.value = it.otherPpcMethod
+            motherDangerSign.value = it.motherDangerSign
+            if (it.motherDangerSign == motherDangerSign.entries!!.last()) {
+                list.add(list.indexOf(otherDangerSign) + 1, motherDangerSign)
+            }
+            otherDangerSign.value = it.otherDangerSign
+            referralFacility.value = it.referralFacility
+            motherDeath.value =
+                if (it.motherDeath) motherDeath.entries!!.first() else motherDeath.entries!!.last()
+            if (it.motherDeath) {
+                deathDate.value = getDateStrFromLong(it.deathDate)
+                causeOfDeath.value = it.causeOfDeath
+                otherDeathCause.value = it.otherDeathCause
+                placeOfDeath.value = it.placeOfDeath
+                list.addAll(
+                    list.indexOf(motherDeath) + 1,
+                    listOf(deathDate, causeOfDeath, placeOfDeath)
+                )
+                if (causeOfDeath.value == causeOfDeath.entries!!.last())
+                    list.add(list.indexOf(causeOfDeath) + 1, otherDeathCause)
+            }
+            remarks.value = it.remarks
+        }
+
+//        pncPeriod.entries = pncPeriod.entries!!.
 //        if (saved == null) {
 //            dateOfDelivery.value = Dataset.getDateFromLong(System.currentTimeMillis())
 //            dateOfDischarge.value = Dataset.getDateFromLong(System.currentTimeMillis())
@@ -207,66 +271,108 @@ class PncFormDataset(
 //        ben?.let {
 //            dateOfDelivery.min = it.regDate
 //        }
-//        setUpPage(list)
+        setUpPage(list)
 
     }
+
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
-//            dateOfDelivery.id -> {
-//                dateOfDischarge.min = Dataset.getLongFromDate(dateOfDelivery.value)
-//                -1
-//            }
-//            hadComplications.id -> {
-//                triggerDependants(
-//                    source = hadComplications,
-//                    passedIndex = index,
-//                    triggerIndex = 0,
-//                    target = complication,
-//                    targetSideEffect = listOf(causeOfDeath, otherComplication, otherCauseOfDeath)
-//                )
-//            }
-//            complication.id -> {
-//                if(index == 6) {
-//                    triggerDependants(
-//                        source = complication,
-//                        addItems = listOf(causeOfDeath),
-//                        removeItems = listOf(otherComplication, otherCauseOfDeath)
-//                    )
-//                } else if(index == 7) {
-//                    triggerDependants(
-//                        source = complication,
-//                        addItems = listOf(otherComplication),
-//                        removeItems = listOf(causeOfDeath, otherCauseOfDeath)
-//                    )
-//                } else {
-//                    triggerDependants(
-//                        source = complication,
-//                        addItems = listOf(),
-//                        removeItems = listOf(otherComplication, otherCauseOfDeath, causeOfDeath)
-//                    )
-//                }
-//            }
+            pncPeriod.id -> {
+                visitDate.inputType = InputType.DATE_PICKER
+                val visitNumber = pncPeriod.value!!.substring(4).toInt()
+                when (visitNumber) {
+                    0 -> {
+                        visitDate.min = dateOfDelivery
+                        visitDate.max = dateOfDelivery + TimeUnit.DAYS.toMillis(1)
+                    }
+
+                    1 -> {
+                        visitDate.min = dateOfDelivery + TimeUnit.DAYS.toMillis(3)
+                        visitDate.max = dateOfDelivery + TimeUnit.DAYS.toMillis(3)
+                    }
+
+                    2 -> {
+                        visitDate.min =
+                            dateOfDelivery + TimeUnit.DAYS.toMillis(7) - TimeUnit.DAYS.toMillis(3)
+                        visitDate.max =
+                            dateOfDelivery + TimeUnit.DAYS.toMillis(7) + TimeUnit.DAYS.toMillis(3)
+                    }
+
+                    3 -> {
+                        visitDate.min =
+                            dateOfDelivery + TimeUnit.DAYS.toMillis(14) - TimeUnit.DAYS.toMillis(3)
+                        visitDate.max =
+                            dateOfDelivery + TimeUnit.DAYS.toMillis(14) + TimeUnit.DAYS.toMillis(3)
+                    }
+
+                    4 -> {
+                        visitDate.min =
+                            dateOfDelivery + TimeUnit.DAYS.toMillis(21) - TimeUnit.DAYS.toMillis(3)
+                        visitDate.max =
+                            dateOfDelivery + TimeUnit.DAYS.toMillis(21) + TimeUnit.DAYS.toMillis(3)
+                    }
+
+                    5 -> {
+                        visitDate.min =
+                            dateOfDelivery + TimeUnit.DAYS.toMillis(28) - TimeUnit.DAYS.toMillis(3)
+                        visitDate.max =
+                            dateOfDelivery + TimeUnit.DAYS.toMillis(28) + TimeUnit.DAYS.toMillis(3)
+                    }
+
+                    6 -> {
+                        visitDate.min =
+                            dateOfDelivery + TimeUnit.DAYS.toMillis(42) - TimeUnit.DAYS.toMillis(3)
+                        visitDate.max =
+                            dateOfDelivery + TimeUnit.DAYS.toMillis(42) + TimeUnit.DAYS.toMillis(3)
+                    }
+                }
+                return -1
+            }
+
+            ifaTabsGiven.id -> validateIntMinMax(ifaTabsGiven)
+            anyContraceptionMethod.id -> triggerDependants(
+                source = anyContraceptionMethod,
+                passedIndex = index,
+                triggerIndex = 0,
+                target = contraceptionMethod,
+                targetSideEffect = listOf(otherPpcMethod)
+            )
+
+            contraceptionMethod.id -> triggerDependants(
+                source = contraceptionMethod,
+                passedIndex = index,
+                triggerIndex = contraceptionMethod.entries!!.lastIndex,
+                target = otherPpcMethod,
+            )
+
+            motherDangerSign.id ->
+                triggerDependants(
+                    source = motherDangerSign,
+                    passedIndex = index,
+                    triggerIndex = motherDangerSign.entries!!.lastIndex,
+                    target = otherDangerSign
+                )
+
+            motherDeath.id -> {
+                triggerDependants(
+                    source = motherDeath,
+                    passedIndex = index,
+                    triggerIndex = 0,
+                    target = listOf(deathDate, causeOfDeath, placeOfDeath),
+                    targetSideEffect = listOf(otherDeathCause)
+                )
+            }
+
+            causeOfDeath.id -> {
+                triggerDependants(
+                    source = causeOfDeath,
+                    passedIndex = index,
+                    triggerIndex = causeOfDeath.entries!!.lastIndex,
+                    target = otherDeathCause
+                )
+            }
+
 //
-//            causeOfDeath.id -> {
-//                triggerDependants(
-//                    source = causeOfDeath,
-//                    passedIndex = index,
-//                    triggerIndex = 4,
-//                    target = otherCauseOfDeath
-//                )
-//            }
-//            deliveryOutcome.id -> {
-//                validateIntMinMax(deliveryOutcome)
-//                validateMaxDeliveryOutcome()
-//            }
-//            liveBirth.id -> {
-//                validateIntMinMax(liveBirth)
-//                validateMaxDeliveryOutcome()
-//            }
-//            stillBirth.id -> {
-//                validateIntMinMax(stillBirth)
-//                validateMaxDeliveryOutcome()
-//            }
             else -> -1
         }
     }
@@ -282,22 +388,24 @@ class PncFormDataset(
 //    }
 
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
-        (cacheModel as DeliveryOutcomeCache).let { form ->
-//            form.dateOfDelivery = Dataset.getLongFromDate(dateOfDelivery.value)
-//            form.timeOfDelivery = timeOfDelivery.value
-//            form.placeOfDelivery = placeOfDelivery.value
-//            form.typeOfDelivery = typeOfDelivery.value
-//            form.hadComplications = hadComplications.value == "Yes"
-//            form.complication = complication.value
-//            form.causeOfDeath = causeOfDeath.value
-//            form.otherCauseOfDeath = otherCauseOfDeath.value
-//            form.otherComplication = otherComplication.value
-//            form.deliveryOutcome = deliveryOutcome.value?.toInt()
-//            form.liveBirth = liveBirth.value?.toInt()
-//            form.stillBirth = stillBirth.value?.toInt()
-//            form.dateOfDischarge = Dataset.getLongFromDate(dateOfDischarge.value)
-//            form.timeOfDischarge = timeOfDischarge.value
-//            form.isJSYBenificiary = isJSYBenificiary.value == "Yes"
+        (cacheModel as PNCVisitCache).let { form ->
+            form.pncPeriod = pncPeriod.value!!.substring(4).toInt()
+            form.pncDate = getLongFromDate(visitDate.value!!)
+            form.ifaTabsGiven = ifaTabsGiven.value?.takeIf { it.isNotEmpty() }?.toInt()
+            form.anyContraceptionMethod =
+                anyContraceptionMethod.value?.let { it == anyContraceptionMethod.entries!!.first() }
+            form.contraceptionMethod = contraceptionMethod.value?.takeIf { it.isNotEmpty() }
+            form.otherPpcMethod = otherPpcMethod.value?.takeIf { it.isNotEmpty() }
+            form.motherDangerSign = motherDangerSign.value?.takeIf { it.isNotEmpty() }
+            form.otherDangerSign = otherDangerSign.value?.takeIf { it.isNotEmpty() }
+            form.referralFacility = referralFacility.value?.takeIf { it.isNotEmpty() }
+            form.motherDeath =
+                motherDeath.value?.let { it == motherDeath.entries!!.first() } ?: false
+            form.deathDate = deathDate.value?.let { getLongFromDate(it) }
+            form.causeOfDeath = causeOfDeath.value?.takeIf { it.isNotEmpty() }
+            form.otherDeathCause = otherDeathCause.value?.takeIf { it.isNotEmpty() }
+            form.placeOfDeath = placeOfDeath.value?.takeIf { it.isNotEmpty() }
+            form.remarks = remarks.value?.takeIf { it.isNotEmpty() }
         }
     }
 }

@@ -261,17 +261,17 @@ class IconDataset @Inject constructor(
             recordsRepo.getRegisteredPregnantWomanListCount(),
             MotherCareFragmentDirections.actionMotherCareFragmentToPwAncVisitsFragment()
         ),
-//        Icon(
-//            R.drawable.ic__pregnancy,
-//            resources.getString(R.string.icon_title_pncmc),
-//            recordsRepo.getAllWomenForPmsmaCount(),
-//            MotherCareFragmentDirections.actionMotherCareFragmentToPncMotherListFragment()
-//        ),
         Icon(
             R.drawable.ic__pregnancy,
             resources.getString(R.string.icon_title_pmdo),
             recordsRepo.getDeliveredWomenListCount(),
             MotherCareFragmentDirections.actionMotherCareFragmentToDeliveryOutcomeListFragment()
+        ),
+        Icon(
+            R.drawable.ic__pregnancy,
+            resources.getString(R.string.icon_title_pncmc),
+            recordsRepo.pncMotherListCount,
+            MotherCareFragmentDirections.actionMotherCareFragmentToPncMotherListFragment()
         ),
         Icon(
             R.drawable.ic__pregnancy,

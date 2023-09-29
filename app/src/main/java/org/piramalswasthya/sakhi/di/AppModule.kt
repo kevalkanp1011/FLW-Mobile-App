@@ -132,6 +132,9 @@ object AppModule {
     @Singleton
     @Provides
     fun provideMaternalHealthDao(database : InAppDb) : MaternalHealthDao = database.maternalHealthDao
+    @Singleton
+    @Provides
+    fun providePncDao(database : InAppDb) : PncDao = database.pncDao
 
     @Singleton
     @Provides

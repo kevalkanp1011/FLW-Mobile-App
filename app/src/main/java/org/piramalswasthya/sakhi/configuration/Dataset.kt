@@ -11,7 +11,6 @@ import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.InputType
-import org.piramalswasthya.sakhi.utils.HelperUtil
 import org.piramalswasthya.sakhi.utils.HelperUtil.getLocalizedResources
 import timber.log.Timber
 import java.text.SimpleDateFormat
@@ -44,7 +43,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     protected companion object {
         fun getLongFromDate(dateString: String?): Long {
             val f = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
-              val date = dateString?.let { f.parse(it) }
+            val date = dateString?.let { f.parse(it) }
             return date?.time ?: 0L
         }
 
@@ -649,6 +648,37 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         return -1
     }
 
+    private val bpRegex = Regex("(\\d{2,3})/(\\d{2,3})")
+
+    protected fun validateForBp(
+        bp: FormElement,
+        minSys: Int = 50,
+        maxSys: Int = 300,
+        minDia: Int = 30,
+        maxDia: Int = 200
+    ): Int {
+        if (bp.value.isNullOrEmpty()) {
+            bp.errorText = null
+            return -1
+        }
+        val matchResult = bpRegex.matchEntire(bp.value!!)
+        if (matchResult == null)
+            bp.errorText = "Invalid format. Should be like 123/56"
+        else {
+            val sys = matchResult.groupValues[1].toInt()
+            val dia = matchResult.groupValues[2].toInt()
+            bp.errorText = if (sys < minSys) "Systole should not be less than $minSys"
+            else if (sys > maxSys) "Systole should not be greater than $maxSys"
+            else if (dia < minDia) "Diastole should not be less then $minDia"
+            else if (dia > maxDia) "Diastole should not be greater than $maxDia"
+            else if (dia > sys) "Diastole cannot be greater than systole"
+            else null
+        }
+        return -1
+
+    }
+
+
     fun getIndexById(id: Int): Int {
         return list.find { it.id == id }?.let {
             list.indexOf(it)
@@ -683,14 +713,16 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
 
     fun getLocalValueInArray(arrayId: Int, entry: String?): String? {
         entry?.let {
-            return resources.getStringArray(arrayId)[englishResources.getStringArray(arrayId).indexOf(it)]
+            return resources.getStringArray(arrayId)[englishResources.getStringArray(arrayId)
+                .indexOf(it)]
         }
         return null
     }
 
     fun getEnglishValueInArray(arrayId: Int, entry: String?): String? {
         entry?.let {
-            return englishResources.getStringArray(arrayId)[resources.getStringArray(arrayId).indexOf(it)]
+            return englishResources.getStringArray(arrayId)[resources.getStringArray(arrayId)
+                .indexOf(it)]
         }
         return null
     }

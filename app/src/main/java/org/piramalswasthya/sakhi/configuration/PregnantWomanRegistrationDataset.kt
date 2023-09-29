@@ -13,6 +13,7 @@ import org.piramalswasthya.sakhi.model.HRPPregnantAssessCache
 import org.piramalswasthya.sakhi.model.InputType
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import java.util.Calendar
+import java.util.concurrent.TimeUnit
 
 class PregnantWomanRegistrationDataset(
     context: Context, currentLanguage: Languages
@@ -377,7 +378,12 @@ class PregnantWomanRegistrationDataset(
 
     private var homeDeliverydbVal: String? = null
 
-    suspend fun setUpPage(ben: BenRegCache?, assess: HRPPregnantAssessCache?, saved: PregnantWomanRegistrationCache?, lastTrackTimestamp : Long? = null) {
+    suspend fun setUpPage(
+        ben: BenRegCache?,
+        assess: HRPPregnantAssessCache?,
+        saved: PregnantWomanRegistrationCache?,
+        lastTrackTimestamp: Long? = null
+    ) {
         val list = mutableListOf(
             dateOfReg,
             rchId,
@@ -439,7 +445,10 @@ class PregnantWomanRegistrationDataset(
 
             updateAgeCheck(dateOfBirth, Calendar.getInstance().timeInMillis)
 
-            isHrpCase.value = if (isHighRisk()) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(R.array.yes_no)[1]
+            isHrpCase.value =
+                if (isHighRisk()) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(
+                    R.array.yes_no
+                )[1]
 
         }
         lastTrackTimestamp?.let {
@@ -460,7 +469,11 @@ class PregnantWomanRegistrationDataset(
             lmp.value = getDateFromLong(it.lmpDate)
 
             if (it.lmpDate > 0) {
-                val weekOfPreg = getWeeksOfPregnancy(Calendar.getInstance().timeInMillis, it.lmpDate)
+                val weekOfPreg =
+                    getWeeksOfPregnancy(
+                        saved?.dateOfRegistration ?: Calendar.getInstance().timeInMillis,
+                        it.lmpDate
+                    )
                 weekOfPregnancy.value =
                     weekOfPreg.toString()
                 if (weekOfPreg > 26)
@@ -498,6 +511,8 @@ class PregnantWomanRegistrationDataset(
                 inputType = InputType.TEXT_VIEW
             }
             it.dateOfRegistration.let {
+                lmp.max = it
+                lmp.min = it - TimeUnit.DAYS.toMillis(280)
                 dateOfVdrlTestDone.min = it
                 dateOfhivTestDone.min = it
                 dateOfhbsAgTestDone.min = it
@@ -522,7 +537,10 @@ class PregnantWomanRegistrationDataset(
             height.value = it.height?.toString()
             vdrlrprTestResult.value = it.vdrlRprTestResult
             it.vdrlRprTestResult?.let { it1 ->
-                if (it1 == vdrlrprTestResult.entries?.get(0) || it1 == vdrlrprTestResult.entries?.get(1)) {
+                if (it1 == vdrlrprTestResult.entries?.get(0) || it1 == vdrlrprTestResult.entries?.get(
+                        1
+                    )
+                ) {
                     list.add(list.indexOf(vdrlrprTestResult) + 1, dateOfVdrlTestDone)
                     dateOfVdrlTestDone.value =
                         it.dateOfVdrlRprTest?.let { it2 -> getDateFromLong(it2) }
@@ -537,7 +555,8 @@ class PregnantWomanRegistrationDataset(
             it.hbsAgTestResult?.let { it1 ->
                 if (it1 == hbsAgTestResult.entries?.get(0) || it1 == hbsAgTestResult.entries?.get(1)) {
                     list.add(list.indexOf(hbsAgTestResult) + 1, dateOfhbsAgTestDone)
-                    dateOfhbsAgTestDone.value = it.dateOfHbsAgTest?.let { it2 -> getDateFromLong(it2) }
+                    dateOfhbsAgTestDone.value =
+                        it.dateOfHbsAgTest?.let { it2 -> getDateFromLong(it2) }
                 }
             }
             hivTestResult.value = it.hivTestResult
@@ -770,27 +789,49 @@ class PregnantWomanRegistrationDataset(
             }
 
             noOfDeliveries.id, timeLessThan18m.id -> {
-                childInfoLabel.showHighRisk = noOfDeliveries.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
-                        timeLessThan18m.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
-                isHrpCase.value = if (isHighRisk()) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(R.array.yes_no)[1]
-                handleListOnValueChanged(isHrpCase.id, resources.getStringArray(R.array.yes_no).indexOf(isHrpCase.value))
+                childInfoLabel.showHighRisk =
+                    noOfDeliveries.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            timeLessThan18m.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+                isHrpCase.value =
+                    if (isHighRisk()) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(
+                        R.array.yes_no
+                    )[1]
+                handleListOnValueChanged(
+                    isHrpCase.id,
+                    resources.getStringArray(R.array.yes_no).indexOf(isHrpCase.value)
+                )
             }
 
             heightShort.id, ageCheck.id -> {
-                physicalObservationLabel.showHighRisk = heightShort.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
-                        ageCheck.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
-                isHrpCase.value = if (isHighRisk()) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(R.array.yes_no)[1]
-                handleListOnValueChanged(isHrpCase.id, resources.getStringArray(R.array.yes_no).indexOf(isHrpCase.value))
+                physicalObservationLabel.showHighRisk =
+                    heightShort.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            ageCheck.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+                isHrpCase.value =
+                    if (isHighRisk()) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(
+                        R.array.yes_no
+                    )[1]
+                handleListOnValueChanged(
+                    isHrpCase.id,
+                    resources.getStringArray(R.array.yes_no).indexOf(isHrpCase.value)
+                )
             }
 
             rhNegative.id, homeDelivery.id, badObstetric.id, multiplePregnancy.id -> {
-                obstetricHistoryLabel.showHighRisk = rhNegative.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
-                        homeDelivery.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
-                        badObstetric.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
-                        multiplePregnancy.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
-                isHrpCase.value = if (isHighRisk()) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(R.array.yes_no)[1]
-                handleListOnValueChanged(isHrpCase.id, resources.getStringArray(R.array.yes_no).indexOf(isHrpCase.value))
+                obstetricHistoryLabel.showHighRisk =
+                    rhNegative.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            homeDelivery.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            badObstetric.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            multiplePregnancy.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+                isHrpCase.value =
+                    if (isHighRisk()) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(
+                        R.array.yes_no
+                    )[1]
+                handleListOnValueChanged(
+                    isHrpCase.id,
+                    resources.getStringArray(R.array.yes_no).indexOf(isHrpCase.value)
+                )
             }
+
             isHrpCase.id -> {
                 triggerDependants(
                     source = isHrpCase,
@@ -843,14 +884,38 @@ class PregnantWomanRegistrationDataset(
 
     fun mapValuesForAssess(assess: HRPPregnantAssessCache?, pageNumber: Int) {
         assess?.let { form ->
-            form.noOfDeliveries = if (noOfDeliveries.value != null) getEnglishValueInArray(R.array.yes_no, noOfDeliveries.value) else null
-            form.timeLessThan18m = if (timeLessThan18m.value != null) getEnglishValueInArray(R.array.yes_no, timeLessThan18m.value) else null
-            form.heightShort = if (heightShort.value != null) getEnglishValueInArray(R.array.yes_no, heightShort.value) else null
-            form.age = if (ageCheck.value != null) getEnglishValueInArray(R.array.yes_no, ageCheck.value) else null
-            form.rhNegative = if (rhNegative.value != null) getEnglishValueInArray(R.array.yes_no, rhNegative.value) else null
-            form.homeDelivery = if (homeDelivery.value != null) getEnglishValueInArray(R.array.yes_no, homeDelivery.value) else null
-            form.badObstetric = if (badObstetric.value != null) getEnglishValueInArray(R.array.yes_no, badObstetric.value) else null
-            form.multiplePregnancy = if (multiplePregnancy.value != null) getEnglishValueInArray(R.array.yes_no, multiplePregnancy.value) else null
+            form.noOfDeliveries = if (noOfDeliveries.value != null) getEnglishValueInArray(
+                R.array.yes_no,
+                noOfDeliveries.value
+            ) else null
+            form.timeLessThan18m = if (timeLessThan18m.value != null) getEnglishValueInArray(
+                R.array.yes_no,
+                timeLessThan18m.value
+            ) else null
+            form.heightShort = if (heightShort.value != null) getEnglishValueInArray(
+                R.array.yes_no,
+                heightShort.value
+            ) else null
+            form.age = if (ageCheck.value != null) getEnglishValueInArray(
+                R.array.yes_no,
+                ageCheck.value
+            ) else null
+            form.rhNegative = if (rhNegative.value != null) getEnglishValueInArray(
+                R.array.yes_no,
+                rhNegative.value
+            ) else null
+            form.homeDelivery = if (homeDelivery.value != null) getEnglishValueInArray(
+                R.array.yes_no,
+                homeDelivery.value
+            ) else null
+            form.badObstetric = if (badObstetric.value != null) getEnglishValueInArray(
+                R.array.yes_no,
+                badObstetric.value
+            ) else null
+            form.multiplePregnancy = if (multiplePregnancy.value != null) getEnglishValueInArray(
+                R.array.yes_no,
+                multiplePregnancy.value
+            ) else null
             form.lmpDate = getLongFromDate(lmp.value)
             form.edd = getLongFromDate(edd.value)
             form.isHighRisk = isHighRisk()
@@ -877,7 +942,7 @@ class PregnantWomanRegistrationDataset(
                 multiplePregnancy.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
     }
 
-    private suspend fun updateAgeCheck(dob:Long, current: Long) {
+    private suspend fun updateAgeCheck(dob: Long, current: Long) {
         val calReg = Calendar.getInstance()
         calReg.timeInMillis = current
         val calDob = Calendar.getInstance()

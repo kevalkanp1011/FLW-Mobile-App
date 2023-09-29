@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.squareup.moshi.JsonClass
+import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.network.getLongFromDate
 import java.text.SimpleDateFormat
@@ -67,7 +68,7 @@ data class PMSMACache(
     var updatedBy: String,
     var updatedDate: Long = System.currentTimeMillis(),
     var syncState: SyncState
-) {
+) : FormDataModel{
 
 
     private fun getDateStringFromLong(dateLong: Long?): String? {

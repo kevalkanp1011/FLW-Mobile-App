@@ -37,11 +37,15 @@
     <string name="nhhr_type_residential_area_2">ग्रामीण</string>
     <string name="nhhr_type_residential_area_3">शहरी</string>
     <string name="nhhr_type_residential_area_4">आदिवासी</string>
+    <string name="nhhr_type_residential_area_5">Tea Garden</string>
+
     <string-array name="nhhr_type_residential_area_array">
         <item>@string/nhhr_type_residential_area_1</item>
         <item>@string/nhhr_type_residential_area_2</item>
         <item>@string/nhhr_type_residential_area_3</item>
         <item>@string/nhhr_type_residential_area_4</item>
+        <item>@string/nhhr_type_residential_area_5</item>
+
     </string-array>
     <string name="nhhr_type_of_house">घर का प्रकार</string>
     <string name="nhhr_type_of_house_1">इनमें से कोई भी नहीं</string>

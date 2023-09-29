@@ -37,11 +37,14 @@
     <string name="nhhr_type_residential_area_2">নগৰীয়া</string>
     <string name="nhhr_type_residential_area_3">জনজাতীয়</string>
     <string name="nhhr_type_residential_area_4">অন্যান্য</string>
+    <string name="nhhr_type_residential_area_5">Tea Garden</string>
+
     <string-array name="nhhr_type_residential_area_array">
         <item>@string/nhhr_type_residential_area_1</item>
         <item>@string/nhhr_type_residential_area_2</item>
         <item>@string/nhhr_type_residential_area_3</item>
         <item>@string/nhhr_type_residential_area_4</item>
+        <item>@string/nhhr_type_residential_area_5</item>
     </string-array>
     <string name="nhhr_type_of_house">ঘৰৰ প্ৰকাৰ নিৰ্বাচন কৰক</string>
     <string name="nhhr_type_of_house_1">একো নহয়</string>

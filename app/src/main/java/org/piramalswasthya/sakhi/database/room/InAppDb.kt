@@ -25,6 +25,7 @@ import org.piramalswasthya.sakhi.database.room.dao.MaternalHealthDao
 import org.piramalswasthya.sakhi.database.room.dao.MdsrDao
 import org.piramalswasthya.sakhi.database.room.dao.PmjayDao
 import org.piramalswasthya.sakhi.database.room.dao.PmsmaDao
+import org.piramalswasthya.sakhi.database.room.dao.PncDao
 import org.piramalswasthya.sakhi.database.room.dao.SyncDao
 import org.piramalswasthya.sakhi.database.room.dao.TBDao
 import org.piramalswasthya.sakhi.model.BenBasicCache
@@ -49,6 +50,7 @@ import org.piramalswasthya.sakhi.model.InfantRegCache
 import org.piramalswasthya.sakhi.model.MDSRCache
 import org.piramalswasthya.sakhi.model.PMJAYCache
 import org.piramalswasthya.sakhi.model.PMSMACache
+import org.piramalswasthya.sakhi.model.PNCVisitCache
 import org.piramalswasthya.sakhi.model.PregnantWomanAncCache
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import org.piramalswasthya.sakhi.model.TBScreeningCache
@@ -63,6 +65,7 @@ import org.piramalswasthya.sakhi.model.Vaccine
         CbacCache::class,
         CDRCache::class,
         MDSRCache::class,
+        PNCVisitCache::class,
         PMSMACache::class,
         PMJAYCache::class,
         FPOTCache::class,
@@ -104,16 +107,17 @@ abstract class InAppDb : RoomDatabase() {
     abstract val fpotDao: FpotDao
     abstract val hbncDao: HbncDao
     abstract val hbycDao: HbycDao
-    abstract val ecrDao : EcrDao
+    abstract val ecrDao: EcrDao
     abstract val vaccineDao: ImmunizationDao
-    abstract val maternalHealthDao : MaternalHealthDao
-    abstract val tbDao : TBDao
-    abstract val hrpDao : HrpDao
+    abstract val maternalHealthDao: MaternalHealthDao
+    abstract val pncDao : PncDao
+    abstract val tbDao: TBDao
+    abstract val hrpDao: HrpDao
     abstract val deliveryOutcomeDao: DeliveryOutcomeDao
     abstract val infantRegDao: InfantRegDao
-    abstract val childRegistrationDao : ChildRegistrationDao
+    abstract val childRegistrationDao: ChildRegistrationDao
 
-    abstract val syncDao : SyncDao
+    abstract val syncDao: SyncDao
 
     companion object {
         @Volatile
