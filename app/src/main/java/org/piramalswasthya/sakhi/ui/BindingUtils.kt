@@ -25,9 +25,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.AncFormState
 import org.piramalswasthya.sakhi.model.AncFormState.*
+import org.piramalswasthya.sakhi.model.BenBasicDomain
 import org.piramalswasthya.sakhi.model.FormInputOld
+import org.piramalswasthya.sakhi.model.Gender
 import org.piramalswasthya.sakhi.model.VaccineState
 import org.piramalswasthya.sakhi.model.VaccineState.*
 import timber.log.Timber
@@ -88,7 +91,7 @@ fun Button.setVaccineState(syncState: VaccineState?) {
 
 @BindingAdapter("scope", "recordCount")
 fun TextView.setRecordCount(scope: CoroutineScope, count: Flow<Int>?) {
-    count?.let {flow->
+    count?.let { flow ->
         scope.launch {
             flow.collect {
                 text = it.toString()
@@ -121,18 +124,23 @@ fun CardView.setRedBorder(allowRedBorder: Boolean, scope: CoroutineScope, count:
 @BindingAdapter("benIdText")
 fun TextView.setBenIdText(benId: Long?) {
     benId?.let {
-        if (benId <0L) {
+        if (benId < 0L) {
             text = "Pending Sync"
             setTextColor(resources.getColor(android.R.color.holo_orange_light))
-        }
-        else {
+        } else {
             text = benId.toString()
-            setTextColor(MaterialColors.getColor(this,com.google.android.material.R.attr.colorOnPrimary))
+            setTextColor(
+                MaterialColors.getColor(
+                    this,
+                    com.google.android.material.R.attr.colorOnPrimary
+                )
+            )
 
         }
     }
 
 }
+
 
 @BindingAdapter("showBasedOnNumMembers")
 fun TextView.showBasedOnNumMembers(numMembers: Int?) {
@@ -140,13 +148,30 @@ fun TextView.showBasedOnNumMembers(numMembers: Int?) {
         visibility = if (it > 0) View.VISIBLE else View.GONE
     }
 }
+
 @BindingAdapter("backgroundTintBasedOnNumMembers")
 fun CardView.setBackgroundTintBasedOnNumMembers(numMembers: Int?) {
     numMembers?.let {
-        val color = MaterialColors.getColor(this,if(it>0) androidx.appcompat.R.attr.colorPrimary else android.R.attr.colorEdgeEffect)
+        val color = MaterialColors.getColor(
+            this,
+            if (it > 0) androidx.appcompat.R.attr.colorPrimary else android.R.attr.colorEdgeEffect
+        )
         setCardBackgroundColor(color)
     }
 }
+
+@BindingAdapter("rchId")
+fun LinearLayout.showRchIdOrNot(ben: BenBasicDomain?) {
+    ben?.let {
+        val gender = ben.gender
+        visibility =
+            if (gender == Gender.FEMALE.name || (gender == Gender.MALE.name && ben.ageInt < Konstants.minAgeForGenBen))
+                View.VISIBLE
+            else
+                View.INVISIBLE
+    }
+}
+
 @BindingAdapter("textBasedOnNumMembers")
 fun TextView.textBasedOnNumMembers(numMembers: Int?) {
     numMembers?.let {
@@ -175,7 +200,9 @@ fun Button.setVisibilityOfLayout(show: Boolean?) {
     show?.let {
         visibility = if (it) View.VISIBLE else View.GONE
     }
-}@BindingAdapter("showLayout")
+}
+
+@BindingAdapter("showLayout")
 fun ImageView.setVisibilityOfLayout(show: Boolean?) {
     show?.let {
         visibility = if (it) View.VISIBLE else View.GONE
@@ -395,10 +422,16 @@ fun TextView.setAsteriskText(fieldName: String?, numAsterisk: Int?) {
 
     fieldName?.let {
         numAsterisk?.let {
-            text = if(numAsterisk ==1) {
-                Html.fromHtml(resources.getString(R.string.radio_title_cbac,fieldName), Html.FROM_HTML_MODE_LEGACY)
+            text = if (numAsterisk == 1) {
+                Html.fromHtml(
+                    resources.getString(R.string.radio_title_cbac, fieldName),
+                    Html.FROM_HTML_MODE_LEGACY
+                )
             } else if (numAsterisk == 2) {
-                Html.fromHtml(resources.getString(R.string.radio_title_cbac_ds,fieldName), Html.FROM_HTML_MODE_LEGACY)
+                Html.fromHtml(
+                    resources.getString(R.string.radio_title_cbac_ds, fieldName),
+                    Html.FROM_HTML_MODE_LEGACY
+                )
             } else {
                 fieldName
             }
@@ -412,8 +445,11 @@ fun TextInputLayout.setAsteriskFormText(required: Boolean?, title: String?) {
 
     required?.let {
         title?.let {
-            hint = if(required) {
-                Html.fromHtml(resources.getString(R.string.radio_title_cbac,title), Html.FROM_HTML_MODE_LEGACY)
+            hint = if (required) {
+                Html.fromHtml(
+                    resources.getString(R.string.radio_title_cbac, title),
+                    Html.FROM_HTML_MODE_LEGACY
+                )
             } else {
                 title
             }
@@ -427,8 +463,11 @@ fun TextView.setAsteriskTextView(required: Boolean?, title: String?) {
 
     required?.let {
         title?.let {
-            text = if(required) {
-                Html.fromHtml(resources.getString(R.string.radio_title_cbac,title), Html.FROM_HTML_MODE_LEGACY)
+            text = if (required) {
+                Html.fromHtml(
+                    resources.getString(R.string.radio_title_cbac, title),
+                    Html.FROM_HTML_MODE_LEGACY
+                )
             } else {
                 title
             }

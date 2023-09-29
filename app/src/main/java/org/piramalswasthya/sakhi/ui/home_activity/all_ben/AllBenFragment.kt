@@ -17,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
+import org.piramalswasthya.sakhi.contracts.SpeechToTextContract
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdActivity
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
@@ -33,6 +34,11 @@ class AllBenFragment : Fragment() {
 
 
     private val viewModel: AllBenViewModel by viewModels()
+    private val sttContract = registerForActivityResult(SpeechToTextContract()) { value ->
+        binding.searchView.setText(value)
+        binding.searchView.setSelection(value.length)
+        viewModel.filterText(value)
+    }
 
     private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
 
@@ -110,6 +116,8 @@ class AllBenFragment : Fragment() {
         binding.btnNextPage.setOnClickListener {
             findNavController().navigate(AllHouseholdFragmentDirections.actionAllHouseholdFragmentToNewHouseholdFragment())
         }
+        binding.ibSearch.visibility = View.VISIBLE
+        binding.ibSearch.setOnClickListener { sttContract.launch(Unit) }
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 

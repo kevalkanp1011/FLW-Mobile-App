@@ -17,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.HouseHoldListAdapter
+import org.piramalswasthya.sakhi.contracts.SpeechToTextContract
 import org.piramalswasthya.sakhi.databinding.AlertNewBenBinding
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.model.Gender
@@ -33,6 +34,12 @@ class AllHouseholdFragment : Fragment() {
         get() = _binding!!
 
     private val viewModel: AllHouseholdViewModel by viewModels()
+
+    private val sttContract = registerForActivityResult(SpeechToTextContract()) { value ->
+        binding.searchView.setText(value)
+        binding.searchView.setSelection(value.length)
+        viewModel.filterText(value)
+    }
 
 
     private var hasDraft = false
@@ -66,7 +73,7 @@ class AllHouseholdFragment : Fragment() {
             addBenAlertBinding.actvRth.text = null
 
             val hof =
-                viewModel.householdBenList.firstOrNull { it.familyHeadRelationPosition==19}
+                viewModel.householdBenList.firstOrNull { it.familyHeadRelationPosition == 19 }
             val hofFatherRegistered =
                 viewModel.householdBenList.any { it.familyHeadRelationPosition == 2 }
             val hofMotherRegistered =
@@ -85,29 +92,30 @@ class AllHouseholdFragment : Fragment() {
                 Gender.TRANSGENDER -> resources.getStringArray(R.array.nbr_relationship_to_head_male)
                 else -> null
             }
-            val filteredDropdownList = dropdownList?.takeIf { hof != null }?.toMutableList()?.apply {
-                if (hofFatherRegistered)
-                    remove(resources.getStringArray(R.array.nbr_relationship_to_head)[1])
-                if (hofMotherRegistered)
-                    remove(resources.getStringArray(R.array.nbr_relationship_to_head)[0])
-                if (isHoFUnmarried)
-                    removeAll(
-                        resources.getStringArray(R.array.nbr_relationship_to_head_unmarried_filter)
-                            .toSet()
-                    )
-                else {
-                    if (!isHoFMarried) {
-                        remove(resources.getStringArray(R.array.nbr_relationship_to_head)[5])
-                        remove(resources.getStringArray(R.array.nbr_relationship_to_head)[4])
+            val filteredDropdownList =
+                dropdownList?.takeIf { hof != null }?.toMutableList()?.apply {
+                    if (hofFatherRegistered)
+                        remove(resources.getStringArray(R.array.nbr_relationship_to_head)[1])
+                    if (hofMotherRegistered)
+                        remove(resources.getStringArray(R.array.nbr_relationship_to_head)[0])
+                    if (isHoFUnmarried)
+                        removeAll(
+                            resources.getStringArray(R.array.nbr_relationship_to_head_unmarried_filter)
+                                .toSet()
+                        )
+                    else {
+                        if (!isHoFMarried) {
+                            remove(resources.getStringArray(R.array.nbr_relationship_to_head)[5])
+                            remove(resources.getStringArray(R.array.nbr_relationship_to_head)[4])
+
+                        }
 
                     }
-
-                }
-                if (hof?.gender == Gender.MALE && selectedGender == Gender.MALE)
-                    remove(resources.getStringArray(R.array.nbr_relationship_to_head)[5])
-                else if (hof?.gender == Gender.FEMALE && selectedGender == Gender.FEMALE)
-                    remove(resources.getStringArray(R.array.nbr_relationship_to_head)[4])
-            }?:dropdownList?.toList()
+                    if (hof?.gender == Gender.MALE && selectedGender == Gender.MALE)
+                        remove(resources.getStringArray(R.array.nbr_relationship_to_head)[5])
+                    else if (hof?.gender == Gender.FEMALE && selectedGender == Gender.FEMALE)
+                        remove(resources.getStringArray(R.array.nbr_relationship_to_head)[4])
+                } ?: dropdownList?.toList()
             filteredDropdownList?.let {
                 addBenAlertBinding.actvRth.setAdapter(
                     ArrayAdapter(
@@ -230,6 +238,9 @@ class AllHouseholdFragment : Fragment() {
             if (hasDraft) draftLoadAlert.show()
             else viewModel.navigateToNewHouseholdRegistration(false)
         }
+        binding.ibSearch.visibility = View.VISIBLE
+        binding.ibSearch.setOnClickListener { sttContract.launch(Unit) }
+
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 

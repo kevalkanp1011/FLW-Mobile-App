@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorOnSecondary"
+    android:gravity="center"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:padding="@dimen/padding_normal"
+        android:text="COMING SOON!"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/padding_normal"
-            android:text="@string/text_help"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
-
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>
