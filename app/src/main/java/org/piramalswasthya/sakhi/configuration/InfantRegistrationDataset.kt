@@ -200,23 +200,27 @@ class InfantRegistrationDataset(
             hepBDose.min = deliveryOutcomeCache.dateOfDelivery
             vitkDose.min = deliveryOutcomeCache.dateOfDelivery
             deliveryOutcomeCache.dateOfDelivery.let {
-                if (it + TimeUnit.DAYS.toMillis(15) < System.currentTimeMillis())
-                    opv0Dose.max = it + TimeUnit.DAYS.toMillis(15)
-                if (it + TimeUnit.DAYS.toMillis(365) < System.currentTimeMillis())
-                    bcgDose.max = it + TimeUnit.DAYS.toMillis(365)
-                if (it + 24 * 60 * 60 * 1000 < System.currentTimeMillis()) {
-                    hepBDose.max = it + TimeUnit.DAYS.toMillis(1)
-                    vitkDose.max = it + TimeUnit.DAYS.toMillis(1)
+                if (it != null) {
+                    if (it + TimeUnit.DAYS.toMillis(15) < System.currentTimeMillis())
+                        opv0Dose.max = it + TimeUnit.DAYS.toMillis(15)
+                    if (it + TimeUnit.DAYS.toMillis(365) < System.currentTimeMillis())
+                        bcgDose.max = it + TimeUnit.DAYS.toMillis(365)
+                    if (it + 24 * 60 * 60 * 1000 < System.currentTimeMillis()) {
+                        hepBDose.max = it + TimeUnit.DAYS.toMillis(1)
+                        vitkDose.max = it + TimeUnit.DAYS.toMillis(1)
+                    }
                 }
             }
         }
         if (pwrCache != null && deliveryOutcomeCache != null) {
             val weeksOfPregnancy =
-                getWeeksOfPregnancy(deliveryOutcomeCache.dateOfDelivery, pwrCache.lmpDate)
+                deliveryOutcomeCache.dateOfDelivery?.let { getWeeksOfPregnancy(it, pwrCache.lmpDate) }
             if (weeksOfPregnancy in 38..41) {
                 infantTerm.value = infantTerm.entries!!.first()
-            } else if (weeksOfPregnancy <= 37)
-                infantTerm.value = infantTerm.entries!!.last()
+            } else if (weeksOfPregnancy != null) {
+                if (weeksOfPregnancy <= 37)
+                    infantTerm.value = infantTerm.entries!!.last()
+            }
         }
         if (saved == null) {
             if (ben != null) {

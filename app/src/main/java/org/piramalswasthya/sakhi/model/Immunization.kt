@@ -7,6 +7,8 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 import org.piramalswasthya.sakhi.configuration.FormDataModel
+import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.network.getLongFromDate
 
 enum class ChildImmunizationCategory {
     BIRTH, WEEK_6, WEEK_10, WEEK_14, MONTH_9_12, MONTH_16_24, YEAR_5_6, YEAR_10, YEAR_16, CATCH_UP
@@ -49,14 +51,36 @@ data class Vaccine(
     ), Index(name = "ind_vaccine", value = ["vaccineId"])]
 )
 data class ImmunizationCache(
+    val id: Long = 0,
     val beneficiaryId: Long,
-    val vaccineId: Int,
+    var vaccineId: Int,
     var date: Long? = null,
     var placeId: Int=0,
     var place: String="",
     var byWhoId: Int=0,
     var byWho: String="",
-) : FormDataModel
+    var processed: String? = "N",
+    var createdBy: String,
+    var createdDate: Long = System.currentTimeMillis(),
+    var updatedBy: String,
+    val updatedDate: Long = System.currentTimeMillis(),
+    var syncState: SyncState
+) : FormDataModel {
+    fun asPostModel(): ImmunizationPost {
+        return ImmunizationPost(
+            id = id,
+            beneficiaryId = beneficiaryId,
+            vaccineName = "",
+            receivedDate = getDateStrFromLong(date),
+            vaccinationreceivedat = place,
+            vaccinatedBy = byWho,
+            createdDate = getDateStrFromLong(createdDate),
+            createdBy = createdBy,
+            modifiedBy = updatedBy,
+            lastModDate = getDateStrFromLong(updatedDate)
+        )
+    }
+}
 
 data class ChildImmunizationDetailsCache(
 //    @ColumnInfo(name = "benId")
@@ -111,4 +135,36 @@ data class ImmunizationDetailsHeader(
 
 enum class VaccineState {
     PENDING, OVERDUE, DONE, MISSED, UNAVAILABLE
+}
+
+data class ImmunizationPost (
+    val id: Long = 0,
+    val beneficiaryId: Long,
+    var vaccineName: String = "",
+    val receivedDate: String? = null,
+    val vaccinationreceivedat: String? = null,
+    val vaccinatedBy: String? = null,
+    val createdDate: String? = null,
+    val createdBy: String,
+    var lastModDate: String? = null,
+    var modifiedBy: String
+) {
+    fun toCacheModel(): ImmunizationCache {
+        return ImmunizationCache(
+            id = id,
+            beneficiaryId = beneficiaryId,
+            vaccineId = 0,
+            date = getLongFromDate(receivedDate),
+//            placeId = 0,
+            place = if(vaccinationreceivedat.isNullOrEmpty()) "" else vaccinationreceivedat,
+//            byWhoId = 0,
+            byWho = if(vaccinatedBy.isNullOrEmpty()) "" else vaccinatedBy,
+            processed = "P",
+            createdBy = createdBy,
+            createdDate = getLongFromDate(createdDate),
+            updatedBy = modifiedBy,
+            updatedDate = getLongFromDate(lastModDate),
+            syncState = SyncState.SYNCED
+        )
+    }
 }

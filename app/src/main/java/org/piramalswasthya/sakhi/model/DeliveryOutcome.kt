@@ -25,7 +25,7 @@ data class DeliveryOutcomeCache (
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val benId : Long,
-    var dateOfDelivery: Long = System.currentTimeMillis(),
+    var dateOfDelivery: Long? = null,
     var timeOfDelivery: String? = null,
     var placeOfDelivery: String? = null,
     var typeOfDelivery: String? = null,
@@ -37,7 +37,7 @@ data class DeliveryOutcomeCache (
     var deliveryOutcome: Int? = 0,
     var liveBirth: Int? = 0,
     var stillBirth: Int? = 0,
-    var dateOfDischarge: Long = System.currentTimeMillis(),
+    var dateOfDischarge: Long? = null,
     var timeOfDischarge: String? = null,
     var isJSYBenificiary: Boolean? = null,
     var processed: String? = "N",
