@@ -14,7 +14,6 @@ import org.piramalswasthya.sakhi.model.InputType.DROPDOWN
 import org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT
 import org.piramalswasthya.sakhi.model.InputType.HEADLINE
 import org.piramalswasthya.sakhi.model.InputType.RADIO
-import retrofit2.http.HEAD
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -167,7 +166,7 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
             typeOfHouse.value = typeOfHouse.getStringFromPosition(saved.houseTypeId)
             houseOwnership.value = houseOwnership.getStringFromPosition(saved.isHouseOwnedId)
         }
-        if (residentialArea.value == residentialArea.entries!!.last()) {
+        if (residentialArea.value == residentialArea.entries!![3]) {
             list.add(list.indexOf(residentialArea) + 1, otherResidentialArea)
         }
         val thirdPage =
@@ -443,7 +442,7 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
             residentialArea.id -> triggerDependants(
                 source = residentialArea,
                 passedIndex = index,
-                triggerIndex = residentialArea.entries!!.size - 1,
+                triggerIndex = residentialArea.entries!!.size - 2,
                 target = otherResidentialArea
             )
 
