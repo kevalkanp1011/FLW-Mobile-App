@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -16,6 +17,7 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.NcdCbacBenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
+import org.piramalswasthya.sakhi.model.getDateStrFromLong
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import timber.log.Timber
 
@@ -50,15 +52,27 @@ class NcdEligibleListFragment : Fragment() {
                         Timber.d("ClickListener Triggered!")
                         viewModel.setSelectedBenId(it)
                         if (!bottomSheet.isVisible)
-                            bottomSheet.show(childFragmentManager, resources.getString(R.string.cbac))
-                    },
-                    clickedNew = {
-                        findNavController().navigate(
-                            NcdEligibleListFragmentDirections.actionNcdEligibleListFragmentToCbacFragment(
-                                benId = it,
-                                ashaId = viewModel.getAshaId()
+                            bottomSheet.show(
+                                childFragmentManager,
+                                resources.getString(R.string.cbac)
                             )
-                        )
+                    },
+                    clickedNew = { benId, nextFillDateMillis ->
+                        if (nextFillDateMillis != null) {
+                            Toast.makeText(
+                                context,
+                                "Available on ${getDateStrFromLong(nextFillDateMillis)}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            findNavController().navigate(
+                                NcdEligibleListFragmentDirections.actionNcdEligibleListFragmentToCbacFragment(
+                                    benId = benId,
+                                    ashaId = viewModel.getAshaId()
+                                )
+                            )
+                        }
+
                     })
             )
         binding.rvAny.adapter = benAdapter
@@ -103,7 +117,10 @@ class NcdEligibleListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__ncd_list, getString(R.string.ncd_eligible_list))
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__ncd_list,
+                getString(R.string.ncd_eligible_list)
+            )
         }
     }
 

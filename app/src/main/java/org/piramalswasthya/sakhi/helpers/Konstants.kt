@@ -1,7 +1,10 @@
 package org.piramalswasthya.sakhi.helpers
 
+import java.util.concurrent.TimeUnit
+
 object Konstants {
 
+    val minMillisBwtweenCbacFiling : Long = TimeUnit.DAYS.toMillis(365)
     const val  amritTokenTimeoutDuration: Int = 100
 
     //Dev

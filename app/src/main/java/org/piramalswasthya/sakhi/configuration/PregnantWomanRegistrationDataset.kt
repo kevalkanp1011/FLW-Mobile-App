@@ -562,18 +562,14 @@ class PregnantWomanRegistrationDataset(
             hivTestResult.value = it.hivTestResult
             hbsAgTestResult.value = it.hbsAgTestResult
             pastIllness.value = it.pastIllness
+            otherPastIllness.value = it.otherPastIllness
             if (pastIllness.value == pastIllness.entries!!.last())
                 list.add(list.indexOf(pastIllness) + 1, otherPastIllness)
-            otherPastIllness.value = it.otherPastIllness
             isFirstPregnancy.value = isFirstPregnancy.getStringFromPosition(if (it.is1st) 1 else 2)
             if (isFirstPregnancy.value == isFirstPregnancy.entries!!.last()) {
                 totalNumberOfPreviousPregnancy.value = it.numPrevPregnancy?.toString()
                 complicationsDuringLastPregnancy.value =
-                    it.complicationPrevPregnancyId?.let { it1 ->
-                        complicationsDuringLastPregnancy.getStringFromPosition(
-                            it1
-                        )
-                    }
+                    it.complicationPrevPregnancy
                 list.addAll(
                     list.indexOf(isFirstPregnancy) + 1,
                     listOf(totalNumberOfPreviousPregnancy, complicationsDuringLastPregnancy)

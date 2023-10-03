@@ -475,6 +475,16 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                     3 -> spouseName.value = it
                 }
             }
+            maritalStatus.entries = when (saved.gender) {
+                MALE -> maritalStatusMale
+                FEMALE -> maritalStatusFemale
+                else -> maritalStatusMale
+            }
+            maritalStatus.arrayId = when (saved.gender) {
+                MALE -> R.array.nbr_marital_status_male_array
+                FEMALE -> R.array.nbr_marital_status_female_array
+                else -> R.array.nbr_marital_status_male_array
+            }
             maritalStatus.value =
                 maritalStatus.getStringFromPosition(saved.genDetails?.maritalStatusId ?: 0)
             ageAtMarriage.value = saved.genDetails?.ageAtMarriage.toString()
@@ -679,6 +689,16 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                     2 -> husbandName.value = it
                     3 -> spouseName.value = it
                 }
+            }
+            maritalStatus.entries = when (saved.gender) {
+                MALE -> maritalStatusMale
+                FEMALE -> maritalStatusFemale
+                else -> maritalStatusMale
+            }
+            maritalStatus.arrayId = when (saved.gender) {
+                MALE -> R.array.nbr_marital_status_male_array
+                FEMALE -> R.array.nbr_marital_status_female_array
+                else -> R.array.nbr_marital_status_male_array
             }
             maritalStatus.value =
                 maritalStatus.getStringFromPosition(saved.genDetails?.maritalStatusId ?: 0)

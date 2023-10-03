@@ -1,12 +1,13 @@
 package org.piramalswasthya.sakhi.adapters
 
+
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.piramalswasthya.sakhi.databinding.RvItemNcdCbacBinding
+import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.BenWithCbacDomain
 
 class NcdCbacBenListAdapter(
@@ -83,17 +84,28 @@ class NcdCbacBenListAdapter(
 
     class CbacFormClickListener(
         private val clickedView: (benId: Long) -> Unit,
-        private val clickedNew: (benId: Long) -> Unit,
+        private val clickedNew: (benId: Long, dueDate: Long?) -> Unit,
 
         ) {
         fun onClickedView(item: BenWithCbacDomain) = clickedView(
             item.ben.benId
         )
 
-        fun onClickedNew(item: BenWithCbacDomain) = clickedNew(
-            item.ben.benId
-        )
+        fun onClickedNew(item: BenWithCbacDomain) {
 
+            clickedNew(
+                item.ben.benId,
+                if(item.savedCbacRecords.isEmpty()) null else {
+                    val lastFillDate = item.savedCbacRecords.maxBy { it.fillDate }.fillDate
+                    val nextAvailFilDate = lastFillDate + Konstants.minMillisBwtweenCbacFiling
+                    if(System.currentTimeMillis() > nextAvailFilDate)
+                        null
+                    else
+                        nextAvailFilDate
+                }
+            )
+
+        }
 
     }
 

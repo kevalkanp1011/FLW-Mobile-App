@@ -17,6 +17,7 @@ import org.piramalswasthya.sakhi.network.AmritApiService
 import org.piramalswasthya.sakhi.network.GetDataPaginatedRequest
 import org.piramalswasthya.sakhi.network.getLongFromDate
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class CbacRepo @Inject constructor(
@@ -105,7 +106,7 @@ class CbacRepo @Inject constructor(
             getCbacCacheFromServerResponse(it)
         }
         cbacList?.filter {
-            !database.cbacDao.sameCreateDateExists(it.createdDate)
+            !database.cbacDao.sameCreateDateExists(it.createdDate, TimeUnit.SECONDS.toMillis(1))
                     && database.benDao.getBen(it.benId) != null
         }?.let {
             database.cbacDao.upsert(*it.toTypedArray())

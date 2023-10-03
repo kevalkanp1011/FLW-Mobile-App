@@ -117,6 +117,12 @@ class PwAncFormViewModel @Inject constructor(
                             it.active = false
                             maternalHealthRepo.persistRegisterRecord(it)
                         }
+                        maternalHealthRepo.getAllActiveAncRecords(benId).apply {
+                            forEach {
+                                it.isActive = false
+                            }
+                            maternalHealthRepo.updateAncRecord(toTypedArray())
+                        }
                         maternalHealthRepo.getBenFromId(benId)?.let {
                             dataset.updateBenRecordToDelivered(it)
                             benRepo.updateRecord(it)
@@ -127,7 +133,7 @@ class PwAncFormViewModel @Inject constructor(
                             it.active = false
                             maternalHealthRepo.persistRegisterRecord(it)
                         }
-                        maternalHealthRepo.getAllSavedAncRecords(benId).apply {
+                        maternalHealthRepo.getAllActiveAncRecords(benId).apply {
                             forEach {
                                 it.isActive = false
                             }
@@ -138,6 +144,18 @@ class PwAncFormViewModel @Inject constructor(
                             benRepo.updateRecord(it)
                         }
 
+                    }
+                    else if(ancCache.maternalDeath==true){
+                        maternalHealthRepo.getSavedRegistrationRecord(benId)?.let {
+                            it.active = false
+                            maternalHealthRepo.persistRegisterRecord(it)
+                        }
+                        maternalHealthRepo.getAllActiveAncRecords(benId).apply {
+                            forEach {
+                                it.isActive = false
+                            }
+                            maternalHealthRepo.updateAncRecord(toTypedArray())
+                        }
                     }
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {

@@ -3,7 +3,11 @@ package org.piramalswasthya.sakhi.configuration
 import android.content.Context
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Languages
-import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.model.DeliveryOutcomeCache
+import org.piramalswasthya.sakhi.model.FormElement
+import org.piramalswasthya.sakhi.model.InputType
+import org.piramalswasthya.sakhi.model.PregnantWomanAncCache
+import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import java.lang.Long.min
 import kotlin.math.max
 
@@ -162,7 +166,11 @@ open class DeliveryOutcomeDataset(
         hasDependants = false
     )
 
-    suspend fun setUpPage(pwr: PregnantWomanRegistrationCache, anc: PregnantWomanAncCache, saved: DeliveryOutcomeCache?) {
+    suspend fun setUpPage(
+        pwr: PregnantWomanRegistrationCache,
+        anc: PregnantWomanAncCache,
+        saved: DeliveryOutcomeCache?
+    ) {
         var list = mutableListOf(
             dateOfDelivery,
             timeOfDelivery,
@@ -201,7 +209,7 @@ open class DeliveryOutcomeDataset(
                 timeOfDischarge,
                 isJSYBenificiary
             )
-            dateOfDelivery.value = saved.dateOfDelivery?.let { getDateFromLong(it)}
+            dateOfDelivery.value = saved.dateOfDelivery?.let { getDateFromLong(it) }
             timeOfDelivery.value = saved.timeOfDelivery
             placeOfDelivery.value = saved.placeOfDelivery
             typeOfDelivery.value = saved.typeOfDelivery
@@ -217,18 +225,21 @@ open class DeliveryOutcomeDataset(
             timeOfDischarge.value = saved.timeOfDischarge
             isJSYBenificiary.value = if (saved.isJSYBenificiary == true) "Yes" else "No"
         }
-        dateOfDelivery.min = max(pwr.lmpDate+ 147*24*60*60*1000, anc.ancDate)
-        dateOfDelivery.max = min(System.currentTimeMillis(), getEddFromLmp(pwr.lmpDate) + 25*24*60*60*1000)
+        dateOfDelivery.min = max(pwr.lmpDate + 147 * 24 * 60 * 60 * 1000, anc.ancDate)
+        dateOfDelivery.max =
+            min(System.currentTimeMillis(), getEddFromLmp(pwr.lmpDate) + 25 * 24 * 60 * 60 * 1000)
 
         setUpPage(list)
 
     }
+
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
             dateOfDelivery.id -> {
                 dateOfDischarge.min = getLongFromDate(dateOfDelivery.value)
                 -1
             }
+
             hadComplications.id -> {
                 triggerDependants(
                     source = hadComplications,
@@ -238,14 +249,15 @@ open class DeliveryOutcomeDataset(
                     targetSideEffect = listOf(causeOfDeath, otherComplication, otherCauseOfDeath)
                 )
             }
+
             complication.id -> {
-                if(index == 6) {
+                if (index == 6) {
                     triggerDependants(
                         source = complication,
                         addItems = listOf(causeOfDeath),
                         removeItems = listOf(otherComplication, otherCauseOfDeath)
                     )
-                } else if(index == 7) {
+                } else if (index == 7) {
                     triggerDependants(
                         source = complication,
                         addItems = listOf(otherComplication),
@@ -268,21 +280,27 @@ open class DeliveryOutcomeDataset(
                     target = otherCauseOfDeath
                 )
             }
+
             otherCauseOfDeath.id -> {
                 validateAllAlphabetsSpaceOnEditText(otherCauseOfDeath)
             }
+
             otherComplication.id -> {
                 validateAllAlphabetsSpaceOnEditText(otherComplication)
             }
+
             deliveryOutcome.id -> {
                 validateDeliveryOutcome(deliveryOutcome)
             }
+
             liveBirth.id -> {
                 validateDeliveryOutcome(liveBirth)
             }
+
             stillBirth.id -> {
                 validateDeliveryOutcome(stillBirth)
             }
+
             else -> -1
         }
     }
@@ -293,7 +311,7 @@ open class DeliveryOutcomeDataset(
                 formElement.max?.let { max ->
                     if (it < min) {
                         resources.getString(
-                            R.string.form_input_min_limit_error, formElement.title , min
+                            R.string.form_input_min_limit_error, formElement.title, min
                         )
                     } else if (it > max) {
                         resources.getString(
@@ -303,13 +321,15 @@ open class DeliveryOutcomeDataset(
                 }
             }
         }
-        if(!liveBirth.value.isNullOrEmpty() && !stillBirth.value.isNullOrEmpty() &&
-            !deliveryOutcome.value.isNullOrEmpty() && formElement.errorText.isNullOrEmpty() ) {
-            if(deliveryOutcome.value!!.toInt() != liveBirth.value!!.toInt() + stillBirth.value!!.toInt()) {
-                formElement.errorText = "Outcome of Delivery should be equal to sum of Live and Still births"
+        if (!liveBirth.value.isNullOrEmpty() && !stillBirth.value.isNullOrEmpty() &&
+            !deliveryOutcome.value.isNullOrEmpty() && formElement.errorText.isNullOrEmpty()
+        ) {
+            if (deliveryOutcome.value!!.toInt() != liveBirth.value!!.toInt() + stillBirth.value!!.toInt()) {
+                formElement.errorText =
+                    "Outcome of Delivery should be equal to sum of Live and Still births"
             }
         }
-        if(!deliveryOutcome.value.isNullOrEmpty()) {
+        if (!deliveryOutcome.value.isNullOrEmpty()) {
             stillBirth.max = deliveryOutcome.value?.toLong()
             liveBirth.max = deliveryOutcome.value?.toLong()
         }
@@ -330,7 +350,9 @@ open class DeliveryOutcomeDataset(
             form.deliveryOutcome = deliveryOutcome.value?.toInt()
             form.liveBirth = liveBirth.value?.toInt()
             form.stillBirth = stillBirth.value?.toInt()
-            form.dateOfDischarge = getLongFromDate(dateOfDischarge.value)
+            form.dateOfDischarge = (dateOfDischarge.value?.let {
+                getLongFromDate(it)
+            })
             form.timeOfDischarge = timeOfDischarge.value
             form.isJSYBenificiary = isJSYBenificiary.value == "Yes"
         }

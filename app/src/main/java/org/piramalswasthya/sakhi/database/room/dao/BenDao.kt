@@ -121,10 +121,10 @@ interface BenDao {
     @Query("SELECT COUNT(*) FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 2 and villageId=:selectedVillage")
     fun getAllPregnancyWomenListCount(selectedVillage: Int): Flow<Int>
 
-    @Query("SELECT ben.* FROM BEN_BASIC_CACHE ben  inner join pregnancy_register pwr on pwr.benId = ben.benId inner join pregnancy_anc anc on ben.benId = anc.benId WHERE ben.reproductiveStatusId =3 and anc.pregnantWomanDelivered =1 and villageId=:selectedVillage group by ben.benId order by anc.updatedDate desc ")
+    @Query("SELECT ben.* FROM BEN_BASIC_CACHE ben  inner join pregnancy_register pwr on pwr.benId = ben.benId inner join pregnancy_anc anc on ben.benId = anc.benId WHERE ben.reproductiveStatusId =3 and anc.pregnantWomanDelivered =1 and anc.isActive = 0 and pwr.active = 0 and CAST((strftime('%s','now') - anc.ancDate/1000)/60/60/24 AS INTEGER) BETWEEN 0 and 42 and villageId=:selectedVillage group by ben.benId order by anc.updatedDate desc ")
     fun getAllDeliveredWomenList(selectedVillage: Int): Flow<List<BenBasicCache>>
 
-    @Query("SELECT count(distinct(ben.benId)) FROM BEN_BASIC_CACHE ben inner join pregnancy_anc anc on ben.benId = anc.benId WHERE ben.reproductiveStatusId =3 and anc.pregnantWomanDelivered =1 and villageId=:selectedVillage")
+    @Query("SELECT count(distinct(ben.benId)) FROM BEN_BASIC_CACHE ben  inner join pregnancy_register pwr on pwr.benId = ben.benId inner join pregnancy_anc anc on ben.benId = anc.benId WHERE ben.reproductiveStatusId =3 and anc.pregnantWomanDelivered =1 and anc.isActive = 0 and pwr.active = 0 and CAST((strftime('%s','now') - anc.ancDate/1000)/60/60/24 AS INTEGER) BETWEEN 0 and 42 and villageId=:selectedVillage")
     fun getAllDeliveredWomenListCount(selectedVillage: Int): Flow<Int>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 1 and gender = 'FEMALE' and villageId=:selectedVillage")
@@ -146,14 +146,11 @@ interface BenDao {
     fun getAllWomenListForPmsmaCount(selectedVillage: Int): Flow<Int>
 
     @Transaction
-    @Query("SELECT *  from BEN_BASIC_CACHE  ben inner join pregnancy_register pwr on pwr.benId = ben.benId where pwr.active = 1 and ben.villageId=:selectedVillage group by ben.benId")
+    @Query("SELECT ben.*  from BEN_BASIC_CACHE  ben inner join pregnancy_register pwr on pwr.benId = ben.benId where pwr.active = 1 and ben.villageId=:selectedVillage group by ben.benId")
     fun getAllRegisteredPregnancyWomenList(selectedVillage: Int): Flow<List<BenWithAncVisitCache>>
 
     @Query("SELECT count(*) FROM PREGNANCY_REGISTER pr INNER JOIN BENEFICIARY  ben ON pr.benId=ben.beneficiaryId where ben.loc_village_id=:selectedVillage and pr.active=1")
     fun getAllRegisteredPregnancyWomenListCount(selectedVillage: Int): Flow<Int>
-
-    @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 3 and villageId=:selectedVillage")
-    fun getAllDeliveryStageWomenList(selectedVillage: Int): Flow<List<BenBasicCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE where  CAST((strftime('%s','now') - dob/1000)/60/60/24/365 AS INTEGER)  >= :min and villageId=:selectedVillage")
     fun getAllNCDList(
@@ -185,7 +182,7 @@ interface BenDao {
     ): Flow<List<BenBasicCache>>
 
     @Transaction
-    @Query("SELECT ben.* FROM BEN_BASIC_CACHE ben join delivery_outcome del on ben.benId = del.benId left outer join pnc_visit pnc on pnc.benId = ben.benId WHERE reproductiveStatusId = 3 and (pnc.isActive is null or pnc.isActive == 1) and  villageId=:selectedVillage group by ben.benId")
+    @Query("SELECT ben.* FROM BEN_BASIC_CACHE ben join delivery_outcome del on ben.benId = del.benId left outer join pnc_visit pnc on pnc.benId = ben.benId WHERE reproductiveStatusId = 3 and (pnc.isActive is null or pnc.isActive == 1) and CAST((strftime('%s','now') - del.dateOfDelivery/1000)/60/60/24 AS INTEGER) BETWEEN 0 and 42 and  villageId=:selectedVillage group by ben.benId")
     fun getAllPNCMotherList(selectedVillage: Int): Flow<List<BenWithDoAndPncCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE CAST((strftime('%s','now') - dob/1000)/60/60/24/365 AS INTEGER) <= :max and villageId=:selectedVillage")

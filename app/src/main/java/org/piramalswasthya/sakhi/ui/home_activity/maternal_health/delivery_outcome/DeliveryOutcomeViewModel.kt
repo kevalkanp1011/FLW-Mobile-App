@@ -1,7 +1,11 @@
 package org.piramalswasthya.sakhi.ui.home_activity.maternal_health.delivery_outcome
 
 import android.content.Context
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -59,7 +63,7 @@ class DeliveryOutcomeViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val asha  = preferenceDao.getLoggedInUser()!!
-            val pwr = pwrRepo.getSavedRegistrationRecord(benId)!!
+            val pwr = pwrRepo.getLatestInactiveRegistrationRecord(benId)!!
             val anc = pwrRepo.getLatestAncRecord(benId)!!
             val ben = benRepo.getBenFromId(benId)?.also { ben ->
                 _benName.value =

@@ -34,7 +34,7 @@ interface CbacDao {
     @Query("UPDATE CBAC SET processed = 'N', syncState = 0 WHERE benId =:benId")
     suspend fun cbacSyncWithServerFailed(vararg benId: Long)
 
-    @Query("select count(*)>0 from cbac where createdDate=:createdDate")
-    suspend fun sameCreateDateExists(createdDate: Long): Boolean
+    @Query("select count(*)>0 from cbac where createdDate between :createdDate-:range and :createdDate+:range")
+    suspend fun sameCreateDateExists(createdDate: Long, range: Long): Boolean
 
 }

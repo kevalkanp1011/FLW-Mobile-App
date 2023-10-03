@@ -172,13 +172,13 @@ data class BenWithPwrCache(
     @Relation(
         parentColumn = "benId", entityColumn = "benId"
     )
-    val pwr: PregnantWomanRegistrationCache?,
+    val pwr: List<PregnantWomanRegistrationCache>,
 
     ) {
     fun asPwrDomainModel(): BenWithPwrDomain {
         return BenWithPwrDomain(
             ben = ben.asBasicDomainModel(),
-            pwr = pwr
+            pwr = pwr.firstOrNull { it.active }
         )
     }
 
@@ -496,7 +496,7 @@ data class BenWithAncVisitCache(
     @Relation(
         parentColumn = "benId", entityColumn = "benId"
     )
-    val pwr: PregnantWomanRegistrationCache,
+    val pwr: List<PregnantWomanRegistrationCache>,
 
     @Relation(
         parentColumn = "benId", entityColumn = "benId", entity = PMSMACache::class
@@ -519,15 +519,16 @@ data class BenWithAncVisitCache(
 
     fun asDomainModel(): BenWithAncListDomain {
         val lastAncRecord = savedAncRecords.maxByOrNull { it.ancDate }
+        val activePwrRecrod = pwr.first { it.active }
         return BenWithAncListDomain(
 //            ecBenId,
             ben.asBasicDomainModel(),
-            pwr,
-            savedAncRecords.map {
+            activePwrRecrod,
+            savedAncRecords.filter { it.isActive }.map {
                 AncStatus(
                     benId = it.benId,
                     visitNumber = it.visitNumber,
-                    filledWeek = (TimeUnit.MILLISECONDS.toDays(it.ancDate - pwr.lmpDate) / 7).toInt(),
+                    filledWeek = (TimeUnit.MILLISECONDS.toDays(it.ancDate - activePwrRecrod.lmpDate) / 7).toInt(),
                     syncState = it.syncState
                 )
             }.sortedBy { it.visitNumber },
@@ -535,11 +536,11 @@ data class BenWithAncVisitCache(
             hasPmsma = pmsma != null,
             showAddAnc = if (savedAncRecords.isEmpty())
                 TimeUnit.MILLISECONDS.toDays(
-                    getTodayMillis() - pwr.lmpDate
+                    getTodayMillis() - activePwrRecrod.lmpDate
                 ) >= Konstants.minAnc1Week * 7
             else
                 lastAncRecord != null &&
-                        (pwr.lmpDate + TimeUnit.DAYS.toMillis(280)) > (lastAncRecord.ancDate + TimeUnit.DAYS.toMillis(
+                        (activePwrRecrod.lmpDate + TimeUnit.DAYS.toMillis(280)) > (lastAncRecord.ancDate + TimeUnit.DAYS.toMillis(
                     28
                 )) &&
                         lastAncRecord.visitNumber < 4 && TimeUnit.MILLISECONDS.toDays(
