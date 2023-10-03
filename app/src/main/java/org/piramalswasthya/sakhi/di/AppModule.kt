@@ -28,9 +28,11 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    private const val baseTmcUrl = //"http://uatamrit.piramalswasthya.org:8080/"
-    "https://amritdemo.piramalswasthya.org/"
-        //"http://192.168.1.94:8081/"
+    private const val baseTmcUrl =
+//        "http://uatamrit.piramalswasthya.org:8080/"
+
+        "https://amritdemo.piramalswasthya.org/"
+    //"http://192.168.1.94:8081/"
     private const val baseAbhaUrl = "https://healthidsbx.abdm.gov.in/api/"
 
     private val baseClient =
@@ -110,51 +112,53 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideHouseholdDao(database : InAppDb) : HouseholdDao = database.householdDao
+    fun provideHouseholdDao(database: InAppDb): HouseholdDao = database.householdDao
 
     @Singleton
     @Provides
-    fun provideBenDao(database : InAppDb) : BenDao = database.benDao
+    fun provideBenDao(database: InAppDb): BenDao = database.benDao
 
 
     @Singleton
     @Provides
-    fun provideBenIdDao(database : InAppDb) : BeneficiaryIdsAvailDao = database.benIdGenDao
+    fun provideBenIdDao(database: InAppDb): BeneficiaryIdsAvailDao = database.benIdGenDao
 
     @Singleton
     @Provides
-    fun provideCbacDao(database : InAppDb) : CbacDao = database.cbacDao
+    fun provideCbacDao(database: InAppDb): CbacDao = database.cbacDao
 
     @Singleton
     @Provides
-    fun provideVaccineDao(database : InAppDb) : ImmunizationDao = database.vaccineDao
+    fun provideVaccineDao(database: InAppDb): ImmunizationDao = database.vaccineDao
 
     @Singleton
     @Provides
-    fun provideMaternalHealthDao(database : InAppDb) : MaternalHealthDao = database.maternalHealthDao
-    @Singleton
-    @Provides
-    fun providePncDao(database : InAppDb) : PncDao = database.pncDao
+    fun provideMaternalHealthDao(database: InAppDb): MaternalHealthDao = database.maternalHealthDao
 
     @Singleton
     @Provides
-    fun provideTBDao(database : InAppDb) : TBDao = database.tbDao
+    fun providePncDao(database: InAppDb): PncDao = database.pncDao
 
     @Singleton
     @Provides
-    fun provideDeliveryOutcomeDao(database : InAppDb) : DeliveryOutcomeDao = database.deliveryOutcomeDao
+    fun provideTBDao(database: InAppDb): TBDao = database.tbDao
 
     @Singleton
     @Provides
-    fun provideInfantRegDao(database : InAppDb) : InfantRegDao = database.infantRegDao
+    fun provideDeliveryOutcomeDao(database: InAppDb): DeliveryOutcomeDao =
+        database.deliveryOutcomeDao
 
     @Singleton
     @Provides
-    fun provideChildRegDao(database : InAppDb) : ChildRegistrationDao = database.childRegistrationDao
+    fun provideInfantRegDao(database: InAppDb): InfantRegDao = database.infantRegDao
 
     @Singleton
     @Provides
-    fun provideSyncDao(database : InAppDb) : SyncDao = database.syncDao
+    fun provideChildRegDao(database: InAppDb): ChildRegistrationDao = database.childRegistrationDao
+
+    @Singleton
+    @Provides
+    fun provideSyncDao(database: InAppDb): SyncDao = database.syncDao
 
     @Singleton
     @Provides
@@ -162,6 +166,6 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providePmsmaDao(database : InAppDb) : PmsmaDao = database.pmsmaDao
+    fun providePmsmaDao(database: InAppDb): PmsmaDao = database.pmsmaDao
 
 }

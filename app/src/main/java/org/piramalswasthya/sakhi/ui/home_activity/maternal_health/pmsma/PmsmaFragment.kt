@@ -14,7 +14,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
-import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.databinding.AlertConsentBinding
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
@@ -147,7 +146,7 @@ class PmsmaFragment : Fragment() {
     fun validate(): Boolean {
 
         val result = binding.form.rvInputForm.adapter?.let {
-            (it as FormInputAdapterOld).validateInput()
+            (it as FormInputAdapter).validateInput(resources)
         }
         Timber.d("Validation : $result")
         return if (result == -1)
