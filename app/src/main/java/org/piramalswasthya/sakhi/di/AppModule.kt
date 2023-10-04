@@ -29,9 +29,9 @@ import javax.inject.Singleton
 object AppModule {
 
     private const val baseTmcUrl =
+        "https://assamtmc.piramalswasthya.org/"
 //        "http://uatamrit.piramalswasthya.org:8080/"
-
-        "https://amritdemo.piramalswasthya.org/"
+//        "https://amritdemo.piramalswasthya.org/"
     //"http://192.168.1.94:8081/"
     private const val baseAbhaUrl = "https://healthidsbx.abdm.gov.in/api/"
 

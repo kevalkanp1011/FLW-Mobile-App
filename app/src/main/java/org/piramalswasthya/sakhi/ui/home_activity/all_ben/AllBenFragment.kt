@@ -98,7 +98,8 @@ class AllBenFragment : Fragment() {
                     checkAndGenerateABHA(benId)
                 },
 
-                ), showAbha = true,
+                ),
+//            showAbha = false,
             showSyncIcon = true,
             showRegistrationDate = true
         )

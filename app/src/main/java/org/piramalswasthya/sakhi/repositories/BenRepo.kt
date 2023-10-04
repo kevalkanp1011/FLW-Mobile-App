@@ -530,7 +530,7 @@ class BenRepo @Inject constructor(
                     householdDao.getHousehold(it.householdId)!!.asNetworkModel()
                 )
                 try {
-                    if (it.isKid) kidNetworkPostList.add(it.asKidNetworkModel())
+                    if (it.ageUnitId!=3 || it.age<15) kidNetworkPostList.add(it.asKidNetworkModel())
                 } catch (e: java.lang.Exception) {
                     Timber.d("caught error in adding kidDetails : $e")
                 }
