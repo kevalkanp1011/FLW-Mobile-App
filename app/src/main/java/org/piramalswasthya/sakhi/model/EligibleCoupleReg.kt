@@ -39,6 +39,7 @@ data class EligibleCoupleRegCache(
     var noOfLiveChildren: Int = 0,
     var noOfMaleChildren: Int = 0,
     var noOfFemaleChildren: Int = 0,
+    var isRegistered: Boolean = true,
     var dob1: Long? = null,
     var age1: Int? = null,
     var gender1: Gender? = null,

@@ -422,6 +422,7 @@ class MaternalHealthRepo @Inject constructor(
                             assess.badObstetric = pwrDTO.badObstetric
                         }
                         assess.lmpDate = getLongFromDate(pwrDTO.lmpDate)
+                        assess.edd = getLongFromDate(pwrDTO.lmpDate) + TimeUnit.DAYS.toMillis(280)
                         assess.multiplePregnancy = if (!pwrDTO.isFirstPregnancyTest) "Yes" else "No"
                         assess.isHighRisk = pwrDTO.isHrpCase
                         database.hrpDao.saveRecord(assess)

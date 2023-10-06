@@ -528,6 +528,7 @@ class EcrRepo @Inject constructor(
                     noOfLiveChildren = numMale + numFemale,
                     noOfMaleChildren = numMale,
                     noOfFemaleChildren = numFemale,
+                    isRegistered = if (ecrJson.has("isRegistered")) ecrJson.getBoolean("isRegistered") else false,
                     processed = "P",
                     createdBy = ecrJson.getString("createdBy"),
                     createdDate = getLongFromDate(
@@ -543,7 +544,7 @@ class EcrRepo @Inject constructor(
                     ),
                     syncState = SyncState.SYNCED
                 )
-                list.add(ecr)
+                if (ecr.isRegistered) list.add(ecr)
             } catch (e: Exception) {
                 Timber.e("Caught $e at ECR PULL")
             }

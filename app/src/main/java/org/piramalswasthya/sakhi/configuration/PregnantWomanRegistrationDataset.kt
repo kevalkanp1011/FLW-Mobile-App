@@ -476,18 +476,17 @@ class PregnantWomanRegistrationDataset(
                     )
                 weekOfPregnancy.value =
                     weekOfPreg.toString()
-                if (weekOfPreg > 26)
+//                if (weekOfPreg > 26)
                     lmp.inputType = InputType.TEXT_VIEW
                 edd.value = getDateFromLong(getEddFromLmp(it.lmpDate))
-//                edd.value = getDateFromLong(it.edd)
-//                    ben?.regDate?.let { it1 ->
-//                        if (lastTrackTimestamp != null) {
-//                            dateOfReg.min =  maxOf( it.lmpDate, it1, lastTrackTimestamp)
-//                        } else {
-//                            dateOfReg.min =  maxOf( it.lmpDate, it1)
-//                        }
-//                    }
-//                dateOfReg.max = minOf(it.edd, System.currentTimeMillis())
+                ben?.regDate?.let { it1 ->
+                    if (lastTrackTimestamp != null) {
+                        dateOfReg.min =  maxOf( it.lmpDate, it1, lastTrackTimestamp)
+                    } else {
+                        dateOfReg.min =  maxOf( it.lmpDate, it1)
+                    }
+                }
+                dateOfReg.max = minOf(it.edd, System.currentTimeMillis())
 
             }
 
