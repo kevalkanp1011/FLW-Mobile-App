@@ -7,7 +7,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
-import org.piramalswasthya.sakhi.database.room.dao.DeliveryOutcomeDao
 import org.piramalswasthya.sakhi.database.room.dao.InfantRegDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
@@ -211,6 +210,12 @@ class InfantRegRepo @Inject constructor(
             }
         }
         return infantRegList
+    }
+
+    suspend fun getNumBabyRegistered(benId: Long) : Int {
+        return withContext(Dispatchers.IO) {
+            infantRegDao.getNumBabiesRegistered(benId)
+        }
     }
 
     companion object {

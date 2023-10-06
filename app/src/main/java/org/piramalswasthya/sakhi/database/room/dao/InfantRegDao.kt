@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import org.piramalswasthya.sakhi.model.DeliveryOutcomeCache
 import org.piramalswasthya.sakhi.model.InfantRegCache
 
 @Dao
@@ -22,4 +21,7 @@ interface InfantRegDao {
 
     @Update
     suspend fun updateInfantReg(it: InfantRegCache)
+
+    @Query("select count(*) from infant_reg where isActive =1 and motherBenId = :benId ")
+    suspend fun getNumBabiesRegistered(benId: Long): Int
 }

@@ -127,8 +127,7 @@ interface AmritApiService {
     suspend fun getDeliveryOutcomeData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
     @POST("/flw-0.0.1/maternalCare/ancVisit/saveAll")
-    suspend fun postAncForm(@Body ancPostList: List<ANCPost>,
-                            /*@Url url : String  ="http://192.168.1.105:8081/maternalCare/anc/saveAll"*/): Response<ResponseBody>
+    suspend fun postAncForm(@Body ancPostList: List<ANCPost>): Response<ResponseBody>
 
     @POST("/flw-0.0.1/maternalCare/ancVisit/getAll")
     suspend fun getAncVisitsData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
@@ -156,5 +155,10 @@ interface AmritApiService {
 
     @POST("/flw-0.0.1/childCare/vaccination/getAll")
     suspend fun getChildImmunizationDetails(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+    @POST("/flw-0.0.1/maternalCare/pnc/saveAll")
+    suspend fun postPncForm(@Body ancPostList: List<PNCNetwork>): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/maternalCare/pnc/getAll")
+    suspend fun getPncVisitsData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
 }

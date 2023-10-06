@@ -113,16 +113,6 @@ class PwAncFormViewModel @Inject constructor(
                     dataset.mapValues(ancCache, 1)
                     maternalHealthRepo.persistAncRecord(ancCache)
                     if (ancCache.pregnantWomanDelivered == true) {
-                        maternalHealthRepo.getSavedRegistrationRecord(benId)?.let {
-                            it.active = false
-                            maternalHealthRepo.persistRegisterRecord(it)
-                        }
-                        maternalHealthRepo.getAllActiveAncRecords(benId).apply {
-                            forEach {
-                                it.isActive = false
-                            }
-                            maternalHealthRepo.updateAncRecord(toTypedArray())
-                        }
                         maternalHealthRepo.getBenFromId(benId)?.let {
                             dataset.updateBenRecordToDelivered(it)
                             benRepo.updateRecord(it)
@@ -131,11 +121,16 @@ class PwAncFormViewModel @Inject constructor(
                     else if (ancCache.isAborted) {
                         maternalHealthRepo.getSavedRegistrationRecord(benId)?.let {
                             it.active = false
+                            if(it.processed!="N") it.processed = "U"
+                            it.syncState = SyncState.UNSYNCED
                             maternalHealthRepo.persistRegisterRecord(it)
                         }
                         maternalHealthRepo.getAllActiveAncRecords(benId).apply {
                             forEach {
                                 it.isActive = false
+                                if(it.processed!="N") it.processed = "U"
+                                it.syncState = SyncState.UNSYNCED
+
                             }
                             maternalHealthRepo.updateAncRecord(toTypedArray())
                         }
@@ -148,11 +143,15 @@ class PwAncFormViewModel @Inject constructor(
                     else if(ancCache.maternalDeath==true){
                         maternalHealthRepo.getSavedRegistrationRecord(benId)?.let {
                             it.active = false
+                            if(it.processed!="N") it.processed = "U"
+                            it.syncState = SyncState.UNSYNCED
                             maternalHealthRepo.persistRegisterRecord(it)
                         }
                         maternalHealthRepo.getAllActiveAncRecords(benId).apply {
                             forEach {
                                 it.isActive = false
+                                if(it.processed!="N") it.processed = "U"
+                                it.syncState = SyncState.UNSYNCED
                             }
                             maternalHealthRepo.updateAncRecord(toTypedArray())
                         }

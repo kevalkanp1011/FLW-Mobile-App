@@ -14,20 +14,20 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.repositories.ImmunizationRepo
+import org.piramalswasthya.sakhi.repositories.PncRepo
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 @HiltWorker
-class PullChildImmunizatonFromAmritWorker @AssistedInject constructor(
+class PullPNCFromAmritWorker @AssistedInject constructor(
     @Assisted private val appContext: Context,
     @Assisted params: WorkerParameters,
-    private val immunizationRepo: ImmunizationRepo,
+    private val pncRepo: PncRepo,
     private val preferenceDao: PreferenceDao,
 ) : CoroutineWorker(appContext, params) {
 
     companion object {
-        const val name = "PullChildImmunizationFromAmritWorker"
+        const val name = "PullPncFromAmritWorker"
         const val Progress = "Progress"
 
     }
@@ -37,7 +37,7 @@ class PullChildImmunizatonFromAmritWorker @AssistedInject constructor(
         return try {
             try {
                 // This ensures that you waiting for the Notification update to be done.
-                setForeground(createForegroundInfo("Downloading Child Immunization Data"))
+                setForeground(createForegroundInfo("Downloading PNC Data"))
             } catch (throwable: Throwable) {
                 // Handle this exception gracefully
                 Timber.d("FgLW", "Something bad happened", throwable)
@@ -48,15 +48,15 @@ class PullChildImmunizatonFromAmritWorker @AssistedInject constructor(
                 try {
                     val result1 =
                         awaitAll(
-                            async { getChildImmunizationDetails() }
+                            async { getPncDetails() },
                         )
 
                     val endTime = System.currentTimeMillis()
                     val timeTaken = TimeUnit.MILLISECONDS.toSeconds(endTime - startTime)
-                    Timber.d("Full child_immunization fetching took $timeTaken seconds $result1")
+                    Timber.d("Full pregnant women details fetching took $timeTaken seconds $result1")
 
                     if (result1.all { it }) {
-                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
+//                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
                         return@withContext Result.success()
                     }
                     return@withContext Result.failure()
@@ -68,7 +68,7 @@ class PullChildImmunizatonFromAmritWorker @AssistedInject constructor(
             }
 
         } catch (e: java.lang.Exception) {
-            Timber.d("Error occurred in PullChildImmunizationFromAmritWorker $e ${e.stackTrace}")
+            Timber.d("Error occurred in PullPNCFromAmritWorker $e ${e.stackTrace}")
 
             Result.failure()
         }
@@ -91,10 +91,10 @@ class PullChildImmunizatonFromAmritWorker @AssistedInject constructor(
     }
 
 
-    private suspend fun getChildImmunizationDetails() : Boolean {
+    private suspend fun getPncDetails() : Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val res = immunizationRepo.getImmunizationDetailsFromServer()
+                val res = pncRepo.getPncVisitsFromServer()
                 return@withContext res == 1
             } catch (e: Exception) {
                 Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
@@ -102,4 +102,5 @@ class PullChildImmunizatonFromAmritWorker @AssistedInject constructor(
             true
         }
     }
+
 }

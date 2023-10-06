@@ -121,7 +121,7 @@ interface BenDao {
     @Query("SELECT COUNT(*) FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 2 and villageId=:selectedVillage")
     fun getAllPregnancyWomenListCount(selectedVillage: Int): Flow<Int>
 
-    @Query("SELECT ben.* FROM BEN_BASIC_CACHE ben  inner join pregnancy_register pwr on pwr.benId = ben.benId inner join pregnancy_anc anc on ben.benId = anc.benId WHERE ben.reproductiveStatusId =3 and anc.pregnantWomanDelivered =1 and anc.isActive = 0 and pwr.active = 0 and CAST((strftime('%s','now') - anc.ancDate/1000)/60/60/24 AS INTEGER) BETWEEN 0 and 42 and villageId=:selectedVillage group by ben.benId order by anc.updatedDate desc ")
+    @Query("SELECT ben.* FROM BEN_BASIC_CACHE ben  inner join pregnancy_register pwr on pwr.benId = ben.benId inner join pregnancy_anc anc on ben.benId = anc.benId WHERE ben.reproductiveStatusId =3 and anc.pregnantWomanDelivered =1 and anc.isActive = 1 and pwr.active = 1 and villageId=:selectedVillage group by ben.benId order by anc.updatedDate desc ")
     fun getAllDeliveredWomenList(selectedVillage: Int): Flow<List<BenBasicCache>>
 
     @Query("SELECT count(distinct(ben.benId)) FROM BEN_BASIC_CACHE ben  inner join pregnancy_register pwr on pwr.benId = ben.benId inner join pregnancy_anc anc on ben.benId = anc.benId WHERE ben.reproductiveStatusId =3 and anc.pregnantWomanDelivered =1 and anc.isActive = 0 and pwr.active = 0 and CAST((strftime('%s','now') - anc.ancDate/1000)/60/60/24 AS INTEGER) BETWEEN 0 and 42 and villageId=:selectedVillage")
@@ -146,7 +146,7 @@ interface BenDao {
     fun getAllWomenListForPmsmaCount(selectedVillage: Int): Flow<Int>
 
     @Transaction
-    @Query("SELECT ben.*  from BEN_BASIC_CACHE  ben inner join pregnancy_register pwr on pwr.benId = ben.benId where pwr.active = 1 and ben.villageId=:selectedVillage group by ben.benId")
+    @Query("SELECT ben.*  from BEN_BASIC_CACHE  ben inner join pregnancy_register pwr on pwr.benId = ben.benId where pwr.active = 1 and ben.reproductiveStatusId=2 and ben.villageId=:selectedVillage group by ben.benId")
     fun getAllRegisteredPregnancyWomenList(selectedVillage: Int): Flow<List<BenWithAncVisitCache>>
 
     @Query("SELECT count(*) FROM PREGNANCY_REGISTER pr INNER JOIN BENEFICIARY  ben ON pr.benId=ben.beneficiaryId where ben.loc_village_id=:selectedVillage and pr.active=1")
