@@ -118,12 +118,12 @@ class DeliveryOutcomeViewModel @Inject constructor(
                         ecrRepo.persistRecord(ecr)
                     }
 
-                    val pwr = pwrRepo.getSavedRegistrationRecord(deliveryOutcome.benId)
-                    if(pwr != null) {
-                        pwr.active = false;
-                        pwr.processed = "U"
-                        pwrRepo.persistRegisterRecord(pwr)
-                    }
+//                    val pwr = pwrRepo.getSavedRegistrationRecord(deliveryOutcome.benId)
+//                    if(pwr != null) {
+//                        pwr.active = false;
+//                        pwr.processed = "U"
+//                        pwrRepo.persistRegisterRecord(pwr)
+//                    }
 
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {

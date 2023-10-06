@@ -150,10 +150,10 @@ interface AmritApiService {
     @POST("/flw-0.0.1/maternalCare/infant/getAll")
     suspend fun getInfantRegData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
-    @POST("/flw-0.0.1/childCare/vaccination/saveAll")
+    @POST("/flw-0.0.1/child-care/vaccination/saveAll")
     suspend fun postChildImmunizationDetails(@Body immunizationList: List<ImmunizationPost>): Response<ResponseBody>
 
-    @POST("/flw-0.0.1/childCare/vaccination/getAll")
+    @POST("/flw-0.0.1/child-care/vaccination/getAll")
     suspend fun getChildImmunizationDetails(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
     @POST("/flw-0.0.1/maternalCare/pnc/saveAll")
     suspend fun postPncForm(@Body ancPostList: List<PNCNetwork>): Response<ResponseBody>
