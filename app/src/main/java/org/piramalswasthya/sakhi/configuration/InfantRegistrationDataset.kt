@@ -173,7 +173,8 @@ class InfantRegistrationDataset(
 
 
     suspend fun setUpPage(
-        ben: BenRegCache?, deliveryOutcomeCache: DeliveryOutcomeCache?,
+        ben: BenRegCache?, deliveryOutcomeCache: DeliveryOutcomeCache,
+        babyIndex: Int,
         pwrCache: PregnantWomanRegistrationCache?, saved: InfantRegCache?
     ) {
         var list = mutableListOf(
@@ -206,7 +207,11 @@ class InfantRegistrationDataset(
                     if (it + TimeUnit.DAYS.toMillis(365) < System.currentTimeMillis())
                         bcgDose.max = it + TimeUnit.DAYS.toMillis(365)
                     if (it + 24 * 60 * 60 * 1000 < System.currentTimeMillis()) {
-                        hepBDose.max = it + TimeUnit.DAYS.toMillis(1)
+                        hepBDose.max = it + TimeUnit.DAYS.toMillis(
+
+
+
+                            1)
                         vitkDose.max = it + TimeUnit.DAYS.toMillis(1)
                     }
                 }
@@ -214,7 +219,12 @@ class InfantRegistrationDataset(
         }
         if (pwrCache != null && deliveryOutcomeCache != null) {
             val weeksOfPregnancy =
-                deliveryOutcomeCache.dateOfDelivery?.let { getWeeksOfPregnancy(it, pwrCache.lmpDate) }
+                deliveryOutcomeCache.dateOfDelivery?.let {
+                    getWeeksOfPregnancy(
+                        it,
+                        pwrCache.lmpDate
+                    )
+                }
             if (weeksOfPregnancy in 38..41) {
                 infantTerm.value = infantTerm.entries!!.first()
             } else if (weeksOfPregnancy != null) {
@@ -224,7 +234,10 @@ class InfantRegistrationDataset(
         }
         if (saved == null) {
             if (ben != null) {
-                babyName.value = "baby of ${ben.firstName}"
+                babyName.value =
+                    if (deliveryOutcomeCache.liveBirth == null || deliveryOutcomeCache.liveBirth == 1)
+                        "baby of ${ben.firstName}"
+                    else "baby $babyIndex of ${ben.firstName}"
             }
 //            opv0Dose.value = getDateFromLong(System.currentTimeMillis())
         } else {

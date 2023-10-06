@@ -75,7 +75,9 @@ class InfantRegViewModel @Inject constructor(
                     motherBenId = ben.beneficiaryId,
                     syncState = SyncState.UNSYNCED,
                     createdBy = asha.userName,
-                    updatedBy = asha.userName
+                    updatedBy = asha.userName,
+                    babyIndex = 0  ,
+                    isActive = true
                 )
             }
 
@@ -86,16 +88,16 @@ class InfantRegViewModel @Inject constructor(
                 _recordExists.value = false
             }
 
-            deliveryOutcomeRepo.getDeliveryOutcome(benId)?.let {
-                deliveryOutcome = it
-            }
+            deliveryOutcome =deliveryOutcomeRepo.getDeliveryOutcome(benId)!!
             maternalHealthRepo.getSavedRegistrationRecord(benId)?.let {
                 pwrCache = it
             }
+            val nummBabiesRegistered = infantRegRepo.getNumBabyRegistered(benId)
 
             dataset.setUpPage(
                 ben,
-                deliveryOutcome,
+                deliveryOutcome!!,
+                nummBabiesRegistered,
                 pwrCache,
                 if (recordExists.value == true) infantReg else null
             )

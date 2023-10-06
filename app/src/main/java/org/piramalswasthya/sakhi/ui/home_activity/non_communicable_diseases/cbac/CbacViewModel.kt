@@ -27,6 +27,7 @@ import org.piramalswasthya.sakhi.model.Gender
 import org.piramalswasthya.sakhi.repositories.CbacRepo
 import timber.log.Timber
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -75,7 +76,12 @@ class CbacViewModel @Inject constructor(
     val raFhScore = Transformations.map(_raFhScore) { it.toString() }
     private val _raTotalScore = MutableLiveData(0)
     val raTotalScore = Transformations.map(_raTotalScore) {
-        String.format("%s%s%s", resources.getString(R.string.total_score_wihout_semi_colon), ": ", it)
+        String.format(
+            "%s%s%s",
+            resources.getString(R.string.total_score_wihout_semi_colon),
+            ": ",
+            it
+        )
     }
 
     //PHQ2
@@ -85,7 +91,12 @@ class CbacViewModel @Inject constructor(
     val phq2FeelDownDepScore = Transformations.map(_phq2FeelDownDepScore) { it.toString() }
     private val _phq2TotalScore = MutableLiveData(0)
     val phq2TotalScore = Transformations.map(_phq2TotalScore) {
-        String.format("%s%s%s", resources.getString(R.string.total_score_wihout_semi_colon), ": ", it)
+        String.format(
+            "%s%s%s",
+            resources.getString(R.string.total_score_wihout_semi_colon),
+            ": ",
+            it
+        )
     }
 
 
@@ -138,6 +149,8 @@ class CbacViewModel @Inject constructor(
     private var flagForNcd = false
 
     private val _minDate = MutableLiveData<Long>()
+
+
     val minDate: LiveData<Long>
         get() = _minDate
 
@@ -152,8 +165,10 @@ class CbacViewModel @Inject constructor(
                         syncState = SyncState.UNSYNCED,
                         createdDate = System.currentTimeMillis()
                     )
+                val lastFilledCbac = cbacRepo.getLastFilledCbac(benId)
                 ben = benDao.getBen(benId)!!
-                _minDate.postValue(ben.regDate)
+                _minDate.postValue(lastFilledCbac?.fillDate?.let { it + TimeUnit.DAYS.toMillis(365) }
+                    ?: ben.regDate)
             }
             if (ben.ageUnit != AgeUnit.YEARS)
                 throw IllegalStateException("Age not in years for CBAC form!!")

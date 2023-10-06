@@ -6,8 +6,10 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import com.squareup.moshi.JsonClass
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.network.getLongFromDate
 
 @Entity(
     tableName = "PNC_VISIT",
@@ -25,7 +27,7 @@ data class PNCVisitCache(
     val id: Long = 0,
     val benId: Long,
     var pncPeriod: Int,
-    var isActive : Boolean,
+    var isActive: Boolean,
     var pncDate: Long = System.currentTimeMillis(),
     var ifaTabsGiven: Int? = 0,
     var anyContraceptionMethod: Boolean? = null,
@@ -46,14 +48,95 @@ data class PNCVisitCache(
     var updatedBy: String,
     val updatedDate: Long = System.currentTimeMillis(),
     var syncState: SyncState
-) : FormDataModel{
-    fun asDomainModel() : PncDomain = PncDomain(
+) : FormDataModel {
+    fun asDomainModel(): PncDomain = PncDomain(
         benId = benId,
         visitNumber = pncPeriod,
         syncState
     )
+
+
+    fun asNetworkModel(): PNCNetwork {
+        return PNCNetwork(
+            id = id,
+            benId = benId,
+            pncPeriod = pncPeriod,
+            isActive = isActive,
+            pncDate = getDateTimeStringFromLong(pncDate)!!,
+            ifaTabsGiven = ifaTabsGiven,
+            anyContraceptionMethod = anyContraceptionMethod,
+            contraceptionMethod = contraceptionMethod,
+            otherPpcMethod = otherPpcMethod,
+            motherDangerSign = motherDangerSign,
+            otherDangerSign = otherDangerSign,
+            referralFacility = referralFacility,
+            motherDeath = motherDeath,
+            deathDate = getDateTimeStringFromLong(deathDate)?:null,
+            causeOfDeath = causeOfDeath,
+            otherDeathCause = otherDeathCause,
+            placeOfDeath = placeOfDeath,
+            remarks = remarks,
+            createdBy = createdBy,
+            createdDate = getDateTimeStringFromLong(createdDate)!!,
+            updatedBy = updatedBy,
+            updatedDate = getDateTimeStringFromLong(updatedDate)!!,
+        )
+    }
 }
 
+@JsonClass(generateAdapter = true)
+data class PNCNetwork(
+    val id: Long,
+    val benId: Long,
+    var pncPeriod: Int,
+    var isActive: Boolean,
+    var pncDate: String,
+    var ifaTabsGiven: Int?,
+    var anyContraceptionMethod: Boolean?,
+    var contraceptionMethod: String?,
+    var otherPpcMethod: String?,
+    var motherDangerSign: String?,
+    var otherDangerSign: String?,
+    var referralFacility: String?,
+    var motherDeath: Boolean,
+    var deathDate: String?,
+    var causeOfDeath: String?,
+    var otherDeathCause: String?,
+    var placeOfDeath: String?,
+    var remarks: String?,
+    var createdBy: String,
+    val createdDate: String,
+    var updatedBy: String,
+    val updatedDate: String,
+) {
+    fun asCacheModel(): PNCVisitCache {
+        return PNCVisitCache(
+            benId = benId,
+            pncPeriod = pncPeriod,
+            isActive = isActive,
+            pncDate = getLongFromDate(pncDate),
+            ifaTabsGiven = ifaTabsGiven,
+            anyContraceptionMethod = anyContraceptionMethod,
+            contraceptionMethod = contraceptionMethod,
+            otherPpcMethod = otherPpcMethod,
+            motherDangerSign = motherDangerSign,
+            otherDangerSign = otherDangerSign,
+            referralFacility = referralFacility,
+            motherDeath = motherDeath,
+            deathDate = getLongFromDate(deathDate),
+            causeOfDeath = causeOfDeath,
+            otherDeathCause = otherDeathCause,
+            placeOfDeath = placeOfDeath,
+            remarks = remarks,
+            processed = "P",
+            createdBy = createdBy,
+            createdDate = getLongFromDate(createdDate),
+            updatedBy = updatedBy,
+            updatedDate = getLongFromDate(updatedDate),
+            syncState = SyncState.SYNCED,
+        )
+    }
+}
 
 data class BenWithDoAndPncCache(
 //    @ColumnInfo(name = "benId")

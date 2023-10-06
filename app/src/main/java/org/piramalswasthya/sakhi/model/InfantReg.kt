@@ -19,13 +19,16 @@ import java.util.Locale
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "infRegInd", value = ["motherBenId"])])
+    indices = [Index(name = "infRegInd", value = ["motherBenId"])]
+)
 
-data class InfantRegCache (
+data class InfantRegCache(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val motherBenId : Long,
+    val motherBenId: Long,
+    val isActive : Boolean ,
     var babyName: String? = null,
+    var babyIndex: Int,
     var infantTerm: String? = null,
     var corticosteroidGiven: String? = null,
     var gender: Gender? = null,
@@ -47,7 +50,7 @@ data class InfantRegCache (
     var updatedBy: String,
     val updatedDate: Long = System.currentTimeMillis(),
     var syncState: SyncState
-):FormDataModel {
+) : FormDataModel {
 
     private fun getDateStringFromLong(dateLong: Long?): String? {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
@@ -58,11 +61,13 @@ data class InfantRegCache (
             return null
         }
     }
-    fun asPostModel() : InfantRegPost {
+
+    fun asPostModel(): InfantRegPost {
         return InfantRegPost(
             id = id,
             benId = motherBenId,
             babyName = babyName,
+            babyIndex = babyIndex,
             infantTerm = infantTerm,
             corticosteroidGiven = corticosteroidGiven,
             gender = gender?.name,
@@ -91,6 +96,7 @@ data class InfantRegPost(
     val id: Long = 0,
     val benId: Long,
     val babyName: String? = null,
+    val babyIndex: Int,
     val infantTerm: String? = null,
     val corticosteroidGiven: String? = null,
     val gender: String? = null,
@@ -115,7 +121,9 @@ data class InfantRegPost(
         return InfantRegCache(
             id = id,
             motherBenId = benId,
+            isActive = true,
             babyName = babyName,
+            babyIndex = babyIndex,
             infantTerm = infantTerm,
             corticosteroidGiven = corticosteroidGiven,
 //            gender = gender,

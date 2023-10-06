@@ -86,7 +86,7 @@ class PncFormViewModel @Inject constructor(
             } ?: run {
                 _recordExists.value = false
             }
-            val lastPnc = pncRepo.getSavedPncRecord(benId, visitNumber - 1)
+            val lastPnc = pncRepo.getLastFilledPncRecord(benId)
 
             dataset.setUpPage(
                 visitNumber,

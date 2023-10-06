@@ -88,7 +88,7 @@ class DeliveryOutcomeRepo @Inject constructor(
                     if (responseString != null) {
                         val jsonObj = JSONObject(responseString)
 
-                        val errormessage = jsonObj.getString("message")
+                        val errormessage = jsonObj.getString("errorMessage")
                         if (jsonObj.isNull("statusCode")) throw IllegalStateException("Amrit server not responding properly, Contact Service Administrator!!")
                         val responsestatuscode = jsonObj.getInt("statusCode")
 

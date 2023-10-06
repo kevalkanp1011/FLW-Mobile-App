@@ -231,7 +231,7 @@ class PregnantWomanRegistrationDataset(
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 2,
-        min = 0,
+        min = 1,
         max = 15
     )
     private val complicationsDuringLastPregnancy = FormElement(
