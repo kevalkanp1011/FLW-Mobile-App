@@ -16,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
+import org.piramalswasthya.sakhi.adapters.InfantRegistrationAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 
@@ -40,18 +41,15 @@ class InfantRegListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapterForForm(
-            BenListAdapterForForm.ClickListener(
-                {
-                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
-                },
-                { hhId, benId ->
-                    findNavController().navigate(
-                        InfantRegListFragmentDirections.actionInfantRegListFragmentToInfantRegFragment(
-                            benId
-                        )
+        val benAdapter = InfantRegistrationAdapter(
+            InfantRegistrationAdapter.ClickListener { benId, babyIndex ->
+                findNavController().navigate(
+                    InfantRegListFragmentDirections.actionInfantRegListFragmentToInfantRegFragment(
+                        benId,
+                        babyIndex
                     )
-                }), resources.getString(R.string.register)
+                )
+            }
         )
         binding.rvAny.adapter = benAdapter
 

@@ -238,6 +238,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setUpFirstTimePullWorker() {
+        WorkerUtils.triggerPeriodicPncEcUpdateWorker(this)
         if(!pref.isFullPullComplete)
             WorkerUtils.triggerAmritPullWorker(this)
 //        WorkerUtils.triggerD2dSyncWorker(this)

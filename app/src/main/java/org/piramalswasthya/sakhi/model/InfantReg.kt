@@ -1,9 +1,11 @@
 package org.piramalswasthya.sakhi.model
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.network.getLongFromDate
@@ -26,7 +28,7 @@ data class InfantRegCache(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val motherBenId: Long,
-    val isActive : Boolean ,
+    var isActive: Boolean,
     var babyName: String? = null,
     var babyIndex: Int,
     var infantTerm: String? = null,
@@ -48,7 +50,7 @@ data class InfantRegCache(
     var createdBy: String,
     val createdDate: Long = System.currentTimeMillis(),
     var updatedBy: String,
-    val updatedDate: Long = System.currentTimeMillis(),
+    var updatedDate: Long = System.currentTimeMillis(),
     var syncState: SyncState
 ) : FormDataModel {
 
@@ -91,6 +93,52 @@ data class InfantRegCache(
     }
 }
 
+data class BenWithDoAndIrCache(
+//    @ColumnInfo(name = "benId")
+//    val ecBenId: Long,
+
+    @Embedded
+    val ben: BenBasicCache,
+    @Relation(
+        parentColumn = "benId", entityColumn = "benId", entity = DeliveryOutcomeCache::class
+    )
+    val deliveryOutcomeCache: List<DeliveryOutcomeCache>,
+
+    @Relation(
+        parentColumn = "benId", entityColumn = "motherBenId", entity = InfantRegCache::class
+    )
+    val savedIrRecords: List<InfantRegCache>
+) {
+
+    fun asBasicDomainModel(): List<InfantRegDomain> {
+
+        val activeDo = deliveryOutcomeCache.first { it.isActive }
+        val activeIr = savedIrRecords.filter { it.isActive }
+        val list = mutableListOf<InfantRegDomain>()
+        val numLiveBirth = activeDo.liveBirth ?: 1
+        if (numLiveBirth == 0) return emptyList()
+        for (i in 0 until numLiveBirth) {
+            list.add(
+                InfantRegDomain(
+                    motherBen = ben.asBasicDomainModel(),
+                    babyIndex = i,
+                    deliveryOutcome = activeDo,
+                    savedIr = activeIr.firstOrNull { it.babyIndex == i },)
+            )
+        }
+
+        return list
+    }
+}
+
+data class InfantRegDomain(
+    val motherBen: BenBasicDomain,
+    val babyIndex: Int,
+    val babyName: String = "Baby $babyIndex of ${motherBen.benFullName}",
+    val deliveryOutcome: DeliveryOutcomeCache,
+    val savedIr : InfantRegCache?,
+    val syncState: SyncState? = savedIr?.syncState
+)
 
 data class InfantRegPost(
     val id: Long = 0,
@@ -148,3 +196,4 @@ data class InfantRegPost(
         )
     }
 }
+

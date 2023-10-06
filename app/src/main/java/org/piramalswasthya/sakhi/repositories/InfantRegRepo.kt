@@ -29,9 +29,9 @@ class InfantRegRepo @Inject constructor(
     private val infantRegDao: InfantRegDao
 ) {
 
-    suspend fun getInfantReg(benId: Long): InfantRegCache? {
+    suspend fun getInfantReg(benId: Long, babyIndex: Int): InfantRegCache? {
         return withContext(Dispatchers.IO) {
-            infantRegDao.getInfantReg(benId)
+            infantRegDao.getInfantReg(benId, babyIndex)
         }
     }
 
@@ -203,7 +203,7 @@ class InfantRegRepo @Inject constructor(
         infantRegList.forEach { infantReg ->
             infantReg.createdDate?.let {
                 var infantRegCache: InfantRegCache? =
-                    infantRegDao.getInfantReg(infantReg.benId)
+                    infantRegDao.getInfantReg(infantReg.benId, infantReg.babyIndex)
                 if (infantRegCache == null) {
                     infantRegDao.saveInfantReg(infantReg.toCacheModel())
                 }
@@ -215,6 +215,19 @@ class InfantRegRepo @Inject constructor(
     suspend fun getNumBabyRegistered(benId: Long) : Int {
         return withContext(Dispatchers.IO) {
             infantRegDao.getNumBabiesRegistered(benId)
+        }
+    }
+
+    suspend fun setToInactive(eligBenIds: Set<Long>) {
+        withContext(Dispatchers.IO) {
+            val records = infantRegDao.getAllInfantRegs(eligBenIds)
+            records.forEach {
+                it.isActive = false
+                if (it.processed != "N") it.processed = "U"
+                it.syncState = SyncState.UNSYNCED
+                it.updatedDate = System.currentTimeMillis()
+                infantRegDao.updateInfantReg(it)
+            }
         }
     }
 

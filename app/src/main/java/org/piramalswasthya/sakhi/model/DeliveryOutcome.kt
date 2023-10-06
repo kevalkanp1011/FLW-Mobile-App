@@ -25,6 +25,7 @@ data class DeliveryOutcomeCache (
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val benId : Long,
+    var isActive : Boolean,
     var dateOfDelivery: Long? = null,
     var timeOfDelivery: String? = null,
     var placeOfDelivery: String? = null,
@@ -44,7 +45,7 @@ data class DeliveryOutcomeCache (
     var createdBy: String,
     val createdDate: Long = System.currentTimeMillis(),
     var updatedBy: String,
-    val updatedDate: Long = System.currentTimeMillis(),
+    var updatedDate: Long = System.currentTimeMillis(),
     var syncState: SyncState
 ) : FormDataModel {
 
@@ -61,6 +62,7 @@ data class DeliveryOutcomeCache (
         return DeliveryOutcomePost(
             id = id,
             benId = benId,
+            isActive = isActive,
             dateOfDelivery = getDateStringFromLong(dateOfDelivery),
             timeOfDelivery = timeOfDelivery,
             placeOfDelivery = placeOfDelivery,
@@ -87,6 +89,7 @@ data class DeliveryOutcomeCache (
 data class DeliveryOutcomePost (
     val id: Long = 0,
     val benId: Long,
+    val isActive : Boolean,
     val dateOfDelivery: String? = null,
     val timeOfDelivery: String? = null,
     val placeOfDelivery: String? = null,
@@ -111,6 +114,7 @@ data class DeliveryOutcomePost (
         return DeliveryOutcomeCache(
             id = id,
             benId = benId,
+            isActive = isActive,
             dateOfDelivery = getLongFromDate(dateOfDelivery),
             timeOfDelivery = timeOfDelivery,
             placeOfDelivery = placeOfDelivery,

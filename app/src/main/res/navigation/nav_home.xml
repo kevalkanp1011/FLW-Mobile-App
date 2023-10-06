@@ -752,6 +752,9 @@
         <argument
             android:name="benId"
             app:argType="long" />
+        <argument
+            android:name="babyIndex"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/childRegListFragment"

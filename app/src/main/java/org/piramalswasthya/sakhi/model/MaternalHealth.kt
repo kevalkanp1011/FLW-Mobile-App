@@ -130,7 +130,7 @@ data class PregnantWomanRegistrationCache(
     var createdBy: String,
     var createdDate: Long = System.currentTimeMillis(),
     var updatedBy: String,
-    val updatedDate: Long = System.currentTimeMillis(),
+    var updatedDate: Long = System.currentTimeMillis(),
     var syncState: SyncState
 ) : FormDataModel {
     fun asPwrPost(): PwrPost {
@@ -350,7 +350,7 @@ data class PregnantWomanAncCache(
     var createdBy: String,
     val createdDate: Long = System.currentTimeMillis(),
     var updatedBy: String,
-    val updatedDate: Long = System.currentTimeMillis(),
+    var updatedDate: Long = System.currentTimeMillis(),
     var syncState: SyncState
 ) : FormDataModel {
     fun asPostModel(): ANCPost {
@@ -501,7 +501,7 @@ data class BenWithAncVisitCache(
     @Relation(
         parentColumn = "benId", entityColumn = "benId", entity = PMSMACache::class
     )
-    val pmsma: PMSMACache?,
+    val pmsma: List<PMSMACache>,
 
     @Relation(
         parentColumn = "benId", entityColumn = "benId", entity = PregnantWomanAncCache::class
@@ -519,6 +519,7 @@ data class BenWithAncVisitCache(
 
     fun asDomainModel(): BenWithAncListDomain {
         val lastAncRecord = savedAncRecords.maxByOrNull { it.ancDate }
+        val activePmsma = pmsma.firstOrNull { it.isActive }
         val activePwrRecrod = pwr.first { it.active }
         return BenWithAncListDomain(
 //            ecBenId,
@@ -532,8 +533,8 @@ data class BenWithAncVisitCache(
                     syncState = it.syncState
                 )
             }.sortedBy { it.visitNumber },
-            pmsmaFillable = if (pmsma == null) savedAncRecords.any { it.visitNumber == 1 } else true,
-            hasPmsma = pmsma != null,
+            pmsmaFillable = if (activePmsma == null) savedAncRecords.any { it.visitNumber == 1 } else true,
+            hasPmsma = activePmsma != null,
             showAddAnc = if (savedAncRecords.isEmpty())
                 TimeUnit.MILLISECONDS.toDays(
                     getTodayMillis() - activePwrRecrod.lmpDate
@@ -546,7 +547,7 @@ data class BenWithAncVisitCache(
                         lastAncRecord.visitNumber < 4 && TimeUnit.MILLISECONDS.toDays(
                     getTodayMillis() - lastAncRecord.ancDate
                 ) > 28,
-            syncState = if (pmsma == null && savedAncRecords.isEmpty()) null else if (pmsma?.syncState == SyncState.UNSYNCED || savedAncRecords.any { it.syncState != SyncState.SYNCED }) SyncState.UNSYNCED else SyncState.SYNCED
+            syncState = if (activePmsma == null && savedAncRecords.isEmpty()) null else if (activePmsma?.syncState == SyncState.UNSYNCED || savedAncRecords.any { it.syncState != SyncState.SYNCED }) SyncState.UNSYNCED else SyncState.SYNCED
         )
 
 

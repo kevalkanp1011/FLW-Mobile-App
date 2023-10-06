@@ -226,6 +226,19 @@ class PmsmaRepo @Inject constructor(
 
     }
 
+    suspend fun setToInactive(eligBenIds: Set<Long>) {
+        withContext(Dispatchers.IO) {
+            val records = pmsmaDao.getAllPmsma(eligBenIds)
+            records.forEach {
+                it.isActive = false
+                if (it.processed != "N") it.processed = "U"
+                it.syncState = SyncState.UNSYNCED
+                it.updatedDate = System.currentTimeMillis()
+                pmsmaDao.updatePmsmaRecord(it)
+            }
+        }
+    }
+
     companion object {
         private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
         private val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)

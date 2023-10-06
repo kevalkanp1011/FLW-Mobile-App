@@ -36,6 +36,8 @@ class InfantRegViewModel @Inject constructor(
 ) : ViewModel() {
     val benId =
         InfantRegFragmentArgs.fromSavedStateHandle(savedStateHandle).benId
+    val babyIndex : Int =
+        InfantRegFragmentArgs.fromSavedStateHandle(savedStateHandle).babyIndex
 
     enum class State {
         IDLE, SAVING, SAVE_SUCCESS, SAVE_FAILED
@@ -76,12 +78,12 @@ class InfantRegViewModel @Inject constructor(
                     syncState = SyncState.UNSYNCED,
                     createdBy = asha.userName,
                     updatedBy = asha.userName,
-                    babyIndex = 0  ,
+                    babyIndex = babyIndex  ,
                     isActive = true
                 )
             }
 
-            infantRegRepo.getInfantReg(benId)?.let {
+            infantRegRepo.getInfantReg(benId, babyIndex)?.let {
                 infantReg = it
                 _recordExists.value = true
             } ?: run {
@@ -92,12 +94,11 @@ class InfantRegViewModel @Inject constructor(
             maternalHealthRepo.getSavedRegistrationRecord(benId)?.let {
                 pwrCache = it
             }
-            val nummBabiesRegistered = infantRegRepo.getNumBabyRegistered(benId)
 
             dataset.setUpPage(
                 ben,
                 deliveryOutcome!!,
-                nummBabiesRegistered,
+                babyIndex,
                 pwrCache,
                 if (recordExists.value == true) infantReg else null
             )

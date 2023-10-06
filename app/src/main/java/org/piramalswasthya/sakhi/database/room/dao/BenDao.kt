@@ -124,7 +124,7 @@ interface BenDao {
     @Query("SELECT ben.* FROM BEN_BASIC_CACHE ben  inner join pregnancy_register pwr on pwr.benId = ben.benId inner join pregnancy_anc anc on ben.benId = anc.benId WHERE ben.reproductiveStatusId =3 and anc.pregnantWomanDelivered =1 and anc.isActive = 1 and pwr.active = 1 and villageId=:selectedVillage group by ben.benId order by anc.updatedDate desc ")
     fun getAllDeliveredWomenList(selectedVillage: Int): Flow<List<BenBasicCache>>
 
-    @Query("SELECT count(distinct(ben.benId)) FROM BEN_BASIC_CACHE ben  inner join pregnancy_register pwr on pwr.benId = ben.benId inner join pregnancy_anc anc on ben.benId = anc.benId WHERE ben.reproductiveStatusId =3 and anc.pregnantWomanDelivered =1 and anc.isActive = 0 and pwr.active = 0 and CAST((strftime('%s','now') - anc.ancDate/1000)/60/60/24 AS INTEGER) BETWEEN 0 and 42 and villageId=:selectedVillage")
+    @Query("SELECT count(distinct(ben.benId)) FROM BEN_BASIC_CACHE ben  inner join pregnancy_register pwr on pwr.benId = ben.benId inner join pregnancy_anc anc on ben.benId = anc.benId WHERE ben.reproductiveStatusId =3 and anc.pregnantWomanDelivered =1 and anc.isActive = 1 and pwr.active = 1 and villageId=:selectedVillage")
     fun getAllDeliveredWomenListCount(selectedVillage: Int): Flow<Int>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 1 and gender = 'FEMALE' and villageId=:selectedVillage")
@@ -133,10 +133,11 @@ interface BenDao {
     @Query("SELECT COUNT(*) FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 1 and gender = 'FEMALE' and villageId=:selectedVillage")
     fun getAllNonPregnancyWomenListCount(selectedVillage: Int): Flow<Int>
 
-    @Query("SELECT * FROM BEN_BASIC_CACHE  WHERE isDelivered = 1 and doFilled = 1 and villageId=:selectedVillage")
-    fun getListForInfantRegister(selectedVillage: Int): Flow<List<BenBasicCache>>
+    @Transaction
+    @Query("SELECT ben.* FROM BEN_BASIC_CACHE ben inner join delivery_outcome do on do.benId = ben.benId where do.isActive = 1 and villageId=:selectedVillage")
+    fun getListForInfantRegister(selectedVillage: Int): Flow<List<BenWithDoAndIrCache>>
 
-    @Query("SELECT COUNT(*) FROM BEN_BASIC_CACHE WHERE isDelivered = 1 and doFilled = 1 and villageId=:selectedVillage")
+    @Query("SELECT count(distinct(ben.benId)) FROM BEN_BASIC_CACHE ben inner join delivery_outcome do on do.benId = ben.benId where do.isActive = 1 and villageId=:selectedVillage")
     fun getInfantRegisterCount(selectedVillage: Int): Flow<Int>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE  WHERE pwHrp = 1 and villageId=:selectedVillage")

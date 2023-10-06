@@ -46,7 +46,7 @@ data class PNCVisitCache(
     var createdBy: String,
     val createdDate: Long = System.currentTimeMillis(),
     var updatedBy: String,
-    val updatedDate: Long = System.currentTimeMillis(),
+    var updatedDate: Long = System.currentTimeMillis(),
     var syncState: SyncState
 ) : FormDataModel {
     fun asDomainModel(): PncDomain = PncDomain(
@@ -71,7 +71,7 @@ data class PNCVisitCache(
             otherDangerSign = otherDangerSign,
             referralFacility = referralFacility,
             motherDeath = motherDeath,
-            deathDate = getDateTimeStringFromLong(deathDate)?:null,
+            deathDate = getDateTimeStringFromLong(deathDate) ?: null,
             causeOfDeath = causeOfDeath,
             otherDeathCause = otherDeathCause,
             placeOfDeath = placeOfDeath,
@@ -147,20 +147,25 @@ data class BenWithDoAndPncCache(
     @Relation(
         parentColumn = "benId", entityColumn = "benId", entity = DeliveryOutcomeCache::class
     )
-    val deliveryOutcomeCache: DeliveryOutcomeCache?,
+    val deliveryOutcomeCache: List<DeliveryOutcomeCache>,
 
     @Relation(
         parentColumn = "benId", entityColumn = "benId", entity = PNCVisitCache::class
     )
     val savedPncRecords: List<PNCVisitCache>
 ) {
-    fun asBasicDomainModel(): BenPncDomain {
+    fun asBasicDomainModelForPNC(): BenPncDomain {
         return BenPncDomain(
             ben.asBasicDomainModel(),
-            deliveryOutcomeCache?.dateOfDelivery?.let { getDateStrFromLong(it) } ?: "",
+            deliveryOutcomeCache.firstOrNull { it.isActive }?.dateOfDelivery?.let {
+                getDateStrFromLong(
+                    it
+                )
+            } ?: "",
             savedPncRecords
         )
     }
+
 }
 
 data class BenPncDomain(
