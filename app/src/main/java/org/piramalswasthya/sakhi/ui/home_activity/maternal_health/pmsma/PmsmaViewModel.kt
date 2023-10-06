@@ -91,7 +91,9 @@ class PmsmaViewModel @Inject constructor(
         val user = preferenceDao.getLoggedInUser()!!
         val pmsmaCache = PMSMACache(
             benId = benId, processed = "N",
-            createdBy = user.name, updatedBy = user.name, syncState = SyncState.UNSYNCED
+            createdBy = user.name, updatedBy = user.name,
+            syncState = SyncState.UNSYNCED,
+            isActive = true,
         )
         dataset.mapValues(pmsmaCache)
         viewModelScope.launch {

@@ -63,9 +63,9 @@ class DeliveryOutcomeViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val asha  = preferenceDao.getLoggedInUser()!!
-            val pwr = pwrRepo.getLatestInactiveRegistrationRecord(benId)!!
+            val pwr = pwrRepo.getLatestActiveRegistrationRecord(benId)!!
             val anc = pwrRepo.getLatestAncRecord(benId)!!
-            val ben = benRepo.getBenFromId(benId)?.also { ben ->
+            benRepo.getBenFromId(benId)?.also { ben ->
                 _benName.value =
                     "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
                 _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
@@ -73,7 +73,8 @@ class DeliveryOutcomeViewModel @Inject constructor(
                     benId = ben.beneficiaryId,
                     syncState = SyncState.UNSYNCED,
                     createdBy = asha.userName,
-                    updatedBy = asha.userName
+                    updatedBy = asha.userName,
+                    isActive =  true
                 )
             }
 
@@ -114,16 +115,17 @@ class DeliveryOutcomeViewModel @Inject constructor(
                         deliveryOutcome.deliveryOutcome?.let {
                             ecr.noOfChildren = ecr.noOfChildren + it
                         }
-                        ecr.processed = "U"
+                        if(ecr.processed!="N")ecr.processed = "U"
+                        ecr.syncState = SyncState.UNSYNCED
                         ecrRepo.persistRecord(ecr)
                     }
 
-                    val pwr = pwrRepo.getSavedRegistrationRecord(deliveryOutcome.benId)
-                    if(pwr != null) {
-                        pwr.active = false;
-                        pwr.processed = "U"
-                        pwrRepo.persistRegisterRecord(pwr)
-                    }
+//                    val pwr = pwrRepo.getSavedRegistrationRecord(deliveryOutcome.benId)
+//                    if(pwr != null) {
+//                        pwr.active = false
+//                        pwr.processed = "U"
+//                        pwrRepo.persistRegisterRecord(pwr)
+//                    }
 
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {

@@ -10,8 +10,8 @@ import org.piramalswasthya.sakhi.model.InfantRegCache
 @Dao
 interface InfantRegDao {
 
-    @Query("SELECT * FROM INFANT_REG WHERE motherBenId =:benId limit 1")
-    fun getInfantReg(benId: Long): InfantRegCache?
+    @Query("SELECT * FROM INFANT_REG WHERE motherBenId =:benId and babyIndex = :babyIndex and isActive = 1 limit 1")
+    fun getInfantReg(benId: Long, babyIndex : Int): InfantRegCache?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun saveInfantReg(infantRegCache: InfantRegCache)
@@ -24,4 +24,7 @@ interface InfantRegDao {
 
     @Query("select count(*) from infant_reg where isActive =1 and motherBenId = :benId ")
     suspend fun getNumBabiesRegistered(benId: Long): Int
+
+    @Query("SELECT * FROM INFANT_REG WHERE motherBenId in (:eligBenIds) and isActive = 1")
+    suspend fun getAllInfantRegs(eligBenIds: Set<Long>): List<InfantRegCache>
 }

@@ -224,4 +224,18 @@ class PncRepo @Inject constructor(
         }
         return pncList
     }
+
+    suspend fun setToInactive(eligBenIds: Set<Long>) {
+        withContext(Dispatchers.IO) {
+            val records = pncDao.getAllPNCs(eligBenIds)
+            records.forEach {
+                it.isActive = false
+                if (it.processed != "N") it.processed = "U"
+                it.syncState = SyncState.UNSYNCED
+                it.updatedDate = System.currentTimeMillis()
+                pncDao.update(it)
+            }
+        }
+    }
+
 }

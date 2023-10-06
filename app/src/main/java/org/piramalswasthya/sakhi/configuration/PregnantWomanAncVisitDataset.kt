@@ -2,6 +2,7 @@ package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.helpers.getWeeksOfPregnancy
@@ -731,6 +732,7 @@ class PregnantWomanAncVisitDataset(
             reproductiveStatusId = 3
         }
         if (it.processed != "N") it.processed = "U"
+        it.syncState = SyncState.UNSYNCED
     }
 
     fun updateBenRecordToEligibleCouple(it: BenRegCache) {
@@ -740,5 +742,6 @@ class PregnantWomanAncVisitDataset(
             reproductiveStatusId = 1
         }
         if (it.processed != "N") it.processed = "U"
+        it.syncState = SyncState.UNSYNCED
     }
 }

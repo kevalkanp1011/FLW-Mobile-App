@@ -11,6 +11,7 @@ import org.piramalswasthya.sakhi.model.BenWithEctListDomain
 import org.piramalswasthya.sakhi.model.BenWithPwrDomain
 import org.piramalswasthya.sakhi.model.BenWithTbScreeningDomain
 import org.piramalswasthya.sakhi.model.BenWithTbSuspectedDomain
+import org.piramalswasthya.sakhi.model.InfantRegDomain
 import org.piramalswasthya.sakhi.model.PregnantWomenVisitDomain
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -143,6 +144,22 @@ fun filterPncDomainList(
                 it.ben.mobileNo.lowercase().contains(filterText) ||
                 it.deliveryDate.contains(filterText) ||
                 it.ben.rchId.takeIf { it1 -> it1.isDigitsOnly() }?.contains(filterText) ?: false
+    }
+
+fun filterInfantDomainList(
+    list: List<InfantRegDomain>,
+    filterText: String
+) =
+    list.filter {
+        it.motherBen.benId.toString().lowercase().contains(filterText) ||
+                it.motherBen.age.lowercase().contains(filterText) ||
+                it.motherBen.familyHeadName.lowercase().contains(filterText) ||
+                it.motherBen.benFullName.lowercase().contains(filterText) ||
+                it.motherBen.spouseName?.lowercase()?.contains(filterText) ?: false ||
+                it.motherBen.benId.toString().lowercase().contains(filterText) ||
+                it.motherBen.mobileNo.lowercase().contains(filterText) ||
+                it.babyName.contains(filterText) ||
+                it.motherBen.rchId.takeIf { it1 -> it1.isDigitsOnly() }?.contains(filterText) ?: false
     }
 
 
