@@ -165,6 +165,8 @@ constructor(
     }
 
     fun getIndexOfRdPmsa() = dataset.getIndexOfRdPmsa()
+    fun getIndexOfRdDengue() = dataset.getIndexOfRdDengue()
+    fun getIndexOfRdFilaria() = dataset.getIndexOfRdFilaria()
     fun getIndexOfSevereAnemia() = dataset.getIndexOfSevereAnemia()
     fun getIndexOfPregInduced() = dataset.getIndexOfPregInduced()
     fun getIndexOfGest() = dataset.getIndexOfGest()

@@ -28,6 +28,8 @@ data class HRPPregnantTrackCache(
     val benId: Long,
     var visitDate: Long? = null,
     var rdPmsa: String? = null,
+    var rdDengue: String? = null,
+    var rdFilaria: String? = null,
     var severeAnemia: String? = null,
     var pregInducedHypertension: String? = null,
     var gestDiabetesMellitus: String? = null,

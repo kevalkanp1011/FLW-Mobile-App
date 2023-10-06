@@ -119,11 +119,31 @@ class HRPPregnantTrackDataset(
         title = resources.getString(R.string.follow_up_for_high_risk_conditions_in_the_pregnant_women),
         required = false
     )
+
+    private val rdDengue = FormElement(
+        id = 13,
+        inputType = InputType.RADIO,
+        title = resources.getString(R.string.rd_dengue),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = true,
+        hasDependants = true
+    )
+
+    private val rdFilaria = FormElement(
+        id = 14,
+        inputType = InputType.RADIO,
+        title = resources.getString(R.string.rd_filaria),
+        entries = resources.getStringArray(R.array.yes_no),
+        required = true,
+        hasDependants = true
+    )
     suspend fun setUpPage(ben: BenRegCache?, saved: HRPPregnantTrackCache?, dateOfVisitMin: Long?) {
         val list = mutableListOf(
             followUpLabel,
             dateOfVisit,
             rdPmsa,
+            rdDengue,
+            rdFilaria,
             severeAnemia,
             pregInducedHypertension,
             gestDiabetesMellitus,
@@ -155,6 +175,12 @@ class HRPPregnantTrackDataset(
             dateOfVisit.value = it.visitDate?.let { it1 -> getDateFromLong(it1) }
             rdPmsa.value = getLocalValueInArray(R.array.yes_no, it.rdPmsa)
             rdPmsa.showHighRisk = it.rdPmsa == englishResources.getStringArray(R.array.yes_no)[0]
+
+            rdDengue.value = getLocalValueInArray(R.array.yes_no, it.rdDengue)
+            rdDengue.showHighRisk = it.rdDengue == englishResources.getStringArray(R.array.yes_no)[0]
+
+            rdFilaria.value = getLocalValueInArray(R.array.yes_no, it.rdFilaria)
+            rdFilaria.showHighRisk = it.rdFilaria == englishResources.getStringArray(R.array.yes_no)[0]
 
             severeAnemia.value = getLocalValueInArray(R.array.yes_no, it.severeAnemia)
             severeAnemia.showHighRisk = it.severeAnemia == englishResources.getStringArray(R.array.yes_no)[0]
@@ -190,6 +216,16 @@ class HRPPregnantTrackDataset(
         return when (formId) {
             rdPmsa.id -> {
                 rdPmsa.showHighRisk = rdPmsa.value == resources.getStringArray(R.array.yes_no)[0]
+                -1
+            }
+
+            rdDengue.id -> {
+                rdDengue.showHighRisk = rdDengue.value == resources.getStringArray(R.array.yes_no)[0]
+                -1
+            }
+
+            rdFilaria.id -> {
+                rdFilaria.showHighRisk = rdFilaria.value == resources.getStringArray(R.array.yes_no)[0]
                 -1
             }
 
@@ -259,6 +295,8 @@ class HRPPregnantTrackDataset(
     }
 
     fun getIndexOfRdPmsa() = getIndexById(rdPmsa.id)
+    fun getIndexOfRdDengue() = getIndexById(rdDengue.id)
+    fun getIndexOfRdFilaria() = getIndexById(rdFilaria.id)
     fun getIndexOfSevereAnemia() = getIndexById(severeAnemia.id)
     fun getIndexOfPregInduced() = getIndexById(pregInducedHypertension.id)
     fun getIndexOfGest() = getIndexById(gestDiabetesMellitus.id)

@@ -479,7 +479,16 @@ class PregnantWomanRegistrationDataset(
                 if (weekOfPreg > 26)
                     lmp.inputType = InputType.TEXT_VIEW
                 edd.value = getDateFromLong(getEddFromLmp(it.lmpDate))
-                edd.value = getDateFromLong(it.edd)
+//                edd.value = getDateFromLong(it.edd)
+//                    ben?.regDate?.let { it1 ->
+//                        if (lastTrackTimestamp != null) {
+//                            dateOfReg.min =  maxOf( it.lmpDate, it1, lastTrackTimestamp)
+//                        } else {
+//                            dateOfReg.min =  maxOf( it.lmpDate, it1)
+//                        }
+//                    }
+//                dateOfReg.max = minOf(it.edd, System.currentTimeMillis())
+
             }
 
             childInfoLabel.showHighRisk = (
@@ -526,12 +535,15 @@ class PregnantWomanRegistrationDataset(
             }
             mcpCardNumber.value = it.mcpCardNumber.toString()
             lmp.value = getDateFromLong(it.lmpDate)
-            val weekOfPreg = getWeeksOfPregnancy(it.dateOfRegistration, it.lmpDate)
-            weekOfPregnancy.value =
-                weekOfPreg.toString()
-            if (weekOfPreg > 26)
-                lmp.inputType = InputType.TEXT_VIEW
-            edd.value = getDateFromLong(getEddFromLmp(it.lmpDate))
+            if (it.lmpDate > 0) {
+                lmp.isEnabled = false
+                val weekOfPreg = getWeeksOfPregnancy(it.dateOfRegistration, it.lmpDate)
+                weekOfPregnancy.value =
+                    weekOfPreg.toString()
+                if (weekOfPreg > 26)
+                    lmp.inputType = InputType.TEXT_VIEW
+                edd.value = getDateFromLong(getEddFromLmp(it.lmpDate))
+            }
             bloodGroup.value = it.bloodGroup
             weight.value = it.weight?.toString()
             height.value = it.height?.toString()
