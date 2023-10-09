@@ -71,7 +71,7 @@ data class PNCVisitCache(
             otherDangerSign = otherDangerSign,
             referralFacility = referralFacility,
             motherDeath = motherDeath,
-            deathDate = getDateTimeStringFromLong(deathDate) ?: null,
+            deathDate =deathDate?.let {  getDateTimeStringFromLong(it) },
             causeOfDeath = causeOfDeath,
             otherDeathCause = otherDeathCause,
             placeOfDeath = placeOfDeath,

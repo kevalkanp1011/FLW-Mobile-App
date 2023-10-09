@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -118,6 +119,13 @@ class HRPMicroBirthPlanFragment : Fragment() {
             when (formId) {
                 // if required
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(R.drawable.ic__pregnancy, getString(R.string.micro_birth_plan))
         }
     }
 

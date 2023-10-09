@@ -204,12 +204,13 @@ class PmsmaRepo @Inject constructor(
     }
 
     private suspend fun savePmsmaCacheFromResponse(dataObj: String): List<PmsmaPost> {
-        var pmsmaList = Gson().fromJson(dataObj, Array<PmsmaPost>::class.java).toList()
+        val pmsmaList = Gson().fromJson(dataObj, Array<PmsmaPost>::class.java).toList()
         pmsmaList.forEach { pmsmaDTO ->
             pmsmaDTO.createdDate?.let {
-                var pwrCache: PMSMACache? =
+                val hasBen = benDao.getBen(pmsmaDTO.benId) != null
+                val pwrCache: PMSMACache? =
                     pmsmaDao.getPmsma(pmsmaDTO.benId)
-                if (pwrCache == null) {
+                if (hasBen && pwrCache == null) {
                     pmsmaDao.upsert(pmsmaDTO.toPmsmaCache())
                 }
             }
