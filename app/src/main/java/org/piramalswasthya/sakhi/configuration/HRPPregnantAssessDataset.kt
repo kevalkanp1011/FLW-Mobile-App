@@ -200,7 +200,11 @@ class HRPPregnantAssessDataset(
                 multiplePregnancy.isEnabled = false
             }
             lmpDate.value = getDateFromLong(saved.lmpDate)
-            edd.value = getDateFromLong(saved.edd)
+            lmpDate.isEnabled = (saved.lmpDate == 0L)
+
+            if (saved.lmpDate > 0L) {
+                edd.value = getDateFromLong(saved.lmpDate + TimeUnit.DAYS.toMillis(280))
+            }
 
             childInfoLabel.showHighRisk = (
                     noOfDeliveries.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
@@ -220,12 +224,12 @@ class HRPPregnantAssessDataset(
                     )
         }
 
-        ben?.genDetails?.lastMenstrualPeriod?.let {
-            lmpDate.value = getDateFromLong(it)
-            edd.value = getDateFromLong(it + TimeUnit.DAYS.toMillis(280))
-            lmpDate.isEnabled = false
-            edd.isEnabled = false
-        }
+//        ben?.genDetails?.lastMenstrualPeriod?.let {
+//            lmpDate.value = getDateFromLong(it)
+//            edd.value = getDateFromLong(it + TimeUnit.DAYS.toMillis(280))
+//            lmpDate.isEnabled = false
+//            edd.isEnabled = false
+//        }
         lmpDate.min = (System.currentTimeMillis() - TimeUnit.DAYS.toMillis(280))
         setUpPage(list)
     }
