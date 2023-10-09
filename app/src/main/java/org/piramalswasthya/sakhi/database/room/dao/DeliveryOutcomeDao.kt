@@ -11,7 +11,7 @@ import org.piramalswasthya.sakhi.model.DeliveryOutcomeCache
 @Dao
 interface DeliveryOutcomeDao {
 
-    @Query("SELECT * FROM DELIVERY_OUTCOME WHERE benId =:benId limit 1")
+    @Query("SELECT * FROM DELIVERY_OUTCOME WHERE benId =:benId and isActive=1 limit 1")
     fun getDeliveryOutcome(benId: Long): DeliveryOutcomeCache?
 
     @Query("SELECT * FROM DELIVERY_OUTCOME WHERE benId in (:benId) and isActive = 1")

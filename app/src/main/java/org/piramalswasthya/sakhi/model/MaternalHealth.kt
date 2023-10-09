@@ -264,13 +264,13 @@ data class PwrPost(
             height = height,
             vdrlRprTestResult = rprTestResult,
 //            vdrlRprTestResultId
-            dateOfVdrlRprTest = getLongFromDate(dateOfRprTest),
+            dateOfVdrlRprTest = dateOfRprTest?.let { getLongFromDate(it) },
             hivTestResult = hivTestResult,
 //            hivTestResultId
-            dateOfHivTest = getLongFromDate(dateOfHivTest),
+            dateOfHivTest = dateOfHivTest?.let { getLongFromDate(it) },
             hbsAgTestResult = hbsAgTestResult,
 //            hbsAgTestResultId
-            dateOfHbsAgTest = getLongFromDate(dateOfHbsAgTest),
+            dateOfHbsAgTest = dateOfHbsAgTest?.let { getLongFromDate(it) },
             pastIllness = pastIllness,
             otherPastIllness = otherPastIllness,
             is1st = isFirstPregnancyTest,

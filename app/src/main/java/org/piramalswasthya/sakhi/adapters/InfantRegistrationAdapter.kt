@@ -68,7 +68,7 @@ class InfantRegistrationAdapter(
 
     ) {
         fun onClickForm(item: InfantRegDomain) =
-            clickedForm?.let { it(item.motherBen.hhId, item.babyIndex) }
+            clickedForm?.let { it(item.motherBen.benId, item.babyIndex) }
     }
 
 }
