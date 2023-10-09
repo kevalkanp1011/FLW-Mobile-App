@@ -62,20 +62,18 @@ class PmsmaRepo @Inject constructor(
 
             pmsmaList.forEach {
                 pmsmaPostList.clear()
-//                val household =
-//                    database.householdDao.getHousehold(it.hhId)
-//                        ?: throw IllegalStateException("No household exists for hhId: ${it.hhId}!!")
-                val ben =
-                    benDao.getBen(it.benId)
-                        ?: throw IllegalStateException("No beneficiary exists for benId: ${it.benId}!!")
-                val pmsma = pmsmaDao.pmsmaCount()
                 pmsmaPostList.add(it.asPostModel())
                 val uploadDone = postDataToAmritServer(pmsmaPostList)
                 if (uploadDone) {
                     it.processed = "P"
                     it.syncState = SyncState.SYNCED
-                    pmsmaDao.updatePmsmaRecord(it)
                 }
+                else{
+                    it.syncState = SyncState.UNSYNCED
+                }
+                pmsmaDao.updatePmsmaRecord(it)
+                if(!uploadDone)
+                    return@withContext false
             }
 
             return@withContext true
@@ -96,8 +94,8 @@ class PmsmaRepo @Inject constructor(
                     if (responseString != null) {
                         val jsonObj = JSONObject(responseString)
 
-                        val errorMessage = jsonObj.getString("message")
-                        if (jsonObj.isNull("status"))
+                        val errorMessage = jsonObj.getString("errorMessage")
+                        if (jsonObj.isNull("statusCode"))
                             throw IllegalStateException("Amrit server not responding properly, Contact Service Administrator!!")
 
                         when (jsonObj.getInt("statusCode")) {

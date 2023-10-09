@@ -68,6 +68,8 @@ class DeliveryOutcomeRepo @Inject constructor(
                     it.syncState = SyncState.UNSYNCED
                 }
                 deliveryOutcomeDao.updateDeliveryOutcome(it)
+                if(!uploadDone)
+                    return@withContext false
             }
 
             return@withContext true

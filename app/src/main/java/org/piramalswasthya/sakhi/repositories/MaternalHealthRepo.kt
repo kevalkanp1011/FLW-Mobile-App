@@ -164,6 +164,8 @@ class MaternalHealthRepo @Inject constructor(
                     it.syncState = SyncState.UNSYNCED
                 }
                 maternalHealthDao.updateANC(it)
+                if(!uploadDone)
+                    return@withContext false
             }
 
             return@withContext true
@@ -253,6 +255,8 @@ class MaternalHealthRepo @Inject constructor(
                     it.syncState = SyncState.UNSYNCED
                 }
                 maternalHealthDao.updatePwr(it)
+                if(!uploadDone)
+                    return@withContext false
             }
 
             return@withContext true

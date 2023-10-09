@@ -28,8 +28,9 @@ class PushECToAmritWorker @AssistedInject constructor(
         return try {
             Timber.d("EC Worker started!")
             val workerResult = ecrRepo.pushAndUpdateEcrRecord()
-            val workerResult1 = ecrRepo.pushAndUpdateEctRecord()
-            if (workerResult && workerResult1) {
+
+            val workerResult1 = if (workerResult) ecrRepo.pushAndUpdateEctRecord() else false
+            if (workerResult1) {
                 Timber.d("Worker completed")
                 Result.success()
             } else {

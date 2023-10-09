@@ -65,6 +65,8 @@ class InfantRegRepo @Inject constructor(
                     it.syncState = SyncState.UNSYNCED
                 }
                 infantRegDao.updateInfantReg(it)
+                if (!uploadDone)
+                    return@withContext false
             }
 
             return@withContext true
@@ -212,7 +214,7 @@ class InfantRegRepo @Inject constructor(
         return infantRegList
     }
 
-    suspend fun getNumBabyRegistered(benId: Long) : Int {
+    suspend fun getNumBabyRegistered(benId: Long): Int {
         return withContext(Dispatchers.IO) {
             infantRegDao.getNumBabiesRegistered(benId)
         }

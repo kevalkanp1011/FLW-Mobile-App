@@ -637,7 +637,7 @@ class PregnantWomanRegistrationDataset(
                     lmp.min = getMinFromMaxForLmp(lmp.max!!)
                     dateOfVdrlTestDone.min = dateOfRegLong
                     dateOfhivTestDone.min = dateOfRegLong
-                    hbsAgTestResult.min = dateOfRegLong
+                    dateOfhbsAgTestDone.min = dateOfRegLong
                     updateAgeCheck(dateOfBirth, dateOfRegLong)
                     return handleListOnValueChanged(isHrpCase.id, 0)
                 }
