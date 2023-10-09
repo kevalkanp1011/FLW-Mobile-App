@@ -52,7 +52,9 @@
     <string name="lmp_date">LMP Date</string>
     <string name="edd">EDD</string>
     <string name="assess_for_high_risk_conditions_in_the_pregnant_women">ASSESS FOR HIGH RISK CONDITIONS IN THE PREGNANT WOMEN</string>
-    <string name="rd_pmsa">RD pmsa</string>
+    <string name="rd_pmsa">RD Malaria</string>
+    <string name="rd_dengue">RD Dengue</string>
+    <string name="rd_filaria">RD Filaria</string>
     <string name="pregnancy_induced_hypertension">Pregnancy induced hypertension</string>
     <string name="hiv_syphilis_hep_b">HIV/Syphilis/Hep B</string>
     <string name="mal_presentation">Mal Presentation</string>

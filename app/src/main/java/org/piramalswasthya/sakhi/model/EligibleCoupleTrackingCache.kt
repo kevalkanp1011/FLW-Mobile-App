@@ -39,6 +39,7 @@ data class EligibleCoupleTrackingCache(
     val updatedBy: String,
     val updatedDate: Long = System.currentTimeMillis(),
     var processed: String? = "N",
+    var isActive: Boolean = true,
     var syncState: SyncState
 ) : FormDataModel {
 
@@ -51,6 +52,7 @@ data class EligibleCoupleTrackingCache(
             isPregnant = isPregnant,
             usingFamilyPlanning = usingFamilyPlanning,
             methodOfContraception = methodOfContraception,
+            isActive = isActive,
             createdBy = createdBy,
             createdDate = getDateTimeStringFromLong(createdDate)!!,
             updatedBy = updatedBy,
@@ -68,6 +70,7 @@ data class ECTNetwork(
     val isPregnant: String?,
     val usingFamilyPlanning: Boolean?,
     val methodOfContraception: String?,
+    var isActive: Boolean?,
     val createdBy: String,
     val createdDate: String,
     val updatedBy: String,

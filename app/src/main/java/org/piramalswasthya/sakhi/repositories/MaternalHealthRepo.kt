@@ -394,7 +394,7 @@ class MaternalHealthRepo @Inject constructor(
                     maternalHealthDao.getSavedRecord(pwrDTO.benId)
                 val hasBen = benDao.getBen(pwrDTO.benId) != null
                 benDao.getBen(pwrDTO.benId)?.let {
-                    if (hasBen && pwrCache == null) {
+                    if (hasBen && pwrCache == null && pwrDTO.isRegistered) {
                         maternalHealthDao.saveRecord(pwrDTO.toPwrCache())
                     }
                     var assess = database.hrpDao.getPregnantAssess(pwrDTO.benId)
@@ -407,6 +407,7 @@ class MaternalHealthRepo @Inject constructor(
                                 homeDelivery = pwrDTO.homeDelivery,
                                 badObstetric = pwrDTO.badObstetric,
                                 lmpDate = getLongFromDate(pwrDTO.lmpDate),
+                                edd = getLongFromDate(pwrDTO.lmpDate) + TimeUnit.DAYS.toMillis(280),
                                 multiplePregnancy = if (!pwrDTO.isFirstPregnancyTest) "Yes" else "No",
                                 isHighRisk = pwrDTO.isHrpCase,
                                 syncState = SyncState.SYNCED
@@ -422,6 +423,8 @@ class MaternalHealthRepo @Inject constructor(
                         pwrDTO.badObstetric?.let {
                             assess.badObstetric = pwrDTO.badObstetric
                         }
+                        assess.lmpDate = getLongFromDate(pwrDTO.lmpDate)
+                        assess.edd = getLongFromDate(pwrDTO.lmpDate) + TimeUnit.DAYS.toMillis(280)
                         assess.multiplePregnancy = if (!pwrDTO.isFirstPregnancyTest) "Yes" else "No"
                         assess.isHighRisk = pwrDTO.isHrpCase
                         database.hrpDao.saveRecord(assess)
