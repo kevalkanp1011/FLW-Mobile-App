@@ -563,6 +563,7 @@ class EcrRepo @Inject constructor(
                 benId = ecrJson.getLong("benId"),
                 visitDate = getLongFromDate(ecrJson.getString("visitDate")),
                 isPregnancyTestDone = if (ecrJson.has("isPregnancyTestDone")) ecrJson.getString("isPregnancyTestDone") else null,
+                isActive = if (ecrJson.has("isActive")) ecrJson.getBoolean("isActive") else false,
                 pregnancyTestResult = if (ecrJson.has("pregnancyTestResult")) ecrJson.getString("pregnancyTestResult") else null,
                 isPregnant = if (ecrJson.has("isPregnant")) ecrJson.getString("isPregnant") else null,
                 usingFamilyPlanning = if (ecrJson.has("usingFamilyPlanning")) ecrJson.getBoolean("usingFamilyPlanning") else null,
