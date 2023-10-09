@@ -56,6 +56,8 @@ data class HRPPregnantTrackCache(
             benId = benId,
             visitDate = getDateTimeStringFromLong(visitDate),
             rdPmsa = rdPmsa,
+            rdDengue = rdDengue,
+            rdFilaria = rdFilaria,
             severeAnemia = severeAnemia,
             pregInducedHypertension = pregInducedHypertension,
             gestDiabetesMellitus = gestDiabetesMellitus,

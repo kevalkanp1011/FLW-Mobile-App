@@ -282,6 +282,8 @@ class HRPPregnantTrackDataset(
         (cacheModel as HRPPregnantTrackCache).let { form ->
             form.visitDate = getLongFromDate(dateOfVisit.value)
             form.rdPmsa = getEnglishValueInArray(R.array.yes_no, rdPmsa.value)
+            form.rdDengue = getEnglishValueInArray(R.array.yes_no, rdDengue.value)
+            form.rdFilaria = getEnglishValueInArray(R.array.yes_no, rdFilaria.value)
             form.severeAnemia = getEnglishValueInArray(R.array.yes_no, severeAnemia.value)
             form.pregInducedHypertension = getEnglishValueInArray(R.array.yes_no, pregInducedHypertension.value)
             form.gestDiabetesMellitus = getEnglishValueInArray(R.array.yes_no, gestDiabetesMellitus.value)
