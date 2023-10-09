@@ -1383,12 +1383,18 @@ class BenRepo @Inject constructor(
                                 benId = jsonObject.getLong("benficieryid"),
                                 family = HouseholdFamily(
                                     familyHeadName = houseDataObj.getString("familyHeadName"),
-                                    familyName = if (jsonObject.has("familyName")) jsonObject.getString(
+                                    familyName = if (houseDataObj.has("familyName")) jsonObject.getString(
                                         "familyName"
                                     ) else null,
                                     familyHeadPhoneNo = houseDataObj.getString("familyHeadPhoneNo")
                                         .toLong(),
                                     houseNo = houseDataObj.getString("houseno")
+                                        .let { if (it == "null") null else it },
+                                    wardNo = houseDataObj.getString("wardNo")
+                                        .let { if (it == "null") null else it },
+                                    wardName = houseDataObj.getString("wardName")
+                                        .let { if (it == "null") null else it },
+                                    mohallaName = houseDataObj.getString("mohallaName")
                                         .let { if (it == "null") null else it },
 //                                rationCardDetails = houseDataObj.getString("rationCardDetails"),
                                     povertyLine = houseDataObj.getString("type_bpl_apl"),
