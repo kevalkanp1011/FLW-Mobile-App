@@ -1,13 +1,18 @@
 package org.piramalswasthya.sakhi.model
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.helpers.getDateString
+import org.piramalswasthya.sakhi.helpers.getTodayMillis
 import org.piramalswasthya.sakhi.network.HRPPregnantAssessDTO
 import org.piramalswasthya.sakhi.utils.HelperUtil
+import java.util.concurrent.TimeUnit
 
 @Entity(
     tableName = "HRP_PREGNANT_ASSESS",
@@ -106,3 +111,48 @@ data class HighRiskAssessDTO (
         )
     }
 }
+
+data class BenWithHRPACache(
+    @Embedded
+    val ben: BenBasicCache,
+    @Relation(
+        parentColumn = "benId", entityColumn = "benId"
+    )
+    val assess: HRPPregnantAssessCache?,
+
+    @Relation(
+        parentColumn = "benId", entityColumn = "benId"
+    )
+    val mbp: HRPMicroBirthPlanCache?,
+
+    ) {
+    fun asDomainModel() : BenWithHRPADomain{
+        var lmpString: String? = null
+        var eddString: String? = null
+        var weeksOfPregnancy: String? = null
+        assess?.lmpDate?.let {lmp ->
+            lmpString = getDateString(lmp)
+            eddString = getDateString(lmp + TimeUnit.DAYS.toMillis(280))
+            weeksOfPregnancy = (TimeUnit.MILLISECONDS.toDays(getTodayMillis() - lmp) / 7).takeIf { it <= 40 }
+                ?.toString() ?: "NA"
+
+        }
+        return BenWithHRPADomain(
+            ben = ben.asBasicDomainModel(),
+            assess = assess,
+            lmpString = lmpString,
+            eddString = eddString,
+            weeksOfPregnancy = weeksOfPregnancy,
+            mbp = mbp
+        )
+    }
+}
+
+data class BenWithHRPADomain(
+    val ben: BenBasicDomain,
+    val assess: HRPPregnantAssessCache?,
+    val lmpString: String?,
+    val eddString: String?,
+    val weeksOfPregnancy: String?,
+    val mbp: HRPMicroBirthPlanCache?
+)

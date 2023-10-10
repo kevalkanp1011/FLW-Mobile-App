@@ -155,7 +155,7 @@ class HRPPregnantTrackDataset(
             hivsyph
         )
         ben?.let {
-            dateOfVisit.min = it.regDate - TimeUnit.DAYS.toMillis(60)
+            dateOfVisit.min = it.regDate
             dateOfVisitMin?.let { dov ->
 //                val cal = Calendar.getInstance()
 //                cal.timeInMillis = dov
@@ -164,7 +164,7 @@ class HRPPregnantTrackDataset(
 //                if (cal.timeInMillis > it.regDate) {
 //                    dateOfVisit.min = cal.timeInMillis
 //                }
-                if (dov > it.regDate - TimeUnit.DAYS.toMillis(60))
+                if (dov > it.regDate)
                     dateOfVisit.min = minOf( dov + TimeUnit.DAYS.toMillis(1), System.currentTimeMillis())
             }
             dateOfVisit.max = System.currentTimeMillis()

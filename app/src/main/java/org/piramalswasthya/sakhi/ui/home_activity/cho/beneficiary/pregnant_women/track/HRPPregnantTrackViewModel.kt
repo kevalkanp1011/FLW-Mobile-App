@@ -121,6 +121,9 @@ constructor(
                     else -> null
                 }
 
+//            hrpReo.getPregnantAssess(benId)?.let {
+//                maxDov  = maxOf(maxDov, it.lmpDate)
+//            }
             dataset.setUpPage(
                 ben,
                 if (recordExists.value == true) hrpPregnantTrackCache else null,

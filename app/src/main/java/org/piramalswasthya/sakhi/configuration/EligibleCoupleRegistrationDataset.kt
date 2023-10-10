@@ -1119,12 +1119,12 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
 
-            dateOfReg.id -> {
-                updateTimeLessThan18()
-                handleListOnValueChanged(timeLessThan18m.id, 0)
-                updateAgeCheck(dateOfBirth, getLongFromDate(dateOfReg.value))
-                handleListOnValueChanged(ageCheck.id, 0)
-            }
+//            dateOfReg.id -> {
+//                updateTimeLessThan18()
+//                handleListOnValueChanged(timeLessThan18m.id, 0)
+//                updateAgeCheck(dateOfBirth, getLongFromDate(dateOfReg.value))
+//                handleListOnValueChanged(ageCheck.id, 0)
+//            }
             rchId.id -> {
                 validateRchIdOnEditText(rchId)
             }

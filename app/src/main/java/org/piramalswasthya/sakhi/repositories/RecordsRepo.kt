@@ -141,22 +141,22 @@ class RecordsRepo @Inject constructor(
 //        .map { list -> list.map { it.asBenBasicDomainModelECTForm() } }
 //    val deliveredWomenListCount = deliveredWomenList.map { it.size }
 
-    var hrpPregnantWomenList = benDao.getAllPregnancyWomenList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForHRPPregAssessmentForm() } }
-    val hrpPregnantWomenListCount = benDao.getAllPregnancyWomenListCount(selectedVillage)
+    var hrpPregnantWomenList = benDao.getAllPregnancyWomenForHRList(selectedVillage)
+        .map { list -> list.map { it.asDomainModel() } }
+    val hrpPregnantWomenListCount = benDao.getAllPregnancyWomenForHRListCount(selectedVillage)
 
     var hrpTrackingPregList = benDao.getAllHRPTrackingPregList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForHRPPregTrackForm() } }
+        .map { list -> list.map { it.asDomainModel() } }
     val hrpTrackingPregListCount = benDao.getAllHRPTrackingPregListCount(selectedVillage)
 
 //    val hrpTrackingPregHistCount = hrpDao.getHRPTrackHist(ben)
 
     var hrpNonPregnantWomenList = benDao.getAllNonPregnancyWomenList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForHRPNonPregAssessmentForm() } }
+        .map { list -> list.map { it.asDomainModel() } }
     val hrpNonPregnantWomenListCount = benDao.getAllNonPregnancyWomenListCount(selectedVillage)
 
     var hrpTrackingNonPregList = benDao.getAllHRPTrackingNonPregList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForHRPNonPregTrackForm() } }
+        .map { list -> list.map { it.asDomainModel() } }
     val hrpTrackingNonPregListCount = benDao.getAllHRPTrackingNonPregListCount(selectedVillage)
 
     fun getPregnantWomenList() = benDao.getAllPregnancyWomenList(selectedVillage)

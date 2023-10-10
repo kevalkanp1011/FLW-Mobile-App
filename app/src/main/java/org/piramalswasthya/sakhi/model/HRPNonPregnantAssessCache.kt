@@ -1,9 +1,11 @@
 package org.piramalswasthya.sakhi.model
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.network.HRPNonPregnantAssessDTO
@@ -66,3 +68,26 @@ data class HRPNonPregnantAssessCache(
         )
     }
 }
+
+
+data class BenWithHRNPACache(
+    @Embedded
+    val ben: BenBasicCache,
+    @Relation(
+        parentColumn = "benId", entityColumn = "benId"
+    )
+    val assess: HRPNonPregnantAssessCache?,
+
+    ) {
+    fun asDomainModel() : BenWithHRNPADomain{
+        return BenWithHRNPADomain(
+            ben = ben.asBasicDomainModel(),
+            assess = assess
+        )
+    }
+}
+
+data class BenWithHRNPADomain(
+    val ben: BenBasicDomain,
+    val assess: HRPNonPregnantAssessCache?
+)

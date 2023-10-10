@@ -1,12 +1,16 @@
 package org.piramalswasthya.sakhi.model
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.network.HRPNonPregnantTrackDTO
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Entity(
     tableName = "HRP_NON_PREGNANT_TRACK",
@@ -58,3 +62,59 @@ data class HRPNonPregnantTrackCache(
         )
     }
 }
+
+
+
+data class BenWithHRNPTrackingCache(
+
+    @Embedded
+    val ben: BenBasicCache,
+    @Relation(
+        parentColumn = "benId", entityColumn = "benId"
+    )
+    val assessCache: HRPNonPregnantAssessCache,
+
+    @Relation(
+        parentColumn = "benId", entityColumn = "benId", entity = HRPNonPregnantTrackCache::class
+    )
+    val savedTrackings: List<HRPNonPregnantTrackCache>
+) {
+
+    companion object {
+        private val dateFormat = SimpleDateFormat("EEE, MMM dd yyyy", Locale.getDefault())
+
+        private fun getHRNPTFilledDateFromLong(long: Long?): String {
+            return "Visited on ${dateFormat.format(long)}"
+        }
+    }
+
+    fun asDomainModel(): BenWithHRNPTListDomain {
+        return BenWithHRNPTListDomain(
+            ben.asBasicDomainModel(),
+            savedTrackings.map {
+                HRNPTDomain(
+                    it.benId,
+                    it.visitDate,
+                    getHRNPTFilledDateFromLong(it.visitDate),
+                    it.syncState
+                )
+            }
+        )
+    }
+}
+
+data class HRNPTDomain(
+    val benId: Long,
+    val visited: Long?,
+    val filledOnString: String,
+    val syncState: SyncState
+)
+
+data class BenWithHRNPTListDomain(
+    val ben: BenBasicDomain,
+    val savedTrackings: List<HRNPTDomain>,
+    val allSynced: SyncState? = if (savedTrackings.isEmpty()) null else
+        if (savedTrackings.map { it.syncState }
+                .all { it == SyncState.SYNCED}) SyncState.SYNCED else SyncState.UNSYNCED
+
+)

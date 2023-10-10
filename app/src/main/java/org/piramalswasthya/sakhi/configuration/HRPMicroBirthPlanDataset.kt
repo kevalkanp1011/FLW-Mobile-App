@@ -209,9 +209,9 @@ class HRPMicroBirthPlanDataset(
             bloodDonors1,
             bloodDonors2,
             birthCompanion,
-            careTaker,
-            communityMember,
-            communityMemberContact,
+//            careTaker,
+//            communityMember,
+//            communityMemberContact,
             modeOfTransportation
         )
 

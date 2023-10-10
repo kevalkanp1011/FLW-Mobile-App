@@ -56,5 +56,5 @@ object Konstants {
     const val pncEcGap : Long = 45
 
 
-    const val defaultTimeStamp = 1603132200000L
+    const val defaultTimeStamp = 1577817001000L
 }
