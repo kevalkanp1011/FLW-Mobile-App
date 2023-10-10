@@ -35,6 +35,12 @@ class InfantRegRepo @Inject constructor(
         }
     }
 
+    suspend fun getInfantRegFromChildBenId(childBenId : Long): InfantRegCache? {
+        return withContext(Dispatchers.IO) {
+            infantRegDao.getInfantRegFromChildBenId(childBenId)
+        }
+    }
+
     suspend fun saveInfantReg(infantRegCache: InfantRegCache) {
         withContext(Dispatchers.IO) {
             infantRegDao.saveInfantReg(infantRegCache)
@@ -90,8 +96,8 @@ class InfantRegRepo @Inject constructor(
                     if (responseString != null) {
                         val jsonObj = JSONObject(responseString)
 
-                        val errormessage = jsonObj.getString("message")
-                        if (jsonObj.isNull("status")) throw IllegalStateException("Amrit server not responding properly, Contact Service Administrator!!")
+                        val errormessage = jsonObj.getString("errorMessage")
+                        if (jsonObj.isNull("statusCode")) throw IllegalStateException("Amrit server not responding properly, Contact Service Administrator!!")
                         val responsestatuscode = jsonObj.getInt("statusCode")
 
                         when (responsestatuscode) {
@@ -230,6 +236,12 @@ class InfantRegRepo @Inject constructor(
                 it.updatedDate = System.currentTimeMillis()
                 infantRegDao.updateInfantReg(it)
             }
+        }
+    }
+
+    suspend fun update(infantRegCache: InfantRegCache){
+        withContext(Dispatchers.IO){
+            infantRegDao.updateInfantReg(infantRegCache)
         }
     }
 

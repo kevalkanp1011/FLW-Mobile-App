@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
+import org.piramalswasthya.sakhi.adapters.ChildRegistrationAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 
@@ -40,18 +39,27 @@ class ChildRegListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapterForForm(
-            BenListAdapterForForm.ClickListener(
-                {
-                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
-                },
-                { hhId, benId ->
+        val benAdapter = ChildRegistrationAdapter(
+            ChildRegistrationAdapter.ClickListener { hhId, motherBenId, babyIndex, childBenId, childRelToHead ->
+                if (childBenId != 0L) {
                     findNavController().navigate(
-                        ChildRegListFragmentDirections.actionChildRegListFragmentToChildRegFragment(
-                            benId
+                        ChildRegListFragmentDirections.actionChildRegListFragmentToNewBenRegFragment(
+                            hhId = hhId,
+                            benId = childBenId,
+                            relToHeadId = childRelToHead,
+                            gender = 0
                         )
                     )
-                }), resources.getString(R.string.register)
+                }
+                //
+                else {
+                    findNavController().navigate(
+                        ChildRegListFragmentDirections.actionChildRegListFragmentToChildRegFragment(
+                            motherBenId, babyIndex
+                        )
+                    )
+                }
+            }
         )
         binding.rvAny.adapter = benAdapter
 
@@ -96,6 +104,7 @@ class ChildRegListFragment : Fragment() {
             )
         }
     }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

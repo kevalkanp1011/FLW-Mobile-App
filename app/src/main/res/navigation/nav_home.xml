@@ -763,6 +763,9 @@
         <action
             android:id="@+id/action_childRegListFragment_to_childRegFragment"
             app:destination="@id/childRegFragment" />
+        <action
+            android:id="@+id/action_childRegListFragment_to_newBenRegFragment"
+            app:destination="@id/newBenRegFragment" />
     </fragment>
     <fragment
         android:id="@+id/childRegFragment"
@@ -771,6 +774,9 @@
         <argument
             android:name="motherBenId"
             app:argType="long" />
+        <argument
+            android:name="babyIndex"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/cdFragment"

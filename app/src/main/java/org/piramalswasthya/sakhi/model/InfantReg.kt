@@ -27,6 +27,7 @@ import java.util.Locale
 data class InfantRegCache(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
+    var childBenId: Long = 0,
     val motherBenId: Long,
     var isActive: Boolean,
     var babyName: String? = null,
@@ -68,6 +69,7 @@ data class InfantRegCache(
         return InfantRegPost(
             id = id,
             benId = motherBenId,
+            childBenId = childBenId,
             babyName = babyName,
             babyIndex = babyIndex,
             infantTerm = infantTerm,
@@ -123,7 +125,8 @@ data class BenWithDoAndIrCache(
                     motherBen = ben.asBasicDomainModel(),
                     babyIndex = i,
                     deliveryOutcome = activeDo,
-                    savedIr = activeIr.firstOrNull { it.babyIndex == i },)
+                    savedIr = activeIr.firstOrNull { it.babyIndex == i },
+                )
             )
         }
 
@@ -136,13 +139,14 @@ data class InfantRegDomain(
     val babyIndex: Int,
     val babyName: String = "Baby $babyIndex of ${motherBen.benFullName}",
     val deliveryOutcome: DeliveryOutcomeCache,
-    val savedIr : InfantRegCache?,
+    val savedIr: InfantRegCache?,
     val syncState: SyncState? = savedIr?.syncState
 )
 
 data class InfantRegPost(
     val id: Long = 0,
     val benId: Long,
+    val childBenId: Long,
     val babyName: String? = null,
     val babyIndex: Int,
     val infantTerm: String? = null,
@@ -169,6 +173,7 @@ data class InfantRegPost(
         return InfantRegCache(
             id = id,
             motherBenId = benId,
+            childBenId = childBenId,
             isActive = true,
             babyName = babyName,
             babyIndex = babyIndex,
@@ -197,3 +202,31 @@ data class InfantRegPost(
     }
 }
 
+data class ChildRegDomain(
+    val motherBen: BenBasicDomain,
+    val infant: InfantRegCache,
+    val childBen : BenBasicDomain?
+)
+
+data class InfantRegWithBen(
+    @Embedded
+    val infant: InfantRegCache,
+    @Relation(
+        parentColumn = "motherBenId", entityColumn = "benId", entity = BenBasicCache::class
+    )
+    val motherBen: BenBasicCache,
+    @Relation(
+        parentColumn = "childBenId", entityColumn = "benId", entity = BenBasicCache::class
+    )
+    val childBen: BenBasicCache?,
+) {
+
+    fun asBasicDomainModel(): ChildRegDomain {
+
+        return ChildRegDomain(
+            motherBen = motherBen.asBasicDomainModel(),
+            infant = infant,
+            childBen = childBen?.asBasicDomainModel()
+        )
+    }
+}

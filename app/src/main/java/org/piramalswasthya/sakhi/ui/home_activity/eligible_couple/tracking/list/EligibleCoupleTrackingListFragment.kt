@@ -53,7 +53,7 @@ class EligibleCoupleTrackingListFragment : Fragment() {
                         benId
                     )
                 )else
-                    Toast.makeText(requireContext(), "Already filled for Today!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Already filled for this Month!", Toast.LENGTH_LONG).show()
             }, showAllTracks = {
                 viewModel.setClickedBenId(it)
                 bottomSheet.show(childFragmentManager,"ECT")

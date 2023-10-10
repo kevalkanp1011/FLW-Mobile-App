@@ -42,6 +42,7 @@ class PMSMAFormDataset(
         inputType = RADIO,
         title = resources.getString(R.string.pmsma_have_mcp_card),
         entries = resources.getStringArray(R.array.pmsma_confirmation_array),
+        hasDependants= true,
         required = false
     )
     val givenMCPCard = FormElement(

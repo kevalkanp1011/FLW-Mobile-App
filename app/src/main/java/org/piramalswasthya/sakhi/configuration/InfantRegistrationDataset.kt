@@ -27,7 +27,7 @@ class InfantRegistrationDataset(
 
     private var infantTerm = FormElement(
         id = 2,
-        inputType = InputType.DROPDOWN,
+        inputType = InputType.TEXT_VIEW,
         title = "Infant Term",
         entries = arrayOf("Full Term", "Pre Term"),
         required = false,
@@ -89,10 +89,7 @@ class InfantRegistrationDataset(
     )
 
     private var birthDefect = FormElement(
-        id = 9,
-        inputType = InputType.DROPDOWN,
-        title = "Defect seen at birth",
-        entries = arrayOf(
+        id = 9, inputType = InputType.DROPDOWN, title = "Defect seen at birth", entries = arrayOf(
             "Cleft Lip / Cleft Palate",
             "Club Foot",
             "Down's Syndrome",
@@ -100,9 +97,7 @@ class InfantRegistrationDataset(
             "Imperforate Anus",
             "Neural Tube Defect (Spinal Bifida)",
             "Other"
-        ),
-        required = false,
-        hasDependants = true
+        ), required = false, hasDependants = true
     )
 
     private var otherDefect = FormElement(
@@ -119,6 +114,8 @@ class InfantRegistrationDataset(
         title = "Weight at Birth(kg)",
         required = false,
         hasDependants = false,
+        minDecimal = 0.5,
+        maxDecimal = 7.0,
         etInputType = android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL,
     )
 
@@ -173,27 +170,20 @@ class InfantRegistrationDataset(
 
 
     suspend fun setUpPage(
-        ben: BenRegCache?, deliveryOutcomeCache: DeliveryOutcomeCache,
+        ben: BenRegCache?,
+        deliveryOutcomeCache: DeliveryOutcomeCache,
         babyIndex: Int,
-        pwrCache: PregnantWomanRegistrationCache?, saved: InfantRegCache?
+        pwrCache: PregnantWomanRegistrationCache?,
+        saved: InfantRegCache?
     ) {
         var list = mutableListOf(
-            babyName,
-            infantTerm,
-            corticosteroidGiven,
-            gender,
-            babyCriedAtBirth,
+            babyName, infantTerm, corticosteroidGiven, gender, babyCriedAtBirth,
 //            resuscitation,
 //            referred,
             hadBirthDefect,
 //            birthDefect,
 //            otherDefect,
-            weight,
-            breastFeedingStarted,
-            opv0Dose,
-            bcgDose,
-            hepBDose,
-            vitkDose
+            weight, breastFeedingStarted, opv0Dose, bcgDose, hepBDose, vitkDose
         )
         if (deliveryOutcomeCache != null) {
             opv0Dose.min = deliveryOutcomeCache.dateOfDelivery
@@ -202,41 +192,37 @@ class InfantRegistrationDataset(
             vitkDose.min = deliveryOutcomeCache.dateOfDelivery
             deliveryOutcomeCache.dateOfDelivery.let {
                 if (it != null) {
-                    if (it + TimeUnit.DAYS.toMillis(15) < System.currentTimeMillis())
-                        opv0Dose.max = it + TimeUnit.DAYS.toMillis(15)
-                    if (it + TimeUnit.DAYS.toMillis(365) < System.currentTimeMillis())
-                        bcgDose.max = it + TimeUnit.DAYS.toMillis(365)
+                    if (it + TimeUnit.DAYS.toMillis(15) < System.currentTimeMillis()) opv0Dose.max =
+                        it + TimeUnit.DAYS.toMillis(15)
+                    if (it + TimeUnit.DAYS.toMillis(365) < System.currentTimeMillis()) bcgDose.max =
+                        it + TimeUnit.DAYS.toMillis(365)
                     if (it + 24 * 60 * 60 * 1000 < System.currentTimeMillis()) {
                         hepBDose.max = it + TimeUnit.DAYS.toMillis(
 
 
-
-                            1)
+                            1
+                        )
                         vitkDose.max = it + TimeUnit.DAYS.toMillis(1)
                     }
                 }
             }
         }
         if (pwrCache != null && deliveryOutcomeCache != null) {
-            val weeksOfPregnancy =
-                deliveryOutcomeCache.dateOfDelivery?.let {
-                    getWeeksOfPregnancy(
-                        it,
-                        pwrCache.lmpDate
-                    )
-                }
+            val weeksOfPregnancy = deliveryOutcomeCache.dateOfDelivery?.let {
+                getWeeksOfPregnancy(
+                    it, pwrCache.lmpDate
+                )
+            }
             if (weeksOfPregnancy in 38..41) {
                 infantTerm.value = infantTerm.entries!!.first()
             } else if (weeksOfPregnancy != null) {
-                if (weeksOfPregnancy <= 37)
-                    infantTerm.value = infantTerm.entries!!.last()
+                if (weeksOfPregnancy <= 37) infantTerm.value = infantTerm.entries!!.last()
             }
         }
         if (saved == null) {
             if (ben != null) {
                 babyName.value =
-                    if (deliveryOutcomeCache.liveBirth == null || deliveryOutcomeCache.liveBirth == 1)
-                        "baby of ${ben.firstName}"
+                    if (deliveryOutcomeCache.liveBirth == null || deliveryOutcomeCache.liveBirth == 1) "baby of ${ben.firstName}"
                     else "baby $babyIndex of ${ben.firstName}"
             }
 //            opv0Dose.value = getDateFromLong(System.currentTimeMillis())
@@ -283,19 +269,12 @@ class InfantRegistrationDataset(
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
             babyCriedAtBirth.id -> {
-                if (index == 1) {
-                    triggerDependants(
-                        source = babyCriedAtBirth,
-                        addItems = listOf(resuscitation, referred),
-                        removeItems = listOf()
-                    )
-                } else {
-                    triggerDependants(
-                        source = babyCriedAtBirth,
-                        addItems = listOf(),
-                        removeItems = listOf(resuscitation, referred),
-                    )
-                }
+                triggerDependants(
+                    source = babyCriedAtBirth,
+                    passedIndex = index,
+                    triggerIndex = 1,
+                    target = resuscitation
+                )
             }
 
             hadBirthDefect.id -> {
@@ -315,6 +294,17 @@ class InfantRegistrationDataset(
                     triggerIndex = 6,
                     target = otherDefect
                 )
+            }
+
+            otherDefect.id -> {
+                validateAllAlphabetsSpecialOnEditText(otherDefect)
+            }
+
+            weight.id -> {
+                validateDoubleUpto1DecimalPlaces(weight)
+                if (weight.errorText == null) validateDoubleMinMax(weight)
+                -1
+
             }
 
             else -> -1

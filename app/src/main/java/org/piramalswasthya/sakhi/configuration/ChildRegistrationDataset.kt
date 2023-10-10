@@ -98,9 +98,9 @@ class ChildRegistrationDataset(
         inputType = InputType.RADIO,
         title = "Whose Mobile Number",
         entries = arrayOf(
-            "Mother - W",
-            "Father - H",
-            "Others – O"
+            "Mother",
+            "Father",
+            "Others"
         ),
         isEnabled = false,
 
@@ -160,17 +160,17 @@ class ChildRegistrationDataset(
         inputType = InputType.DROPDOWN,
         title = "Place of Birth",
         entries = arrayOf(
-            "District Hospital – 5",
-            "Community Health Centre – 2",
-            "Primary Health Centre –1",
-            "Sub Centre- 24",
-            "Other Public Facility 19",
-            "Accredited Private Hospital – 20",
-            "Other Private Hospital – 21",
-            "Home-22",
-            "Sub District Hospital – 4",
-            "Medical College Hospital – 17",
-            "In Transit- 23"
+            "District Hospital",
+            "Community Health Centre",
+            "Primary Health Centre",
+            "Sub Centre",
+            "Other Public Facility",
+            "Accredited Private Hospital",
+            "Other Private Hospital ",
+            "Home",
+            "Sub District Hospital",
+            "Medical College Hospital",
+            "In Transit"
         ),
         required = false,
         hasDependants = false
@@ -233,6 +233,7 @@ class ChildRegistrationDataset(
             rchIdMother.id -> validateRchIdOnEditText(rchIdMother)
             mobileNumber.id -> validateMobileNumberOnEditText(mobileNumber)
             weightAtBirth.id -> validateDoubleMinMax(weightAtBirth)
+            birthCertificateNo.id -> validateNoAlphabetSpaceOnEditText(birthCertificateNo)
 
             else -> -1
         }

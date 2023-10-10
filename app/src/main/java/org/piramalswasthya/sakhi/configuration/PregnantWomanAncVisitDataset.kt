@@ -598,8 +598,8 @@ class PregnantWomanAncVisitDataset(
             }
 
             hb.id -> {
-                validateDoubleMinMax(hb)
-                if (hb.errorText == null) validateDouble1DecimalPlaces(hb)
+                validateDoubleUpto1DecimalPlaces(hb)
+                if (hb.errorText == null) validateDoubleMinMax(hb)
                 -1
             }
 

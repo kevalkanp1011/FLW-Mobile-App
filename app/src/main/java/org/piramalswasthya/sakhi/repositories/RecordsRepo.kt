@@ -163,6 +163,7 @@ class RecordsRepo @Inject constructor(
         .map { list -> list.map { it.asPwrDomainModel() } }
 
     fun getRegisteredInfants() = childRegistrationDao.getAllRegisteredInfants(selectedVillage)
+        .map { it.map { it.asBasicDomainModel() } }
 
     fun getRegisteredInfantsCount() =
         childRegistrationDao.getAllRegisteredInfantsCount(selectedVillage)

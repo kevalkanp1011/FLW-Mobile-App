@@ -13,8 +13,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.ChildRegistrationDataset
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.model.InfantRegCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.ChildRegRepo
+import org.piramalswasthya.sakhi.repositories.InfantRegRepo
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -24,10 +26,13 @@ class ChildRegViewModel @Inject constructor(
     private val preferenceDao: PreferenceDao,
     @ApplicationContext context: Context,
     private val childRegRepo: ChildRegRepo,
+    private val infantRegRepo: InfantRegRepo,
     private val benRepo: BenRepo
 ) : ViewModel() {
     val motherBenId =
         ChildRegFragmentArgs.fromSavedStateHandle(savedStateHandle).motherBenId
+    val babyIndex =
+        ChildRegFragmentArgs.fromSavedStateHandle(savedStateHandle).babyIndex
 
     enum class State {
         IDLE, SAVING, SAVE_SUCCESS, SAVE_FAILED
@@ -41,6 +46,8 @@ class ChildRegViewModel @Inject constructor(
     val recordExists: LiveData<Boolean>
         get() = _recordExists
 
+    private lateinit var infantReg : InfantRegCache
+
     private val dataset =
         ChildRegistrationDataset(context, preferenceDao.getCurrentLanguage())
     val formList = dataset.listFlow
@@ -49,7 +56,7 @@ class ChildRegViewModel @Inject constructor(
         viewModelScope.launch {
             val ben = benRepo.getBenFromId(motherBenId)
             val deliveryOutcome = childRegRepo.getDeliveryOutcomeRepoFromMotherBenId(motherBenId = motherBenId)
-            val infantReg = childRegRepo.getInfantRegFromMotherBenId(motherBenId = motherBenId)
+            infantReg = childRegRepo.getInfantRegFromMotherBenId(motherBenId = motherBenId, babyIndex = babyIndex)!!
             dataset.setUpPage(
                 motherBen = ben,
                 deliveryOutcomeCache = deliveryOutcome,
@@ -75,9 +82,8 @@ class ChildRegViewModel @Inject constructor(
                     val childBen = dataset.mapAsBeneficiary(motherBen,preferenceDao.getLoggedInUser()!!, preferenceDao.getLocationRecord()!!)
                     benRepo.substituteBenIdForDraft(childBen)
                     benRepo.persistRecord(childBen)
-
-//                    dataset.mapValues(motherBenId, 1)
-//                    childRegRepo.saveChildReg(child)
+                    infantReg.childBenId = childBen.beneficiaryId
+                    infantRegRepo.update(infantReg)
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {
                     Timber.d("saving child registration data failed!!")

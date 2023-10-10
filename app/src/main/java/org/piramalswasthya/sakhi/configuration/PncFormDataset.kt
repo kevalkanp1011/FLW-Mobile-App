@@ -281,50 +281,51 @@ class PncFormDataset(
                 visitDate.inputType = InputType.DATE_PICKER
                 val visitNumber = pncPeriod.value!!.substring(4).toInt()
                 when (visitNumber) {
-                    0 -> {
+                    1 -> {
                         visitDate.min = dateOfDelivery
                         visitDate.max = dateOfDelivery + TimeUnit.DAYS.toMillis(1)
                     }
 
-                    1 -> {
+                    3 -> {
                         visitDate.min = dateOfDelivery + TimeUnit.DAYS.toMillis(3)
                         visitDate.max = dateOfDelivery + TimeUnit.DAYS.toMillis(3)
                     }
 
-                    2 -> {
+                    7 -> {
                         visitDate.min =
                             dateOfDelivery + TimeUnit.DAYS.toMillis(7) - TimeUnit.DAYS.toMillis(3)
                         visitDate.max =
                             dateOfDelivery + TimeUnit.DAYS.toMillis(7) + TimeUnit.DAYS.toMillis(3)
                     }
 
-                    3 -> {
+                    14 -> {
                         visitDate.min =
                             dateOfDelivery + TimeUnit.DAYS.toMillis(14) - TimeUnit.DAYS.toMillis(3)
                         visitDate.max =
                             dateOfDelivery + TimeUnit.DAYS.toMillis(14) + TimeUnit.DAYS.toMillis(3)
                     }
 
-                    4 -> {
+                    21 -> {
                         visitDate.min =
                             dateOfDelivery + TimeUnit.DAYS.toMillis(21) - TimeUnit.DAYS.toMillis(3)
                         visitDate.max =
                             dateOfDelivery + TimeUnit.DAYS.toMillis(21) + TimeUnit.DAYS.toMillis(3)
                     }
 
-                    5 -> {
+                    28 -> {
                         visitDate.min =
                             dateOfDelivery + TimeUnit.DAYS.toMillis(28) - TimeUnit.DAYS.toMillis(3)
                         visitDate.max =
                             dateOfDelivery + TimeUnit.DAYS.toMillis(28) + TimeUnit.DAYS.toMillis(3)
                     }
 
-                    6 -> {
+                    42 -> {
                         visitDate.min =
                             dateOfDelivery + TimeUnit.DAYS.toMillis(42) - TimeUnit.DAYS.toMillis(3)
                         visitDate.max =
                             dateOfDelivery + TimeUnit.DAYS.toMillis(42) + TimeUnit.DAYS.toMillis(3)
                     }
+                    else -> throw IllegalStateException("Illegal PNC Date $visitNumber")
                 }
                 return -1
             }

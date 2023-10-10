@@ -10,6 +10,7 @@ import com.squareup.moshi.JsonClass
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 
 @Entity(
@@ -103,10 +104,19 @@ data class BenWithEcTrackingCache(
     }
 
     fun asDomainModel(): BenWithEctListDomain {
+        val recentFill = savedECTRecords.maxByOrNull { it.visitDate }
+        val allowFill = recentFill?.let {
+            val cal = Calendar.getInstance()
+            val currentMonth = cal.get(Calendar.MONTH)
+            cal.apply { timeInMillis = recentFill.visitDate }
+            val lastVisitMonth = cal.get(Calendar.MONTH)
+            currentMonth != lastVisitMonth
+        } ?: true
         return BenWithEctListDomain(
 //            ecBenId,
             ben.asBasicDomainModel(),
             ecr.noOfChildren.toString(),
+            allowFill,
             savedECTRecords.map {
                 ECTDomain(
                     it.benId,
@@ -132,9 +142,10 @@ data class BenWithEctListDomain(
 //    val benId: Long,
     val ben: BenBasicDomain,
     val numChildren: String,
+    val allowFill: Boolean,
     val savedECTRecords: List<ECTDomain>,
     val allSynced: SyncState? = if (savedECTRecords.isEmpty()) null else
         if (savedECTRecords.map { it.syncState }
-                .all { it == SyncState.SYNCED}) SyncState.SYNCED else SyncState.UNSYNCED
+                .all { it == SyncState.SYNCED }) SyncState.SYNCED else SyncState.UNSYNCED
 
 )
