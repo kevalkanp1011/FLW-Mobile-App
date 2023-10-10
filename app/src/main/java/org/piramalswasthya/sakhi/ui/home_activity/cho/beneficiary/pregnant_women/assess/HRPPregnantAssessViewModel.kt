@@ -78,13 +78,13 @@ constructor(
                 _recordExists.value = true
                 _fullyFilled.value = (
                         it.noOfDeliveries != null
-                        && it.timeLessThan18m != null
-                        && it.heightShort != null
-                        && it.age != null
-                        && it. rhNegative != null
-                        && it.homeDelivery != null
-                        && it. badObstetric != null
-                        && it. multiplePregnancy != null)
+                                && it.timeLessThan18m != null
+                                && it.heightShort != null
+                                && it.age != null
+                                && it.rhNegative != null
+                                && it.homeDelivery != null
+                                && it.badObstetric != null
+                                && it.multiplePregnancy != null)
             } ?: run {
                 _recordExists.value = false
                 _fullyFilled.value = false

@@ -58,10 +58,12 @@ class HRPAdapter(
                     1 -> {
                         binding.btnForm1.text = btnText[0]
                     }
+
                     2 -> {
                         binding.btnForm1.text = btnText[0]
                         binding.btnForm2.text = btnText[1]
                     }
+
                     3 -> {
                         binding.btnForm1.text = btnText[0]
                         binding.btnForm2.text = btnText[1]
@@ -87,30 +89,33 @@ class HRPAdapter(
                         item.assess?.let {
                             completelyFilled =
                                 it.noOfDeliveries != null &&
-                                it.timeLessThan18m != null &&
-                                it.heightShort != null &&
-                                it.age != null &&
-                                it.rhNegative != null &&
-                                it.homeDelivery != null &&
-                                it.badObstetric != null &&
-                                it.multiplePregnancy != null
+                                        it.timeLessThan18m != null &&
+                                        it.heightShort != null &&
+                                        it.age != null &&
+                                        it.rhNegative != null &&
+                                        it.homeDelivery != null &&
+                                        it.badObstetric != null &&
+                                        it.multiplePregnancy != null
                         }
 
                         formEnabled = true
                     }
                 }
+
                 2 -> {
                     binding.btnForm2.also {
                         hasForm = item.mbp != null
                         formEnabled = true
                     }
                 }
+
                 3 -> {
                     binding.btnForm3.also {
 //                        hasForm = item.assess.noOfDeliveries.form3Filled
 //                        formEnabled = item.ben.form3Enabled
                     }
                 }
+
                 else -> throw IllegalStateException("FormNumber>3")
             }
             formButton.visibility = if (formEnabled) View.VISIBLE else View.INVISIBLE
@@ -180,7 +185,7 @@ class HRPAdapter(
         private val clickedForm3: ((hhId: Long, benId: Long) -> Unit)? = null
 
     ) {
-//        fun onClickedBen(item: HRPAViewHolder) = clickedBen?.let { it() }(item.benId)
+        //        fun onClickedBen(item: HRPAViewHolder) = clickedBen?.let { it() }(item.benId)
         fun onClickForm1(item: BenWithHRPADomain) =
             clickedForm1?.let { it(item.ben.hhId, item.ben.benId) }
 

@@ -113,17 +113,17 @@ constructor(
             val maxDovHrp = hrpReo.getMaxDoVHrp(benId)
 
             val maxDovNonHrp = hrpReo.getMaxDoVNonHrp(benId)
-            val maxDov: Long? =
+            var maxDov: Long =
                 when {
                     maxDovHrp != null && maxDovNonHrp != null -> max(maxDovHrp, maxDovNonHrp)
                     maxDovHrp != null && maxDovNonHrp == null -> maxDovHrp
                     maxDovHrp == null && maxDovNonHrp != null -> maxDovNonHrp
-                    else -> null
+                    else -> 0L
                 }
 
-//            hrpReo.getPregnantAssess(benId)?.let {
-//                maxDov  = maxOf(maxDov, it.lmpDate)
-//            }
+            hrpReo.getPregnantAssess(benId)?.let {
+                maxDov = maxOf(maxDov, it.lmpDate)
+            }
             dataset.setUpPage(
                 ben,
                 if (recordExists.value == true) hrpPregnantTrackCache else null,

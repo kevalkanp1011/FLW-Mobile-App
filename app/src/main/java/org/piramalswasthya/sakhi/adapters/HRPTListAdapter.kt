@@ -7,18 +7,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.piramalswasthya.sakhi.databinding.RvItemEcTrackingListBinding
 import org.piramalswasthya.sakhi.databinding.RvItemHrpTrackingListBinding
 import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
-import org.piramalswasthya.sakhi.model.BenWithEctListDomain
-import org.piramalswasthya.sakhi.model.BenWithHRNPADomain
-import org.piramalswasthya.sakhi.model.BenWithHRNPTListDomain
 import org.piramalswasthya.sakhi.model.BenWithHRPTListDomain
 import java.util.Calendar
-import java.util.concurrent.TimeUnit
 
-class HRPTListAdapter(private val clickListener: HRPTClickListener,
-                      private vararg val formButtonText: String,
+class HRPTListAdapter(
+    private val clickListener: HRPTClickListener,
+    private vararg val formButtonText: String,
 ) :
     ListAdapter<BenWithHRPTListDomain, HRPTListAdapter.HRPTViewHolder>(
         MyDiffUtilCallBack
@@ -57,10 +53,12 @@ class HRPTListAdapter(private val clickListener: HRPTClickListener,
                     1 -> {
                         binding.btnForm1.text = btnText[0]
                     }
+
                     2 -> {
                         binding.btnForm1.text = btnText[0]
                         binding.btnForm2.text = btnText[1]
                     }
+
                     3 -> {
                         binding.btnForm1.text = btnText[0]
                         binding.btnForm2.text = btnText[1]
@@ -91,37 +89,41 @@ class HRPTListAdapter(private val clickListener: HRPTClickListener,
                             calMaxVisit.timeInMillis = it
                             calMaxVisit.setToStartOfTheDay()
 
-                            trackingDone = trackingDone || ((calToday.timeInMillis - calMaxVisit.timeInMillis)/(1000*60*60*24) < 1)
+                            trackingDone =
+                                trackingDone || ((calToday.timeInMillis - calMaxVisit.timeInMillis) / (1000 * 60 * 60 * 24) < 1)
                         }
 
                         hasForm = trackingDone
                         formEnabled = !trackingDone
                     }
                 }
+
                 2 -> {
                     binding.btnForm2.also {
                         hasForm = item.savedTrackings.isNotEmpty()
                         formEnabled = item.savedTrackings.isNotEmpty()
                     }
                 }
+
                 3 -> {
                     binding.btnForm3.also {
 //                        hasForm = item.assess.noOfDeliveries.form3Filled
 //                        formEnabled = item.ben.form3Enabled
                     }
                 }
+
                 else -> throw IllegalStateException("FormNumber>3")
             }
             formButton.visibility = if (formEnabled) View.VISIBLE else View.INVISIBLE
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (hasForm) {
-                        formButton.setBackgroundColor(
-                            binding.root.resources.getColor(
-                                android.R.color.holo_green_dark,
-                                binding.root.context.theme
-                            )
+                    formButton.setBackgroundColor(
+                        binding.root.resources.getColor(
+                            android.R.color.holo_green_dark,
+                            binding.root.context.theme
                         )
+                    )
 
                 } else {
                     formButton.setBackgroundColor(

@@ -40,6 +40,7 @@ class BenRegisterCHOFragment : Fragment() {
             binding.form.rvInputForm.adapter?.notifyItemChanged(it)
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -57,11 +58,12 @@ class BenRegisterCHOFragment : Fragment() {
                         micClickedElementId = formId
                         sttContract.launch(Unit)
                     }
-                 else -> {
-                     viewModel.updateListOnValueChanged(formId, index)
-                     hardCodedListUpdate(formId)
-                 }
-                 }
+
+                    else -> {
+                        viewModel.updateListOnValueChanged(formId, index)
+                        hardCodedListUpdate(formId)
+                    }
+                }
             }, isEnabled = true
         )
         binding.tvBenName.visibility = View.GONE

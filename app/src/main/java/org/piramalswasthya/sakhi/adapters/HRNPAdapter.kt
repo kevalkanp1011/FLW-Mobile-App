@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.piramalswasthya.sakhi.databinding.RvItemBenWithFormBinding
 import org.piramalswasthya.sakhi.databinding.RvItemBenWithHrnpaFormBinding
-import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
 import org.piramalswasthya.sakhi.model.BenWithHRNPADomain
 
 class HRNPAdapter(
@@ -56,10 +54,12 @@ class HRNPAdapter(
                     1 -> {
                         binding.btnForm1.text = btnText[0]
                     }
+
                     2 -> {
                         binding.btnForm1.text = btnText[0]
                         binding.btnForm2.text = btnText[1]
                     }
+
                     3 -> {
                         binding.btnForm1.text = btnText[0]
                         binding.btnForm2.text = btnText[1]
@@ -85,30 +85,33 @@ class HRNPAdapter(
                         item.assess?.let {
                             completelyFilled =
                                 it.noOfDeliveries != null &&
-                                it.timeLessThan18m != null &&
-                                it.heightShort != null &&
-                                it.age != null &&
-                                it.misCarriage != null &&
-                                it.homeDelivery != null &&
-                                it.medicalIssues != null &&
-                                it.pastCSection != null
+                                        it.timeLessThan18m != null &&
+                                        it.heightShort != null &&
+                                        it.age != null &&
+                                        it.misCarriage != null &&
+                                        it.homeDelivery != null &&
+                                        it.medicalIssues != null &&
+                                        it.pastCSection != null
                         }
 
                         formEnabled = true
                     }
                 }
+
                 2 -> {
                     binding.btnForm2.also {
 //                        hasForm = item.ben.form2Filled
 //                        formEnabled = item.ben.form2Enabled
                     }
                 }
+
                 3 -> {
                     binding.btnForm3.also {
 //                        hasForm = item.assess.noOfDeliveries.form3Filled
 //                        formEnabled = item.ben.form3Enabled
                     }
                 }
+
                 else -> throw IllegalStateException("FormNumber>3")
             }
             formButton.visibility = if (formEnabled) View.VISIBLE else View.INVISIBLE
@@ -178,7 +181,7 @@ class HRNPAdapter(
         private val clickedForm3: ((hhId: Long, benId: Long) -> Unit)? = null
 
     ) {
-//        fun onClickedBen(item: HRPAViewHolder) = clickedBen?.let { it() }(item.benId)
+        //        fun onClickedBen(item: HRPAViewHolder) = clickedBen?.let { it() }(item.benId)
         fun onClickForm1(item: BenWithHRNPADomain) =
             clickedForm1?.let { it(item.ben.hhId, item.ben.benId) }
 

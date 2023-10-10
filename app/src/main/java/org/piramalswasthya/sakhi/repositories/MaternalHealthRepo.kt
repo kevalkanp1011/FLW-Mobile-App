@@ -413,7 +413,7 @@ class MaternalHealthRepo @Inject constructor(
                                 lmpDate = getLongFromDate(pwrDTO.lmpDate),
                                 edd = getLongFromDate(pwrDTO.lmpDate) + TimeUnit.DAYS.toMillis(280),
                                 multiplePregnancy = if (!pwrDTO.isFirstPregnancyTest) "Yes" else "No",
-                                isHighRisk = pwrDTO.isHrpCase,
+                                isHighRisk = isHighRisk(pwrDTO),
                                 syncState = SyncState.SYNCED
                             )
                         )
@@ -430,13 +430,20 @@ class MaternalHealthRepo @Inject constructor(
                         assess.lmpDate = getLongFromDate(pwrDTO.lmpDate)
                         assess.edd = getLongFromDate(pwrDTO.lmpDate) + TimeUnit.DAYS.toMillis(280)
                         assess.multiplePregnancy = if (!pwrDTO.isFirstPregnancyTest) "Yes" else "No"
-                        assess.isHighRisk = pwrDTO.isHrpCase
+                        assess.isHighRisk = assess.isHighRisk || isHighRisk(pwrDTO)
                         database.hrpDao.saveRecord(assess)
                     }
                 }
             }
         }
         return pwrList
+    }
+
+    private fun isHighRisk(pwrDTO: PwrPost): Boolean {
+        return (pwrDTO.badObstetric == "Yes" ||
+            pwrDTO.rhNegative == "Yes" ||
+            pwrDTO.homeDelivery == "Yes" ||
+            !pwrDTO.isFirstPregnancyTest)
     }
 
     suspend fun getAncVisitDetailsFromServer(): Int {

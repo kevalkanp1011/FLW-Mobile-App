@@ -14,8 +14,6 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
-import org.piramalswasthya.sakhi.adapters.HRNPAdapter
 import org.piramalswasthya.sakhi.adapters.HRNPTListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
@@ -112,6 +110,7 @@ class HRPNonPregnantListFragment : Fragment() {
             )
         }
     }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

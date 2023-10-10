@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.helpers.filterBenFormList
 import org.piramalswasthya.sakhi.helpers.filterBenHRNPFormList
 import org.piramalswasthya.sakhi.network.AmritApiService
 import org.piramalswasthya.sakhi.repositories.BenRepo
