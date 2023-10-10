@@ -32,7 +32,6 @@ import org.piramalswasthya.sakhi.databinding.ActivityHomeBinding
 import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.helpers.MyContextWrapper
-import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdActivity
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.ui.home_activity.sync.SyncBottomSheetFragment
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
@@ -239,6 +238,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setUpFirstTimePullWorker() {
+        WorkerUtils.triggerPeriodicPncEcUpdateWorker(this)
         if(!pref.isFullPullComplete)
             WorkerUtils.triggerAmritPullWorker(this)
 //        WorkerUtils.triggerD2dSyncWorker(this)
@@ -304,13 +304,13 @@ class HomeActivity : AppCompatActivity() {
 
         }
 
-        binding.navView.menu.findItem(R.id.abha_id_activity).setOnMenuItemClickListener {
-            navController.popBackStack(R.id.homeFragment, false)
-            startActivity(Intent(this, AbhaIdActivity::class.java))
-            binding.drawerLayout.close()
-            true
-
-        }
+//        binding.navView.menu.findItem(R.id.abha_id_activity).setOnMenuItemClickListener {
+//            navController.popBackStack(R.id.homeFragment, false)
+//            startActivity(Intent(this, AbhaIdActivity::class.java))
+//            binding.drawerLayout.close()
+//            true
+//
+//        }
     }
 
 //    override fun onOptionsItemSelected(item: MenuItem): Boolean {

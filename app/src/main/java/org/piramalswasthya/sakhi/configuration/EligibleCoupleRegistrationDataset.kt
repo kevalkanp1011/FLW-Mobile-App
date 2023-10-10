@@ -14,7 +14,6 @@ import org.piramalswasthya.sakhi.model.EligibleCoupleRegCache
 import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.Gender
 import org.piramalswasthya.sakhi.model.HRPNonPregnantAssessCache
-import org.piramalswasthya.sakhi.model.HRPPregnantAssessCache
 import org.piramalswasthya.sakhi.model.InputType.DATE_PICKER
 import org.piramalswasthya.sakhi.model.InputType.EDIT_TEXT
 import org.piramalswasthya.sakhi.model.InputType.HEADLINE
@@ -1169,8 +1168,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 //                    noOfLiveChildren.isEnabled = false
                     numMale.value = "0"
                     numFemale.value = "0"
-                    noOfDeliveries.value = null
-                    noOfDeliveries.isEnabled = true
+                    noOfDeliveries.value = resources.getStringArray(R.array.yes_no)[1]
+                    noOfDeliveries.isEnabled = false
                     handleListOnValueChanged(noOfDeliveries.id, 0)
                     timeLessThan18m.value = null
                     timeLessThan18m.isEnabled = true

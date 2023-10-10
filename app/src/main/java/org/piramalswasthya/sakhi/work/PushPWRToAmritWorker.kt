@@ -22,12 +22,13 @@ class PushPWRToAmritWorker @AssistedInject constructor(
     companion object {
         const val name = "PushPWRToAmritWorker"
     }
+
     override suspend fun doWork(): Result {
         init()
         try {
             val workerResult = maternalHealthRepo.processNewPwr()
-            val workerResult1 = maternalHealthRepo.processNewAncVisit()
-            return if (workerResult && workerResult1 /*&& workerResult2*/) {
+            val workerResult1 = if (workerResult) maternalHealthRepo.processNewAncVisit() else false
+            return if (workerResult1) {
                 Timber.d("Worker completed")
                 Result.success()
             } else {
@@ -42,7 +43,7 @@ class PushPWRToAmritWorker @AssistedInject constructor(
 
     private fun init() {
         if (TokenInsertTmcInterceptor.getToken() == "")
-            preferenceDao.getAmritToken()?.let{
+            preferenceDao.getAmritToken()?.let {
                 TokenInsertTmcInterceptor.setToken(it)
             }
     }

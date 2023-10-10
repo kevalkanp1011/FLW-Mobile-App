@@ -83,6 +83,8 @@ class EcrRepo @Inject constructor(
                     it.syncState = SyncState.UNSYNCED
                 }
                 database.ecrDao.update(it)
+                if(!uploadDone)
+                    return@withContext false
             }
 
             return@withContext true
@@ -169,6 +171,8 @@ class EcrRepo @Inject constructor(
                     it.syncState = SyncState.UNSYNCED
                 }
                 database.ecrDao.updateEligibleCoupleTracking(it)
+                if(!uploadDone)
+                    return@withContext false
             }
 
             return@withContext true
@@ -528,6 +532,7 @@ class EcrRepo @Inject constructor(
                     noOfLiveChildren = numMale + numFemale,
                     noOfMaleChildren = numMale,
                     noOfFemaleChildren = numFemale,
+                    isRegistered = if (ecrJson.has("isRegistered")) ecrJson.getBoolean("isRegistered") else false,
                     processed = "P",
                     createdBy = ecrJson.getString("createdBy"),
                     createdDate = getLongFromDate(
@@ -543,7 +548,7 @@ class EcrRepo @Inject constructor(
                     ),
                     syncState = SyncState.SYNCED
                 )
-                list.add(ecr)
+                if (ecr.isRegistered) list.add(ecr)
             } catch (e: Exception) {
                 Timber.e("Caught $e at ECR PULL")
             }
@@ -562,6 +567,7 @@ class EcrRepo @Inject constructor(
                 benId = ecrJson.getLong("benId"),
                 visitDate = getLongFromDate(ecrJson.getString("visitDate")),
                 isPregnancyTestDone = if (ecrJson.has("isPregnancyTestDone")) ecrJson.getString("isPregnancyTestDone") else null,
+                isActive = if (ecrJson.has("isActive")) ecrJson.getBoolean("isActive") else false,
                 pregnancyTestResult = if (ecrJson.has("pregnancyTestResult")) ecrJson.getString("pregnancyTestResult") else null,
                 isPregnant = if (ecrJson.has("isPregnant")) ecrJson.getString("isPregnant") else null,
                 usingFamilyPlanning = if (ecrJson.has("usingFamilyPlanning")) ecrJson.getBoolean("usingFamilyPlanning") else null,

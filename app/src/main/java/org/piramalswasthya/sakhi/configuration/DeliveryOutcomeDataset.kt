@@ -8,8 +8,7 @@ import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.InputType
 import org.piramalswasthya.sakhi.model.PregnantWomanAncCache
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
-import java.lang.Long.min
-import kotlin.math.max
+import java.util.concurrent.TimeUnit
 
 open class DeliveryOutcomeDataset(
     context: Context, currentLanguage: Languages
@@ -21,7 +20,6 @@ open class DeliveryOutcomeDataset(
         title = resources.getString(R.string.do_delivery_date),
         arrayId = -1,
         required = true,
-        max = System.currentTimeMillis(),
         hasDependants = true
     )
 
@@ -225,10 +223,9 @@ open class DeliveryOutcomeDataset(
             timeOfDischarge.value = saved.timeOfDischarge
             isJSYBenificiary.value = if (saved.isJSYBenificiary == true) "Yes" else "No"
         }
-        dateOfDelivery.min = max(pwr.lmpDate + 147 * 24 * 60 * 60 * 1000, anc.ancDate)
+        dateOfDelivery.min = maxOf(pwr.lmpDate + TimeUnit.DAYS.toMillis(21*7), anc.ancDate)
         dateOfDelivery.max =
-            min(System.currentTimeMillis(), getEddFromLmp(pwr.lmpDate) + 25 * 24 * 60 * 60 * 1000)
-
+            minOf(System.currentTimeMillis(), getEddFromLmp(pwr.lmpDate) + TimeUnit.DAYS.toMillis(25))
         setUpPage(list)
 
     }

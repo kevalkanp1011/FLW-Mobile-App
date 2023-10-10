@@ -73,8 +73,8 @@ enum class Gender {
             " (hrppa.benId is not null and hrppa.noOfDeliveries is not null and hrppa.timeLessThan18m is not null and hrppa.heightShort is not null and hrppa.age is not null and hrppa.rhNegative is not null and hrppa.homeDelivery is not null and hrppa.badObstetric is not null and hrppa.multiplePregnancy is not null) as hrppaFilled, hrppa.syncState as hrppaSyncState," +
             " (hrpnpa.benId is not null and hrpnpa.noOfDeliveries is not null and hrpnpa.timeLessThan18m is not null and hrpnpa.heightShort is not null and hrpnpa.age is not null and hrpnpa.misCarriage is not null and hrpnpa.homeDelivery is not null and hrpnpa.medicalIssues is not null and hrpnpa.pastCSection is not null )as hrpnpaFilled, hrpnpa.syncState as hrpnpaSyncState," +
             " hrpmbp.benId is not null as hrpmbpFilled, hrpmbp.syncState as hrpmbpSyncState," +
-            " hrpt.benId is not null as hrptFilled, (count(distinct hrpt.id) > 3) as trackingDone, hrpt.syncState as hrptSyncState," +
-            " hrnpt.benId is not null as hrnptFilled, hrnpt.syncState as hrnptSyncState " +
+            " hrpt.benId is not null as hrptFilled, ((count(distinct hrpt.id) > 3)  or (((JulianDay('now')) - JulianDay(date(max(hrpt.visitDate)/1000,'unixepoch','localtime'))) < 1 ))as hrptrackingDone, hrpt.syncState as hrptSyncState," +
+            " hrnpt.benId is not null as hrnptFilled,((JulianDay('now') - JulianDay(date(max(hrnpt.visitDate)/1000,'unixepoch','localtime'))) < 1 ) as hrnptrackingDone, hrnpt.syncState as hrnptSyncState " +
             "from BENEFICIARY b " +
             "JOIN HOUSEHOLD h ON b.householdId = h.householdId " +
             "LEFT OUTER JOIN CBAC cbac on b.beneficiaryId = cbac.benId " +
@@ -147,7 +147,8 @@ data class BenBasicCache(
     val hrpnpaFilled: Boolean,
     val hrpmbpFilled: Boolean,
     val hrptFilled: Boolean,
-    val trackingDone: Boolean,
+    val hrptrackingDone: Boolean,
+    val hrnptrackingDone: Boolean,
     val hrnptFilled: Boolean,
     val hrppaSyncState: SyncState?,
     val hrpnpaSyncState: SyncState?,
@@ -536,7 +537,8 @@ data class BenBasicCache(
 //            typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
-            form1Filled = false,
+            form1Filled = hrnptrackingDone,
+            form1Enabled = !hrnptrackingDone,
             form2Filled = hrnptFilled,
             form2Enabled = hrnptFilled,
             syncState = hrnptSyncState
@@ -561,8 +563,8 @@ data class BenBasicCache(
 //            typeOfList = typeOfList.name,
             rchId = rchId ?: "Not Available",
             hrpStatus = hrpStatus,
-            form1Filled = trackingDone,
-            form1Enabled = !trackingDone,
+            form1Filled = hrptrackingDone,
+            form1Enabled = !hrptrackingDone,
             form2Filled = hrptFilled,
             form2Enabled = hrptFilled,
             syncState = hrptSyncState

@@ -10,6 +10,7 @@ import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.DeliveryOutcomeDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
+import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.model.DeliveryOutcomeCache
 import org.piramalswasthya.sakhi.model.DeliveryOutcomePost
 import org.piramalswasthya.sakhi.network.AmritApiService
@@ -18,7 +19,9 @@ import timber.log.Timber
 import java.io.IOException
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class DeliveryOutcomeRepo @Inject constructor(
@@ -65,6 +68,8 @@ class DeliveryOutcomeRepo @Inject constructor(
                     it.syncState = SyncState.UNSYNCED
                 }
                 deliveryOutcomeDao.updateDeliveryOutcome(it)
+                if(!uploadDone)
+                    return@withContext false
             }
 
             return@withContext true
@@ -199,7 +204,8 @@ class DeliveryOutcomeRepo @Inject constructor(
     }
 
     private suspend fun saveDeliveryOutcomeCacheFromResponse(dataObj: String): List<DeliveryOutcomePost> {
-        var deliveryOutcomeList = Gson().fromJson(dataObj, Array<DeliveryOutcomePost>::class.java).toList()
+        var deliveryOutcomeList =
+            Gson().fromJson(dataObj, Array<DeliveryOutcomePost>::class.java).toList()
         deliveryOutcomeList.forEach { deliveryOutcome ->
             deliveryOutcome.createdDate?.let {
                 var deliveryOutcomeCache: DeliveryOutcomeCache? =
@@ -210,6 +216,28 @@ class DeliveryOutcomeRepo @Inject constructor(
             }
         }
         return deliveryOutcomeList
+    }
+
+    suspend fun getExpiredRecords(): Set<Long> {
+        return withContext(Dispatchers.IO) {
+            val map = deliveryOutcomeDao.getAllBenIdAndDeliverDate()
+            val gapMillis = TimeUnit.DAYS.toMillis(Konstants.pncEcGap)
+            val todayMillis = Calendar.getInstance().setToStartOfTheDay().timeInMillis
+            map.filter { it.value + gapMillis < todayMillis }.keys
+        }
+    }
+
+    suspend fun setToInactive(eligBenIds: Set<Long>) {
+        withContext(Dispatchers.IO) {
+            val records = deliveryOutcomeDao.getAllDeliveryOutcomes(eligBenIds)
+            records.forEach {
+                it.isActive = false
+                if (it.processed != "N") it.processed = "U"
+                it.syncState = SyncState.UNSYNCED
+                it.updatedDate = System.currentTimeMillis()
+                deliveryOutcomeDao.updateDeliveryOutcome(it)
+            }
+        }
     }
 
     companion object {

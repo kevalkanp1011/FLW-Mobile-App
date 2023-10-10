@@ -28,6 +28,7 @@ data class PMSMACache(
     val id: Long = 0,
     val benId: Long,
 //    val hhId: Long,
+    var isActive : Boolean,
     var mctsNumberOrRchNumber: String? = null,
     var haveMCPCard: Boolean = false,
     var givenMCPCard : Boolean? = null,
@@ -86,6 +87,7 @@ data class PMSMACache(
         return PmsmaPost(
             id = id,
             benId = benId,
+            isActive = isActive,
             rchNumber = mctsNumberOrRchNumber,
             haveMCPCard = haveMCPCard,
             givenMCPCard = givenMCPCard,
@@ -133,6 +135,7 @@ data class PmsmaPost(
 
     val id: Long = 0,
     val benId: Long = 0,
+    val isActive : Boolean,
     val rchNumber: String? = null,
     val haveMCPCard:Boolean = false,
     val givenMCPCard:Boolean? = null,
@@ -176,6 +179,7 @@ data class PmsmaPost(
         return PMSMACache(
             id = id,
             benId = benId,
+            isActive = isActive,
 //            hhId
             mctsNumberOrRchNumber = rchNumber,
             haveMCPCard = haveMCPCard,

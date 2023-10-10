@@ -144,6 +144,8 @@ class HRPPregnantTrackFragment : Fragment() {
         binding.form.rvInputForm.adapter?.apply {
             when (formId) {
                 1 -> notifyItemChanged(viewModel.getIndexOfRdPmsa())
+                13 -> notifyItemChanged(viewModel.getIndexOfRdDengue())
+                14 -> notifyItemChanged(viewModel.getIndexOfRdFilaria())
                 2 -> notifyItemChanged(viewModel.getIndexOfSevereAnemia())
                 3 -> notifyItemChanged(viewModel.getIndexOfPregInduced())
                 4 -> notifyItemChanged(viewModel.getIndexOfGest())

@@ -25,6 +25,7 @@ data class DeliveryOutcomeCache (
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val benId : Long,
+    var isActive : Boolean,
     var dateOfDelivery: Long? = null,
     var timeOfDelivery: String? = null,
     var placeOfDelivery: String? = null,
@@ -40,11 +41,12 @@ data class DeliveryOutcomeCache (
     var dateOfDischarge: Long? = null,
     var timeOfDischarge: String? = null,
     var isJSYBenificiary: Boolean? = null,
+//    var isActive: Boolean? = true,
     var processed: String? = "N",
     var createdBy: String,
     val createdDate: Long = System.currentTimeMillis(),
     var updatedBy: String,
-    val updatedDate: Long = System.currentTimeMillis(),
+    var updatedDate: Long = System.currentTimeMillis(),
     var syncState: SyncState
 ) : FormDataModel {
 
@@ -61,7 +63,8 @@ data class DeliveryOutcomeCache (
         return DeliveryOutcomePost(
             id = id,
             benId = benId,
-            dateOfDelivery = getDateStringFromLong(dateOfDelivery),
+            isActive = isActive,
+            dateOfDelivery = dateOfDelivery?.let { getDateStringFromLong(it) },
             timeOfDelivery = timeOfDelivery,
             placeOfDelivery = placeOfDelivery,
             typeOfDelivery = typeOfDelivery,
@@ -73,7 +76,7 @@ data class DeliveryOutcomeCache (
             deliveryOutcome = deliveryOutcome,
             liveBirth = liveBirth,
             stillBirth = stillBirth,
-            dateOfDischarge = getDateStringFromLong(dateOfDischarge),
+            dateOfDischarge = dateOfDischarge?.let { getDateStringFromLong(it) },
             timeOfDischarge = timeOfDischarge,
             isJSYBenificiary = isJSYBenificiary,
             createdDate = getDateStringFromLong(createdDate),
@@ -87,6 +90,7 @@ data class DeliveryOutcomeCache (
 data class DeliveryOutcomePost (
     val id: Long = 0,
     val benId: Long,
+    val isActive : Boolean,
     val dateOfDelivery: String? = null,
     val timeOfDelivery: String? = null,
     val placeOfDelivery: String? = null,
@@ -111,6 +115,7 @@ data class DeliveryOutcomePost (
         return DeliveryOutcomeCache(
             id = id,
             benId = benId,
+            isActive = isActive,
             dateOfDelivery = getLongFromDate(dateOfDelivery),
             timeOfDelivery = timeOfDelivery,
             placeOfDelivery = placeOfDelivery,

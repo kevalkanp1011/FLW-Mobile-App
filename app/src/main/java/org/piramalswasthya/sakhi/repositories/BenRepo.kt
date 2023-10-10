@@ -530,7 +530,7 @@ class BenRepo @Inject constructor(
                     householdDao.getHousehold(it.householdId)!!.asNetworkModel()
                 )
                 try {
-                    if (it.isKid) kidNetworkPostList.add(it.asKidNetworkModel())
+                    if (it.ageUnitId!=3 || it.age<15) kidNetworkPostList.add(it.asKidNetworkModel())
                 } catch (e: java.lang.Exception) {
                     Timber.d("caught error in adding kidDetails : $e")
                 }
@@ -1383,13 +1383,19 @@ class BenRepo @Inject constructor(
                                 benId = jsonObject.getLong("benficieryid"),
                                 family = HouseholdFamily(
                                     familyHeadName = houseDataObj.getString("familyHeadName"),
-                                    familyName = if (jsonObject.has("familyName")) jsonObject.getString(
+                                    familyName = if (houseDataObj.has("familyName")) houseDataObj.getString(
                                         "familyName"
                                     ) else null,
                                     familyHeadPhoneNo = houseDataObj.getString("familyHeadPhoneNo")
                                         .toLong(),
-                                    houseNo = houseDataObj.getString("houseno")
-                                        .let { if (it == "null") null else it },
+                                    houseNo = if (houseDataObj.has("houseno"))houseDataObj.getString("houseno")
+                                        .let { if (it == "null") null else it } else null,
+                                    wardNo = if (houseDataObj.has("wardNo"))houseDataObj.getString("wardNo")
+                                        .let { if (it == "null") null else it } else null,
+                                    wardName = if (houseDataObj.has("wardName"))houseDataObj.getString("wardName")
+                                        .let { if (it == "null") null else it } else null,
+                                    mohallaName = if (houseDataObj.has("mohallaName"))houseDataObj.getString("mohallaName")
+                                        .let { if (it == "null") null else it } else null,
 //                                rationCardDetails = houseDataObj.getString("rationCardDetails"),
                                     povertyLine = houseDataObj.getString("type_bpl_apl"),
                                     povertyLineId = houseDataObj.getInt("bpl_aplId"),

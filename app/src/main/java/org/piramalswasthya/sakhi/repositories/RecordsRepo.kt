@@ -109,7 +109,7 @@ class RecordsRepo @Inject constructor(
     val hrpListCount = menopauseList.map { it.size }
 
     val pncMotherList = benDao.getAllPNCMotherList(selectedVillage)
-        .map { list -> list.map { it.asBasicDomainModel() } }
+        .map { list -> list.map { it.asBasicDomainModelForPNC() } }
     val pncMotherListCount = pncMotherList.map { it.size }
 
     val cdrList = benDao.getAllCDRList(selectedVillage)
@@ -192,7 +192,7 @@ class RecordsRepo @Inject constructor(
 
     fun getAllWomenForPmsmaCount() = benDao.getAllWomenListForPmsmaCount(selectedVillage)
     fun getListForInfantReg() = benDao.getListForInfantRegister(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForInfantRegistrationForm() } }
+        .map { list -> list.flatMap { it.asBasicDomainModel() } }
 
     fun getInfantRegisterCount() = benDao.getInfantRegisterCount(selectedVillage)
 

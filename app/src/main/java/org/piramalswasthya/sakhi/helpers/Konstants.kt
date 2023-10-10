@@ -52,5 +52,9 @@ object Konstants {
     const val maxAnc4Week = 40
 
 
+    //PNC-EC cycle
+    const val pncEcGap : Long = 45
+
+
     const val defaultTimeStamp = 1603132200000L
 }

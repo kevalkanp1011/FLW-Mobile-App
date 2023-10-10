@@ -130,7 +130,7 @@ data class PregnantWomanRegistrationCache(
     var createdBy: String,
     var createdDate: Long = System.currentTimeMillis(),
     var updatedBy: String,
-    val updatedDate: Long = System.currentTimeMillis(),
+    var updatedDate: Long = System.currentTimeMillis(),
     var syncState: SyncState
 ) : FormDataModel {
     fun asPwrPost(): PwrPost {
@@ -144,11 +144,11 @@ data class PregnantWomanRegistrationCache(
             weight = weight,
             height = height,
             rprTestResult = vdrlRprTestResult,
-            dateOfRprTest = getDateStringFromLong(dateOfVdrlRprTest),
+            dateOfRprTest = dateOfVdrlRprTest?.let { getDateStringFromLong(it) },
             hivTestResult = hivTestResult,
             hbsAgTestResult = hbsAgTestResult,
-            dateOfHivTest = getDateStringFromLong(dateOfHivTest),
-            dateOfHbsAgTest = getDateStringFromLong(dateOfHbsAgTest),
+            dateOfHivTest = dateOfHivTest?.let { getDateStringFromLong(it) },
+            dateOfHbsAgTest = dateOfHbsAgTest?.let { getDateStringFromLong(it) },
             pastIllness = pastIllness,
             otherPastIllness = otherPastIllness,
             isFirstPregnancyTest = is1st,
@@ -264,13 +264,13 @@ data class PwrPost(
             height = height,
             vdrlRprTestResult = rprTestResult,
 //            vdrlRprTestResultId
-            dateOfVdrlRprTest = getLongFromDate(dateOfRprTest),
+            dateOfVdrlRprTest = dateOfRprTest?.let { getLongFromDate(it) },
             hivTestResult = hivTestResult,
 //            hivTestResultId
-            dateOfHivTest = getLongFromDate(dateOfHivTest),
+            dateOfHivTest = dateOfHivTest?.let { getLongFromDate(it) },
             hbsAgTestResult = hbsAgTestResult,
 //            hbsAgTestResultId
-            dateOfHbsAgTest = getLongFromDate(dateOfHbsAgTest),
+            dateOfHbsAgTest = dateOfHbsAgTest?.let { getLongFromDate(it) },
             pastIllness = pastIllness,
             otherPastIllness = otherPastIllness,
             is1st = isFirstPregnancyTest,
@@ -350,7 +350,7 @@ data class PregnantWomanAncCache(
     var createdBy: String,
     val createdDate: Long = System.currentTimeMillis(),
     var updatedBy: String,
-    val updatedDate: Long = System.currentTimeMillis(),
+    var updatedDate: Long = System.currentTimeMillis(),
     var syncState: SyncState
 ) : FormDataModel {
     fun asPostModel(): ANCPost {
@@ -362,7 +362,7 @@ data class PregnantWomanAncCache(
             isAborted = isAborted,
             abortionType = abortionType,
             abortionFacility = abortionFacility,
-            abortionDate = getDateStringFromLong(abortionDate),
+            abortionDate = abortionDate?.let { getDateStringFromLong(it) },
             weightOfPW = weight,
             bpSystolic = bpSystolic,
             bpDiastolic = bpDiastolic,
@@ -371,9 +371,9 @@ data class PregnantWomanAncCache(
             fundalHeight = fundalHeight,
             urineAlbuminPresent = urineAlbumin == "Present",
             bloodSugarTestDone = randomBloodSugarTest == "Done",
-            tdDose1Date = getDateStringFromLong(tt1),
-            tdDose2Date = getDateStringFromLong(tt2),
-            tdDoseBoosterDate = getDateStringFromLong(ttBooster),
+            tdDose1Date = tt1?.let { getDateStringFromLong(it) },
+            tdDose2Date = tt2?.let { getDateStringFromLong(it) },
+            tdDoseBoosterDate = ttBooster?.let { getDateStringFromLong(it) },
             folicAcidTabs = numFolicAcidTabGiven,
             ifaTabs = numIfaAcidTabGiven,
             isHighRisk = anyHighRisk,
@@ -385,7 +385,7 @@ data class PregnantWomanAncCache(
             isMaternalDeath = maternalDeath,
             probableCauseOfDeath = maternalDeathProbableCause,
             otherCauseOfDeath = otherMaternalDeathProbableCause,
-            deathDate = getDateStringFromLong(deathDate),
+            deathDate = deathDate?.let { getDateStringFromLong(it) },
             isBabyDelivered = pregnantWomanDelivered,
             createdDate = getDateStringFromLong(createdDate),
             createdBy = createdBy,
@@ -501,7 +501,7 @@ data class BenWithAncVisitCache(
     @Relation(
         parentColumn = "benId", entityColumn = "benId", entity = PMSMACache::class
     )
-    val pmsma: PMSMACache?,
+    val pmsma: List<PMSMACache>,
 
     @Relation(
         parentColumn = "benId", entityColumn = "benId", entity = PregnantWomanAncCache::class
@@ -519,6 +519,7 @@ data class BenWithAncVisitCache(
 
     fun asDomainModel(): BenWithAncListDomain {
         val lastAncRecord = savedAncRecords.maxByOrNull { it.ancDate }
+        val activePmsma = pmsma.firstOrNull { it.isActive }
         val activePwrRecrod = pwr.first { it.active }
         return BenWithAncListDomain(
 //            ecBenId,
@@ -532,8 +533,8 @@ data class BenWithAncVisitCache(
                     syncState = it.syncState
                 )
             }.sortedBy { it.visitNumber },
-            pmsmaFillable = if (pmsma == null) savedAncRecords.any { it.visitNumber == 1 } else true,
-            hasPmsma = pmsma != null,
+            pmsmaFillable = if (activePmsma == null) savedAncRecords.any { it.visitNumber == 1 } else true,
+            hasPmsma = activePmsma != null,
             showAddAnc = if (savedAncRecords.isEmpty())
                 TimeUnit.MILLISECONDS.toDays(
                     getTodayMillis() - activePwrRecrod.lmpDate
@@ -546,7 +547,7 @@ data class BenWithAncVisitCache(
                         lastAncRecord.visitNumber < 4 && TimeUnit.MILLISECONDS.toDays(
                     getTodayMillis() - lastAncRecord.ancDate
                 ) > 28,
-            syncState = if (pmsma == null && savedAncRecords.isEmpty()) null else if (pmsma?.syncState == SyncState.UNSYNCED || savedAncRecords.any { it.syncState != SyncState.SYNCED }) SyncState.UNSYNCED else SyncState.SYNCED
+            syncState = if (activePmsma == null && savedAncRecords.isEmpty()) null else if (activePmsma?.syncState == SyncState.UNSYNCED || savedAncRecords.any { it.syncState != SyncState.SYNCED }) SyncState.UNSYNCED else SyncState.SYNCED
         )
 
 

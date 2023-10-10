@@ -62,20 +62,18 @@ class PmsmaRepo @Inject constructor(
 
             pmsmaList.forEach {
                 pmsmaPostList.clear()
-//                val household =
-//                    database.householdDao.getHousehold(it.hhId)
-//                        ?: throw IllegalStateException("No household exists for hhId: ${it.hhId}!!")
-                val ben =
-                    benDao.getBen(it.benId)
-                        ?: throw IllegalStateException("No beneficiary exists for benId: ${it.benId}!!")
-                val pmsma = pmsmaDao.pmsmaCount()
                 pmsmaPostList.add(it.asPostModel())
                 val uploadDone = postDataToAmritServer(pmsmaPostList)
                 if (uploadDone) {
                     it.processed = "P"
                     it.syncState = SyncState.SYNCED
-                    pmsmaDao.updatePmsmaRecord(it)
                 }
+                else{
+                    it.syncState = SyncState.UNSYNCED
+                }
+                pmsmaDao.updatePmsmaRecord(it)
+                if(!uploadDone)
+                    return@withContext false
             }
 
             return@withContext true
@@ -96,8 +94,8 @@ class PmsmaRepo @Inject constructor(
                     if (responseString != null) {
                         val jsonObj = JSONObject(responseString)
 
-                        val errorMessage = jsonObj.getString("message")
-                        if (jsonObj.isNull("status"))
+                        val errorMessage = jsonObj.getString("errorMessage")
+                        if (jsonObj.isNull("statusCode"))
                             throw IllegalStateException("Amrit server not responding properly, Contact Service Administrator!!")
 
                         when (jsonObj.getInt("statusCode")) {
@@ -206,12 +204,13 @@ class PmsmaRepo @Inject constructor(
     }
 
     private suspend fun savePmsmaCacheFromResponse(dataObj: String): List<PmsmaPost> {
-        var pmsmaList = Gson().fromJson(dataObj, Array<PmsmaPost>::class.java).toList()
+        val pmsmaList = Gson().fromJson(dataObj, Array<PmsmaPost>::class.java).toList()
         pmsmaList.forEach { pmsmaDTO ->
             pmsmaDTO.createdDate?.let {
-                var pwrCache: PMSMACache? =
+                val hasBen = benDao.getBen(pmsmaDTO.benId) != null
+                val pwrCache: PMSMACache? =
                     pmsmaDao.getPmsma(pmsmaDTO.benId)
-                if (pwrCache == null) {
+                if (hasBen && pwrCache == null) {
                     pmsmaDao.upsert(pmsmaDTO.toPmsmaCache())
                 }
             }
@@ -224,6 +223,19 @@ class PmsmaRepo @Inject constructor(
             pmsmaDao.getPmsma(benId)
         }
 
+    }
+
+    suspend fun setToInactive(eligBenIds: Set<Long>) {
+        withContext(Dispatchers.IO) {
+            val records = pmsmaDao.getAllPmsma(eligBenIds)
+            records.forEach {
+                it.isActive = false
+                if (it.processed != "N") it.processed = "U"
+                it.syncState = SyncState.UNSYNCED
+                it.updatedDate = System.currentTimeMillis()
+                pmsmaDao.updatePmsmaRecord(it)
+            }
+        }
     }
 
     companion object {

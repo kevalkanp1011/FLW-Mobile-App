@@ -40,9 +40,10 @@ class MaternalHealthRepo @Inject constructor(
             maternalHealthDao.getSavedRecord(benId)
         }
     }
-    suspend fun getLatestInactiveRegistrationRecord(benId: Long): PregnantWomanRegistrationCache? {
+
+    suspend fun getLatestActiveRegistrationRecord(benId: Long): PregnantWomanRegistrationCache? {
         return withContext(Dispatchers.IO) {
-            maternalHealthDao.getSavedInactiveRecord(benId)
+            maternalHealthDao.getSavedActiveRecord(benId)
         }
     }
 
@@ -163,6 +164,8 @@ class MaternalHealthRepo @Inject constructor(
                     it.syncState = SyncState.UNSYNCED
                 }
                 maternalHealthDao.updateANC(it)
+                if(!uploadDone)
+                    return@withContext false
             }
 
             return@withContext true
@@ -252,6 +255,8 @@ class MaternalHealthRepo @Inject constructor(
                     it.syncState = SyncState.UNSYNCED
                 }
                 maternalHealthDao.updatePwr(it)
+                if(!uploadDone)
+                    return@withContext false
             }
 
             return@withContext true
@@ -391,8 +396,9 @@ class MaternalHealthRepo @Inject constructor(
             pwrDTO.createdDate?.let {
                 var pwrCache: PregnantWomanRegistrationCache? =
                     maternalHealthDao.getSavedRecord(pwrDTO.benId)
+                val hasBen = benDao.getBen(pwrDTO.benId) != null
                 benDao.getBen(pwrDTO.benId)?.let {
-                    if (pwrCache == null) {
+                    if (hasBen && pwrCache == null && pwrDTO.isRegistered) {
                         maternalHealthDao.saveRecord(pwrDTO.toPwrCache())
                     }
                     var assess = database.hrpDao.getPregnantAssess(pwrDTO.benId)
@@ -405,6 +411,7 @@ class MaternalHealthRepo @Inject constructor(
                                 homeDelivery = pwrDTO.homeDelivery,
                                 badObstetric = pwrDTO.badObstetric,
                                 lmpDate = getLongFromDate(pwrDTO.lmpDate),
+                                edd = getLongFromDate(pwrDTO.lmpDate) + TimeUnit.DAYS.toMillis(280),
                                 multiplePregnancy = if (!pwrDTO.isFirstPregnancyTest) "Yes" else "No",
                                 isHighRisk = pwrDTO.isHrpCase,
                                 syncState = SyncState.SYNCED
@@ -420,6 +427,8 @@ class MaternalHealthRepo @Inject constructor(
                         pwrDTO.badObstetric?.let {
                             assess.badObstetric = pwrDTO.badObstetric
                         }
+                        assess.lmpDate = getLongFromDate(pwrDTO.lmpDate)
+                        assess.edd = getLongFromDate(pwrDTO.lmpDate) + TimeUnit.DAYS.toMillis(280)
                         assess.multiplePregnancy = if (!pwrDTO.isFirstPregnancyTest) "Yes" else "No"
                         assess.isHighRisk = pwrDTO.isHrpCase
                         database.hrpDao.saveRecord(assess)
@@ -503,9 +512,10 @@ class MaternalHealthRepo @Inject constructor(
             Gson().fromJson(dataObj, Array<ANCPost>::class.java).toList()
         ancList.forEach { ancDTO ->
             ancDTO.createdDate?.let {
-                var ancCache: PregnantWomanAncCache? =
+                val hasBen = benDao.getBen(ancDTO.benId) != null
+                val ancCache: PregnantWomanAncCache? =
                     maternalHealthDao.getSavedRecord(ancDTO.benId, ancDTO.ancVisit)
-                if (ancCache == null) {
+                if (hasBen && ancCache == null) {
                     maternalHealthDao.saveRecord(ancDTO.toAncCache())
                 }
             }
@@ -513,6 +523,26 @@ class MaternalHealthRepo @Inject constructor(
         return ancList
     }
 
+    suspend fun setToInactive(eligBenIds: Set<Long>) {
+        withContext(Dispatchers.IO) {
+            val records = maternalHealthDao.getAllActiveAncRecords(eligBenIds)
+            records.forEach {
+                it.isActive = false
+                if (it.processed != "N") it.processed = "U"
+                it.syncState = SyncState.UNSYNCED
+                it.updatedDate = System.currentTimeMillis()
+                maternalHealthDao.updateANC(it)
+            }
+            val records2 = maternalHealthDao.getAllActivePwrRecords(eligBenIds)
+            records2.forEach {
+                it.active = false
+                if (it.processed != "N") it.processed = "U"
+                it.syncState = SyncState.UNSYNCED
+                it.updatedDate = System.currentTimeMillis()
+                maternalHealthDao.updatePwr(it)
+            }
+        }
+    }
     companion object {
         private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
         private val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
