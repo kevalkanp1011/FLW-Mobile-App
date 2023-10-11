@@ -96,6 +96,7 @@ data class HighRiskAssessDTO (
             timeLessThan18m = timeLessThan18m,
             heightShort = heightShort,
             age = age,
+            isHighRisk = noOfDeliveries == "Yes" || timeLessThan18m == "Yes" || heightShort == "Yes" || age == "Yes",
             syncState = SyncState.SYNCED
         )
     }
@@ -107,6 +108,7 @@ data class HighRiskAssessDTO (
             timeLessThan18m = timeLessThan18m,
             heightShort = heightShort,
             age = age,
+            isHighRisk = noOfDeliveries == "Yes" || timeLessThan18m == "Yes" || heightShort == "Yes" || age == "Yes",
             syncState = SyncState.SYNCED
         )
     }
