@@ -52,7 +52,10 @@ object Konstants {
     const val maxAnc4Week = 40
 
 
-    //PNC-EC cycle
+    const val babyLowWeight: Double = 2.5
+
+
+        //PNC-EC cycle
     const val pncEcGap : Long = 45
 
 

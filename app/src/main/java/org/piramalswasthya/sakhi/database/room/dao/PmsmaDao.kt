@@ -9,7 +9,7 @@ interface PmsmaDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(vararg pmsmaCache: PMSMACache)
 
-    @Query("SELECT * FROM PMSMA WHERE processed = 'N'")
+    @Query("SELECT * FROM PMSMA WHERE processed in ('N','U')")
     suspend fun getAllUnprocessedPmsma(): List<PMSMACache>
 
     @Query("select count(*) from PMSMA")

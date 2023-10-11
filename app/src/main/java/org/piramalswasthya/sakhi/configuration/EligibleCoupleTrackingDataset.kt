@@ -126,8 +126,15 @@ class EligibleCoupleTrackingDataset(
             dateOfVisit.min = lastTrack?.let {
                 Calendar.getInstance().apply {
                     timeInMillis = it.visitDate
+                    val currentMonth = get(Calendar.MONTH)
+                    if (currentMonth == 11) {
+                        set(Calendar.YEAR, get(Calendar.YEAR) + 1)
+                        set(Calendar.MONTH, 0)
+                    } else {
+                        set(Calendar.MONTH, currentMonth + 1)
+                    }
+                    set(Calendar.DAY_OF_MONTH, 1)
                     setToStartOfTheDay()
-                    add(Calendar.DAY_OF_YEAR, 1)
                 }.timeInMillis
             } ?: dateOfReg
         } else {

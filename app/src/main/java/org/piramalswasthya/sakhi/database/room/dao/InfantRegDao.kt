@@ -19,7 +19,7 @@ interface InfantRegDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun saveInfantReg(infantRegCache: InfantRegCache)
 
-    @Query("SELECT * FROM INFANT_REG WHERE processed = 'N'")
+    @Query("SELECT * FROM INFANT_REG WHERE processed in ('N', 'U')")
     suspend fun getAllUnprocessedInfantReg(): List<InfantRegCache>
 
     @Update

@@ -58,6 +58,11 @@ class SchedulerFragment : Fragment() {
                 binding.tvAnc.text = it.toString()
             }
         }
+        lifecycleScope.launch {
+            viewModel.lowWeightBabiesCount.collect{
+                binding.tvLbwb.text = it.toString()
+            }
+        }
         binding.cvAnc.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToPwAncVisitsFragment())
         }

@@ -24,7 +24,7 @@ interface CbacDao {
     suspend fun getLastFilledCbacFromBenId(benId: Long): CbacCache?
 
 
-    @Query("SELECT c.*, b.householdId as hhId, b.gender as benGender FROM CBAC c join beneficiary b on c.benId= b.beneficiaryId WHERE c.processed = 'N' ")
+    @Query("SELECT c.*, b.householdId as hhId, b.gender as benGender FROM CBAC c join beneficiary b on c.benId= b.beneficiaryId WHERE c.processed in ('N','U') ")
     suspend fun getAllUnprocessedCbac(): List<CbacCachePush>
 
     @Query("UPDATE CBAC SET syncState = 1 WHERE benId =:benId")

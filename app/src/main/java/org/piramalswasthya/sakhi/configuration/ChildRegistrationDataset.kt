@@ -6,6 +6,7 @@ import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.BenBasicCache
 import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.BenRegKid
 import org.piramalswasthya.sakhi.model.DeliveryOutcomeCache
 import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.Gender
@@ -259,15 +260,15 @@ class ChildRegistrationDataset(
             else -> Gender.FEMALE
         }
         val familyHeadRelationId =
-            getFamilyHeadRelationFromMother(gender,motherBen.familyHeadRelationPosition)
+            getFamilyHeadRelationFromMother(gender, motherBen.familyHeadRelationPosition)
         val familyHeadRelation = getRelationStringFromId(familyHeadRelationId)
 
         return BenRegCache(
             ashaId = user.userId,
             beneficiaryId = 0,
             createdDate = System.currentTimeMillis(),
-            updatedBy=user.userName,
-            createdBy=user.userName,
+            updatedBy = user.userName,
+            createdBy = user.userName,
             updatedDate = System.currentTimeMillis(),
             householdId = motherBen.householdId,
             isAdult = false,
@@ -297,8 +298,14 @@ class ChildRegistrationDataset(
             religion = motherBen.religion,
             religionId = motherBen.religionId,
             rchId = rchId.value,
-            processed = "N"
+            processed = "N",
+            kidDetails = BenRegKid(
+                childName = childName.value,
+                birthPlace = placeOfBirth.value,
+                birthPlaceId = placeOfBirth.getPosition(),
+                birthCertificateNumber = birthCertificateNo.value
             )
+        )
     }
 
     private fun getRelationStringFromId(familyHeadRelationId: Int): String {

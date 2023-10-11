@@ -243,7 +243,6 @@
                     android:layout_weight="1"
                     android:backgroundTint="@android:color/holo_orange_light"
                     android:elevation="@dimen/padding_normal"
-                    android:visibility="gone"
                     app:cardCornerRadius="@dimen/padding_normal"
                     app:cardElevation="@dimen/padding_normal">
 

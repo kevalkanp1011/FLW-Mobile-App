@@ -144,7 +144,7 @@ interface BenDao {
     @Query("SELECT ben.* FROM BEN_BASIC_CACHE ben inner join delivery_outcome do on do.benId = ben.benId where do.isActive = 1 and villageId=:selectedVillage")
     fun getListForInfantRegister(selectedVillage: Int): Flow<List<BenWithDoAndIrCache>>
 
-    @Query("SELECT count(distinct(ben.benId)) FROM BEN_BASIC_CACHE ben inner join delivery_outcome do on do.benId = ben.benId where do.isActive = 1 and villageId=:selectedVillage")
+    @Query("SELECT count(distinct(ben.benId)) FROM BEN_BASIC_CACHE ben inner join delivery_outcome do on do.benId = ben.benId where do.isActive = 1 and ben.villageId=:selectedVillage")
     fun getInfantRegisterCount(selectedVillage: Int): Flow<Int>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE  WHERE pwHrp = 1 and villageId=:selectedVillage")
@@ -274,5 +274,8 @@ interface BenDao {
 
     @Query("select count(*) from BEN_BASIC_CACHE where villageId = :villageId and reproductiveStatusId = 1 and gender = 'FEMALE' and benId in (select benId from HRP_NON_PREGNANT_ASSESS where isHighRisk = 1);")
     fun getAllHRPTrackingNonPregListCount(villageId: Int): Flow<Int>
+
+    @Query("select count(*) from INFANT_REG inf join ben_basic_cache ben on ben.benId = inf.motherBenId where isActive = 1 and weight < :lowWeightLimit and  ben.villageId = :villageId")
+    fun getLowWeightBabiesCount(villageId: Int, lowWeightLimit : Double = Konstants.babyLowWeight ): Flow<Int>
 
 }

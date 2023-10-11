@@ -159,6 +159,9 @@ class RecordsRepo @Inject constructor(
         .map { list -> list.map { it.asDomainModel() } }
     val hrpTrackingNonPregListCount = benDao.getAllHRPTrackingNonPregListCount(selectedVillage)
 
+
+    val lowWeightBabiesCount = benDao.getLowWeightBabiesCount(selectedVillage)
+
     fun getPregnantWomenList() = benDao.getAllPregnancyWomenList(selectedVillage)
         .map { list -> list.map { it.asPwrDomainModel() } }
 

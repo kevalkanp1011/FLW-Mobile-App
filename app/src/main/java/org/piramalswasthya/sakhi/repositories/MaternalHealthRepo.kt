@@ -13,7 +13,7 @@ import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.MaternalHealthDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
-import org.piramalswasthya.sakhi.helpers.hasPendingAncVisit
+import org.piramalswasthya.sakhi.helpers.getTodayMillis
 import org.piramalswasthya.sakhi.model.*
 import org.piramalswasthya.sakhi.network.AmritApiService
 import org.piramalswasthya.sakhi.network.GetDataPaginatedRequest
@@ -101,39 +101,23 @@ class MaternalHealthRepo @Inject constructor(
     val ancDueCount = maternalHealthDao.getAllPregnancyRecords().transformLatest {
         Timber.d("From DB : ${it.count()}")
         var count = 0
-        it.map {
-            val regis = it.key
-            Timber.d(
-                "Values emitted : ${
-                    it.value.map {
-                        AncStatus(
-                            it.benId,
-                            it.visitNumber,
-                            (TimeUnit.MILLISECONDS.toDays(regis.lmpDate - it.ancDate) / 7).toInt()
-
-                        )
-                    }
-                }"
-            )
-
-            val visitPending = hasPendingAncVisit(
-                it.value.map {
-                    AncStatus(
-                        it.benId,
-                        it.visitNumber,
-                        (TimeUnit.MILLISECONDS.toDays(regis.lmpDate - it.ancDate) / 7).toInt()
-
-                    )
-                },
-                regis.lmpDate,
-                regis.benId,
-                Calendar.getInstance().apply {
-                    set(Calendar.SECOND, 0)
-                    set(Calendar.MINUTE, 0)
-                    set(Calendar.HOUR_OF_DAY, 0)
-                }.timeInMillis
-            )
-            if (visitPending)
+        val notDeliveredList = it.filter { !it.value.any { it.pregnantWomanDelivered == true } }
+        notDeliveredList.keys.forEach { activePwrRecrod ->
+            val savedAncRecords = it[activePwrRecrod] ?: emptyList()
+            val isDue = if (savedAncRecords.isEmpty())
+                TimeUnit.MILLISECONDS.toDays(
+                    getTodayMillis() - activePwrRecrod.lmpDate
+                ) >= Konstants.minAnc1Week * 7
+            else {
+                val lastAncRecord = savedAncRecords.maxBy { it.visitNumber }
+                (activePwrRecrod.lmpDate + TimeUnit.DAYS.toMillis(280)) > (lastAncRecord.ancDate + TimeUnit.DAYS.toMillis(
+                    28
+                )) &&
+                        lastAncRecord.visitNumber < 4 && TimeUnit.MILLISECONDS.toDays(
+                    getTodayMillis() - lastAncRecord.ancDate
+                ) > 28
+            }
+            if (isDue)
                 count++
         }
         emit(count)
@@ -164,7 +148,7 @@ class MaternalHealthRepo @Inject constructor(
                     it.syncState = SyncState.UNSYNCED
                 }
                 maternalHealthDao.updateANC(it)
-                if(!uploadDone)
+                if (!uploadDone)
                     return@withContext false
             }
 
@@ -255,7 +239,7 @@ class MaternalHealthRepo @Inject constructor(
                     it.syncState = SyncState.UNSYNCED
                 }
                 maternalHealthDao.updatePwr(it)
-                if(!uploadDone)
+                if (!uploadDone)
                     return@withContext false
             }
 
@@ -441,9 +425,9 @@ class MaternalHealthRepo @Inject constructor(
 
     private fun isHighRisk(pwrDTO: PwrPost): Boolean {
         return (pwrDTO.badObstetric == "Yes" ||
-            pwrDTO.rhNegative == "Yes" ||
-            pwrDTO.homeDelivery == "Yes" ||
-            !pwrDTO.isFirstPregnancyTest)
+                pwrDTO.rhNegative == "Yes" ||
+                pwrDTO.homeDelivery == "Yes" ||
+                !pwrDTO.isFirstPregnancyTest)
     }
 
     suspend fun getAncVisitDetailsFromServer(): Int {
@@ -550,6 +534,7 @@ class MaternalHealthRepo @Inject constructor(
             }
         }
     }
+
     companion object {
         private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
         private val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
