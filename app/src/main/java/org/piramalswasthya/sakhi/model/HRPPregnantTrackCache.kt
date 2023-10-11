@@ -11,6 +11,7 @@ import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.getDateString
 import org.piramalswasthya.sakhi.helpers.getTodayMillis
 import org.piramalswasthya.sakhi.network.HRPPregnantTrackDTO
+import org.piramalswasthya.sakhi.utils.HelperUtil
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -51,7 +52,9 @@ data class HRPPregnantTrackCache(
     fun asDomainModel(): HRPPregnantTrackDomain {
         return HRPPregnantTrackDomain(
             id = id,
-            dateOfVisit = visit + " : " + getDateStrFromLong(visitDate)
+            dateOfVisit = visit + " : " + getDateStrFromLong(visitDate),
+            filledOnString = visit + HelperUtil.getTrackDate(visitDate),
+            syncState = syncState
         )
     }
 
@@ -79,7 +82,9 @@ data class HRPPregnantTrackCache(
 
 data class HRPPregnantTrackDomain(
     val id: Int = 0,
-    val dateOfVisit: String?
+    val dateOfVisit: String?,
+    val filledOnString: String?,
+    val syncState: SyncState?
 )
 
 data class HRPPregnantTrackBen(
