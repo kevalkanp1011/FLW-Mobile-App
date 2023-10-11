@@ -42,7 +42,7 @@ class PMSMAFormDataset(
         inputType = RADIO,
         title = resources.getString(R.string.pmsma_have_mcp_card),
         entries = resources.getStringArray(R.array.pmsma_confirmation_array),
-        hasDependants= true,
+        hasDependants = true,
         required = false
     )
     val givenMCPCard = FormElement(
@@ -416,7 +416,7 @@ class PMSMAFormDataset(
         mctsNumberOrRchNumber.value = pmsma.mctsNumberOrRchNumber
         haveMCPCard.value = if (pmsma.haveMCPCard == true) "Yes" else "No"
         husbandName.value = pmsma.husbandName
-        address.value = pmsma.address
+        address.value = pmsma.address?.let { if (it.length > 100) it.substring(0, 100) else it }
         mobileNumber.value = pmsma.mobileNumber.toString()
         numANC.value = pmsma.numANC.toString()
         weight.value = pmsma.weight.toString()

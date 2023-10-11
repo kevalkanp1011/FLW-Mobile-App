@@ -201,7 +201,11 @@ class ChildRegistrationDataset(
         dateOfReg.value = getDateFromLong(System.currentTimeMillis())
         dateOfReg.min = deliveryOutcomeCache?.dateOfDelivery
         motherBen?.let {
-            fatherName.value = it.genDetails?.spouseName
+            it.genDetails?.spouseName?.let {
+                fatherName.value = it
+            }?:run{
+                fatherName.inputType= InputType.EDIT_TEXT
+            }
             motherName.value = "${it.firstName} ${it.lastName ?: ""}"
             mobileNumberOf.value = mobileNumberOf.entries?.first()
             mobileNumber.value = it.contactNumber.toString()
@@ -233,6 +237,7 @@ class ChildRegistrationDataset(
             rchId.id -> validateRchIdOnEditText(rchId)
             rchIdMother.id -> validateRchIdOnEditText(rchIdMother)
             mobileNumber.id -> validateMobileNumberOnEditText(mobileNumber)
+            fatherName.id -> validateAllCapsOrSpaceOnEditText(fatherName)
             weightAtBirth.id -> validateDoubleMinMax(weightAtBirth)
             birthCertificateNo.id -> validateNoAlphabetSpaceOnEditText(birthCertificateNo)
 

@@ -161,7 +161,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_small"
                     android:layout_weight="1"
-                    android:backgroundTint="?attr/colorPrimary"
+                    android:backgroundTint="@android:color/holo_orange_light"
                     android:elevation="@dimen/padding_normal"
                     app:cardCornerRadius="@dimen/padding_normal"
                     app:cardElevation="@dimen/padding_normal">
@@ -176,8 +176,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:lines="3"
-                            android:textColor="?attr/colorOnPrimary"
-
                             android:text="@string/high_risk_pregnant_women"
                             android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
@@ -188,8 +186,6 @@
                             android:layout_below="@id/tv_ph_hrp"
                             android:layout_alignParentEnd="false"
                             android:layout_centerHorizontal="true"
-                            android:textColor="?attr/colorOnPrimary"
-
                             android:textAppearance="@style/TextAppearance.Material3.DisplayMedium"
                             tools:text="45" />
                     </RelativeLayout>
@@ -201,7 +197,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_small"
                     android:layout_weight="1"
-                    android:backgroundTint="?attr/colorPrimary"
+                    android:backgroundTint="@android:color/holo_orange_light"
                     android:elevation="@dimen/padding_normal"
                     app:cardCornerRadius="@dimen/padding_normal"
                     app:cardElevation="@dimen/padding_normal">
@@ -216,7 +212,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:lines="3"
-                            android:textColor="?attr/colorOnPrimary"
 
                             android:text="@string/high_risk_non_pregnant_women"
                             android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
@@ -228,8 +223,6 @@
                             android:layout_below="@id/tv_hr_npw"
                             android:layout_alignParentEnd="false"
                             android:layout_centerHorizontal="true"
-                            android:textColor="?attr/colorOnPrimary"
-
                             android:text="@string/_0"
                             android:textAppearance="@style/TextAppearance.Material3.DisplayMedium" />
                     </RelativeLayout>
@@ -243,6 +236,7 @@
                     android:layout_weight="1"
                     android:backgroundTint="@android:color/holo_orange_light"
                     android:elevation="@dimen/padding_normal"
+                    android:visibility="gone"
                     app:cardCornerRadius="@dimen/padding_normal"
                     app:cardElevation="@dimen/padding_normal">
 
@@ -279,9 +273,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_small"
                     android:layout_weight="1"
-                    android:backgroundTint="@android:color/holo_orange_dark"
+                    android:backgroundTint="@android:color/holo_orange_light"
                     android:elevation="@dimen/padding_normal"
-                    android:visibility="gone"
                     app:cardCornerRadius="@dimen/padding_normal"
                     app:cardElevation="@dimen/padding_normal">
 

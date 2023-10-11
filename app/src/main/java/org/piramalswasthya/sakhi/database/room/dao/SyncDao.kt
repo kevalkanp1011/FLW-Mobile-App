@@ -17,15 +17,16 @@ interface SyncDao {
                 + "UNION SELECT 6 as id, 'PMSMA' as name,  pmsma.syncState as syncState, count(*) as count from pmsma pmsma group by pmsma.syncState "
                 + "UNION SELECT 7 as id, 'Delivery Outcome' as name,  do.syncState as syncState, count(*) as count from delivery_outcome do group by do.syncState "
                 + "UNION SELECT 8 as id, 'PNC' as name,  pnc.syncState as syncState, count(*) as count from pnc_visit pnc group by pnc.syncState "
-                + "UNION SELECT 9 as id, 'CBAC' as name,  c1.syncState as syncState, count(*) as count from cbac c1 group by c1.syncState "
-                + "UNION SELECT 10 as id, 'TB Screening' as name,  tbsn.syncState as syncState, count(*) as count from TB_SCREENING tbsn group by tbsn.syncState "
-                + "UNION SELECT 11 as id, 'TB Suspected' as name,  tbsp.syncState as syncState, count(*) as count from TB_SUSPECTED tbsp group by tbsp.syncState "
-                + "UNION SELECT 12 as id, 'HRP Assess' as name,  hrpa.syncState as syncState, count(*) as count from HRP_PREGNANT_ASSESS hrpa group by hrpa.syncState "
-                + "UNION SELECT 13 as id, 'HRP Track' as name,  hrpt.syncState as syncState, count(*) as count from HRP_PREGNANT_TRACK hrpt group by hrpt.syncState "
-                + "UNION SELECT 14 as id, 'HR NonPreg Assess' as name,  hrnpa.syncState as syncState, count(*) as count from HRP_NON_PREGNANT_ASSESS hrnpa group by hrnpa.syncState "
-                + "UNION SELECT 15 as id, 'HR NonPreg Track' as name,  hrnpt.syncState as syncState, count(*) as count from HRP_NON_PREGNANT_TRACK hrnpt group by hrnpt.syncState "
-                + "UNION SELECT 16 as id, 'Infant Reg' as name,  ir.syncState as syncState, count(*) as count from infant_reg ir group by ir.syncState "
+                + "UNION SELECT 9 as id, 'Infant Reg' as name,  ir.syncState as syncState, count(*) as count from infant_reg ir group by ir.syncState "
+                + "UNION SELECT 10 as id, 'CBAC' as name,  c1.syncState as syncState, count(*) as count from cbac c1 group by c1.syncState "
+                + "UNION SELECT 11 as id, 'TB Screening' as name,  tbsn.syncState as syncState, count(*) as count from TB_SCREENING tbsn group by tbsn.syncState "
+                + "UNION SELECT 12 as id, 'TB Suspected' as name,  tbsp.syncState as syncState, count(*) as count from TB_SUSPECTED tbsp group by tbsp.syncState "
+                + "UNION SELECT 13 as id, 'HRP Assess' as name,  hrpa.syncState as syncState, count(*) as count from HRP_PREGNANT_ASSESS hrpa group by hrpa.syncState "
+                + "UNION SELECT 14 as id, 'HRP Track' as name,  hrpt.syncState as syncState, count(*) as count from HRP_PREGNANT_TRACK hrpt group by hrpt.syncState "
+                + "UNION SELECT 15 as id, 'HR NonPreg Assess' as name,  hrnpa.syncState as syncState, count(*) as count from HRP_NON_PREGNANT_ASSESS hrnpa group by hrnpa.syncState "
+                + "UNION SELECT 16 as id, 'HR NonPreg Track' as name,  hrnpt.syncState as syncState, count(*) as count from HRP_NON_PREGNANT_TRACK hrnpt group by hrnpt.syncState "
                 + "UNION SELECT 17 as id, 'Immunization' as name,  imm.syncState as syncState, count(*) as count from IMMUNIZATION imm group by imm.syncState "
-                 + " ORDER by id")
+                + " ORDER by id"
+    )
     fun getSyncStatus(): Flow<List<SyncStatusCache>>
 }

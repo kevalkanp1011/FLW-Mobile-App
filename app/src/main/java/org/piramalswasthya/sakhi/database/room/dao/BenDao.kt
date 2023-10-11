@@ -190,8 +190,12 @@ interface BenDao {
     ): Flow<List<BenBasicCache>>
 
     @Transaction
-    @Query("SELECT ben.* FROM BEN_BASIC_CACHE ben join delivery_outcome del on ben.benId = del.benId left outer join pnc_visit pnc on pnc.benId = ben.benId WHERE reproductiveStatusId = 3 and (pnc.isActive is null or pnc.isActive == 1) and CAST((strftime('%s','now') - del.dateOfDelivery/1000)/60/60/24 AS INTEGER) BETWEEN 0 and 42 and  villageId=:selectedVillage group by ben.benId")
-    fun getAllPNCMotherList(selectedVillage: Int): Flow<List<BenWithDoAndPncCache>>
+    @Query("SELECT ben.* FROM BEN_BASIC_CACHE ben join delivery_outcome del on ben.benId = del.benId left outer join pnc_visit pnc on pnc.benId = ben.benId WHERE reproductiveStatusId = 3 and (pnc.isActive is null or pnc.isActive == 1) and CAST((strftime('%s','now') - del.dateOfDelivery/1000)/60/60/24 AS INTEGER) BETWEEN :minPncDate and :maxPncDate and  villageId=:selectedVillage group by ben.benId")
+    fun getAllPNCMotherList(
+        selectedVillage: Int,
+        minPncDate: Long = 0,
+        maxPncDate: Long = Konstants.pncEcGap
+    ): Flow<List<BenWithDoAndPncCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE CAST((strftime('%s','now') - dob/1000)/60/60/24/365 AS INTEGER) <= :max and villageId=:selectedVillage")
     fun getAllInfantList(
@@ -276,6 +280,9 @@ interface BenDao {
     fun getAllHRPTrackingNonPregListCount(villageId: Int): Flow<Int>
 
     @Query("select count(*) from INFANT_REG inf join ben_basic_cache ben on ben.benId = inf.motherBenId where isActive = 1 and weight < :lowWeightLimit and  ben.villageId = :villageId")
-    fun getLowWeightBabiesCount(villageId: Int, lowWeightLimit : Double = Konstants.babyLowWeight ): Flow<Int>
+    fun getLowWeightBabiesCount(
+        villageId: Int,
+        lowWeightLimit: Double = Konstants.babyLowWeight
+    ): Flow<Int>
 
 }

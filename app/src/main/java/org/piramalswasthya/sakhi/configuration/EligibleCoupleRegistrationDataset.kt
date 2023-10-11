@@ -727,6 +727,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         id = 61,
         inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = resources.getString(R.string.no_of_deliveries_is_more_than_3),
+        arrayId = R.array.yes_no,
         entries = resources.getStringArray(R.array.yes_no),
         required = false,
         hasDependants = true

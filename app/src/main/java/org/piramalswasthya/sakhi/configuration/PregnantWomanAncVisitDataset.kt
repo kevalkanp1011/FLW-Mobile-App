@@ -126,6 +126,8 @@ class PregnantWomanAncVisitDataset(
     private val pulseRate = FormElement(
         id = 11,
         inputType = InputType.EDIT_TEXT,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
+        etMaxLength = 3,
         title = "Pulse Rate",
         required = false,
     )
@@ -689,7 +691,7 @@ class PregnantWomanAncVisitDataset(
             cache.weight = weight.value?.toInt()
             cache.bpSystolic = bp.value?.takeIf { it.isNotEmpty() }?.substringBefore("/")?.toInt()
             cache.bpDiastolic = bp.value?.takeIf { it.isNotEmpty() }?.substringAfter("/")?.toInt()
-            cache.pulseRate = pulseRate.value
+            cache.pulseRate = pulseRate.value?.takeIf { it.isNotEmpty() }
             cache.hb = hb.value?.toDouble()
             cache.fundalHeight = fundalHeight.value?.toInt()
             cache.urineAlbumin = urineAlbumin.value
