@@ -209,11 +209,11 @@ open class DeliveryOutcomeDataset(
             )
             dateOfDelivery.value = saved.dateOfDelivery?.let { getDateFromLong(it) }
             timeOfDelivery.value = saved.timeOfDelivery
-            placeOfDelivery.value = saved.placeOfDelivery
-            typeOfDelivery.value = saved.typeOfDelivery
+            placeOfDelivery.value = getLocalValueInArray(placeOfDelivery.arrayId, saved.placeOfDelivery)
+            typeOfDelivery.value = getLocalValueInArray(typeOfDelivery.arrayId, saved.typeOfDelivery)
             hadComplications.value = if (saved.hadComplications == true) "Yes" else "No"
-            complication.value = saved.complication
-            causeOfDeath.value = saved.causeOfDeath
+            complication.value = getLocalValueInArray(complication.arrayId, saved.complication)
+            causeOfDeath.value = getLocalValueInArray(causeOfDeath.arrayId, saved.causeOfDeath)
             otherCauseOfDeath.value = saved.otherCauseOfDeath
             otherComplication.value = saved.otherComplication
             deliveryOutcome.value = saved.deliveryOutcome.toString()

@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.FormElement
@@ -72,29 +73,16 @@ class ImmunizationDataset(context: Context, language: Languages) : Dataset(conte
         id = 109,
         inputType = InputType.DROPDOWN,
         title = "Vaccinated Place",
-        entries = arrayOf(
-            "Sub-Centre",
-            "PHC",
-            "CHC",
-            "Sub-District Hospital,",
-            "District Hospital,",
-            "Medical College Hospital",
-            "Private Hospital",
-            "Accredited Private Hospital",
-            "VHND",
-            "Other",
-        ),
+        arrayId = R.array.imm_vaccinated_place_array,
+        entries = resources.getStringArray(R.array.imm_vaccinated_place_array),
         required = false
     )
     private val vaccinatedBy = FormElement(
         id = 110,
         inputType = InputType.DROPDOWN,
         title = "Vaccinated By",
-        entries = arrayOf(
-            "ANM",
-            "CHO",
-            "MO",
-        ),
+        arrayId = R.array.imm_vaccinated_by_array,
+        entries = resources.getStringArray(R.array.imm_vaccinated_by_array),
         required = false
     )
 
@@ -121,8 +109,8 @@ class ImmunizationDataset(context: Context, language: Languages) : Dataset(conte
 
         imm?.let { saved ->
             dateOfVaccination.value = saved.date?.let { getDateFromLong(it) }
-            vaccinatedPlace.value = vaccinatedPlace.getStringFromPosition(saved.placeId)
-            vaccinatedBy.value = vaccinatedBy.getStringFromPosition(saved.byWhoId)
+            vaccinatedPlace.value = getLocalValueInArray(vaccinatedPlace.arrayId, saved.place)
+            vaccinatedBy.value = getLocalValueInArray(vaccinatedBy.arrayId, saved.byWho)
         }
         setUpPage(list)
     }
@@ -132,10 +120,10 @@ class ImmunizationDataset(context: Context, language: Languages) : Dataset(conte
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
         (cacheModel as ImmunizationCache).let {
             it.date = dateOfVaccination.value?.let { getLongFromDate(it) }
-            it.placeId= vaccinatedPlace.getPosition()
-            it.place = vaccinatedPlace.getStringFromPosition(it.placeId)?:""
-            it.byWhoId= vaccinatedBy.getPosition()
-            it.byWho = vaccinatedBy.getStringFromPosition(it.byWhoId)?:""
+//            it.placeId= vaccinatedPlace.getPosition()
+            it.place = vaccinatedPlace.getEnglishStringFromPosition(vaccinatedPlace.getPosition())?:""
+//            it.byWhoId= vaccinatedBy.getPosition()
+            it.byWho = vaccinatedBy.getEnglishStringFromPosition(vaccinatedBy.getPosition())?:""
 
 
         }

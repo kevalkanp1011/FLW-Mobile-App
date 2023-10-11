@@ -12,12 +12,8 @@ import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.ImmunizationCache
 import org.piramalswasthya.sakhi.model.ImmunizationPost
-import org.piramalswasthya.sakhi.model.PregnantWomanAncCache
-import org.piramalswasthya.sakhi.model.PwrPost
-import org.piramalswasthya.sakhi.model.TBSuspectedCache
 import org.piramalswasthya.sakhi.network.AmritApiService
 import org.piramalswasthya.sakhi.network.GetDataPaginatedRequest
-import org.piramalswasthya.sakhi.network.TBSuspectedRequestDTO
 import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
@@ -105,13 +101,12 @@ class ImmunizationRepo @Inject constructor(
         val immunizationList = Gson().fromJson(dataObj, Array<ImmunizationPost>::class.java).toList()
         immunizationList.forEach { immunizationDTO ->
             val vaccine = immunizationDao.getVaccineByName(immunizationDTO.vaccineName)!!
-            var immunizationCache: ImmunizationCache? =
+            val immunization: ImmunizationCache? =
                 immunizationDao.getImmunizationRecord(immunizationDTO.beneficiaryId, vaccine.id)
-            if (immunizationCache == null) {
-                var immunizationCache = immunizationDTO.toCacheModel()
-                val vaccine = immunizationDao.getVaccineByName(immunizationDTO.vaccineName)!!
+            if (immunization == null) {
+                val immunizationCache = immunizationDTO.toCacheModel()
                 immunizationCache.vaccineId = vaccine.id
-                immunizationDao.addImmunizationRecord(immunizationDTO.toCacheModel())
+                immunizationDao.addImmunizationRecord(immunizationCache)
             }
         }
         return immunizationList
@@ -176,8 +171,7 @@ class ImmunizationRepo @Inject constructor(
 
             } catch (e: SocketTimeoutException) {
                 Timber.d("save_child_immunization error : $e")
-                return@withContext false
-
+                return@withContext pushUnSyncedChildImmunizationRecords();
             } catch (e: java.lang.IllegalStateException) {
                 Timber.d("save_child_immunization error : $e")
                 return@withContext false

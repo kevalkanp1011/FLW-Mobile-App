@@ -543,10 +543,10 @@ class PregnantWomanRegistrationDataset(
                     lmp.inputType = InputType.TEXT_VIEW
                 edd.value = getDateFromLong(getEddFromLmp(it.lmpDate))
             }
-            bloodGroup.value = it.bloodGroup
+            bloodGroup.value = getLocalValueInArray(bloodGroup.arrayId, saved.bloodGroup)
             weight.value = it.weight?.toString()
             height.value = it.height?.toString()
-            vdrlrprTestResult.value = it.vdrlRprTestResult
+            vdrlrprTestResult.value = getLocalValueInArray(vdrlrprTestResult.arrayId, saved.vdrlRprTestResult)
             it.vdrlRprTestResult?.let { it1 ->
                 if (it1 == vdrlrprTestResult.entries?.get(0) || it1 == vdrlrprTestResult.entries?.get(
                         1
@@ -570,9 +570,9 @@ class PregnantWomanRegistrationDataset(
                         it.dateOfHbsAgTest?.let { it2 -> getDateFromLong(it2) }
                 }
             }
-            hivTestResult.value = it.hivTestResult
-            hbsAgTestResult.value = it.hbsAgTestResult
-            pastIllness.value = it.pastIllness
+            hivTestResult.value = getLocalValueInArray(hivTestResult.arrayId, saved.hivTestResult)
+            hbsAgTestResult.value = getLocalValueInArray(hbsAgTestResult.arrayId, saved.hbsAgTestResult)
+            pastIllness.value = getLocalValueInArray(pastIllness.arrayId, saved.pastIllness)
             otherPastIllness.value = it.otherPastIllness
             if (pastIllness.value == pastIllness.entries!!.last())
                 list.add(list.indexOf(pastIllness) + 1, otherPastIllness)
@@ -580,7 +580,7 @@ class PregnantWomanRegistrationDataset(
             if (isFirstPregnancy.value == isFirstPregnancy.entries!!.last()) {
                 totalNumberOfPreviousPregnancy.value = it.numPrevPregnancy?.toString()
                 complicationsDuringLastPregnancy.value =
-                    it.complicationPrevPregnancy
+                    getLocalValueInArray(complicationsDuringLastPregnancy.arrayId, saved.complicationPrevPregnancy)
                 list.addAll(
                     list.indexOf(isFirstPregnancy) + 1,
                     listOf(totalNumberOfPreviousPregnancy, complicationsDuringLastPregnancy)
@@ -595,7 +595,7 @@ class PregnantWomanRegistrationDataset(
             isHrpCase.value = isHrpCase.getStringFromPosition(if (it.isHrp) 1 else 2)
             if (it.isHrp) {
 //                assignedAsHrpBy.value = assignedAsHrpBy.getStringFromPosition(it.hrpIdById)
-                assignedAsHrpBy.value = it.hrpIdBy
+                assignedAsHrpBy.value = getLocalValueInArray(assignedAsHrpBy.arrayId, saved.hrpIdBy)
             }
 
 
