@@ -99,7 +99,7 @@ class AllBenFragment : Fragment() {
                 },
 
                 ),
-//            showAbha = false,
+            showAbha = false,
             showSyncIcon = true,
             showRegistrationDate = true
         )

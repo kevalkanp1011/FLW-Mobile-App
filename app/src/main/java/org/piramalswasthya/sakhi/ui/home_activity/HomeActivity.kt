@@ -32,6 +32,7 @@ import org.piramalswasthya.sakhi.databinding.ActivityHomeBinding
 import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.helpers.MyContextWrapper
+import org.piramalswasthya.sakhi.ui.abha_id_activity.AbhaIdActivity
 import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 import org.piramalswasthya.sakhi.ui.home_activity.sync.SyncBottomSheetFragment
 import org.piramalswasthya.sakhi.ui.login_activity.LoginActivity
@@ -66,10 +67,9 @@ class HomeActivity : AppCompatActivity() {
         get() = _binding!!
 
 
-    private val syncBottomSheet : SyncBottomSheetFragment by lazy {
+    private val syncBottomSheet: SyncBottomSheetFragment by lazy {
         SyncBottomSheetFragment()
     }
-
 
 
     private val viewModel: HomeViewModel by viewModels()
@@ -82,8 +82,13 @@ class HomeActivity : AppCompatActivity() {
         }
         MaterialAlertDialogBuilder(this).setTitle(resources.getString(R.string.choose_application_language))
             .setSingleChoiceItems(
-                arrayOf(resources.getString(R.string.english), resources.getString(R.string.hindi), resources.getString(
-                                    R.string.assamese)), currentLanguageIndex
+                arrayOf(
+                    resources.getString(R.string.english),
+                    resources.getString(R.string.hindi),
+                    resources.getString(
+                        R.string.assamese
+                    )
+                ), currentLanguageIndex
             ) { di, checkedItemIndex ->
                 val checkedLanguage = when (checkedItemIndex) {
                     0 -> Languages.ENGLISH
@@ -153,7 +158,13 @@ class HomeActivity : AppCompatActivity() {
         val pref = EntryPointAccessors.fromApplication(
             newBase, WrapperEntryPoint::class.java
         ).pref
-        super.attachBaseContext(MyContextWrapper.wrap(newBase, newBase.applicationContext, pref.getCurrentLanguage().symbol))
+        super.attachBaseContext(
+            MyContextWrapper.wrap(
+                newBase,
+                newBase.applicationContext,
+                pref.getCurrentLanguage().symbol
+            )
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -201,9 +212,13 @@ class HomeActivity : AppCompatActivity() {
                         langChooseAlert.show()
                         return true
                     }
+
                     R.id.sync_status -> {
-                        if(!syncBottomSheet.isVisible)
-                            syncBottomSheet.show(supportFragmentManager, resources.getString(R.string.sync))
+                        if (!syncBottomSheet.isVisible)
+                            syncBottomSheet.show(
+                                supportFragmentManager,
+                                resources.getString(R.string.sync)
+                            )
                         return true
                     }
                 }
@@ -239,7 +254,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setUpFirstTimePullWorker() {
         WorkerUtils.triggerPeriodicPncEcUpdateWorker(this)
-        if(!pref.isFullPullComplete)
+        if (!pref.isFullPullComplete)
             WorkerUtils.triggerAmritPullWorker(this)
 //        WorkerUtils.triggerD2dSyncWorker(this)
     }
@@ -304,13 +319,13 @@ class HomeActivity : AppCompatActivity() {
 
         }
 
-//        binding.navView.menu.findItem(R.id.abha_id_activity).setOnMenuItemClickListener {
-//            navController.popBackStack(R.id.homeFragment, false)
-//            startActivity(Intent(this, AbhaIdActivity::class.java))
-//            binding.drawerLayout.close()
-//            true
-//
-//        }
+        binding.navView.menu.findItem(R.id.abha_id_activity).setOnMenuItemClickListener {
+            navController.popBackStack(R.id.homeFragment, false)
+            startActivity(Intent(this, AbhaIdActivity::class.java))
+            binding.drawerLayout.close()
+            true
+
+        }
     }
 
 //    override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -336,7 +351,7 @@ class HomeActivity : AppCompatActivity() {
         binding.ivToolbar.setImageResource(logoResource)
 //        binding.toolbar.setLogo(logoResource)
         title?.let {
-            binding.toolbar.title= null
+            binding.toolbar.title = null
             binding.tvToolbar.text = it
         }
     }
