@@ -9,6 +9,7 @@ import androidx.room.Relation
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.network.HRPNonPregnantTrackDTO
+import org.piramalswasthya.sakhi.utils.HelperUtil
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -42,7 +43,9 @@ data class HRPNonPregnantTrackCache(
     fun asDomainModel(): HRPPregnantTrackDomain {
         return HRPPregnantTrackDomain(
             id = id,
-            dateOfVisit = getDateStrFromLong(visitDate)
+            dateOfVisit = getDateStrFromLong(visitDate),
+            filledOnString = "Follow Up " + HelperUtil.getTrackDate(visitDate),
+            syncState = syncState
         )
     }
 
