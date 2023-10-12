@@ -15,6 +15,7 @@ import org.piramalswasthya.sakhi.configuration.PregnantWomanAncVisitDataset
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.PregnantWomanAncCache
+import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
 import timber.log.Timber
@@ -60,6 +61,7 @@ class PwAncFormViewModel @Inject constructor(
     val formList = dataset.listFlow
 
     private lateinit var ancCache: PregnantWomanAncCache
+    private lateinit var registerRecord: PregnantWomanRegistrationCache
 
     init {
         viewModelScope.launch {
@@ -76,7 +78,7 @@ class PwAncFormViewModel @Inject constructor(
                     updatedBy = asha.userName
                 )
             }
-            val registerRecord = maternalHealthRepo.getSavedRegistrationRecord(benId)!!
+            registerRecord = maternalHealthRepo.getSavedRegistrationRecord(benId)!!
             maternalHealthRepo.getSavedAncRecord(benId, visitNumber)?.let {
                 ancCache = it
                 _recordExists.value = true
@@ -112,23 +114,24 @@ class PwAncFormViewModel @Inject constructor(
                     _state.postValue(State.SAVING)
                     dataset.mapValues(ancCache, 1)
                     maternalHealthRepo.persistAncRecord(ancCache)
+                    if (registerRecord.syncState == SyncState.UNSYNCED)
+                        maternalHealthRepo.persistRegisterRecord(registerRecord)
                     if (ancCache.pregnantWomanDelivered == true) {
                         maternalHealthRepo.getBenFromId(benId)?.let {
                             dataset.updateBenRecordToDelivered(it)
                             benRepo.updateRecord(it)
                         }
-                    }
-                    else if (ancCache.isAborted) {
+                    } else if (ancCache.isAborted) {
                         maternalHealthRepo.getSavedRegistrationRecord(benId)?.let {
                             it.active = false
-                            if(it.processed!="N") it.processed = "U"
+                            if (it.processed != "N") it.processed = "U"
                             it.syncState = SyncState.UNSYNCED
                             maternalHealthRepo.persistRegisterRecord(it)
                         }
                         maternalHealthRepo.getAllActiveAncRecords(benId).apply {
                             forEach {
                                 it.isActive = false
-                                if(it.processed!="N") it.processed = "U"
+                                if (it.processed != "N") it.processed = "U"
                                 it.syncState = SyncState.UNSYNCED
 
                             }
@@ -139,18 +142,17 @@ class PwAncFormViewModel @Inject constructor(
                             benRepo.updateRecord(it)
                         }
 
-                    }
-                    else if(ancCache.maternalDeath==true){
+                    } else if (ancCache.maternalDeath == true) {
                         maternalHealthRepo.getSavedRegistrationRecord(benId)?.let {
                             it.active = false
-                            if(it.processed!="N") it.processed = "U"
+                            if (it.processed != "N") it.processed = "U"
                             it.syncState = SyncState.UNSYNCED
                             maternalHealthRepo.persistRegisterRecord(it)
                         }
                         maternalHealthRepo.getAllActiveAncRecords(benId).apply {
                             forEach {
                                 it.isActive = false
-                                if(it.processed!="N") it.processed = "U"
+                                if (it.processed != "N") it.processed = "U"
                                 it.syncState = SyncState.UNSYNCED
                             }
                             maternalHealthRepo.updateAncRecord(toTypedArray())

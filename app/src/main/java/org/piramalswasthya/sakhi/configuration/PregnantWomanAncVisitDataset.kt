@@ -18,8 +18,9 @@ class PregnantWomanAncVisitDataset(
     context: Context, currentLanguage: Languages
 ) : Dataset(context, currentLanguage) {
 
-    private var lmp: Long = 0L
     private var lastAncVisitDate: Long = 0L
+
+    private lateinit var regis: PregnantWomanRegistrationCache
 
     private val ancDate = FormElement(
         id = 1,
@@ -320,7 +321,7 @@ class PregnantWomanAncVisitDataset(
         lastAnc: PregnantWomanAncCache?,
         saved: PregnantWomanAncCache?
     ) {
-        lmp = regis.lmpDate
+        this.regis = regis
         val list = mutableListOf(
             ancDate,
             weekOfPregnancy,
@@ -344,56 +345,43 @@ class PregnantWomanAncVisitDataset(
             maternalDeath
 
         )
-        abortionDate.min = lmp + TimeUnit.DAYS.toMillis(5 * 7 + 1)
+        abortionDate.min = regis.lmpDate + TimeUnit.DAYS.toMillis(5 * 7 + 1)
         dateOfTTOrTd1.min = abortionDate.min
         dateOfTTOrTdBooster.min = abortionDate.min
-        abortionDate.max = minOf(System.currentTimeMillis(), lmp + TimeUnit.DAYS.toMillis(21 * 7))
+        abortionDate.max =
+            minOf(System.currentTimeMillis(), regis.lmpDate + TimeUnit.DAYS.toMillis(21 * 7))
         dateOfTTOrTd1.max = abortionDate.max
         dateOfTTOrTd2.max = abortionDate.max
         dateOfTTOrTdBooster.max = abortionDate.max
 
         if (lastAnc == null)
             list.remove(dateOfTTOrTd2)
+        setUpTdX()
         ben?.let {
-            ancDate.min = lmp + TimeUnit.DAYS.toMillis(7 * Konstants.minAnc1Week.toLong() + 1)
+            ancDate.min =
+                regis.lmpDate + TimeUnit.DAYS.toMillis(7 * Konstants.minAnc1Week.toLong() + 1)
             ancVisit.entries = arrayOf("1", "2", "3", "4")
             lastAnc?.let { last ->
                 ancDate.min = last.ancDate + TimeUnit.DAYS.toMillis(4 * 7)
                 ancVisit.entries = arrayOf(2, 3, 4).filter {
                     it > last.visitNumber
                 }.map { it.toString() }.toTypedArray()
-                if (last.ttBooster != null) {
-                    dateOfTTOrTdBooster.value = getDateFromLong(last.ttBooster!!)
-                    dateOfTTOrTd1.inputType = InputType.TEXT_VIEW
-                    dateOfTTOrTd2.inputType = InputType.TEXT_VIEW
-                    dateOfTTOrTdBooster.inputType = InputType.TEXT_VIEW
-                } else if (last.tt1 == null) {
-                    dateOfTTOrTd2.inputType = InputType.TEXT_VIEW
-                } else {
-                    dateOfTTOrTd1.value = getDateFromLong(last.tt1!!)
-                    dateOfTTOrTdBooster.inputType = InputType.TEXT_VIEW
-                    dateOfTTOrTd1.inputType = InputType.TEXT_VIEW
-                    if (last.tt2 == null) {
-                        dateOfTTOrTd2.min = last.tt1!! + TimeUnit.DAYS.toMillis(28)
-                        dateOfTTOrTd2.max = min(System.currentTimeMillis(), getEddFromLmp(lmp))
-                    } else {
-                        dateOfTTOrTd2.value = getDateFromLong(last.tt2!!)
-                        dateOfTTOrTd2.inputType = InputType.TEXT_VIEW
-                    }
-                }
+
                 lastAncVisitDate = last.ancDate
             }
             ancDate.max =
-                minOf(getEddFromLmp(lmp), System.currentTimeMillis())
+                minOf(getEddFromLmp(regis.lmpDate), System.currentTimeMillis())
             ancDate.value = getDateFromLong(ancDate.max!!)
-            maternalDateOfDeath.min = maxOf(lmp, lastAncVisitDate) + TimeUnit.DAYS.toMillis(1)
-            maternalDateOfDeath.max = minOf(getEddFromLmp(lmp), System.currentTimeMillis())
+            maternalDateOfDeath.min =
+                maxOf(regis.lmpDate, lastAncVisitDate) + TimeUnit.DAYS.toMillis(1)
+            maternalDateOfDeath.max =
+                minOf(getEddFromLmp(regis.lmpDate), System.currentTimeMillis())
         }
 
 //        ancDate.value = getDateFromLong(System.currentTimeMillis())
         weekOfPregnancy.value = ancDate.value?.let {
             val long = getLongFromDate(it)
-            val weeks = getWeeksOfPregnancy(long, lmp)
+            val weeks = getWeeksOfPregnancy(long, regis.lmpDate)
             if (weeks > 22) {
                 list.add(deliveryDone)
             }
@@ -409,7 +397,7 @@ class PregnantWomanAncVisitDataset(
 
         saved?.let { savedAnc ->
 
-            val woP = getWeeksOfPregnancy(savedAnc.ancDate, lmp)
+            val woP = getWeeksOfPregnancy(savedAnc.ancDate, regis.lmpDate)
             if (woP <= 12) {
                 list.remove(fundalHeight)
                 list.remove(numIfaAcidTabGiven)
@@ -441,9 +429,9 @@ class PregnantWomanAncVisitDataset(
             urineAlbumin.value = urineAlbumin.getStringFromPosition(savedAnc.urineAlbuminId)
             randomBloodSugarTest.value =
                 randomBloodSugarTest.getStringFromPosition(savedAnc.randomBloodSugarTestId)
-            dateOfTTOrTd1.value = savedAnc.tt1?.let { getDateFromLong(it) }
-            dateOfTTOrTd2.value = savedAnc.tt2?.let { getDateFromLong(it) }
-            dateOfTTOrTdBooster.value = savedAnc.ttBooster?.let { getDateFromLong(it) }
+            dateOfTTOrTd1.value = regis.tt1?.let { getDateFromLong(it) }
+            dateOfTTOrTd2.value = regis.tt2?.let { getDateFromLong(it) }
+            dateOfTTOrTdBooster.value = regis.ttBooster?.let { getDateFromLong(it) }
             numFolicAcidTabGiven.value = savedAnc.numFolicAcidTabGiven.toString()
             numIfaAcidTabGiven.value = savedAnc.numIfaAcidTabGiven.toString()
             savedAnc.anyHighRisk?.let {
@@ -496,13 +484,35 @@ class PregnantWomanAncVisitDataset(
 
     }
 
+    private fun setUpTdX() {
+        if (regis.ttBooster != null) {
+            dateOfTTOrTdBooster.value = getDateFromLong(regis.ttBooster!!)
+            dateOfTTOrTd1.inputType = InputType.TEXT_VIEW
+            dateOfTTOrTd2.inputType = InputType.TEXT_VIEW
+            dateOfTTOrTdBooster.inputType = InputType.TEXT_VIEW
+        } else if (regis.tt1 == null) {
+            dateOfTTOrTd2.inputType = InputType.TEXT_VIEW
+        } else {
+            dateOfTTOrTd1.value = getDateFromLong(regis.tt1!!)
+            dateOfTTOrTdBooster.inputType = InputType.TEXT_VIEW
+            dateOfTTOrTd1.inputType = InputType.TEXT_VIEW
+            if (regis.tt2 == null) {
+                dateOfTTOrTd2.min = regis.tt1!! + TimeUnit.DAYS.toMillis(28)
+                dateOfTTOrTd2.max = min(System.currentTimeMillis(), getEddFromLmp(regis.lmpDate))
+            } else {
+                dateOfTTOrTd2.value = getDateFromLong(regis.tt2!!)
+                dateOfTTOrTd2.inputType = InputType.TEXT_VIEW
+            }
+        }
+    }
+
 
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
             ancDate.id -> {
                 ancDate.value?.let {
                     val long = getLongFromDate(it)
-                    val weeks = getWeeksOfPregnancy(long, lmp)
+                    val weeks = getWeeksOfPregnancy(long, regis.lmpDate)
                     val listChanged = if (weeks > 22) {
                         triggerDependants(
                             source = maternalDeath,
@@ -581,13 +591,20 @@ class PregnantWomanAncVisitDataset(
             )
 
             dateOfTTOrTd1.id -> {
-                dateOfTTOrTdBooster.inputType = InputType.TEXT_VIEW
+                if (dateOfTTOrTd1.value == null)
+                    dateOfTTOrTdBooster.inputType = InputType.DATE_PICKER
+                else
+                    dateOfTTOrTdBooster.inputType = InputType.TEXT_VIEW
                 -1
             }
 
             dateOfTTOrTdBooster.id -> {
-                dateOfTTOrTd1.inputType = InputType.TEXT_VIEW
-                dateOfTTOrTd2.inputType = InputType.TEXT_VIEW
+                if (dateOfTTOrTdBooster.value == null) {
+                    dateOfTTOrTd1.inputType = InputType.DATE_PICKER
+                } else {
+                    dateOfTTOrTd1.inputType = InputType.TEXT_VIEW
+                }
+
                 -1
             }
 
@@ -694,9 +711,7 @@ class PregnantWomanAncVisitDataset(
             cache.urineAlbuminId = urineAlbumin.getPosition()
             cache.randomBloodSugarTest = randomBloodSugarTest.value
             cache.randomBloodSugarTestId = randomBloodSugarTest.getPosition()
-            cache.tt1 = dateOfTTOrTd1.value?.let { getLongFromDate(it) }
-            cache.tt2 = dateOfTTOrTd2.value?.let { getLongFromDate(it) }
-            cache.ttBooster = dateOfTTOrTdBooster.value?.let { getLongFromDate(it) }
+            updateRegistrationForTdX()
             cache.numFolicAcidTabGiven = numFolicAcidTabGiven.value?.toInt() ?: 0
             cache.numIfaAcidTabGiven = numIfaAcidTabGiven.value?.toInt() ?: 0
             anyHighRisk.value?.let {
@@ -719,6 +734,31 @@ class PregnantWomanAncVisitDataset(
                 cache.pregnantWomanDelivered = it == deliveryDone.entries!!.first()
             }
         }
+    }
+
+    private fun updateRegistrationForTdX() {
+        if (dateOfTTOrTd1.value.isNullOrBlank() || dateOfTTOrTd2.value.isNullOrBlank() || dateOfTTOrTdBooster.value.isNullOrBlank())
+            return
+        else {
+            val td1 = if (dateOfTTOrTd1.inputType == InputType.DATE_PICKER) getLongFromDate(
+                dateOfTTOrTd1.value
+            ) else null
+            val td2 = if (dateOfTTOrTd2.inputType == InputType.DATE_PICKER) getLongFromDate(
+                dateOfTTOrTd2.value
+            ) else null
+            val tdBooster =
+                if (dateOfTTOrTdBooster.inputType == InputType.DATE_PICKER) getLongFromDate(
+                    dateOfTTOrTdBooster.value
+                ) else null
+            if (td1 == null && td2 == null && tdBooster == null)
+                return
+        }
+        regis.tt1 = dateOfTTOrTd1.value?.let { getLongFromDate(it) }
+        regis.tt2 = dateOfTTOrTd2.value?.let { getLongFromDate(it) }
+        regis.ttBooster = dateOfTTOrTdBooster.value?.let { getLongFromDate(it) }
+        regis.updatedDate = System.currentTimeMillis()
+        if (regis.processed != "N") regis.processed = "U"
+        regis.syncState = SyncState.UNSYNCED
     }
 
     fun getWeeksOfPregnancy(): Int = getIndexById(weekOfPregnancy.id)

@@ -28,6 +28,7 @@ interface BenDao {
     @Query("SELECT COUNT(*) FROM BEN_BASIC_CACHE where villageId = :selectedVillage and gender = :gender")
     fun getAllBenGenderCount(selectedVillage: Int, gender: String): Flow<Int>
 
+    @Transaction
     @Query("SELECT * FROM BEN_BASIC_CACHE where villageId = :selectedVillage")
     fun getAllTbScreeningBen(selectedVillage: Int): Flow<List<BenWithTbScreeningCache>>
 
@@ -66,7 +67,7 @@ interface BenDao {
     suspend fun getAllUnsyncedBen(unsynced: SyncState = SyncState.UNSYNCED): List<BenRegCache>
 
     @Query("SELECT COUNT(*) FROM BENEFICIARY WHERE isDraft = 0 AND (processed = 'N' OR processed = 'U') AND syncState =0")
-    fun getUnProcessedRecordCount(unsynced: SyncState = SyncState.UNSYNCED): Flow<Int>
+    fun getUnProcessedRecordCount(): Flow<Int>
 
     @Query("SELECT * FROM BENEFICIARY WHERE isDraft = 0 AND processed = 'U' AND syncState =:unsynced ")
     suspend fun getAllBenForSyncWithServer(unsynced: SyncState = SyncState.UNSYNCED): List<BenRegCache>
@@ -117,6 +118,7 @@ interface BenDao {
     @Query("SELECT ben.* FROM BEN_BASIC_CACHE ben left outer join pregnancy_register  pr on pr.benId = ben.benId  WHERE reproductiveStatusId = 2 and (pr.benId is null or pr.active = 1) and villageId=:selectedVillage")
     fun getAllPregnancyWomenList(selectedVillage: Int): Flow<List<BenWithPwrCache>>
 
+    @Transaction
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 2 and villageId=:selectedVillage")
     fun getAllPregnancyWomenForHRList(selectedVillage: Int): Flow<List<BenWithHRPACache>>
 
@@ -134,6 +136,7 @@ interface BenDao {
     @Query("SELECT count(distinct(ben.benId)) FROM BEN_BASIC_CACHE ben  inner join pregnancy_register pwr on pwr.benId = ben.benId inner join pregnancy_anc anc on ben.benId = anc.benId WHERE ben.reproductiveStatusId =3 and anc.pregnantWomanDelivered =1 and anc.isActive = 1 and pwr.active = 1 and villageId=:selectedVillage")
     fun getAllDeliveredWomenListCount(selectedVillage: Int): Flow<Int>
 
+    @Transaction
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId = 1 and gender = 'FEMALE' and villageId=:selectedVillage")
     fun getAllNonPregnancyWomenList(selectedVillage: Int): Flow<List<BenWithHRNPACache>>
 
@@ -248,7 +251,7 @@ interface BenDao {
     fun getScreeningList(villageId: Int): Flow<List<BenBasicCache>>
 
     @Transaction
-    @Query("select * from BEN_BASIC_CACHE b inner join tb_screening t on  b.benId = t.benId where villageId = :villageId and tbsnFilled = 1 and (t.bloodInSputum =1 or t.coughMoreThan2Weeks = 1 or feverMoreThan2Weeks = 1 or nightSweats = 1 or lossOfWeight = 1 or historyOfTb = 1)")
+    @Query("select b.* from BEN_BASIC_CACHE b inner join tb_screening t on  b.benId = t.benId where villageId = :villageId and tbsnFilled = 1 and (t.bloodInSputum =1 or t.coughMoreThan2Weeks = 1 or feverMoreThan2Weeks = 1 or nightSweats = 1 or lossOfWeight = 1 or historyOfTb = 1)")
     fun getTbScreeningList(villageId: Int): Flow<List<BenWithTbSuspectedCache>>
 
     @Transaction
@@ -257,7 +260,6 @@ interface BenDao {
         selectedVillage: Int, min: Int = Konstants.minAgeForNcd
     ): Flow<List<BenWithCbacCache>>
 
-    @Transaction
     @Query("SELECT COUNT(*) FROM BEN_BASIC_CACHE b where CAST((strftime('%s','now') - b.dob/1000)/60/60/24/365 AS INTEGER)  >= :min and b.reproductiveStatusId!=2 and b.villageId=:selectedVillage")
     fun getBenWithCbacCount(
         selectedVillage: Int, min: Int = Konstants.minAgeForNcd
@@ -267,12 +269,14 @@ interface BenDao {
     suspend fun getMinBenId(): Long?
 
 
+    @Transaction
     @Query("select * from BEN_BASIC_CACHE where villageId = :villageId and reproductiveStatusId = 2 and gender = 'FEMALE' and benId in (select benId from HRP_PREGNANT_ASSESS where isHighRisk = 1);")
     fun getAllHRPTrackingPregList(villageId: Int): Flow<List<BenWithHRPTrackingCache>>
 
     @Query("select count(*) from BEN_BASIC_CACHE where villageId = :villageId and reproductiveStatusId = 2 and gender = 'FEMALE' and benId in (select benId from HRP_PREGNANT_ASSESS where isHighRisk = 1);")
     fun getAllHRPTrackingPregListCount(villageId: Int): Flow<Int>
 
+    @Transaction
     @Query("select * from BEN_BASIC_CACHE where villageId = :villageId and reproductiveStatusId = 1 and gender = 'FEMALE' and benId in (select benId from HRP_NON_PREGNANT_ASSESS where isHighRisk = 1);")
     fun getAllHRPTrackingNonPregList(villageId: Int): Flow<List<BenWithHRNPTrackingCache>>
 
