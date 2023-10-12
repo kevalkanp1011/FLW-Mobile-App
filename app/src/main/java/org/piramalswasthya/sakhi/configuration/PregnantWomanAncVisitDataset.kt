@@ -595,10 +595,6 @@ class PregnantWomanAncVisitDataset(
 
             weight.id -> validateIntMinMax(weight)
 
-            pulseRate.id -> {
-                validateAllAlphabetsSpaceOnEditText(pulseRate)
-            }
-
             hb.id -> {
                 validateDoubleUpto1DecimalPlaces(hb)
                 if (hb.errorText == null) validateDoubleMinMax(hb)

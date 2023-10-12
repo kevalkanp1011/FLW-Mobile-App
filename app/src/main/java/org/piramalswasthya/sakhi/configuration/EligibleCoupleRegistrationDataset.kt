@@ -1147,7 +1147,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             }
 
             ifsc.id -> {
-                validateAllAlphaNumericSpaceOnEditText(ifsc)
+                validateAllAlphaNumericOnEditText(ifsc)
             }
 
             ageAtMarriage.id -> {

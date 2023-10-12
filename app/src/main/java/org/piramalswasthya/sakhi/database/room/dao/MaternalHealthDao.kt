@@ -36,7 +36,7 @@ interface MaternalHealthDao {
         benId: Long,
     ): List<AncStatus>
 
-    @Query("select * from pregnancy_register reg left outer join pregnancy_anc anc on reg.benId=anc.benId where reg.active = 1 and anc.isActive = 1")
+    @Query("select * from pregnancy_register reg left outer join pregnancy_anc anc on reg.benId=anc.benId where reg.active = 1 and (anc.benId is null or anc.isActive = 1)")
     fun getAllPregnancyRecords(): Flow<Map<PregnantWomanRegistrationCache, List<PregnantWomanAncCache>>>
 
     @Query("select count(*) from HRP_NON_PREGNANT_ASSESS assess where isHighRisk = 1")

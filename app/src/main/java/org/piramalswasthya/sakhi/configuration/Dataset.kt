@@ -480,6 +480,11 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
             ?.all { it.isWhitespace() || it.isLetter() || it.isDigit() }
             ?: false
 
+    private fun String.isAllAlphaNumeric() =
+        takeIf { it.isNotEmpty() }?.toCharArray()
+            ?.all { it.isLetter() || it.isDigit() }
+            ?: false
+
     private fun String.isAnyAlphabetOrSpace() =
         takeIf { it.isNotEmpty() }?.toCharArray()
             ?.any { it.isWhitespace() || it.isLetter() }
@@ -515,7 +520,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
 
     protected fun validateAllAlphabetsSpaceOnEditText(formElement: FormElement): Int {
         formElement.value?.takeIf { it.isNotEmpty() }?.isAllAlphabetsAndSpace()?.let {
-            if (formElement.errorText != null)
+            if (formElement.errorText != null && formElement.errorText !=  resources.getString(R.string.form_input_alphabet_space_only_error))
                 return@let
             if (it) formElement.errorText = null
             else formElement.errorText =
@@ -526,7 +531,7 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
 
     protected fun validateAllAlphabetsSpecialOnEditText(formElement: FormElement): Int {
         formElement.value?.takeIf { it.isNotEmpty() }?.isThereAnyNumber()?.let {
-            if (formElement.errorText != null)
+            if (formElement.errorText != null && formElement.errorText !=  resources.getString(R.string.form_input_alphabet_special_only_error))
                 return@let
             if (it) formElement.errorText =
                 resources.getString(R.string.form_input_alphabet_special_only_error)
@@ -537,24 +542,43 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     }
 
     protected fun validateAllAlphaNumericSpaceOnEditText(formElement: FormElement): Int {
-        formElement.value?.takeIf { it.isNotEmpty() }?.isAllAlphaNumericAndSpace()?.let {
-            if (formElement.errorText != null)
+        formElement.value?.takeIf { it.isNotEmpty() }?.let {
+            val isValid = it.isAllAlphaNumericAndSpace()
+            if (formElement.errorText != null && formElement.errorText !=  resources.getString(R.string.form_input_alph_numeric_space_only_error))
                 return@let
-            if (it) formElement.errorText = null
+            if (isValid) formElement.errorText = null
             else formElement.errorText =
                 resources.getString(R.string.form_input_alph_numeric_space_only_error)
+        }?: kotlin.run {
+            formElement.errorText = null
+        }
+        return -1
+    }
+
+    protected fun validateAllAlphaNumericOnEditText(formElement: FormElement): Int {
+        formElement.value?.takeIf { it.isNotEmpty() }?.let {
+            val isValid = it.isAllAlphaNumeric()
+            if (formElement.errorText != null && formElement.errorText !=  resources.getString(R.string.form_input_alph_numeric_space_only_error))
+                return@let
+            if (isValid) formElement.errorText = null
+            else formElement.errorText =
+                resources.getString(R.string.form_input_alph_numeric_space_only_error)
+        }?: kotlin.run {
+            formElement.errorText = null
         }
         return -1
     }
 
     protected fun validateNoAlphabetSpaceOnEditText(formElement: FormElement): Int {
         formElement.value?.takeIf { it.isNotEmpty() }?.isAnyAlphabetOrSpace()?.let {
-            if (formElement.errorText != null)
+            if (formElement.errorText != null  && formElement.errorText !=  resources.getString(R.string.form_input__no_alpha_space_error))
                 return@let
             if (it) formElement.errorText =
                 resources.getString(R.string.form_input__no_alpha_space_error)
             else formElement.errorText =
                 null
+        }?: kotlin.run {
+            formElement.errorText = null
         }
         return -1
     }
@@ -564,6 +588,8 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
             if (it) formElement.errorText = null
             else formElement.errorText =
                 resources.getString(R.string.form_input_digit_only_error)
+        }?: kotlin.run {
+            formElement.errorText = null
         }
         return -1
     }

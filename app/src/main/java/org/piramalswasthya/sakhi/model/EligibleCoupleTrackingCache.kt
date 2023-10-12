@@ -117,7 +117,7 @@ data class BenWithEcTrackingCache(
         return BenWithEctListDomain(
 //            ecBenId,
             ben.asBasicDomainModel(),
-            ecr.noOfChildren.toString(),
+            ecr.noOfLiveChildren.toString(),
             allowFill,
             savedECTRecords.map {
                 ECTDomain(
