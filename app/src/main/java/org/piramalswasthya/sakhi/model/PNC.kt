@@ -9,7 +9,10 @@ import androidx.room.Relation
 import com.squareup.moshi.JsonClass
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.network.getLongFromDate
+import java.util.Calendar
+import java.util.concurrent.TimeUnit
 
 @Entity(
     tableName = "PNC_VISIT",
@@ -71,7 +74,7 @@ data class PNCVisitCache(
             otherDangerSign = otherDangerSign,
             referralFacility = referralFacility,
             motherDeath = motherDeath,
-            deathDate =deathDate?.let {  getDateTimeStringFromLong(it) },
+            deathDate = deathDate?.let { getDateTimeStringFromLong(it) },
             causeOfDeath = causeOfDeath,
             otherDeathCause = otherDeathCause,
             placeOfDeath = placeOfDeath,
@@ -155,13 +158,35 @@ data class BenWithDoAndPncCache(
     val savedPncRecords: List<PNCVisitCache>
 ) {
     fun asBasicDomainModelForPNC(): BenPncDomain {
+        val activeDo = deliveryOutcomeCache.first { it.isActive }
+        val latestPnc = savedPncRecords.maxByOrNull { it.pncPeriod }
+        val daysSinceDeliveryMillis = Calendar.getInstance()
+            .setToStartOfTheDay().timeInMillis - activeDo.dateOfDelivery!!.let {
+            val cal = Calendar.getInstance()
+            cal.timeInMillis = it
+            cal.setToStartOfTheDay()
+            cal.timeInMillis
+        }
+        val daysSinceDelivery = TimeUnit.MILLISECONDS.toDays(daysSinceDeliveryMillis)
+        val availFillDates =
+            listOf(
+                1,
+                3,
+                7,
+                14,
+                21,
+                28,
+                42
+            ).filter { if (daysSinceDelivery == 0L) it <= 1 else it <= daysSinceDelivery }
+                .filter { it > (latestPnc?.pncPeriod ?: 0) }
         return BenPncDomain(
             ben.asBasicDomainModel(),
-            deliveryOutcomeCache.firstOrNull { it.isActive }?.dateOfDelivery?.let {
+            activeDo.dateOfDelivery?.let {
                 getDateStrFromLong(
                     it
                 )
             } ?: "",
+            availFillDates.isNotEmpty(),
             savedPncRecords
         )
     }
@@ -172,10 +197,11 @@ data class BenPncDomain(
 
     val ben: BenBasicDomain,
     val deliveryDate: String,
+    val allowFill: Boolean,
     val savedPncRecords: List<PNCVisitCache>,
     val syncState: SyncState? = savedPncRecords.takeIf { it.isNotEmpty() }?.map { it.syncState }
-        ?.let {
-            if (it.any { it != SyncState.SYNCED })
+        ?.let { syncStates ->
+            if (syncStates.any { it != SyncState.SYNCED })
                 SyncState.UNSYNCED
             else
                 SyncState.SYNCED

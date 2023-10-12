@@ -9,8 +9,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.ImmunizationBenListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentChildImmunizationListBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -50,6 +52,7 @@ class ChildImmunizationListFragment : Fragment() {
             }
         }
 
+
 //        bottomSheet.setContentFlow(viewModel.bottomSheetContent)
 //        lifecycleScope.launch {
 //            viewModel.bottomSheetContent.collect {
@@ -58,5 +61,16 @@ class ChildImmunizationListFragment : Fragment() {
 //            }
 //        }
     }
+
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__immunization,
+                getString(R.string.child_immunization_list)
+            )
+        }
+    }
+
 
 }

@@ -218,7 +218,7 @@ class PncFormDataset(
             otherPpcMethod.value = it.otherPpcMethod
             motherDangerSign.value = it.motherDangerSign
             if (it.motherDangerSign == motherDangerSign.entries!!.last()) {
-                list.add(list.indexOf(otherDangerSign) + 1, motherDangerSign)
+                list.add(list.indexOf(motherDangerSign) + 1, otherDangerSign)
             }
             otherDangerSign.value = it.otherDangerSign
             referralFacility.value = it.referralFacility

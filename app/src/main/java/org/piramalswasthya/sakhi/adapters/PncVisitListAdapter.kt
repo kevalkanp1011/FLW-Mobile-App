@@ -40,6 +40,8 @@ class PncVisitListAdapter(private val clickListener: PncVisitClickListener? = nu
             binding.visit = item
             binding.btnViewVisits.visibility =
                 if (item.savedPncRecords.isEmpty()) View.INVISIBLE else View.VISIBLE
+            binding.btnAddPnc.visibility =
+                if (item.allowFill) View.INVISIBLE else View.VISIBLE
             binding.clickListener = clickListener
             binding.executePendingBindings()
 
@@ -65,7 +67,7 @@ class PncVisitListAdapter(private val clickListener: PncVisitClickListener? = nu
         )
 
         fun addVisit(item: BenPncDomain) = addVisit(item.ben.benId,
-            if (item.savedPncRecords.isEmpty()) 1 else item.savedPncRecords.maxOf {it.pncPeriod} + 1)
+            if (item.savedPncRecords.isEmpty()) 1 else item.savedPncRecords.maxOf { it.pncPeriod } + 1)
     }
 
 }

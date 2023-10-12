@@ -72,6 +72,9 @@ class SchedulerFragment : Fragment() {
         binding.cvNonHrp.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToHRPNonPregnantListFragment())
         }
+        binding.cvLwb.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToInfantRegListFragment())
+        }
         lifecycleScope.launch {
             viewModel.hrpDueCount.collect{
                 binding.tvHrp.text = it.toString()
