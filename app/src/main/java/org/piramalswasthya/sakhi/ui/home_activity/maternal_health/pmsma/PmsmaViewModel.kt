@@ -71,6 +71,7 @@ class PmsmaViewModel @Inject constructor(
             val household = benRepo.getHousehold(hhId)!!
             pmsma = pmsmaRepo.getPmsmaByBenId(benId)
             pwr = maternalHealthRepo.getSavedRegistrationRecord(benId)!!
+            val lastAnc = maternalHealthRepo.getLatestAncRecord(benId)
             _benName.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
             _recordExists.value = pmsma != null
@@ -78,6 +79,7 @@ class PmsmaViewModel @Inject constructor(
                 household,
                 ben,
                 pwr,
+                lastAnc,
                 if (recordExists.value == true) pmsma else null
             )
 

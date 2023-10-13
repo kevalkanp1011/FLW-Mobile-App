@@ -680,7 +680,8 @@ class FormInputAdapter(
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RvItemFormAgePickerViewV2Binding.inflate(layoutInflater, parent, false)
+                val binding =
+                    RvItemFormAgePickerViewV2Binding.inflate(layoutInflater, parent, false)
                 return AgePickerViewInputViewHolder(binding)
             }
         }
@@ -788,7 +789,11 @@ class FormInputAdapter(
 
             TIME_PICKER -> (holder as TimePickerInputViewHolder).bind(item, isEnabled)
             HEADLINE -> (holder as HeadlineViewHolder).bind(item, formValueListener)
-            AGE_PICKER -> (holder as AgePickerViewInputViewHolder).bind(item, ageClickListener, isEnabled)
+            AGE_PICKER -> (holder as AgePickerViewInputViewHolder).bind(
+                item,
+                ageClickListener,
+                isEnabled
+            )
         }
     }
 
@@ -803,7 +808,7 @@ class FormInputAdapter(
         if (!isEnabled) return retVal
         currentList.forEachIndexed { index, it ->
             Timber.d("Error text for ${it.title} ${it.errorText}")
-            if (it.errorText != null) {
+            if (it.inputType != TEXT_VIEW && it.errorText != null) {
                 retVal = index
                 return@forEachIndexed
             }
@@ -811,7 +816,7 @@ class FormInputAdapter(
         Timber.d("Validation : $retVal")
         if (retVal != -1) return retVal
         currentList.forEachIndexed { index, it ->
-            if (it.required) {
+            if (it.inputType != TEXT_VIEW && it.required) {
                 if (it.value.isNullOrBlank()) {
                     Timber.d("validateInput called for item $it, with index ${index}")
                     it.errorText = resources.getString(R.string.form_input_empty_error)

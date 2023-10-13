@@ -13,6 +13,7 @@ import org.piramalswasthya.sakhi.model.InputType.HEADLINE
 import org.piramalswasthya.sakhi.model.InputType.RADIO
 import org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW
 import org.piramalswasthya.sakhi.model.PMSMACache
+import org.piramalswasthya.sakhi.model.PregnantWomanAncCache
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -33,7 +34,7 @@ class PMSMAFormDataset(
 
     private val mctsNumberOrRchNumber = FormElement(
         id = 1,
-        inputType = EDIT_TEXT,
+        inputType = TEXT_VIEW,
         title = resources.getString(R.string.pmsma_mcts_rch_number),
         required = false
     )
@@ -258,6 +259,7 @@ class PMSMAFormDataset(
         inputType = RADIO,
         title = resources.getString(R.string.pmsma_high_risk_symbols),
         entries = resources.getStringArray(R.array.pmsma_confirmation_array),
+        hasDependants = true,
         required = false
     )
     private val highRiskReason = FormElement(
@@ -304,14 +306,17 @@ class PMSMAFormDataset(
         household: HouseholdCache,
         ben: BenRegCache,
         pwr: PregnantWomanRegistrationCache,
+        lastAnc: PregnantWomanAncCache?,
         pmsma: PMSMACache?
     ) {
-
+        mctsNumberOrRchNumber.value = pwr.rchId?.toString()
         address.value = getAddress(household)
         mobileNumber.value = ben.contactNumber.toString()
         husbandName.value = ben.genDetails?.spouseName
         mctsNumberOrRchNumber.value = ben.rchId
-
+        lastAnc?.let {
+            "${(it.ancDate - pwr.lmpDate) / 7} Weeks"
+        }
         lastMenstrualPeriod.value = getDateFromLong(pwr.lmpDate)
         expectedDateOfDelivery.value = getDateFromLong(getEddFromLmp(pwr.lmpDate))
         abdominalCheckUp.value = "${

@@ -379,20 +379,23 @@ class PregnantWomanAncVisitDataset(
         }
 
 //        ancDate.value = getDateFromLong(System.currentTimeMillis())
-        weekOfPregnancy.value = ancDate.value?.let {
-            val long = getLongFromDate(it)
-            val weeks = getWeeksOfPregnancy(long, regis.lmpDate)
-            if (weeks > 22) {
-                list.add(deliveryDone)
+        if (saved == null) {
+            weekOfPregnancy.value = ancDate.value?.let {
+                val long = getLongFromDate(it)
+                val weeks = getWeeksOfPregnancy(long, regis.lmpDate)
+                if (weeks >= Konstants.minWeekToShowDelivered) {
+                    list.add(deliveryDone)
+                }
+                if (weeks <= 12) {
+                    list.remove(fundalHeight)
+                    list.remove(numIfaAcidTabGiven)
+                } else {
+                    list.remove(numFolicAcidTabGiven)
+                }
+                weeks.toString()
             }
-            if (weeks <= 12) {
-                list.remove(fundalHeight)
-                list.remove(numIfaAcidTabGiven)
-            } else {
-                list.remove(numFolicAcidTabGiven)
-            }
-            weeks.toString()
         }
+
         ancVisit.value = visitNumber.toString()
 
         saved?.let { savedAnc ->
@@ -404,7 +407,9 @@ class PregnantWomanAncVisitDataset(
             } else {
                 list.remove(numFolicAcidTabGiven)
             }
-
+            if (woP >= Konstants.minWeekToShowDelivered) {
+                if (!list.contains(deliveryDone)) list.add(deliveryDone)
+            }
             ancDate.value = getDateFromLong(savedAnc.ancDate)
             weekOfPregnancy.value = woP.toString()
             isAborted.value =
@@ -513,7 +518,7 @@ class PregnantWomanAncVisitDataset(
                 ancDate.value?.let {
                     val long = getLongFromDate(it)
                     val weeks = getWeeksOfPregnancy(long, regis.lmpDate)
-                    val listChanged = if (weeks > 22) {
+                    val listChanged = if (weeks >= Konstants.minWeekToShowDelivered) {
                         triggerDependants(
                             source = maternalDeath,
                             addItems = listOf(deliveryDone),
@@ -536,14 +541,32 @@ class PregnantWomanAncVisitDataset(
                     }
                     if (ancVisit.entries?.contains(calcVisitNumber.toString()) == true) {
                         ancVisit.value = calcVisitNumber.toString()
-                        val listChanged2 = handleListOnValueChanged(
-                            ancVisit.id,
-                            ancVisit.entries!!.indexOf(ancDate.value)
-                        )
-                        if (listChanged >= 0 || listChanged2 >= 0)
-                            return 1
+                        val listChanged2 = if (weeks <= 12)
+                            triggerDependants(
+                                source = ancVisit,
+                                addItems = listOf(numFolicAcidTabGiven),
+                                removeItems = listOf(fundalHeight, numIfaAcidTabGiven),
+                                position = getIndexById(dateOfTTOrTdBooster.id) + 1
+                            )
+                        else {
+                            triggerDependants(
+                                source = ancVisit,
+                                removeItems = listOf(numFolicAcidTabGiven),
+                                addItems = listOf(fundalHeight),
+                                position = getIndexById(hb.id) + 1
+                            )
+                            triggerDependants(
+                                source = ancVisit,
+                                removeItems = listOf(),
+                                addItems = listOf(numIfaAcidTabGiven),
+                                position = getIndexById(dateOfTTOrTdBooster.id) + 1
+                            )
+
+                        }
+                        return if (listChanged >= 0 || listChanged2 >= 0)
+                            1
                         else
-                            return -1
+                            -1
                     }
                     return listChanged
                 }
