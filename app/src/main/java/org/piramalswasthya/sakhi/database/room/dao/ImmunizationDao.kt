@@ -35,7 +35,7 @@ interface ImmunizationDao {
 
     @Transaction
     @Query(
-        "SELECT * FROM BEN_BASIC_CACHE ben LEFT OUTER JOIN IMMUNIZATION imm WHERE ben.dob BETWEEN :minDob AND :maxDob "
+        "SELECT ben.* FROM BEN_BASIC_CACHE ben LEFT OUTER JOIN IMMUNIZATION imm WHERE ben.dob BETWEEN :minDob AND :maxDob group by ben.benId"
     )
     fun getBenWithImmunizationRecords(
         minDob: Long,
