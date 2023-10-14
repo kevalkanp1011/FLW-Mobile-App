@@ -17,16 +17,20 @@ import java.util.concurrent.TimeUnit
 
 object WorkerUtils {
 
-    const val syncWorkerUniqueName  = "SYNC-WITH-AMRIT"
+    const val syncWorkerUniqueName = "SYNC-WITH-AMRIT"
 
     private val networkOnlyConstraint = Constraints.Builder()
         .setRequiredNetworkType(NetworkType.CONNECTED)
         .build()
 
-    fun triggerAmritSyncWorker(context : Context){
+    fun triggerAmritSyncWorker(context: Context) {
         val pullWorkRequest = OneTimeWorkRequestBuilder<PullFromAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
+        val pullIncentiveActivityWorkRequest =
+            OneTimeWorkRequestBuilder<PullIncentiveWorker>()
+                .setConstraints(networkOnlyConstraint)
+                .build()
         val pullCbacWorkRequest = OneTimeWorkRequestBuilder<CbacPullFromAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
@@ -39,18 +43,20 @@ object WorkerUtils {
         val pullECWorkRequest = OneTimeWorkRequestBuilder<PullECFromAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
-        val pullImmunizationWorkRequest = OneTimeWorkRequestBuilder<PullChildImmunizatonFromAmritWorker>()
-            .setConstraints(networkOnlyConstraint)
-            .build()
+        val pullImmunizationWorkRequest =
+            OneTimeWorkRequestBuilder<PullChildImmunizatonFromAmritWorker>()
+                .setConstraints(networkOnlyConstraint)
+                .build()
         val pushWorkRequest = OneTimeWorkRequestBuilder<PushToAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
         val pushCbacWorkRequest = OneTimeWorkRequestBuilder<CbacPushToAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
-        val pushImmunizationWorkRequest = OneTimeWorkRequestBuilder<PushChildImmunizationToAmritWorker>()
-            .setConstraints(networkOnlyConstraint)
-            .build()
+        val pushImmunizationWorkRequest =
+            OneTimeWorkRequestBuilder<PushChildImmunizationToAmritWorker>()
+                .setConstraints(networkOnlyConstraint)
+                .build()
         val pushHRPToAmritWorker = OneTimeWorkRequestBuilder<PushHRPToAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
@@ -62,7 +68,12 @@ object WorkerUtils {
             .build()
         val workManager = WorkManager.getInstance(context)
         workManager
-            .beginUniqueWork(syncWorkerUniqueName, ExistingWorkPolicy.APPEND_OR_REPLACE, pullWorkRequest)
+            .beginUniqueWork(
+                syncWorkerUniqueName,
+                ExistingWorkPolicy.APPEND_OR_REPLACE,
+                pullWorkRequest
+            )
+            .then(pullIncentiveActivityWorkRequest)
             .then(pullCbacWorkRequest)
             .then(pullHRPWorkRequest)
             .then(pullTBWorkRequest)
@@ -76,7 +87,8 @@ object WorkerUtils {
             .then(pushECWorkRequest)
             .enqueue()
     }
-    fun triggerAmritPushWorker(context : Context){
+
+    fun triggerAmritPushWorker(context: Context) {
         val pushWorkRequest = OneTimeWorkRequestBuilder<PushToAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
@@ -98,21 +110,28 @@ object WorkerUtils {
         val pushPmsmaWorkRequest = OneTimeWorkRequestBuilder<PushPmsmaToAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
-        val pushDeliverOutcomeWorkRequest = OneTimeWorkRequestBuilder<PushDeliveryOutcomeToAmritWorker>()
-            .setConstraints(networkOnlyConstraint)
-            .build()
+        val pushDeliverOutcomeWorkRequest =
+            OneTimeWorkRequestBuilder<PushDeliveryOutcomeToAmritWorker>()
+                .setConstraints(networkOnlyConstraint)
+                .build()
         val pushPNCWorkRequest = OneTimeWorkRequestBuilder<PushPNCToAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
-        val pushInfantRegisterWorkRequest = OneTimeWorkRequestBuilder<PushInfantRegisterToAmritWorker>()
-            .setConstraints(networkOnlyConstraint)
-            .build()
-        val pushImmunizationWorkRequest = OneTimeWorkRequestBuilder<PushChildImmunizationToAmritWorker>()
-            .setConstraints(networkOnlyConstraint)
-            .build()
+        val pushInfantRegisterWorkRequest =
+            OneTimeWorkRequestBuilder<PushInfantRegisterToAmritWorker>()
+                .setConstraints(networkOnlyConstraint)
+                .build()
+        val pushImmunizationWorkRequest =
+            OneTimeWorkRequestBuilder<PushChildImmunizationToAmritWorker>()
+                .setConstraints(networkOnlyConstraint)
+                .build()
         val workManager = WorkManager.getInstance(context)
         workManager
-            .beginUniqueWork(syncWorkerUniqueName, ExistingWorkPolicy.APPEND_OR_REPLACE, pushWorkRequest)
+            .beginUniqueWork(
+                syncWorkerUniqueName,
+                ExistingWorkPolicy.APPEND_OR_REPLACE,
+                pushWorkRequest
+            )
             .then(pushCbacWorkRequest)
             .then(pushHRPToAmritWorker)
             .then(pushTBWorkRequest)
@@ -125,10 +144,16 @@ object WorkerUtils {
             .then(pushImmunizationWorkRequest)
             .enqueue()
     }
-    fun triggerAmritPullWorker(context : Context){
+
+    fun triggerAmritPullWorker(context: Context) {
         val pullWorkRequest = OneTimeWorkRequestBuilder<PullFromAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
+
+        val pullIncentiveActivityWorkRequest =
+            OneTimeWorkRequestBuilder<PullIncentiveWorker>()
+                .setConstraints(networkOnlyConstraint)
+                .build()
         val pullCbacWorkRequest = OneTimeWorkRequestBuilder<CbacPullFromAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
@@ -150,20 +175,27 @@ object WorkerUtils {
         val pullPNCWorkRequest = OneTimeWorkRequestBuilder<PullPNCFromAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
-        val pullDeliveryOutcomeWorkRequest = OneTimeWorkRequestBuilder<PullDeliveryOutcomeFromAmritWorker>()
-            .setConstraints(networkOnlyConstraint)
-            .build()
+        val pullDeliveryOutcomeWorkRequest =
+            OneTimeWorkRequestBuilder<PullDeliveryOutcomeFromAmritWorker>()
+                .setConstraints(networkOnlyConstraint)
+                .build()
         val pullInfantRegWorkRequest = OneTimeWorkRequestBuilder<PullInfantRegFromAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
-        val pullImmunizationWorkRequest = OneTimeWorkRequestBuilder<PullChildImmunizatonFromAmritWorker>()
-            .setConstraints(networkOnlyConstraint)
-            .build()
+        val pullImmunizationWorkRequest =
+            OneTimeWorkRequestBuilder<PullChildImmunizatonFromAmritWorker>()
+                .setConstraints(networkOnlyConstraint)
+                .build()
         val setSyncCompleteWorker = OneTimeWorkRequestBuilder<UpdatePrefForPullCompleteWorker>()
             .build()
         val workManager = WorkManager.getInstance(context)
         workManager
-            .beginUniqueWork(syncWorkerUniqueName, ExistingWorkPolicy.APPEND_OR_REPLACE, pullWorkRequest)
+            .beginUniqueWork(
+                syncWorkerUniqueName,
+                ExistingWorkPolicy.APPEND_OR_REPLACE,
+                pullWorkRequest
+            )
+            .then(pullIncentiveActivityWorkRequest)
             .then(pullCbacWorkRequest)
             .then(pullHRPWorkRequest)
             .then(pullTBWorkRequest)
@@ -190,7 +222,7 @@ object WorkerUtils {
 //            )
     }
 
-    fun triggerCbacPullWorker(context: Context){
+    fun triggerCbacPullWorker(context: Context) {
         val workRequest = OneTimeWorkRequestBuilder<CbacPullFromAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
@@ -201,7 +233,8 @@ object WorkerUtils {
                 workRequest
             )
     }
-    fun triggerCbacPushWorker(context: Context){
+
+    fun triggerCbacPushWorker(context: Context) {
         val workRequest = OneTimeWorkRequestBuilder<CbacPushToAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
@@ -212,7 +245,8 @@ object WorkerUtils {
                 workRequest
             )
     }
-    fun triggerECPushWorker(context: Context){
+
+    fun triggerECPushWorker(context: Context) {
         val workRequest = OneTimeWorkRequestBuilder<PushECToAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
@@ -224,7 +258,7 @@ object WorkerUtils {
             )
     }
 
-    fun triggerPMSMAPushWorker(context: Context){
+    fun triggerPMSMAPushWorker(context: Context) {
         val workRequest = OneTimeWorkRequestBuilder<PushPmsmaToAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
@@ -236,7 +270,7 @@ object WorkerUtils {
             )
     }
 
-    fun triggerDeliveryOutcomePushWorker(context: Context){
+    fun triggerDeliveryOutcomePushWorker(context: Context) {
         val workRequest = OneTimeWorkRequestBuilder<PushDeliveryOutcomeToAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
@@ -248,7 +282,7 @@ object WorkerUtils {
             )
     }
 
-    fun triggerInfantRegPushWorker(context: Context){
+    fun triggerInfantRegPushWorker(context: Context) {
         val workRequest = OneTimeWorkRequestBuilder<PushInfantRegisterToAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
@@ -267,18 +301,28 @@ object WorkerUtils {
         WorkManager.getInstance(context)
             .enqueueUniqueWork(GenerateBenIdsWorker.name, ExistingWorkPolicy.KEEP, workRequest)
     }
+
     fun triggerPeriodicPncEcUpdateWorker(context: Context) {
-        val workRequest = PeriodicWorkRequest.Builder(UpdatePNCToECWorker::class.java, 1, TimeUnit.DAYS)
-            .setConstraints(Constraints.Builder().setRequiresDeviceIdle(true).build())
-            .build()
+        val workRequest =
+            PeriodicWorkRequest.Builder(UpdatePNCToECWorker::class.java, 1, TimeUnit.DAYS)
+                .setConstraints(Constraints.Builder().setRequiresDeviceIdle(true).build())
+                .build()
         WorkManager.getInstance(context)
-            .enqueueUniquePeriodicWork(UpdatePNCToECWorker.periodicName, ExistingPeriodicWorkPolicy.KEEP, workRequest)
+            .enqueueUniquePeriodicWork(
+                UpdatePNCToECWorker.periodicName,
+                ExistingPeriodicWorkPolicy.KEEP,
+                workRequest
+            )
     }
 
     fun triggerAdHocPncEcUpdateWorker(context: Context) {
         val workRequest = OneTimeWorkRequest.Builder(UpdatePNCToECWorker::class.java).build()
         WorkManager.getInstance(context)
-            .enqueueUniqueWork(UpdatePNCToECWorker.oneShotName, ExistingWorkPolicy.KEEP, workRequest)
+            .enqueueUniqueWork(
+                UpdatePNCToECWorker.oneShotName,
+                ExistingWorkPolicy.KEEP,
+                workRequest
+            )
     }
 
     fun triggerDownloadCardWorker(
@@ -289,12 +333,18 @@ object WorkerUtils {
 
         val workRequest = OneTimeWorkRequestBuilder<DownloadCardWorker>()
             .setConstraints(networkOnlyConstraint)
-            .setInputData(Data.Builder().apply { putString(DownloadCardWorker.file_name, fileName) }.build())
+            .setInputData(Data.Builder().apply { putString(DownloadCardWorker.file_name, fileName) }
+                .build())
             .build()
 
         return WorkManager.getInstance(context)
-            .enqueueUniqueWork(DownloadCardWorker.name, ExistingWorkPolicy.REPLACE, workRequest).state
+            .enqueueUniqueWork(
+                DownloadCardWorker.name,
+                ExistingWorkPolicy.REPLACE,
+                workRequest
+            ).state
     }
+
     fun cancelAllWork(context: Context) {
         val workManager = WorkManager.getInstance(context)
         workManager.cancelAllWork()

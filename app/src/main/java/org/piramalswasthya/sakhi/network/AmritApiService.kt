@@ -26,17 +26,17 @@ interface AmritApiService {
     @POST("identity-0.0.1/rmnch/syncDataToAmrit")
     suspend fun submitRmnchDataAmrit(@Body sendingRMNCHData: SendingRMNCHData): Response<ResponseBody>
 
-//    @POST("beneficiary/getBeneficiaryData")
+    //    @POST("beneficiary/getBeneficiaryData")
     @POST("flw-0.0.1/beneficiary/getBeneficiaryData")
     suspend fun getBeneficiaries(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
     @POST("flw-0.0.1/cbac/getAll")
-    suspend fun getCbacs( @Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+    suspend fun getCbacs(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
     @POST("flw-0.0.1/cbac/saveAll")
-    suspend fun postCbacs(/*@Url url : String  ="http://192.168.1.94:8081/cbac/saveAll",*/@Body list : List<CbacPost>): Response<ResponseBody>
+    suspend fun postCbacs(/*@Url url : String  ="http://192.168.1.94:8081/cbac/saveAll",*/@Body list: List<CbacPost>): Response<ResponseBody>
 
-//    @POST("tb/screening/getAll")
+    //    @POST("tb/screening/getAll")
     @POST("flw-0.0.1/tb/screening/getAll")
     suspend fun getTBScreeningData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
@@ -55,6 +55,7 @@ interface AmritApiService {
     @POST("flw-0.0.1/highRisk/pregnant/assess/getAll")
 //    @POST("highRisk/pregnant/assess/getAll")
     suspend fun getHRPAssessData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+
     @POST("flw-0.0.1/highRisk/pregnant/assess/saveAll")
 //    @POST("highRisk/pregnant/assess/saveAll")
     suspend fun saveHRPAssessData(@Body userDataDTO: UserDataDTO<Any?>): Response<ResponseBody>
@@ -62,6 +63,7 @@ interface AmritApiService {
     @POST("flw-0.0.1/highRisk/assess/getAll")
 //    @POST("highRisk/pregnant/assess/getAll")
     suspend fun getHighRiskAssessData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+
     @POST("flw-0.0.1/highRisk/assess/saveAll")
 //    @POST("highRisk/pregnant/assess/saveAll")
     suspend fun saveHighRiskAssessData(@Body userDataDTO: UserDataDTO<Any?>): Response<ResponseBody>
@@ -70,6 +72,7 @@ interface AmritApiService {
     @POST("flw-0.0.1/highRisk/pregnant/track/getAll")
 //    @POST("highRisk/pregnant/track/getAll")
     suspend fun getHRPTrackData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+
     @POST("flw-0.0.1/highRisk/pregnant/track/saveAll")
 //    @POST("highRisk/pregnant/track/saveAll")
     suspend fun saveHRPTrackData(@Body userDataDTO: UserDataDTO<Any?>): Response<ResponseBody>
@@ -77,6 +80,7 @@ interface AmritApiService {
     @POST("flw-0.0.1/highRisk/nonPregnant/assess/getAll")
 //    @POST("highRisk/nonPregnant/assess/getAll")
     suspend fun getHRNonPAssessData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+
     @POST("flw-0.0.1/highRisk/nonPregnant/assess/saveAll")
 //    @POST("highRisk/nonPregnant/assess/saveAll")
     suspend fun saveHRNonPAssessData(@Body userDataDTO: UserDataDTO<Any?>): Response<ResponseBody>
@@ -85,6 +89,7 @@ interface AmritApiService {
     @POST("flw-0.0.1/highRisk/nonPregnant/track/getAll")
 //    @POST("highRisk/nonPregnant/track/getAll")
     suspend fun getHRNonPTrackData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+
     @POST("flw-0.0.1/highRisk/nonPregnant/track/saveAll")
 //    @POST("highRisk/nonPregnant/track/saveAll")
     suspend fun saveHRNonPTrackData(@Body userDataDTO: UserDataDTO<Any?>): Response<ResponseBody>
@@ -120,8 +125,10 @@ interface AmritApiService {
     suspend fun getEctFormData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
     @POST("/flw-0.0.1/maternalCare/deliveryOutcome/saveAll")
-    suspend fun postDeliveryOutcomeForm(@Body deliveryOutcomeList: List<DeliveryOutcomePost>,
-                                        /*@Url url : String  ="http://192.168.1.105:8081/maternalCare/deliveryOutcome/saveAll"*/): Response<ResponseBody>
+    suspend fun postDeliveryOutcomeForm(
+        @Body deliveryOutcomeList: List<DeliveryOutcomePost>,
+        /*@Url url : String  ="http://192.168.1.105:8081/maternalCare/deliveryOutcome/saveAll"*/
+    ): Response<ResponseBody>
 
     @POST("/flw-0.0.1/maternalCare/deliveryOutcome/getAll")
     suspend fun getDeliveryOutcomeData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
@@ -155,10 +162,16 @@ interface AmritApiService {
 
     @POST("/flw-0.0.1/child-care/vaccination/getAll")
     suspend fun getChildImmunizationDetails(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+
     @POST("/flw-0.0.1/maternalCare/pnc/saveAll")
     suspend fun postPncForm(@Body ancPostList: List<PNCNetwork>): Response<ResponseBody>
 
     @POST("/flw-0.0.1/maternalCare/pnc/getAll")
     suspend fun getPncVisitsData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+
+    @POST
+    suspend fun getAllIncentiveActivities(@Url url : String = "http://192.168.1.109:8080/incentive/masterData/getAll",@Body requestBody: IncentiveActivityListRequest): IncentiveActivityListResponse
+    @POST
+    suspend fun getAllIncentiveRecords(@Url url : String = "http://192.168.1.109:8080/incentive/fetchUserData",@Body requestBody: IncentiveRecordListRequest): IncentiveRecordListResponse
 
 }

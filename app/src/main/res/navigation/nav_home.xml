@@ -945,5 +945,10 @@
             android:name="visitNumber"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/incentivesFragment"
+        android:name="org.piramalswasthya.sakhi.ui.home_activity.incentives.IncentivesFragment"
+        android:label="fragment_incentives"
+        tools:layout="@layout/fragment_incentives" />
 
 </navigation>

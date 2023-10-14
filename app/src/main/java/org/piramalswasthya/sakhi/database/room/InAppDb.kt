@@ -20,6 +20,7 @@ import org.piramalswasthya.sakhi.database.room.dao.HbycDao
 import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
 import org.piramalswasthya.sakhi.database.room.dao.HrpDao
 import org.piramalswasthya.sakhi.database.room.dao.ImmunizationDao
+import org.piramalswasthya.sakhi.database.room.dao.IncentiveDao
 import org.piramalswasthya.sakhi.database.room.dao.InfantRegDao
 import org.piramalswasthya.sakhi.database.room.dao.MaternalHealthDao
 import org.piramalswasthya.sakhi.database.room.dao.MdsrDao
@@ -46,6 +47,8 @@ import org.piramalswasthya.sakhi.model.HRPPregnantAssessCache
 import org.piramalswasthya.sakhi.model.HRPPregnantTrackCache
 import org.piramalswasthya.sakhi.model.HouseholdCache
 import org.piramalswasthya.sakhi.model.ImmunizationCache
+import org.piramalswasthya.sakhi.model.IncentiveActivityCache
+import org.piramalswasthya.sakhi.model.IncentiveRecordCache
 import org.piramalswasthya.sakhi.model.InfantRegCache
 import org.piramalswasthya.sakhi.model.MDSRCache
 import org.piramalswasthya.sakhi.model.PMJAYCache
@@ -86,7 +89,10 @@ import org.piramalswasthya.sakhi.model.Vaccine
         HRPNonPregnantAssessCache::class,
         HRPPregnantTrackCache::class,
         HRPNonPregnantTrackCache::class,
-        HRPMicroBirthPlanCache::class
+        HRPMicroBirthPlanCache::class,
+        //INCENTIVES
+        IncentiveActivityCache::class,
+        IncentiveRecordCache::class,
     ],
     views = [BenBasicCache::class],
     version = 13, exportSchema = false
@@ -110,12 +116,13 @@ abstract class InAppDb : RoomDatabase() {
     abstract val ecrDao: EcrDao
     abstract val vaccineDao: ImmunizationDao
     abstract val maternalHealthDao: MaternalHealthDao
-    abstract val pncDao : PncDao
+    abstract val pncDao: PncDao
     abstract val tbDao: TBDao
     abstract val hrpDao: HrpDao
     abstract val deliveryOutcomeDao: DeliveryOutcomeDao
     abstract val infantRegDao: InfantRegDao
     abstract val childRegistrationDao: ChildRegistrationDao
+    abstract val incentiveDao: IncentiveDao
 
     abstract val syncDao: SyncDao
 
