@@ -11,6 +11,8 @@ import org.piramalswasthya.sakhi.model.Vaccine
 
 class ImmunizationDataset(context: Context, language: Languages) : Dataset(context, language) {
 
+    private var vaccineId : Int  = 0
+
     private val name = FormElement(
         id = 100,
         inputType = InputType.TEXT_VIEW,
@@ -98,6 +100,7 @@ class ImmunizationDataset(context: Context, language: Languages) : Dataset(conte
             vaccinatedPlace,
             vaccinatedBy
         )
+        vaccineId = vaccine.vaccineId
         name.value = ben.firstName ?: "Baby of ${ben.motherName}"
         motherName.value = ben.motherName
         dateOfBirth.value = getDateFromLong(ben.dob)
@@ -121,6 +124,7 @@ class ImmunizationDataset(context: Context, language: Languages) : Dataset(conte
         (cacheModel as ImmunizationCache).let {
             it.date = dateOfVaccination.value?.let { getLongFromDate(it) }
 //            it.placeId= vaccinatedPlace.getPosition()
+            it.vaccineId = vaccineId
             it.place = vaccinatedPlace.getEnglishStringFromPosition(vaccinatedPlace.getPosition())?:""
 //            it.byWhoId= vaccinatedBy.getPosition()
             it.byWho = vaccinatedBy.getEnglishStringFromPosition(vaccinatedBy.getPosition())?:""
