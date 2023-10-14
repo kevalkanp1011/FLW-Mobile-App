@@ -781,7 +781,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             dateOfReg,
             firstName,
             lastName,
-//            agePopup,
+            agePopup,
             dob,
             age,
             ageUnit,

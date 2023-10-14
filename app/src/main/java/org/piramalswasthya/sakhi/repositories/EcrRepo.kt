@@ -72,7 +72,17 @@ class EcrRepo @Inject constructor(
                 val ben = database.benDao.getBen(it.benId)
                     ?: throw IllegalStateException("No beneficiary exists for benId: ${it.benId}!!")
 
-                ecrPostList.add(it.asPostModel())
+                val ecrPost = it.asPostModel()
+                val cache = database.hrpDao.getNonPregnantAssess(ben.beneficiaryId)
+                cache?.let {
+                    ecrPost.misCarriage = cache.misCarriage
+                    ecrPost.homeDelivery = cache.homeDelivery
+                    ecrPost.medicalIssues = cache.medicalIssues
+                    ecrPost.pastCSection = cache.pastCSection
+                    ecrPost.isHighRisk = cache.isHighRisk
+                }
+
+                ecrPostList.add(ecrPost)
                 it.syncState = SyncState.SYNCING
                 database.ecrDao.update(it)
                 val uploadDone = postECRDataToAmritServer(ecrPostList)

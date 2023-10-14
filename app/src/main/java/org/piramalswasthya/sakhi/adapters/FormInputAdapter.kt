@@ -53,6 +53,7 @@ import org.piramalswasthya.sakhi.model.InputType.RADIO
 import org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW
 import org.piramalswasthya.sakhi.model.InputType.TIME_PICKER
 import org.piramalswasthya.sakhi.model.InputType.values
+import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.AgePickerDialog
 import timber.log.Timber
 import java.util.Calendar
 
@@ -692,9 +693,10 @@ class FormInputAdapter(
             binding.form = item
             if (isEnabled) {
                 binding.clickListener = clickListener
-//                if (item.errorText == null) binding.tilEditText.isErrorEnabled = false
-//                Timber.d("Bound EditText item ${item.title} with ${item.required}")
-//                binding.tilEditText.error = item.errorText
+                binding.et.setOnClickListener {
+                    val agePicker = AgePickerDialog(binding.root.context)
+                    agePicker.setLimitsAndShow(0,85,0,11,0,30)
+                }
             }
             binding.executePendingBindings()
 

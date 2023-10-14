@@ -15,8 +15,10 @@ import org.piramalswasthya.sakhi.configuration.EligibleCoupleTrackingDataset
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.EligibleCoupleTrackingCache
+import org.piramalswasthya.sakhi.model.HRPPregnantAssessCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.EcrRepo
+import org.piramalswasthya.sakhi.repositories.HRPRepo
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -26,7 +28,8 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
     preferenceDao: PreferenceDao,
     @ApplicationContext context: Context,
     private val ecrRepo: EcrRepo,
-    private val benRepo: BenRepo
+    private val benRepo: BenRepo,
+    private val hrpRepo: HRPRepo
 ) : ViewModel() {
     val benId =
         EligibleCoupleTrackingFormFragmentArgs.fromSavedStateHandle(savedStateHandle).benId
@@ -124,6 +127,34 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
                             dataset.updateBen(it)
                             benRepo.updateRecord(it)
                         }
+
+                        var pregAssessCache =
+                            hrpRepo.getPregnantAssess(benId)
+                        val nonPregAssessCache =
+                            hrpRepo.getNonPregnantAssess(benId)
+                        if (pregAssessCache == null) {
+                            pregAssessCache = if (nonPregAssessCache == null) {
+                                HRPPregnantAssessCache(
+                                    benId = benId
+                                )
+                            } else {
+                                HRPPregnantAssessCache(
+                                    benId = benId,
+                                    noOfDeliveries = nonPregAssessCache.noOfDeliveries,
+                                    timeLessThan18m = nonPregAssessCache.timeLessThan18m,
+                                    heightShort = nonPregAssessCache.heightShort,
+                                    age = nonPregAssessCache.age,
+                                    isHighRisk = (
+                                            nonPregAssessCache.noOfDeliveries == "Yes" ||
+                                                    nonPregAssessCache.timeLessThan18m == "Yes" ||
+                                                    nonPregAssessCache.heightShort == "Yes" ||
+                                                    nonPregAssessCache.age == "Yes"
+                                            )
+                                )
+                            }
+                        }
+
+                        hrpRepo.saveRecord(pregAssessCache)
                     }
 
                     _state.postValue(State.SAVE_SUCCESS)

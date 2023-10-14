@@ -1685,7 +1685,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             getLongFromDate(dob9.value)
         )
         if (lastDeliveryDate > 0) {
-            if (getLongFromDate(dateOfReg.value) - lastDeliveryDate <= TimeUnit.DAYS.toMillis(548)) {
+            if (Calendar.getInstance().timeInMillis - lastDeliveryDate <= TimeUnit.DAYS.toMillis(548)) {
                 timeLessThan18m.value = resources.getStringArray(R.array.yes_no)[0]
                 timeLessThan18m.isEnabled = false
             } else {
