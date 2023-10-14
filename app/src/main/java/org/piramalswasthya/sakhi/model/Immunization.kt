@@ -22,12 +22,12 @@ enum class ImmunizationCategory {
 @Entity(tableName = "VACCINE")
 data class Vaccine(
     @PrimaryKey
-    val id: Int,
-    val name: String,
+    val vaccineId: Int,
+    val vaccineName: String,
     val minAllowedAgeInMillis : Long,
     val maxAllowedAgeInMillis : Long,
     val category: ImmunizationCategory,
-    val childCategory: ChildImmunizationCategory,
+    val immunizationService: ChildImmunizationCategory,
 //    val dueDuration: Long,
     val overdueDurationSinceMinInMillis: Long = maxAllowedAgeInMillis,
     val dependantVaccineId: Int? = null,
@@ -43,7 +43,7 @@ data class Vaccine(
         onDelete = ForeignKey.CASCADE
     ), ForeignKey(
         entity = Vaccine::class,
-        parentColumns = arrayOf("id"),
+        parentColumns = arrayOf("vaccineId"),
         childColumns = arrayOf("vaccineId"),
         onDelete = ForeignKey.CASCADE
     )], indices = [Index(

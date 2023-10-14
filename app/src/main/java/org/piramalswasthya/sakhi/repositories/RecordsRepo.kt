@@ -7,14 +7,17 @@ import kotlinx.coroutines.flow.transformLatest
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.ChildRegistrationDao
 import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
+import org.piramalswasthya.sakhi.database.room.dao.ImmunizationDao
 import org.piramalswasthya.sakhi.database.room.dao.MaternalHealthDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import java.util.Calendar
 import javax.inject.Inject
 
 @ActivityRetainedScoped
 class RecordsRepo @Inject constructor(
     private val householdDao: HouseholdDao,
     private val benDao: BenDao,
+    private val vaccineDao: ImmunizationDao,
     private val maternalHealthDao: MaternalHealthDao,
     private val childRegistrationDao: ChildRegistrationDao,
     preferenceDao: PreferenceDao
@@ -119,8 +122,16 @@ class RecordsRepo @Inject constructor(
     val mdsrList = benDao.getAllMDSRList(selectedVillage)
         .map { list -> list.map { it.asBenBasicDomainModelForMdsrForm() } }
 
-    val childrenImmunizationList = benDao.getAllChildrenImmunizationList(selectedVillage)
-        .map { list -> list.map { it.asBasicDomainModel() } }
+//    val childrenImmunizationList = benDao.getAllChildrenImmunizationList(selectedVillage)
+//        .map { list -> list.map { it.asBasicDomainModel() } }
+    val childrenImmunizationList = vaccineDao.getBenWithImmunizationRecords(
+        minDob = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+            add(Calendar.YEAR, -16)
+        }.timeInMillis, maxDob = System.currentTimeMillis())
     val childrenImmunizationListCount = childrenImmunizationList.map { it.size }
 
     val motherImmunizationList = benDao.getAllMotherImmunizationList(selectedVillage)

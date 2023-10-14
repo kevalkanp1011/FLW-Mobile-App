@@ -132,6 +132,9 @@ object WorkerUtils {
         val pullCbacWorkRequest = OneTimeWorkRequestBuilder<CbacPullFromAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
+        val pullVaccineWorkRequest = OneTimeWorkRequestBuilder<PullVaccinesWorker>()
+            .setConstraints(networkOnlyConstraint)
+            .build()
         val pullHRPWorkRequest = OneTimeWorkRequestBuilder<PullHRPFromAmritWorker>()
             .setConstraints(networkOnlyConstraint)
             .build()
@@ -165,6 +168,7 @@ object WorkerUtils {
         workManager
             .beginUniqueWork(syncWorkerUniqueName, ExistingWorkPolicy.APPEND_OR_REPLACE, pullWorkRequest)
             .then(pullCbacWorkRequest)
+            .then(pullVaccineWorkRequest)
             .then(pullHRPWorkRequest)
             .then(pullTBWorkRequest)
             .then(pullECWorkRequest)

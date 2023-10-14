@@ -35,7 +35,7 @@ class SignInViewModel @Inject constructor(
         viewModelScope.launch {
             try {   //Temporary Placement - need to move to  assets and load from there.
                 _state.value = userRepo.authenticateUser(username, password /*state*/)
-                userRepo.checkAndAddVaccines()
+//                userRepo.checkAndAddVaccines()
             } catch (e: Exception) {
                 _state.value =
                     NetworkResponse.Error("Network Call failed.\nUnknown error : ${e.message} stack-trace : ${e.stackTrace}")

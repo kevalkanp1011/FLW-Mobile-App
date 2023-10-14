@@ -12,6 +12,7 @@ import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.ImmunizationCache
 import org.piramalswasthya.sakhi.model.ImmunizationPost
+import org.piramalswasthya.sakhi.model.Vaccine
 import org.piramalswasthya.sakhi.network.AmritApiService
 import org.piramalswasthya.sakhi.network.GetDataPaginatedRequest
 import timber.log.Timber
@@ -102,10 +103,10 @@ class ImmunizationRepo @Inject constructor(
         immunizationList.forEach { immunizationDTO ->
             val vaccine = immunizationDao.getVaccineByName(immunizationDTO.vaccineName)!!
             val immunization: ImmunizationCache? =
-                immunizationDao.getImmunizationRecord(immunizationDTO.beneficiaryId, vaccine.id)
+                immunizationDao.getImmunizationRecord(immunizationDTO.beneficiaryId, vaccine.vaccineId)
             if (immunization == null) {
                 val immunizationCache = immunizationDTO.toCacheModel()
-                immunizationCache.vaccineId = vaccine.id
+                immunizationCache.vaccineId = vaccine.vaccineId
                 immunizationDao.addImmunizationRecord(immunizationCache)
             }
         }
@@ -125,7 +126,7 @@ class ImmunizationRepo @Inject constructor(
             immunizationCacheList.forEach { cache ->
                 var immunizationDTO = cache.asPostModel()
                 val vaccine = immunizationDao.getVaccineById(cache.vaccineId)!!
-                immunizationDTO.vaccineName = vaccine.name
+                immunizationDTO.vaccineName = vaccine.vaccineName
                 immunizationDTOs.add(immunizationDTO)
             }
             if (immunizationDTOs.isEmpty()) return@withContext true
@@ -202,6 +203,77 @@ class ImmunizationRepo @Inject constructor(
             val f = SimpleDateFormat("MMM d, yyyy h:mm:ss a", Locale.ENGLISH)
             val date = f.parse(dateString)
             return date?.time ?: throw IllegalStateException("Invalid date for dateReg")
+        }
+    }
+
+    suspend fun getVaccineDetailsFromServer(): Int {
+        return withContext(Dispatchers.IO) {
+            val user =
+                preferenceDao.getLoggedInUser()
+                    ?: throw IllegalStateException("No user logged in!!")
+            val lastTimeStamp = preferenceDao.getLastSyncedTimeStamp()
+            try {
+                val response = tmcNetworkApiService.getAllChildVaccines(category = "CHILD")
+                val statusCode = response.code()
+                if (statusCode == 200) {
+                    val responseString = response.body()?.string()
+                    if (responseString != null) {
+                        val jsonObj = JSONObject(responseString)
+
+                        val errorMessage = jsonObj.getString("errorMessage")
+                        val responseStatusCode = jsonObj.getInt("statusCode")
+                        Timber.d("Pull from amrit child vaccine data : $responseStatusCode")
+                        when (responseStatusCode) {
+                            200 -> {
+                                try {
+                                    val dataObj = jsonObj.getString("data")
+                                    saveVaccinesFromResponse(dataObj)
+                                } catch (e: Exception) {
+                                    Timber.d("Child Vaccine entries not synced $e")
+                                    return@withContext 0
+                                }
+
+                                return@withContext 1
+                            }
+
+                            5002 -> {
+                                if (userRepo.refreshTokenTmc(
+                                        user.userName, user.password
+                                    )
+                                ) throw SocketTimeoutException("Refreshed Token!")
+                                else throw IllegalStateException("User Logged out!!")
+                            }
+
+                            5000 -> {
+                                if (errorMessage == "No record found") return@withContext 0
+                            }
+
+                            else -> {
+                                throw IllegalStateException("$responseStatusCode received, don't know what todo!?")
+                            }
+                        }
+                    }
+                }
+
+            } catch (e: SocketTimeoutException) {
+                Timber.d("get_child_vaccines error : $e")
+                getVaccineDetailsFromServer()
+
+            } catch (e: java.lang.IllegalStateException) {
+                Timber.d("get_child_vaccines error : $e")
+                return@withContext -1
+            }
+            -1
+        }
+    }
+
+    private suspend fun saveVaccinesFromResponse(dataObj: String) {
+        val vaccineList = Gson().fromJson(dataObj, Array<Vaccine>::class.java).toList()
+        vaccineList.forEach { vaccine ->
+            val existingVaccine: Vaccine? = immunizationDao.getVaccineByName(vaccine.vaccineName)
+            if (existingVaccine == null) {
+                immunizationDao.addVaccine(vaccine)
+            }
         }
     }
 }

@@ -16,6 +16,8 @@ import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.MONTH_9_12
 import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.WEEK_10
 import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.WEEK_14
 import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.WEEK_6
+import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.YEAR_10
+import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.YEAR_16
 import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.YEAR_5_6
 import org.piramalswasthya.sakhi.model.ImmunizationCategory.CHILD
 import org.piramalswasthya.sakhi.model.ImmunizationCategory.MOTHER
@@ -48,325 +50,341 @@ class UserRepo @Inject constructor(
     suspend fun checkAndAddVaccines() {
         if (vaccineDao.vaccinesLoaded())
             return
-        val vaccineList = arrayOf(
-            ////------------------CHILD-----------------///////////////
-            //Birth
-            Vaccine(
-                id = 1,
-                category = CHILD,
-                childCategory = BIRTH,
-                name = "OPV 0",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(0),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(15),
-                overdueDurationSinceMinInMillis = TimeUnit.DAYS.toMillis(1),
-            ),
-            Vaccine(
-                id = 2,
-                category = CHILD,
-                childCategory = BIRTH,
-                name = "BCG 0",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(0),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
-                overdueDurationSinceMinInMillis = TimeUnit.DAYS.toMillis(1),
-
-                ),
-            Vaccine(
-                id = 3,
-                category = CHILD,
-                childCategory = BIRTH,
-                name = "Hepatitis B 0",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(0),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(1),
-
-                ),
-            Vaccine(
-                id = 4,
-                category = CHILD,
-                childCategory = BIRTH,
-                name = "Vit K",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(0),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(1),
-            ),
-            //Week 6
-            Vaccine(
-                id = 5,
-                category = CHILD,
-                childCategory = WEEK_6,
-                name = "OPV 1",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(6 * 7),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 2),
-//                overdueDurationSinceMinInMillis =
-            ),
-            Vaccine(
-                id = 6,
-                category = CHILD,
-                childCategory = WEEK_6,
-                name = "Pentavalent 1",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(6 * 7),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
-            ),
-            Vaccine(
-                id = 7,
-                category = CHILD,
-                childCategory = WEEK_6,
-                name = "ROTA 1",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(6 * 7),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
-            ),
-            Vaccine(
-                id = 8,
-                category = CHILD,
-                childCategory = WEEK_6,
-                name = "IPV 1",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(6 * 7),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
-            ),
-            //Week 10
-            Vaccine(
-                id = 9,
-                category = CHILD,
-                childCategory = WEEK_10,
-                name = "OPV 2",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(10 * 7),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 2),
-                dependantVaccineId = 5,
-                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
-            ),
-            Vaccine(
-                id = 10,
-                category = CHILD,
-                childCategory = WEEK_10,
-                name = "Pentavalent 2",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(10 * 7),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
-                dependantVaccineId = 5,
-                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
-            ),
-            Vaccine(
-                id = 11,
-                category = CHILD,
-                childCategory = WEEK_14,
-                name = "OPV 3",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(14 * 7),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 2),
-                dependantVaccineId = 9,
-                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
-            ),
-            Vaccine(
-                id = 12,
-                category = CHILD,
-                childCategory = WEEK_14,
-                name = "Pentavalent 3",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(14 * 7),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
-                dependantVaccineId = 10,
-                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
-            ),
-            Vaccine(
-                id = 13,
-                category = CHILD,
-                childCategory = WEEK_10,
-                name = "ROTA 2",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(10 * 7),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 1),
-                dependantVaccineId = 7,
-                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
-            ),
-            Vaccine(
-                id = 14,
-                category = CHILD,
-                childCategory = WEEK_14,
-                name = "ROTA 3",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(14 * 7),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 1),
-                dependantVaccineId = 7,
-                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
-            ),
-            Vaccine(
-                id = 15,
-                category = CHILD,
-                childCategory = WEEK_14,
-                name = "IPV 2",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(8 * 7),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 1),
-                dependantVaccineId = 8,
-                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
-            ),
-            Vaccine(
-                id = 16,
-                category = CHILD,
-                childCategory = MONTH_16_24,
-                name = "OPV Booster 1",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(487),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 2),
-            ),
-            Vaccine(
-                id = 17,
-                category = CHILD,
-                childCategory = MONTH_16_24,
-                name = "DPT Booster 1",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(487),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 7),
-            ),
-            Vaccine(
-                id = 18,
-                category = CHILD,
-                childCategory = YEAR_5_6,
-                name = "DPT Booster 2",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(356 * 5),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 7),
-            ),
-
-            Vaccine(
-                id = 19,
-                category = CHILD,
-                childCategory = MONTH_9_12,
-                name = "Measles 1",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(274),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
-            ),
-            Vaccine(
-                id = 20,
-                category = CHILD,
-                childCategory = MONTH_16_24,
-                name = "Measles 2",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(487),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
-            ),
-            Vaccine(
-                id = 21,
-                category = CHILD,
-                childCategory = MONTH_9_12,
-                name = "JE Vaccine – 1",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(274),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
-            ),
-            Vaccine(
-                id = 22,
-                category = CHILD,
-                childCategory = MONTH_16_24,
-                name = "JE Vaccine – 2",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(487),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
-            ),
-            Vaccine(
-                id = 23,
-                category = CHILD,
-                childCategory = MONTH_9_12,
-                name = "Vitamin A – 1",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(274),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
-            ),
-            Vaccine(
-                id = 24,
-                category = CHILD,
-                childCategory = MONTH_16_24,
-                name = "Vitamin A – 2",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(487),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
-                dependantVaccineId = 23,
-                dependantCoolDuration = TimeUnit.DAYS.toMillis(274)
-            ),
-            Vaccine(
-                id = 25,
-                category = CHILD,
-                childCategory = YEAR_5_6,
-                name = "Vitamin A – 3",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 2),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
-                dependantVaccineId = 24,
-                dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
-            ),
-            Vaccine(
-                id = 26,
-                category = CHILD,
-                childCategory = YEAR_5_6,
-                name = "Vitamin A – 4",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(913),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
-                dependantVaccineId = 25,
-                dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
-            ),
-            Vaccine(
-                id = 27,
-                category = CHILD,
-                childCategory = YEAR_5_6,
-                name = "Vitamin A – 5",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(1095),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
-                dependantVaccineId = 26,
-                dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
-            ),
-            Vaccine(
-                id = 28,
-                category = CHILD,
-                childCategory = YEAR_5_6,
-                name = "Vitamin A – 6",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(1278),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
-                dependantVaccineId = 27,
-                dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
-            ),
-            Vaccine(
-                id = 29,
-                category = CHILD,
-                childCategory = YEAR_5_6,
-                name = "Vitamin A – 7",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(1460),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
-                dependantVaccineId = 28,
-                dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
-            ),
-            Vaccine(
-                id = 30,
-                category = CHILD,
-                childCategory = YEAR_5_6,
-                name = "Vitamin A – 8",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(1643),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
-                dependantVaccineId = 29,
-                dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
-            ),
-            Vaccine(
-                id = 31,
-                category = CHILD,
-                childCategory = YEAR_5_6,
-                name = "Vitamin A – 9",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 7),
-                dependantVaccineId = 30,
-                dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
-            ),
-            ////------------------MOTHER-----------------///////////////
-            Vaccine(
-                id = 32,
-                category = MOTHER,
-                childCategory = YEAR_5_6,
-                name = "Td-1",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(0),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(36 * 7),
-            ),
-            Vaccine(
-                id = 33,
-                category = MOTHER,
-                childCategory = YEAR_5_6,
-                name = "Td-2",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(4 * 7),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(36 * 7),
-                dependantVaccineId = 32,
-                dependantCoolDuration = TimeUnit.DAYS.toMillis(4 * 7)
-            ),
-            Vaccine(
-                id = 34,
-                category = MOTHER,
-                childCategory = YEAR_5_6,
-                name = "Td-Booster",
-                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(0),
-                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(36 * 7),
-            ),
-
-            )
-        vaccineDao.addVaccine(*vaccineList)
+//        val vaccineList = arrayOf(
+//            ////------------------CHILD-----------------///////////////
+//            //Birth
+//            Vaccine(
+//                vaccineId = 1,
+//                category = CHILD,
+//                immunizationService = BIRTH,
+//                vaccineName = "OPV 0",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(0),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(15),
+//                overdueDurationSinceMinInMillis = TimeUnit.DAYS.toMillis(1),
+//            ),
+//            Vaccine(
+//                vaccineId = 2,
+//                category = CHILD,
+//                immunizationService = BIRTH,
+//                vaccineName = "BCG 0",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(0),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
+//                overdueDurationSinceMinInMillis = TimeUnit.DAYS.toMillis(1),
+//
+//                ),
+//            Vaccine(
+//                vaccineId = 3,
+//                category = CHILD,
+//                immunizationService = BIRTH,
+//                vaccineName = "Hepatitis B 0",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(0),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(1),
+//
+//                ),
+//            Vaccine(
+//                vaccineId = 4,
+//                category = CHILD,
+//                immunizationService = BIRTH,
+//                vaccineName = "Vit K",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(0),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(1),
+//            ),
+//            //Week 6
+//            Vaccine(
+//                vaccineId = 5,
+//                category = CHILD,
+//                immunizationService = WEEK_6,
+//                vaccineName = "OPV 1",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(6 * 7),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 2),
+////                overdueDurationSinceMinInMillis =
+//            ),
+//            Vaccine(
+//                vaccineId = 6,
+//                category = CHILD,
+//                immunizationService = WEEK_6,
+//                vaccineName = "Pentavalent 1",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(6 * 7),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
+//            ),
+//            Vaccine(
+//                vaccineId = 7,
+//                category = CHILD,
+//                immunizationService = WEEK_6,
+//                vaccineName = "ROTA 1",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(6 * 7),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
+//            ),
+//            Vaccine(
+//                vaccineId = 8,
+//                category = CHILD,
+//                immunizationService = WEEK_6,
+//                vaccineName = "IPV 1",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(6 * 7),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
+//            ),
+//            //Week 10
+//            Vaccine(
+//                vaccineId = 9,
+//                category = CHILD,
+//                immunizationService = WEEK_10,
+//                vaccineName = "OPV 2",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(10 * 7),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 2),
+//                dependantVaccineId = 5,
+//                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
+//            ),
+//            Vaccine(
+//                vaccineId = 10,
+//                category = CHILD,
+//                immunizationService = WEEK_10,
+//                vaccineName = "Pentavalent 2",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(10 * 7),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
+//                dependantVaccineId = 5,
+//                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
+//            ),
+//            Vaccine(
+//                vaccineId = 11,
+//                category = CHILD,
+//                immunizationService = WEEK_14,
+//                vaccineName = "OPV 3",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(14 * 7),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 2),
+//                dependantVaccineId = 9,
+//                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
+//            ),
+//            Vaccine(
+//                vaccineId = 12,
+//                category = CHILD,
+//                immunizationService = WEEK_14,
+//                vaccineName = "Pentavalent 3",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(14 * 7),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
+//                dependantVaccineId = 10,
+//                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
+//            ),
+//            Vaccine(
+//                vaccineId = 13,
+//                category = CHILD,
+//                immunizationService = WEEK_10,
+//                vaccineName = "ROTA 2",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(10 * 7),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 1),
+//                dependantVaccineId = 7,
+//                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
+//            ),
+//            Vaccine(
+//                vaccineId = 14,
+//                category = CHILD,
+//                immunizationService = WEEK_14,
+//                vaccineName = "ROTA 3",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(14 * 7),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 1),
+//                dependantVaccineId = 7,
+//                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
+//            ),
+//            Vaccine(
+//                vaccineId = 15,
+//                category = CHILD,
+//                immunizationService = WEEK_14,
+//                vaccineName = "IPV 2",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(8 * 7),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 1),
+//                dependantVaccineId = 8,
+//                dependantCoolDuration = TimeUnit.DAYS.toMillis(28)
+//            ),
+//            Vaccine(
+//                vaccineId = 16,
+//                category = CHILD,
+//                immunizationService = MONTH_16_24,
+//                vaccineName = "OPV Booster 1",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(487),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 2),
+//            ),
+//            Vaccine(
+//                vaccineId = 17,
+//                category = CHILD,
+//                immunizationService = MONTH_16_24,
+//                vaccineName = "DPT Booster 1",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(487),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 7),
+//            ),
+//            Vaccine(
+//                vaccineId = 18,
+//                category = CHILD,
+//                immunizationService = YEAR_5_6,
+//                vaccineName = "DPT Booster 2",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(356 * 5),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 7),
+//            ),
+//
+//            Vaccine(
+//                vaccineId = 19,
+//                category = CHILD,
+//                immunizationService = MONTH_9_12,
+//                vaccineName = "Measles 1",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(274),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
+//            ),
+//            Vaccine(
+//                vaccineId = 20,
+//                category = CHILD,
+//                immunizationService = MONTH_16_24,
+//                vaccineName = "Measles 2",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(487),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
+//            ),
+//            Vaccine(
+//                vaccineId = 21,
+//                category = CHILD,
+//                immunizationService = MONTH_9_12,
+//                vaccineName = "JE Vaccine – 1",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(274),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365),
+//            ),
+//            Vaccine(
+//                vaccineId = 22,
+//                category = CHILD,
+//                immunizationService = MONTH_16_24,
+//                vaccineName = "JE Vaccine – 2",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(487),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
+//            ),
+//            Vaccine(
+//                vaccineId = 23,
+//                category = CHILD,
+//                immunizationService = MONTH_9_12,
+//                vaccineName = "Vitamin A – 1",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(274),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
+//            ),
+//            Vaccine(
+//                vaccineId = 24,
+//                category = CHILD,
+//                immunizationService = MONTH_16_24,
+//                vaccineName = "Vitamin A – 2",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(487),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
+//                dependantVaccineId = 23,
+//                dependantCoolDuration = TimeUnit.DAYS.toMillis(274)
+//            ),
+//            Vaccine(
+//                vaccineId = 25,
+//                category = CHILD,
+//                immunizationService = YEAR_5_6,
+//                vaccineName = "Vitamin A – 3",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 2),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
+//                dependantVaccineId = 24,
+//                dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
+//            ),
+//            Vaccine(
+//                vaccineId = 26,
+//                category = CHILD,
+//                immunizationService = YEAR_5_6,
+//                vaccineName = "Vitamin A – 4",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(913),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
+//                dependantVaccineId = 25,
+//                dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
+//            ),
+//            Vaccine(
+//                vaccineId = 27,
+//                category = CHILD,
+//                immunizationService = YEAR_5_6,
+//                vaccineName = "Vitamin A – 5",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(1095),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
+//                dependantVaccineId = 26,
+//                dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
+//            ),
+//            Vaccine(
+//                vaccineId = 28,
+//                category = CHILD,
+//                immunizationService = YEAR_5_6,
+//                vaccineName = "Vitamin A – 6",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(1278),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
+//                dependantVaccineId = 27,
+//                dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
+//            ),
+//            Vaccine(
+//                vaccineId = 29,
+//                category = CHILD,
+//                immunizationService = YEAR_5_6,
+//                vaccineName = "Vitamin A – 7",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(1460),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
+//                dependantVaccineId = 28,
+//                dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
+//            ),
+//            Vaccine(
+//                vaccineId = 30,
+//                category = CHILD,
+//                immunizationService = YEAR_5_6,
+//                vaccineName = "Vitamin A – 8",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(1643),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
+//                dependantVaccineId = 29,
+//                dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
+//            ),
+//            Vaccine(
+//                vaccineId = 31,
+//                category = CHILD,
+//                immunizationService = YEAR_5_6,
+//                vaccineName = "Vitamin A – 9",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 5),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 7),
+//                dependantVaccineId = 30,
+//                dependantCoolDuration = TimeUnit.DAYS.toMillis(183)
+//            ),
+//            Vaccine(
+//                vaccineId = 32,
+//                category = CHILD,
+//                immunizationService = YEAR_10,
+//                vaccineName = "TD Dose",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 10),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 16),
+//            ),
+//            Vaccine(
+//                vaccineId = 33,
+//                category = CHILD,
+//                immunizationService = YEAR_16,
+//                vaccineName = "TD Dose",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 16),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(365 * 17),
+//            ),
+//            ////------------------MOTHER-----------------///////////////
+//            Vaccine(
+//                vaccineId = 34,
+//                category = MOTHER,
+//                immunizationService = YEAR_5_6,
+//                vaccineName = "Td-1",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(0),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(36 * 7),
+//            ),
+//            Vaccine(
+//                vaccineId = 35,
+//                category = MOTHER,
+//                immunizationService = YEAR_5_6,
+//                vaccineName = "Td-2",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(4 * 7),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(36 * 7),
+//                dependantVaccineId = 32,
+//                dependantCoolDuration = TimeUnit.DAYS.toMillis(4 * 7)
+//            ),
+//            Vaccine(
+//                vaccineId = 36,
+//                category = MOTHER,
+//                immunizationService = YEAR_5_6,
+//                vaccineName = "Td-Booster",
+//                minAllowedAgeInMillis = TimeUnit.DAYS.toMillis(0),
+//                maxAllowedAgeInMillis = TimeUnit.DAYS.toMillis(36 * 7),
+//            ),
+//
+//            )
+//        vaccineDao.addVaccine(*vaccineList)
     }
 
 
