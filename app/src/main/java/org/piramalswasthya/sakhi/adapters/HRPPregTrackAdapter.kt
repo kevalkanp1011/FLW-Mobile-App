@@ -10,7 +10,7 @@ import org.piramalswasthya.sakhi.model.HRPPregnantTrackDomain
 
 class HRPPregTrackAdapter(
     private val clickListener: HRPTrackClickListener? = null,
-    private val visit : String
+    private val visit: String
 ) : ListAdapter<HRPPregnantTrackDomain, HRPPregTrackAdapter.BenHRPTrackViewHolder>(
     BenDiffUtilCallBack
 ) {

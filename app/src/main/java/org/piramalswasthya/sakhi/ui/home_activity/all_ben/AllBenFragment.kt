@@ -88,18 +88,18 @@ class AllBenFragment : Fragment() {
 //                    )
                 },
                 {
-                    findNavController().navigate(
-                        AllBenFragmentDirections.actionAllBenFragmentToNewBenRegTypeFragment(
-                            it
-                        )
-                    )
+//                    findNavController().navigate(
+//                        AllBenFragmentDirections.actionAllBenFragmentToNewBenRegTypeFragment(
+//                            it
+//                        )
+//                    )
                 },
                 { benId, hhId ->
                     checkAndGenerateABHA(benId)
                 },
 
                 ),
-//            showAbha = false,
+            showAbha = true,
             showSyncIcon = true,
             showRegistrationDate = true
         )

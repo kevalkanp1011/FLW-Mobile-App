@@ -98,6 +98,7 @@ class HRPPregnantAssessFragment : Fragment() {
             )
         }
     }
+
     private fun submitHRPAssess() {
         if (validateCurrentPage()) {
             viewModel.saveForm()

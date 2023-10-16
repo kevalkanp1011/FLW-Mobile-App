@@ -13,7 +13,7 @@ interface EcrDao {
     @Query("SELECT * FROM ELIGIBLE_COUPLE_REG WHERE processed in ('N', 'U')")
     suspend fun getAllUnprocessedECR(): List<EligibleCoupleRegCache>
 
-    @Query("SELECT * FROM ELIGIBLE_COUPLE_TRACKING WHERE processed = 'N'")
+    @Query("SELECT * FROM ELIGIBLE_COUPLE_TRACKING WHERE processed in ('N','U')")
     suspend fun getAllUnprocessedECT(): List<EligibleCoupleTrackingCache>
 
     @Query("select count(*) from ELIGIBLE_COUPLE_REG")

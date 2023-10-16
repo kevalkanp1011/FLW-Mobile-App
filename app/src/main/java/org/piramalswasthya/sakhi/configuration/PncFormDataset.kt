@@ -24,7 +24,7 @@ class PncFormDataset(
         id = 1,
         inputType = InputType.DROPDOWN,
         title = resources.getString(R.string.pnc_period),
-        entries = resources.getStringArray(R.array.pnc_period_array),
+//        entries = resources.getStringArray(R.array.pnc_period_array),
         arrayId = -1,
         required = true,
         hasDependants = false
@@ -39,7 +39,7 @@ class PncFormDataset(
         hasDependants = false
     )
 
-    private var ifaTabsGiven = FormElement(
+    private val ifaTabsGiven = FormElement(
         id = 3,
         inputType = InputType.EDIT_TEXT,
         title = resources.getString(R.string.pnc_ifa_tabs_given),
@@ -51,7 +51,7 @@ class PncFormDataset(
         min = 0,
     )
 
-    private var anyContraceptionMethod = FormElement(
+    private val anyContraceptionMethod = FormElement(
         id = 4,
         inputType = InputType.RADIO,
         title = resources.getString(R.string.pnc_any_contraception_method),
@@ -60,7 +60,7 @@ class PncFormDataset(
         hasDependants = true
     )
 
-    private var contraceptionMethod = FormElement(
+    private val contraceptionMethod = FormElement(
         id = 5,
         inputType = InputType.DROPDOWN,
         title = resources.getString(R.string.pnc_contraception_method),
@@ -69,7 +69,7 @@ class PncFormDataset(
         hasDependants = true
     )
 
-    private var otherPpcMethod = FormElement(
+    private val otherPpcMethod = FormElement(
         id = 6,
         inputType = InputType.EDIT_TEXT,
         title = resources.getString(R.string.pnc_other_ppc_method),
@@ -77,7 +77,7 @@ class PncFormDataset(
         hasDependants = false
     )
 
-    private var motherDangerSign = FormElement(
+    private val motherDangerSign = FormElement(
         id = 7,
         inputType = InputType.DROPDOWN,
         title = resources.getString(R.string.pnc_mother_danger_sign),
@@ -86,7 +86,7 @@ class PncFormDataset(
         hasDependants = true
     )
 
-    private var otherDangerSign = FormElement(
+    private val otherDangerSign = FormElement(
         id = 8,
         inputType = InputType.EDIT_TEXT,
         title = resources.getString(R.string.pnc_other_danger_sign),
@@ -94,7 +94,7 @@ class PncFormDataset(
         hasDependants = false
     )
 
-    private var referralFacility = FormElement(
+    private val referralFacility = FormElement(
         id = 9,
         inputType = InputType.DROPDOWN,
         title = resources.getString(R.string.pnc_referral_facility),
@@ -103,7 +103,7 @@ class PncFormDataset(
         hasDependants = false
     )
 
-    private var motherDeath = FormElement(
+    private val motherDeath = FormElement(
         id = 10,
         inputType = InputType.RADIO,
         title = resources.getString(R.string.pnc_mother_death),
@@ -112,7 +112,7 @@ class PncFormDataset(
         hasDependants = true,
     )
 
-    private var deathDate = FormElement(
+    private val deathDate = FormElement(
         id = 11,
         inputType = InputType.DATE_PICKER,
         title = resources.getString(R.string.pnc_death_date),
@@ -122,7 +122,7 @@ class PncFormDataset(
         hasDependants = false
     )
 
-    private var causeOfDeath = FormElement(
+    private val causeOfDeath = FormElement(
         id = 12,
         inputType = InputType.DROPDOWN,
         title = resources.getString(R.string.pnc_death_cause),
@@ -131,7 +131,7 @@ class PncFormDataset(
         hasDependants = true,
     )
 
-    private var otherDeathCause = FormElement(
+    private val otherDeathCause = FormElement(
         id = 13,
         inputType = InputType.EDIT_TEXT,
         title = resources.getString(R.string.pnc_other_death_cause),
@@ -139,7 +139,7 @@ class PncFormDataset(
         hasDependants = false
     )
 
-    private var placeOfDeath = FormElement(
+    private val placeOfDeath = FormElement(
         id = 14,
         inputType = InputType.DROPDOWN,
         title = resources.getString(R.string.pnc_death_place),
@@ -148,7 +148,7 @@ class PncFormDataset(
         hasDependants = false,
     )
 
-    private var remarks = FormElement(
+    private val remarks = FormElement(
         id = 15,
         inputType = InputType.EDIT_TEXT,
         title = resources.getString(R.string.pnc_remarks),
@@ -177,15 +177,24 @@ class PncFormDataset(
         deathDate.min = dateOfDelivery
         deathDate.max = System.currentTimeMillis()
         motherDeath.value = motherDeath.entries!!.last()
-        val daysSinceDelivery = Calendar.getInstance()
+        val daysSinceDeliveryMillis = Calendar.getInstance()
             .setToStartOfTheDay().timeInMillis - deliveryOutcomeCache.dateOfDelivery!!.let {
             val cal = Calendar.getInstance()
             cal.timeInMillis = it
             cal.setToStartOfTheDay()
             cal.timeInMillis
         }
+        val daysSinceDelivery = TimeUnit.MILLISECONDS.toDays(daysSinceDeliveryMillis)
         pncPeriod.entries =
-            listOf(1, 3, 7, 14, 21, 28, 42).filter { if(daysSinceDelivery == 0L) it<=1 else it <= daysSinceDelivery }
+            listOf(
+                1,
+                3,
+                7,
+                14,
+                21,
+                28,
+                42
+            ).filter { if (daysSinceDelivery == 0L) it <= 1 else it <= daysSinceDelivery }
                 .filter { it > (previousPnc?.pncPeriod ?: 0) }
                 .map { "Day $it" }.toTypedArray()
 
@@ -209,7 +218,7 @@ class PncFormDataset(
             otherPpcMethod.value = it.otherPpcMethod
             motherDangerSign.value = it.motherDangerSign
             if (it.motherDangerSign == motherDangerSign.entries!!.last()) {
-                list.add(list.indexOf(otherDangerSign) + 1, motherDangerSign)
+                list.add(list.indexOf(motherDangerSign) + 1, otherDangerSign)
             }
             otherDangerSign.value = it.otherDangerSign
             referralFacility.value = it.referralFacility
@@ -279,52 +288,111 @@ class PncFormDataset(
         return when (formId) {
             pncPeriod.id -> {
                 visitDate.inputType = InputType.DATE_PICKER
-                val visitNumber = pncPeriod.value!!.substring(4).toInt()
-                when (visitNumber) {
-                    0 -> {
-                        visitDate.min = dateOfDelivery
-                        visitDate.max = dateOfDelivery + TimeUnit.DAYS.toMillis(1)
-                    }
-
+                visitDate.value = null
+                val today = Calendar.getInstance().setToStartOfTheDay().timeInMillis
+                when (val visitNumber = pncPeriod.value!!.substring(4).toInt()) {
                     1 -> {
-                        visitDate.min = dateOfDelivery + TimeUnit.DAYS.toMillis(3)
-                        visitDate.max = dateOfDelivery + TimeUnit.DAYS.toMillis(3)
-                    }
-
-                    2 -> {
-                        visitDate.min =
-                            dateOfDelivery + TimeUnit.DAYS.toMillis(7) - TimeUnit.DAYS.toMillis(3)
-                        visitDate.max =
-                            dateOfDelivery + TimeUnit.DAYS.toMillis(7) + TimeUnit.DAYS.toMillis(3)
+                        visitDate.min = minOf(today, dateOfDelivery)
+                        visitDate.max = minOf(
+                            today,
+                            dateOfDelivery + TimeUnit.DAYS.toMillis(1)
+                        )
                     }
 
                     3 -> {
-                        visitDate.min =
-                            dateOfDelivery + TimeUnit.DAYS.toMillis(14) - TimeUnit.DAYS.toMillis(3)
-                        visitDate.max =
-                            dateOfDelivery + TimeUnit.DAYS.toMillis(14) + TimeUnit.DAYS.toMillis(3)
+                        visitDate.min = minOf(today, dateOfDelivery + TimeUnit.DAYS.toMillis(3))
+                        visitDate.max = minOf(
+                            today,
+                            dateOfDelivery + TimeUnit.DAYS.toMillis(3)
+                        )
                     }
 
-                    4 -> {
+                    7 -> {
                         visitDate.min =
-                            dateOfDelivery + TimeUnit.DAYS.toMillis(21) - TimeUnit.DAYS.toMillis(3)
+                            minOf(
+                                today,
+                                dateOfDelivery + TimeUnit.DAYS.toMillis(7) - TimeUnit.DAYS.toMillis(
+                                    3
+                                )
+                            )
                         visitDate.max =
-                            dateOfDelivery + TimeUnit.DAYS.toMillis(21) + TimeUnit.DAYS.toMillis(3)
+                            minOf(
+                                System.currentTimeMillis(),
+                                dateOfDelivery + TimeUnit.DAYS.toMillis(7) + TimeUnit.DAYS.toMillis(
+                                    3
+                                )
+                            )
                     }
 
-                    5 -> {
+                    14 -> {
                         visitDate.min =
-                            dateOfDelivery + TimeUnit.DAYS.toMillis(28) - TimeUnit.DAYS.toMillis(3)
+                            minOf(
+                                today,
+                                dateOfDelivery + TimeUnit.DAYS.toMillis(14) - TimeUnit.DAYS.toMillis(
+                                    3
+                                )
+                            )
                         visitDate.max =
-                            dateOfDelivery + TimeUnit.DAYS.toMillis(28) + TimeUnit.DAYS.toMillis(3)
+                            minOf(
+                                System.currentTimeMillis(),
+                                dateOfDelivery + TimeUnit.DAYS.toMillis(14) + TimeUnit.DAYS.toMillis(
+                                    3
+                                )
+                            )
                     }
 
-                    6 -> {
+                    21 -> {
                         visitDate.min =
-                            dateOfDelivery + TimeUnit.DAYS.toMillis(42) - TimeUnit.DAYS.toMillis(3)
+                            minOf(
+                                today,
+                                dateOfDelivery + TimeUnit.DAYS.toMillis(21) - TimeUnit.DAYS.toMillis(
+                                    3
+                                )
+                            )
                         visitDate.max =
-                            dateOfDelivery + TimeUnit.DAYS.toMillis(42) + TimeUnit.DAYS.toMillis(3)
+                            minOf(
+                                System.currentTimeMillis(),
+                                dateOfDelivery + TimeUnit.DAYS.toMillis(21) + TimeUnit.DAYS.toMillis(
+                                    3
+                                )
+                            )
                     }
+
+                    28 -> {
+                        visitDate.min =
+                            minOf(
+                                today,
+                                dateOfDelivery + TimeUnit.DAYS.toMillis(28) - TimeUnit.DAYS.toMillis(
+                                    3
+                                )
+                            )
+                        visitDate.max =
+                            minOf(
+                                System.currentTimeMillis(),
+                                dateOfDelivery + TimeUnit.DAYS.toMillis(28) + TimeUnit.DAYS.toMillis(
+                                    3
+                                )
+                            )
+                    }
+
+                    42 -> {
+                        visitDate.min =
+                            minOf(
+                                today,
+                                dateOfDelivery + TimeUnit.DAYS.toMillis(42) - TimeUnit.DAYS.toMillis(
+                                    3
+                                )
+                            )
+                        visitDate.max =
+                            minOf(
+                                System.currentTimeMillis(),
+                                dateOfDelivery + TimeUnit.DAYS.toMillis(42) + TimeUnit.DAYS.toMillis(
+                                    3
+                                )
+                            )
+                    }
+
+                    else -> throw IllegalStateException("Illegal PNC Date $visitNumber")
                 }
                 return -1
             }

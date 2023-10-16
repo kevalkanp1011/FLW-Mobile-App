@@ -51,17 +51,17 @@
                 android:layout_height="wrap_content"
                 android:paddingVertical="@dimen/padding_wide"
                 android:orientation="horizontal">
-                <androidx.legacy.widget.Space
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"/>
+<!--                <androidx.legacy.widget.Space-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="1"/>-->
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cv_anc"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_margin="@dimen/margin_small"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:backgroundTint="?attr/colorPrimary"
                     android:elevation="@dimen/padding_normal"
                     app:cardCornerRadius="@dimen/padding_normal"
@@ -76,39 +76,40 @@
                             android:id="@+id/tv_ph_anc"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="?attr/colorOnPrimary"
                             android:text="@string/beneficiaries_due_for_anc"
-                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+                            android:layout_alignParentTop="true"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                            android:textColor="?attr/colorOnPrimary" />
 
                         <TextView
                             android:id="@+id/tv_anc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="?attr/colorOnPrimary"
-
                             android:layout_below="@id/tv_ph_anc"
+                            android:layout_alignParentBottom="true"
+
                             android:layout_alignParentEnd="false"
                             android:layout_centerHorizontal="true"
                             android:textAppearance="@style/TextAppearance.Material3.DisplayMedium"
+                            android:textColor="?attr/colorOnPrimary"
                             tools:text="45" />
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
 
-                <androidx.legacy.widget.Space
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"/>
+<!--                <androidx.legacy.widget.Space-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="1"/>-->
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cv_imm"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_margin="@dimen/margin_small"
                     android:layout_weight="1"
                     android:backgroundTint="?attr/colorPrimary"
                     android:elevation="@dimen/padding_normal"
                     app:cardCornerRadius="@dimen/padding_normal"
-                    android:visibility="gone"
                     app:cardElevation="@dimen/padding_normal">
 
                     <RelativeLayout
@@ -121,6 +122,7 @@
                             android:layout_width="151dp"
                             android:layout_height="50dp"
                             android:text="@string/beneficiaries_due_for_immunization"
+                            android:layout_alignParentTop="true"
 
                             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                             android:textColor="?attr/colorOnPrimary" />
@@ -132,6 +134,7 @@
                             android:layout_below="@id/tv_ph_imm"
                             android:layout_alignParentEnd="false"
                             android:layout_centerHorizontal="true"
+                            android:layout_alignParentBottom="true"
 
                             android:text="@string/_0"
                             android:textAppearance="@style/TextAppearance.Material3.DisplayMedium"
@@ -161,7 +164,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_small"
                     android:layout_weight="1"
-                    android:backgroundTint="?attr/colorPrimary"
+                    android:backgroundTint="@android:color/holo_orange_light"
                     android:elevation="@dimen/padding_normal"
                     app:cardCornerRadius="@dimen/padding_normal"
                     app:cardElevation="@dimen/padding_normal">
@@ -176,8 +179,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:lines="3"
-                            android:textColor="?attr/colorOnPrimary"
-
                             android:text="@string/high_risk_pregnant_women"
                             android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
 
@@ -188,8 +189,6 @@
                             android:layout_below="@id/tv_ph_hrp"
                             android:layout_alignParentEnd="false"
                             android:layout_centerHorizontal="true"
-                            android:textColor="?attr/colorOnPrimary"
-
                             android:textAppearance="@style/TextAppearance.Material3.DisplayMedium"
                             tools:text="45" />
                     </RelativeLayout>
@@ -201,7 +200,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_small"
                     android:layout_weight="1"
-                    android:backgroundTint="?attr/colorPrimary"
+                    android:backgroundTint="@android:color/holo_orange_light"
                     android:elevation="@dimen/padding_normal"
                     app:cardCornerRadius="@dimen/padding_normal"
                     app:cardElevation="@dimen/padding_normal">
@@ -216,7 +215,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:lines="3"
-                            android:textColor="?attr/colorOnPrimary"
 
                             android:text="@string/high_risk_non_pregnant_women"
                             android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
@@ -228,8 +226,6 @@
                             android:layout_below="@id/tv_hr_npw"
                             android:layout_alignParentEnd="false"
                             android:layout_centerHorizontal="true"
-                            android:textColor="?attr/colorOnPrimary"
-
                             android:text="@string/_0"
                             android:textAppearance="@style/TextAppearance.Material3.DisplayMedium" />
                     </RelativeLayout>
@@ -276,13 +272,13 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_lwb"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_small"
                     android:layout_weight="1"
-                    android:backgroundTint="@android:color/holo_orange_dark"
+                    android:backgroundTint="@android:color/holo_orange_light"
                     android:elevation="@dimen/padding_normal"
-                    android:visibility="gone"
                     app:cardCornerRadius="@dimen/padding_normal"
                     app:cardElevation="@dimen/padding_normal">
 

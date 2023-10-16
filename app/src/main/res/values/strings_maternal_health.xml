@@ -181,7 +181,7 @@
     <string name="pmsma_haemoglobin_and_blood_group">Haemoglobin</string>
     <string name="pmsma_hiv">HIV</string>
     <string name="pmsma_vdrl">Vdrl</string>
-    <string name="pmsma_hbsc">HBSC (Hepatitis B) </string>
+    <string name="pmsma_hbsc">HBSG (Hepatitis B) </string>
     <string name="pmsma_malaria">Malaria</string>
     <string name="pmsma_hiv_test_during_anc">Was HIV test done during ANC Check up?</string>
     <string name="pmsma_swollen_condition">Swollen condition</string>

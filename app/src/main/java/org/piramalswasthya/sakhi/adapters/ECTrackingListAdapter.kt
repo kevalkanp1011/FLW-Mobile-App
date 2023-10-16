@@ -6,10 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.piramalswasthya.sakhi.databinding.RvItemEcTrackingListBinding
-import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.model.BenWithEctListDomain
-import java.util.Calendar
-import java.util.concurrent.TimeUnit
 
 class ECTrackingListAdapter(private val clickListener: ECTrackListClickListener) :
     ListAdapter<BenWithEctListDomain, ECTrackingListAdapter.ECTrackViewHolder>(
@@ -62,11 +59,7 @@ class ECTrackingListAdapter(private val clickListener: ECTrackListClickListener)
         ) {
         fun onClickedAdd(item: BenWithEctListDomain) = addNewTrack(
             item.ben.benId,
-            (Calendar.getInstance()
-                .setToStartOfTheDay().timeInMillis - (item.savedECTRecords.takeIf { it.isNotEmpty() }
-                ?.maxBy { it.visited }?.visited ?: 0)).let {
-                TimeUnit.MILLISECONDS.toDays(it) > 0
-            }
+            item.allowFill
         )
 
         fun onClickedShowAllTracks(item: BenWithEctListDomain) = showAllTracks(

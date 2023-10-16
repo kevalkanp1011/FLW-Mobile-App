@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
+import org.piramalswasthya.sakhi.adapters.HRPTListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 
@@ -40,8 +40,8 @@ class HRPPregnantListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapterForForm(
-            clickListener = BenListAdapterForForm.ClickListener(
+        val benAdapter = HRPTListAdapter(
+            clickListener = HRPTListAdapter.HRPTClickListener(
                 {
 //                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
                 },
@@ -65,8 +65,7 @@ class HRPPregnantListFragment : Fragment() {
             formButtonText = arrayOf(
                 resources.getString(R.string.follow_up),
                 resources.getString(R.string.history)
-            ),
-            role = 1
+            )
         )
         binding.rvAny.adapter = benAdapter
 

@@ -4,8 +4,10 @@ import android.content.Context
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.Languages
+import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.model.*
 import timber.log.Timber
+import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 class HRPNonPregnantTrackDataset(
@@ -170,17 +172,18 @@ class HRPNonPregnantTrackDataset(
         }
 
         ben?.let {
-            dateOfVisit.min = it.regDate - TimeUnit.DAYS.toMillis(60)
+            dateOfVisit.min = it.regDate
             dateOfVisitMin?.let { dov ->
-//                val cal = Calendar.getInstance()
-//                cal.timeInMillis = dov
-//                cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1)
-//                cal.set(Calendar.DAY_OF_MONTH, 1)
-//                if (cal.timeInMillis > it.regDate) {
-//                    dateOfVisit.min = cal.timeInMillis
-//                }
-                if (dov > it.regDate - TimeUnit.DAYS.toMillis(60))
-                    dateOfVisit.min = minOf( dov + TimeUnit.DAYS.toMillis(1), System.currentTimeMillis())
+                val calReg = Calendar.getInstance().setToStartOfTheDay()
+                calReg.timeInMillis = it.regDate
+                calReg.setToStartOfTheDay()
+                val calMaxVisit = Calendar.getInstance()
+                calMaxVisit.timeInMillis = dov
+                calMaxVisit.setToStartOfTheDay()
+
+                if((calMaxVisit.timeInMillis - calReg.timeInMillis) >= 0) {
+                    dateOfVisit.min = minOf( calMaxVisit.timeInMillis + TimeUnit.DAYS.toMillis(1), System.currentTimeMillis())
+                }
             }
             dateOfVisit.max = System.currentTimeMillis()
         }

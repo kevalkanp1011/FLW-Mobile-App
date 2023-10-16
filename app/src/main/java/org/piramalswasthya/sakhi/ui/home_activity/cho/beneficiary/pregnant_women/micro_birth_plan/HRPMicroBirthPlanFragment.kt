@@ -125,7 +125,10 @@ class HRPMicroBirthPlanFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__pregnancy, getString(R.string.micro_birth_plan))
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__pregnancy,
+                getString(R.string.micro_birth_plan)
+            )
         }
     }
 

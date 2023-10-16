@@ -166,12 +166,15 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
                 target
             )
             if (anyRemoved) {
+
+                targetSideEffect?.let { sideEffectList ->
+                    sideEffectList.forEach { it.value = null
+                    it.errorText = null}
+                    list.removeAll(sideEffectList)
+                }
                 target.forEach {
                     it.value = null
-                }
-                targetSideEffect?.let { sideEffectList ->
-                    list.removeAll(sideEffectList)
-                    sideEffectList.forEach { it.value = null }
+                    it.errorText = null
                 }
                 list.indexOf(source)
             } else -1
@@ -471,9 +474,18 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         takeIf { it.isNotEmpty() }?.toCharArray()?.all { it.isWhitespace() || it.isLetter() }
             ?: false
 
+    private fun String.isThereAnyNumber() =
+        takeIf { it.isNotEmpty() }?.toCharArray()?.any { it.isDigit() }
+            ?: false
+
     private fun String.isAllAlphaNumericAndSpace() =
         takeIf { it.isNotEmpty() }?.toCharArray()
             ?.all { it.isWhitespace() || it.isLetter() || it.isDigit() }
+            ?: false
+
+    private fun String.isAllAlphaNumeric() =
+        takeIf { it.isNotEmpty() }?.toCharArray()
+            ?.all { it.isLetter() || it.isDigit() }
             ?: false
 
     private fun String.isAnyAlphabetOrSpace() =
@@ -511,6 +523,8 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
 
     protected fun validateAllAlphabetsSpaceOnEditText(formElement: FormElement): Int {
         formElement.value?.takeIf { it.isNotEmpty() }?.isAllAlphabetsAndSpace()?.let {
+            if (formElement.errorText != null && formElement.errorText != resources.getString(R.string.form_input_alphabet_space_only_error))
+                return@let
             if (it) formElement.errorText = null
             else formElement.errorText =
                 resources.getString(R.string.form_input_alphabet_space_only_error)
@@ -518,21 +532,56 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         return -1
     }
 
+    protected fun validateAllAlphabetsSpecialOnEditText(formElement: FormElement): Int {
+        formElement.value?.takeIf { it.isNotEmpty() }?.isThereAnyNumber()?.let {
+            if (formElement.errorText != null && formElement.errorText != resources.getString(R.string.form_input_alphabet_special_only_error))
+                return@let
+            if (it) formElement.errorText =
+                resources.getString(R.string.form_input_alphabet_special_only_error)
+            else formElement.errorText =
+                null
+        }
+        return -1
+    }
+
     protected fun validateAllAlphaNumericSpaceOnEditText(formElement: FormElement): Int {
-        formElement.value?.takeIf { it.isNotEmpty() }?.isAllAlphaNumericAndSpace()?.let {
-            if (it) formElement.errorText = null
+        formElement.value?.takeIf { it.isNotEmpty() }?.let {
+            val isValid = it.isAllAlphaNumericAndSpace()
+            if (formElement.errorText != null && formElement.errorText != resources.getString(R.string.form_input_alph_numeric_space_only_error))
+                return@let
+            if (isValid) formElement.errorText = null
             else formElement.errorText =
                 resources.getString(R.string.form_input_alph_numeric_space_only_error)
+        } ?: kotlin.run {
+            formElement.errorText = null
+        }
+        return -1
+    }
+
+    protected fun validateAllAlphaNumericOnEditText(formElement: FormElement): Int {
+        formElement.value?.takeIf { it.isNotEmpty() }?.let {
+            val isValid = it.isAllAlphaNumeric()
+            if (formElement.errorText != null && formElement.errorText != resources.getString(R.string.form_input_alph_numeric_space_only_error))
+                return@let
+            if (isValid) formElement.errorText = null
+            else formElement.errorText =
+                resources.getString(R.string.form_input_alph_numeric_space_only_error)
+        } ?: kotlin.run {
+            formElement.errorText = null
         }
         return -1
     }
 
     protected fun validateNoAlphabetSpaceOnEditText(formElement: FormElement): Int {
         formElement.value?.takeIf { it.isNotEmpty() }?.isAnyAlphabetOrSpace()?.let {
+            if (formElement.errorText != null && formElement.errorText != resources.getString(R.string.form_input__no_alpha_space_error))
+                return@let
             if (it) formElement.errorText =
                 resources.getString(R.string.form_input__no_alpha_space_error)
             else formElement.errorText =
                 null
+        } ?: kotlin.run {
+            formElement.errorText = null
         }
         return -1
     }
@@ -542,6 +591,8 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
             if (it) formElement.errorText = null
             else formElement.errorText =
                 resources.getString(R.string.form_input_digit_only_error)
+        } ?: kotlin.run {
+            formElement.errorText = null
         }
         return -1
     }
@@ -588,12 +639,27 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
         return -1
     }
 
-    protected fun validateDouble1DecimalPlaces(formElement: FormElement): Int {
+    protected fun validateDoubleUpto1DecimalPlaces(formElement: FormElement): Int {
         formElement.errorText = formElement.value?.takeIf { it.isNotEmpty() }?.let {
-            if (it.contains('.') && it.substringAfter(".").length > 1)
-                "Only 1 decimal place allowed"
-            else
-                null
+            val periodCount = it.count { it == '.' }
+            if (periodCount > 1) {
+                "Invalid value"
+            } else if (periodCount == 0) {
+                if (it.any { !it.isDigit() })
+                    "Invalid value"
+                else
+                    null
+            } else {
+                val prePeriod = it.substringBefore('.')
+                val postPeriod = it.substringAfter('.')
+                if (prePeriod.any { !it.isDigit() } || postPeriod.any { !it.isDigit() })
+                    "Invalid value"
+                else if (postPeriod.length > 1)
+                    "Only 1 decimal place allowed"
+                else
+                    null
+            }
+
         }
         return -1
     }

@@ -8,6 +8,10 @@ import org.piramalswasthya.sakhi.model.BenPncDomain
 import org.piramalswasthya.sakhi.model.BenWithAncListDomain
 import org.piramalswasthya.sakhi.model.BenWithEcrDomain
 import org.piramalswasthya.sakhi.model.BenWithEctListDomain
+import org.piramalswasthya.sakhi.model.BenWithHRNPADomain
+import org.piramalswasthya.sakhi.model.BenWithHRNPTListDomain
+import org.piramalswasthya.sakhi.model.BenWithHRPADomain
+import org.piramalswasthya.sakhi.model.BenWithHRPTListDomain
 import org.piramalswasthya.sakhi.model.BenWithPwrDomain
 import org.piramalswasthya.sakhi.model.BenWithTbScreeningDomain
 import org.piramalswasthya.sakhi.model.BenWithTbSuspectedDomain
@@ -220,6 +224,111 @@ fun filterBenFormList(
                     it.mobileNo.lowercase().contains(filterText) ||
                     it.gender.lowercase().contains(filterText) ||
                     it.fatherName?.lowercase()?.contains(filterText) ?: false
+        }
+    }
+}
+
+
+fun filterBenHRPFormList(
+    list: List<BenWithHRPADomain>,
+    text: String
+): List<BenWithHRPADomain> {
+    if (text == "")
+        return list
+    else {
+        val filterText = text.lowercase()
+        return list.filter {
+            it.ben.hhId.toString().lowercase().contains(filterText) ||
+                    it.ben.benId.toString().lowercase().contains(filterText) ||
+                    it.ben.regDate.lowercase().contains((filterText)) ||
+                    it.ben.age.lowercase().contains(filterText) ||
+                    it.ben.rchId.takeIf { it1 -> it1.isDigitsOnly() }?.contains(filterText) ?: false ||
+                    it.ben.benName.lowercase().contains(filterText) ||
+                    it.ben.familyHeadName.lowercase().contains(filterText) ||
+                    it.ben.spouseName?.lowercase()?.contains(filterText) == true ||
+                    it.ben.benSurname?.lowercase()?.contains(filterText) ?: false ||
+//                    it.typeOfList.lowercase().contains(filterText) ||
+                    it.ben.mobileNo.lowercase().contains(filterText) ||
+                    it.ben.gender.lowercase().contains(filterText) ||
+                    it.ben.fatherName?.lowercase()?.contains(filterText) ?: false
+        }
+    }
+}
+
+fun filterBenHRNPFormList(
+    list: List<BenWithHRNPADomain>,
+    text: String
+): List<BenWithHRNPADomain> {
+    if (text == "")
+        return list
+    else {
+        val filterText = text.lowercase()
+        return list.filter {
+            it.ben.hhId.toString().lowercase().contains(filterText) ||
+                    it.ben.benId.toString().lowercase().contains(filterText) ||
+                    it.ben.regDate.lowercase().contains((filterText)) ||
+                    it.ben.age.lowercase().contains(filterText) ||
+                    it.ben.rchId.takeIf { it1 -> it1.isDigitsOnly() }?.contains(filterText) ?: false ||
+                    it.ben.benName.lowercase().contains(filterText) ||
+                    it.ben.familyHeadName.lowercase().contains(filterText) ||
+                    it.ben.spouseName?.lowercase()?.contains(filterText) == true ||
+                    it.ben.benSurname?.lowercase()?.contains(filterText) ?: false ||
+//                    it.typeOfList.lowercase().contains(filterText) ||
+                    it.ben.mobileNo.lowercase().contains(filterText) ||
+                    it.ben.gender.lowercase().contains(filterText) ||
+                    it.ben.fatherName?.lowercase()?.contains(filterText) ?: false
+        }
+    }
+}
+
+fun filterBenHRPTFormList(
+    list: List<BenWithHRPTListDomain>,
+    text: String
+): List<BenWithHRPTListDomain> {
+    if (text == "")
+        return list
+    else {
+        val filterText = text.lowercase()
+        return list.filter {
+            it.ben.hhId.toString().lowercase().contains(filterText) ||
+                    it.ben.benId.toString().lowercase().contains(filterText) ||
+                    it.ben.regDate.lowercase().contains((filterText)) ||
+                    it.ben.age.lowercase().contains(filterText) ||
+                    it.ben.rchId.takeIf { it1 -> it1.isDigitsOnly() }?.contains(filterText) ?: false ||
+                    it.ben.benName.lowercase().contains(filterText) ||
+                    it.ben.familyHeadName.lowercase().contains(filterText) ||
+                    it.ben.spouseName?.lowercase()?.contains(filterText) == true ||
+                    it.ben.benSurname?.lowercase()?.contains(filterText) ?: false ||
+//                    it.typeOfList.lowercase().contains(filterText) ||
+                    it.ben.mobileNo.lowercase().contains(filterText) ||
+                    it.ben.gender.lowercase().contains(filterText) ||
+                    it.ben.fatherName?.lowercase()?.contains(filterText) ?: false
+        }
+    }
+}
+
+fun filterBenHRNPTFormList(
+    list: List<BenWithHRNPTListDomain>,
+    text: String
+): List<BenWithHRNPTListDomain> {
+    if (text == "")
+        return list
+    else {
+        val filterText = text.lowercase()
+        return list.filter {
+            it.ben.hhId.toString().lowercase().contains(filterText) ||
+                    it.ben.benId.toString().lowercase().contains(filterText) ||
+                    it.ben.regDate.lowercase().contains((filterText)) ||
+                    it.ben.age.lowercase().contains(filterText) ||
+                    it.ben.rchId.takeIf { it1 -> it1.isDigitsOnly() }?.contains(filterText) ?: false ||
+                    it.ben.benName.lowercase().contains(filterText) ||
+                    it.ben.familyHeadName.lowercase().contains(filterText) ||
+                    it.ben.spouseName?.lowercase()?.contains(filterText) == true ||
+                    it.ben.benSurname?.lowercase()?.contains(filterText) ?: false ||
+//                    it.typeOfList.lowercase().contains(filterText) ||
+                    it.ben.mobileNo.lowercase().contains(filterText) ||
+                    it.ben.gender.lowercase().contains(filterText) ||
+                    it.ben.fatherName?.lowercase()?.contains(filterText) ?: false
         }
     }
 }

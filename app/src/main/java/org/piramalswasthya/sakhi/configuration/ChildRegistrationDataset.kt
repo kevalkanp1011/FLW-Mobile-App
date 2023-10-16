@@ -6,6 +6,7 @@ import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.BenBasicCache
 import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.BenRegKid
 import org.piramalswasthya.sakhi.model.DeliveryOutcomeCache
 import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.Gender
@@ -98,9 +99,9 @@ class ChildRegistrationDataset(
         inputType = InputType.RADIO,
         title = "Whose Mobile Number",
         entries = arrayOf(
-            "Mother - W",
-            "Father - H",
-            "Others – O"
+            "Mother",
+            "Father",
+            "Others"
         ),
         isEnabled = false,
 
@@ -160,17 +161,17 @@ class ChildRegistrationDataset(
         inputType = InputType.DROPDOWN,
         title = "Place of Birth",
         entries = arrayOf(
-            "District Hospital – 5",
-            "Community Health Centre – 2",
-            "Primary Health Centre –1",
-            "Sub Centre- 24",
-            "Other Public Facility 19",
-            "Accredited Private Hospital – 20",
-            "Other Private Hospital – 21",
-            "Home-22",
-            "Sub District Hospital – 4",
-            "Medical College Hospital – 17",
-            "In Transit- 23"
+            "District Hospital",
+            "Community Health Centre",
+            "Primary Health Centre",
+            "Sub Centre",
+            "Other Public Facility",
+            "Accredited Private Hospital",
+            "Other Private Hospital ",
+            "Home",
+            "Sub District Hospital",
+            "Medical College Hospital",
+            "In Transit"
         ),
         required = false,
         hasDependants = false
@@ -200,7 +201,11 @@ class ChildRegistrationDataset(
         dateOfReg.value = getDateFromLong(System.currentTimeMillis())
         dateOfReg.min = deliveryOutcomeCache?.dateOfDelivery
         motherBen?.let {
-            fatherName.value = it.genDetails?.spouseName
+            it.genDetails?.spouseName?.let {
+                fatherName.value = it
+            }?:run{
+                fatherName.inputType= InputType.EDIT_TEXT
+            }
             motherName.value = "${it.firstName} ${it.lastName ?: ""}"
             mobileNumberOf.value = mobileNumberOf.entries?.first()
             mobileNumber.value = it.contactNumber.toString()
@@ -232,7 +237,9 @@ class ChildRegistrationDataset(
             rchId.id -> validateRchIdOnEditText(rchId)
             rchIdMother.id -> validateRchIdOnEditText(rchIdMother)
             mobileNumber.id -> validateMobileNumberOnEditText(mobileNumber)
+            fatherName.id -> validateAllCapsOrSpaceOnEditText(fatherName)
             weightAtBirth.id -> validateDoubleMinMax(weightAtBirth)
+            birthCertificateNo.id -> validateNoAlphabetSpaceOnEditText(birthCertificateNo)
 
             else -> -1
         }
@@ -258,15 +265,15 @@ class ChildRegistrationDataset(
             else -> Gender.FEMALE
         }
         val familyHeadRelationId =
-            getFamilyHeadRelationFromMother(gender,motherBen.familyHeadRelationPosition)
+            getFamilyHeadRelationFromMother(gender, motherBen.familyHeadRelationPosition)
         val familyHeadRelation = getRelationStringFromId(familyHeadRelationId)
 
         return BenRegCache(
             ashaId = user.userId,
             beneficiaryId = 0,
             createdDate = System.currentTimeMillis(),
-            updatedBy=user.userName,
-            createdBy=user.userName,
+            updatedBy = user.userName,
+            createdBy = user.userName,
             updatedDate = System.currentTimeMillis(),
             householdId = motherBen.householdId,
             isAdult = false,
@@ -296,8 +303,14 @@ class ChildRegistrationDataset(
             religion = motherBen.religion,
             religionId = motherBen.religionId,
             rchId = rchId.value,
-            processed = "N"
+            processed = "N",
+            kidDetails = BenRegKid(
+                childName = childName.value,
+                birthPlace = placeOfBirth.value,
+                birthPlaceId = placeOfBirth.getPosition(),
+                birthCertificateNumber = birthCertificateNo.value
             )
+        )
     }
 
     private fun getRelationStringFromId(familyHeadRelationId: Int): String {

@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -47,6 +49,9 @@ class HRNonPregnantTrackBottomSheet : BottomSheetDialogFragment() {
                 },
                 visit = resources.getString(R.string.visit_on)
             )
+
+        val divider = DividerItemDecoration(context, LinearLayout.VERTICAL)
+        binding.rvHrpTract.addItemDecoration(divider)
 
         lifecycleScope.launch {
             viewModel.getTrackDetails().let {

@@ -58,6 +58,11 @@ class SchedulerFragment : Fragment() {
                 binding.tvAnc.text = it.toString()
             }
         }
+        lifecycleScope.launch {
+            viewModel.lowWeightBabiesCount.collect{
+                binding.tvLbwb.text = it.toString()
+            }
+        }
         binding.cvAnc.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToPwAncVisitsFragment())
         }
@@ -66,6 +71,9 @@ class SchedulerFragment : Fragment() {
         }
         binding.cvNonHrp.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToHRPNonPregnantListFragment())
+        }
+        binding.cvLwb.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToInfantRegListFragment())
         }
         lifecycleScope.launch {
             viewModel.hrpDueCount.collect{

@@ -31,7 +31,7 @@ class BenRepo @Inject constructor(
     private val benDao: BenDao,
     private val householdDao: HouseholdDao,
     private val benIdGenDao: BeneficiaryIdsAvailDao,
-//    private val cbacDao: CbacDao,
+    private val infantRegRepo: InfantRegRepo,
     private val preferenceDao: PreferenceDao,
     private val userRepo: UserRepo,
     private val tmcNetworkApiService: AmritApiService
@@ -439,6 +439,14 @@ class BenRepo @Inject constructor(
                     val benNumber = resBenId.substring(resBenId.length - 12)
                     val newBenId = java.lang.Long.valueOf(benNumber)
                     //FIX TO UPDATE IMAGE-NAME WITH NEW BEN-ID
+                    val infantReg = infantRegRepo.getInfantRegFromChildBenId(ben.beneficiaryId)
+                    infantReg?.let {
+                        it.childBenId = newBenId
+                        it.syncState = SyncState.UNSYNCED
+                        if (it.processed != "N") it.processed = "U"
+                        it.updatedDate = System.currentTimeMillis()
+                    }
+                    infantReg?.let { infantRegRepo.update(it) }
                     val photoUri = ImageUtils.renameImage(context, ben.beneficiaryId, newBenId)
                     benDao.updateToFinalBenId(
                         hhId = ben.householdId,
@@ -453,6 +461,7 @@ class BenRepo @Inject constructor(
                             householdDao.update(it)
                         }
                     ben.beneficiaryId = newBenId
+                    //FIX TO UPDATE INFANT-REG CHILD BEN ID
 
                     return true
                 }
@@ -530,7 +539,7 @@ class BenRepo @Inject constructor(
                     householdDao.getHousehold(it.householdId)!!.asNetworkModel()
                 )
                 try {
-                    if (it.ageUnitId!=3 || it.age<15) kidNetworkPostList.add(it.asKidNetworkModel())
+                    if (it.ageUnitId != 3 || it.age < 15) kidNetworkPostList.add(it.asKidNetworkModel())
                 } catch (e: java.lang.Exception) {
                     Timber.d("caught error in adding kidDetails : $e")
                 }
@@ -1388,13 +1397,21 @@ class BenRepo @Inject constructor(
                                     ) else null,
                                     familyHeadPhoneNo = houseDataObj.getString("familyHeadPhoneNo")
                                         .toLong(),
-                                    houseNo = if (houseDataObj.has("houseno"))houseDataObj.getString("houseno")
+                                    houseNo = if (houseDataObj.has("houseno")) houseDataObj.getString(
+                                        "houseno"
+                                    )
                                         .let { if (it == "null") null else it } else null,
-                                    wardNo = if (houseDataObj.has("wardNo"))houseDataObj.getString("wardNo")
+                                    wardNo = if (houseDataObj.has("wardNo")) houseDataObj.getString(
+                                        "wardNo"
+                                    )
                                         .let { if (it == "null") null else it } else null,
-                                    wardName = if (houseDataObj.has("wardName"))houseDataObj.getString("wardName")
+                                    wardName = if (houseDataObj.has("wardName")) houseDataObj.getString(
+                                        "wardName"
+                                    )
                                         .let { if (it == "null") null else it } else null,
-                                    mohallaName = if (houseDataObj.has("mohallaName"))houseDataObj.getString("mohallaName")
+                                    mohallaName = if (houseDataObj.has("mohallaName")) houseDataObj.getString(
+                                        "mohallaName"
+                                    )
                                         .let { if (it == "null") null else it } else null,
 //                                rationCardDetails = houseDataObj.getString("rationCardDetails"),
                                     povertyLine = houseDataObj.getString("type_bpl_apl"),

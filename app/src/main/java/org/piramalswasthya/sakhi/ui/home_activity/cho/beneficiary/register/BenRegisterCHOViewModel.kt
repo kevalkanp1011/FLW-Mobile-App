@@ -141,8 +141,8 @@ class BenRegisterCHOViewModel @Inject constructor(
     fun getIndexOfAge() = dataset.getIndexOfAge()
 
     fun getIndexOfDob() = dataset.getIndexOfDOB()
-    fun updateValueByIdAndReturnListIndex ( id : Int, value : String?)  : Int{
+    fun updateValueByIdAndReturnListIndex(id: Int, value: String?): Int {
         dataset.setValueById(id, value)
-        return dataset.getIndexById(id )
+        return dataset.getIndexById(id)
     }
 }

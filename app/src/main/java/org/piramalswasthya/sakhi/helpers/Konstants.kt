@@ -51,10 +51,15 @@ object Konstants {
     const val minAnc4Week = 36
     const val maxAnc4Week = 40
 
+    const val minWeekToShowDelivered = 23
 
-    //PNC-EC cycle
+
+    const val babyLowWeight: Double = 2.5
+
+
+        //PNC-EC cycle
     const val pncEcGap : Long = 45
 
 
-    const val defaultTimeStamp = 1603132200000L
+    const val defaultTimeStamp = 1577817001000L
 }

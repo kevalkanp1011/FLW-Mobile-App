@@ -279,11 +279,11 @@ open class DeliveryOutcomeDataset(
             }
 
             otherCauseOfDeath.id -> {
-                validateAllAlphabetsSpaceOnEditText(otherCauseOfDeath)
+                validateAllAlphabetsSpecialOnEditText(otherCauseOfDeath)
             }
 
             otherComplication.id -> {
-                validateAllAlphabetsSpaceOnEditText(otherComplication)
+                validateAllAlphabetsSpecialOnEditText(otherComplication)
             }
 
             deliveryOutcome.id -> {

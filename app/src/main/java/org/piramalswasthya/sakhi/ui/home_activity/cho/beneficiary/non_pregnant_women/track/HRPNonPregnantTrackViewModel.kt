@@ -122,10 +122,12 @@ constructor(
                         }
 
 
-                        var pregAssessCache = hrpReo.getPregnantAssess(hrpNonPregnantTrackCache.benId)
-                        val nonPregAssessCache = hrpReo.getNonPregnantAssess(hrpNonPregnantTrackCache.benId)
+                        var pregAssessCache =
+                            hrpReo.getPregnantAssess(hrpNonPregnantTrackCache.benId)
+                        val nonPregAssessCache =
+                            hrpReo.getNonPregnantAssess(hrpNonPregnantTrackCache.benId)
                         if (pregAssessCache == null) {
-                            pregAssessCache = if (nonPregAssessCache == null ) {
+                            pregAssessCache = if (nonPregAssessCache == null) {
                                 HRPPregnantAssessCache(
                                     benId = hrpNonPregnantTrackCache.benId
                                 )

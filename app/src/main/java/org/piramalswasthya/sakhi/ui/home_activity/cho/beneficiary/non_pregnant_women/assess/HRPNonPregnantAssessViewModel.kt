@@ -11,7 +11,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.configuration.Dataset
 import org.piramalswasthya.sakhi.configuration.HRPNonPregnantAssessDataset
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
@@ -86,7 +85,7 @@ constructor(
                                 && it.timeLessThan18m != null
                                 && it.heightShort != null
                                 && it.age != null
-                                && it.misCarriage  != null
+                                && it.misCarriage != null
                                 && it.homeDelivery != null
                                 && it.medicalIssues != null
                                 && it.pastCSection != null)

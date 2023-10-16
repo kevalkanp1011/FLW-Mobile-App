@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.home_activity.incentives.IncentivesFragment">
+
+    <TextView
+        android:id="@+id/tv_lastupdated"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_orange_light"
+        android:padding="@dimen/padding_normal"
+        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Last Updated on 23-43-1234" />
+
+    <LinearLayout
+        android:id="@+id/ll_date_range"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_normal"
+        app:layout_constraintTop_toBottomOf="@id/tv_lastupdated"
+        tools:context=".ui.home_activity.incentives.IncentivesFragment">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/padding_normal"
+            app:cardBackgroundColor="?attr/colorPrimaryContainer"
+            app:cardCornerRadius="@dimen/padding_wide">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_from_ph"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@id/tv_from"
+                    android:paddingVertical="@dimen/padding_small"
+                    android:text="From"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge" />
+
+                <TextView
+                    android:id="@+id/tv_from"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_from_ph"
+                    android:layout_centerHorizontal="true"
+                    android:drawableStart="@drawable/ic_calendar"
+                    android:drawablePadding="@dimen/padding_small"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                    tools:text="12-12-2929" />
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <ImageButton
+            android:id="@+id/ib_edit_calendar"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_edit"
+            android:padding="@dimen/padding_small"
+            style="@style/Widget.Material3.MaterialTimePicker.ImageButton"
+            app:tint="@color/seed" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/padding_normal"
+            app:cardBackgroundColor="?attr/colorPrimaryContainer"
+            app:cardCornerRadius="@dimen/padding_wide">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_to_ph"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@id/tv_to"
+                    android:paddingVertical="@dimen/padding_small"
+                    android:text="To"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge" />
+
+                <TextView
+                    android:id="@+id/tv_to"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_to_ph"
+                    android:layout_centerHorizontal="true"
+                    android:drawableStart="@drawable/ic_calendar"
+                    android:drawablePadding="@dimen/padding_small"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                    tools:text="12-12-2929" />
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_incentive"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@id/ll_sum"
+        app:layout_constraintTop_toBottomOf="@+id/ll_date_range"
+        tools:itemCount="23"
+        tools:listitem="@layout/rv_item_incentive" >
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <LinearLayout
+        android:id="@+id/ll_sum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/tv_total_processed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/padding_normal"
+            android:background="@android:color/holo_green_light"
+            android:text="@string/incentive_processed"
+
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+
+        <TextView
+            android:id="@+id/tv_total_pending"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/padding_normal"
+            android:text="@string/incentive_pending"
+            android:background="@android:color/holo_red_light"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

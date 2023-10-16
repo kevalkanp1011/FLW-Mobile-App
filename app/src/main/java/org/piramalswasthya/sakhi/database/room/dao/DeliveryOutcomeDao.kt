@@ -20,7 +20,7 @@ interface DeliveryOutcomeDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun saveDeliveryOutcome(deliveryOutcomeCache: DeliveryOutcomeCache)
 
-    @Query("SELECT * FROM DELIVERY_OUTCOME WHERE processed = 'N'")
+    @Query("SELECT * FROM DELIVERY_OUTCOME WHERE processed in ('N','U')")
     suspend fun getAllUnprocessedDeliveryOutcomes(): List<DeliveryOutcomeCache>
 
     @Update

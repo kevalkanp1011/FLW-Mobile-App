@@ -8,7 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.helpers.filterBenFormList
+import org.piramalswasthya.sakhi.helpers.filterBenHRNPTFormList
 import org.piramalswasthya.sakhi.model.BenBasicDomainForForm
 import org.piramalswasthya.sakhi.model.HRPNonPregnantTrackCache
 import org.piramalswasthya.sakhi.network.AmritApiService
@@ -49,7 +49,7 @@ constructor(
     private val allBenList = recordsRepo.hrpTrackingNonPregList
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter) { list, filter ->
-        filterBenFormList(list, filter)
+        filterBenHRNPTFormList(list, filter)
     }
 
     init {

@@ -10,6 +10,8 @@ import java.util.Locale
 
 object HelperUtil {
 
+    private val dateFormat = SimpleDateFormat("EEE, MMM dd yyyy", Locale.getDefault())
+
     fun getLocalizedResources(context: Context, currentLanguage: Languages): Resources {
         val desiredLocale = Locale(currentLanguage.symbol)
         var conf = context.resources.configuration
@@ -43,5 +45,13 @@ object HelperUtil {
             return null
         }
 
+    }
+
+
+    fun getTrackDate(long: Long?): String? {
+        long?.let {
+            return " on ${dateFormat.format(long)}"
+        }
+        return null
     }
 }

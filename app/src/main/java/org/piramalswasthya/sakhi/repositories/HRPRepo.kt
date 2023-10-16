@@ -239,6 +239,7 @@ class HRPRepo @Inject constructor(
                         if (hrpPregnantAssessCache.timeLessThan18m == null) hrpPregnantAssessCache.timeLessThan18m = entry.timeLessThan18m
                         if (hrpPregnantAssessCache.heightShort == null) hrpPregnantAssessCache.heightShort = entry.heightShort
                         if (hrpPregnantAssessCache.age == null) hrpPregnantAssessCache.age = entry.age
+                        isHighRisk(hrpPregnantAssessCache)
                         database.hrpDao.saveRecord(hrpPregnantAssessCache)
                     }
 
@@ -251,6 +252,7 @@ class HRPRepo @Inject constructor(
                         if (hrpNonPregnantAssessCache.timeLessThan18m == null) hrpNonPregnantAssessCache.timeLessThan18m = entry.timeLessThan18m
                         if (hrpNonPregnantAssessCache.heightShort == null) hrpNonPregnantAssessCache.heightShort = entry.heightShort
                         if (hrpNonPregnantAssessCache.age == null) hrpNonPregnantAssessCache.age = entry.age
+                        isHighRisk(hrpNonPregnantAssessCache)
                         database.hrpDao.saveRecord(hrpNonPregnantAssessCache)
                     }
 
@@ -259,6 +261,30 @@ class HRPRepo @Inject constructor(
                 Timber.d("cannot save entry $dto due to : $e")
             }
         }
+    }
+
+    private fun isHighRisk(assess: HRPNonPregnantAssessCache) {
+        assess.isHighRisk =
+            assess.noOfDeliveries == "Yes" ||
+                    assess.timeLessThan18m == "Yes" ||
+                    assess.heightShort == "Yes" ||
+                    assess.age == "Yes" ||
+                    assess.misCarriage == "Yes" ||
+                    assess.homeDelivery == "Yes" ||
+                    assess.medicalIssues == "Yes" ||
+                    assess.pastCSection == "Yes"
+    }
+
+    private fun isHighRisk(assess: HRPPregnantAssessCache) {
+        assess.isHighRisk =
+            assess.noOfDeliveries == "Yes" ||
+                    assess.timeLessThan18m == "Yes" ||
+                    assess.heightShort == "Yes" ||
+                    assess.age == "Yes" ||
+                    assess.rhNegative == "Yes" ||
+                    assess.homeDelivery == "Yes" ||
+                    assess.badObstetric == "Yes" ||
+                    assess.multiplePregnancy == "Yes"
     }
 
     suspend fun getHRPAssessDetailsFromServer(): Int {
@@ -1020,7 +1046,7 @@ class HRPRepo @Inject constructor(
     }
 
     private suspend fun mapECR(cache: HRPNonPregnantAssessCache): EcrPost {
-        var ecr : EligibleCoupleRegCache? = ecrRepo.getSavedRecord(cache.benId)
+        val ecr : EligibleCoupleRegCache? = ecrRepo.getSavedRecord(cache.benId)
 
         val ecrPost : EcrPost
         val user = preferenceDao.getLoggedInUser()!!

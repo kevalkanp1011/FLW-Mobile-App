@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.helpers.filterBenFormList
+import org.piramalswasthya.sakhi.helpers.filterBenHRNPFormList
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import javax.inject.Inject
 
@@ -19,7 +19,7 @@ class HRPNonPregnantViewModel @Inject constructor(
     private val allBenList = recordsRepo.hrpNonPregnantWomenList
     private val filter = MutableStateFlow("")
     val benList = allBenList.combine(filter) { list, filter ->
-        filterBenFormList(list, filter)
+        filterBenHRNPFormList(list, filter)
     }
 
     fun filterText(text: String) {

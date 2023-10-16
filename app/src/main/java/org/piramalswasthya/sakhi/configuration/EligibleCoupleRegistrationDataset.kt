@@ -217,7 +217,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         inputType = TEXT_VIEW,
         title = "Male",
         arrayId = -1,
-        required = true,
+        required = false,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 1,
         max = 9,
@@ -229,7 +229,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         inputType = TEXT_VIEW,
         title = "Female",
         arrayId = -1,
-        required = true,
+        required = false,
         etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
         etMaxLength = 1,
         max = 9,
@@ -727,6 +727,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         id = 61,
         inputType = org.piramalswasthya.sakhi.model.InputType.RADIO,
         title = resources.getString(R.string.no_of_deliveries_is_more_than_3),
+        arrayId = R.array.yes_no,
         entries = resources.getStringArray(R.array.yes_no),
         required = false,
         hasDependants = true
@@ -1119,12 +1120,12 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
 
-            dateOfReg.id -> {
-                updateTimeLessThan18()
-                handleListOnValueChanged(timeLessThan18m.id, 0)
-                updateAgeCheck(dateOfBirth, getLongFromDate(dateOfReg.value))
-                handleListOnValueChanged(ageCheck.id, 0)
-            }
+//            dateOfReg.id -> {
+//                updateTimeLessThan18()
+//                handleListOnValueChanged(timeLessThan18m.id, 0)
+//                updateAgeCheck(dateOfBirth, getLongFromDate(dateOfReg.value))
+//                handleListOnValueChanged(ageCheck.id, 0)
+//            }
             rchId.id -> {
                 validateRchIdOnEditText(rchId)
             }
@@ -1146,7 +1147,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             }
 
             ifsc.id -> {
-                validateAllAlphaNumericSpaceOnEditText(ifsc)
+                validateAllAlphaNumericOnEditText(ifsc)
             }
 
             ageAtMarriage.id -> {
