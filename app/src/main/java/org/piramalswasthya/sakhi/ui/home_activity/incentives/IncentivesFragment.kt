@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,6 +41,8 @@ class IncentivesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = IncentiveListAdapter()
+        val divider = DividerItemDecoration(context, LinearLayout.VERTICAL)
+        binding.rvIncentive.addItemDecoration(divider)
         binding.rvIncentive.adapter = adapter
         val dateRangePicker =
             MaterialDatePicker.Builder.dateRangePicker()
