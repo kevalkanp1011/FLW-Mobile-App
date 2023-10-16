@@ -33,6 +33,7 @@ class PullIncentiveWorker @AssistedInject constructor(
                 Data.Builder().putAll(mapOf("result" to "Network Call failed rec. Check in logcat"))
                     .build()
             )
+        preferenceDao.lastIncentivePullTimestamp = System.currentTimeMillis()
         return Result.success()
     }
 

@@ -1,9 +1,11 @@
 package org.piramalswasthya.sakhi.model
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.piramalswasthya.sakhi.network.getLongFromDate
@@ -15,6 +17,7 @@ data class IncentiveActivityCache(
     val name: String,
     val description: String,
     val paymentParam: String,
+    val isPaid : Boolean = false,
     val rate: Int,
     val state: Int,
     val district: Int,
@@ -145,6 +148,29 @@ data class IncentiveRecordListResponse(
     val statusCode: Int,
     val errorMessage: String,
     val status: String
+)
+
+data class IncentiveCache(
+    @Embedded
+    val record: IncentiveRecordCache,
+    @Relation(parentColumn = "activityId", entityColumn = "id")
+    val activity: IncentiveActivityCache,
+    @Relation(parentColumn = "benId", entityColumn = "benId")
+    val ben: BenBasicCache?,
+) {
+    fun asDomainModel(): IncentiveDomain {
+        return IncentiveDomain(
+            record,
+            activity,
+            ben?.asBasicDomainModel()
+        )
+    }
+}
+
+data class IncentiveDomain(
+    val record: IncentiveRecordCache,
+    val activity: IncentiveActivityCache,
+    val ben: BenBasicDomain?
 )
 
 

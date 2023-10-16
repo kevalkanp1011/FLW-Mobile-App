@@ -193,4 +193,10 @@ class PreferenceDao @Inject constructor(@ApplicationContext private val context:
         set(value) {
             pref.edit().putLong("last amrit token timestamp ", value).apply()
         }
+
+    var lastIncentivePullTimestamp : Long
+        get() = pref.getLong("last incentive update timestamp ", Konstants.defaultTimeStamp)
+        set(value) {
+            pref.edit().putLong("last incentive update timestamp ", value).apply()
+        }
 }

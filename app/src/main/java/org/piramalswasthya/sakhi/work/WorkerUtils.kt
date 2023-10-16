@@ -125,6 +125,11 @@ object WorkerUtils {
             OneTimeWorkRequestBuilder<PushChildImmunizationToAmritWorker>()
                 .setConstraints(networkOnlyConstraint)
                 .build()
+        //Always at last - INCENTIVES
+        val pullIncentiveActivityWorkRequest =
+            OneTimeWorkRequestBuilder<PullIncentiveWorker>()
+                .setConstraints(networkOnlyConstraint)
+                .build()
         val workManager = WorkManager.getInstance(context)
         workManager
             .beginUniqueWork(
@@ -142,6 +147,7 @@ object WorkerUtils {
             .then(pushPNCWorkRequest)
             .then(pushInfantRegisterWorkRequest)
             .then(pushImmunizationWorkRequest)
+            .then(pullIncentiveActivityWorkRequest)
             .enqueue()
     }
 

@@ -2,4 +2,10 @@
 <resources>
 
     <string name="incentive_fragment_title">Incentives</string>
+    <string name="incentive_processed">Processed \nTotal : ₹ %1d</string>
+    <string name="incentive_pending">Pending \nTotal : ₹ %1d</string>
+    <string name="incentive_amount">₹ %1d</string>
+    <string name="incentive_ben_details">Ben ID: %1d\nName: %2s</string>
+    <string name="incentive_activity_details">Activity: %1s</string>
+    <string name="incentive_last_updated">Last Updated on %1s</string>
 </resources>

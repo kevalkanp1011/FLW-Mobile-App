@@ -18,6 +18,9 @@ class IncentiveRepo @Inject constructor(
 
 ) {
 
+    val list = incentiveDao.getAllRecords()
+
+
     suspend fun pullAndSaveAllIncentiveActivities(user: User): Boolean {
         return withContext(Dispatchers.IO) {
             try {
