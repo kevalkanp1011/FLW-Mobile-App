@@ -169,6 +169,12 @@ interface AmritApiService {
     @POST("/flw-0.0.1/maternalCare/pnc/getAll")
     suspend fun getPncVisitsData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
+    @POST("/flw-0.0.1/death-reports/mdsr/saveAll")
+    suspend fun postMdsrForm(@Body mdsrPostList: List<MdsrPost>): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/death-reports/mdsr/getAll")
+    suspend fun getMdsrData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+
     @POST
     suspend fun getAllIncentiveActivities(@Url url : String = "http://192.168.1.109:8080/incentive/masterData/getAll",@Body requestBody: IncentiveActivityListRequest): IncentiveActivityListResponse
     @POST

@@ -121,6 +121,10 @@ object WorkerUtils {
             OneTimeWorkRequestBuilder<PushInfantRegisterToAmritWorker>()
                 .setConstraints(networkOnlyConstraint)
                 .build()
+        val pushMdsrWorkRequest =
+            OneTimeWorkRequestBuilder<PushMdsrToAmritWorker>()
+                .setConstraints(networkOnlyConstraint)
+                .build()
         val pushImmunizationWorkRequest =
             OneTimeWorkRequestBuilder<PushChildImmunizationToAmritWorker>()
                 .setConstraints(networkOnlyConstraint)
@@ -146,6 +150,7 @@ object WorkerUtils {
             .then(pushDeliverOutcomeWorkRequest)
             .then(pushPNCWorkRequest)
             .then(pushInfantRegisterWorkRequest)
+            .then(pushMdsrWorkRequest)
             .then(pushImmunizationWorkRequest)
             .then(pullIncentiveActivityWorkRequest)
             .enqueue()

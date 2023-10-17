@@ -211,7 +211,7 @@ class PncRepo @Inject constructor(
         }
     }
 
-    private suspend fun savePNCCacheFromResponse(dataObj: String): List<PNCNetwork> {
+    private suspend fun savePNCCacheFromResponse(dataObj: String) {
         val pncList =
             Gson().fromJson(dataObj, Array<PNCNetwork>::class.java).toList()
         pncList.forEach { pncDTO ->
@@ -222,7 +222,7 @@ class PncRepo @Inject constructor(
             }
 
         }
-        return pncList
+        return
     }
 
     suspend fun setToInactive(eligBenIds: Set<Long>) {

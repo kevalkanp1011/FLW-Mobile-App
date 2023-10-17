@@ -9,6 +9,7 @@ import org.piramalswasthya.sakhi.database.room.dao.ChildRegistrationDao
 import org.piramalswasthya.sakhi.database.room.dao.HouseholdDao
 import org.piramalswasthya.sakhi.database.room.dao.MaternalHealthDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.model.filterMdsr
 import javax.inject.Inject
 
 @ActivityRetainedScoped
@@ -117,7 +118,7 @@ class RecordsRepo @Inject constructor(
 //    val cdrListCount = cdrList.map { it.size }
 
     val mdsrList = benDao.getAllMDSRList(selectedVillage)
-        .map { list -> list.map { it.asBenBasicDomainModelForMdsrForm() } }
+        .map { list -> list.filterMdsr() }
 
     val childrenImmunizationList = benDao.getAllChildrenImmunizationList(selectedVillage)
         .map { list -> list.map { it.asBasicDomainModel() } }

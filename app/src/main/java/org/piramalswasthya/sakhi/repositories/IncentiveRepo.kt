@@ -3,7 +3,7 @@ package org.piramalswasthya.sakhi.repositories
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.dao.IncentiveDao
-import org.piramalswasthya.sakhi.helpers.Konstants
+import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.IncentiveActivityListRequest
 import org.piramalswasthya.sakhi.model.IncentiveRecordListRequest
 import org.piramalswasthya.sakhi.model.User
@@ -14,7 +14,8 @@ import javax.inject.Inject
 
 class IncentiveRepo @Inject constructor(
     private val amritApiService: AmritApiService,
-    private val incentiveDao: IncentiveDao
+    private val incentiveDao: IncentiveDao,
+    private val preferenceDao: PreferenceDao
 
 ) {
 
@@ -45,7 +46,7 @@ class IncentiveRepo @Inject constructor(
 
                 val requestBody = IncentiveRecordListRequest(
                     user.userId, getDateTimeStringFromLong(
-                        Konstants.defaultTimeStamp)!!,
+                        preferenceDao.lastIncentivePullTimestamp)!!,
                         getDateTimeStringFromLong(System.currentTimeMillis())!!
                     )
                 val recordListNetwork =

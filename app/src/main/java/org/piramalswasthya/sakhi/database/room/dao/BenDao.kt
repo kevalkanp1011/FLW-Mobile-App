@@ -233,8 +233,9 @@ interface BenDao {
         selectedVillage: Int, max: Int = Konstants.maxAgeForCdr
     ): Flow<List<BenBasicCache>>
 
+    @Transaction
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE reproductiveStatusId in (2, 3, 4) and isMdsr = 1 and villageId=:selectedVillage")
-    fun getAllMDSRList(selectedVillage: Int): Flow<List<BenBasicCache>>
+    fun getAllMDSRList(selectedVillage: Int): Flow<List<BenWithAncDoPncCache>>
 
     @Query("SELECT * FROM BEN_BASIC_CACHE WHERE  CAST((strftime('%s','now') - dob/1000)/60/60/24/365 AS INTEGER)<=:max and villageId=:selectedVillage")
     fun getAllChildrenImmunizationList(

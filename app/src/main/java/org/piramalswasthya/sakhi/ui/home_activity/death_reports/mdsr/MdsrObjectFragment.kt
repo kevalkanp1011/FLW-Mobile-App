@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
@@ -22,8 +23,8 @@ import timber.log.Timber
 class MdsrObjectFragment : Fragment() {
 
 
-    private var _binding : FragmentNewFormBinding? = null
-    private val binding : FragmentNewFormBinding
+    private var _binding: FragmentNewFormBinding? = null
+    private val binding: FragmentNewFormBinding
         get() = _binding!!
 
 
@@ -46,48 +47,53 @@ class MdsrObjectFragment : Fragment() {
         viewModel.benAgeGender.observe(viewLifecycleOwner) {
             binding.tvAgeGender.text = it
         }
-        binding.btnSubmit.setOnClickListener{
-            if(validate()) viewModel.submitForm()
+        binding.btnSubmit.setOnClickListener {
+            if (validate()) viewModel.submitForm()
         }
-        viewModel.exists.observe(viewLifecycleOwner) { exists ->
-            val adapter = FormInputAdapterOld(isEnabled = !exists)
-            binding.form.rvInputForm.adapter = adapter
-            if (exists) {
-                binding.btnSubmit.visibility = View.GONE
-//                binding.mdsrForm.inputForm.rvInputForm.apply {
-//                    isClickable = false
-//                    isFocusable = false
-//                }
-                viewModel.setExistingValues()
-            } else {
+        viewModel.exists.observe(viewLifecycleOwner) { notIt ->
+            notIt?.let { recordExists ->
+                val adapter = FormInputAdapter(
+                    formValueListener = FormInputAdapter.FormValueListener { formId, index ->
+                        viewModel.updateListOnValueChanged(formId, index)
+                    }, isEnabled = !recordExists
+                )
+                binding.btnSubmit.isEnabled = !recordExists
+                binding.form.rvInputForm.adapter = adapter
+                lifecycleScope.launch {
+                    viewModel.formList.collect {
+                        if (it.isNotEmpty())
+                            adapter.submitList(it)
 
-                viewModel.address.observe(viewLifecycleOwner) {
-                    viewModel.setAddress(it, adapter)
+                    }
                 }
-            }
-            lifecycleScope.launch{
-                adapter.submitList(viewModel.getFirstPage(adapter))
             }
         }
         viewModel.state.observe(viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 MdsrObjectViewModel.State.LOADING -> {
                     binding.cvPatientInformation.visibility = View.GONE
                     binding.form.rvInputForm.visibility = View.GONE
                     binding.btnSubmit.visibility = View.GONE
                     binding.pbForm.visibility = View.VISIBLE
                 }
+
                 MdsrObjectViewModel.State.SUCCESS -> {
                     findNavController().navigateUp()
                     WorkerUtils.triggerD2dSyncWorker(requireContext())
                 }
+
                 MdsrObjectViewModel.State.FAIL -> {
                     binding.cvPatientInformation.visibility = View.VISIBLE
                     binding.form.rvInputForm.visibility = View.VISIBLE
                     binding.btnSubmit.visibility = View.VISIBLE
                     binding.pbForm.visibility = View.GONE
-                    Toast.makeText(context, resources.getString(R.string.saving_mdsr_to_database_failed), Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        resources.getString(R.string.saving_mdsr_to_database_failed),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
+
                 else -> {
                     binding.cvPatientInformation.visibility = View.VISIBLE
                     binding.form.rvInputForm.visibility = View.VISIBLE
@@ -97,7 +103,6 @@ class MdsrObjectFragment : Fragment() {
             }
         }
     }
-
 
 
     fun validate(): Boolean {
