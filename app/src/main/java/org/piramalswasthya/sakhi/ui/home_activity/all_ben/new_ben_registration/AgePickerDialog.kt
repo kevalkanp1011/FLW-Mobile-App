@@ -1,14 +1,10 @@
 package org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.piramalswasthya.sakhi.databinding.AlertAgePickerBinding
-import org.piramalswasthya.sakhi.databinding.FragmentInputFormPageHhBinding
+import org.piramalswasthya.sakhi.model.AgeUnitDTO
 
 class AgePickerDialog (context: Context) : AlertDialog(context) {
 
@@ -28,31 +24,56 @@ class AgePickerDialog (context: Context) : AlertDialog(context) {
         setContentView(binding.root)
     }
 
-    fun  setLimitsAndShow(yearsMin: Int,
-                  yearsMax : Int,
-                  montsMin : Int,
-                  monthsMax : Int,
-                  daysMin : Int,
-                  daysMax : Int) {
+    /**
+     * age picker dialog
+     * - setting min and max values
+     * - setting default values from dto
+     * - trigger show to open the dialog
+     */
+    fun  setLimitsAndShow(
+        yearsMin: Int,
+        yearsMax: Int,
+        monthsMin: Int,
+        monthsMax: Int,
+        daysMin: Int,
+        daysMax: Int,
+        ageUnitDTO: AgeUnitDTO,
+        isOk: Boolean
+    ) {
         this.yearsMin = yearsMin
         this.yearsMax = yearsMax
-        this.montsMin = montsMin
+        this.montsMin = monthsMin
         this.monthsMax = monthsMax
         this.daysMin = daysMin
         this.daysMax = daysMax
-        show()
+        show(ageUnitDTO, isOk)
     }
-    override fun show() {
+    fun show(ageUnitDTO: AgeUnitDTO, isOk: Boolean) {
         super.show()
         binding.dialogNumberPickerYears.minValue = yearsMin
         binding.dialogNumberPickerYears.maxValue = yearsMax
+        binding.dialogNumberPickerYears.value = ageUnitDTO.years
 
         binding.dialogNumberPickerMonths.minValue = montsMin
         binding.dialogNumberPickerMonths.maxValue = monthsMax
+        binding.dialogNumberPickerMonths.value = ageUnitDTO.months
 
         binding.dialogNumberPickerDays.minValue = daysMin
         binding.dialogNumberPickerDays.maxValue = daysMax
+        binding.dialogNumberPickerDays.value = ageUnitDTO.days
+
+        binding.btnOk.setOnClickListener{
+            ageUnitDTO.years = binding.dialogNumberPickerYears.value
+            ageUnitDTO.months = binding.dialogNumberPickerMonths.value
+            ageUnitDTO.days = binding.dialogNumberPickerDays.value
+            dismiss()
+        }
+
+        binding.btnCancel.setOnClickListener{
+            cancel()
+        }
     }
+
     companion object {
         const val TAG = "AgePickerDialog"
     }

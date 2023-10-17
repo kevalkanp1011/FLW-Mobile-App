@@ -818,6 +818,13 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         required = false
     )
 
+    private val assesLabel = FormElement(
+        id = 72,
+        inputType = org.piramalswasthya.sakhi.model.InputType.HEADLINE,
+        title = resources.getString(R.string.assess_for_high_risk_conditions_in_the_non_pregnant_women),
+        required = false
+    )
+
     private var maleChild = 0
 
     private var femaleChild = 0
@@ -844,6 +851,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             noOfLiveChildren,
             numMale,
             numFemale,
+            assesLabel,
             infoChildLabel,
             noOfDeliveries,
             timeLessThan18m,
@@ -1819,7 +1827,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
     }
 
     fun mapValueToBen(ben: BenRegCache?): Boolean {
-        var isUpdated = false;
+        var isUpdated = false
         val rchIdFromBen = ben?.rchId?.takeIf { it.isNotEmpty() }?.toLong()
         val aadharNoFromBen = ben?.aadharNum?.takeIf { it.isNotEmpty() }
         rchId.value?.takeIf {

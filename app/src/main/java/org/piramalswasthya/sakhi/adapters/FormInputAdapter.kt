@@ -41,6 +41,7 @@ import org.piramalswasthya.sakhi.databinding.RvItemFormTextViewV2Binding
 import org.piramalswasthya.sakhi.databinding.RvItemFormTimepickerV2Binding
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.helpers.getDateString
+import org.piramalswasthya.sakhi.model.AgeUnitDTO
 import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.InputType.AGE_PICKER
 import org.piramalswasthya.sakhi.model.InputType.CHECKBOXES
@@ -54,6 +55,10 @@ import org.piramalswasthya.sakhi.model.InputType.TEXT_VIEW
 import org.piramalswasthya.sakhi.model.InputType.TIME_PICKER
 import org.piramalswasthya.sakhi.model.InputType.values
 import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.AgePickerDialog
+import org.piramalswasthya.sakhi.utils.HelperUtil.getAgeStrFromAgeUnit
+import org.piramalswasthya.sakhi.utils.HelperUtil.getDobFromAge
+import org.piramalswasthya.sakhi.utils.HelperUtil.getLongFromDate
+import org.piramalswasthya.sakhi.utils.HelperUtil.updateAgeDTO
 import timber.log.Timber
 import java.util.Calendar
 
@@ -355,21 +360,36 @@ class FormInputAdapter(
                             gravity = Gravity.CENTER_HORIZONTAL
                         }
                         rdBtn.id = View.generateViewId()
-                        val colorStateList = ColorStateList(
-                            arrayOf<IntArray>(
-                                intArrayOf(-android.R.attr.state_checked),
-                                intArrayOf(android.R.attr.state_checked)
-                            ), intArrayOf(
-                                binding.root.resources.getColor(
-                                    android.R.color.darker_gray,
-                                    binding.root.context.theme
-                                ),  // disabled
-                                binding.root.resources.getColor(
-                                    android.R.color.darker_gray,
-                                    binding.root.context.theme
-                                ) // enabled
+                        val colorStateList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            ColorStateList(
+                                arrayOf(
+                                    intArrayOf(-android.R.attr.state_checked),
+                                    intArrayOf(android.R.attr.state_checked)
+                                ), intArrayOf(
+                                    binding.root.resources.getColor(
+                                        android.R.color.darker_gray,
+                                        binding.root.context.theme
+                                    ),  // disabled
+                                    binding.root.resources.getColor(
+                                        android.R.color.darker_gray,
+                                        binding.root.context.theme
+                                    ) // enabled
+                                )
                             )
-                        )
+                        } else {
+                            ColorStateList(
+                                arrayOf(
+                                    intArrayOf(-android.R.attr.state_checked),
+                                    intArrayOf(android.R.attr.state_checked)
+                                ), intArrayOf(
+                                    binding.root.resources.getColor(
+                                        android.R.color.darker_gray,
+                                    ),  // disabled
+                                    binding.root.resources.getColor(
+                                        android.R.color.darker_gray,
+                                    ) // enabled
+                                )
+                            )                        }
 
                         if (!isEnabled) rdBtn.buttonTintList = colorStateList
                         rdBtn.text = it
@@ -688,19 +708,110 @@ class FormInputAdapter(
         }
 
         fun bind(
-            item: FormElement, clickListener: AgeClickListener?, isEnabled: Boolean
+            item: FormElement, isEnabled: Boolean, formValueListener: FormValueListener?
         ) {
             binding.form = item
+            binding.invalidateAll()
+            val agePicker = AgePickerDialog(binding.root.context)
+
+            val calDob = Calendar.getInstance()
+            val ageUnitDTO = AgeUnitDTO(0,0,0)
+            val isOk = true
+            item.value?.let {
+                calDob.timeInMillis = getLongFromDate(it)
+                updateAgeDTO(ageUnitDTO, calDob)
+                binding.etNum.setText(getAgeStrFromAgeUnit(ageUnitDTO))
+
+            }
+
             if (isEnabled) {
-                binding.clickListener = clickListener
-                binding.et.setOnClickListener {
-                    val agePicker = AgePickerDialog(binding.root.context)
-                    agePicker.setLimitsAndShow(0,85,0,11,0,30)
+                binding.etNum.setOnClickListener {
+                    val calNow = Calendar.getInstance()
+                    val calMin = Calendar.getInstance()
+                    val calMax = Calendar.getInstance()
+                    item.min?.let {
+                        calMin.timeInMillis = it
+                    }
+                    item.max?.let {
+                        calMax.timeInMillis = it
+                    }
+
+                    agePicker.setLimitsAndShow(
+                        calNow.get(Calendar.YEAR) - calMax.get(Calendar.YEAR),
+                        calNow.get(Calendar.YEAR) - calMin.get(Calendar.YEAR),
+                        0,
+                        11,
+                        0,
+                        30,
+                        ageUnitDTO,
+                        isOk
+                    )
                 }
+                agePicker.setOnDismissListener{
+                    binding.etNum.setText(getAgeStrFromAgeUnit(ageUnitDTO))
+                    calDob.timeInMillis =
+                        getDobFromAge(ageUnitDTO)
+                    binding.etDate.setText(getDateString(calDob.timeInMillis))
+                    item.value = getDateString(calDob.timeInMillis)
+                    if (item.hasDependants) formValueListener?.onValueChanged(item, -1)
+                }
+            }
+
+
+            if (!isEnabled) {
+                binding.etDate.isFocusable = false
+                binding.etNum.isFocusable = false
+                binding.etDate.isClickable = false
+                binding.etNum.isClickable = false
+                binding.executePendingBindings()
+                return
+            }
+            val today = Calendar.getInstance()
+            var thisYear = today.get(Calendar.YEAR)
+            var thisMonth = today.get(Calendar.MONTH)
+            var thisDay = today.get(Calendar.DAY_OF_MONTH)
+
+            item.errorText?.also { binding.tilEditTextDate.error = it }
+                ?: run { binding.tilEditTextDate.error = null }
+            binding.etDate.setOnClickListener {
+                item.value?.let { value ->
+                    thisYear = value.substring(6).toInt()
+                    thisMonth = value.substring(3, 5).trim().toInt() - 1
+                    thisDay = value.substring(0, 2).trim().toInt()
+                }
+                val datePickerDialog = DatePickerDialog(
+                    it.context, { _, year, month, day ->
+                        val millisCal = Calendar.getInstance().apply {
+                            set(Calendar.YEAR, year)
+                            set(Calendar.MONTH, month)
+                            set(Calendar.DAY_OF_MONTH, day)
+                        }
+                        val millis = millisCal.timeInMillis
+                        if (item.min != null && millis < item.min!!) {
+                            item.value = getDateString(item.min)
+                        } else if (item.max != null && millis > item.max!!)
+                            item.value = getDateString(item.max)
+                        else
+                            item.value = getDateString(millis)
+
+                        updateAgeDTO(ageUnitDTO, millisCal)
+                        binding.etNum.setText(getAgeStrFromAgeUnit(ageUnitDTO))
+                        binding.invalidateAll()
+                        if (item.hasDependants) formValueListener?.onValueChanged(item, -1)
+                    }, thisYear, thisMonth, thisDay
+                )
+                item.errorText = null
+                binding.tilEditTextDate.error = null
+                datePickerDialog.datePicker.maxDate = item.max ?: 0
+                datePickerDialog.datePicker.minDate = item.min ?: 0
+                if (item.showYearFirstInDatePicker)
+                    datePickerDialog.datePicker.touchables[0].performClick()
+                datePickerDialog.show()
             }
             binding.executePendingBindings()
 
         }
+
     }
 
     class HeadlineViewHolder private constructor(private val binding: RvItemFormHeadlineV2Binding) :
@@ -793,8 +904,8 @@ class FormInputAdapter(
             HEADLINE -> (holder as HeadlineViewHolder).bind(item, formValueListener)
             AGE_PICKER -> (holder as AgePickerViewInputViewHolder).bind(
                 item,
-                ageClickListener,
-                isEnabled
+                isEnabled,
+                formValueListener
             )
         }
     }

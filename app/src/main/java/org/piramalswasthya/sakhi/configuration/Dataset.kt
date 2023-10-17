@@ -246,17 +246,18 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
 
     protected fun triggerDependants(
         age: Int,
-        ageUnit: FormElement,
+//        ageUnit: FormElement,
         ageTriggerRange: Range<Int>,
-        ageUnitTriggerIndex: Int,
+//        ageUnitTriggerIndex: Int,
         target: FormElement,
         placeAfter: FormElement,
         targetSideEffect: List<FormElement>? = null
     ): Int {
         Timber.d("YTRU")
-        return if (age in ageTriggerRange && ageUnit.value == ageUnit.entries?.get(
-                ageUnitTriggerIndex
-            )
+        return if (age in ageTriggerRange
+//            && ageUnit.value == ageUnit.entries?.get(
+//                ageUnitTriggerIndex
+//            )
         ) {
             if (!list.contains(target)) {
                 val listIndex = list.indexOf(placeAfter)
@@ -389,11 +390,14 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     }
 
     protected fun assignValuesToAgeAndAgeUnitFromDob(
-        dob: Long, ageElement: FormElement, ageUnitElement: FormElement,
-        ageAtMarriageElement: FormElement? = null, timeStampDateOfMarriage: Long? = null
+        dob: Long,
+//        ageElement: FormElement,
+//        ageUnitElement: FormElement,
+        ageAtMarriageElement: FormElement? = null,
+        timeStampDateOfMarriage: Long? = null
     ): Int {
-        ageUnitElement.errorText = null
-        ageElement.errorText = null
+//        ageUnitElement.errorText = null
+//        ageElement.errorText = null
         val calDob = Calendar.getInstance().apply {
             timeInMillis = dob
         }.setToStartOfTheDay()
@@ -406,20 +410,20 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
                 getDiffYears(calDob, Calendar.getInstance().apply { timeInMillis = it }).toString()
         }
         if (yearsDiff > 0) {
-            ageUnitElement.value = ageUnitElement.entries?.last()
-            ageElement.value = yearsDiff.toString()
+//            ageUnitElement.value = ageUnitElement.entries?.last()
+//            ageElement.value = yearsDiff.toString()
             return -1
         } else {
             val monthDiff = getDiffMonths(calDob, calNow)
             if (monthDiff > 0) {
-                ageUnitElement.value = ageUnitElement.entries?.get(1)
-                ageElement.value = monthDiff.toString()
+//                ageUnitElement.value = ageUnitElement.entries?.get(1)
+//                ageElement.value = monthDiff.toString()
                 return -1
             } else {
                 val dayDiff = getDiffDays(calDob, calNow)
                 if (dayDiff >= 0) {
-                    ageUnitElement.value = ageUnitElement.entries?.get(0)
-                    ageElement.value = dayDiff.toString()
+//                    ageUnitElement.value = ageUnitElement.entries?.get(0)
+//                    ageElement.value = dayDiff.toString()
                     return -1
                 }
             }

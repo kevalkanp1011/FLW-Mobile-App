@@ -77,6 +77,12 @@ data class HRPPregnantAssessCache(
     }
 }
 
+data class AgeUnitDTO(
+    var years: Int,
+    var months: Int,
+    var days: Int
+)
+
 data class HighRiskAssessDTO (
     val id: Int = 0,
     val benId: Long = 0,
