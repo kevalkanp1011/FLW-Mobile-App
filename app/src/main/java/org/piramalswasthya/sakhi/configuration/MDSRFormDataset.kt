@@ -14,7 +14,7 @@ class MDSRFormDataset(
 ) : Dataset(context, currentLanguage) {
 
 
-    val dateOfDeath = FormElement(
+    private val dateOfDeath = FormElement(
         id = 1,
         inputType = InputType.DATE_PICKER,
         title = "Date of death ",
@@ -22,20 +22,20 @@ class MDSRFormDataset(
         max = System.currentTimeMillis(),
         required = true
     )
-    val address = FormElement(
+    private val address = FormElement(
         id = 2,
         inputType = InputType.TEXT_VIEW,
         title = "Address",
         required = false
     )
-    val husbandName = FormElement(
+    private val husbandName = FormElement(
         id = 3,
         inputType = InputType.TEXT_VIEW,
         etMaxLength = 50,
         title = "Husband’s Name",
         required = false
     )
-    val causeOfDeath = FormElement(
+    private val causeOfDeath = FormElement(
         id = 4,
         inputType = InputType.RADIO,
         title = "Cause of death",
@@ -44,13 +44,13 @@ class MDSRFormDataset(
         hasDependants = true,
         entries = arrayOf("Maternal", "Non-maternal")
     )
-    val reasonOfDeath = FormElement(
+    private val reasonOfDeath = FormElement(
         id = 5,
         inputType = InputType.EDIT_TEXT,
         title = "Specify Reason",
         required = true
     )
-    val investigationDate = FormElement(
+    private val investigationDate = FormElement(
         id = 6,
         inputType = InputType.DATE_PICKER,
         title = "Date of field investigation",
@@ -58,7 +58,7 @@ class MDSRFormDataset(
         max = System.currentTimeMillis(),
         required = false
     )
-    val actionTaken = FormElement(
+    private val actionTaken = FormElement(
         id = 7,
         inputType = InputType.RADIO,
         title = "Action Take",
@@ -66,13 +66,13 @@ class MDSRFormDataset(
         orientation = LinearLayout.VERTICAL,
         entries = arrayOf("Yes", "No")
     )
-    val blockMOSign = FormElement(
+    private val blockMOSign = FormElement(
         id = 8,
         inputType = InputType.EDIT_TEXT,
         title = "Signature of MO I/C of the block",
         required = false
     )
-    val dateIc = FormElement(
+    private val dateIc = FormElement(
         id = 9,
         inputType = InputType.DATE_PICKER,
         min = 0L,

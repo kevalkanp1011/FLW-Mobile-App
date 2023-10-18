@@ -125,6 +125,10 @@ object WorkerUtils {
             OneTimeWorkRequestBuilder<PushMdsrToAmritWorker>()
                 .setConstraints(networkOnlyConstraint)
                 .build()
+        val pushCdrWorkRequest =
+            OneTimeWorkRequestBuilder<PushCdrToAmritWorker>()
+                .setConstraints(networkOnlyConstraint)
+                .build()
         val pushImmunizationWorkRequest =
             OneTimeWorkRequestBuilder<PushChildImmunizationToAmritWorker>()
                 .setConstraints(networkOnlyConstraint)
@@ -151,6 +155,7 @@ object WorkerUtils {
             .then(pushPNCWorkRequest)
             .then(pushInfantRegisterWorkRequest)
             .then(pushMdsrWorkRequest)
+            .then(pushCdrWorkRequest)
             .then(pushImmunizationWorkRequest)
             .then(pullIncentiveActivityWorkRequest)
             .enqueue()
@@ -197,6 +202,15 @@ object WorkerUtils {
             OneTimeWorkRequestBuilder<PullChildImmunizatonFromAmritWorker>()
                 .setConstraints(networkOnlyConstraint)
                 .build()
+        val pullMdsrWorkRequest =
+            OneTimeWorkRequestBuilder<PullMdsrFromAmritWorker>()
+                .setConstraints(networkOnlyConstraint)
+                .build()
+        val pullCdrWorkRequest =
+            OneTimeWorkRequestBuilder<PullCdrFromAmritWorker>()
+                .setConstraints(networkOnlyConstraint)
+                .build()
+
         val setSyncCompleteWorker = OneTimeWorkRequestBuilder<UpdatePrefForPullCompleteWorker>()
             .build()
         val workManager = WorkManager.getInstance(context)
@@ -217,6 +231,8 @@ object WorkerUtils {
             .then(pullDeliveryOutcomeWorkRequest)
             .then(pullInfantRegWorkRequest)
             .then(pullImmunizationWorkRequest)
+            .then(pullMdsrWorkRequest)
+            .then(pullCdrWorkRequest)
             .then(setSyncCompleteWorker)
             .enqueue()
     }

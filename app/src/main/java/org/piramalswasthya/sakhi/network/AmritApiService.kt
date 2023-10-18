@@ -175,6 +175,12 @@ interface AmritApiService {
     @POST("/flw-0.0.1/death-reports/mdsr/getAll")
     suspend fun getMdsrData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
+    @POST("/flw-0.0.1/death-reports/cdr/saveAll")
+    suspend fun postCdrForm(@Body cdrPostList: List<CDRPost>): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/death-reports/cdr/getAll")
+    suspend fun getCdrData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
+
     @POST("/flw-0.0.1/incentive/masterData/getAll")
     suspend fun getAllIncentiveActivities(@Body requestBody: IncentiveActivityListRequest): IncentiveActivityListResponse
 

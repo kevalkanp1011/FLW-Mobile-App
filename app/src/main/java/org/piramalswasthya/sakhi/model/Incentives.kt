@@ -10,7 +10,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.piramalswasthya.sakhi.network.getLongFromDate
 
-@Entity(tableName = "Incentive-Activity")
+@Entity(tableName = "INCENTIVE_ACTIVITY")
 data class IncentiveActivityCache(
     @PrimaryKey
     val id: Long,
@@ -75,7 +75,7 @@ data class IncentiveActivityListResponse(
 )
 
 @Entity(
-    tableName = "Incentive-Records",
+    tableName = "INCENTIVE_RECORD",
     foreignKeys = [ForeignKey(
         entity = IncentiveActivityCache::class,
         parentColumns = arrayOf("id"),

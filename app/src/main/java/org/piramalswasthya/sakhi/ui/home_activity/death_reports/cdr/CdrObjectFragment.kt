@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.databinding.FragmentNewFormBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
@@ -47,27 +48,24 @@ class CdrObjectFragment : Fragment() {
         binding.btnSubmit.setOnClickListener {
             if (validate()) viewModel.submitForm()
         }
-        viewModel.exists.observe(viewLifecycleOwner) {exists ->
-            val adapter = FormInputAdapterOld(isEnabled = !exists)
-            binding.form.rvInputForm.adapter = adapter
-            if (exists) {
-                binding.btnSubmit.visibility = View.GONE
-//                binding.cdrForm.rvInputForm.apply {
-//                    isClickable = false
-//                    isFocusable = false
-//                }
-                viewModel.setExistingValues()
-            }
-            else {
-                viewModel.address.observe(viewLifecycleOwner) {
-                    viewModel.setAddress(it, adapter)
+        viewModel.exists.observe(viewLifecycleOwner) { notIt ->
+            notIt?.let { recordExists ->
+                val adapter = FormInputAdapter(
+                    formValueListener = FormInputAdapter.FormValueListener { formId, index ->
+                        viewModel.updateListOnValueChanged(formId, index)
+                    }, isEnabled = !recordExists
+                )
+                binding.btnSubmit.isEnabled = !recordExists
+                binding.form.rvInputForm.adapter = adapter
+                lifecycleScope.launch {
+                    viewModel.formList.collect {
+                        if (it.isNotEmpty())
+                            adapter.submitList(it)
+
+                    }
                 }
             }
-            lifecycleScope.launch {
-                adapter.submitList(viewModel.getFirstPage(adapter))
-            }
         }
-
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
                 CdrObjectViewModel.State.LOADING -> {
@@ -78,7 +76,7 @@ class CdrObjectFragment : Fragment() {
                 }
                 CdrObjectViewModel.State.SUCCESS -> {
                     findNavController().navigateUp()
-                    WorkerUtils.triggerD2dSyncWorker(requireContext())
+                    WorkerUtils.triggerAmritPushWorker(requireContext())
                 }
                 CdrObjectViewModel.State.FAIL -> {
                     binding.form.rvInputForm.visibility = View.VISIBLE

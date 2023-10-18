@@ -175,6 +175,10 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideCdrDao(database: InAppDb): CdrDao = database.cdrDao
+
+    @Singleton
+    @Provides
     fun provideIncentiveDao(database: InAppDb): IncentiveDao = database.incentiveDao
 
 }

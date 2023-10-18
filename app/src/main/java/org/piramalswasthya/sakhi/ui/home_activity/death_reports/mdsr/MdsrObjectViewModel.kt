@@ -1,7 +1,6 @@
 package org.piramalswasthya.sakhi.ui.home_activity.death_reports.mdsr
 
 import android.app.Application
-import android.content.res.Configuration
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -22,8 +21,6 @@ import org.piramalswasthya.sakhi.model.User
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.MdsrRepo
 import timber.log.Timber
-import java.text.SimpleDateFormat
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,12 +38,6 @@ class MdsrObjectViewModel @Inject constructor(
         LOADING,
         SUCCESS,
         FAIL
-    }
-
-    private val resources by lazy {
-        val configuration = Configuration(context.resources.configuration)
-        configuration.setLocale(Locale(preferenceDao.getCurrentLanguage().symbol))
-        context.createConfigurationContext(configuration).resources
     }
 
     private val benId = MdsrObjectFragmentArgs.fromSavedStateHandle(state).benId
@@ -98,8 +89,11 @@ class MdsrObjectViewModel @Inject constructor(
         _state.value = State.LOADING
         val mdsrCache = MDSRCache(
             benId = benId,
-            processed = "N",
             createdBy = user.userName,
+            createdDate = System.currentTimeMillis(),
+            updatedBy = user.userName,
+            updatedDate = System.currentTimeMillis(),
+            processed = "N",
             syncState = SyncState.UNSYNCED
         )
         dataset.mapValues(mdsrCache)
@@ -132,20 +126,9 @@ class MdsrObjectViewModel @Inject constructor(
         return address
     }
 
-    private fun getDateFromLong(dateLong: Long?): String? {
-        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
-        dateLong?.let {
-            return dateFormat.format(dateLong)
-        } ?: run {
-            return null
-        }
-    }
     fun updateListOnValueChanged(formId: Int, index: Int) {
         viewModelScope.launch {
             dataset.updateList(formId, index)
         }
-
     }
-
-
 }

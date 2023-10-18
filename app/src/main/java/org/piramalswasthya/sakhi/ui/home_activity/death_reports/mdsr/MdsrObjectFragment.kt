@@ -79,7 +79,7 @@ class MdsrObjectFragment : Fragment() {
 
                 MdsrObjectViewModel.State.SUCCESS -> {
                     findNavController().navigateUp()
-                    WorkerUtils.triggerD2dSyncWorker(requireContext())
+                    WorkerUtils.triggerAmritPushWorker(requireContext())
                 }
 
                 MdsrObjectViewModel.State.FAIL -> {

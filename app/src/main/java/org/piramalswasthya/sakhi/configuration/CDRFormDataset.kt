@@ -2,165 +2,145 @@ package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
 import android.widget.LinearLayout
+import org.piramalswasthya.sakhi.helpers.Languages
+import org.piramalswasthya.sakhi.model.BenBasicCache
+import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.CDRCache
-import org.piramalswasthya.sakhi.model.FormInputOld
+import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.InputType
-import java.text.SimpleDateFormat
-import java.util.*
 
-class CDRFormDataset(context: Context, private val childDeathReview: CDRCache? = null) {
+class CDRFormDataset(
+    context: Context, currentLanguage: Languages
+) : Dataset(context, currentLanguage) {
 
-    companion object {
-        private fun getCurrentDate(): String {
-            val calendar = Calendar.getInstance()
-            val mdFormat =
-                SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
-            return mdFormat.format(calendar.time)
-        }
-
-        private fun getLongFromDate(dateString: String): Long {
-            val f = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
-            val date = f.parse(dateString)
-            return date?.time ?: throw IllegalStateException("Invalid date for dateReg")
-        }
-    }
-
-
-    fun mapValues(cdrCache: CDRCache) {
-        cdrCache.childName = childName.value.value
-        cdrCache.dateOfBirth = getLongFromDate(dateOfBirth.value.value!!)
-        cdrCache.visitDate = getLongFromDate(visitDate.value.value!!)
-        cdrCache.gender = gender.value.value
-        cdrCache.motherName = motherName.value.value
-        cdrCache.fatherName = fatherName.value.value
-        cdrCache.address = address.value.value
-        cdrCache.houseNumber = houseNumber.value.value
-        cdrCache.mohalla = mohalla.value.value
-        cdrCache.landmarks = landmarks.value.value
-        cdrCache.landline = landline.value.value?.toLong() ?: 0L
-        cdrCache.mobileNumber = mobileNumber.value.value?.toLong() ?: 0L
-        cdrCache.dateOfDeath = getLongFromDate(dateOfDeath.value.value!!)
-        cdrCache.timeOfDeath = timeOfDeath.value.value
-        cdrCache.placeOfDeath = placeOfDeath.value.value
-        cdrCache.firstInformant = firstInformant.value.value
-        cdrCache.ashaSign = ashaSign.value.value
-        cdrCache.pincode = pincode.value.value?.toInt()?:0
-        cdrCache.dateOfNotification = dateOfNotification.value.value?.let { getLongFromDate(it) }?: System.currentTimeMillis()
-    }
-
-    val childName = FormInputOld(
+    private val childName = FormElement(
+        id = 1,
         inputType = InputType.TEXT_VIEW,
         title = "Name of the Child",
         required = false
     )
-    val dateOfBirth = FormInputOld(
+    private val dateOfBirth = FormElement(
+        id = 2,
         inputType = InputType.TEXT_VIEW,
         title = "Date of Birth",
         required = false
     )
-    val age = FormInputOld(
+    private val age = FormElement(
+        id = 3,
         inputType = InputType.TEXT_VIEW,
         title = "Age",
         required = false
     )
-    val visitDate = FormInputOld(
+    private val visitDate = FormElement(
+        id = 4,
         inputType = InputType.DATE_PICKER,
         min = 0L,
         max = System.currentTimeMillis(),
         title = "Visit Date",
         required = true
     )
-    val gender = FormInputOld(
+    private val gender = FormElement(
+        id = 5,
         inputType = InputType.TEXT_VIEW,
         title = "Gender",
         required = false
     )
-    val motherName = FormInputOld(
+    private val motherName = FormElement(
+        id = 6,
         inputType = InputType.TEXT_VIEW,
         title = "Mother’s Name",
         required = false
     )
-    val fatherName = FormInputOld(
+    private val fatherName = FormElement(
+        id = 7,
         inputType = InputType.TEXT_VIEW,
         title = "Father’s Name",
         required = false
     )
-    val address = FormInputOld(
+    private val address = FormElement(
+        id = 8,
         inputType = InputType.TEXT_VIEW,
         title = "Address",
         required = false
     )
-    val houseNumber = FormInputOld(
+    private val houseNumber = FormElement(
+        id = 9,
         inputType = InputType.EDIT_TEXT,
         title = "House number",
         required = false
     )
-    val mohalla = FormInputOld(
+    private val mohalla = FormElement(
+        id = 10,
         inputType = InputType.EDIT_TEXT,
         title = "Mohalla/Colony ",
         required = false
     )
-    val landmarks = FormInputOld(
+    private val landmarks = FormElement(
+        id = 11,
         inputType = InputType.EDIT_TEXT,
         title = "Landmarks, if any ",
         required = false
     )
-    val pincode = FormInputOld(
+    private val pincode = FormElement(
+        id = 12,
         inputType = InputType.EDIT_TEXT,
         title = "Pincode",
         etMaxLength = 6,
-        min=100000,
-        max=999999,
+        min = 100000,
+        max = 999999,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
-    val landline = FormInputOld(
+    private val landline = FormElement(
+        id = 13,
         inputType = InputType.EDIT_TEXT,
         title = "Landline",
         etMaxLength = 12,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_NORMAL,
         required = false
     )
-    val mobileNumber = FormInputOld(
+    private val mobileNumber = FormElement(
+        id = 14,
         inputType = InputType.TEXT_VIEW,
         title = "Mobile number",
         required = false
     )
-    val dateOfDeath = FormInputOld(
+    private val dateOfDeath = FormElement(
+        id = 15,
         inputType = InputType.DATE_PICKER,
         title = "Date of death",
         min = 0L,
         max = System.currentTimeMillis(),
         required = true
     )
-    val timeOfDeath = FormInputOld(
+    private val timeOfDeath = FormElement(
+        id = 16,
         inputType = InputType.TIME_PICKER,
         title = "Time",
         required = false
     )
-    val placeOfDeath = FormInputOld(
+    private val placeOfDeath = FormElement(
+        id = 17,
         inputType = InputType.RADIO,
         title = "Place of Death",
         required = true,
         orientation = LinearLayout.VERTICAL,
         entries = arrayOf("Home", "Hospital", "In transit")
     )
-    val hospitalName = FormInputOld(
-        inputType = InputType.EDIT_TEXT,
-        title = "Hospital Name",
-        required = false
-    )
-    val firstInformant = FormInputOld(
+    private val firstInformant = FormElement(
+        id = 18,
         inputType = InputType.TEXT_VIEW,
         title = "Name of First Informant ",
         required = false
     )
-    val ashaSign = FormInputOld(
+    private val ashaSign = FormElement(
+        id = 19,
         inputType = InputType.EDIT_TEXT,
         title = "Signature/Name of ASHA",
         required = false
     )
-    val dateOfNotification = FormInputOld(
+    private val dateOfNotification = FormElement(
+        id = 20,
         inputType = InputType.DATE_PICKER,
         title = "Date of Notification ",
         min = 0L,
@@ -168,6 +148,88 @@ class CDRFormDataset(context: Context, private val childDeathReview: CDRCache? =
         required = false
     )
 
-    val firstPage = listOf(childName, dateOfBirth, age, visitDate, gender, motherName, fatherName, address, houseNumber, mohalla, landmarks, pincode,
-        landline, mobileNumber, dateOfDeath, timeOfDeath, placeOfDeath, firstInformant, ashaSign, dateOfNotification)
+    suspend fun setUpPage(
+        ben: BenRegCache,
+        currentAddress: String?,
+        currentHouseNumber: String?,
+        currentMohalla: String?,
+        saved: CDRCache?
+    ) {
+        val list = listOf(
+            childName,
+            dateOfBirth,
+            age,
+            visitDate,
+            gender,
+            motherName,
+            fatherName,
+            address,
+            houseNumber,
+            mohalla,
+            landmarks,
+            pincode,
+            landline,
+            mobileNumber,
+            dateOfDeath,
+            timeOfDeath,
+            placeOfDeath,
+            firstInformant,
+            ashaSign,
+            dateOfNotification
+        )
+        childName.value = "${ben.firstName} ${ben.lastName}"
+        dateOfBirth.value = getDateFromLong(ben.dob)
+        age.value =
+            "${BenBasicCache.getAgeFromDob(ben.dob)} ${BenBasicCache.getAgeUnitFromDob(ben.dob)}"
+        visitDate.value = getDateFromLong(System.currentTimeMillis())
+        gender.value = ben.gender?.name
+        motherName.value = ben.motherName
+        fatherName.value = ben.fatherName
+        address.value = currentAddress
+        houseNumber.value = currentHouseNumber
+        mohalla.value = currentMohalla
+        mobileNumber.value = ben.contactNumber.toString()
+        saved?.let { savedCdr ->
+            visitDate.value = savedCdr.visitDate?.let { it1 -> getDateFromLong(it1) }
+            landmarks.value = savedCdr.landmarks
+            pincode.value = savedCdr.pincode?.toString()
+            landline.value = savedCdr.landline?.toString()
+            mobileNumber.value = savedCdr.mobileNumber.toString()
+            dateOfDeath.value = getDateFromLong(savedCdr.dateOfDeath)
+            timeOfDeath.value = savedCdr.timeOfDeath?.let { getDateFromLong(it) }
+            placeOfDeath.value = savedCdr.placeOfDeath
+            firstInformant.value = savedCdr.firstInformant
+            ashaSign.value = savedCdr.ashaSign
+            dateOfNotification.value = savedCdr.dateOfNotification?.let { getDateFromLong(it) }
+        }
+
+
+        setUpPage(list)
+    }
+
+
+    override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
+        return -1
+    }
+
+    override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
+        (cacheModel as CDRCache).let { cdr ->
+            cdr.visitDate = getLongFromDate(visitDate.value)
+            cdr.motherName = motherName.value
+            cdr.fatherName = fatherName.value
+            cdr.address = address.value
+            cdr.houseNumber = houseNumber.value
+            cdr.mohalla = mohalla.value
+            cdr.landmarks = landmarks.value
+            cdr.pincode = pincode.value?.toInt()
+            cdr.landline = landline.value?.toLong()
+            cdr.mobileNumber = mobileNumber.value!!.toLong()
+            cdr.dateOfDeath = getLongFromDate(dateOfDeath.value)
+            cdr.timeOfDeath = timeOfDeath.value?.let { getLongFromDate(it) }
+            cdr.placeOfDeath = placeOfDeath.value
+            cdr.firstInformant = firstInformant.value
+            cdr.ashaSign = ashaSign.value
+            cdr.dateOfNotification = dateOfNotification.value?.let { getLongFromDate(it) }
+        }
+    }
 }
