@@ -1681,11 +1681,11 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
 //            validateIntMinMax(age)
             if (agePopup.errorText == null) {
                 ageAtMarriage.value = null
-                ageAtMarriage.max =
-                    if (isBenParentOfHoF())
-                        getLongFromDate(agePopup.value) - getAgeFromDob(
-                            hof!!.dob
-                        ) else getLongFromDate(agePopup.value)
+                val ageAtMarriageMax = if (isBenParentOfHoF())
+                    getAgeFromDob(getLongFromDate(agePopup.value)) - getAgeFromDob(
+                        hof!!.dob
+                    ) else getAgeFromDob(getLongFromDate(agePopup.value))
+                ageAtMarriage.max = ageAtMarriageMax.toLong()
 
             }
 

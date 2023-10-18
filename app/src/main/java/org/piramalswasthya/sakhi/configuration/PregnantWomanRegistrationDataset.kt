@@ -8,6 +8,7 @@ import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.helpers.getWeeksOfPregnancy
 import org.piramalswasthya.sakhi.model.BenBasicCache
 import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.EligibleCoupleRegCache
 import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.HRPPregnantAssessCache
 import org.piramalswasthya.sakhi.model.InputType
@@ -395,6 +396,7 @@ class PregnantWomanRegistrationDataset(
         ben: BenRegCache?,
         assess: HRPPregnantAssessCache?,
         saved: PregnantWomanRegistrationCache?,
+        ecr: EligibleCoupleRegCache?,
         lastTrackTimestamp: Long? = null
     ) {
         val list = mutableListOf(
@@ -479,7 +481,7 @@ class PregnantWomanRegistrationDataset(
             heightShort.value = getLocalValueInArray(R.array.yes_no, it.heightShort)
             heightShortdbVal = getLocalValueInArray(R.array.yes_no, it.heightShort)
 
-            ageCheck.value = getLocalValueInArray(R.array.yes_no, it.age)
+//            ageCheck.value = getLocalValueInArray(R.array.yes_no, it.age)
 
             rhNegative.value = getLocalValueInArray(R.array.yes_no, it.rhNegative)
 
@@ -635,6 +637,30 @@ class PregnantWomanRegistrationDataset(
             }
         }
 
+        ecr?.let {
+            // if no of children in ec registration is
+            // > 0 => setting is first pregnancy false and no of pregnancies value
+            // else => setting is first pregnancy true
+            if (ecr.noOfChildren > 0) {
+                isFirstPregnancy.value = resources.getStringArray(R.array.yes_no)[1]
+                isFirstPregnancy.isEnabled = false
+                totalNumberOfPreviousPregnancy.min = ecr.noOfChildren.toLong()
+                if (saved == null) {
+                    list.addAll(
+                        list.indexOf(isFirstPregnancy) + 1,
+                        listOf(totalNumberOfPreviousPregnancy, complicationsDuringLastPregnancy)
+                    )
+                    totalNumberOfPreviousPregnancy.value = ecr.noOfChildren.toString()
+                }
+            } else {
+                isFirstPregnancy.value = resources.getStringArray(R.array.yes_no)[0]
+            }
+            // if no of children greater than 3 setting no of deliveries greater than 3 as true
+            if (ecr.noOfChildren > 3) {
+                noOfDeliveries.value = resources.getStringArray(R.array.yes_no)[0]
+                noOfDeliveries.isEnabled = false
+            }
+        }
 //        ben?.isHrpStatus?.let {
 //            if (it || isHighRisk()) {
 //                list.add(assignedAsHrpBy)

@@ -842,7 +842,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 //            age,
             ageAtMarriage,
             womanDetails,
-            aadharNo,
+//            aadharNo,
             bankAccount,
             bankName,
             branchName,
@@ -894,7 +894,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             noOfDeliveries.value = getLocalValueInArray(R.array.yes_no, it.noOfDeliveries)
             timeLessThan18m.value = getLocalValueInArray(R.array.yes_no,it.timeLessThan18m)
             heightShort.value = getLocalValueInArray(R.array.yes_no,it.heightShort)
-            ageCheck.value = getLocalValueInArray(R.array.yes_no,it.age)
+//            ageCheck.value = getLocalValueInArray(R.array.yes_no,it.age)
             misCarriage.value = getLocalValueInArray(R.array.yes_no,it.misCarriage)
             homeDelivery.value = getLocalValueInArray(R.array.yes_no,it.homeDelivery)
             medicalIssues.value = getLocalValueInArray(R.array.yes_no,it.medicalIssues)
@@ -1147,7 +1147,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
             }
 
             bankName.id -> {
-                validateAllAlphaNumericSpaceOnEditText(bankName)
+                validateAllAlphabetsSpaceOnEditText(bankName)
             }
 
             branchName.id -> {
@@ -1838,21 +1838,21 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                 isUpdated = true
             }
         }
-        aadharNo.value?.takeIf {
-            aadharNo.inputType == EDIT_TEXT &&
-                    it.isNotEmpty()
-        }?.let {
-            val last4 = "*".repeat(8) + it.takeLast(4)
-            if (
-                last4
-                != aadharNoFromBen
-            ) {
-                ben?.hasAadhar = true
-                ben?.hasAadharId = 1
-                ben?.aadharNum = last4
-                isUpdated = true
-            }
-        }
+//        aadharNo.value?.takeIf {
+//            aadharNo.inputType == EDIT_TEXT &&
+//                    it.isNotEmpty()
+//        }?.let {
+//            val last4 = "*".repeat(8) + it.takeLast(4)
+//            if (
+//                last4
+//                != aadharNoFromBen
+//            ) {
+//                ben?.hasAadhar = true
+//                ben?.hasAadharId = 1
+//                ben?.aadharNum = last4
+//                isUpdated = true
+//            }
+//        }
         isHighRisk().let { highRisk ->
             if (highRisk) {
                 ben?.isHrpStatus = true

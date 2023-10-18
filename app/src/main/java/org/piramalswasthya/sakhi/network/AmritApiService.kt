@@ -175,9 +175,10 @@ interface AmritApiService {
     @POST("/flw-0.0.1/death-reports/mdsr/getAll")
     suspend fun getMdsrData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
-    @POST
-    suspend fun getAllIncentiveActivities(@Url url : String = "http://192.168.1.109:8080/incentive/masterData/getAll",@Body requestBody: IncentiveActivityListRequest): IncentiveActivityListResponse
-    @POST
-    suspend fun getAllIncentiveRecords(@Url url : String = "http://192.168.1.109:8080/incentive/fetchUserData",@Body requestBody: IncentiveRecordListRequest): IncentiveRecordListResponse
+    @POST("/flw-0.0.1/incentive/masterData/getAll")
+    suspend fun getAllIncentiveActivities(@Body requestBody: IncentiveActivityListRequest): IncentiveActivityListResponse
+
+    @POST("/flw-0.0.1/incentive/fetchUserData")
+    suspend fun getAllIncentiveRecords(@Body requestBody: IncentiveRecordListRequest): IncentiveRecordListResponse
 
 }
