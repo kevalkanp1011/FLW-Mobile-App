@@ -86,10 +86,11 @@ object HelperUtil {
 
         if (ageUnitDTO.years >= 1) {
             str.append(ageUnitDTO.years)
-            str.append(if (ageUnitDTO.years == 1) " Year, " else " Years, ")
+            str.append(if (ageUnitDTO.years == 1) " Year" else " Years")
         }
 
         if (ageUnitDTO.months >= 1) {
+            if (ageUnitDTO.years >= 1) str.append(", ")
             str.append(ageUnitDTO.months)
             str.append(if (ageUnitDTO.months == 1) " Month" else " Months")
         }

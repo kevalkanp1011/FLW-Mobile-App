@@ -101,6 +101,7 @@ class AllBenFragment : Fragment() {
                 ),
             showAbha = true,
             showSyncIcon = true,
+            showBeneficiaries = true,
             showRegistrationDate = true
         )
         binding.rvAny.adapter = benAdapter
