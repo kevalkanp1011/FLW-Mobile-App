@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,17 +14,15 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.adapters.BenListAdapter
-import org.piramalswasthya.sakhi.adapters.BenListAdapterForForm
+import org.piramalswasthya.sakhi.adapters.InfantListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBinding
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
-import timber.log.Timber
 
 @AndroidEntryPoint
 class InfantListFragment : Fragment() {
 
     private var _binding: FragmentDisplaySearchRvButtonBinding? = null
-    private val binding : FragmentDisplaySearchRvButtonBinding
+    private val binding: FragmentDisplaySearchRvButtonBinding
         get() = _binding!!
 
     private val viewModel: InfantListViewModel by viewModels()
@@ -35,33 +32,27 @@ class InfantListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding  = FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnNextPage.visibility = View.GONE
-        val benAdapter = BenListAdapter(
-//            BenListAdapterForForm.ClickListener(
-//                {
-//                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
-//                },
-//                { hhId, benId ->
-//                    Timber.d("benId : $benId hhId : $hhId")
-//                    findNavController().navigate(
-//                        InfantListFragmentDirections.actionInfantListFragmentToHbncDayListFragment(
-//                            hhId = hhId,
-//                            benId = benId
-//                        )
-//                    )
-//                }), resources.getString(R.string.hbnc_form)
-        showBeneficiaries = true
+        val benAdapter = InfantListAdapter(
+            InfantListAdapter.InfantListClickListener { benId, hhId ->
+                findNavController().navigate(
+                    InfantListFragmentDirections.actionInfantListFragmentToHbncDayListFragment(
+                        benId = benId,
+                        hhId = hhId
+                    )
                 )
+            }
+        )
         binding.rvAny.adapter = benAdapter
 
         lifecycleScope.launch {
-            viewModel.benList.collect{
+            viewModel.benList.collect {
                 if (it.isEmpty())
                     binding.flEmpty.visibility = View.VISIBLE
                 else
@@ -91,10 +82,14 @@ class InfantListFragment : Fragment() {
 
         }
     }
+
     override fun onStart() {
         super.onStart()
-        activity?.let{
-            (it as HomeActivity).updateActionBar(R.drawable.ic__infant, getString(R.string.child_care_icon_title_infant_list))
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__infant,
+                getString(R.string.child_care_icon_title_infant_list)
+            )
         }
     }
 
