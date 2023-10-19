@@ -19,7 +19,7 @@ interface IncentiveDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg incentiveRecord: IncentiveRecordCache)
 
-    @Query("select * from INCENTIVE_RECORD")
+    @Query("select * from `incentive-records` order by activityId")
     fun getAllRecords(): Flow<List<IncentiveCache>>
 
 

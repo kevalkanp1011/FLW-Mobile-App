@@ -5,6 +5,7 @@ import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
 import android.os.Bundle
 import android.os.Environment
+import android.text.TextPaint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,10 +23,13 @@ import org.piramalswasthya.sakhi.adapters.IncentiveListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentIncentivesBinding
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.helpers.getDateString
+import org.piramalswasthya.sakhi.model.IncentiveDomain
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
+import org.piramalswasthya.sakhi.utils.HelperUtil.drawMultilineText
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.Calendar
 
 @AndroidEntryPoint
 class IncentivesFragment : Fragment() {
@@ -34,6 +38,8 @@ class IncentivesFragment : Fragment() {
     private val binding: FragmentIncentivesBinding
         get() = _binding!!
 
+
+    private var incentiveDomainList : List<IncentiveDomain> = mutableListOf()
 
     private val viewModel: IncentivesViewModel by viewModels()
 
@@ -79,6 +85,7 @@ class IncentivesFragment : Fragment() {
 
         lifecycleScope.launch {
             viewModel.incentiveList.collect {
+                incentiveDomainList = it
                 adapter.submitList(it)
                 val activityList = it.map { it.activity }
                 val pending = activityList.filter { !it.isPaid }.sumOf { it.rate }
@@ -116,50 +123,90 @@ class IncentivesFragment : Fragment() {
 
         val document = PdfDocument()
 
+        val pageNumber = 1
+
+        incentiveDomainList.forEach {
+
+        }
         val pageWidth = 300
         val pageHeight = 400
-        val pageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, 1).create()
-        val page = document.startPage(pageInfo)
+        var pageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, 1).create()
+        var page = document.startPage(pageInfo)
 
         val canvas = page.canvas
         val paint = Paint()
         paint.color = Color.BLACK
         paint.textSize = 6f
 
+        val textPaint = TextPaint()
+        textPaint.color = Color.BLACK
+        textPaint.textSize = 6f
+
         val x = 10
         var y = 50
         val columnWidth = 100
         val rowHeight = 15
 
-        canvas.drawText("ASHA Incentive Master Claim Form", (x + columnWidth).toFloat(), y.toFloat(), paint)
+        var maxPages = incentiveDomainList.size / 20 + 2
+
+        var currentPage = 1
+
+        canvas.drawText(resources.getString(R.string.asha_incentive_master_claim_form), (x + columnWidth).toFloat(), y.toFloat(), paint)
         y+= 5
 
         canvas.drawLine(x.toFloat(), y.toFloat(), (pageWidth - 2*x).toFloat(), y.toFloat(), paint)
         y += rowHeight
 
-        canvas.drawText("To", x.toFloat(), y.toFloat(), paint)
+        canvas.drawText(resources.getString(R.string.to), x.toFloat(), y.toFloat(), paint)
         y += rowHeight
 
-        canvas.drawText("SDM&HO or i/c Block PHC", x.toFloat(), y.toFloat(), paint)
+        canvas.drawText(resources.getString(R.string.sdm_ho_or_i_c_block_phc), x.toFloat(), y.toFloat(), paint)
         y += rowHeight
 
         canvas.drawText("_______________________", x.toFloat(), y.toFloat(), paint)
         y += rowHeight
 
-        canvas.drawText("Sub: Submission of ASHA incentive claim for the period from ${binding.tvFrom.text} to ${binding.tvTo.text}", x.toFloat(), y.toFloat(), paint)
+        canvas.drawText(resources.getString(R.string.sub_submission_of_asha_incentive_claim_for_the_period_from)
+                + binding.tvFrom.text + resources.getString(R.string.to_small)
+                + binding.tvTo.text,
+            x.toFloat(), y.toFloat(), paint)
         y += rowHeight
 
-        canvas.drawText("Sir/Madam,   With reference to the subject cited above, I have to the honour to submit the ASHA incentive claims ", x.toFloat(), y.toFloat(), paint)
+        canvas.drawText(resources.getString(R.string.sir_madam), x.toFloat(), y.toFloat(), paint)
+//        y += rowHeight
+
+        canvas.drawMultilineText(
+            text = resources.getString(R.string.with_reference_to_)
+                    + binding.tvFrom.text + resources.getString(R.string.to_small)
+                    + binding.tvTo.text + resources.getString(R.string.as_per_statement),
+            textPaint = textPaint,
+            width = pageWidth - 2*x,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            0)
         y += rowHeight
 
-        canvas.drawText("for the period from ${binding.tvFrom.text} to ${binding.tvTo.text} as per statement mentioned below.", x.toFloat(), y.toFloat(), paint)
-        y += rowHeight
-
-
-        // Draw the table data
-//        canvas.drawText("Data 1", x.toFloat(), y.toFloat(), paint)
-//        canvas.drawText("Data 2", (x + columnWidth).toFloat(), y.toFloat(), paint)
-
+        var currentGroup = ""
+        incentiveDomainList.forEach {
+            if (y > pageHeight) {
+                document.finishPage(page)
+                currentPage++
+                pageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, currentPage).create()
+                page = document.startPage(pageInfo)
+                y = rowHeight
+            } else {
+                if (currentGroup.contentEquals(it.activity.group)) {
+                    it.record.name?.let { it1 -> canvas.drawText(it1, x.toFloat(), y.toFloat(), paint) }
+                    y += rowHeight
+                } else {
+                    canvas.drawText(it.activity.group, x.toFloat(), y.toFloat(), paint)
+                    y += rowHeight
+                    it.record.name?.let { it1 -> canvas.drawText(it1, x.toFloat(), y.toFloat(), paint) }
+                    y += rowHeight
+                }
+                currentGroup = it.activity.group
+            }
+        }
         // Finish the page
         document.finishPage(page)
 
@@ -180,7 +227,7 @@ class IncentivesFragment : Fragment() {
         // You can continue with more pages if needed
 
         // Save the PDF file
-        val fileName = "incentives.pdf"
+        val fileName = "incentives_" + (Calendar.getInstance().timeInMillis) + ".pdf"
         val directory =
         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         val file = File(directory, fileName)
