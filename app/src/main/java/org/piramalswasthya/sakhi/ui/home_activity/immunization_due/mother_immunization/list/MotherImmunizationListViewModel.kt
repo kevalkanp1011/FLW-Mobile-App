@@ -35,10 +35,10 @@ class MotherImmunizationListViewModel @Inject constructor(
                     it.minAllowedAgeInMillis < ageMillis
                 }.map { vaccine ->
                     VaccineDomain(
-                        vaccine.id,
-                        vaccine.name,
-                        vaccine.childCategory,
-                        if (cache.givenVaccines.any { it.vaccineId == vaccine.id }) VaccineState.DONE
+                        vaccine.vaccineId,
+                        vaccine.vaccineName,
+                        vaccine.immunizationService,
+                        if (cache.givenVaccines.any { it.vaccineId == vaccine.vaccineId }) VaccineState.DONE
                         else if (ageMillis < (vaccine.maxAllowedAgeInMillis)) {
                             vaccine.dependantVaccineId?.let { dep ->
 

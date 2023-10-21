@@ -52,7 +52,6 @@ class ChildImmunizationListFragment : Fragment() {
             }
         }
 
-
 //        bottomSheet.setContentFlow(viewModel.bottomSheetContent)
 //        lifecycleScope.launch {
 //            viewModel.bottomSheetContent.collect {

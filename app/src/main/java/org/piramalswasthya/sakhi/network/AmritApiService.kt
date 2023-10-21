@@ -169,6 +169,9 @@ interface AmritApiService {
     @POST("/flw-0.0.1/maternalCare/pnc/getAll")
     suspend fun getPncVisitsData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
+    @GET("/flw-0.0.1/child-care/vaccine/getAll")
+    suspend fun getAllChildVaccines(@Query("category") category: String): Response<ResponseBody>
+
     @POST("/flw-0.0.1/death-reports/mdsr/saveAll")
     suspend fun postMdsrForm(@Body mdsrPostList: List<MdsrPost>): Response<ResponseBody>
 

@@ -145,4 +145,23 @@
         <item>Hepatitis</item>
         <item>OPV</item>
     </string-array>
+
+    <!--  Child Immunization  -->
+    <string-array name="imm_vaccinated_place_array">
+        <item>Sub-Centre</item>
+        <item>PHC</item>
+        <item>CHC</item>
+        <item>Sub-District Hospital</item>
+        <item>District Hospital</item>
+        <item>Medical College Hospital</item>
+        <item>Private Hospital</item>
+        <item>Accredited Private Hospital</item>
+        <item>VHND</item>
+        <item>Other</item>
+    </string-array>
+    <string-array name="imm_vaccinated_by_array">
+        <item>ANM</item>
+        <item>CHO</item>
+        <item>MO</item>
+    </string-array>
 </resources>

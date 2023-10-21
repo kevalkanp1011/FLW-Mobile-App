@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.dao.ImmunizationDao
-import org.piramalswasthya.sakhi.helpers.getTodayMillis
 import org.piramalswasthya.sakhi.model.ImmunizationCategory
 import org.piramalswasthya.sakhi.model.ImmunizationDetailsDomain
 import org.piramalswasthya.sakhi.model.Vaccine
@@ -45,10 +44,10 @@ class ChildImmunizationListViewModel @Inject constructor(
                     it.minAllowedAgeInMillis < ageMillis
                 }.map { vaccine ->
                     VaccineDomain(
-                        vaccine.id,
-                        vaccine.name,
-                        vaccine.childCategory,
-                        if (cache.givenVaccines.any { it.vaccineId == vaccine.id }) VaccineState.DONE
+                        vaccine.vaccineId,
+                        vaccine.vaccineName,
+                        vaccine.immunizationService,
+                        if (cache.givenVaccines.any { it.vaccineId == vaccine.vaccineId }) VaccineState.DONE
                         else if (ageMillis < (vaccine.maxAllowedAgeInMillis)) {
                             vaccine.dependantVaccineId?.let { dep ->
 

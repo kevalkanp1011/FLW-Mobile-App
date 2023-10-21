@@ -22,12 +22,12 @@ enum class ImmunizationCategory {
 @Entity(tableName = "VACCINE")
 data class Vaccine(
     @PrimaryKey
-    val id: Int,
-    val name: String,
+    val vaccineId: Int,
+    val vaccineName: String,
     val minAllowedAgeInMillis : Long,
     val maxAllowedAgeInMillis : Long,
     val category: ImmunizationCategory,
-    val childCategory: ChildImmunizationCategory,
+    val immunizationService: ChildImmunizationCategory,
 //    val dueDuration: Long,
     val overdueDurationSinceMinInMillis: Long = maxAllowedAgeInMillis,
     val dependantVaccineId: Int? = null,
@@ -43,7 +43,7 @@ data class Vaccine(
         onDelete = ForeignKey.CASCADE
     ), ForeignKey(
         entity = Vaccine::class,
-        parentColumns = arrayOf("id"),
+        parentColumns = arrayOf("vaccineId"),
         childColumns = arrayOf("vaccineId"),
         onDelete = ForeignKey.CASCADE
     )], indices = [Index(
@@ -70,6 +70,7 @@ data class ImmunizationCache(
         return ImmunizationPost(
             id = id,
             beneficiaryId = beneficiaryId,
+            vaccineId = vaccineId,
             vaccineName = "",
             receivedDate = getDateStrFromLong(date),
             vaccinationreceivedat = place,
@@ -140,6 +141,7 @@ enum class VaccineState {
 data class ImmunizationPost (
     val id: Long = 0,
     val beneficiaryId: Long,
+    val vaccineId: Int,
     var vaccineName: String = "",
     val receivedDate: String? = null,
     val vaccinationreceivedat: String? = null,
@@ -153,7 +155,7 @@ data class ImmunizationPost (
         return ImmunizationCache(
             id = id,
             beneficiaryId = beneficiaryId,
-            vaccineId = 0,
+            vaccineId = vaccineId,
             date = getLongFromDate(receivedDate),
 //            placeId = 0,
             place = if(vaccinationreceivedat.isNullOrEmpty()) "" else vaccinationreceivedat,

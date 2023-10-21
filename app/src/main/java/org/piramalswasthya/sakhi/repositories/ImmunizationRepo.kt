@@ -12,12 +12,9 @@ import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.ImmunizationCache
 import org.piramalswasthya.sakhi.model.ImmunizationPost
-import org.piramalswasthya.sakhi.model.PregnantWomanAncCache
-import org.piramalswasthya.sakhi.model.PwrPost
-import org.piramalswasthya.sakhi.model.TBSuspectedCache
+import org.piramalswasthya.sakhi.model.Vaccine
 import org.piramalswasthya.sakhi.network.AmritApiService
 import org.piramalswasthya.sakhi.network.GetDataPaginatedRequest
-import org.piramalswasthya.sakhi.network.TBSuspectedRequestDTO
 import timber.log.Timber
 import java.net.SocketTimeoutException
 import java.text.SimpleDateFormat
@@ -105,13 +102,12 @@ class ImmunizationRepo @Inject constructor(
         val immunizationList = Gson().fromJson(dataObj, Array<ImmunizationPost>::class.java).toList()
         immunizationList.forEach { immunizationDTO ->
             val vaccine = immunizationDao.getVaccineByName(immunizationDTO.vaccineName)!!
-            var immunizationCache: ImmunizationCache? =
-                immunizationDao.getImmunizationRecord(immunizationDTO.beneficiaryId, vaccine.id)
-            if (immunizationCache == null) {
-                var immunizationCache = immunizationDTO.toCacheModel()
-                val vaccine = immunizationDao.getVaccineByName(immunizationDTO.vaccineName)!!
-                immunizationCache.vaccineId = vaccine.id
-                immunizationDao.addImmunizationRecord(immunizationDTO.toCacheModel())
+            val immunization: ImmunizationCache? =
+                immunizationDao.getImmunizationRecord(immunizationDTO.beneficiaryId, vaccine.vaccineId)
+            if (immunization == null) {
+                val immunizationCache = immunizationDTO.toCacheModel()
+                immunizationCache.vaccineId = vaccine.vaccineId
+                immunizationDao.addImmunizationRecord(immunizationCache)
             }
         }
         return immunizationList
@@ -130,7 +126,7 @@ class ImmunizationRepo @Inject constructor(
             immunizationCacheList.forEach { cache ->
                 var immunizationDTO = cache.asPostModel()
                 val vaccine = immunizationDao.getVaccineById(cache.vaccineId)!!
-                immunizationDTO.vaccineName = vaccine.name
+                immunizationDTO.vaccineName = vaccine.vaccineName
                 immunizationDTOs.add(immunizationDTO)
             }
             if (immunizationDTOs.isEmpty()) return@withContext true
@@ -176,8 +172,7 @@ class ImmunizationRepo @Inject constructor(
 
             } catch (e: SocketTimeoutException) {
                 Timber.d("save_child_immunization error : $e")
-                return@withContext false
-
+                return@withContext pushUnSyncedChildImmunizationRecords();
             } catch (e: java.lang.IllegalStateException) {
                 Timber.d("save_child_immunization error : $e")
                 return@withContext false
@@ -208,6 +203,77 @@ class ImmunizationRepo @Inject constructor(
             val f = SimpleDateFormat("MMM d, yyyy h:mm:ss a", Locale.ENGLISH)
             val date = f.parse(dateString)
             return date?.time ?: throw IllegalStateException("Invalid date for dateReg")
+        }
+    }
+
+    suspend fun getVaccineDetailsFromServer(): Int {
+        return withContext(Dispatchers.IO) {
+            val user =
+                preferenceDao.getLoggedInUser()
+                    ?: throw IllegalStateException("No user logged in!!")
+            val lastTimeStamp = preferenceDao.getLastSyncedTimeStamp()
+            try {
+                val response = tmcNetworkApiService.getAllChildVaccines(category = "CHILD")
+                val statusCode = response.code()
+                if (statusCode == 200) {
+                    val responseString = response.body()?.string()
+                    if (responseString != null) {
+                        val jsonObj = JSONObject(responseString)
+
+                        val errorMessage = jsonObj.getString("errorMessage")
+                        val responseStatusCode = jsonObj.getInt("statusCode")
+                        Timber.d("Pull from amrit child vaccine data : $responseStatusCode")
+                        when (responseStatusCode) {
+                            200 -> {
+                                try {
+                                    val dataObj = jsonObj.getString("data")
+                                    saveVaccinesFromResponse(dataObj)
+                                } catch (e: Exception) {
+                                    Timber.d("Child Vaccine entries not synced $e")
+                                    return@withContext 0
+                                }
+
+                                return@withContext 1
+                            }
+
+                            5002 -> {
+                                if (userRepo.refreshTokenTmc(
+                                        user.userName, user.password
+                                    )
+                                ) throw SocketTimeoutException("Refreshed Token!")
+                                else throw IllegalStateException("User Logged out!!")
+                            }
+
+                            5000 -> {
+                                if (errorMessage == "No record found") return@withContext 0
+                            }
+
+                            else -> {
+                                throw IllegalStateException("$responseStatusCode received, don't know what todo!?")
+                            }
+                        }
+                    }
+                }
+
+            } catch (e: SocketTimeoutException) {
+                Timber.d("get_child_vaccines error : $e")
+                getVaccineDetailsFromServer()
+
+            } catch (e: java.lang.IllegalStateException) {
+                Timber.d("get_child_vaccines error : $e")
+                return@withContext -1
+            }
+            -1
+        }
+    }
+
+    private suspend fun saveVaccinesFromResponse(dataObj: String) {
+        val vaccineList = Gson().fromJson(dataObj, Array<Vaccine>::class.java).toList()
+        vaccineList.forEach { vaccine ->
+            val existingVaccine: Vaccine? = immunizationDao.getVaccineByName(vaccine.vaccineName)
+            if (existingVaccine == null) {
+                immunizationDao.addVaccine(vaccine)
+            }
         }
     }
 }

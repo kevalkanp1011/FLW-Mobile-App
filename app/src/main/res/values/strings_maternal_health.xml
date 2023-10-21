@@ -102,6 +102,64 @@
         <item>Any Other Method</item>
     </string-array>
 
+    <!--  PregnantWoman ANC  -->
+    <string-array name="anc_abortion_type_array">
+        <item>Induced</item>
+        <item>Spontaneous</item>
+    </string-array>
+    <string-array name="anc_abortion_facility_array">
+        <item>Govt. Hospital</item>
+        <item>Pvt. Hospital</item>
+    </string-array>
+    <string-array name="anc_urine_albumin_array">
+        <item>Absent</item>
+        <item>Present</item>
+    </string-array>
+    <string-array name="anc_random_blood_sugar_test_array">
+        <item>Not Done</item>
+        <item>Done</item>
+    </string-array>
+    <string-array name="anc_high_risk_array">
+        <item>NONE</item>
+        <item>HIGH BP (SYSTOLIC>=140 AND OR DIASTOLIC >=90mmHg)</item>
+        <item>CONVULSIONS</item>
+        <item>VAGINAL BLEEDING</item>
+        <item>FOUL SMELLING DISCHARGE</item>
+        <item>SEVERE ANAEMIA (HB less than 7 gm/dl)</item>
+        <item>DIABETES</item>
+        <item>TWINS</item>
+        <item>OTHER</item>
+    </string-array>
+    <string-array name="anc_referral_facility_array">
+        <item>Primary Health Centre</item>
+        <item>Community Health Centre</item>
+        <item>District Hospital</item>
+        <item>Other Private Hospital</item>
+    </string-array>
+    <string-array name="anc_confirmed_by_array">
+        <item>ANM</item>
+        <item>CHO</item>
+        <item>PHC – MO</item>
+        <item>Specialist at Higher Facility</item>
+    </string-array>
+    <string-array name="anc_death_cause_array">
+        <item>ECLAMPSIA</item>
+        <item>HAEMORRHAGE</item>
+        <item>HIGH FEVER</item>
+        <item>ABORTION</item>
+        <item>OTHER</item>
+    </string-array>
+    <string-array name="anc_confirmation_array">
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+    <string-array name="anc_confirmation_array1">
+        <item>No</item>
+        <item>Yes</item>
+    </string-array>
+
+
+
     <!--  PMSMA  -->
     <string name="pmsma_mcts_rch_number">MCTS Number/RCH Number</string>
     <string name="pmsma_have_mcp_card">Does the beneficiary have an MCP card</string>

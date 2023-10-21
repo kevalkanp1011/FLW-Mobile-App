@@ -1,6 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--  PregnantWoman ANC  -->
+    <string-array name="anc_abortion_type_array">
+        <item>আদিত কৰা হৈছে</item>
+        <item>স্বজনলৈ আপত্তি হৈছে</item>
+    </string-array>
+    <string-array name="anc_abortion_facility_array">
+        <item>সৰ্কাৰী চিকিৎসা চেণ্টাৰ</item>
+        <item>ব্যক্তিগত চিকিৎসা চেণ্টাৰ</item>
+    </string-array>
+    <string-array name="anc_urine_albumin_array">
+        <item>অসম্পৰ্ক</item>
+        <item>উপস্থিত</item>
+    </string-array>
+    <string-array name="anc_random_blood_sugar_test_array">
+        <item>কৰা হোৱা নাই</item>
+        <item>কৰা হৈছে</item>
+    </string-array>
+    <string-array name="anc_high_risk_array">
+        <item>অসম্পৰ্ক</item>
+        <item>উচ্চ ব্লাড প্ৰেছাৰ (সিষ্টলিক >= 140 আৰু/অথবা ডায়াষ্টলিক >= 90mmHg)</item>
+        <item>উল্লেখযোগ্য</item>
+        <item>যোনিৰ বেগছী</item>
+        <item>দুৰ্বাচাৰিত গন্ধ</item>
+        <item>গৰ্ভাণৰ সৰীৰৰ বিশেষ সৰু মানতুল্য (HB কম 7 জি/ডিএল)</item>
+        <item>ডায়াবিটিচ</item>
+        <item>দুৰ্ন্নৈতিৰাৱক (পৰা 7 মি/ডিএল)</item>
+        <item>অন্যান্য</item>
+    </string-array>
+    <string-array name="anc_referral_facility_array">
+        <item>প্ৰাথমিক চিকিৎসা চেণ্টাৰ</item>
+        <item>জনস্বাস্থ্য চেণ্টাৰ</item>
+        <item>জিলা ৰোগ চেণ্টাৰ</item>
+        <item>অন্য ব্যক্তিগত চিকিৎসা চেণ্টাৰ</item>
+    </string-array>
+    <string-array name="anc_confirmed_by_array">
+        <item>ANM</item>
+        <item>CHO</item>
+        <item>PHC – মেডিকেল অফিচাৰ</item>
+        <item>উচ্চতৰ চিকিৎসা চেণ্টাৰত বিশেষজ্ঞ</item>
+    </string-array>
+    <string-array name="anc_death_cause_array">
+        <item>ইক্লেম্পচিয়া</item>
+        <item>বিলিটৰ সড়ক</item>
+        <item>উচ্চ জ্বৰ</item>
+        <item>গৰ্ভপাত</item>
+        <item>অন্য</item>
+    </string-array>
+    <string-array name="anc_confirmation_array">
+        <item>হয়</item>
+        <item>নহয়</item>
+    </string-array>
+    <string-array name="anc_confirmation_array1">
+        <item>নহয়</item>
+        <item>হয়</item>
+    </string-array>
+
+
     <!--  PMSMA  -->
     <string name="pmsma_mcts_rch_number">MCTS নম্বৰ / RCH নম্বৰ</string>
     <string name="pmsma_have_mcp_card">লাভকাৰীক কোৰকৈ এটি মুখ্যীয়া স্বাস্থ্য কাৰ্ড আছে?</string>

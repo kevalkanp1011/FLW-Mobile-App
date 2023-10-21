@@ -46,7 +46,8 @@ class PregnantWomanAncVisitDataset(
         id = 4,
         inputType = InputType.RADIO,
         title = "Abortion If Any",
-        entries = arrayOf("No", "Yes"),
+        arrayId = R.array.anc_confirmation_array1,
+        entries = resources.getStringArray(R.array.anc_confirmation_array1),
         required = false,
         hasDependants = true
     )
@@ -54,7 +55,8 @@ class PregnantWomanAncVisitDataset(
         id = 5,
         inputType = InputType.RADIO,
         title = "Abortion Type",
-        entries = arrayOf("Induced", "Spontaneous"),
+        arrayId = R.array.anc_abortion_type_array,
+        entries = resources.getStringArray(R.array.anc_abortion_type_array),
         required = true,
         hasDependants = true
     )
@@ -62,7 +64,8 @@ class PregnantWomanAncVisitDataset(
         id = 6,
         inputType = InputType.RADIO,
         title = "Facility",
-        entries = arrayOf("Govt. Hospital", "Pvt. Hospital"),
+        arrayId = R.array.anc_abortion_facility_array,
+        entries = resources.getStringArray(R.array.anc_abortion_facility_array),
         required = true,
         hasDependants = true
     )
@@ -156,14 +159,16 @@ class PregnantWomanAncVisitDataset(
         id = 14,
         inputType = InputType.RADIO,
         title = "Urine Albumin",
-        entries = arrayOf("Absent", "Present"),
+        arrayId = R.array.anc_urine_albumin_array,
+        entries = resources.getStringArray(R.array.anc_urine_albumin_array),
         required = false,
     )
     private val randomBloodSugarTest = FormElement(
         id = 15,
         inputType = InputType.RADIO,
         title = "Random Blood Sugar Test",
-        entries = arrayOf("Not Done", "Done"),
+        arrayId = R.array.anc_random_blood_sugar_test_array,
+        entries = resources.getStringArray(R.array.anc_random_blood_sugar_test_array),
         required = false,
     )
     private val dateOfTTOrTd1 = FormElement(
@@ -214,22 +219,16 @@ class PregnantWomanAncVisitDataset(
         id = 21,
         inputType = InputType.RADIO,
         title = "Any High Risk conditions",
-        entries = arrayOf("No", "Yes"),
+        arrayId = R.array.anc_confirmation_array1,
+        entries = resources.getStringArray(R.array.anc_confirmation_array1),
         required = false,
         hasDependants = true
     )
     private val highRiskCondition = FormElement(
-        id = 22, inputType = InputType.DROPDOWN, title = "High Risk Conditions", entries = arrayOf(
-            "NONE",
-            "HIGH BP (SYSTOLIC>=140 AND OR DIASTOLIC >=90mmHg)",
-            "CONVULSIONS",
-            "VAGINAL BLEEDING",
-            "FOUL SMELLING DISCHARGE",
-            "SEVERE ANAEMIA (HB<7 gm/dl)",
-            "DIABETES",
-            "TWINS",
-            "OTHER",
-        ), required = false, hasDependants = true
+        id = 22, inputType = InputType.DROPDOWN, title = "High Risk Conditions",
+        arrayId = R.array.anc_high_risk_array,
+        entries = resources.getStringArray(R.array.anc_high_risk_array),
+        required = false, hasDependants = true
     )
     private val otherHighRiskCondition = FormElement(
         id = 23,
@@ -241,43 +240,36 @@ class PregnantWomanAncVisitDataset(
         id = 24,
         inputType = InputType.DROPDOWN,
         title = "Referral Facility",
-        entries = arrayOf(
-            "Primary Health Centre",
-            "Community Health Centre",
-            "District Hospital",
-            "Other Private Hospital",
-        ),
+        arrayId = R.array.anc_referral_facility_array,
+        entries = resources.getStringArray(R.array.anc_referral_facility_array),
         required = false,
     )
     private val hrpConfirm = FormElement(
-        id = 25, inputType = InputType.RADIO, title = "Is HRP Confirmed?", entries = arrayOf(
-            "No", "Yes",
-        ), required = false, hasDependants = true
+        id = 25, inputType = InputType.RADIO, title = "Is HRP Confirmed?",
+        arrayId = R.array.anc_confirmation_array1,
+        entries = resources.getStringArray(R.array.anc_confirmation_array1),
+        required = false, hasDependants = true
     )
     private val hrpConfirmedBy = FormElement(
         id = 26,
         inputType = InputType.DROPDOWN,
         title = "Who had identified as HRP?",
-        entries = arrayOf(
-            "ANM",
-            "CHO",
-            "PHC – MO",
-            "Specialist at Higher Facility",
-        ),
+        arrayId = R.array.anc_confirmed_by_array,
+        entries = resources.getStringArray(R.array.anc_confirmed_by_array),
         required = true,
     )
     private val maternalDeath = FormElement(
-        id = 27, inputType = InputType.RADIO, title = "Maternal Death", entries = arrayOf(
-            "No", "Yes",
-        ), required = false, hasDependants = true
+        id = 27, inputType = InputType.RADIO, title = "Maternal Death",
+        arrayId = R.array.anc_confirmation_array1,
+        entries = resources.getStringArray(R.array.anc_confirmation_array1),
+        required = false, hasDependants = true
     )
     private val maternalDeathProbableCause = FormElement(
         id = 28,
         inputType = InputType.DROPDOWN,
         title = "Probable Cause of Death",
-        entries = arrayOf(
-            "ECLAMPSIA", "HAEMORRHAGE", "HIGH FEVER", "ABORTION", "OTHER"
-        ),
+        arrayId = R.array.anc_death_cause_array,
+        entries = resources.getStringArray(R.array.anc_death_cause_array),
         required = true,
         hasDependants = true
     )
@@ -299,9 +291,8 @@ class PregnantWomanAncVisitDataset(
         id = 31,
         inputType = InputType.RADIO,
         title = "Has the pregnant woman delivered?",
-        entries = arrayOf(
-            "Yes", "No",
-        ),
+        arrayId = R.array.anc_confirmation_array,
+        entries = resources.getStringArray(R.array.anc_confirmation_array),
         required = false,
     )
 
@@ -415,9 +406,8 @@ class PregnantWomanAncVisitDataset(
             isAborted.value =
                 if (savedAnc.isAborted) isAborted.entries!!.last() else isAborted.entries!!.first()
             if (savedAnc.isAborted) {
-                abortionType.value = abortionType.getStringFromPosition(savedAnc.abortionTypeId)
-                abortionFacility.value =
-                    abortionFacility.getStringFromPosition(savedAnc.abortionFacilityId)
+                abortionType.value = getLocalValueInArray(abortionType.arrayId, savedAnc.abortionType)
+                abortionFacility.value = getLocalValueInArray(abortionFacility.arrayId, saved.abortionFacility)
                 abortionDate.value = savedAnc.abortionDate?.let { getDateFromLong(it) }
                 list.addAll(
                     list.indexOf(isAborted) + 1,
@@ -431,9 +421,8 @@ class PregnantWomanAncVisitDataset(
             pulseRate.value = savedAnc.pulseRate
             hb.value = savedAnc.hb?.toString()
             fundalHeight.value = savedAnc.fundalHeight?.toString()
-            urineAlbumin.value = urineAlbumin.getStringFromPosition(savedAnc.urineAlbuminId)
-            randomBloodSugarTest.value =
-                randomBloodSugarTest.getStringFromPosition(savedAnc.randomBloodSugarTestId)
+            urineAlbumin.value = getLocalValueInArray(urineAlbumin.arrayId, saved.urineAlbumin)
+            randomBloodSugarTest.value = getLocalValueInArray(randomBloodSugarTest.arrayId, saved.randomBloodSugarTest)
             dateOfTTOrTd1.value = regis.tt1?.let { getDateFromLong(it) }
             dateOfTTOrTd2.value = regis.tt2?.let { getDateFromLong(it) }
             dateOfTTOrTdBooster.value = regis.ttBooster?.let { getDateFromLong(it) }
@@ -443,8 +432,7 @@ class PregnantWomanAncVisitDataset(
                 anyHighRisk.value =
                     if (it) anyHighRisk.entries!!.last() else anyHighRisk.entries!!.first()
                 if (it) {
-                    highRiskCondition.value =
-                        highRiskCondition.getStringFromPosition(savedAnc.highRiskId)
+                    highRiskCondition.value = getLocalValueInArray(highRiskCondition.arrayId, saved.highRisk)
                     list.add(list.indexOf(anyHighRisk) + 1, highRiskCondition)
                     if (highRiskCondition.value == highRiskCondition.entries!!.last()) {
                         otherHighRiskCondition.value = savedAnc.otherHighRisk
@@ -453,13 +441,11 @@ class PregnantWomanAncVisitDataset(
                 }
             }
 
-            highRiskReferralFacility.value =
-                highRiskReferralFacility.getStringFromPosition(savedAnc.referralFacilityId)
+            highRiskReferralFacility.value = getLocalValueInArray(highRiskReferralFacility.arrayId, saved.referralFacility)
             hrpConfirm.value =
                 savedAnc.hrpConfirmed?.let { if (it) hrpConfirm.entries!!.last() else hrpConfirm.entries!!.first() }
             if (savedAnc.hrpConfirmed == true) {
-                hrpConfirmedBy.value =
-                    hrpConfirmedBy.getStringFromPosition(savedAnc.hrpConfirmedById)
+                hrpConfirmedBy.value = getLocalValueInArray(hrpConfirmedBy.arrayId, saved.hrpConfirmedBy)
                 list.add(list.indexOf(hrpConfirm) + 1, hrpConfirmedBy)
             }
             savedAnc.maternalDeath?.let {
@@ -467,7 +453,7 @@ class PregnantWomanAncVisitDataset(
                     if (it) maternalDeath.entries!!.last() else maternalDeath.entries!!.first()
                 if (it) {
                     maternalDeathProbableCause.value =
-                        maternalDeathProbableCause.getStringFromPosition(savedAnc.maternalDeathProbableCauseId)
+                        getLocalValueInArray(maternalDeathProbableCause.arrayId, saved.maternalDeathProbableCause)
                     maternalDateOfDeath.value =
                         savedAnc.deathDate?.let { it1 -> getDateFromLong(it1) }
                     list.addAll(
