@@ -5,7 +5,6 @@ import android.net.Uri
 import android.text.InputType
 import android.util.Range
 import android.widget.LinearLayout
-import androidx.core.text.isDigitsOnly
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.helpers.Languages
@@ -110,46 +109,50 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
         hasSpeechToText = true,
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS,
     )
-    val ageUnit = FormElement(
-        id = 5,
-        inputType = DROPDOWN,
-        title = resources.getString(R.string.nbr_nb_age_unit),
-        arrayId = -1,
-        entries = resources.getStringArray(R.array.nbr_age_unit_array),
-        required = true,
-        hasDependants = true,
-    )
+
+    //    val ageUnit = FormElement(
+//        id = 5,
+//        inputType = DROPDOWN,
+//        title = resources.getString(R.string.nbr_nb_age_unit),
+//        arrayId = -1,
+//        entries = resources.getStringArray(R.array.nbr_age_unit_array),
+//        required = true,
+//        hasDependants = true,
+//    )
     private val agePopup = FormElement(
         id = 115,
         inputType = org.piramalswasthya.sakhi.model.InputType.AGE_PICKER,
-        title = "AGE",
+        title = resources.getString(R.string.nbr_age),
+        subtitle = resources.getString(R.string.nbr_dob),
         arrayId = -1,
         required = true,
         allCaps = true,
         hasSpeechToText = true,
+        hasDependants = true,
         etInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
     )
-    val age = FormElement(
-        id = 7,
-        inputType = EDIT_TEXT,
-        title = resources.getString(R.string.nbr_age),
-        arrayId = -1,
-        required = true,
-        hasDependants = true,
-        etMaxLength = 2,
-        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
-        max = Konstants.maxAgeForGenBen.toLong(),
-        min = Konstants.minAgeForGenBen.toLong(),
-    )
-    val dob = FormElement(
-        id = 8,
-        inputType = DATE_PICKER,
-        title = resources.getString(R.string.nbr_dob),
-        arrayId = -1,
-        required = true,
-        showYearFirstInDatePicker = true,
-        hasDependants = true,
-    )
+
+    //    val age = FormElement(
+//        id = 7,
+//        inputType = EDIT_TEXT,
+//        title = resources.getString(R.string.nbr_age),
+//        arrayId = -1,
+//        required = true,
+//        hasDependants = true,
+//        etMaxLength = 2,
+//        etInputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL,
+//        max = Konstants.maxAgeForGenBen.toLong(),
+//        min = Konstants.minAgeForGenBen.toLong(),
+//    )
+//    val dob = FormElement(
+//        id = 8,
+//        inputType = DATE_PICKER,
+//        title = resources.getString(R.string.nbr_dob),
+//        arrayId = -1,
+//        required = true,
+//        showYearFirstInDatePicker = true,
+//        hasDependants = true,
+//    )
     val gender = FormElement(
         id = 9,
         inputType = RADIO,
@@ -421,9 +424,10 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             dateOfReg,
             firstName,
             lastName,
-            dob,
-            age,
-            ageUnit,
+            agePopup,
+//            dob,
+//            age,
+//            ageUnit,
             gender,
             fatherName,
             motherName,
@@ -441,9 +445,10 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             dateOfReg,
             firstName,
             lastName,
-            dob,
-            age,
-            ageUnit,
+            agePopup,
+//            dob,
+//            age,
+//            ageUnit,
             gender,
             maritalStatus,
             fatherName,
@@ -462,9 +467,10 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             dateOfReg.value = getDateFromLong(saved.regDate)
             firstName.value = saved.firstName
             lastName.value = saved.lastName
-            dob.value = getDateFromLong(saved.dob)
-            age.value = getAgeFromDob(saved.dob).toString()
-            ageUnit.value = ageUnit.getStringFromPosition(saved.ageUnitId)
+            agePopup.value = getDateFromLong(saved.dob)
+//            dob.value = getDateFromLong(saved.dob)
+//            age.value = getAgeFromDob(saved.dob).toString()
+//            ageUnit.value = ageUnit.getStringFromPosition(saved.ageUnitId)
             gender.value = gender.getStringFromPosition(saved.genderId)
             fatherName.value = saved.fatherName
             motherName.value = saved.motherName
@@ -563,7 +569,11 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             spouseName.required = false
 
         }
-        ageAtMarriage.value?.takeIf { it.isNotEmpty() && it == age.value }?.let {
+        ageAtMarriage.value?.takeIf {
+            it.isNotEmpty() && it == (getAgeFromDob(
+                getLongFromDate(agePopup.value)
+            )).toString()
+        }?.let {
             if (!list.contains(dateOfMarriage))
                 list.add(list.indexOf(ageAtMarriage) + 1, dateOfMarriage)
         }
@@ -579,7 +589,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
 //        if (ageUnit.value == ageUnit.entries?.last() && (age.value?.toInt() ?: 0) in 3..5) {
 //            list.add((list.indexOf(rchId)), childRegisteredAtAwc)
 //        }
-        if (ageUnit.value == ageUnit.entries?.last() && (age.value?.toInt() ?: 0) in 4..14) {
+        if ((getAgeFromDob(getLongFromDate(agePopup.value))) in 4..14) {
             list.add((list.indexOf(rchId)), childRegisteredAtSchool)
         }
         if (childRegisteredAtSchool.value == childRegisteredAtSchool.entries?.first()) list.add(
@@ -627,9 +637,10 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             dateOfReg,
             firstName,
             lastName,
-            dob,
-            age,
-            ageUnit,
+            agePopup,
+//            dob,
+//            age,
+//            ageUnit,
             gender,
             maritalStatus,
             fatherName,
@@ -656,20 +667,23 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                 contactNumber.inputType = TEXT_VIEW
             }
         }
-        ageUnit.apply {
-            inputType = TEXT_VIEW
-            value = ageUnit.entries!!.last()
-        }
-        dob.min = getHoFMinDobMillis()
-        dob.max = getHofMaxDobMillis()
-        age.min = Konstants.minAgeForGenBen.toLong().also {
-            minAgeYear = it.toInt()
-        }
-        age.max = Konstants.maxAgeForGenBen.toLong().also {
-            maxAgeYear = it.toInt()
-        }
+
+        agePopup.min = getHoFMinDobMillis()
+        agePopup.max = getHofMaxDobMillis()
 
 
+//        ageUnit.apply {
+//            inputType = TEXT_VIEW
+//            value = ageUnit.entries!!.last()
+//        }
+//        dob.min = getHoFMinDobMillis()
+//        dob.max = getHofMaxDobMillis()
+//        age.min = Konstants.minAgeForGenBen.toLong().also {
+//            minAgeYear = it.toInt()
+//        }
+//        age.max = Konstants.maxAgeForGenBen.toLong().also {
+//            maxAgeYear = it.toInt()
+//        }
 
 
         ben?.takeIf { !it.isDraft }?.let { saved ->
@@ -677,9 +691,10 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             dateOfReg.value = getDateFromLong(saved.regDate)
             firstName.value = saved.firstName
             lastName.value = saved.lastName
-            dob.value = getDateFromLong(saved.dob)
-            age.value = getAgeFromDob(saved.dob).toString()
-            ageUnit.value = ageUnit.getStringFromPosition(saved.ageUnitId)
+            agePopup.value = getDateFromLong(saved.dob)
+//            dob.value = getDateFromLong(saved.dob)
+//            age.value = getAgeFromDob(saved.dob).toString()
+//            ageUnit.value = ageUnit.getStringFromPosition(saved.ageUnitId)
             gender.value = gender.getStringFromPosition(saved.genderId)
             fatherName.value = saved.fatherName
             motherName.value = saved.motherName
@@ -757,7 +772,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
 //        if (ageUnit.value == ageUnit.entries?.last() && (age.value?.toInt() ?: 0) in 3..5) {
 //            list.add((list.indexOf(rchId)), childRegisteredAtAwc)
 //        }
-        if (ageUnit.value == ageUnit.entries?.last() && (age.value?.toInt() ?: 0) in 4..14) {
+        if ((getAgeFromDob(getLongFromDate(agePopup.value))) in 4..14) {
             list.add((list.indexOf(rchId)), childRegisteredAtSchool)
         }
         if (childRegisteredAtSchool.value == childRegisteredAtSchool.entries?.first()) list.add(
@@ -781,10 +796,10 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             dateOfReg,
             firstName,
             lastName,
-//            agePopup,
-            dob,
-            age,
-            ageUnit,
+            agePopup,
+//            dob,
+//            age,
+//            ageUnit,
             gender,
             maritalStatus,
             fatherName,
@@ -801,7 +816,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
         this.hof = hoF
         if (ben == null) {
             dateOfReg.value = getCurrentDateString()
-            ageUnit.value = ageUnit.entries!!.last()
+//            ageUnit.value = ageUnit.entries!!.last()
             mobileNoOfRelation.value = mobileNoOfRelation.entries!![4]
             contactNumber.value = familyHeadPhoneNo
             community.value = hoF?.communityId?.let { community.getStringFromPosition(it) }
@@ -826,8 +841,11 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             if (relationToHeadId == relationToHead.entries!!.lastIndex) {
                 list.add(list.indexOf(relationToHead) + 1, otherRelationToHead)
             }
-            dob.min = getMinDobMillis()
-            dob.max = System.currentTimeMillis()
+
+            agePopup.min = getMinDobMillis()
+            agePopup.max = System.currentTimeMillis()
+//            dob.min = getMinDobMillis()
+//            dob.max = System.currentTimeMillis()
             if (relationToHeadId == 4 || relationToHeadId == 5) hoF?.let {
                 setUpForSpouse(it, hoFSpouse)
             }
@@ -848,9 +866,10 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             dateOfReg.value = getDateFromLong(saved.regDate)
             firstName.value = saved.firstName
             lastName.value = saved.lastName
-            dob.value = getDateFromLong(saved.dob)
-            age.value = getAgeFromDob(saved.dob).toString()
-            ageUnit.value = ageUnit.getStringFromPosition(saved.ageUnitId)
+            agePopup.value = getDateFromLong(saved.dob)
+//            dob.value = getDateFromLong(saved.dob)
+//            age.value = getAgeFromDob(saved.dob).toString()
+//            ageUnit.value = ageUnit.getStringFromPosition(saved.ageUnitId)
             gender.value = gender.getStringFromPosition(saved.genderId)
             fatherName.value = saved.fatherName
             motherName.value = saved.motherName
@@ -933,7 +952,11 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             spouseName.required = false
 
         }
-        ageAtMarriage.value?.takeIf { it.isNotEmpty() && it == age.value }?.let {
+        ageAtMarriage.value?.takeIf {
+            it.isNotEmpty() && it == (getAgeFromDob(
+                getLongFromDate(agePopup.value)
+            )).toString()
+        }?.let {
             if (!list.contains(dateOfMarriage))
                 list.add(list.indexOf(ageAtMarriage) + 1, dateOfMarriage)
         }
@@ -949,7 +972,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
 //        if (ageUnit.value == ageUnit.entries?.last() && (age.value?.toInt() ?: 0) in 3..5) {
 //            list.add((list.indexOf(rchId)), childRegisteredAtAwc)
 //        }
-        if (ageUnit.value == ageUnit.entries?.last() && (age.value?.toInt() ?: 0) in 4..14) {
+        if ((getAgeFromDob(getLongFromDate(agePopup.value))) in 4..14) {
             list.add((list.indexOf(rchId)), childRegisteredAtSchool)
         }
         if (childRegisteredAtSchool.value == childRegisteredAtSchool.entries?.first()) list.add(
@@ -979,8 +1002,13 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             hoFAge,
             hoFSpouseAge
         )) - Konstants.minAgeForGenBen
-        age.max = maxAge.toLong()
-        dob.min = Calendar.getInstance().setToStartOfTheDay().let {
+//        age.max = maxAge.toLong()
+//        dob.min = Calendar.getInstance().setToStartOfTheDay().let {
+//            it.add(Calendar.YEAR, -1 * maxAge)
+//            it.timeInMillis
+//        }
+
+        agePopup.min = Calendar.getInstance().setToStartOfTheDay().let {
             it.add(Calendar.YEAR, -1 * maxAge)
             it.timeInMillis
         }
@@ -991,11 +1019,15 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
 
     private fun setUpForParents(hoF: BenRegCache, benGender: Gender) {
         val hoFAge = getAgeFromDob(hoF.dob)
-        ageUnit.value = ageUnit.entries!!.last()
-        ageUnit.inputType = TEXT_VIEW
+//        ageUnit.value = ageUnit.entries!!.last()
+//        ageUnit.inputType = TEXT_VIEW
         val minAge = hoFAge + Konstants.minAgeForGenBen
-        age.min = minAge.toLong()
-        dob.max = Calendar.getInstance().setToStartOfTheDay().let {
+//        age.min = minAge.toLong()
+//        dob.max = Calendar.getInstance().setToStartOfTheDay().let {
+//            it.add(Calendar.YEAR, -1 * minAge)
+//            it.timeInMillis
+//        }
+        agePopup.max = Calendar.getInstance().setToStartOfTheDay().let {
             it.add(Calendar.YEAR, -1 * minAge)
             it.timeInMillis
         }
@@ -1027,33 +1059,33 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                 husbandName.value = "${hoFSpouse.firstName} ${hoFSpouse.lastName ?: ""}"
                 husbandName.inputType = TEXT_VIEW
             }
-            ageUnit.value = ageUnit.entries!!.last()
-            ageUnit.inputType = TEXT_VIEW
+//            ageUnit.value = ageUnit.entries!!.last()
+//            ageUnit.inputType = TEXT_VIEW
             maritalStatus.value = maritalStatus.getStringFromPosition(2)
             maritalStatus.inputType = TEXT_VIEW
             ageAtMarriage.inputType = TEXT_VIEW
             timeStampDateOfMarriageFromSpouse = hoFSpouse.genDetails?.marriageDate
-            dob.min = getHoFMinDobMillis()
-            dob.max = getHofMaxDobMillis()
-            age.min = Konstants.minAgeForGenBen.toLong().also {
-                minAgeYear = it.toInt()
-            }
-            age.max = Konstants.maxAgeForGenBen.toLong().also {
-                maxAgeYear = it.toInt()
-            }
+//            dob.min = getHoFMinDobMillis()
+//            dob.max = getHofMaxDobMillis()
+//            age.min = Konstants.minAgeForGenBen.toLong().also {
+//                minAgeYear = it.toInt()
+//            }
+//            age.max = Konstants.maxAgeForGenBen.toLong().also {
+//                maxAgeYear = it.toInt()
+//            }
+            agePopup.min = getHoFMinDobMillis()
+            agePopup.max = getHofMaxDobMillis()
         }
     }
 
     private fun hasThirdPage(): Boolean {
-        return (ageUnit.value == ageUnit.entries!!.last()) &&
-                age.value != null &&
-                age.value!!.toInt() >= Konstants.minAgeForGenBen &&
-                (gender.value == gender.entries!![1])
+        return ((getAgeFromDob(getLongFromDate(agePopup.value))) >= Konstants.minAgeForGenBen &&
+                (gender.value == gender.entries!![1]))
 
     }
 
     private fun isKid(): Boolean {
-        return (ageUnit.value != ageUnit.entries!!.last() || age.value!!.toInt() < 15)
+        return ((getAgeFromDob(getLongFromDate(agePopup.value))) < 15)
     }
 
     //////////////////////////////////////////Second Page///////////////////////////////////////////
@@ -1338,30 +1370,30 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                 validateAllCapsOrSpaceOnEditText(lastName)
             }
 
-            dob.id -> {
+            agePopup.id -> {
                 assignValuesToAgeAndAgeUnitFromDob(
-                    getLongFromDate(dob.value),
-                    age,
-                    ageUnit,
+                    getLongFromDate(agePopup.value),
+//                    age,
+//                    ageUnit,
                     ageAtMarriage,
                     timeStampDateOfMarriageFromSpouse
                 )
-                handleForAgeDob(formId = dob.id)
+                handleForAgeDob(formId = agePopup.id)
 
             }
 
-            ageUnit.id, age.id -> {
-                if (age.value.isNullOrEmpty() || ageUnit.value == null) {
-                    validateEmptyOnEditText(age)
-                    validateEmptyOnEditText(ageUnit)
-                    return -1
-                }
-                handleForAgeDob(formId = age.id)
-            }
+//            ageUnit.id, age.id -> {
+//                if (age.value.isNullOrEmpty() || ageUnit.value == null) {
+//                    validateEmptyOnEditText(age)
+//                    validateEmptyOnEditText(ageUnit)
+//                    return -1
+//                }
+//                handleForAgeDob(formId = age.id)
+//            }
 
             ageAtMarriage.id -> {
 
-                age.value?.takeIf { it.isNotEmpty() && it.isDigitsOnly() && !ageAtMarriage.value.isNullOrEmpty() }
+                (getAgeFromDob(getLongFromDate(agePopup.value))).takeIf { it > 0 && !ageAtMarriage.value.isNullOrEmpty() }
                     ?.toInt()?.let {
                         validateEmptyOnEditText(ageAtMarriage)
                         validateIntMinMax(ageAtMarriage)
@@ -1626,66 +1658,73 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
     }
 
     private fun handleForAgeDob(formId: Int): Int {
-        if (formId == age.id) {
-            when (ageUnit.value) {
-                ageUnit.entries?.get(0) -> {
-                    age.min = 0
-                    age.max = 31
-                }
+        if (formId == agePopup.id) {
+//            when (ageUnit.value) {
+//                ageUnit.entries?.get(0) -> {
+//                    age.min = 0
+//                    age.max = 31
+//                }
+//
+//                ageUnit.entries?.get(1) -> {
+//                    age.min = 1
+//                    age.max = 11
+//                }
+//
+//                ageUnit.entries?.get(2) -> {
+//                    age.min = minAgeYear.toLong()
+//                    age.max = maxAgeYear.toLong()
+//                }
+//
+//                else -> return -1
+//            }
 
-                ageUnit.entries?.get(1) -> {
-                    age.min = 1
-                    age.max = 11
-                }
+//            validateIntMinMax(age)
+            if (agePopup.errorText == null) {
+                ageAtMarriage.value = null
+                val ageAtMarriageMax = if (isBenParentOfHoF())
+                    getAgeFromDob(getLongFromDate(agePopup.value)) - getAgeFromDob(
+                        hof!!.dob
+                    ) else getAgeFromDob(getLongFromDate(agePopup.value))
+                ageAtMarriage.max = ageAtMarriageMax.toLong()
 
-                ageUnit.entries?.get(2) -> {
-                    age.min = minAgeYear.toLong()
-                    age.max = maxAgeYear.toLong()
-                }
-
-                else -> return -1
             }
 
-            validateIntMinMax(age)
-            if (age.errorText == null) {
-
-                val cal = Calendar.getInstance()
-                when (ageUnit.value) {
-                    ageUnit.entries?.get(2) -> {
-                        ageAtMarriage.value = null
-                        ageAtMarriage.max =
-                            if (isBenParentOfHoF())
-                                age.value!!.toLong() - getAgeFromDob(
-                                    hof!!.dob
-                                ) else age.value!!.toLong()
-                        cal.add(
-                            Calendar.YEAR, -1 * age.value!!.toInt()
-                        )
-                    }
-
-                    ageUnit.entries?.get(1) -> {
-                        cal.add(
-                            Calendar.MONTH, -1 * age.value!!.toInt()
-                        )
-                    }
-
-                    ageUnit.entries?.get(0) -> {
-                        cal.add(
-                            Calendar.DAY_OF_YEAR, -1 * age.value!!.toInt()
-                        )
-                    }
-                }
-                val year = cal.get(Calendar.YEAR)
-                val month = cal.get(Calendar.MONTH) + 1
-                val day = cal.get(Calendar.DAY_OF_MONTH)
-                val newDob =
-                    "${if (day > 9) day else "0$day"}-${if (month > 9) month else "0$month"}-$year"
-                if (dob.value != newDob) {
-                    dob.value = newDob
-                    dob.errorText = null
-                }
-            }
+//                when (ageUnit.value) {
+//                    ageUnit.entries?.get(2) -> {
+//                        ageAtMarriage.value = null
+//                        ageAtMarriage.max =
+//                            if (isBenParentOfHoF())
+//                                age.value!!.toLong() - getAgeFromDob(
+//                                    hof!!.dob
+//                                ) else age.value!!.toLong()
+//                        cal.add(
+//                            Calendar.YEAR, -1 * age.value!!.toInt()
+//                        )
+//                    }
+//
+//                    ageUnit.entries?.get(1) -> {
+//                        cal.add(
+//                            Calendar.MONTH, -1 * age.value!!.toInt()
+//                        )
+//                    }
+//
+//                    ageUnit.entries?.get(0) -> {
+//                        cal.add(
+//                            Calendar.DAY_OF_YEAR, -1 * age.value!!.toInt()
+//                        )
         }
+//                }
+//                val year = cal.get(Calendar.YEAR)
+//                val month = cal.get(Calendar.MONTH) + 1
+//                val day = cal.get(Calendar.DAY_OF_MONTH)
+//                val newDob =
+//                    "${if (day > 9) day else "0$day"}-${if (month > 9) month else "0$month"}-$year"
+//                if (dob.value != newDob) {
+//                    dob.value = newDob
+//                    dob.errorText = null
+//                }
+//            }
+//        }
         val listChanged = if (hasThirdPage()) triggerDependants(
             source = rchId,
             addItems = listOf(reproductiveStatus),
@@ -1699,17 +1738,17 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             )
         } != -1
         val listChanged2 = triggerDependants(
-            age = age.value!!.toInt(),
-            ageUnit = ageUnit,
+            age = getAgeFromDob(getLongFromDate(agePopup.value)),
+//            ageUnit = ageUnit,
             ageTriggerRange = Range(4, 14),
-            ageUnitTriggerIndex = 2,
+//            ageUnitTriggerIndex = 2,
             target = childRegisteredAtSchool,
             placeAfter = religion,
             targetSideEffect = listOf(typeOfSchool)
         ) != -1
         val listChanged3 =
             if (maritalStatus.inputType == TEXT_VIEW) -1 else {
-                if (ageUnit.value != ageUnit.entries!!.last() || age.value!!.toInt() <= Konstants.maxAgeForAdolescent) triggerDependants(
+                if (getAgeFromDob(getLongFromDate(agePopup.value)) <= Konstants.maxAgeForAdolescent) triggerDependants(
                     source = rchId,
                     addItems = listOf(birthCertificateNumber, placeOfBirth),
                     removeItems = listOf(
@@ -1751,20 +1790,22 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             ben.regDate = getLongFromDate(dateOfReg.value!!)
             ben.firstName = firstName.value
             ben.lastName = lastName.value
-            ben.dob = getLongFromDate(dob.value!!)
-            ben.age = age.value?.toInt() ?: 0
-            ben.ageUnitId = when (ageUnit.value) {
-                ageUnit.entries!![2] -> 3
-                ageUnit.entries!![1] -> 2
-                ageUnit.entries!![0] -> 1
-                else -> 0
-            }
-            ben.ageUnit = when (ben.ageUnitId) {
-                3 -> AgeUnit.YEARS
-                2 -> AgeUnit.MONTHS
-                1 -> AgeUnit.DAYS
-                else -> null
-            }
+            ben.dob = getLongFromDate(agePopup.value!!)
+            ben.age = (getAgeFromDob(getLongFromDate(agePopup.value)))
+            ben.ageUnitId = 3
+            ben.ageUnit = AgeUnit.YEARS
+//            ben.ageUnitId = when (ageUnit.value) {
+//                ageUnit.entries!![2] -> 3
+//                ageUnit.entries!![1] -> 2
+//                ageUnit.entries!![0] -> 1
+//                else -> 0
+//            }
+//            ben.ageUnit = when (ben.ageUnitId) {
+//                3 -> AgeUnit.YEARS
+//                2 -> AgeUnit.MONTHS
+//                1 -> AgeUnit.DAYS
+//                else -> null
+//            }
             ben.isAdult = ben.ageUnit == AgeUnit.YEARS && ben.age >= 15
             ben.isKid = !ben.isAdult
 

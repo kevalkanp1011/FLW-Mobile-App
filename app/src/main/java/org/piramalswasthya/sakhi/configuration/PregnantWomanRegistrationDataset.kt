@@ -8,6 +8,7 @@ import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.helpers.getWeeksOfPregnancy
 import org.piramalswasthya.sakhi.model.BenBasicCache
 import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.EligibleCoupleRegCache
 import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.HRPPregnantAssessCache
 import org.piramalswasthya.sakhi.model.InputType
@@ -372,7 +373,20 @@ class PregnantWomanRegistrationDataset(
         showHighRisk = false
     )
 
+    private val assesLabel = FormElement(
+        id = 38,
+        inputType = InputType.HEADLINE,
+        title = resources.getString(R.string.assess_for_high_risk_conditions_in_the_pregnant_women),
+        required = false
+    )
+
     private var dateOfBirth = 0L
+
+    private var noOfDeliveriesdbVal: String? = null
+
+    private var timeLessThan18mdbVal: String? = null
+
+    private var badObstetricdbVal: String? = null
 
     private var heightShortdbVal: String? = null
 
@@ -382,6 +396,7 @@ class PregnantWomanRegistrationDataset(
         ben: BenRegCache?,
         assess: HRPPregnantAssessCache?,
         saved: PregnantWomanRegistrationCache?,
+        ecr: EligibleCoupleRegCache?,
         lastTrackTimestamp: Long? = null
     ) {
         val list = mutableListOf(
@@ -405,6 +420,7 @@ class PregnantWomanRegistrationDataset(
 //            dateOfhbsAgTestDone,
             pastIllness,
             isFirstPregnancy,
+            assesLabel,
             childInfoLabel,
             noOfDeliveries,
             timeLessThan18m,
@@ -454,16 +470,27 @@ class PregnantWomanRegistrationDataset(
         lastTrackTimestamp?.let {
             dateOfReg.min = it
         }
+        // fetching high risk assess cache details and assigning them
         assess?.let {
             noOfDeliveries.value = getLocalValueInArray(R.array.yes_no, it.noOfDeliveries)
+            noOfDeliveriesdbVal = getLocalValueInArray(R.array.yes_no, it.noOfDeliveries)
+
             timeLessThan18m.value = getLocalValueInArray(R.array.yes_no, it.timeLessThan18m)
+            timeLessThan18mdbVal = getLocalValueInArray(R.array.yes_no, it.timeLessThan18m)
+
             heightShort.value = getLocalValueInArray(R.array.yes_no, it.heightShort)
             heightShortdbVal = getLocalValueInArray(R.array.yes_no, it.heightShort)
-            ageCheck.value = getLocalValueInArray(R.array.yes_no, it.age)
+
+//            ageCheck.value = getLocalValueInArray(R.array.yes_no, it.age)
+
             rhNegative.value = getLocalValueInArray(R.array.yes_no, it.rhNegative)
+
             homeDelivery.value = getLocalValueInArray(R.array.yes_no, it.homeDelivery)
             homeDeliverydbVal = getLocalValueInArray(R.array.yes_no, it.homeDelivery)
+
             badObstetric.value = getLocalValueInArray(R.array.yes_no, it.badObstetric)
+            badObstetricdbVal = getLocalValueInArray(R.array.yes_no, it.badObstetric)
+
             multiplePregnancy.value = getLocalValueInArray(R.array.yes_no, it.multiplePregnancy)
             // if there is valid lmp date auto populating edd and weeks of pregnancy
             lmp.value = getDateFromLong(it.lmpDate)
@@ -610,6 +637,30 @@ class PregnantWomanRegistrationDataset(
             }
         }
 
+        ecr?.let {
+            // if no of children in ec registration is
+            // > 0 => setting is first pregnancy false and no of pregnancies value
+            // else => setting is first pregnancy true
+            if (ecr.noOfChildren > 0) {
+                isFirstPregnancy.value = resources.getStringArray(R.array.yes_no)[1]
+                isFirstPregnancy.isEnabled = false
+                totalNumberOfPreviousPregnancy.min = ecr.noOfChildren.toLong()
+                if (saved == null) {
+                    list.addAll(
+                        list.indexOf(isFirstPregnancy) + 1,
+                        listOf(totalNumberOfPreviousPregnancy, complicationsDuringLastPregnancy)
+                    )
+                    totalNumberOfPreviousPregnancy.value = ecr.noOfChildren.toString()
+                }
+            } else {
+                isFirstPregnancy.value = resources.getStringArray(R.array.yes_no)[0]
+            }
+            // if no of children greater than 3 setting no of deliveries greater than 3 as true
+            if (ecr.noOfChildren > 3) {
+                noOfDeliveries.value = resources.getStringArray(R.array.yes_no)[0]
+                noOfDeliveries.isEnabled = false
+            }
+        }
 //        ben?.isHrpStatus?.let {
 //            if (it || isHighRisk()) {
 //                list.add(assignedAsHrpBy)
@@ -761,14 +812,29 @@ class PregnantWomanRegistrationDataset(
                     multiplePregnancy.isEnabled = false
                     homeDelivery.value = resources.getStringArray(R.array.yes_no)[1]
                     homeDelivery.isEnabled = false
+                    noOfDeliveries.value = resources.getStringArray(R.array.yes_no)[1]
+                    noOfDeliveries.isEnabled = false
+                    timeLessThan18m.value = resources.getStringArray(R.array.yes_no)[1]
+                    timeLessThan18m.isEnabled = false
+                    badObstetric.value = resources.getStringArray(R.array.yes_no)[1]
+                    badObstetric.isEnabled = false
                 } else {
                     multiplePregnancy.value = resources.getStringArray(R.array.yes_no)[0]
                     multiplePregnancy.isEnabled = false
                     homeDelivery.value = homeDeliverydbVal
                     homeDelivery.isEnabled = true
+                    noOfDeliveries.value = noOfDeliveriesdbVal
+                    noOfDeliveries.isEnabled = true
+                    timeLessThan18m.value = timeLessThan18mdbVal
+                    timeLessThan18m.isEnabled = true
+                    badObstetric.value = badObstetricdbVal
+                    badObstetric.isEnabled = true
                 }
                 handleListOnValueChanged(multiplePregnancy.id, 0)
                 handleListOnValueChanged(homeDelivery.id, 0)
+                handleListOnValueChanged(noOfDeliveries.id, 0)
+                handleListOnValueChanged(timeLessThan18m.id, 0)
+                handleListOnValueChanged(badObstetric.id, 0)
                 triggerDependants(
                     source = isFirstPregnancy,
                     passedIndex = index,

@@ -10,14 +10,14 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.helpers.filterBenList
 import org.piramalswasthya.sakhi.model.BenHealthIdDetails
-import org.piramalswasthya.sakhi.network.AmritApiService
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import javax.inject.Inject
 
 @HiltViewModel
 class AllBenViewModel @Inject constructor(
-    recordsRepo: RecordsRepo
+    recordsRepo: RecordsRepo,
+    private val benRepo:BenRepo
 ) : ViewModel() {
 
 
@@ -26,13 +26,6 @@ class AllBenViewModel @Inject constructor(
     val benList = allBenList.combine(filter){
        list, filter -> filterBenList(list, filter)
     }
-
-
-    @Inject
-    lateinit var benRepo:BenRepo
-
-    @Inject
-    lateinit var amritApiService: AmritApiService
 
     private val _abha = MutableLiveData<String?>()
     val abha: LiveData<String?>

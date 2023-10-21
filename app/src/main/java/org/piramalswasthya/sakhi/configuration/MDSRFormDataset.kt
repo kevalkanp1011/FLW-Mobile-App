@@ -2,99 +2,78 @@ package org.piramalswasthya.sakhi.configuration
 
 import android.content.Context
 import android.widget.LinearLayout
-import org.piramalswasthya.sakhi.model.FormInputOld
+import org.piramalswasthya.sakhi.R
+import org.piramalswasthya.sakhi.helpers.Languages
+import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.InputType
 import org.piramalswasthya.sakhi.model.MDSRCache
-import java.text.SimpleDateFormat
-import java.util.*
 
-class MDSRFormDataset(context: Context) {
+class MDSRFormDataset(
+    context: Context, currentLanguage: Languages
+) : Dataset(context, currentLanguage) {
 
-    companion object {
-        private fun getCurrentDate(): String {
-            val calendar = Calendar.getInstance()
-            val mdFormat =
-                SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
-            return mdFormat.format(calendar.time)
-        }
 
-        private fun getLongFromDate(dateString: String): Long {
-            val f = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
-            val date = f.parse(dateString)
-            return date?.time ?: throw IllegalStateException("Invalid date for dateReg")
-        }
-    }
-
-    fun mapValues(mdsrCache: MDSRCache) {
-        mdsrCache.dateOfDeath = getLongFromDate(dateOfDeath.value.value!!)
-        mdsrCache.address = address.value.value
-        mdsrCache.husbandName = husbandName.value.value
-        mdsrCache.causeOfDeath = if(causeOfDeath.value.value == "Maternal") 1 else 2
-        mdsrCache.reasonOfDeath = reasonOfDeath.value.value
-        mdsrCache.actionTaken = if(actionTaken.value.value == "Yes") 1 else 2
-        mdsrCache.investigationDate = investigationDate.value.value?.let { getLongFromDate(it) }
-        mdsrCache.blockMOSign = blockMOSign.value.value
-        mdsrCache.date = date.value.value?.let { getLongFromDate(it) }
-        mdsrCache.createdDate = System.currentTimeMillis()
-    }
-
-    private var mdsr: MDSRCache? = null
-
-    constructor(context: Context, mdsr: MDSRCache? = null) : this(context) {
-        this.mdsr = mdsr
-        //TODO(SETUP THE VALUES)
-    }
-
-    val dateOfDeath = FormInputOld(
+    private val dateOfDeath = FormElement(
+        id = 1,
         inputType = InputType.DATE_PICKER,
         title = "Date of death ",
         min = 0L,
         max = System.currentTimeMillis(),
         required = true
     )
-    val address = FormInputOld(
+    private val address = FormElement(
+        id = 2,
         inputType = InputType.TEXT_VIEW,
         title = "Address",
         required = false
     )
-    val husbandName = FormInputOld(
-        inputType = InputType.EDIT_TEXT,
+    private val husbandName = FormElement(
+        id = 3,
+        inputType = InputType.TEXT_VIEW,
         etMaxLength = 50,
         title = "Husband’s Name",
         required = false
     )
-    val causeOfDeath = FormInputOld(
+    private val causeOfDeath = FormElement(
+        id = 4,
         inputType = InputType.RADIO,
         title = "Cause of death",
         required = true,
         orientation = LinearLayout.VERTICAL,
+        hasDependants = true,
         entries = arrayOf("Maternal", "Non-maternal")
     )
-    val reasonOfDeath = FormInputOld(
+    private val reasonOfDeath = FormElement(
+        id = 5,
         inputType = InputType.EDIT_TEXT,
         title = "Specify Reason",
         required = true
     )
-    val investigationDate = FormInputOld(
+    private val investigationDate = FormElement(
+        id = 6,
         inputType = InputType.DATE_PICKER,
         title = "Date of field investigation",
         min = 0L,
         max = System.currentTimeMillis(),
         required = false
     )
-    val actionTaken = FormInputOld(
+    private val actionTaken = FormElement(
+        id = 7,
         inputType = InputType.RADIO,
         title = "Action Take",
         required = false,
         orientation = LinearLayout.VERTICAL,
         entries = arrayOf("Yes", "No")
     )
-    val blockMOSign = FormInputOld(
+    private val blockMOSign = FormElement(
+        id = 8,
         inputType = InputType.EDIT_TEXT,
         title = "Signature of MO I/C of the block",
         required = false
     )
-    val date = FormInputOld(
+    private val dateIc = FormElement(
+        id = 9,
         inputType = InputType.DATE_PICKER,
         min = 0L,
         max = System.currentTimeMillis(),
@@ -102,8 +81,63 @@ class MDSRFormDataset(context: Context) {
         required = false
     )
 
-    val firstPage by lazy {
-        listOf(dateOfDeath, address, husbandName, causeOfDeath, investigationDate, actionTaken,
-            blockMOSign, date)
+
+    suspend fun setUpPage(
+        ben: BenRegCache,
+        address: String,
+        saved: MDSRCache?
+    ) {
+        val list = mutableListOf(
+            dateOfDeath,
+            this.address,
+            husbandName,
+            causeOfDeath,
+            investigationDate,
+            actionTaken,
+            blockMOSign,
+            dateIc
+        )
+        this.address.value = address
+        husbandName.value = ben.genDetails?.spouseName
+        saved?.let { mdsr ->
+            dateOfDeath.value = mdsr.dateOfDeath?.let { getDateFromLong(it) }
+            this.address.value = mdsr.address
+            husbandName.value = mdsr.husbandName
+            causeOfDeath.value = mdsr.causeOfDeath
+            reasonOfDeath.value = mdsr.reasonOfDeath
+            investigationDate.value = mdsr.investigationDate?.let { getDateFromLong(it) }
+            actionTaken.value = mdsr.actionTaken?.let {
+                if (it) resources.getString(R.string.yes) else resources.getString(R.string.no)
+            }
+            blockMOSign.value = mdsr.blockMOSign
+            dateIc.value = mdsr.dateIc?.let { getDateFromLong(it) }
+        }
+        setUpPage(list)
+    }
+    override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
+        return when (formId) {
+            causeOfDeath.id -> triggerDependants(
+                source = causeOfDeath,
+                passedIndex = index,
+                triggerIndex = 0,
+                target = listOf(reasonOfDeath)
+            )
+
+            else -> -1
+        }
+    }
+    override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
+        (cacheModel as MDSRCache).let { mdsrCache ->
+            mdsrCache.dateOfDeath = getLongFromDate(dateOfDeath.value!!)
+            mdsrCache.address = address.value
+            mdsrCache.husbandName = husbandName.value
+            mdsrCache.causeOfDeath =causeOfDeath.value
+            mdsrCache.reasonOfDeath = reasonOfDeath.value
+            mdsrCache.actionTaken = actionTaken.value?.let { actionTaken.value == "Yes" }
+            mdsrCache.investigationDate = investigationDate.value?.let { getLongFromDate(it) }
+            mdsrCache.blockMOSign = blockMOSign.value
+            mdsrCache.dateIc = dateIc.value?.let { getLongFromDate(it) }
+            mdsrCache.createdDate = System.currentTimeMillis()
+        }
     }
 }

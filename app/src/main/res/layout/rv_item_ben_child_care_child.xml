@@ -6,12 +6,13 @@
     <data>
 
         <variable
-            name="item"
-            type="org.piramalswasthya.sakhi.model.BenWithHRPTListDomain" />
+            name="ben"
+            type="org.piramalswasthya.sakhi.model.BenBasicDomain" />
 
         <variable
             name="clickListener"
-            type="org.piramalswasthya.sakhi.adapters.HRPTListAdapter.HRPTClickListener" />
+            type="org.piramalswasthya.sakhi.adapters.ChildListAdapter.ChildListClickListener" />
+
 
     </data>
 
@@ -22,26 +23,38 @@
         android:layout_margin="@dimen/margin_normal"
         android:backgroundTint="?attr/colorPrimary"
         android:elevation="@dimen/padding_normal"
-        android:padding="@dimen/padding_wide"
         app:cardCornerRadius="@dimen/padding_normal"
         app:cardElevation="@dimen/padding_normal">
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:id="@+id/ll_title_hrp_tracking_bar"
+                android:id="@+id/ll_title_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorOnPrimary"
+                android:background="@color/read_only"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingHorizontal="@dimen/padding_tiny"
                 app:layout_constraintTop_toTopOf="parent">
 
+                <!--                <ImageView-->
+                <!--                    android:id="@+id/iv_hh_logo"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="0dp"-->
+                <!--                    android:paddingVertical="@dimen/padding_normal"-->
+                <!--                    android:src="@drawable/ic__hh"-->
+                <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--                    app:layout_constraintStart_toStartOf="parent"-->
+                <!--                    app:layout_constraintTop_toTopOf="parent"-->
+                <!--                    app:tint="?attr/colorPrimary" />-->
+
+
                 <TextView
-                    android:id="@+id/tv_hh_hrp_id"
+                    android:id="@+id/tv_hh_id"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -49,12 +62,28 @@
                     android:drawablePadding="@dimen/padding_small"
                     android:gravity="center_vertical"
                     android:padding="@dimen/padding_small"
-                    android:text="@{item.ben.benFullName}"
+                    android:text="@{ben.familyHeadName}"
                     android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     android:textColor="?attr/colorPrimaryVariant"
                     app:drawableLeftCompat="@drawable/ic__hh"
                     app:drawableTint="?attr/colorPrimary"
                     tools:text="Hello Meister" />
+
+                <Button
+                    android:id="@+id/btn_new_ben"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/margin_small"
+                    android:drawableStart="@drawable/ic_person"
+                    android:padding="@dimen/padding_normal"
+                    android:paddingHorizontal="@dimen/padding_tiny"
+                    android:text="@string/btn_rv_item_hh_add_ben"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                    android:visibility="gone"
+                    app:cornerRadius="@dimen/padding_normal"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_hh_id" />
+
                 <ImageView
                     android:id="@+id/iv_sync_state"
                     android:layout_width="24dp"
@@ -62,21 +91,21 @@
                     android:layout_gravity="center_vertical|end"
                     android:layout_marginHorizontal="@dimen/padding_small"
                     android:contentDescription="@string/iv_sync_state_tv"
-                    app:syncState="@{item.allSynced}"
+                    app:syncState="@{ben.syncState}"
                     tools:src="@drawable/ic_synced" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linear_hrp_tracking_Layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="@dimen/padding_normal"
-                app:layout_constraintTop_toBottomOf="@id/ll_title_hrp_tracking_bar">
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ll_title_bar">
 
                 <LinearLayout
-                    android:id="@+id/ll_ben_pwr_tracking_details"
+                    android:id="@+id/ll_ben_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:baselineAligned="false"
@@ -92,17 +121,17 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/tv_husband_name_ph"
+                            android:text="@string/name_ben"
                             android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
                             android:textColor="?attr/colorOnPrimary" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{item.ben.spouseName}"
+                            android:text="@{ben.benFullName}"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                             android:textColor="?attr/colorOnPrimary"
-                            tools:text="TextView" />
+                            tools:text="Lala Land" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -115,28 +144,76 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/age"
+                            android:text="@string/age_ben"
                             android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
                             android:textColor="?attr/colorOnPrimary" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{item.ben.age}"
+                            android:text="@{ben.age}"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                             android:textColor="?attr/colorOnPrimary"
-                            tools:text="TextView" />
+                            tools:text="45 Years" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="@dimen/padding_small">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/gender"
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                            android:textColor="?attr/colorOnPrimary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{ben.gender}"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnPrimary"
+                            tools:text="Female" />
                     </LinearLayout>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/ll_ben_pwr_tracking_details_2"
+                    android:id="@+id/ll_ben_details_2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:baselineAligned="false"
-                    android:orientation="horizontal">
+                    app:layout_constraintTop_toBottomOf="@+id/ll_ben_details">
 
+
+                    <LinearLayout
+                        android:id="@+id/ncd_father_name"
+                        showLayout="@{ben.fatherName!=null}"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:padding="@dimen/padding_small">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tv_father_name_ph"
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+                            android:textColor="?attr/colorOnPrimary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{ben.fatherName}"
+                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnPrimary"
+                            tools:text="Dummy" />
+                    </LinearLayout>
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -152,12 +229,12 @@
                             android:textColor="?attr/colorOnPrimary" />
 
                         <TextView
-                            benIdText="@{item.ben.benId}"
+                            benIdText="@{ben.benId}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                             android:textColor="?attr/colorOnPrimary"
-                            tools:text="TextView" />
+                            tools:text="Lala Land" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -170,180 +247,64 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/tv_mob_no_ph"
+                            android:text="@string/mobile_number"
                             android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
                             android:textColor="?attr/colorOnPrimary" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{item.ben.mobileNo}"
+                            android:text="@{ben.mobileNo}"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                             android:textColor="?attr/colorOnPrimary"
-                            tools:text="TextView" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:padding="@dimen/padding_small">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/tv_rch_id"
-                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                            android:textColor="?attr/colorOnPrimary" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{item.ben.rchId}"
-                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                            android:textColor="?attr/colorOnPrimary"
-                            tools:text="TextView" />
+                            tools:text="0123456789" />
                     </LinearLayout>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/ll_ben_pwr_tracking_details_3"
+                    android:id="@+id/ll_ben_details_3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal">
-
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/ll_ben_details_2">
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        rchId="@{ben}"
                         android:orientation="vertical"
                         android:padding="@dimen/padding_small">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/pregnancy_weeks"
+                            android:text="@string/rch_id_ben"
                             android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
                             android:textColor="?attr/colorOnPrimary" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{item.weeksOfPregnancy}"
+                            android:text="@{ben.rchId}"
                             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                             android:textColor="?attr/colorOnPrimary"
-                            tools:text="TextView" />
+                            tools:text="0123456789" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:padding="@dimen/padding_small">
+                    <Button
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="HBYC"
+                        android:onClick="@{() -> clickListener.onClickedHbnc(ben)}"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/pmsma_lmp"
-                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                            android:textColor="?attr/colorOnPrimary" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{item.lmpString}"
-                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                            android:textColor="?attr/colorOnPrimary"
-                            tools:text="TextView" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:padding="@dimen/padding_small">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/pmsma_edd"
-                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                            android:textColor="?attr/colorOnPrimary" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{item.eddString}"
-                            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                            android:textColor="?attr/colorOnPrimary"
-                            tools:text="TextView" />
-                    </LinearLayout>
                 </LinearLayout>
-
             </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/ll_btn_row"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/ll_title_hrp_tracking_bar"
-                app:layout_constraintTop_toBottomOf="@id/linear_hrp_tracking_Layout"
-                android:baselineAligned="false"
-                android:orientation="horizontal"
-                android:weightSum="3">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_form3"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_margin="@dimen/margin_small"
-                    android:visibility="invisible"
-                    android:onClick="@{()-> clickListener.onClickForm3(item)}"
-                    android:textColor="?attr/colorOnPrimary"
-                    tools:text="CBAC Form" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_form2"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_margin="@dimen/margin_small"
-                    android:visibility="invisible"
-                    android:onClick="@{()-> clickListener.onClickForm2(item)}"
-                    android:textColor="?attr/colorOnPrimary"
-                    tools:text="CBAC Form" />
-
-
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_form1"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAllCaps="true"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                    android:onClick="@{()-> clickListener.onClickForm1(item)}"
-                    android:layout_margin="@dimen/margin_small"
-                    android:visibility="invisible"
-                    android:textColor="?attr/colorOnPrimary"
-                    tools:text="CBAC Form" />
-
-
-            </LinearLayout>
-
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.cardview.widget.CardView>
 </layout>

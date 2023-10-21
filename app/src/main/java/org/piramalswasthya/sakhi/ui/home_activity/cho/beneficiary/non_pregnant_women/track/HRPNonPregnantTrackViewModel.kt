@@ -137,7 +137,13 @@ constructor(
                                     noOfDeliveries = nonPregAssessCache.noOfDeliveries,
                                     timeLessThan18m = nonPregAssessCache.timeLessThan18m,
                                     heightShort = nonPregAssessCache.heightShort,
-                                    age = nonPregAssessCache.age
+                                    age = nonPregAssessCache.age,
+                                    isHighRisk = (
+                                            nonPregAssessCache.noOfDeliveries == "Yes" ||
+                                            nonPregAssessCache.timeLessThan18m == "Yes" ||
+                                            nonPregAssessCache.heightShort == "Yes" ||
+                                            nonPregAssessCache.age == "Yes"
+                                            )
                                 )
                             }
                         }

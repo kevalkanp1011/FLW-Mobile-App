@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.HBNCDayGridAdapter
 import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 
 @AndroidEntryPoint
 class HbncDayListFragment : Fragment() {
@@ -56,6 +57,16 @@ class HbncDayListFragment : Fragment() {
             viewModel.dayList.collect{
                 iconAdapter.submitList(it)
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__child,
+                getString(R.string.hbnc_day_list)
+            )
         }
     }
 

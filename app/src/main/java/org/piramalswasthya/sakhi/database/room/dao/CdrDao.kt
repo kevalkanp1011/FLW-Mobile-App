@@ -15,8 +15,8 @@ interface CdrDao {
     @Query("select count(*) from CDR")
     suspend fun cdrCount(): Int
 
-    @Query("SELECT * FROM CDR WHERE benId =:benId AND hhId = :hhId LIMIT 1")
-    suspend fun getCDR(hhId: Long, benId: Long): CDRCache?
+    @Query("SELECT * FROM CDR WHERE benId =:benId LIMIT 1")
+    suspend fun getCDR(benId: Long): CDRCache?
 
     @Update
     suspend fun update(cdr: CDRCache)

@@ -1,14 +1,12 @@
 package org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration
 
-import android.app.Dialog
-import android.content.DialogInterface
+import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.piramalswasthya.sakhi.databinding.AlertAgePickerBinding
-import org.piramalswasthya.sakhi.databinding.FragmentInputFormPageHhBinding
+import org.piramalswasthya.sakhi.model.AgeUnitDTO
 
-class AgePickerDialog () : DialogFragment() {
+class AgePickerDialog (context: Context) : AlertDialog(context) {
 
     private var _binding : AlertAgePickerBinding? = null
 
@@ -21,34 +19,59 @@ class AgePickerDialog () : DialogFragment() {
     private var monthsMax : Int = 0
     private var daysMin : Int = 0
     private var daysMax : Int = 0
+    override fun onCreate(savedInstanceState: Bundle?) {
+        _binding = AlertAgePickerBinding.inflate(layoutInflater, null, false)
+        setContentView(binding.root)
+    }
 
-    constructor(
+    /**
+     * age picker dialog
+     * - setting min and max values
+     * - setting default values from dto
+     * - trigger show to open the dialog
+     */
+    fun  setLimitsAndShow(
         yearsMin: Int,
-        yearsMax : Int,
-        montsMin : Int,
-        monthsMax : Int,
-        daysMin : Int,
-        daysMax : Int) : this() {
+        yearsMax: Int,
+        monthsMin: Int,
+        monthsMax: Int,
+        daysMin: Int,
+        daysMax: Int,
+        ageUnitDTO: AgeUnitDTO,
+        isOk: Boolean
+    ) {
         this.yearsMin = yearsMin
         this.yearsMax = yearsMax
-        this.montsMin = montsMin
+        this.montsMin = monthsMin
         this.monthsMax = monthsMax
         this.daysMin = daysMin
         this.daysMax = daysMax
+        show(ageUnitDTO, isOk)
     }
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        _binding = AlertAgePickerBinding.inflate(layoutInflater, null, false)
-        val alertBinding = AlertAgePickerBinding.inflate(layoutInflater, binding.root, false)
-        alertBinding.dialogNumberPickerYears.minValue = yearsMin
-        alertBinding.dialogNumberPickerYears.maxValue = yearsMax
+    fun show(ageUnitDTO: AgeUnitDTO, isOk: Boolean) {
+        super.show()
+        binding.dialogNumberPickerYears.minValue = yearsMin
+        binding.dialogNumberPickerYears.maxValue = yearsMax
+        binding.dialogNumberPickerYears.value = ageUnitDTO.years
 
-        alertBinding.dialogNumberPickerMonths.minValue = montsMin
-        alertBinding.dialogNumberPickerMonths.maxValue = monthsMax
+        binding.dialogNumberPickerMonths.minValue = montsMin
+        binding.dialogNumberPickerMonths.maxValue = monthsMax
+        binding.dialogNumberPickerMonths.value = ageUnitDTO.months
 
-        alertBinding.dialogNumberPickerDays.minValue = daysMin
-        alertBinding.dialogNumberPickerDays.maxValue = daysMax
+        binding.dialogNumberPickerDays.minValue = daysMin
+        binding.dialogNumberPickerDays.maxValue = daysMax
+        binding.dialogNumberPickerDays.value = ageUnitDTO.days
 
-        return MaterialAlertDialogBuilder(requireContext()).setView(alertBinding.root).create()
+        binding.btnOk.setOnClickListener{
+            ageUnitDTO.years = binding.dialogNumberPickerYears.value
+            ageUnitDTO.months = binding.dialogNumberPickerMonths.value
+            ageUnitDTO.days = binding.dialogNumberPickerDays.value
+            dismiss()
+        }
+
+        binding.btnCancel.setOnClickListener{
+            cancel()
+        }
     }
 
     companion object {

@@ -32,10 +32,10 @@
     <string name="home_delivery_of_previous_pregnancy">Home delivery of previous pregnancy</string>
     <string name="during_pregnancy_or_delivery_you_faced_any_medical_issues">During pregnancy or delivery you faced any medical issues</string>
     <string name="past_c_section_cs">Past C –section (CS)</string>
-    <string name="information_on_children">Information on children</string>
+    <string name="information_on_children">Information on Children</string>
     <string name="physical_observation">Physical Observation</string>
     <string name="obstetric_history">Obstetric History</string>
-    <string name="assess_for_high_risk_conditions_in_the_non_pregnant_women">ASSESS FOR HIGH RISK CONDITIONS IN THE NON-PREGNANT WOMEN</string>
+    <string name="assess_for_high_risk_conditions_in_the_non_pregnant_women">Assess for High Risk Conditions in the Non-Pregnant Women</string>
     <string name="visible_signs_of_anemia_as_per_appearance">Visible signs of Anemia as per appearance</string>
     <string name="for_clinical_assessment_to_be_filled_consulting_with_anm">For Clinical Assessment (to be filled consulting with ANM)</string>
     <string name="hypertension">Hypertension</string>
@@ -51,7 +51,7 @@
     <string name="multiple_pregnancy">Multiple Pregnancy</string>
     <string name="lmp_date">LMP Date</string>
     <string name="edd">EDD</string>
-    <string name="assess_for_high_risk_conditions_in_the_pregnant_women">ASSESS FOR HIGH RISK CONDITIONS IN THE PREGNANT WOMEN</string>
+    <string name="assess_for_high_risk_conditions_in_the_pregnant_women">Assess for High Risk Conditions in the Pregnant Women</string>
     <string name="rd_pmsa">RD Malaria</string>
     <string name="rd_dengue">RD Dengue</string>
     <string name="rd_filaria">RD Filaria</string>
@@ -86,8 +86,8 @@
     <string name="beneficiary_registration">Beneficiary Registration</string>
     <string name="show_details">Show Details</string>
     <string name="husband">Husband</string>
-    <string name="micro_birth_plan_for_all_pregnant_women">MICRO BIRTH PLAN (FOR ALL PREGNANT WOMEN)</string>
-    <string name="follow_up_for_high_risk_conditions_in_the_non_pregnant_women">FOLLOW UP FOR HIGH RISK CONDITIONS IN THE NON-PREGNANT WOMEN</string>
-    <string name="follow_up_for_high_risk_conditions_in_the_pregnant_women">FOLLOW UP FOR HIGH RISK CONDITIONS IN THE PREGNANT WOMEN</string>
+    <string name="micro_birth_plan_for_all_pregnant_women">Micro Birth Plan (For All Pregnant Women)</string>
+    <string name="follow_up_for_high_risk_conditions_in_the_non_pregnant_women">Follow-up for High Risk Conditions in the Non-Pregnant Women</string>
+    <string name="follow_up_for_high_risk_conditions_in_the_pregnant_women">Follow-up for High Risk Conditions in the Pregnant Women</string>
     <string name="beneficiaries">Beneficiaries</string>
 </resources>

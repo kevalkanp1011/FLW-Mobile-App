@@ -63,7 +63,7 @@ enum class Gender {
             " pwr.benId is not null as pwrFilled, pwr.syncState as pwrSyncState," +
             " pwa.pregnantWomanDelivered as isDelivered, pwa.hrpConfirmed as pwHrp," +
             " ecr.benId is not null as ecrFilled, " +
-            " ect.benId is not null as ectFilled, (pwa.maternalDeath or do.complication = 'death') as isMdsr," +
+            " ect.benId is not null as ectFilled, (pwa.maternalDeath or do.complication = 'DEATH' or pnc.motherDeath) as isMdsr," +
             " ect.benId is not null as ectFilled, " +
             " tbsn.benId is not null as tbsnFilled, tbsn.syncState as tbsnSyncState," +
             " tbsp.benId is not null as tbspFilled, tbsp.syncState as tbspSyncState, " +
@@ -85,6 +85,7 @@ enum class Gender {
             "LEFT OUTER JOIN HBYC hbyc on b.beneficiaryId = hbyc.benId " +
             "LEFT OUTER JOIN PREGNANCY_REGISTER pwr on b.beneficiaryId = pwr.benId " +
             "LEFT OUTER JOIN PREGNANCY_ANC pwa on b.beneficiaryId = pwa.benId " +
+            "LEFT OUTER JOIN pnc_visit pnc on b.beneficiaryId = pnc.benId " +
             "LEFT OUTER JOIN ELIGIBLE_COUPLE_REG ecr on b.beneficiaryId = ecr.benId " +
             "LEFT OUTER JOIN ELIGIBLE_COUPLE_TRACKING ect on (b.beneficiaryId = ect.benId  and CAST((strftime('%s','now') - ect.visitDate/1000)/60/60/24 AS INTEGER) < 30 )" +
             "LEFT OUTER JOIN TB_SCREENING tbsn on b.beneficiaryId = tbsn.benId " +

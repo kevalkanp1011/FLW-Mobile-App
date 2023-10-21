@@ -14,14 +14,12 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.PregnantWomanRegistrationDataset
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.model.HRPNonPregnantAssessCache
 import org.piramalswasthya.sakhi.model.HRPPregnantAssessCache
 import org.piramalswasthya.sakhi.model.PregnantWomanRegistrationCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.EcrRepo
 import org.piramalswasthya.sakhi.repositories.HRPRepo
 import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
-import org.piramalswasthya.sakhi.utils.HelperUtil
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -86,6 +84,8 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
 
             val assess = hrpRepo.getPregnantAssess(benId)
 
+            val ecr = ecrRepo.getSavedRecord(benId)
+
             assess?.let {
                 pregnancyRegistrationForm.createdDate = it.visitDate
             }
@@ -103,6 +103,7 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
                 ben,
                 assess,
                 if (recordExists.value == true) pregnancyRegistrationForm else null,
+                ecr,
                 latestTrack?.visitDate
             )
             dataset.updateList(30,getIndexOfHRP())
