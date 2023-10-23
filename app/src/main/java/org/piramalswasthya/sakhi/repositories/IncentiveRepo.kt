@@ -4,12 +4,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.dao.IncentiveDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.helpers.setToEndOfTheDay
 import org.piramalswasthya.sakhi.model.IncentiveActivityListRequest
 import org.piramalswasthya.sakhi.model.IncentiveRecordListRequest
 import org.piramalswasthya.sakhi.model.User
 import org.piramalswasthya.sakhi.model.getDateTimeStringFromLong
 import org.piramalswasthya.sakhi.network.AmritApiService
 import timber.log.Timber
+import java.util.Calendar
 import javax.inject.Inject
 
 class IncentiveRepo @Inject constructor(
@@ -47,7 +49,7 @@ class IncentiveRepo @Inject constructor(
                 val requestBody = IncentiveRecordListRequest(
                     user.userId, getDateTimeStringFromLong(
                         preferenceDao.lastIncentivePullTimestamp)!!,
-                        getDateTimeStringFromLong(System.currentTimeMillis())!!
+                        getDateTimeStringFromLong(Calendar.getInstance().setToEndOfTheDay().timeInMillis)!!
                     )
                 val recordListNetwork =
                     amritApiService.getAllIncentiveRecords(requestBody = requestBody)

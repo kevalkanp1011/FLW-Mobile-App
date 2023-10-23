@@ -173,6 +173,16 @@ data class IncentiveDomain(
     val ben: BenBasicDomain?
 )
 
+data class IncentiveDomainDTO(
+    val id: Long = 0,
+    val group: String,
+    val name: String,
+    val description: String,
+    val paymentParam: String,
+    val rate: Long,
+    var noOfClaims: Int,
+    var amountClaimed: Long
+)
 
 
 

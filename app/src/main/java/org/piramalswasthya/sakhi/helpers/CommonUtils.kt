@@ -396,6 +396,13 @@ fun Calendar.setToStartOfTheDay() = apply {
     set(Calendar.MILLISECOND, 0)
 }
 
+fun Calendar.setToEndOfTheDay() = apply {
+    set(Calendar.HOUR_OF_DAY, 23)
+    set(Calendar.MINUTE, 59)
+    set(Calendar.SECOND, 59)
+    set(Calendar.MILLISECOND, 0)
+}
+
 
 sealed class NetworkResponse<T>(val data: T? = null, val message: String? = null) {
 
