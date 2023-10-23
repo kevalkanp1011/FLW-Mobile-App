@@ -1,21 +1,29 @@
 package org.piramalswasthya.sakhi.ui.home_activity.incentives
 
+import android.content.Intent
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.text.Layout
 import android.text.TextPaint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.LinearLayout
+import android.widget.Spinner
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
@@ -24,6 +32,7 @@ import org.piramalswasthya.sakhi.databinding.FragmentIncentivesBinding
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.helpers.getDateString
 import org.piramalswasthya.sakhi.model.IncentiveDomain
+import org.piramalswasthya.sakhi.model.IncentiveDomainDTO
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.utils.HelperUtil.drawMultilineText
 import java.io.File
@@ -39,7 +48,7 @@ class IncentivesFragment : Fragment() {
         get() = _binding!!
 
 
-    private var incentiveDomainList : List<IncentiveDomain> = mutableListOf()
+    private var incentiveDomainList: List<IncentiveDomain> = mutableListOf()
 
     private val viewModel: IncentivesViewModel by viewModels()
 
@@ -53,6 +62,59 @@ class IncentivesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val fromMonth: Spinner = binding.fromMonthsSpinner
+// Create an ArrayAdapter using the string array and a default spinner layout.
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.visit_months,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears.
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner.
+            fromMonth.adapter = adapter
+        }
+
+        val fromYear: Spinner = binding.fromMonthsSpinner
+// Create an ArrayAdapter using the string array and a default spinner layout.
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.visit_months,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears.
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner.
+            fromYear.adapter = adapter
+        }
+
+        val toMonth: Spinner = binding.fromMonthsSpinner
+// Create an ArrayAdapter using the string array and a default spinner layout.
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.visit_months,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears.
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner.
+            toMonth.adapter = adapter
+        }
+
+        val toYear: Spinner = binding.fromMonthsSpinner
+// Create an ArrayAdapter using the string array and a default spinner layout.
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.visit_months,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears.
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner.
+            toYear.adapter = adapter
+        }
+
         val adapter = IncentiveListAdapter()
         val divider = DividerItemDecoration(context, LinearLayout.VERTICAL)
         binding.rvIncentive.addItemDecoration(divider)
@@ -66,22 +128,22 @@ class IncentivesFragment : Fragment() {
                         .build()
                 )
                 .build()
-        binding.ibEditCalendar.setOnClickListener {
-            dateRangePicker.show(childFragmentManager, "CALENDAR")
-        }
+//        binding.ibEditCalendar.setOnClickListener {
+//            dateRangePicker.show(childFragmentManager, "CALENDAR")
+//        }
         dateRangePicker.addOnPositiveButtonClickListener {
             viewModel.setRange(it.first, it.second)
         }
-        lifecycleScope.launch{
-            viewModel.from.collect{
-                binding.tvFrom.text = getDateString(it)
-            }
-        }
-        lifecycleScope.launch{
-            viewModel.to.collect{
-                binding.tvTo.text = getDateString(it)
-            }
-        }
+//        lifecycleScope.launch {
+//            viewModel.from.collect {
+//                binding.tvFrom.text = getDateString(it)
+//            }
+//        }
+//        lifecycleScope.launch {
+//            viewModel.to.collect {
+//                binding.tvTo.text = getDateString(it)
+//            }
+//        }
 
         lifecycleScope.launch {
             viewModel.incentiveList.collect {
@@ -135,14 +197,25 @@ class IncentivesFragment : Fragment() {
 
         val canvas = page.canvas
         val paint = Paint()
+//        paint.isAntiAlias = true
+        paint.isSubpixelText = false
         paint.color = Color.BLACK
         paint.textSize = 6f
 
         val textPaint = TextPaint()
         textPaint.color = Color.BLACK
         textPaint.textSize = 6f
+        textPaint.letterSpacing = 0.1f
 
-        val x = 10
+
+        val boxPaint = Paint()
+        boxPaint.color = Color.BLACK
+        boxPaint.style = Paint.Style.STROKE
+        boxPaint.strokeWidth = 0.3f
+
+        // Draw the box
+
+        var x = 10
         var y = 50
         val columnWidth = 100
         val rowHeight = 15
@@ -151,25 +224,37 @@ class IncentivesFragment : Fragment() {
 
         var currentPage = 1
 
-        canvas.drawText(resources.getString(R.string.asha_incentive_master_claim_form), (x + columnWidth).toFloat(), y.toFloat(), paint)
-        y+= 5
+        canvas.drawText(
+            resources.getString(R.string.asha_incentive_master_claim_form),
+            (x + columnWidth).toFloat(),
+            y.toFloat(),
+            paint
+        )
+        y += 5
 
-        canvas.drawLine(x.toFloat(), y.toFloat(), (pageWidth - 2*x).toFloat(), y.toFloat(), paint)
+        canvas.drawLine(x.toFloat(), y.toFloat(), (pageWidth - 2 * x).toFloat(), y.toFloat(), paint)
         y += rowHeight
 
         canvas.drawText(resources.getString(R.string.to), x.toFloat(), y.toFloat(), paint)
         y += rowHeight
 
-        canvas.drawText(resources.getString(R.string.sdm_ho_or_i_c_block_phc), x.toFloat(), y.toFloat(), paint)
+        canvas.drawText(
+            resources.getString(R.string.sdm_ho_or_i_c_block_phc),
+            x.toFloat(),
+            y.toFloat(),
+            paint
+        )
         y += rowHeight
 
         canvas.drawText("_______________________", x.toFloat(), y.toFloat(), paint)
         y += rowHeight
 
-        canvas.drawText(resources.getString(R.string.sub_submission_of_asha_incentive_claim_for_the_period_from)
-                + binding.tvFrom.text + resources.getString(R.string.to_small)
-                + binding.tvTo.text,
-            x.toFloat(), y.toFloat(), paint)
+        canvas.drawText(
+            resources.getString(R.string.sub_submission_of_asha_incentive_claim_for_the_period_from)
+                    + binding.fromMonthsSpinner + resources.getString(R.string.to_small)
+                    + binding.toMonthsSpinner,
+            x.toFloat(), y.toFloat(), paint
+        )
         y += rowHeight
 
         canvas.drawText(resources.getString(R.string.sir_madam), x.toFloat(), y.toFloat(), paint)
@@ -177,17 +262,41 @@ class IncentivesFragment : Fragment() {
 
         canvas.drawMultilineText(
             text = resources.getString(R.string.with_reference_to_)
-                    + binding.tvFrom.text + resources.getString(R.string.to_small)
-                    + binding.tvTo.text + resources.getString(R.string.as_per_statement),
+                    + binding.toMonthsSpinner + resources.getString(R.string.to_small)
+                    + binding.toMonthsSpinner + resources.getString(R.string.as_per_statement),
             textPaint = textPaint,
-            width = pageWidth - 2*x,
+            width = pageWidth - 2 * x,
             x = x.toFloat(),
             y = y.toFloat(),
-            0)
+            0
+        )
+        y += 2*rowHeight
+
+//        Slno 	Activity 	Parameter for payment	Rate Rs.	No of Claims	Amount Claimed 	"Amount Approved
+//        (For Office use only)"	FMR Code	Remarks (if any)
+
+        textPaint.textSize = 3.5f
+
+        drawItemBox(
+            canvas, x, y, textPaint, boxPaint,
+            "Slno",
+            "Activity",
+            "Parameter for payment",
+            "Rate Rs.",
+            "No of Claims",
+            "Amount Claimed",
+            "Amount Approved(For Office use only)",
+            "FMR Code",
+            "Remarks (if any)"
+        )
+
+        x = 10
+        var items: List<IncentiveDomainDTO> = viewModel.mapToView(incentiveDomainList)
+        var currentGroup = ""
+        var slNo = 1
         y += rowHeight
 
-        var currentGroup = ""
-        incentiveDomainList.forEach {
+        items.forEach {
             if (y > pageHeight) {
                 document.finishPage(page)
                 currentPage++
@@ -195,31 +304,218 @@ class IncentivesFragment : Fragment() {
                 page = document.startPage(pageInfo)
                 y = rowHeight
             } else {
-                if (currentGroup.contentEquals(it.activity.group)) {
-                    it.record.name?.let { it1 -> canvas.drawText(it1, x.toFloat(), y.toFloat(), paint) }
-                    y += rowHeight
+                if (currentGroup.contentEquals(it.group)) {
+                    //
                 } else {
-                    canvas.drawText(it.activity.group, x.toFloat(), y.toFloat(), paint)
-                    y += rowHeight
-                    it.record.name?.let { it1 -> canvas.drawText(it1, x.toFloat(), y.toFloat(), paint) }
+                    canvas.drawMultilineText(
+                        text = it.group,
+                        textPaint = textPaint,
+                        width = pageWidth - 2 * x,
+                        alignment = Layout.Alignment.ALIGN_CENTER,
+                        x = x.toFloat(),
+                        y = y.toFloat(),
+                        start = 0
+                    )
                     y += rowHeight
                 }
-                currentGroup = it.activity.group
+
+                drawItemBox(
+                    canvas,
+                    x,
+                    y,
+                    textPaint,
+                    boxPaint,
+                    slNo.toString(),
+                    it.description,
+                    it.paymentParam,
+                    it.rate.toString(),
+                    it.noOfClaims.toString(),
+                    it.amountClaimed.toString(),
+                    "",
+                    "",
+                    "lia"
+                )
+                y += rowHeight
+                currentGroup = it.group
+                slNo += 1
             }
         }
         // Finish the page
         document.finishPage(page)
 
         // Start a new page
-        val pageInfo1 = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, 2).create()
+        val pageInfo1 = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, currentPage + 1).create()
         val page1 = document.startPage(pageInfo1)
 
         val canvas1 = page1.canvas
         y = 50 // Reset y position
 
-        // Draw more data on the second page
-        canvas1.drawText("Data 3", x.toFloat(), y.toFloat(), paint)
-        canvas1.drawText("Data 4", (x + columnWidth).toFloat(), y.toFloat(), paint)
+
+        //
+
+        canvas1.drawMultilineText(
+            text = "Activity wise claim forms along with supporting documents are also enclosed as per guideline.",
+            textPaint = textPaint,
+            alignment = Layout.Alignment.ALIGN_CENTER,
+            width = pageWidth - 2 * x,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+
+        y += rowHeight
+        canvas1.drawMultilineText(
+            text = "Cetify that, all claims are genuine and services are rendered by me regarding the activities against which the claim submitted. Kindly make the payment.",
+            textPaint = textPaint,
+            alignment = Layout.Alignment.ALIGN_CENTER,
+            width = pageWidth - 2 * x,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        y += rowHeight
+
+        canvas1.drawMultilineText(
+            text = "Yours faithfully,",
+            textPaint = textPaint,
+            alignment = Layout.Alignment.ALIGN_NORMAL,
+            width = pageWidth - 2 * x,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        y += rowHeight
+
+        canvas1.drawMultilineText(
+            text = "Name of the ASHA",
+            textPaint = textPaint,
+            alignment = Layout.Alignment.ALIGN_NORMAL,
+            width = pageWidth - 2 * x,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        y += rowHeight
+
+        canvas1.drawMultilineText(
+            text = "Account No:",
+            textPaint = textPaint,
+            alignment = Layout.Alignment.ALIGN_NORMAL,
+            width = pageWidth - 2 * x,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        y += rowHeight
+
+        canvas1.drawMultilineText(
+            text = "Bank Name & Branch Name:",
+            textPaint = textPaint,
+            alignment = Layout.Alignment.ALIGN_NORMAL,
+            width = pageWidth - 2 * x,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        y += rowHeight
+
+        canvas1.drawMultilineText(
+            text = "Contact No:",
+            textPaint = textPaint,
+            alignment = Layout.Alignment.ALIGN_NORMAL,
+            width = pageWidth - 2 * x,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        y += rowHeight
+        canvas1.drawMultilineText(
+            text = "Village:",
+            textPaint = textPaint,
+            alignment = Layout.Alignment.ALIGN_NORMAL,
+            width = pageWidth - 2 * x,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        y += rowHeight
+        canvas1.drawMultilineText(
+            text = "SC Name:",
+            textPaint = textPaint,
+            alignment = Layout.Alignment.ALIGN_NORMAL,
+            width = pageWidth - 2 * x,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        y += rowHeight
+
+        canvas1.drawMultilineText(
+            text = "Certify that the claims mentioned above are correct.",
+            textPaint = textPaint,
+            alignment = Layout.Alignment.ALIGN_CENTER,
+            width = pageWidth - 2 * x,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        y += rowHeight
+
+
+        canvas1.drawMultilineText(
+            text = "Signature of ASHA SUPERVISOR",
+            textPaint = textPaint,
+            alignment = Layout.Alignment.ALIGN_NORMAL,
+            width = pageWidth - 2 * x,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        y += rowHeight
+
+        canvas1.drawMultilineText(
+            text = "Signature of ANM",
+            textPaint = textPaint,
+            alignment = Layout.Alignment.ALIGN_NORMAL,
+            width = pageWidth - 2 * x,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        y += rowHeight
+
+        canvas1.drawMultilineText(
+            text = "For office use only",
+            textPaint = textPaint,
+            alignment = Layout.Alignment.ALIGN_CENTER,
+            width = pageWidth - 2 * x,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        y += rowHeight
+
+        canvas1.drawMultilineText(
+            text = "An amount of Rs________________(Rupees_________only) approved for payment of ASHA incentive for the period from____________to_____________and the amount is debited to the account through DBT.",
+            textPaint = textPaint,
+            alignment = Layout.Alignment.ALIGN_NORMAL,
+            width = pageWidth - 2 * x,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        y += rowHeight
+
+        canvas1.drawMultilineText(
+            text = "Signature of ABPM\t\tSignature of BAM\t\tSignature of BCM\t\tSignature of BPM\t\tSignature of SDM & HO",
+            textPaint = textPaint,
+            alignment = Layout.Alignment.ALIGN_CENTER,
+            width = pageWidth - 2 * x,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        y += rowHeight
 
         // Finish the second page
         document.finishPage(page1)
@@ -229,15 +525,225 @@ class IncentivesFragment : Fragment() {
         // Save the PDF file
         val fileName = "incentives_" + (Calendar.getInstance().timeInMillis) + ".pdf"
         val directory =
-        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         val file = File(directory, fileName)
 
         try {
             document.writeTo(FileOutputStream(file))
+//            val snackbar = Snackbar.make(binding.root, "File downloaded!", Snackbar.LENGTH_LONG)
+//
+//            snackbar.setAction("Show File") {
+//                showFile(file.absolutePath)
+//            }
+//
+//            snackbar.show()
         } catch (e: IOException) {
             e.printStackTrace()
         }
         document.close()
+
+    }
+
+    private fun showFile(absolutePath: String) {
+        val filePath = absolutePath
+
+        // Create an Intent to open the file
+        val openFileIntent = Intent(Intent.ACTION_VIEW)
+        val fileUri = Uri.parse("file://$filePath")
+        openFileIntent.setDataAndType(fileUri, "application/*") // Adjust the MIME type as per your file type
+
+        // Check if there's an app to handle this intent
+        if (openFileIntent.resolveActivity(requireActivity().packageManager) != null) {
+            startActivity(openFileIntent)
+        } else {
+            Toast.makeText(requireContext(), "cant open this file check in downloads", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun drawItemBox(
+        canvas: Canvas,
+        x_val: Int,
+        y: Int,
+        textPaint: TextPaint,
+        boxPaint: Paint,
+        s: String,
+        s1: String,
+        s2: String,
+        s3: String,
+        s4: String,
+        s5: String,
+        s6: String,
+        s7: String,
+        s8: String
+    ) {
+        val colWidth = 15
+        val rowHeight = 15
+        var x = 10
+        canvas.drawMultilineText(
+            text = s,
+            textPaint = textPaint,
+            alignment = Layout.Alignment.ALIGN_CENTER,
+            width = colWidth,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        boxPaint.color = Color.GRAY
+        canvas.drawRect(
+            x.toFloat(),
+            y.toFloat(),
+            (x + colWidth).toFloat(),
+            (y + rowHeight).toFloat(),
+            boxPaint
+        )
+        x += colWidth
+
+
+        canvas.drawMultilineText(
+            text = s1,
+            textPaint = textPaint,
+            width = 5*colWidth,
+            alignment = Layout.Alignment.ALIGN_CENTER,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        canvas.drawRect(
+            x.toFloat(),
+            y.toFloat(),
+            (x + 5*colWidth).toFloat(),
+            (y + rowHeight).toFloat(),
+            boxPaint
+        )
+        x += 5*colWidth
+
+
+        canvas.drawMultilineText(
+            text = s2,
+            textPaint = textPaint,
+            width = 2*colWidth,
+            alignment = Layout.Alignment.ALIGN_CENTER,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        canvas.drawRect(
+            x.toFloat(),
+            y.toFloat(),
+            (x + 2*colWidth).toFloat(),
+            (y + rowHeight).toFloat(),
+            boxPaint
+        )
+        x += 2*colWidth
+
+        canvas.drawMultilineText(
+            text = s3,
+            textPaint = textPaint,
+            width = colWidth,
+            alignment = Layout.Alignment.ALIGN_CENTER,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        canvas.drawRect(
+            x.toFloat(),
+            y.toFloat(),
+            (x + colWidth).toFloat(),
+            (y + rowHeight).toFloat(),
+            boxPaint
+        )
+        x += colWidth
+
+        canvas.drawMultilineText(
+            text = s4,
+            textPaint = textPaint,
+            width = colWidth,
+            alignment = Layout.Alignment.ALIGN_CENTER,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        canvas.drawRect(
+            x.toFloat(),
+            y.toFloat(),
+            (x + colWidth).toFloat(),
+            (y + rowHeight).toFloat(),
+            boxPaint
+        )
+        x += colWidth
+
+        canvas.drawMultilineText(
+            text = s5,
+            textPaint = textPaint,
+            width = 2*colWidth,
+            alignment = Layout.Alignment.ALIGN_CENTER,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        canvas.drawRect(
+            x.toFloat(),
+            y.toFloat(),
+            (x + 2*colWidth).toFloat(),
+            (y + rowHeight).toFloat(),
+            boxPaint
+        )
+        x += 2*colWidth
+
+        canvas.drawMultilineText(
+            text = s6,
+            textPaint = textPaint,
+            width = 2*colWidth,
+            alignment = Layout.Alignment.ALIGN_CENTER,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        canvas.drawRect(
+            x.toFloat(),
+            y.toFloat(),
+            (x + 2*colWidth).toFloat(),
+            (y + rowHeight).toFloat(),
+            boxPaint
+        )
+        x += 2*colWidth
+
+        canvas.drawMultilineText(
+            text = s7,
+            textPaint = textPaint,
+            width = 2*colWidth,
+            alignment = Layout.Alignment.ALIGN_CENTER,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        canvas.drawRect(
+            x.toFloat(),
+            y.toFloat(),
+            (x + 2*colWidth).toFloat(),
+            (y + rowHeight).toFloat(),
+            boxPaint
+        )
+        x += 2*colWidth
+
+        canvas.drawMultilineText(
+            text = s8,
+            textPaint = textPaint,
+            width = 2*colWidth,
+            alignment = Layout.Alignment.ALIGN_CENTER,
+            x = x.toFloat(),
+            y = y.toFloat(),
+            start = 0
+        )
+        canvas.drawRect(
+            x.toFloat(),
+            y.toFloat(),
+            (x + 2*colWidth).toFloat(),
+            (y + rowHeight).toFloat(),
+            boxPaint
+        )
+        x += 2*colWidth
+
 
     }
 

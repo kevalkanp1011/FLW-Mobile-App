@@ -18,4 +18,19 @@
     <string name="as_per_statement">" as per statement mentioned below."</string>
     <string name="to_small">" to "</string>
     <string name="sir_madam">Sir/Madam,</string>
+
+    <string-array name="months">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
 </resources>

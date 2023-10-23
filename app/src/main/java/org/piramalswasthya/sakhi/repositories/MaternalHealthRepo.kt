@@ -198,7 +198,10 @@ class MaternalHealthRepo @Inject constructor(
                     }
                 } catch (e: IOException) {
                     e.printStackTrace()
-                } catch (e: Exception) {
+                } catch (e: SocketTimeoutException) {
+                    postDataToAmritServer(ancPostList)
+                }
+                catch (e: Exception) {
                     e.printStackTrace()
                 }
             } else {

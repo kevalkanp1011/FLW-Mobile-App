@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.model.IncentiveDomain
+import org.piramalswasthya.sakhi.model.IncentiveDomainDTO
 import org.piramalswasthya.sakhi.model.getDateStrFromLong
 import org.piramalswasthya.sakhi.repositories.IncentiveRepo
 import java.util.Calendar
@@ -61,6 +62,36 @@ class IncentivesViewModel @Inject constructor(
             _from.emit(from)
             _to.emit(to)
         }
+    }
+
+    fun mapToView(incentiveDomainList: List<IncentiveDomain>): List<IncentiveDomainDTO> {
+        var items: List<IncentiveDomainDTO> = mutableListOf()
+        incentiveDomainList.forEach {
+            var entries =
+                items.filter { itemDTO -> (itemDTO.group == it.activity.group) && (itemDTO.name == it.activity.name) }
+
+            if (entries.isEmpty()) {
+                val dto = IncentiveDomainDTO(
+                    group = it.activity.group,
+                    name = it.activity.name,
+                    description = it.activity.description,
+                    paymentParam = it.activity.paymentParam,
+                    rate = it.record.amount,
+                    noOfClaims = 1,
+                    amountClaimed = 1 * it.record.amount
+                )
+                items = items + dto
+            } else {
+                val dto = entries[0]
+                dto.noOfClaims = dto.noOfClaims + 1
+                dto.amountClaimed = dto.amountClaimed + it.record.amount
+                val list = items.toMutableList()
+                list[list.indexOf(dto)] = dto
+                items = list
+            }
+        }
+
+        return items.sortedBy { it.group }
     }
 
 }

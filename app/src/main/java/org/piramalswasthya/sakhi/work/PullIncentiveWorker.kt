@@ -8,7 +8,9 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.repositories.IncentiveRepo
+import java.util.Calendar
 
 @HiltWorker
 class PullIncentiveWorker @AssistedInject constructor(
@@ -33,7 +35,7 @@ class PullIncentiveWorker @AssistedInject constructor(
                 Data.Builder().putAll(mapOf("result" to "Network Call failed rec. Check in logcat"))
                     .build()
             )
-        preferenceDao.lastIncentivePullTimestamp = System.currentTimeMillis()
+        preferenceDao.lastIncentivePullTimestamp = Calendar.getInstance().setToStartOfTheDay().timeInMillis
         return Result.success()
     }
 
