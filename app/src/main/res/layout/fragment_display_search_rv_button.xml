@@ -34,7 +34,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             tools:visibility="visible"
-            app:cardCornerRadius="@dimen/padding_wide"
             android:background="?attr/colorPrimary">
             <ImageView
                 android:id="@+id/ib_search_im"

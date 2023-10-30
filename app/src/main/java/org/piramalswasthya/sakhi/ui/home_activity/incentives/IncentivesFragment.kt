@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.ui.home_activity.incentives
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
@@ -23,22 +24,24 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.IncentiveListAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentIncentivesBinding
 import org.piramalswasthya.sakhi.helpers.Konstants
-import org.piramalswasthya.sakhi.helpers.getDateString
+import org.piramalswasthya.sakhi.helpers.setToEndOfTheDay
+import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.model.IncentiveDomain
 import org.piramalswasthya.sakhi.model.IncentiveDomainDTO
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.utils.HelperUtil.drawMultilineText
+import org.piramalswasthya.sakhi.utils.MonthYearPickerDialog
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.Calendar
+
 
 @AndroidEntryPoint
 class IncentivesFragment : Fragment() {
@@ -63,11 +66,11 @@ class IncentivesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // from month
         val fromMonth: Spinner = binding.fromMonthsSpinner
-// Create an ArrayAdapter using the string array and a default spinner layout.
         ArrayAdapter.createFromResource(
             requireContext(),
-            R.array.visit_months,
+            R.array.months,
             android.R.layout.simple_spinner_item
         ).also { adapter ->
             // Specify the layout to use when the list of choices appears.
@@ -76,44 +79,36 @@ class IncentivesFragment : Fragment() {
             fromMonth.adapter = adapter
         }
 
-        val fromYear: Spinner = binding.fromMonthsSpinner
-// Create an ArrayAdapter using the string array and a default spinner layout.
-        ArrayAdapter.createFromResource(
-            requireContext(),
-            R.array.visit_months,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            // Specify the layout to use when the list of choices appears.
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // Apply the adapter to the spinner.
-            fromYear.adapter = adapter
+//        fromMonth.setSelection(0)
+
+        val myArrayList = ArrayList<Int>()
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        for (i in currentYear downTo 2020) {
+            myArrayList.add(i)
         }
 
-        val toMonth: Spinner = binding.fromMonthsSpinner
-// Create an ArrayAdapter using the string array and a default spinner layout.
+        val fromYear: Spinner = binding.fromYearsSpinner
+        val fromYearsAdapter: ArrayAdapter<Int> =
+            ArrayAdapter<Int>(requireContext(), android.R.layout.simple_spinner_dropdown_item, myArrayList)
+        fromYear.adapter = fromYearsAdapter
+        fromYear.setSelection(0)
+
+        val toMonth: Spinner = binding.toMonthsSpinner
         ArrayAdapter.createFromResource(
             requireContext(),
-            R.array.visit_months,
+            R.array.months,
             android.R.layout.simple_spinner_item
         ).also { adapter ->
-            // Specify the layout to use when the list of choices appears.
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             // Apply the adapter to the spinner.
             toMonth.adapter = adapter
         }
+//        toMonth.setSelection(0)
 
-        val toYear: Spinner = binding.fromMonthsSpinner
-// Create an ArrayAdapter using the string array and a default spinner layout.
-        ArrayAdapter.createFromResource(
-            requireContext(),
-            R.array.visit_months,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            // Specify the layout to use when the list of choices appears.
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // Apply the adapter to the spinner.
-            toYear.adapter = adapter
-        }
+        val toYear: Spinner = binding.toYearsSpinner
+
+        toYear.adapter = fromYearsAdapter
+        toYear.setSelection(0)
 
         val adapter = IncentiveListAdapter()
         val divider = DividerItemDecoration(context, LinearLayout.VERTICAL)
@@ -128,22 +123,10 @@ class IncentivesFragment : Fragment() {
                         .build()
                 )
                 .build()
-//        binding.ibEditCalendar.setOnClickListener {
-//            dateRangePicker.show(childFragmentManager, "CALENDAR")
-//        }
+
         dateRangePicker.addOnPositiveButtonClickListener {
             viewModel.setRange(it.first, it.second)
         }
-//        lifecycleScope.launch {
-//            viewModel.from.collect {
-//                binding.tvFrom.text = getDateString(it)
-//            }
-//        }
-//        lifecycleScope.launch {
-//            viewModel.to.collect {
-//                binding.tvTo.text = getDateString(it)
-//            }
-//        }
 
         lifecycleScope.launch {
             viewModel.incentiveList.collect {
@@ -159,9 +142,44 @@ class IncentivesFragment : Fragment() {
             }
         }
 
+        binding.fetchData.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.MONTH, resources.getStringArray(R.array.months).indexOf(fromMonth.selectedItem))
+            calendar.set(Calendar.YEAR, fromYear.selectedItem.toString().toInt())
+            calendar.set(Calendar.DAY_OF_MONTH, 1)
+            calendar.setToStartOfTheDay()
+            val firstDay = calendar.timeInMillis
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
+            calendar.setToEndOfTheDay()
+            val lastDay = calendar.timeInMillis
+            viewModel.setRange(firstDay, lastDay)
+        }
+
         binding.tvTotalPending.setOnClickListener {
             downloadPdf()
         }
+
+        binding.et1.setOnClickListener {
+            val pd = MonthYearPickerDialog()
+            pd.setListener { picker, i, i2, i3 ->
+                run {
+                    fromMonth.setSelection(i2)
+//                    fromYear.se
+                    binding.et1.setText("${resources.getStringArray(R.array.months)[i2]} $i")
+                }
+            }
+            pd.show(requireFragmentManager(), "MonthYearPickerDialog1")
+        }
+
+//        binding.et2.setOnClickListener {
+//            val pd = MonthYearPickerDialog()
+//            pd.setListener { picker, i, i2, i3 ->
+//                run {
+//                    binding.et2.setText("$i2/$i")
+//                }
+//            }
+//            pd.show(requireFragmentManager(), "MonthYearPickerDialog2")
+//        }
     }
 
 
@@ -251,8 +269,8 @@ class IncentivesFragment : Fragment() {
 
         canvas.drawText(
             resources.getString(R.string.sub_submission_of_asha_incentive_claim_for_the_period_from)
-                    + binding.fromMonthsSpinner + resources.getString(R.string.to_small)
-                    + binding.toMonthsSpinner,
+                    + binding.fromMonthsSpinner.selectedItem + binding.fromYearsSpinner.selectedItem + resources.getString(R.string.to_small)
+                    + binding.toMonthsSpinner.selectedItem + binding.toYearsSpinner.selectedItem,
             x.toFloat(), y.toFloat(), paint
         )
         y += rowHeight
@@ -262,8 +280,8 @@ class IncentivesFragment : Fragment() {
 
         canvas.drawMultilineText(
             text = resources.getString(R.string.with_reference_to_)
-                    + binding.toMonthsSpinner + resources.getString(R.string.to_small)
-                    + binding.toMonthsSpinner + resources.getString(R.string.as_per_statement),
+                    + binding.fromMonthsSpinner.selectedItem + binding.fromYearsSpinner.selectedItem + resources.getString(R.string.to_small)
+                    + binding.toMonthsSpinner.selectedItem + binding.toYearsSpinner.selectedItem + resources.getString(R.string.as_per_statement),
             textPaint = textPaint,
             width = pageWidth - 2 * x,
             x = x.toFloat(),
@@ -271,9 +289,6 @@ class IncentivesFragment : Fragment() {
             0
         )
         y += 2*rowHeight
-
-//        Slno 	Activity 	Parameter for payment	Rate Rs.	No of Claims	Amount Claimed 	"Amount Approved
-//        (For Office use only)"	FMR Code	Remarks (if any)
 
         textPaint.textSize = 3.5f
 
@@ -296,6 +311,7 @@ class IncentivesFragment : Fragment() {
         var slNo = 1
         y += rowHeight
 
+        var total = 0L
         items.forEach {
             if (y > pageHeight) {
                 document.finishPage(page)
@@ -335,11 +351,25 @@ class IncentivesFragment : Fragment() {
                     "",
                     "lia"
                 )
+                total += it.amountClaimed
                 y += rowHeight
                 currentGroup = it.group
                 slNo += 1
             }
         }
+
+        drawItemBox(
+            canvas, x, y, textPaint, boxPaint,
+            "",
+            "Total",
+            "",
+            "",
+            "",
+            total.toString(),
+            "",
+            "",
+            ""
+        )
         // Finish the page
         document.finishPage(page)
 
@@ -349,9 +379,6 @@ class IncentivesFragment : Fragment() {
 
         val canvas1 = page1.canvas
         y = 50 // Reset y position
-
-
-        //
 
         canvas1.drawMultilineText(
             text = "Activity wise claim forms along with supporting documents are also enclosed as per guideline.",
