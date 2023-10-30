@@ -22,17 +22,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:visibility="gone"
         android:padding="@dimen/padding_normal"
         app:layout_constraintTop_toBottomOf="@id/tv_lastupdated"
         tools:context=".ui.home_activity.incentives.IncentivesFragment">
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="@dimen/padding_normal"
-            app:cardBackgroundColor="?attr/colorPrimaryContainer"
-            app:cardCornerRadius="@dimen/padding_wide">
+
 
 <!--            <RelativeLayout-->
 <!--                android:layout_width="match_parent"-->
@@ -62,78 +57,168 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <Spinner
-                    android:id="@+id/from_months_spinner"
-                    android:layout_width="0dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_normal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/margin_normal"/>
-                <Spinner
-                    android:id="@+id/from_years_spinner"
-                    android:layout_width="0dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content" />
-                <Spinner
-                    android:id="@+id/to_months_spinner"
-                    android:layout_width="0dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content" />
-                <Spinner
-                    android:id="@+id/to_years_spinner"
-                    android:layout_width="0dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content" />
+                    android:id="@+id/from_ll"
+                    android:layout_margin="@dimen/margin_normal"
+                    android:orientation="horizontal">
+                    <Spinner
+                        android:id="@+id/from_months_spinner"
+                        android:layout_width="0dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_normal"
+                        android:layout_marginHorizontal="@dimen/margin_normal"/>
+                    <Spinner
+                        android:id="@+id/from_years_spinner"
+                        android:layout_width="0dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_normal">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="to">
+                    </TextView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="@dimen/margin_normal">
+                    <Spinner
+                        android:id="@+id/to_months_spinner"
+                        android:layout_width="0dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                    <Spinner
+                        android:id="@+id/to_years_spinner"
+                        android:layout_width="0dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="@dimen/margin_normal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+    </LinearLayout>
 
-<!--        <ImageButton-->
-<!--            android:id="@+id/ib_edit_calendar"-->
-<!--            android:layout_width="60dp"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:src="@drawable/ic_edit"-->
-<!--            android:padding="@dimen/padding_small"-->
-<!--            style="@style/Widget.Material3.MaterialTimePicker.ImageButton"-->
-<!--            app:tint="@color/seed" />-->
+    <LinearLayout
+        android:id="@+id/from_to_date_range"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/ll_date_range"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_normal"
+        >
+        <LinearLayout
+            android:id="@+id/from_date_ll"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_edit_text1"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_normal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tv_nullable"
+                android:hint="Select Month">
 
-<!--        <androidx.cardview.widget.CardView-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et1"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Select Month"
+                    android:singleLine="true"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/to_date_ll"-->
 <!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:padding="@dimen/padding_normal"-->
-<!--            app:cardBackgroundColor="?attr/colorPrimaryContainer"-->
-<!--            app:cardCornerRadius="@dimen/padding_wide">-->
+<!--            android:layout_weight="2"-->
+<!--            android:layout_height="wrap_content">-->
+<!--            <com.google.android.material.textfield.TextInputLayout-->
+<!--                android:id="@+id/til_edit_text2"-->
+<!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_weight="2"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginEnd="@dimen/margin_normal"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_constraintEnd_toStartOf="@id/tv_nullable"-->
+<!--                android:hint="To Date">-->
 
-<!--            <RelativeLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content">-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/tv_to_ph"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_alignStart="@id/tv_to"-->
-<!--                    android:paddingVertical="@dimen/padding_small"-->
-<!--                    android:text="To"-->
-<!--                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge" />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/tv_to"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_below="@+id/tv_to_ph"-->
-<!--                    android:layout_centerHorizontal="true"-->
-<!--                    android:drawableStart="@drawable/ic_calendar"-->
-<!--                    android:drawablePadding="@dimen/padding_small"-->
+<!--                <com.google.android.material.textfield.TextInputEditText-->
+<!--                    android:id="@+id/et2"-->
+<!--                    android:clickable="true"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:text="To Date"-->
+<!--                    android:singleLine="true"-->
 <!--                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"-->
-<!--                    tools:text="12-12-2929" />-->
-<!--            </RelativeLayout>-->
-<!--        </androidx.cardview.widget.CardView>-->
+<!--                    android:focusable="true" />-->
 
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--        </LinearLayout>-->
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:paddingVertical="@dimen/padding_normal"
+            android:layout_height="wrap_content">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/fetch_data"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_height="wrap_content"
+                android:text="FETCH"
+                >
+            </com.google.android.material.button.MaterialButton>
+        </LinearLayout>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -143,7 +228,7 @@
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/ll_sum"
-        app:layout_constraintTop_toBottomOf="@+id/ll_date_range"
+        app:layout_constraintTop_toBottomOf="@+id/from_to_date_range"
         tools:itemCount="23"
         tools:listitem="@layout/rv_item_incentive" >
 
