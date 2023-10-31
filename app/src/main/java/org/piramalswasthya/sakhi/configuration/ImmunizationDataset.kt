@@ -16,7 +16,7 @@ class ImmunizationDataset(context: Context, language: Languages) : Dataset(conte
     private val name = FormElement(
         id = 100,
         inputType = InputType.TEXT_VIEW,
-        title = "Name",
+        title = resources.getString(R.string.name_ben),
         required = false
     )
 
@@ -24,13 +24,13 @@ class ImmunizationDataset(context: Context, language: Languages) : Dataset(conte
     private val motherName = FormElement(
         id = 101,
         inputType = InputType.TEXT_VIEW,
-        title = "Mother's Name",
+        title = resources.getString(R.string.mother_s_name),
         required = false
     )
     private val dateOfBirth = FormElement(
         id = 102,
         inputType = InputType.TEXT_VIEW,
-        title = "Date Of Birth",
+        title = resources.getString(R.string.date_of_birth),
         required = false
     )
 
@@ -49,32 +49,32 @@ class ImmunizationDataset(context: Context, language: Languages) : Dataset(conte
     private val vaccineName = FormElement(
         id = 105,
         inputType = InputType.TEXT_VIEW,
-        title = "Vaccine Name",
+        title = resources.getString(R.string.vaccine_name),
         required = false
     )
     private val doseNumber = FormElement(
         id = 106,
         inputType = InputType.TEXT_VIEW,
-        title = "Dose Number",
+        title = resources.getString(R.string.dose_number),
         required = false
     )
     private val expectedDate = FormElement(
         id = 107,
         inputType = InputType.TEXT_VIEW,
-        title = "Expected Date",
+        title = resources.getString(R.string.expected_date),
         required = false
     )
     private val dateOfVaccination = FormElement(
         id = 108,
         inputType = InputType.DATE_PICKER,
-        title = "Date of Vaccination",
-        min = System.currentTimeMillis(),
+        title = resources.getString(R.string.date_of_vaccination),
+        max = System.currentTimeMillis(),
         required = false
     )
     private val vaccinatedPlace = FormElement(
         id = 109,
         inputType = InputType.DROPDOWN,
-        title = "Vaccinated Place",
+        title = resources.getString(R.string.vaccinated_place),
         arrayId = R.array.imm_vaccinated_place_array,
         entries = resources.getStringArray(R.array.imm_vaccinated_place_array),
         required = false
@@ -82,7 +82,7 @@ class ImmunizationDataset(context: Context, language: Languages) : Dataset(conte
     private val vaccinatedBy = FormElement(
         id = 110,
         inputType = InputType.DROPDOWN,
-        title = "Vaccinated By",
+        title = resources.getString(R.string.vaccinated_by),
         arrayId = R.array.imm_vaccinated_by_array,
         entries = resources.getStringArray(R.array.imm_vaccinated_by_array),
         required = false
@@ -109,6 +109,10 @@ class ImmunizationDataset(context: Context, language: Languages) : Dataset(conte
         expectedDate.value =
             getDateFromLong(ben.dob + vaccine.minAllowedAgeInMillis + vaccine.overdueDurationSinceMinInMillis)
         dateOfVaccination.value = getDateFromLong(System.currentTimeMillis())
+        dateOfVaccination.min = ben.dob + vaccine.minAllowedAgeInMillis
+        if (System.currentTimeMillis() > ben.dob + vaccine.maxAllowedAgeInMillis) {
+            dateOfVaccination.max = ben.dob + vaccine.maxAllowedAgeInMillis
+        }
 
         imm?.let { saved ->
             dateOfVaccination.value = saved.date?.let { getDateFromLong(it) }

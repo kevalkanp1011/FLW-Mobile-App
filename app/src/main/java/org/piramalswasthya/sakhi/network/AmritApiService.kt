@@ -185,9 +185,9 @@ interface AmritApiService {
     suspend fun getCdrData(@Body userDetail: GetDataPaginatedRequest): Response<ResponseBody>
 
     @POST("/flw-0.0.1/incentive/masterData/getAll")
-    suspend fun getAllIncentiveActivities(@Body requestBody: IncentiveActivityListRequest): IncentiveActivityListResponse
+    suspend fun getAllIncentiveActivities(@Body requestBody: IncentiveActivityListRequest): Response<ResponseBody>
 
     @POST("/flw-0.0.1/incentive/fetchUserData")
-    suspend fun getAllIncentiveRecords(@Body requestBody: IncentiveRecordListRequest): IncentiveRecordListResponse
+    suspend fun getAllIncentiveRecords(@Body requestBody: IncentiveRecordListRequest): Response<ResponseBody>
 
 }

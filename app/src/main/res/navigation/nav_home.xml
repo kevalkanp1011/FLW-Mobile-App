@@ -73,6 +73,9 @@
         <action
             android:id="@+id/action_homeFragment_to_infantRegListFragment"
             app:destination="@id/infantRegListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_childImmunizationListFragment"
+            app:destination="@id/childImmunizationListFragment" />
     </fragment>
     <fragment
         android:id="@+id/allHouseholdFragment"
@@ -253,30 +256,30 @@
             app:destination="@id/newBenRegG15Fragment"
             app:popUpTo="@id/homeFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/newBenRegL15Fragment"
-        android:name="org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_less_15.NewBenRegL15Fragment"
-        android:label="@string/kid_registration">
-        <argument
-            android:name="hhId"
-            app:argType="long" />
-        <action
-            android:id="@+id/action_newBenRegL15Fragment_to_infantListFragment"
-            app:destination="@id/infantListFragment"
-            app:popUpTo="@id/homeFragment" />
-        <action
-            android:id="@+id/action_newBenRegL15Fragment_to_childListFragment"
-            app:destination="@id/childListFragment"
-            app:popUpTo="@id/homeFragment" />
-        <action
-            android:id="@+id/action_newBenRegL15Fragment_to_adolescentListFragment"
-            app:destination="@id/adolescentListFragment"
-            app:popUpTo="@id/homeFragment" />
-        <argument
-            android:name="benId"
-            android:defaultValue="0L"
-            app:argType="long" />
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/newBenRegL15Fragment"-->
+<!--        android:name="org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_less_15.NewBenRegL15Fragment"-->
+<!--        android:label="@string/kid_registration">-->
+<!--        <argument-->
+<!--            android:name="hhId"-->
+<!--            app:argType="long" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_newBenRegL15Fragment_to_infantListFragment"-->
+<!--            app:destination="@id/infantListFragment"-->
+<!--            app:popUpTo="@id/homeFragment" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_newBenRegL15Fragment_to_childListFragment"-->
+<!--            app:destination="@id/childListFragment"-->
+<!--            app:popUpTo="@id/homeFragment" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_newBenRegL15Fragment_to_adolescentListFragment"-->
+<!--            app:destination="@id/adolescentListFragment"-->
+<!--            app:popUpTo="@id/homeFragment" />-->
+<!--        <argument-->
+<!--            android:name="benId"-->
+<!--            android:defaultValue="0L"-->
+<!--            app:argType="long" />-->
+<!--    </fragment>-->
     <fragment
         android:id="@+id/newBenRegG15Fragment"
         android:name="org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_more_15.NewBenRegG15Fragment"

@@ -250,37 +250,37 @@ class IconDataset @Inject constructor(
 
     fun getMotherCareDataset(resources: Resources) = listOf(
         Icon(
-            R.drawable.ic__pregnancy,
+            R.drawable.ic__pwr,
             resources.getString(R.string.icon_title_pmr),
             recordsRepo.getPregnantWomenListCount(),
             MotherCareFragmentDirections.actionMotherCareFragmentToPwRegistrationFragment()
         ),
         Icon(
-            R.drawable.ic__pregnancy,
+            R.drawable.ic__anc_visit,
             resources.getString(R.string.icon_title_pmt),
             recordsRepo.getRegisteredPregnantWomanListCount(),
             MotherCareFragmentDirections.actionMotherCareFragmentToPwAncVisitsFragment()
         ),
         Icon(
-            R.drawable.ic__pregnancy,
+            R.drawable.ic__delivery_outcome,
             resources.getString(R.string.icon_title_pmdo),
             recordsRepo.getDeliveredWomenListCount(),
             MotherCareFragmentDirections.actionMotherCareFragmentToDeliveryOutcomeListFragment()
         ),
         Icon(
-            R.drawable.ic__pregnancy,
+            R.drawable.ic__mother,
             resources.getString(R.string.icon_title_pncmc),
             recordsRepo.pncMotherListCount,
             MotherCareFragmentDirections.actionMotherCareFragmentToPncMotherListFragment()
         ),
         Icon(
-            R.drawable.ic__pregnancy,
+            R.drawable.ic__infant_registration,
             resources.getString(R.string.icon_title_pmir),
             recordsRepo.getInfantRegisterCount(),
             MotherCareFragmentDirections.actionMotherCareFragmentToInfantRegListFragment()
         ),
         Icon(
-            R.drawable.ic__pregnancy,
+            R.drawable.ic__child_registration,
             resources.getString(R.string.icon_title_pmcr),
             recordsRepo.getRegisteredInfantsCount(),
             MotherCareFragmentDirections.actionMotherCareFragmentToChildRegListFragment()

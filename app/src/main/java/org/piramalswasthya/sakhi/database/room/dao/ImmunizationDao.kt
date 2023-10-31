@@ -11,7 +11,6 @@ import org.piramalswasthya.sakhi.model.ChildImmunizationDetailsCache
 import org.piramalswasthya.sakhi.model.ImmunizationCache
 import org.piramalswasthya.sakhi.model.ImmunizationCategory
 import org.piramalswasthya.sakhi.model.MotherImmunizationDetailsCache
-import org.piramalswasthya.sakhi.model.TBScreeningCache
 import org.piramalswasthya.sakhi.model.Vaccine
 
 @Dao
@@ -32,6 +31,10 @@ interface ImmunizationDao {
 
     @Query("SELECT * FROM IMMUNIZATION WHERE  syncState = :syncState")
     suspend fun getUnsyncedImmunization(syncState: SyncState): List<ImmunizationCache>
+
+    @Query("select count(*) as count from (select * from beneficiary b inner join vaccine v on  (strftime('%s', 'now') * 1000)  - b.dob between v.minAllowedAgeInMillis and v.overdueDurationSinceMinInMillis and v.vaccineId not in (select vaccineId from immunization i where i.beneficiaryId = b.beneficiaryId) group by b.beneficiaryId)")
+    fun getChildrenImmunizationDueListCount() : Flow<Int>
+
 
     @Transaction
     @Query(

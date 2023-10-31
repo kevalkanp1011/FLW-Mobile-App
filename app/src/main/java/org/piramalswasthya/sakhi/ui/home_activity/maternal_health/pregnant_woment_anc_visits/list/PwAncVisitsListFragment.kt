@@ -100,7 +100,7 @@ class PwAncVisitsListFragment : Fragment() {
         super.onStart()
         activity?.let {
             (it as HomeActivity).updateActionBar(
-                R.drawable.ic__pregnancy,
+                R.drawable.ic__anc_visit,
                 getString(R.string.icon_title_pmt)
             )
         }

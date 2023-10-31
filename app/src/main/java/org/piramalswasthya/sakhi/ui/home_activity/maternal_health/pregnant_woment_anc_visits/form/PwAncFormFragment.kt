@@ -161,7 +161,7 @@ class PwAncFormFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__pregnancy, getString(R.string.anc_visit))
+            (it as HomeActivity).updateActionBar(R.drawable.ic__anc_visit, getString(R.string.anc_visit))
         }
     }
 

@@ -90,7 +90,7 @@ class DeliveryOutcomeListFragment : Fragment() {
         super.onStart()
         activity?.let {
             (it as HomeActivity).updateActionBar(
-                R.drawable.ic__pregnancy,
+                R.drawable.ic__delivery_outcome,
                 getString(R.string.delivery_outcome_list)
             )
         }

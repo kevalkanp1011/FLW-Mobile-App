@@ -782,11 +782,12 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
     }
 
     fun getLocalValueInArray(arrayId: Int, entry: String?): String? {
-        entry?.let {
-            return resources.getStringArray(arrayId)[englishResources.getStringArray(arrayId)
-                .indexOf(it)]
+        return if (entry.isNullOrEmpty()) {
+            null
+        } else {
+            resources.getStringArray(arrayId)[englishResources.getStringArray(arrayId)
+                .indexOf(entry)]
         }
-        return null
     }
 
     fun getEnglishValueInArray(arrayId: Int, entry: String?): String? {

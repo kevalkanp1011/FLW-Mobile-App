@@ -118,7 +118,7 @@ class InfantRegFragment : Fragment() {
         super.onStart()
         activity?.let {
             (it as HomeActivity).updateActionBar(
-                R.drawable.ic__infant,
+                R.drawable.ic__infant_registration,
                 getString(R.string.infant_reg)
             )
         }

@@ -58,6 +58,13 @@ class SchedulerFragment : Fragment() {
                 binding.tvAnc.text = it.toString()
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.immunizationDue.collect{
+                binding.tvImm.text = it.toString()
+            }
+        }
+
         lifecycleScope.launch {
             viewModel.lowWeightBabiesCount.collect{
                 binding.tvLbwb.text = it.toString()
@@ -65,6 +72,10 @@ class SchedulerFragment : Fragment() {
         }
         binding.cvAnc.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToPwAncVisitsFragment())
+        }
+
+        binding.cvImm.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToChildImmunizationListFragment())
         }
         binding.cvHrp.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToHRPPregnantListFragment())

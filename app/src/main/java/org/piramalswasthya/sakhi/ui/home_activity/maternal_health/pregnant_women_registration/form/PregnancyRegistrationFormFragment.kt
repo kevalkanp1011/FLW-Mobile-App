@@ -156,7 +156,7 @@ class PregnancyRegistrationFormFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__pregnancy, getString(R.string.pregnancy_registration))
+            (it as HomeActivity).updateActionBar(R.drawable.ic__pwr, getString(R.string.pregnancy_registration))
         }
     }
 

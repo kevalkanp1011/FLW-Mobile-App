@@ -27,8 +27,13 @@ class SchedulerViewModel @Inject constructor(
         get() = _state
 
     val ancDueCount : Flow<Int> = maternalHealthRepo.ancDueCount
+
     val hrpDueCount : Flow<Int> = recordsRepo.hrpTrackingPregListCount
+
     val hrpCountEC : Flow<Int> = recordsRepo.hrpTrackingNonPregListCount
+
+    val immunizationDue : Flow<Int> = recordsRepo.childrenImmunizationDueListCount
+
     val lowWeightBabiesCount : Flow<Int> = recordsRepo.lowWeightBabiesCount
 
     private val _date = MutableLiveData(
