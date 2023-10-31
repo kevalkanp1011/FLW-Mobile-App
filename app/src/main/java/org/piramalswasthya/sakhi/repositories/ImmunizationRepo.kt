@@ -99,14 +99,17 @@ class ImmunizationRepo @Inject constructor(
     }
 
     private suspend fun saveImmunizationCacheFromResponse(dataObj: String): List<ImmunizationPost> {
-        val immunizationList = Gson().fromJson(dataObj, Array<ImmunizationPost>::class.java).toList()
+        val immunizationList =
+            Gson().fromJson(dataObj, Array<ImmunizationPost>::class.java).toList()
         immunizationList.forEach { immunizationDTO ->
-            val vaccine = immunizationDao.getVaccineByName(immunizationDTO.vaccineName)!!
             val immunization: ImmunizationCache? =
-                immunizationDao.getImmunizationRecord(immunizationDTO.beneficiaryId, vaccine.vaccineId)
+                immunizationDao.getImmunizationRecord(
+                    immunizationDTO.beneficiaryId,
+                    immunizationDTO.vaccineId
+                )
             if (immunization == null) {
                 val immunizationCache = immunizationDTO.toCacheModel()
-                immunizationCache.vaccineId = vaccine.vaccineId
+                immunizationCache.vaccineId = immunizationDTO.vaccineId
                 immunizationDao.addImmunizationRecord(immunizationCache)
             }
         }
@@ -120,7 +123,8 @@ class ImmunizationRepo @Inject constructor(
                 preferenceDao.getLoggedInUser()
                     ?: throw IllegalStateException("No user logged in!!")
 
-            val immunizationCacheList: List<ImmunizationCache> = immunizationDao.getUnsyncedImmunization(SyncState.UNSYNCED)
+            val immunizationCacheList: List<ImmunizationCache> =
+                immunizationDao.getUnsyncedImmunization(SyncState.UNSYNCED)
 
             val immunizationDTOs = mutableListOf<ImmunizationPost>()
             immunizationCacheList.forEach { cache ->
@@ -172,7 +176,7 @@ class ImmunizationRepo @Inject constructor(
 
             } catch (e: SocketTimeoutException) {
                 Timber.d("save_child_immunization error : $e")
-                return@withContext pushUnSyncedChildImmunizationRecords();
+                return@withContext pushUnSyncedChildImmunizationRecords()
             } catch (e: java.lang.IllegalStateException) {
                 Timber.d("save_child_immunization error : $e")
                 return@withContext false
