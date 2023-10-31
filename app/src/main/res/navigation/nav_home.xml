@@ -247,10 +247,10 @@
         <argument
             android:name="hhId"
             app:argType="long" />
-        <action
-            android:id="@+id/action_newBenRegTypeFragment_to_newBenRegL15Fragment"
-            app:destination="@id/newBenRegL15Fragment"
-            app:popUpTo="@id/homeFragment" />
+<!--        <action-->
+<!--            android:id="@+id/action_newBenRegTypeFragment_to_newBenRegL15Fragment"-->
+<!--            app:destination="@id/newBenRegL15Fragment"-->
+<!--            app:popUpTo="@id/homeFragment" />-->
         <action
             android:id="@+id/action_newBenRegTypeFragment_to_newBenRegG15Fragment"
             app:destination="@id/newBenRegG15Fragment"
@@ -449,9 +449,9 @@
         <action
             android:id="@+id/action_householdMembersFragment_to_newBenRegTypeFragment"
             app:destination="@id/newBenRegTypeFragment" />
-        <action
-            android:id="@+id/action_householdMembersFragment_to_newBenRegL15Fragment"
-            app:destination="@id/newBenRegL15Fragment" />
+<!--        <action-->
+<!--            android:id="@+id/action_householdMembersFragment_to_newBenRegL15Fragment"-->
+<!--            app:destination="@id/newBenRegL15Fragment" />-->
         <action
             android:id="@+id/action_householdMembersFragment_to_newBenRegG15Fragment"
             app:destination="@id/newBenRegG15Fragment" />

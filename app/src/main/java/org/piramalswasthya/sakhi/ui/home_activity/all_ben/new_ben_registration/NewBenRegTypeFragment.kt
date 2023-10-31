@@ -142,11 +142,11 @@ class NewBenRegTypeFragment : Fragment() {
 
         viewModel.navigateToNewBenKidRegistration.observe(viewLifecycleOwner) {
             if (it) {
-                findNavController().navigate(
-                    NewBenRegTypeFragmentDirections.actionNewBenRegTypeFragmentToNewBenRegL15Fragment(
-                        hhId
-                    )
-                )
+//                findNavController().navigate(
+//                    NewBenRegTypeFragmentDirections.actionNewBenRegTypeFragmentToNewBenRegL15Fragment(
+//                        hhId
+//                    )
+//                )
                 viewModel.navigateToBenKidRegistrationCompleted()
             }
         }

@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavDirections
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -16,8 +15,6 @@ import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.BenRegFormDataset
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.helpers.Konstants
-import org.piramalswasthya.sakhi.model.AgeUnit
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.BenRegGen
 import org.piramalswasthya.sakhi.model.BenRegKid
@@ -28,7 +25,6 @@ import org.piramalswasthya.sakhi.model.User
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.HouseholdRepo
 import org.piramalswasthya.sakhi.repositories.UserRepo
-import org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration.ben_age_less_15.NewBenRegL15FragmentDirections
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -230,19 +226,6 @@ class NewBenRegViewModel @Inject constructor(
     fun setImageUriToFormElement(dpUri: Uri) {
         dataset.setImageUriToFormElement(lastImageFormId, dpUri)
 
-    }
-
-    fun getNavDirection(): NavDirections {
-        return if (ben.ageUnit in arrayOf(
-                AgeUnit.DAYS,
-                AgeUnit.MONTHS
-            ) || (ben.ageUnit == AgeUnit.YEARS && ben.age == 1)
-        )
-            NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToInfantListFragment()
-        else if (ben.age <= Konstants.maxAgeForChild)
-            NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToChildListFragment()
-        else
-            NewBenRegL15FragmentDirections.actionNewBenRegL15FragmentToAdolescentListFragment()
     }
 
     fun updateValueByIdAndReturnListIndex(id: Int, value: String?): Int {
