@@ -11,8 +11,8 @@ interface HbncDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(vararg hbncCache: HBNCCache)
 
-    @Query("SELECT * FROM HBNC WHERE processed = 'N'")
-    suspend fun getAllUnprocessedFPOT(): List<HBNCCache>
+    @Query("SELECT * FROM HBNC WHERE processed = 'N' or processed = 'U'")
+    suspend fun getAllUnprocessed(): List<HBNCCache>
 
     @Query("select count(*) from HBNC")
     suspend fun hbncCount(): Int
@@ -25,7 +25,11 @@ interface HbncDao {
 
     @Update
     suspend fun setSynced(it: HBNCCache)
-    @Query("SELECT * FROM HBNC WHERE processed = 'N'")
+
+    /**
+     * get all hbnc records with processed state N(new) or U(un processed)
+     */
+    @Query("SELECT * FROM HBNC WHERE processed = 'N' or processed = 'U'")
     suspend fun getAllUnprocessedHbnc(): List<HBNCCache>
 
     @Update

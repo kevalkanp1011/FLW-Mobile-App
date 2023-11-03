@@ -142,6 +142,37 @@ object HelperUtil {
         return null
     }
 
+    /**
+     * get current date in yyyy-MM-dd HH:mm:ss format
+     */
+    fun getCurrentDate(millis: Long = System.currentTimeMillis()): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
+        val dateString = dateFormat.format(millis)
+        val timeString = timeFormat.format(millis)
+        return "${dateString}T${timeString}.000Z"
+    }
+
+    /**
+     * get date string in yyyy-MM-dd format from given long date
+     */
+    fun getDateStrFromLong(dateLong: Long?): String? {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
+        dateLong?.let {
+            val dateString = dateFormat.format(dateLong)
+            val timeString = timeFormat.format(dateLong)
+            return dateString
+        } ?: run {
+            return null
+        }
+    }
+
+    fun getLongFromDateStr(dateString: String?): Long {
+        val f =  SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        val date = dateString?.let { f.parse(it) }
+        return date?.time ?: 0L
+    }
     fun Canvas.drawMultilineText(
         text: CharSequence,
         textPaint: TextPaint,

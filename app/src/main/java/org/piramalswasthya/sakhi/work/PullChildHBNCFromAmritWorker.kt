@@ -14,20 +14,20 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.repositories.HRPRepo
+import org.piramalswasthya.sakhi.repositories.HbncRepo
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 @HiltWorker
-class PullHRPFromAmritWorker @AssistedInject constructor(
+class PullChildHBNCFromAmritWorker @AssistedInject constructor(
     @Assisted private val appContext: Context,
     @Assisted params: WorkerParameters,
-    private val hrpRepo: HRPRepo,
+    private val hbncRepo: HbncRepo,
     private val preferenceDao: PreferenceDao,
 ) : CoroutineWorker(appContext, params) {
 
     companion object {
-        const val name = "Pull HRP From Amrit"
+        const val name = "PullChildHBNCFromAmritWorker"
         const val Progress = "Progress"
 
     }
@@ -37,7 +37,7 @@ class PullHRPFromAmritWorker @AssistedInject constructor(
         return try {
             try {
                 // This ensures that you waiting for the Notification update to be done.
-                setForeground(createForegroundInfo("Downloading HRP Data"))
+                setForeground(createForegroundInfo("Downloading Child HBNC Data"))
             } catch (throwable: Throwable) {
                 // Handle this exception gracefully
                 Timber.d("error", "Something bad happened", throwable)
@@ -48,19 +48,15 @@ class PullHRPFromAmritWorker @AssistedInject constructor(
                 try {
                     val result1 =
                         awaitAll(
-                            async { getHighRiskAssess() },
-//                            async { getHRPAssess() },
-                            async { getHRPTrack() },
-//                            async { getHRNonPAssess() },
-                            async { getHRNonPTrack() }
+                            async { getChildHBNCDetails() }
                         )
 
                     val endTime = System.currentTimeMillis()
                     val timeTaken = TimeUnit.MILLISECONDS.toSeconds(endTime - startTime)
-                    Timber.d("Full tb fetching took $timeTaken seconds $result1")
+                    Timber.d("Full HBNC fetching took $timeTaken seconds $result1")
 
                     if (result1.all { it }) {
-//                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
+                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
                         return@withContext Result.success()
                     }
                     return@withContext Result.failure()
@@ -72,7 +68,7 @@ class PullHRPFromAmritWorker @AssistedInject constructor(
             }
 
         } catch (e: java.lang.Exception) {
-            Timber.d("Error occurred in PullTBFromAmritWorker $e ${e.stackTrace}")
+            Timber.d("Error occurred in PullChildHBNCFromAmritWorker $e ${e.stackTrace}")
 
             Result.failure()
         }
@@ -94,22 +90,11 @@ class PullHRPFromAmritWorker @AssistedInject constructor(
         return ForegroundInfo(0, notification)
     }
 
-    private suspend fun getHRPAssess() : Boolean {
-        return withContext(Dispatchers.IO) {
-            try {
-                val res = hrpRepo.getHRPAssessDetailsFromServer()
-                return@withContext res == 1
-            } catch (e: Exception) {
-                Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
-            }
-            true
-        }
-    }
 
-    private suspend fun getHighRiskAssess() : Boolean {
+    private suspend fun getChildHBNCDetails() : Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val res = hrpRepo.getHighRiskAssessDetailsFromServer()
+                val res = hbncRepo.getHBNCDetailsFromServer()
                 return@withContext res == 1
             } catch (e: Exception) {
                 Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
@@ -117,40 +102,4 @@ class PullHRPFromAmritWorker @AssistedInject constructor(
             true
         }
     }
-    private suspend fun getHRPTrack() : Boolean {
-        return withContext(Dispatchers.IO) {
-            try {
-                val res = hrpRepo.getHRPTrackDetailsFromServer()
-                return@withContext res == 1
-            } catch (e: Exception) {
-                Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
-            }
-            true
-        }
-    }
-
-    private suspend fun getHRNonPAssess() : Boolean {
-        return withContext(Dispatchers.IO) {
-            try {
-                val res = hrpRepo.getHRNonPAssessDetailsFromServer()
-                return@withContext res == 1
-            } catch (e: Exception) {
-                Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
-            }
-            true
-        }
-    }
-
-    private suspend fun getHRNonPTrack() : Boolean {
-        return withContext(Dispatchers.IO) {
-            try {
-                val res = hrpRepo.getHRNonPTrackDetailsFromServer()
-                return@withContext res == 1
-            } catch (e: Exception) {
-                Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
-            }
-            true
-        }
-    }
-
 }

@@ -56,7 +56,7 @@ class PullChildImmunizatonFromAmritWorker @AssistedInject constructor(
                     Timber.d("Full child_immunization fetching took $timeTaken seconds $result1")
 
                     if (result1.all { it }) {
-                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
+//                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
                         return@withContext Result.success()
                     }
                     return@withContext Result.failure()

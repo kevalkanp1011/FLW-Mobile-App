@@ -1,21 +1,31 @@
 package org.piramalswasthya.sakhi.repositories
 
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.database.room.dao.HbncDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.HBNCCache
 import org.piramalswasthya.sakhi.model.HBNCPost
 import org.piramalswasthya.sakhi.model.HbncHomeVisit
 import org.piramalswasthya.sakhi.model.HbncVisitCard
+import org.piramalswasthya.sakhi.network.AmritApiService
+import org.piramalswasthya.sakhi.network.GetDataPaginatedRequest
+import org.piramalswasthya.sakhi.utils.HelperUtil
 import timber.log.Timber
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 class HbncRepo @Inject constructor(
     private val database: InAppDb,
-    private val preferenceDao: PreferenceDao
+    private val amritApiService: AmritApiService,
+    private val userRepo: UserRepo,
+    private val preferenceDao: PreferenceDao,
+    private val hbncDao: HbncDao
 ) {
 
 
@@ -94,56 +104,186 @@ class HbncRepo @Inject constructor(
         }
     }
 
-//    private suspend fun postDataToD2dServer(hbncPostSet: Set<HBNCPost>): Boolean {
-//        if (hbncPostSet.isEmpty())
-//            return false
-//
-//        try {
-//            val response = d2DNetworkApiService.postHbncForm(hbncPostSet.toList())
-//            val statusCode = response.code()
-//
-//            if (statusCode == 200) {
-//                try {
-//                    val responseString = response.body()?.string()
-//                    if (responseString != null) {
-//                        val jsonObj = JSONObject(responseString)
-//
-//                        // Log.d("dsfsdfse", "onResponse: "+jsonObj);
-//                        val errormessage = jsonObj.getString("message")
-//                        if (jsonObj.isNull("status"))
-//                            throw IllegalStateException("D2d server not responding properly, Contact Service Administrator!!")
-//                        val responsestatuscode = jsonObj.getInt("status")
-//
-//                        if (responsestatuscode == 200) {
-//                            Timber.d("Saved Successfully to server")
-//                            return true
-//                        } else if (responsestatuscode == 5002) {
-//                            val user = userRepo.getLoggedInUser()
-//                                ?: throw IllegalStateException("User seems to be logged out!!")
-//                            if (userRepo.refreshTokenD2d(user.userName, user.password))
-//                                throw SocketTimeoutException()
-//                        } else {
-//                            throw IOException("Throwing away IO eXcEpTiOn")
-//                        }
-//                    }
-//                } catch (e: IOException) {
-//                    e.printStackTrace()
-//                } catch (e: Exception) {
-//                    e.printStackTrace()
-//                }
-//            } else {
-//                //server_resp5();
-//            }
-//            Timber.w("Bad Response from server, need to check $hbncPostSet $response ")
-//            return false
-//        } catch (e: SocketTimeoutException) {
-//            Timber.d("Caught exception $e here")
-//            return postDataToD2dServer(hbncPostSet)
-//        } catch (e: JSONException) {
-//            Timber.d("Caught exception $e here")
-//            return false
-//        }
-//    }
+    /**
+     * get all unprocessed data from local db and push it to amrit server
+     */
+    suspend fun pushHBNCDetails(): Int {
 
+        return withContext(Dispatchers.IO) {
+            val user =
+                preferenceDao.getLoggedInUser()
+                    ?: throw IllegalStateException("No user logged in!!")
+
+            val hbncList = database.hbncDao.getAllUnprocessedHbnc()
+
+            val hbncPostSet = mutableSetOf<HBNCPost>()
+
+            try {
+                hbncList.forEach {
+                    hbncPostSet.add(it.asPostModel(user))
+                }
+                val response = amritApiService.pushHBNCDetailsFromServer(
+                    hbncPostSet.toList()
+                )
+                val statusCode = response.code()
+                if (statusCode == 200) {
+                    val responseString = response.body()?.string()
+                    if (responseString != null) {
+                        val jsonObj = JSONObject(responseString)
+
+                        val errorMessage = jsonObj.getString("errorMessage")
+                        val responseStatusCode = jsonObj.getInt("statusCode")
+                        Timber.d("Push to Amrit HBNC data : $responseStatusCode")
+                        when (responseStatusCode) {
+                            200 -> {
+                                try {
+                                    val dataObj = jsonObj.getString("data")
+                                    updateSyncStatus(hbncList)
+                                } catch (e: Exception) {
+                                    Timber.d("Child HBNC entries sync status not updated $e")
+                                    return@withContext 0
+                                }
+
+                                return@withContext 1
+                            }
+
+                            5002 -> {
+                                if (userRepo.refreshTokenTmc(
+                                        user.userName, user.password
+                                    )
+                                ) throw SocketTimeoutException("Refreshed Token!")
+                                else throw IllegalStateException("User Logged out!!")
+                            }
+
+                            5000 -> {
+                                if (errorMessage == "No record found") return@withContext 0
+                            }
+
+                            else -> {
+                                throw IllegalStateException("$responseStatusCode received, dont know what todo!?")
+                            }
+                        }
+                    }
+                }
+            } catch (e: SocketTimeoutException) {
+                getHBNCDetailsFromServer()
+                Timber.d("get hbnc data error : $e")
+                return@withContext -2
+
+            } catch (e: java.lang.IllegalStateException) {
+                Timber.d("get hbnc error : $e")
+                return@withContext -1
+            }
+            -1
+        }
+    }
+
+    /**
+     * once data is pushed update the sync state to synced and processed to P
+     */
+    private suspend fun updateSyncStatus(hbncList: List<HBNCCache>) {
+        hbncList.forEach {
+            it.syncState = SyncState.SYNCED
+            it.processed = "P"
+            hbncDao.update(it)
+        }
+    }
+
+    /**
+     * get hbnc details from server and save it to local db
+     */
+    suspend fun getHBNCDetailsFromServer(): Int {
+
+        return withContext(Dispatchers.IO) {
+            val user =
+                preferenceDao.getLoggedInUser()
+                    ?: throw IllegalStateException("No user logged in!!")
+            val lastTimeStamp = Konstants.defaultTimeStamp
+            try {
+                val response = amritApiService.getHBNCDetailsFromServer(
+                    GetDataPaginatedRequest(
+                        ashaId = user.userId,
+                        pageNo = 0,
+                        fromDate = HelperUtil.getCurrentDate(lastTimeStamp),
+                        toDate = HelperUtil.getCurrentDate()
+                    )
+                )
+                val statusCode = response.code()
+                if (statusCode == 200) {
+                    val responseString = response.body()?.string()
+                    if (responseString != null) {
+                        val jsonObj = JSONObject(responseString)
+
+                        val errorMessage = jsonObj.getString("errorMessage")
+                        val responseStatusCode = jsonObj.getInt("statusCode")
+                        Timber.d("Pull from Amrit HBNC data : $responseStatusCode")
+                        when (responseStatusCode) {
+                            200 -> {
+                                try {
+                                    val dataObj = jsonObj.getString("data")
+                                    saveChildHBNCacheFromResponse(dataObj)
+                                } catch (e: Exception) {
+                                    Timber.d("Child HBNC entries not synced $e")
+                                    return@withContext 0
+                                }
+
+                                return@withContext 1
+                            }
+
+                            5002 -> {
+                                if (userRepo.refreshTokenTmc(
+                                        user.userName, user.password
+                                    )
+                                ) throw SocketTimeoutException("Refreshed Token!")
+                                else throw IllegalStateException("User Logged out!!")
+                            }
+
+                            5000 -> {
+                                if (errorMessage == "No record found") return@withContext 0
+                            }
+
+                            else -> {
+                                throw IllegalStateException("$responseStatusCode received, dont know what todo!?")
+                            }
+                        }
+                    }
+                }
+
+            } catch (e: SocketTimeoutException) {
+                getHBNCDetailsFromServer()
+                Timber.d("get hbnc data error : $e")
+                return@withContext -2
+
+            } catch (e: java.lang.IllegalStateException) {
+                Timber.d("get hbnc error : $e")
+                return@withContext -1
+            }
+            -1
+        }
+    }
+
+    /**
+     * extract hbnc objects from api response and save in in app db
+     */
+    private suspend fun saveChildHBNCacheFromResponse(dataObj: String) {
+        val hbncList =
+            Gson().fromJson(dataObj, Array<HBNCPost>::class.java).toList()
+
+        hbncList.forEach { hbncPost ->
+            var cache = hbncDao.getHbnc(hbncPost.hhId, hbncPost.benId, hbncPost.homeVisitDate)
+            if (cache == null) {
+                cache = hbncPost.toCache()
+                hbncDao.update(cache)
+            } else {
+                if (cache.visitCard == null) cache.visitCard = hbncPost.hbncVisitCardDTO?.toCache()
+                if (cache.part1 == null) cache.part1 = hbncPost.hbncPart1DTO?.toCache()
+                if (cache.part2 == null) cache.part2 = hbncPost.hbncPart2DTO?.toCache()
+                if (cache.homeVisitForm == null) cache.homeVisitForm = hbncPost.hbncVisitDTO?.toCache()
+                cache.processed = "P"
+                cache.syncState = SyncState.SYNCED
+            }
+            hbncDao.update(cache)
+        }
+    }
 
 }

@@ -190,4 +190,10 @@ interface AmritApiService {
     @POST("/flw-0.0.1/incentive/fetchUserData")
     suspend fun getAllIncentiveRecords(@Body requestBody: IncentiveRecordListRequest): Response<ResponseBody>
 
+    @POST("/flw-0.0.1/child-care/hbncVisit/getAll")
+    suspend fun getHBNCDetailsFromServer(getDataPaginatedRequest: GetDataPaginatedRequest): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/child-care/hbncVisit/saveAll")
+    suspend fun pushHBNCDetailsFromServer(@Body hbncPostList: List<HBNCPost>): Response<ResponseBody>
+
 }

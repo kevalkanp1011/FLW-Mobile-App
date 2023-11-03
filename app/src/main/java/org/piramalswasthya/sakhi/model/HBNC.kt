@@ -5,24 +5,21 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import org.piramalswasthya.sakhi.utils.HelperUtil
 
 @Entity(
     tableName = "HBNC",
     foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
-        parentColumns = arrayOf("beneficiaryId",/* "householdId"*/),
-        childColumns = arrayOf("benId", /*"hhId"*/),
+        parentColumns = arrayOf("beneficiaryId"/* "householdId"*/),
+        childColumns = arrayOf("benId" /*"hhId"*/),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "ind_hbnc", value = ["benId",/* "hhId"*/])]
+    indices = [Index(name = "ind_hbnc", value = ["benId"/* "hhId"*/])]
 )
 
 data class HBNCCache(
@@ -58,126 +55,165 @@ data class HBNCCache(
 
 ) : FormDataModel {
 
-    companion object {
-        private val format1 = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+    fun asPostModel(
+        user: User
+    ): HBNCPost {
+        var hbncVisitCardDTO: HBNCVisitCardPost? = null
+        var hbncPart1DTO: HBNCPart1Post? = null
+        var hbncPart2DTO: HBNCPart2Post? = null
+        var hbncVisitDTO: HBNCVisitPost? = null
+
+        visitCard?.let {
+            hbncVisitCardDTO = HBNCVisitCardPost(
+                id = 0L,
+                benId = benId,
+                visitNo = homeVisitDate,
+                ashaName = it.ashaName,
+                villageName = it.villageName,
+                subCenterName = it.subCenterName,
+                blockName = it.blockName,
+                motherName = it.motherName,
+                fatherName = it.fatherName,
+                dateOfDelivery = HelperUtil.getDateStrFromLong(it.dateOfDelivery),
+                placeOfDelivery = it.placeOfDelivery.toString(),
+                babyGender = it.babyGender.toString(),
+                typeOfDelivery = it.typeOfDelivery.toString(),
+                stillBirth = it.stillBirth != 0,
+                startedBreastFeeding = it.startedBreastFeeding.toString(),
+                dischargeDateMother = HelperUtil.getDateStrFromLong(it.dischargeDateMother),
+                dischargeDateBaby = HelperUtil.getDateStrFromLong(it.dischargeDateBaby),
+                weightInGrams = it.weightInGrams,
+                registrationOfBirth = it.registrationOfBirth != 0,
+                createdBy = user.userName,
+                createdDate = HelperUtil.getDateStrFromLong(System.currentTimeMillis()),
+                updatedBy = user.userName,
+                updatedDate = HelperUtil.getDateStrFromLong(System.currentTimeMillis()),
+            )
+        }
+
+        part1?.let {
+            hbncPart1DTO = HBNCPart1Post(
+                id = 0L,
+                benId = benId,
+                visitNo = homeVisitDate,
+                dateOfVisit = HelperUtil.getDateStrFromLong(it.dateOfVisit),
+                babyAlive = it.babyAlive != 0,
+                dateOfBabyDeath = HelperUtil.getDateStrFromLong(it.dateOfBabyDeath),
+                timeOfBabyDeath = it.timeOfBabyDeath,
+                placeOfBabyDeath = it.placeOfBabyDeath.toString(),
+                otherPlaceOfBabyDeath = it.otherPlaceOfBabyDeath,
+                isBabyPreterm = it.isBabyPreterm != 0,
+                gestationalAge = it.gestationalAge.toString(),
+                dateOfFirstExamination = HelperUtil.getDateStrFromLong(it.dateOfFirstExamination),
+                timeOfFirstExamination = it.timeOfFirstExamination,
+                motherAlive = it.motherAlive != 0,
+                dateOfMotherDeath = HelperUtil.getDateStrFromLong(it.dateOfMotherDeath),
+                timeOfMotherDeath = it.timeOfMotherDeath,
+                placeOfMotherDeath = it.placeOfMotherDeath.toString(),
+                otherPlaceOfMotherDeath = it.otherPlaceOfMotherDeath,
+                motherAnyProblem = it.motherAnyProblem,
+                babyFirstFed = it.babyFirstFed.toString(),
+                otherBabyFirstFed = it.otherBabyFirstFed,
+                timeBabyFirstFed = it.timeBabyFirstFed,
+                howBabyTookFirstFeed = it.howBabyTookFirstFeed.toString(),
+                motherHasBreastFeedProblem = it.motherHasBreastFeedProblem != 0,
+                motherBreastFeedProblem = it.motherBreastFeedProblem,
+                createdBy = user.userName,
+                createdDate = HelperUtil.getDateStrFromLong(System.currentTimeMillis()),
+                updatedBy = user.userName,
+                updatedDate = HelperUtil.getDateStrFromLong(System.currentTimeMillis()),
+            )
+        }
+
+        part2?.let {
+            hbncPart2DTO = HBNCPart2Post(
+                id = 0L,
+                benId = benId,
+                visitNo = homeVisitDate,
+                dateOfVisit = HelperUtil.getDateStrFromLong(it.dateOfVisit),
+                babyTemperature = it.babyTemperature,
+                babyEyeCondition = it.babyEyeCondition.toString(),
+                babyUmbilicalBleed = it.babyUmbilicalBleed != 0,
+                actionBabyUmbilicalBleed = it.actionBabyUmbilicalBleed != 0,
+                babyWeight = it.babyWeight.toFloat(),
+                babyWeightMatchesColor = it.babyWeightMatchesColor != 0,
+                babyWeightColorOnScale = it.babyWeightColorOnScale.toString(),
+                allLimbsLimp = it.allLimbsLimp != 0,
+                feedLessStop = it.feedLessStop != 0,
+                cryWeakStop = it.cryWeakStop != 0,
+                dryBaby = it.dryBaby != 0,
+                wrapClothCloseToMother = it.wrapClothCloseToMother != 0,
+                exclusiveBreastFeeding = it.exclusiveBreastFeeding != 0,
+                cordCleanDry = it.cordCleanDry != 0,
+                unusualInBaby = it.unusualInBaby.toString(),
+                otherUnusualInBaby = it.otherUnusualInBaby,
+                createdBy = user.userName,
+                createdDate = HelperUtil.getDateStrFromLong(System.currentTimeMillis()),
+                updatedBy = user.userName,
+                updatedDate = HelperUtil.getDateStrFromLong(System.currentTimeMillis()),
+            )
+        }
+
+        homeVisitForm?.let {
+            hbncVisitDTO = HBNCVisitPost(
+                id = 0L,
+                benId = benId,
+                visitNo = homeVisitDate,
+                dateOfVisit = HelperUtil.getDateStrFromLong(it.dateOfVisit),
+                babyAlive = it.babyAlive != 0,
+                numTimesFullMeal24hr = it.numTimesFullMeal24hr,
+                numPadChanged24hr = it.numPadChanged24hr,
+                babyKeptWarmWinter = it.babyKeptWarmWinter != 0,
+                babyFedProperly = it.babyFedProperly != 0,
+                babyCryContinuously = it.babyCryContinuously != 0,
+                motherTemperature = if (it.motherTemperature != null) it.motherTemperature.toInt() else 0,
+                foulDischargeFever = it.foulDischargeFever != 0,
+                motherSpeakAbnormallyFits = it.motherSpeakAbnormallyFits != 0,
+                motherLessNoMilk = it.motherLessNoMilk != 0,
+                motherBreastProblem = it.motherBreastProblem != 0,
+                babyEyesSwollen = it.babyEyesSwollen != 0,
+                babyWeight = (if (it.babyWeight != null) it.babyWeight.toFloat() else 0) as Float,
+                babyTemperature = if (it.babyTemperature != null) it.babyTemperature.toInt() else 0,
+                babyYellow = it.babyYellow != 0,
+                babyImmunizationStatus = it.babyImmunizationStatus,
+                babyReferred = it.babyReferred != 0,
+                dateOfBabyReferral = it.dateOfBabyReferral.toString(),
+                placeOfBabyReferral = it.placeOfBabyReferral.toString(),
+                otherPlaceOfBabyReferral = it.otherPlaceOfBabyReferral,
+                motherReferred = it.motherReferred != 0,
+                dateOfMotherReferral = HelperUtil.getDateStrFromLong(it.dateOfMotherReferral),
+                placeOfMotherReferral = it.placeOfMotherReferral.toString(),
+                otherPlaceOfMotherReferral = it.otherPlaceOfMotherReferral,
+                allLimbsLimp = it.allLimbsLimp != 0,
+                feedingLessStopped = it.feedingLessStopped != 0,
+                cryWeakStopped = it.cryWeakStopped != 0,
+                bloatedStomach = it.bloatedStomach != 0,
+                coldOnTouch = it.coldOnTouch != 0,
+                chestDrawing = it.chestDrawing != 0,
+                breathFast = it.breathFast != 0,
+                pusNavel = it.pusNavel.toString(),
+                supervisor = it.sup.toString(),
+                supervisorName = it.supName,
+                supervisorComment = it.supComment,
+                supervisorSignDate = HelperUtil.getDateStrFromLong(it.supSignDate),
+                createdBy = user.userName,
+                createdDate = HelperUtil.getDateStrFromLong(System.currentTimeMillis()),
+                updatedBy = user.userName,
+                updatedDate = HelperUtil.getDateStrFromLong(System.currentTimeMillis()),
+            )
+        }
+
+        return HBNCPost(
+            id = id,
+            benId = benId,
+            hhId = hhId,
+            homeVisitDate = homeVisitDate,
+            hbncVisitCardDTO = hbncVisitCardDTO,
+            hbncPart1DTO = hbncPart1DTO,
+            hbncPart2DTO = hbncPart2DTO,
+            hbncVisitDTO = hbncVisitDTO
+        )
     }
-
-    private fun longToDateString(long: Long): String {
-        return format1.format(Calendar.getInstance().apply { timeInMillis = long }.time)
-    }
-
-
-
-//    fun asPostModel(
-//        user: UserCache,
-//        household: HouseholdCache,
-////        ben: BenRegCache,
-//        hbncCount: Int
-//    ): HBNCPost {
-//        return HBNCPost(
-//            benId = benId,
-//            householdId = household.toString(),
-//            createdBy = user.userName,
-//            createdDate = System.currentTimeMillis() / 1000L,
-//            updatedBy = user.userName,
-//            updatedDate = System.currentTimeMillis() / 1000L,
-//            //Part 0
-//            healthSubCenterName = visitCard?.healthSubCenterName ?: "",
-//            phcName = visitCard?.phcName ?: "",
-//            motherName = visitCard?.motherName ?: "",
-//            fatherName = visitCard?.fatherName ?: "",
-//            dateOfDelivery = visitCard?.dateOfDelivery?.let { longToDateString(it) } ?: "",
-//            placeOfDelivery = visitCard?.placeOfDelivery ?: 0,
-//            babyGender = visitCard?.babyGender ?: 0,
-//            typeOfDelivery = visitCard?.typeOfDelivery ?: 0,
-//            initiationBreastFeedingStart = visitCard?.startedBreastFeed.toString(),
-//            weightAtBirth = visitCard?.weightAtBirth?.toString() ?: "0",
-//            dischargeDateFromHospital = visitCard?.dischargeDateFromHospital?.let { longToDateString(it) }
-//                ?: "",
-//            motherStatus = visitCard?.motherStatus ?: 0,
-//            registrationOfBirth = visitCard?.registeredAtBirth ?: 0,
-//            childStatus = visitCard?.childStatus ?: 0,
-//            homeVisitDate = homeVisitDate,
-//            chileImmunizationStatus = visitCard?.let { "${if (it.childImmunizedBCG) "1" else "0"}${if (it.childImmunizedPolio) "1" else "0"}${if (it.childImmunizedDpt) "1" else "0"}${if (it.childImmunizedHepB) "1" else "0"}".toInt() }
-//                ?: 0,
-//            newbornWeightRecorded = visitCard?.birthWeightRecordedInMCP ?: 0,
-//            deliveryTime = visitCard?.deliveryTime ?: "",
-//            dateCompletionPregnancy =visitCard?.dateOfCompletionOfPregnancy?.let { longToDateString(it) }
-//                ?: "",
-//            howManyWeekHaveBeenBorn = visitCard?.numWeeksWhenBorn?.toString()?:"",
-//            dateTimeOfFirstTraining = visitCard?.dateOfFirstTraining?.let { longToDateString(it) }
-//                ?: "",
-//            doesMotherHaveProblem = visitCard   ?.doesMotherHaveProblem.toString(),
-//            babyFedAfterBirth = visitCard?.babyFedAfterBirth?:0,
-//            babyFirstBreastfed = visitCard?.whenBabyFirstBreastFed?:"",
-//            howBabyBreastfeed = visitCard?.howBabyFirstFed?:0,
-//            problemInBreastfeeding = visitCard?.breastFeedProblem?:"",
-//            isMotherHavingTroubleBreastfeeding = visitCard?.breastFeedProblem2?:"",
-//            recordBabyTemp = visitCard?.measureRecordBabyTemperature?:"",
-//            babyEyeCondition = visitCard?.babyEyeCondition?:0,
-//            isThereBleedingFromUmbilicalCord = visitCard?.babyBleedUmbilical?:0,
-//            weighingMachineScaleColor = visitCard?.babyWeighingScaleColor?:0,
-//            bodyIsSluggish = visitCard?.babyAllOrganLethargic?:0,
-//            lessMilkIsDrinking = visitCard?.babyLessMilkDrinking?:0,
-//            notDrinkingMilk = visitCard?.babyNoDrinkMilk?:0,
-//            cryingSlow = visitCard?.babyCrySlow?:0,
-//            notCrying = visitCard?.babyNoCry?:0,
-//            whetherTheNewbornWasBeingLooked = visitCard?.babyBornLookedAfter?:0,
-//            childWasWipedWithCleanCloth = visitCard?.babyWipedCleanCloth?:0,
-//            childKeptWarm = visitCard?.babyKeptWarm?:0,
-//            childWasGivenABath = visitCard?.babyGivenBath?:0,
-//            childIsWrappedInClothAndKeptToTheMother = visitCard?.babyWrappedInClothKeptWithMother?:0,
-//            startedBreastFeedingOnly = visitCard?.startedBreastFeedOnlyGivenBreastMilk?:0,
-//            wasThereAnythingUnusualWithTheBath = visitCard?.babyAnythingUnusual?:0,
-//
-//            //Part A
-//            howManyTimesTheMotherFeedsHerStomachIn24hours = part1?.numTimesEats.toString(),
-//            howManyPadsHaveBeenChangedInDayForBleeding = part1?.numPadsChanged.toString(),
-//            duringTheWinterSeasonIsKeptWarm = part1?.winterBabyKeptWarm?:0,
-//            isTheChildBreastFedProperly = part1?.breastFeedProper?:0,
-//            doesTheChildCryContinuouslyOrUrinateLessThan6TimesDay = part1?.babyCryContinuouslyOrUrinateLess6?:0,
-//
-//            //Part B
-//            measureAndCheckTheTemperature = part2?.temperature?:"",
-//            wateryDischargeWithFoulSmell = part2?.waterDischargeFoulSmell?:0,
-//            doesTheMotherGrumbleUnevenlyOrHaveSeizure = part2?.motherGrumbleSeizure?:0,
-//            motherMilkIsNotBeingProducedAfterDelivery = part2?.motherNoOrLessMilk?:0,
-//            doesTheMotherHaveCrackedNipplePainBreast = part2?.crackedNipplePainHardBreast?:0,
-//
-//            //Part C
-//            areEyesSwollen = homeVisitForm?.eyesSwollenPusComing?:0,
-//            Weight = homeVisitForm?.weightOnDayN.toString(),
-//            weightInKg = homeVisitForm?.weightOnDayN.toString(),
-//            measureAndEnterTemperature = homeVisitForm?.temperature?:"0",
-//            pusFilledPimplesInSkin = homeVisitForm?.pusPimpleOnSkin?:0,
-//            crackedRednessOfTwistedSkin = homeVisitForm?.crackedRednessOfTwistedSkin?:"",
-////            eye = homeVisitForm?.pusPimpleOnSkin?:0,
-//            seizures = homeVisitForm?.seizure.toString(),
-//            isBreathGoingFast = homeVisitForm?.breathGoingFast.toString(),
-//            isChildReferredPHCRHSDH = homeVisitForm?.referredWhere?:"",
-//
-//            //Part D
-//            allOrgansAreLethargic = partD?.organsLethargic?:"",
-//            hasStoppedDrinkingMilk = partD?.lessNoMilkDrinking?:"",
-//            isDrinkingLessMilk = partD?.lessNoMilkDrinking?:"",
-//            slowCrying = partD?.slowOrStoppedCrying?:"",
-//            stopCrying =  partD?.slowOrStoppedCrying?:"",
-//            bloatedStomachOrMotherTellsThatChildVomitsAgain = partD?.bloatedStomachOrVomit?:"",
-//            pusInTheNavel = partD?.pusInNavel?:"",
-//
-//            //Extras
-//            id="0",
-//            loginId = 0,
-//            ashaName = user.userName,
-//            supervisorRemarks = supervisorRemark?:"",
-//            supervisorName = supervisorName?:"",
-//            supervisorTickMarks = supervisorComments?:"",
-//            visitDay = longToDateString(dateSupervisorVisit),
-//            signaturesWithDateOfSupervision = longToDateString(dateSupervisorVisit),
-//            villageId = user.villageIds.first(),
-//            villageName = user.villageEnglish.first()
-//        )
-//    }
 }
 
 data class HbncVisitCard(
@@ -200,7 +236,7 @@ data class HbncVisitCard(
 )
 
 data class HbncPartI(
-    val dateOfVisit : Long,
+    val dateOfVisit: Long,
     val babyAlive: Int,
     val dateOfBabyDeath: Long,
     val timeOfBabyDeath: String?,
@@ -225,194 +261,455 @@ data class HbncPartI(
 )
 
 data class HbncPartII(
-    val dateOfVisit : Long,
+    val dateOfVisit: Long,
     val babyTemperature: String?,
     val babyEyeCondition: Int,
-    val babyUmbilicalBleed : Int,
-    val actionBabyUmbilicalBleed : Int,
-    val babyWeight : String,
-    val babyWeightMatchesColor : Int,
-    val babyWeightColorOnScale : Int,
+    val babyUmbilicalBleed: Int,
+    val actionBabyUmbilicalBleed: Int,
+    val babyWeight: String,
+    val babyWeightMatchesColor: Int,
+    val babyWeightColorOnScale: Int,
 
-    val allLimbsLimp : Int,
-    val feedLessStop : Int,
-    val cryWeakStop : Int,
-    val dryBaby : Int,
-    val wrapClothCloseToMother : Int,
-    val exclusiveBreastFeeding : Int,
-    val cordCleanDry : Int,
-    val unusualInBaby : Int,
-    val otherUnusualInBaby : String?,
+    val allLimbsLimp: Int,
+    val feedLessStop: Int,
+    val cryWeakStop: Int,
+    val dryBaby: Int,
+    val wrapClothCloseToMother: Int,
+    val exclusiveBreastFeeding: Int,
+    val cordCleanDry: Int,
+    val unusualInBaby: Int,
+    val otherUnusualInBaby: String?,
 
     )
 
 data class HbncHomeVisit(
-    val dateOfVisit : Long,
+    val dateOfVisit: Long,
     val babyAlive: Int,
-    val numTimesFullMeal24hr : Int,
-    val numPadChanged24hr : Int,
-    val babyKeptWarmWinter : Int,
-    val babyFedProperly : Int,
-    val babyCryContinuously : Int,
+    val numTimesFullMeal24hr: Int,
+    val numPadChanged24hr: Int,
+    val babyKeptWarmWinter: Int,
+    val babyFedProperly: Int,
+    val babyCryContinuously: Int,
 
-    val motherTemperature : String?,
-    val foulDischargeFever : Int,
-    val motherSpeakAbnormallyFits : Int,
-    val motherLessNoMilk : Int,
-    val motherBreastProblem : Int,
+    val motherTemperature: String?,
+    val foulDischargeFever: Int,
+    val motherSpeakAbnormallyFits: Int,
+    val motherLessNoMilk: Int,
+    val motherBreastProblem: Int,
 
-    val babyEyesSwollen : Int,
-    val babyWeight : String?,
-    val babyTemperature : String?,
-    val babyYellow : Int,
-    val babyImmunizationStatus : String?,
+    val babyEyesSwollen: Int,
+    val babyWeight: String?,
+    val babyTemperature: String?,
+    val babyYellow: Int,
+    val babyImmunizationStatus: String?,
 
-    val babyReferred : Int,
-    val dateOfBabyReferral : Long,
-    val placeOfBabyReferral : Int,
-    val otherPlaceOfBabyReferral : String?,
-    val motherReferred : Int,
-    val dateOfMotherReferral : Long,
-    val placeOfMotherReferral : Int,
-    val otherPlaceOfMotherReferral : String?,
-    val allLimbsLimp : Int,
-    val feedingLessStopped : Int,
-    val cryWeakStopped : Int,
-    val bloatedStomach : Int,
-    val coldOnTouch : Int,
-    val chestDrawing : Int,
-    val breathFast : Int,
-    val pusNavel : Int,
-    val sup : Int,
-    val supName : String?,
-    val supComment : String?,
-    val supSignDate : Long,
+    val babyReferred: Int,
+    val dateOfBabyReferral: Long?,
+    val placeOfBabyReferral: Int,
+    val otherPlaceOfBabyReferral: String?,
+    val motherReferred: Int,
+    val dateOfMotherReferral: Long,
+    val placeOfMotherReferral: Int,
+    val otherPlaceOfMotherReferral: String?,
+    val allLimbsLimp: Int,
+    val feedingLessStopped: Int,
+    val cryWeakStopped: Int,
+    val bloatedStomach: Int,
+    val coldOnTouch: Int,
+    val chestDrawing: Int,
+    val breathFast: Int,
+    val pusNavel: Int,
+    val sup: Int,
+    val supName: String?,
+    val supComment: String?,
+    val supSignDate: Long,
 )
+
+data class HBNCPart1Post(
+    var id: Long,
+    var benId: Long,
+    var visitNo: Int,
+    var dateOfVisit: String?,
+    var babyAlive: Boolean,
+    var dateOfBabyDeath: String?,
+    var timeOfBabyDeath: String?,
+    var placeOfBabyDeath: String,
+    var otherPlaceOfBabyDeath: String?,
+    var isBabyPreterm: Boolean,
+    var gestationalAge: String,
+    var dateOfFirstExamination: String?,
+    var timeOfFirstExamination: String?,
+    var motherAlive: Boolean,
+    var dateOfMotherDeath: String?,
+    var timeOfMotherDeath: String?,
+    var placeOfMotherDeath: String,
+    var otherPlaceOfMotherDeath: String?,
+    var motherAnyProblem: String?,
+    var babyFirstFed: String,
+    var otherBabyFirstFed: String?,
+    var timeBabyFirstFed: String?,
+    var howBabyTookFirstFeed: String,
+    var motherHasBreastFeedProblem: Boolean,
+    var motherBreastFeedProblem: String?,
+    var createdBy: String?,
+    var createdDate: String?,
+    var updatedDate: String?,
+    var updatedBy: String?
+) {
+    fun toCache(): HbncPartI {
+        return HbncPartI(
+            dateOfVisit = HelperUtil.getLongFromDateStr(dateOfVisit),
+            babyAlive = if (babyAlive) 1 else 0,
+            dateOfBabyDeath = HelperUtil.getLongFromDateStr(dateOfBabyDeath),
+            timeOfBabyDeath = timeOfBabyDeath,
+            placeOfBabyDeath = placeOfBabyDeath.toInt(),
+            otherPlaceOfBabyDeath = otherPlaceOfBabyDeath,
+            isBabyPreterm = if (isBabyPreterm) 1 else 0,
+            gestationalAge = gestationalAge.toInt(),
+            dateOfFirstExamination = HelperUtil.getLongFromDateStr(dateOfFirstExamination),
+            timeOfFirstExamination = timeOfFirstExamination,
+            motherAlive = if (motherAlive) 1 else 0,
+            dateOfMotherDeath = HelperUtil.getLongFromDateStr(dateOfMotherDeath),
+            timeOfMotherDeath = timeOfMotherDeath,
+            placeOfMotherDeath = placeOfMotherDeath.toInt(),
+            otherPlaceOfMotherDeath = otherPlaceOfMotherDeath,
+            motherAnyProblem = motherAnyProblem,
+            babyFirstFed = babyFirstFed.toInt(),
+            otherBabyFirstFed = otherBabyFirstFed,
+            timeBabyFirstFed = timeBabyFirstFed,
+            howBabyTookFirstFeed = howBabyTookFirstFeed.toInt(),
+            motherHasBreastFeedProblem = if (motherHasBreastFeedProblem) 1 else 0,
+            motherBreastFeedProblem = motherBreastFeedProblem,
+        )
+    }
+}
+
+data class HBNCPart2Post(
+    var id: Long,
+    var benId: Long,
+    var visitNo: Int,
+    var dateOfVisit: String?,
+    var babyTemperature: String?,
+    var babyEyeCondition: String,
+    var babyUmbilicalBleed: Boolean,
+    var actionBabyUmbilicalBleed: Boolean,
+    var babyWeight: Float?,
+    var babyWeightMatchesColor: Boolean,
+    var babyWeightColorOnScale: String,
+    var allLimbsLimp: Boolean,
+    var feedLessStop: Boolean,
+    var cryWeakStop: Boolean,
+    var dryBaby: Boolean,
+    var wrapClothCloseToMother: Boolean,
+    var exclusiveBreastFeeding: Boolean,
+    var cordCleanDry: Boolean,
+    var unusualInBaby: String,
+    var otherUnusualInBaby: String?,
+    var createdBy: String?,
+    var createdDate: String?,
+    var updatedDate: String?,
+    var updatedBy: String?
+) {
+    fun toCache(): HbncPartII {
+        return HbncPartII(
+            dateOfVisit = HelperUtil.getLongFromDateStr(dateOfVisit),
+            babyTemperature = babyTemperature,
+            babyEyeCondition = babyEyeCondition.toInt(),
+            babyUmbilicalBleed = if (babyUmbilicalBleed) 1 else 0,
+            actionBabyUmbilicalBleed = if (actionBabyUmbilicalBleed) 1 else 0,
+            babyWeight = babyWeight.toString(),
+            babyWeightMatchesColor = if (babyWeightMatchesColor) 1 else 0,
+            babyWeightColorOnScale = babyWeightColorOnScale.toInt(),
+            allLimbsLimp = if (allLimbsLimp) 1 else 0,
+            feedLessStop = if (feedLessStop) 1 else 0,
+            cryWeakStop = if (cryWeakStop) 1 else 0,
+            dryBaby = if (dryBaby) 1 else 0,
+            wrapClothCloseToMother = if (wrapClothCloseToMother) 1 else 0,
+            exclusiveBreastFeeding = if (exclusiveBreastFeeding) 1 else 0,
+            cordCleanDry = if (cordCleanDry) 1 else 0,
+            unusualInBaby = unusualInBaby.toInt(),
+            otherUnusualInBaby = otherUnusualInBaby
+        )
+    }
+}
+
+data class HBNCVisitPost(
+    var id: Long,
+    var benId: Long,
+    var visitNo: Int,
+    var dateOfVisit: String?,
+    var babyAlive: Boolean,
+    var numTimesFullMeal24hr: Int,
+    var numPadChanged24hr: Int,
+    var babyKeptWarmWinter: Boolean,
+    var babyFedProperly: Boolean,
+    var babyCryContinuously: Boolean,
+    var motherTemperature: Int,
+    var foulDischargeFever: Boolean,
+    var motherSpeakAbnormallyFits: Boolean,
+    var motherLessNoMilk: Boolean,
+    var motherBreastProblem: Boolean,
+    var babyEyesSwollen: Boolean,
+    var babyWeight: Float,
+    var babyTemperature: Int,
+    var babyYellow: Boolean,
+    var babyImmunizationStatus: String?,
+    var babyReferred: Boolean,
+    var dateOfBabyReferral: String?,
+    var placeOfBabyReferral: String,
+    var otherPlaceOfBabyReferral: String?,
+    var motherReferred: Boolean,
+    var dateOfMotherReferral: String?,
+    var placeOfMotherReferral: String,
+    var otherPlaceOfMotherReferral: String?,
+    var allLimbsLimp: Boolean,
+    var feedingLessStopped: Boolean,
+    var cryWeakStopped: Boolean,
+    var bloatedStomach: Boolean,
+    var coldOnTouch: Boolean,
+    var chestDrawing: Boolean,
+    var breathFast: Boolean,
+    var pusNavel: String,
+    var supervisor: String,
+    var supervisorName: String?,
+    var supervisorComment: String?,
+    var supervisorSignDate: String?,
+    var createdBy: String?,
+    var createdDate: String?,
+    var updatedDate: String?,
+    var updatedBy: String?
+) {
+    fun toCache(): HbncHomeVisit {
+        return HbncHomeVisit(
+            dateOfVisit = HelperUtil.getLongFromDateStr(dateOfVisit),
+            babyAlive = if (babyAlive) 1 else 0,
+            numTimesFullMeal24hr = numTimesFullMeal24hr,
+            numPadChanged24hr = numPadChanged24hr,
+            babyKeptWarmWinter = if (babyKeptWarmWinter) 1 else 0,
+            babyFedProperly = if (babyFedProperly) 1 else 0,
+            babyCryContinuously = if (babyCryContinuously) 1 else 0,
+            motherTemperature = motherTemperature.toString(),
+            foulDischargeFever = if (foulDischargeFever) 1 else 0,
+            motherSpeakAbnormallyFits = if (motherSpeakAbnormallyFits) 1 else 0,
+            motherLessNoMilk = if (motherLessNoMilk) 1 else 0,
+            motherBreastProblem = if (motherBreastProblem) 1 else 0,
+            babyEyesSwollen = if (babyEyesSwollen) 1 else 0,
+            babyWeight = babyWeight.toString(),
+            babyTemperature = babyTemperature.toString(),
+            babyYellow = if (babyYellow) 1 else 0,
+            babyImmunizationStatus = babyImmunizationStatus,
+            babyReferred = if (babyReferred) 1 else 0,
+            dateOfBabyReferral = dateOfBabyReferral?.toLong(),
+            placeOfBabyReferral = placeOfBabyReferral.toInt(),
+            otherPlaceOfBabyReferral = otherPlaceOfBabyReferral,
+            motherReferred = if (motherBreastProblem) 1 else 0,
+            dateOfMotherReferral = HelperUtil.getLongFromDateStr(dateOfMotherReferral),
+            placeOfMotherReferral = placeOfMotherReferral.toInt(),
+            otherPlaceOfMotherReferral = otherPlaceOfMotherReferral,
+            allLimbsLimp = if (motherBreastProblem) 1 else 0,
+            feedingLessStopped = if (motherBreastProblem) 1 else 0,
+            cryWeakStopped = if (motherBreastProblem) 1 else 0,
+            bloatedStomach = if (motherBreastProblem) 1 else 0,
+            coldOnTouch = if (motherBreastProblem) 1 else 0,
+            chestDrawing = if (motherBreastProblem) 1 else 0,
+            breathFast = if (motherBreastProblem) 1 else 0,
+            pusNavel = pusNavel.toInt(),
+            sup = supervisor.toInt(),
+            supName = supervisorName,
+            supComment = supervisorComment,
+            supSignDate = HelperUtil.getLongFromDateStr(supervisorSignDate)
+        )
+    }
+}
+
+@JsonClass(generateAdapter = true)
+data class HBNCVisitCardPost(
+    val id: Long,
+    val benId: Long,
+    val visitNo: Int,
+    val ashaName: String?,
+    val villageName: String?,
+    val subCenterName: String?,
+    val blockName: String?,
+    val motherName: String?,
+    val fatherName: String?,
+    val dateOfDelivery: String?,
+    val placeOfDelivery: String?,
+    val babyGender: String?,
+    val typeOfDelivery: String?,
+    val stillBirth: Boolean,
+    val startedBreastFeeding: String?,
+    val dischargeDateMother: String?,
+    val dischargeDateBaby: String?,
+    val weightInGrams: Int,
+    val registrationOfBirth: Boolean,
+    val createdBy: String?,
+    val createdDate: String?,
+    val updatedDate: String?,
+    val updatedBy: String?
+) {
+    fun toCache(): HbncVisitCard {
+        return HbncVisitCard(
+            ashaName = ashaName,
+            villageName = villageName,
+            subCenterName = subCenterName,
+            blockName = blockName,
+            motherName = motherName,
+            fatherName = fatherName,
+            dateOfDelivery = HelperUtil.getLongFromDateStr(dateOfDelivery),
+            placeOfDelivery = placeOfDelivery?.toInt() ?: 0,
+            babyGender = babyGender?.toInt() ?: 0,
+            typeOfDelivery = typeOfDelivery?.toInt() ?: 0,
+            stillBirth = if (stillBirth) 1 else 0,
+            startedBreastFeeding = startedBreastFeeding?.toInt() ?: 0,
+            dischargeDateMother = HelperUtil.getLongFromDateStr(dischargeDateMother),
+            dischargeDateBaby = HelperUtil.getLongFromDateStr(dischargeDateBaby),
+            weightInGrams = weightInGrams,
+            registrationOfBirth = if (registrationOfBirth) 1 else 0
+        )
+    }
+}
 
 @JsonClass(generateAdapter = true)
 data class HBNCPost(
-    val ashaName: String,
-    val babyEyeCondition: Int,
-    val babyFedAfterBirth: Int,
-    val babyFirstBreastfed: String,
-    val babyGender: Int,
-
-    @Json(name = "beneficiaryid")
+    val id: Int,
     val benId: Long,
-    val bodyIsSluggish: Int,
-    val childStatus: Int,
-    val chileImmunizationStatus: Int,
-    val createdBy: String,
-    val createdDate: Long,//in seconds (millis/1000L) at source code
-    val cryingSlow: Int,
-    val dateCompletionPregnancy: String,
-    val dateOfDelivery: String,
-    val dateTimeOfFirstTraining: String,
-    val deliveryTime: String,
-    val dischargeDateFromHospital: String,
-    val fatherName: String,
-    val motherName: String,
-
-    @Json(name = "healthSubcenterName")
-    val healthSubCenterName: String,
+    val hhId: Long,
     val homeVisitDate: Int,
+    val hbncVisitCardDTO: HBNCVisitCardPost?,
+    val hbncPart1DTO: HBNCPart1Post?,
+    val hbncPart2DTO: HBNCPart2Post?,
+    val hbncVisitDTO: HBNCVisitPost?,
+) {
+    fun toCache(): HBNCCache {
+        var visitCard: HbncVisitCard? = null
+        var part1: HbncPartI? = null
+        var part2: HbncPartII? = null
+        var homeVisitForm: HbncHomeVisit? = null
 
-    @Json(name = "houseoldId")
-    val householdId: String,
-    val howBabyBreastfeed: Int,
-    val howManyWeekHaveBeenBorn: String,
-    val isMotherHavingTroubleBreastfeeding: String,
-    val isThereBleedingFromUmbilicalCord: Int,
-    val lessMilkIsDrinking: Int,
-    val loginId: Int,
-    val motherStatus: Int,
-    val newbornWeightRecorded: Int,
-    val notCrying: Int,
-    val notDrinkingMilk: Int,
-    val phcName: String,
-    val placeOfDelivery: Int,
-    val problemInBreastfeeding: String,
-    val recordBabyTemp: String,
-    val registrationOfBirth: Int,
-    val typeOfDelivery: Int,
-    val updatedBy: String,
-    val updatedDate: Long,//in seconds (millis/1000L) at source code
+        hbncVisitCardDTO?.let {
+            visitCard = HbncVisitCard(
+                ashaName = it.ashaName,
+                villageName = it.villageName,
+                subCenterName = it.subCenterName,
+                blockName = it.blockName,
+                motherName = it.motherName,
+                fatherName = it.fatherName,
+                dateOfDelivery = HelperUtil.getLongFromDateStr(it.dateOfDelivery),
+                placeOfDelivery = if (it.placeOfDelivery != null) it.placeOfDelivery.toInt() else 0,
+                babyGender = if (it.babyGender != null) it.babyGender.toInt() else 0,
+                typeOfDelivery = if (it.typeOfDelivery != null) it.typeOfDelivery.toInt() else 0,
+                stillBirth = if (it.stillBirth) 1 else 0,
+                startedBreastFeeding = if (it.startedBreastFeeding != null) it.startedBreastFeeding.toInt() else 0,
+                dischargeDateMother = HelperUtil.getLongFromDateStr(it.dischargeDateMother),
+                dischargeDateBaby = HelperUtil.getLongFromDateStr(it.dischargeDateBaby),
+                weightInGrams = it.weightInGrams,
+                registrationOfBirth = if (it.registrationOfBirth) 1 else 0
+            )
+        }
 
-    @Json(name = "village_name")
-    val villageName: String,
+        hbncPart1DTO?.let {
+            part1 = HbncPartI(
+                dateOfVisit = HelperUtil.getLongFromDateStr(it.dateOfVisit),
+                babyAlive = if (it.babyAlive) 1 else 0,
+                dateOfBabyDeath = HelperUtil.getLongFromDateStr(it.dateOfBabyDeath),
+                timeOfBabyDeath = it.timeOfBabyDeath,
+                placeOfBabyDeath = it.placeOfBabyDeath.toInt(),
+                otherPlaceOfBabyDeath = it.otherPlaceOfBabyDeath,
+                isBabyPreterm = if (it.isBabyPreterm) 1 else 0,
+                gestationalAge = it.gestationalAge.toInt(),
+                dateOfFirstExamination = HelperUtil.getLongFromDateStr(it.dateOfFirstExamination),
+                timeOfFirstExamination = it.timeOfFirstExamination,
+                motherAlive = if (it.motherAlive) 1 else 0,
+                dateOfMotherDeath = HelperUtil.getLongFromDateStr(it.dateOfMotherDeath),
+                timeOfMotherDeath = it.timeOfMotherDeath,
+                placeOfMotherDeath = it.placeOfMotherDeath.toInt(),
+                otherPlaceOfMotherDeath = it.otherPlaceOfMotherDeath,
+                motherAnyProblem = it.motherAnyProblem,
+                babyFirstFed = it.babyFirstFed.toInt(),
+                otherBabyFirstFed = it.otherBabyFirstFed,
+                timeBabyFirstFed = it.timeBabyFirstFed,
+                howBabyTookFirstFeed = it.howBabyTookFirstFeed.toInt(),
+                motherHasBreastFeedProblem = if (it.motherHasBreastFeedProblem) 1 else 0,
+                motherBreastFeedProblem = it.motherBreastFeedProblem,
+            )
+        }
 
-    @Json(name = "villageid")
-    val villageId: Int,
+        hbncPart2DTO?.let {
+            part2 = HbncPartII(
+                dateOfVisit = HelperUtil.getLongFromDateStr(it.dateOfVisit),
+                babyTemperature = it.babyTemperature,
+                babyEyeCondition = it.babyEyeCondition.toInt(),
+                babyUmbilicalBleed = if (it.babyUmbilicalBleed) 1 else 0,
+                actionBabyUmbilicalBleed = if (it.actionBabyUmbilicalBleed) 1 else 0,
+                babyWeight = it.babyWeight.toString(),
+                babyWeightMatchesColor = if (it.babyWeightMatchesColor) 1 else 0,
+                babyWeightColorOnScale = it.babyWeightColorOnScale.toInt(),
+                allLimbsLimp = if (it.allLimbsLimp) 1 else 0,
+                feedLessStop = if (it.feedLessStop) 1 else 0,
+                cryWeakStop = if (it.cryWeakStop) 1 else 0,
+                dryBaby = if (it.dryBaby) 1 else 0,
+                wrapClothCloseToMother = if (it.wrapClothCloseToMother) 1 else 0,
+                exclusiveBreastFeeding = if (it.exclusiveBreastFeeding) 1 else 0,
+                cordCleanDry = if (it.cordCleanDry) 1 else 0,
+                unusualInBaby = it.unusualInBaby.toInt(),
+                otherUnusualInBaby = it.otherUnusualInBaby
+            )
+        }
 
-    @Json(name = "vistDay")
-    val visitDay: String,
-    val weighingMachineScaleColor: Int,
-    val weightAtBirth: String,
-    val weightInKg: String,
-    val whetherTheNewbornWasBeingLooked: Int,
-    val childWasWipedWithCleanCloth: Int,
-    val childKeptWarm: Int,
+        hbncVisitDTO?.let {
+            homeVisitForm = HbncHomeVisit(
+                dateOfVisit = HelperUtil.getLongFromDateStr(it.dateOfVisit),
+                babyAlive = if (it.babyAlive) 1 else 0,
+                numTimesFullMeal24hr = it.numTimesFullMeal24hr,
+                numPadChanged24hr = it.numPadChanged24hr,
+                babyKeptWarmWinter = if (it.babyKeptWarmWinter) 1 else 0,
+                babyFedProperly = if (it.babyFedProperly) 1 else 0,
+                babyCryContinuously = if (it.babyCryContinuously) 1 else 0,
+                motherTemperature = it.motherTemperature.toString(),
+                foulDischargeFever = if (it.foulDischargeFever) 1 else 0,
+                motherSpeakAbnormallyFits = if (it.motherSpeakAbnormallyFits) 1 else 0,
+                motherLessNoMilk = if (it.motherLessNoMilk) 1 else 0,
+                motherBreastProblem = if (it.motherBreastProblem) 1 else 0,
+                babyEyesSwollen = if (it.babyEyesSwollen) 1 else 0,
+                babyWeight = it.babyWeight.toString(),
+                babyTemperature = it.babyTemperature.toString(),
+                babyYellow = if (it.babyYellow) 1 else 0,
+                babyImmunizationStatus = it.babyImmunizationStatus,
+                babyReferred = if (it.babyReferred) 1 else 0,
+                dateOfBabyReferral = it.dateOfBabyReferral?.toLong(),
+                placeOfBabyReferral = it.placeOfBabyReferral.toInt(),
+                otherPlaceOfBabyReferral = it.otherPlaceOfBabyReferral,
+                motherReferred = if (it.motherBreastProblem) 1 else 0,
+                dateOfMotherReferral = HelperUtil.getLongFromDateStr(it.dateOfMotherReferral),
+                placeOfMotherReferral = it.placeOfMotherReferral.toInt(),
+                otherPlaceOfMotherReferral = it.otherPlaceOfMotherReferral,
+                allLimbsLimp = if (it.motherBreastProblem) 1 else 0,
+                feedingLessStopped = if (it.motherBreastProblem) 1 else 0,
+                cryWeakStopped = if (it.motherBreastProblem) 1 else 0,
+                bloatedStomach = if (it.motherBreastProblem) 1 else 0,
+                coldOnTouch = if (it.motherBreastProblem) 1 else 0,
+                chestDrawing = if (it.motherBreastProblem) 1 else 0,
+                breathFast = if (it.motherBreastProblem) 1 else 0,
+                pusNavel = it.pusNavel.toInt(),
+                sup = it.supervisor.toInt(),
+                supName = it.supervisorName,
+                supComment = it.supervisorComment,
+                supSignDate = HelperUtil.getLongFromDateStr(it.supervisorSignDate)
+            )
+        }
 
-    @Json(name = "childWasGivenAbath")
-    val childWasGivenABath: Int,
-
-    @Json(name = "childIsWrappedInClothAndKeptTotheMother")
-    val childIsWrappedInClothAndKeptToTheMother: Int,
-    val startedBreastFeedingOnly: Int,
-
-    @Json(name = "wasThereAnythinUnsualWithTheBath")
-    val wasThereAnythingUnusualWithTheBath: Int,
-    val howManyTimesTheMotherFeedsHerStomachIn24hours: String,
-
-    @Json(name = "howManyPadsHaveBeenChangedInDayForbleeding")
-    val howManyPadsHaveBeenChangedInDayForBleeding: String,
-    val duringTheWinterSeasonIsKeptWarm: Int,
-    val isTheChildBreastFedProperly: Int,
-
-    @Json(name = "doesTheChildCryContinouslyOrUrniateLessThan6TimesDay")
-    val doesTheChildCryContinuouslyOrUrinateLessThan6TimesDay: Int,
-    val measureAndCheckTheTemperature: String,
-    val motherMilkIsNotBeingProducedAfterDelivery: Int,
-
-    @Json(name = "doesTheMotherGrumbleUnevnlyOrHaveSeizure")
-    val doesTheMotherGrumbleUnevenlyOrHaveSeizure: Int,
-    val doesTheMotherHaveCrackedNipplePainBreast: Int,
-    val wateryDischargeWithFoulSmell: Int,
-    val areEyesSwollen: Int,
-    val Weight: String,
-    val measureAndEnterTemperature: String,
-    val pusFilledPimplesInSkin: Int,
-    val crackedRednessOfTwistedSkin: String,
-    val seizures: String,
-    val isBreathGoingFast: String,
-
-    @Json(name = "isChildReferedPHCRHSDH")
-    val isChildReferredPHCRHSDH: String,
-
-    @Json(name = "allOrgansAreLetharic")
-    val allOrgansAreLethargic: String,
-    val isDrinkingLessMilk: String,
-
-    @Json(name = "hasStoppedDrinkginMilk")
-    val hasStoppedDrinkingMilk: String,
-    val slowCrying: String,
-
-    @Json(name = "stopCyring")
-    val stopCrying: String,
-
-    @Json(name = "bloatedStomachOrMotherTellsThatChildsVomitsAgain")
-    val bloatedStomachOrMotherTellsThatChildVomitsAgain: String,
-
-    @Json(name = "pusIntheNavel")
-    val pusInTheNavel: String,
-    val doesMotherHaveProblem: String,
-    val id: String,
-
-    @Json(name = "initiationBreastFeedingstart")
-    val initiationBreastFeedingStart: String,
-    val supervisorTickMarks: String,
-    val supervisorRemarks: String,
-    val supervisorName: String,
-    val signaturesWithDateOfSupervision: String,
-
-    )
+        return HBNCCache(
+            id = 0,
+            benId = benId,
+            hhId = hhId,
+            homeVisitDate = homeVisitDate,
+            visitCard = visitCard,
+            part1 = part1,
+            part2 = part2,
+            homeVisitForm = homeVisitForm,
+            processed = "P",
+            syncState = SyncState.SYNCED
+        )
+    }
+}

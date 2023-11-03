@@ -181,4 +181,8 @@ object AppModule {
     @Provides
     fun provideIncentiveDao(database: InAppDb): IncentiveDao = database.incentiveDao
 
+    @Singleton
+    @Provides
+    fun provideHBNCDao(database: InAppDb): HbncDao = database.hbncDao
+
 }
