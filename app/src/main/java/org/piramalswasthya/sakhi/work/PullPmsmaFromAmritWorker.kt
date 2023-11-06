@@ -58,7 +58,7 @@ class PullPmsmaFromAmritWorker @AssistedInject constructor(
                         return@withContext Result.success()
                     }
                     return@withContext Result.failure()
-                }catch (e : SQLiteConstraintException){
+                } catch (e: SQLiteConstraintException) {
                     Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
                     return@withContext Result.failure()
                 }
@@ -89,7 +89,7 @@ class PullPmsmaFromAmritWorker @AssistedInject constructor(
     }
 
 
-    private suspend fun getPmsmaDetails() : Boolean {
+    private suspend fun getPmsmaDetails(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 val res = pmsmaRepo.getPmsmaDetailsFromServer()

@@ -14,33 +14,35 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.repositories.MdsrRepo
+import org.piramalswasthya.sakhi.network.interceptors.TokenInsertTmcInterceptor
+import org.piramalswasthya.sakhi.repositories.HbycRepo
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 @HiltWorker
-class PullMdsrFromAmritWorker @AssistedInject constructor(
+class PushChildHBYCToAmritWorker @AssistedInject constructor(
     @Assisted private val appContext: Context,
     @Assisted params: WorkerParameters,
-    private val mdsrRepo: MdsrRepo,
+    private val hbycRepo: HbycRepo,
     private val preferenceDao: PreferenceDao,
 ) : CoroutineWorker(appContext, params) {
 
     companion object {
-        const val name = "PullMdsrFromAmritWorker"
+        const val name = "PushChildHBYCFromAmritWorker"
         const val Progress = "Progress"
 
     }
 
 
     override suspend fun doWork(): Result {
+        init()
         return try {
             try {
                 // This ensures that you waiting for the Notification update to be done.
-                setForeground(createForegroundInfo("Downloading PNC Data"))
+                setForeground(createForegroundInfo("Pushing Child HBYC Data"))
             } catch (throwable: Throwable) {
                 // Handle this exception gracefully
-                Timber.d("FgLW", "Something bad happened", throwable)
+                Timber.d("error", "Something went wrong", throwable)
             }
             withContext(Dispatchers.IO) {
                 val startTime = System.currentTimeMillis()
@@ -48,15 +50,15 @@ class PullMdsrFromAmritWorker @AssistedInject constructor(
                 try {
                     val result1 =
                         awaitAll(
-                            async { getMdsrDetails() },
+                            async { pushChildHBYCDetails() }
                         )
 
                     val endTime = System.currentTimeMillis()
                     val timeTaken = TimeUnit.MILLISECONDS.toSeconds(endTime - startTime)
-                    Timber.d("Full pregnant women details fetching took $timeTaken seconds $result1")
+                    Timber.d("Full HByC fetching took $timeTaken seconds $result1")
 
                     if (result1.all { it }) {
-//                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
+                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
                         return@withContext Result.success()
                     }
                     return@withContext Result.failure()
@@ -68,11 +70,12 @@ class PullMdsrFromAmritWorker @AssistedInject constructor(
             }
 
         } catch (e: java.lang.Exception) {
-            Timber.d("Error occurred in PullPNCFromAmritWorker $e ${e.stackTrace}")
+            Timber.d("Error occurred in PullChildHBYCFromAmritWorker $e ${e.stackTrace}")
 
             Result.failure()
         }
     }
+
 
     private fun createForegroundInfo(progress: String): ForegroundInfo {
 
@@ -91,10 +94,10 @@ class PullMdsrFromAmritWorker @AssistedInject constructor(
     }
 
 
-    private suspend fun getMdsrDetails(): Boolean {
+    private suspend fun pushChildHBYCDetails(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val res = mdsrRepo.getMdsrFromServer()
+                val res = hbycRepo.pushHBYCDetails()
                 return@withContext res == 1
             } catch (e: Exception) {
                 Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
@@ -103,4 +106,10 @@ class PullMdsrFromAmritWorker @AssistedInject constructor(
         }
     }
 
+    private fun init() {
+        if (TokenInsertTmcInterceptor.getToken() == "")
+            preferenceDao.getAmritToken()?.let {
+                TokenInsertTmcInterceptor.setToken(it)
+            }
+    }
 }

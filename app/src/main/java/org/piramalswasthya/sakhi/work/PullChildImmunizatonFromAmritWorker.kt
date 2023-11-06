@@ -60,7 +60,7 @@ class PullChildImmunizatonFromAmritWorker @AssistedInject constructor(
                         return@withContext Result.success()
                     }
                     return@withContext Result.failure()
-                }catch (e : SQLiteConstraintException){
+                } catch (e: SQLiteConstraintException) {
                     Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
                     return@withContext Result.failure()
                 }
@@ -91,7 +91,7 @@ class PullChildImmunizatonFromAmritWorker @AssistedInject constructor(
     }
 
 
-    private suspend fun getChildImmunizationDetails() : Boolean {
+    private suspend fun getChildImmunizationDetails(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 val res = immunizationRepo.getImmunizationDetailsFromServer()

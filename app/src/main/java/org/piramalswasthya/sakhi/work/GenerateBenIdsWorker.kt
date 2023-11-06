@@ -36,7 +36,7 @@ class GenerateBenIdsWorker @AssistedInject constructor(
         } /*catch (e: SocketTimeoutException) {
             Timber.e("Caught Exception for Gen Ben iD worker $e")
             doWork()
-        } */catch (e: Exception) {
+        } */ catch (e: Exception) {
             Timber.e("Caught Exception for Gen Ben iD worker $e")
             Result.failure()
         }

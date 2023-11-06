@@ -13,7 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.repositories.DeliveryOutcomeRepo
 import org.piramalswasthya.sakhi.repositories.InfantRegRepo
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -59,7 +58,7 @@ class PullInfantRegFromAmritWorker @AssistedInject constructor(
                         return@withContext Result.success()
                     }
                     return@withContext Result.failure()
-                }catch (e : SQLiteConstraintException){
+                } catch (e: SQLiteConstraintException) {
                     Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
                     return@withContext Result.failure()
                 }
@@ -90,7 +89,7 @@ class PullInfantRegFromAmritWorker @AssistedInject constructor(
     }
 
 
-    private suspend fun getInfantRegDetails() : Boolean {
+    private suspend fun getInfantRegDetails(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 val res = infantRegRepo.getInfantRegFromServer()

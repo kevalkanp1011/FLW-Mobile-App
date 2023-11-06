@@ -19,6 +19,7 @@ class UpdatePrefForPullCompleteWorker @AssistedInject constructor(
         const val name = "setPullCompleteWorker"
 
     }
+
     override suspend fun doWork(): Result {
         preferenceDao.isFullPullComplete = true
         return Result.success()

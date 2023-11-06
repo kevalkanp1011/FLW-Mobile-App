@@ -8,31 +8,19 @@ import org.piramalswasthya.sakhi.crypt.CryptoUtil
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.ImmunizationDao
+import org.piramalswasthya.sakhi.database.room.dao.SyncDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.NetworkResponse
-import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.BIRTH
-import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.MONTH_16_24
-import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.MONTH_9_12
-import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.WEEK_10
-import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.WEEK_14
-import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.WEEK_6
-import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.YEAR_10
-import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.YEAR_16
-import org.piramalswasthya.sakhi.model.ChildImmunizationCategory.YEAR_5_6
-import org.piramalswasthya.sakhi.model.ImmunizationCategory.CHILD
-import org.piramalswasthya.sakhi.model.ImmunizationCategory.MOTHER
+import org.piramalswasthya.sakhi.model.SyncStatusCache
 import org.piramalswasthya.sakhi.model.User
-import org.piramalswasthya.sakhi.model.Vaccine
 import org.piramalswasthya.sakhi.network.AmritApiService
 import org.piramalswasthya.sakhi.network.TmcAuthUserRequest
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertTmcInterceptor
 import retrofit2.HttpException
 import timber.log.Timber
-import java.lang.Exception
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -41,10 +29,11 @@ class UserRepo @Inject constructor(
     private val db : InAppDb,
     private val vaccineDao: ImmunizationDao,
     private val preferenceDao: PreferenceDao,
+    private val syncDao: SyncDao,
     private val amritApiService: AmritApiService
 ) {
 
-    val unProcessedRecordCount: Flow<Int> = benDao.getUnProcessedRecordCount()
+    val unProcessedRecordCount: Flow<List<SyncStatusCache>> = syncDao.getSyncStatus()
 
 
     suspend fun checkAndAddVaccines() {
@@ -390,9 +379,9 @@ class UserRepo @Inject constructor(
 
     suspend fun authenticateUser(userName: String, password: String): NetworkResponse<User?> {
         return withContext(Dispatchers.IO) {
-            val offlineLoginResult = offlineLogin(userName, password)
-            if (offlineLoginResult)
-                return@withContext NetworkResponse.Success(null)
+//            val offlineLoginResult = offlineLogin(userName, password)
+//            if (offlineLoginResult)
+//                return@withContext NetworkResponse.Success(null)
             try {
                 val userId = getTokenAmrit(userName, password)
                 val user = setUserRole(userId, password)
@@ -464,6 +453,10 @@ class UserRepo @Inject constructor(
                 Timber.w("User Logged in!")
 
                 return true
+            } else if (it.userName == userName) {
+                throw IllegalStateException("Invalid Username/password")
+                Timber.w("Invalid Username/password")
+                return false
             }
         }
         return false

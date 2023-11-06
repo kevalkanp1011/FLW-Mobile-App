@@ -61,7 +61,7 @@ class PullPWRFromAmritWorker @AssistedInject constructor(
                         return@withContext Result.success()
                     }
                     return@withContext Result.failure()
-                }catch (e : SQLiteConstraintException){
+                } catch (e: SQLiteConstraintException) {
                     Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
                     return@withContext Result.failure()
                 }
@@ -92,7 +92,7 @@ class PullPWRFromAmritWorker @AssistedInject constructor(
     }
 
 
-    private suspend fun getPwrDetails() : Boolean {
+    private suspend fun getPwrDetails(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 val res = maternalHealthRepo.getPwrDetailsFromServer()
@@ -104,7 +104,7 @@ class PullPWRFromAmritWorker @AssistedInject constructor(
         }
     }
 
-    private suspend fun getAncVisitDetails() : Boolean {
+    private suspend fun getAncVisitDetails(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 val res = maternalHealthRepo.getAncVisitDetailsFromServer()

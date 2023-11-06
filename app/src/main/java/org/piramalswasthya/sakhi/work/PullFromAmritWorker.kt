@@ -58,9 +58,10 @@ class PullFromAmritWorker @AssistedInject constructor(
             withContext(Dispatchers.IO) {
                 val startTime = System.currentTimeMillis()
                 var numPages: Int
-                val startPage = if(preferenceDao.getLastSyncedTimeStamp()==Konstants.defaultTimeStamp)
-                    preferenceDao.getFirstSyncLastSyncedPage()
-                else 0
+                val startPage =
+                    if (preferenceDao.getLastSyncedTimeStamp() == Konstants.defaultTimeStamp)
+                        preferenceDao.getFirstSyncLastSyncedPage()
+                    else 0
 
                 try {
                     do {
@@ -87,10 +88,10 @@ class PullFromAmritWorker @AssistedInject constructor(
                         return@withContext Result.success()
                     }
                     return@withContext Result.failure()
-                }catch (e : SQLiteConstraintException){
-                        Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
+                } catch (e: SQLiteConstraintException) {
+                    Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
                     return@withContext Result.failure()
-                    }
+                }
 
 
 //                for (j in 0 until n) {
@@ -128,30 +129,32 @@ class PullFromAmritWorker @AssistedInject constructor(
     }
 
 
-    private suspend fun getBenForPage(numPages: Int, rem: Int, startPage : Int): Boolean {
+    private suspend fun getBenForPage(numPages: Int, rem: Int, startPage: Int): Boolean {
         return withContext(Dispatchers.IO) {
             var page: Int = startPage + rem
 
-            try{while (page <= numPages) {
-                val ret = benRepo.getBeneficiariesFromServerForWorker(page)
+            try {
+                while (page <= numPages) {
+                    val ret = benRepo.getBeneficiariesFromServerForWorker(page)
 
-                if (ret == -1)
-                    throw IllegalStateException("benRepo.getBeneficiariesFromServerForWorker(page) returned -1 ")
-                if (ret != -2) {
-                    val finalPage = (page1+page2+page3+page4)/4
-                    val minPageSynced = min(min(page1,page2), min(page3,page4))
-                    preferenceDao.setFirstSyncLastSyncedPage(minPageSynced)
-                    setProgressAsync(workDataOf(Progress to finalPage, NumPages to numPages ))
-                    page += n
-                }
-                when(rem){
-                    0-> page1 = page
-                    1-> page2 = page
-                    2-> page3 = page
-                    3-> page4 = page
-                }
+                    if (ret == -1)
+                        throw IllegalStateException("benRepo.getBeneficiariesFromServerForWorker(page) returned -1 ")
+                    if (ret != -2) {
+                        val finalPage = (page1 + page2 + page3 + page4) / 4
+                        val minPageSynced = min(min(page1, page2), min(page3, page4))
+                        preferenceDao.setFirstSyncLastSyncedPage(minPageSynced)
+                        setProgressAsync(workDataOf(Progress to finalPage, NumPages to numPages))
+                        page += n
+                    }
+                    when (rem) {
+                        0 -> page1 = page
+                        1 -> page2 = page
+                        2 -> page3 = page
+                        3 -> page4 = page
+                    }
 
-            }}catch (e : SQLiteConstraintException){
+                }
+            } catch (e: SQLiteConstraintException) {
                 Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
             }
             true

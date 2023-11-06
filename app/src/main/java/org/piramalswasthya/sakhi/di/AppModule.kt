@@ -185,4 +185,9 @@ object AppModule {
     @Provides
     fun provideHBNCDao(database: InAppDb): HbncDao = database.hbncDao
 
+    @Singleton
+    @Provides
+    fun provideHBYCDao(database: InAppDb): HbycDao = database.hbycDao
+
+
 }

@@ -149,4 +149,38 @@ data class HbycPost (
     val vitaminASupplements: Int? = null,
     val weightAccordingToChildAge: Int? = null,
     val year: String? = null,
-)
+) {
+    fun toCache(): HBYCCache {
+        return HBYCCache(
+            benId = beneficiaryid,
+            hhId = houseoldId?.toLong() ?: 0,
+            byHeightLength = byHeightLenght ?: 0,
+            hbycAgeCategory = childVaccinatedByAge.toString(),
+            wasIll = childWasIll ?: 0,
+            createdBy = createdBy,
+            createdDate = createdDate,
+            deathCause = deathCause,
+            delayInDevelopment = delayConstraint ?: 0,
+            referred = ifYesReferHospital ?: 0,
+            referredToHealthInstitite = ifYesThenHealth ?: 0,
+            ironFolicAcidGiven = ironicFolicAcidSyurp ?: 0,
+            deathAge = markAgeInMonth.toString() + " months",
+            month = month,
+            childrenWeighingLessReferred = numberOfChildrenWeiingLess ?: 0,
+            orsPacketDelivered = ors ?: 0,
+            orsShortage = orsInLastMonth ?: 0,
+            deathPlace = placeOfDeath,
+            primaryHealthCenterName = primaryHealthCenter,
+            qmOrAnmInformed = qmAnmWasInformed ?: 0,
+            subcenterName = subCenterName,
+            superVisorOn = supperVisionFromBlock ?: 0,
+            vitaminASupplementsGiven = supplementStarted ?: 0,
+            supplementsGiven = supplimentGiven ?: 0,
+            infantPopulation = totalNumberChildVillage,
+            weightAccordingToAge = weightAccordingToChildAge ?: 0,
+            year = year,
+            processed = "P",
+            syncState = SyncState.SYNCED
+        )
+    }
+}

@@ -35,7 +35,8 @@ class PullIncentiveWorker @AssistedInject constructor(
                 Data.Builder().putAll(mapOf("result" to "Network Call failed rec. Check in logcat"))
                     .build()
             )
-        preferenceDao.lastIncentivePullTimestamp = Calendar.getInstance().setToStartOfTheDay().timeInMillis
+        preferenceDao.lastIncentivePullTimestamp =
+            Calendar.getInstance().setToStartOfTheDay().timeInMillis
         return Result.success()
     }
 

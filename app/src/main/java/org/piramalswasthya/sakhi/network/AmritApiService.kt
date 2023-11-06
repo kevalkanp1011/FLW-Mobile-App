@@ -196,4 +196,10 @@ interface AmritApiService {
     @POST("/flw-0.0.1/child-care/hbncVisit/saveAll")
     suspend fun pushHBNCDetailsFromServer(@Body hbncPostList: List<HBNCPost>): Response<ResponseBody>
 
+    @POST("/flw-0.0.1/child-care/hbyc/getAll")
+    suspend fun getHBYCFromServer(getDataPaginatedRequest: GetDataPaginatedRequest): Response<ResponseBody>
+
+    @POST("/flw-0.0.1/child-care/hbyc/saveAll")
+    suspend fun pushHBYCToServer(@Body hbncPostList: List<HbycPost>): Response<ResponseBody>
+
 }

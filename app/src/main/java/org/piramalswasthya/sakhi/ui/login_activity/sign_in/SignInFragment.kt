@@ -10,10 +10,15 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.databinding.FragmentSignInBinding
+import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.helpers.Languages.ASSAMESE
 import org.piramalswasthya.sakhi.helpers.Languages.ENGLISH
 import org.piramalswasthya.sakhi.helpers.Languages.HINDI
@@ -43,6 +48,35 @@ class SignInFragment : Fragment() {
             .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }.create()
     }
 
+    private val userChangeAlert by lazy {
+        var str = "previously logged in with " + viewModel.loggedInUser.value?.userName + " do you" +
+                " want to continue? "
+        viewModel.unprocessedRecordsCount.value?.let {
+            if (it > 0) {
+                str += "there are"+  viewModel.unprocessedRecordsCount.value + " unprocessed records, wait till records are synced"
+            }
+        }
+
+        MaterialAlertDialogBuilder(requireContext()).setTitle(resources.getString(R.string.logout))
+            .setMessage(str)
+            .setPositiveButton(resources.getString(R.string.yes)) { dialog, _ ->
+                viewModel.unprocessedRecordsCount.value?.let {
+                    if (it > 0) {
+                        WorkerUtils.triggerAmritPushWorker(requireContext())
+                    } else {
+                        lifecycleScope.launch {
+                            viewModel.logout()
+                        }
+                        ImageUtils.removeAllBenImages(requireContext())
+                        WorkerUtils.cancelAllWork(requireContext())
+                    }
+                }
+                dialog.dismiss()
+            }.setNegativeButton(resources.getString(R.string.no)) { dialog, _ ->
+                viewModel.updateState(NetworkResponse.Idle())
+                dialog.dismiss()
+            }.create()
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -97,29 +131,21 @@ class SignInFragment : Fragment() {
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is NetworkResponse.Idle -> {
-                    var hasRememberMeUsername = false
-                    var hasRememberMePassword = false
+                    binding.clContent.visibility = View.VISIBLE
+                    binding.pbSignIn.visibility = View.INVISIBLE
+//                    var hasRememberMeUsername = false
+//                    var hasRememberMePassword = false
 //                    var hasRememberMeState = false
-                    viewModel.fetchRememberedUserName()?.let {
-                        binding.etUsername.setText(it)
-                        hasRememberMeUsername = true
-                    }
-                    viewModel.fetchRememberedPassword()?.let {
-                        binding.etPassword.setText(it)
-                        binding.cbRemember.isChecked = true
-                        hasRememberMePassword = true
-                    }
-//                    viewModel.fetchRememberedState()?.let {
-//                        binding.toggleStates.check(
-//                            when (it) {
-//                                "Bihar" -> binding.tbtnBihar.id
-//                                "Assam" -> binding.tbtnAssam.id
-//                                else -> throw IllegalStateException("State unknown $it")
-//                            }
-//                        )
-//                        hasRememberMeState = true
+//                    viewModel.fetchRememberedUserName()?.let {
+//                        binding.etUsername.setText(it)
+//                        hasRememberMeUsername = true
 //                    }
-                    if (hasRememberMeUsername && hasRememberMePassword/* && hasRememberMeState*/) validateInput()
+//                    viewModel.fetchRememberedPassword()?.let {
+//                        binding.etPassword.setText(it)
+//                        binding.cbRemember.isChecked = true
+//                        hasRememberMePassword = true
+//                    }
+//                    if (hasRememberMeUsername && hasRememberMePassword) validateInput()
                 }
                 is NetworkResponse.Loading -> validateInput()
                 is NetworkResponse.Error -> {
@@ -128,32 +154,16 @@ class SignInFragment : Fragment() {
                     binding.tvError.text = state.message
                     binding.tvError.visibility = View.VISIBLE
                 }
-//                State.ERROR_SERVER -> {
-//                    binding.pbSignIn.visibility = View.GONE
-//                    binding.clContent.visibility = View.VISIBLE
-//                    binding.tvError.text = getString(R.string.error_sign_in_timeout)
-//                    binding.tvError.visibility = View.VISIBLE
-//                }
-//                State.ERROR_NETWORK -> {
-//                    binding.pbSignIn.visibility = View.GONE
-//                    binding.clContent.visibility = View.VISIBLE
-//                    binding.tvError.text = getString(R.string.error_sign_in_disconnected_network)
-//                    binding.tvError.visibility = View.VISIBLE
-//                }
                 is NetworkResponse.Success -> {
-                    if (binding.cbRemember.isChecked) {
+//                    if (binding.cbRemember.isChecked) {
                         val username = binding.etUsername.text.toString()
                         val password = binding.etPassword.text.toString()
                         viewModel.rememberUser(
-                            username, password, /*when (binding.toggleStates.checkedButtonId) {
-                                binding.tbtnBihar.id -> "Bihar"
-                                binding.tbtnAssam.id -> "Assam"
-                                else -> throw IllegalStateException("Unknown State!! !! !!")
-                            }*/
+                            username, password
                         )
-                    } else {
-                        viewModel.forgetUser()
-                    }
+//                    } else {
+//                        viewModel.forgetUser()
+//                    }
                     binding.clContent.visibility = View.INVISIBLE
                     binding.pbSignIn.visibility = View.VISIBLE
                     binding.tvError.visibility = View.GONE
@@ -167,25 +177,40 @@ class SignInFragment : Fragment() {
             }
         }
 
+        viewModel.logoutComplete.observe(viewLifecycleOwner) {
+            it?.let {
+                if (it) validateInput()
+            }
+        }
     }
 
+    /**
+     * get username and password
+     * validate with existing logged in user if exists else call login api
+     */
     private fun validateInput() {
-//        val state = when (binding.toggleStates.checkedButtonId) {
-//            binding.tbtnBihar.id -> "Bihar"
-//            binding.tbtnAssam.id -> "Assam"
-//            View.NO_ID -> {
-//                stateUnselectedAlert.show()
-//                return
-//            }
-//            else -> throw IllegalStateException("Two States!!")
-//        }
         binding.clContent.visibility = View.INVISIBLE
         binding.pbSignIn.visibility = View.VISIBLE
         val username = binding.etUsername.text.toString()
         val password = binding.etPassword.text.toString()
 
         Timber.d("Username : $username \n Password : $password")
-        viewModel.authUser(username, password, /*state*/)
+
+        val loggedInUser = viewModel.loggedInUser.value
+
+        if (loggedInUser == null) {
+            viewModel.authUser(username, password)
+        } else {
+            if (loggedInUser.userName == username) {
+                if(loggedInUser.password == password) {
+                    viewModel.updateState(NetworkResponse.Success(loggedInUser))
+                } else {
+                    viewModel.updateState(NetworkResponse.Error("Invalid Password"))
+                }
+            } else {
+                userChangeAlert.show()
+            }
+        }
     }
 
 

@@ -60,7 +60,7 @@ class PushChildHBNCFromAmritWorker @AssistedInject constructor(
                         return@withContext Result.success()
                     }
                     return@withContext Result.failure()
-                }catch (e : SQLiteConstraintException){
+                } catch (e: SQLiteConstraintException) {
                     Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
                     return@withContext Result.failure()
                 }
@@ -73,7 +73,6 @@ class PushChildHBNCFromAmritWorker @AssistedInject constructor(
             Result.failure()
         }
     }
-
 
 
     private fun createForegroundInfo(progress: String): ForegroundInfo {

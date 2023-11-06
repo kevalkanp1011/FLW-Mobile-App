@@ -64,7 +64,7 @@ class PullHRPFromAmritWorker @AssistedInject constructor(
                         return@withContext Result.success()
                     }
                     return@withContext Result.failure()
-                }catch (e : SQLiteConstraintException){
+                } catch (e: SQLiteConstraintException) {
                     Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
                     return@withContext Result.failure()
                 }
@@ -94,7 +94,7 @@ class PullHRPFromAmritWorker @AssistedInject constructor(
         return ForegroundInfo(0, notification)
     }
 
-    private suspend fun getHRPAssess() : Boolean {
+    private suspend fun getHRPAssess(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 val res = hrpRepo.getHRPAssessDetailsFromServer()
@@ -106,7 +106,7 @@ class PullHRPFromAmritWorker @AssistedInject constructor(
         }
     }
 
-    private suspend fun getHighRiskAssess() : Boolean {
+    private suspend fun getHighRiskAssess(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 val res = hrpRepo.getHighRiskAssessDetailsFromServer()
@@ -117,7 +117,8 @@ class PullHRPFromAmritWorker @AssistedInject constructor(
             true
         }
     }
-    private suspend fun getHRPTrack() : Boolean {
+
+    private suspend fun getHRPTrack(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 val res = hrpRepo.getHRPTrackDetailsFromServer()
@@ -129,7 +130,7 @@ class PullHRPFromAmritWorker @AssistedInject constructor(
         }
     }
 
-    private suspend fun getHRNonPAssess() : Boolean {
+    private suspend fun getHRNonPAssess(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 val res = hrpRepo.getHRNonPAssessDetailsFromServer()
@@ -141,7 +142,7 @@ class PullHRPFromAmritWorker @AssistedInject constructor(
         }
     }
 
-    private suspend fun getHRNonPTrack() : Boolean {
+    private suspend fun getHRNonPTrack(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 val res = hrpRepo.getHRNonPTrackDetailsFromServer()

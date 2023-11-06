@@ -22,6 +22,7 @@ class PushChildImmunizationToAmritWorker @AssistedInject constructor(
     companion object {
         const val name = "PushChildImmunizationToAmritWorker"
     }
+
     override suspend fun doWork(): Result {
         init()
         return try {
@@ -41,7 +42,7 @@ class PushChildImmunizationToAmritWorker @AssistedInject constructor(
 
     private fun init() {
         if (TokenInsertTmcInterceptor.getToken() == "")
-            preferenceDao.getAmritToken()?.let{
+            preferenceDao.getAmritToken()?.let {
                 TokenInsertTmcInterceptor.setToken(it)
             }
     }

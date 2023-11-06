@@ -1,27 +1,22 @@
 package org.piramalswasthya.sakhi.work
 
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.MediaScannerConnection
 import android.net.Uri
-import android.os.Build
 import android.os.Environment
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.internal.notify
 import org.piramalswasthya.sakhi.R
-import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
 import timber.log.Timber
 import java.io.File
@@ -86,14 +81,14 @@ class DownloadCardWorker @AssistedInject constructor(
                 }
                 return@withContext Result.success()
             }
-        } catch (e : java.lang.Exception) {
+        } catch (e: java.lang.Exception) {
             return Result.failure()
         }
     }
 
     private fun createForegroundInfo(progress: String): ForegroundInfo {
 
-        val notification = NotificationCompat.Builder(appContext,channelId)
+        val notification = NotificationCompat.Builder(appContext, channelId)
             .setContentTitle("Downloading abha card")
             .setContentText(progress)
             .setSmallIcon(R.drawable.ic_download)
@@ -104,7 +99,7 @@ class DownloadCardWorker @AssistedInject constructor(
     }
 
     private fun showDownload(fileName: String, uri: Uri) {
-        val notificationBuilder = NotificationCompat.Builder(appContext,fileName)
+        val notificationBuilder = NotificationCompat.Builder(appContext, fileName)
             .setSmallIcon(R.drawable.ic_download)
             .setChannelId(channelId)
             .setContentTitle(fileName)

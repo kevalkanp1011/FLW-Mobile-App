@@ -46,9 +46,10 @@ class PullTBFromAmritWorker @AssistedInject constructor(
             withContext(Dispatchers.IO) {
                 val startTime = System.currentTimeMillis()
                 var numPages: Int
-                val startPage = if(preferenceDao.getLastSyncedTimeStamp()==Konstants.defaultTimeStamp)
-                    preferenceDao.getFirstSyncLastSyncedPage()
-                else 0
+                val startPage =
+                    if (preferenceDao.getLastSyncedTimeStamp() == Konstants.defaultTimeStamp)
+                        preferenceDao.getFirstSyncLastSyncedPage()
+                    else 0
 
                 try {
                     val result1 =
@@ -66,7 +67,7 @@ class PullTBFromAmritWorker @AssistedInject constructor(
                         return@withContext Result.success()
                     }
                     return@withContext Result.failure()
-                }catch (e : SQLiteConstraintException){
+                } catch (e: SQLiteConstraintException) {
                     Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
                     return@withContext Result.failure()
                 }
@@ -97,7 +98,7 @@ class PullTBFromAmritWorker @AssistedInject constructor(
     }
 
 
-    private suspend fun getTbScreeningDetails() : Boolean {
+    private suspend fun getTbScreeningDetails(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 val res = tbRepo.getTBScreeningDetailsFromServer()
@@ -109,7 +110,7 @@ class PullTBFromAmritWorker @AssistedInject constructor(
         }
     }
 
-    private suspend fun getTbSuspectedDetails() : Boolean {
+    private suspend fun getTbSuspectedDetails(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 val res = tbRepo.getTbSuspectedDetailsFromServer()

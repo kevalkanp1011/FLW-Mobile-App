@@ -16,7 +16,7 @@ class SyncViewModel @Inject constructor(
     preferenceDao: PreferenceDao
 ) : ViewModel() {
 
-    val syncStatus = syncDao.getSyncStatus(preferenceDao.getLocationRecord()?.village?.id!!)
+    val syncStatus = syncDao.getSyncStatus()
 
     val lang = preferenceDao.getCurrentLanguage()
     fun getLocalNames(context: Context): Array<String> {

@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.InAppDb
+import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.LocationRecord
@@ -57,18 +58,18 @@ class HomeViewModel @Inject constructor(
 //            _user = pref.getLoggedInUser()!!
             launch {
                 userRepo.unProcessedRecordCount.collect { value ->
-                    _unprocessedRecords = value
+                    _unprocessedRecords = value.filter { it.syncState != SyncState.SYNCED }.sumOf { it.count }
                 }
             }
         }
     }
     fun logout() {
         viewModelScope.launch {
-            withContext(Dispatchers.IO){
-                database.clearAllTables()
-            }
-            pref.deleteForLogout()
-            pref.setLastSyncedTimeStamp(Konstants.defaultTimeStamp)
+//            withContext(Dispatchers.IO){
+//                database.clearAllTables()
+//            }
+//            pref.deleteForLogout()
+//            pref.setLastSyncedTimeStamp(Konstants.defaultTimeStamp)
             _navigateToLoginPage.value = true
         }
     }

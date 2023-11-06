@@ -10,7 +10,12 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertTmcInterceptor
-import org.piramalswasthya.sakhi.repositories.*
+import org.piramalswasthya.sakhi.repositories.CdrRepo
+import org.piramalswasthya.sakhi.repositories.HbncRepo
+import org.piramalswasthya.sakhi.repositories.HbycRepo
+import org.piramalswasthya.sakhi.repositories.MdsrRepo
+import org.piramalswasthya.sakhi.repositories.PmjayRepo
+import org.piramalswasthya.sakhi.repositories.PmsmaRepo
 import timber.log.Timber
 import java.net.SocketTimeoutException
 

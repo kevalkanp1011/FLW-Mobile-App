@@ -19,6 +19,7 @@ class CbacPushToAmritWorker @AssistedInject constructor(
     companion object {
         const val name = "PushToAmritWorker"
     }
+
     override suspend fun doWork(): Result {
         cbacRepo.pushAndUpdateCbacRecord()
         return Result.success()

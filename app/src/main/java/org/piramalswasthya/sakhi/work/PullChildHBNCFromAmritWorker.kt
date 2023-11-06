@@ -56,11 +56,11 @@ class PullChildHBNCFromAmritWorker @AssistedInject constructor(
                     Timber.d("Full HBNC fetching took $timeTaken seconds $result1")
 
                     if (result1.all { it }) {
-                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
+//                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
                         return@withContext Result.success()
                     }
                     return@withContext Result.failure()
-                }catch (e : SQLiteConstraintException){
+                } catch (e: SQLiteConstraintException) {
                     Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
                     return@withContext Result.failure()
                 }
@@ -91,7 +91,7 @@ class PullChildHBNCFromAmritWorker @AssistedInject constructor(
     }
 
 
-    private suspend fun getChildHBNCDetails() : Boolean {
+    private suspend fun getChildHBNCDetails(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 val res = hbncRepo.getHBNCDetailsFromServer()

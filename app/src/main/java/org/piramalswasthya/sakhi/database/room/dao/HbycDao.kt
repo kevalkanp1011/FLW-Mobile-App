@@ -24,4 +24,7 @@ interface HbycDao {
 
     @Update
     suspend fun setSynced(it: HBYCCache)
+
+    @Query("SELECT * FROM HBYC WHERE processed = 'N' or processed = 'P'")
+    fun getAllUnprocessedHbyc(): List<HBYCCache>
 }
