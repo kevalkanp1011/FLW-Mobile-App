@@ -201,13 +201,14 @@ class SignInFragment : Fragment() {
         if (loggedInUser == null) {
             viewModel.authUser(username, password)
         } else {
-            if (loggedInUser.userName == username) {
+            if (loggedInUser.userName.equals(username, true)) {
                 if(loggedInUser.password == password) {
                     viewModel.updateState(NetworkResponse.Success(loggedInUser))
                 } else {
                     viewModel.updateState(NetworkResponse.Error("Invalid Password"))
                 }
             } else {
+                userChangeAlert.setCanceledOnTouchOutside(false)
                 userChangeAlert.show()
             }
         }

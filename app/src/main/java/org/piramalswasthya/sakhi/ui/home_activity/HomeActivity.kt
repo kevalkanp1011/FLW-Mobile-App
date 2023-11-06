@@ -309,6 +309,8 @@ class HomeActivity : AppCompatActivity() {
         }
         binding.navView.menu.findItem(R.id.sync_pending_records).setOnMenuItemClickListener {
             WorkerUtils.triggerAmritPushWorker(this)
+            if (!pref.isFullPullComplete)
+                WorkerUtils.triggerAmritPullWorker(this)
             binding.drawerLayout.close()
             true
 

@@ -130,8 +130,8 @@
     <string name="anc_visits">ANC দৰকাৰি</string>
     <string name="id">পৰিচয়পত্ৰ</string>
     <string name="no_of_children">শিশুৰ সংখ্যা</string>
-    <string name="view_trackings">ট্ৰেকিং চাবলৈ</string>
-    <string name="add_tracking">ট্ৰেকিং যোগ কৰক</string>
+<!--    <string name="view_trackings">ট্ৰেকিং চাবলৈ</string>-->
+<!--    <string name="add_tracking">ট্ৰেকিং যোগ কৰক</string>-->
     <string name="household_id">পৰাৰ পৰিচয়পত্ৰ</string>
     <string name="contact_number">যোগাযোগ নম্বৰ</string>
     <string name="kcuf">KCUF</string>
