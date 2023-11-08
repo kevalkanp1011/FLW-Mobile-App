@@ -7,13 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
-import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.LocationRecord
 import org.piramalswasthya.sakhi.repositories.UserRepo
 import javax.inject.Inject
@@ -70,6 +67,7 @@ class HomeViewModel @Inject constructor(
 //            }
 //            pref.deleteForLogout()
 //            pref.setLastSyncedTimeStamp(Konstants.defaultTimeStamp)
+            pref.deleteLoginCred()
             _navigateToLoginPage.value = true
         }
     }

@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.squareup.moshi.JsonClass
+import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
 
 @Entity(
@@ -54,7 +55,7 @@ data class HBYCCache (
     var syncState : SyncState,
     var createdBy: String? = null,
     var createdDate: Long? = System.currentTimeMillis(),
-) {
+) : FormDataModel {
     fun asPostModel(user: User, household: HouseholdCache, ben: BenRegCache, hbycCount: Int): HbycPost {
         return HbycPost(
             anmNameNumber = user.userId.toString(),

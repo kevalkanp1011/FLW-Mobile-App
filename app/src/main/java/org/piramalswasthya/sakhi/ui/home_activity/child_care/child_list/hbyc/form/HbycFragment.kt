@@ -1,11 +1,11 @@
 package org.piramalswasthya.sakhi.ui.home_activity.child_care.child_list.hbyc.form
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -13,7 +13,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
-import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.databinding.FragmentHbycBinding
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
@@ -47,19 +46,20 @@ class HbycFragment : Fragment() {
             if (validate()) viewModel.submitForm()
         }
         viewModel.exists.observe(viewLifecycleOwner) {exists ->
-            val adapter = FormInputAdapterOld(isEnabled = !exists)
+            val adapter = FormInputAdapter(
+                formValueListener = FormInputAdapter.FormValueListener { formId, index ->
+                    viewModel.updateListOnValueChanged(formId, index)
+                    hardCodedListUpdate(formId)
+                }, isEnabled = !exists
+            )
+            binding.btnHbycSubmit.isEnabled = !exists
             binding.hbycForm.rvInputForm.adapter = adapter
-            if (exists) {
-                binding.btnHbycSubmit.visibility = View.GONE
-                viewModel.setExistingValues()
-            }
-            else {
-                viewModel.address.observe(viewLifecycleOwner) {
-                    viewModel.setAutoPopulatedValues(it, adapter)
-                }
-            }
             lifecycleScope.launch {
-                adapter.submitList(viewModel.getFirstPage())
+                viewModel.formList.collect { list ->
+                    if (list.isNotEmpty())
+                        adapter.submitList(list)
+
+                }
             }
         }
 
@@ -113,6 +113,13 @@ class HbycFragment : Fragment() {
         return false
     }
 
+    private fun hardCodedListUpdate(formId: Int) {
+        binding.hbycForm.rvInputForm.adapter?.apply {
+            when (formId) {
+                // if required
+            }
+        }
+    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

@@ -69,14 +69,16 @@ class SignInViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 database.clearAllTables()
             }
-                pref.deleteForLogout()
-                pref.setLastSyncedTimeStamp(Konstants.defaultTimeStamp)
-                _loggedInUser.value = null
-                Thread.sleep(2000)
-                _logoutComplete.value = true
-
-
+            pref.deleteForLogout()
+            pref.setLastSyncedTimeStamp(Konstants.defaultTimeStamp)
+            _loggedInUser.value = null
+            Thread.sleep(2000)
+            _logoutComplete.value = true
         }
+    }
+
+    fun getLoggedInUser() : User? {
+        return pref.getLoggedInUser()
     }
 
     /**
@@ -105,10 +107,10 @@ class SignInViewModel @Inject constructor(
         pref.getRememberedState()
 
 
-    fun rememberUser(username: String, password: String /*state: String*/) {
+    fun rememberUser(username: String, password: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                pref.registerLoginCred(username, password/* state*/)
+                pref.registerLoginCred(username, password)
             }
         }
     }

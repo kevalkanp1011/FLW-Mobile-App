@@ -11,13 +11,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.piramalswasthya.sakhi.adapters.FormInputAdapterOld
 import org.piramalswasthya.sakhi.configuration.HBYCFormDataset
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.model.BenRegCache
-import org.piramalswasthya.sakhi.model.FormInputOld
 import org.piramalswasthya.sakhi.model.HBYCCache
 import org.piramalswasthya.sakhi.model.HouseholdCache
 import org.piramalswasthya.sakhi.model.User
@@ -68,8 +66,9 @@ class HbycViewModel @Inject constructor(
     val exists: LiveData<Boolean>
         get() = _exists
 
-    private val dataset = HBYCFormDataset(context)
-
+    private val dataset =
+        HBYCFormDataset(context, preferenceDao.getCurrentLanguage())
+    val formList = dataset.listFlow
     fun submitForm() {
         _state.value = State.LOADING
         val hbycCache = HBYCCache(benId = benId, hhId = hhId, processed = "N", syncState = SyncState.UNSYNCED)
@@ -101,6 +100,10 @@ class HbycViewModel @Inject constructor(
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
             _address.value = getAddress(household)
             _exists.value = hbyc != null
+            dataset.setUpPage(
+                ben,
+                if (_exists.value == true) hbyc else null
+            )
         }
     }
 
@@ -123,15 +126,20 @@ class HbycViewModel @Inject constructor(
         return address
     }
 
-    fun getFirstPage(): List<FormInputOld> {
-        return dataset.firstPage
-    }
+//    fun getFirstPage(): List<FormInputOld> {
+//        return dataset.firstPage
+//    }
 
-    fun setAutoPopulatedValues(it: String?, adapter: FormInputAdapterOld) {
-//        dataset.contactNumber.value.value = ben.contactNumber.toString()
-//        dataset.spouseName.value.value = ben.genDetails?.spouseName
-    }
+//    fun setAutoPopulatedValues(it: String?, adapter: FormInputAdapterOld) {
+////        dataset.contactNumber.value.value = ben.contactNumber.toString()
+////        dataset.spouseName.value.value = ben.genDetails?.spouseName
+//    }
 
+    fun updateListOnValueChanged(formId: Int, index: Int) {
+        viewModelScope.launch {
+            dataset.updateList(formId, index)
+        }
+    }
     private fun getDateFromLong(dateLong: Long?): String? {
         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
         dateLong?.let {

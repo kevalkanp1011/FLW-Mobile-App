@@ -49,8 +49,8 @@ class SignInFragment : Fragment() {
     }
 
     private val userChangeAlert by lazy {
-        var str = "previously logged in with " + viewModel.loggedInUser.value?.userName + " do you" +
-                " want to continue? "
+        var str = "previously logged in with " + viewModel.getLoggedInUser()?.userName + " do you" +
+                " want to override? "
         viewModel.unprocessedRecordsCount.value?.let {
             if (it > 0) {
                 str += "there are"+  viewModel.unprocessedRecordsCount.value + " unprocessed records, wait till records are synced"
@@ -133,19 +133,19 @@ class SignInFragment : Fragment() {
                 is NetworkResponse.Idle -> {
                     binding.clContent.visibility = View.VISIBLE
                     binding.pbSignIn.visibility = View.INVISIBLE
-//                    var hasRememberMeUsername = false
-//                    var hasRememberMePassword = false
-//                    var hasRememberMeState = false
-//                    viewModel.fetchRememberedUserName()?.let {
-//                        binding.etUsername.setText(it)
-//                        hasRememberMeUsername = true
-//                    }
-//                    viewModel.fetchRememberedPassword()?.let {
-//                        binding.etPassword.setText(it)
-//                        binding.cbRemember.isChecked = true
-//                        hasRememberMePassword = true
-//                    }
-//                    if (hasRememberMeUsername && hasRememberMePassword) validateInput()
+                    var hasRememberMeUsername = false
+                    var hasRememberMePassword = false
+                    var hasRememberMeState = false
+                    viewModel.fetchRememberedUserName()?.let {
+                        binding.etUsername.setText(it)
+                        hasRememberMeUsername = true
+                    }
+                    viewModel.fetchRememberedPassword()?.let {
+                        binding.etPassword.setText(it)
+                        binding.cbRemember.isChecked = true
+                        hasRememberMePassword = true
+                    }
+                    if (hasRememberMeUsername && hasRememberMePassword) validateInput()
                 }
                 is NetworkResponse.Loading -> validateInput()
                 is NetworkResponse.Error -> {
@@ -155,15 +155,15 @@ class SignInFragment : Fragment() {
                     binding.tvError.visibility = View.VISIBLE
                 }
                 is NetworkResponse.Success -> {
-//                    if (binding.cbRemember.isChecked) {
+                    if (binding.cbRemember.isChecked) {
                         val username = binding.etUsername.text.toString()
                         val password = binding.etPassword.text.toString()
                         viewModel.rememberUser(
                             username, password
                         )
-//                    } else {
-//                        viewModel.forgetUser()
-//                    }
+                    } else {
+                        viewModel.forgetUser()
+                    }
                     binding.clContent.visibility = View.INVISIBLE
                     binding.pbSignIn.visibility = View.VISIBLE
                     binding.tvError.visibility = View.GONE
@@ -196,7 +196,7 @@ class SignInFragment : Fragment() {
 
         Timber.d("Username : $username \n Password : $password")
 
-        val loggedInUser = viewModel.loggedInUser.value
+        val loggedInUser = viewModel.getLoggedInUser()
 
         if (loggedInUser == null) {
             viewModel.authUser(username, password)
