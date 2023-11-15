@@ -7,6 +7,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.database.room.dao.BenDao
 import org.piramalswasthya.sakhi.database.room.dao.HbycDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
@@ -23,6 +24,7 @@ class HbycRepo @Inject constructor(
     private val database: InAppDb,
     private val preferenceDao: PreferenceDao,
     private val hbycDao: HbycDao,
+    private val benDao: BenDao,
     private val userRepo: UserRepo,
     private val amritApiService: AmritApiService
 ) {
@@ -256,16 +258,17 @@ class HbycRepo @Inject constructor(
             Gson().fromJson(dataObj, Array<HbycPost>::class.java).toList()
 
         hbycList.forEach { hbycPost ->
-            var cache = hbycPost.houseoldId?.toLong()
-                ?.let { hbycDao.getHbyc(it, hbycPost.beneficiaryid) }
-            if (cache == null) {
-                cache = hbycPost.toCache()
-                hbycDao.upsert(cache)
-            } else {
-                cache.processed = "P"
-                cache.syncState = SyncState.SYNCED
+            benDao.getBen(hbycPost.beneficiaryid)?.let {
+                var cache = hbycDao.getHbyc(it.householdId, it.beneficiaryId, hbycPost.month.toString())
+                cache?.let { it1 ->
+                    it1.processed = "P"
+                    it1.syncState = SyncState.SYNCED
+                    hbycDao.upsert(it1)
+                } ?: run {
+                    cache = hbycPost.toCache(it.householdId)
+                    hbycDao.upsert(cache!!)
+                }
             }
-            hbycDao.upsert(cache)
         }
     }
 

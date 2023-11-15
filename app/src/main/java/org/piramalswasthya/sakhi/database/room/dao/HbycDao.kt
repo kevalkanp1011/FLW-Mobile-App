@@ -16,8 +16,8 @@ interface HbycDao {
     @Query("select count(*) from HBYC")
     suspend fun hbycCount(): Int
 
-    @Query("SELECT * FROM HBYC WHERE benId =:benId AND hhId = :hhId LIMIT 1")
-    suspend fun getHbyc(hhId: Long, benId: Long): HBYCCache?
+    @Query("SELECT * FROM HBYC WHERE benId =:benId AND hhId = :hhId AND month = :month LIMIT 1")
+    suspend fun getHbyc(hhId: Long, benId: Long, month: String): HBYCCache?
 
     @Query("SELECT * FROM HBYC WHERE benId =:benId AND hhId = :hhId ORDER BY month")
     fun getAllHbycEntries(hhId: Long, benId: Long): Flow<List<HBYCCache>>

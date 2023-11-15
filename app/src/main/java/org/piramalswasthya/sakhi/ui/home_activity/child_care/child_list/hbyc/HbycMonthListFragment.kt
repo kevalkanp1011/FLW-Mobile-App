@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.HbycMonthGridAdapter
 import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
+import org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.HbncDayListFragmentDirections
 
 @AndroidEntryPoint
 class HbycMonthListFragment : Fragment() {
@@ -43,9 +44,7 @@ class HbycMonthListFragment : Fragment() {
         binding.rvIconGrid.layoutManager = rvLayoutManager
         val iconAdapter = HbycMonthGridAdapter(
             HbycMonthGridAdapter.HbycIconClickListener {
-//                Timber.d("benId : $benId hhId : $hhId $count")
                 findNavController().navigate(it)
-//                    HbncDayListFragmentDirections.actionHbncDayListFragmentToHbncFragment(hhId, benId, count,))
             })
 
         binding.rvIconGrid.adapter = iconAdapter

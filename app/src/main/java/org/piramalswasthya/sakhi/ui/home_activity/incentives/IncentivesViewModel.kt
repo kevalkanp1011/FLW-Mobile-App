@@ -27,14 +27,14 @@ class IncentivesViewModel @Inject constructor(
     private val _lastUpdated: Long = pref.lastIncentivePullTimestamp
     val lastUpdated: String
         get() = getDateStrFromLong(_lastUpdated)!!
-    private val sourceIncentiveList = incentiveRepo.list.map { it.map { it.asDomainModel() } }
+    private val sourceIncentiveList = incentiveRepo.list.map { it -> it.map { it.asDomainModel() } }
 
-    val initStart = Calendar.getInstance().apply {
+    private val initStart = Calendar.getInstance().apply {
         set(Calendar.DAY_OF_MONTH, 1)
         setToStartOfTheDay()
     }.timeInMillis
 
-    val initEnd = Calendar.getInstance().apply {
+    private val initEnd = Calendar.getInstance().apply {
         setToStartOfTheDay()
     }.timeInMillis
 
@@ -67,7 +67,7 @@ class IncentivesViewModel @Inject constructor(
     fun mapToView(incentiveDomainList: List<IncentiveDomain>): List<IncentiveDomainDTO> {
         var items: List<IncentiveDomainDTO> = mutableListOf()
         incentiveDomainList.forEach {
-            var entries =
+            val entries =
                 items.filter { itemDTO -> (itemDTO.group == it.activity.group) && (itemDTO.name == it.activity.name) }
 
             if (entries.isEmpty()) {
@@ -78,7 +78,8 @@ class IncentivesViewModel @Inject constructor(
                     paymentParam = it.activity.paymentParam,
                     rate = it.record.amount,
                     noOfClaims = 1,
-                    amountClaimed = 1 * it.record.amount
+                    amountClaimed = 1 * it.record.amount,
+                    fmrCode = it.activity.fmrCode
                 )
                 items = items + dto
             } else {

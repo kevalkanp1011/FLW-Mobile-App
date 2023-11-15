@@ -45,6 +45,7 @@ class HbycViewModel @Inject constructor(
 
     private val benId = HbycFragmentArgs.fromSavedStateHandle(state).benId
     private val hhId = HbycFragmentArgs.fromSavedStateHandle(state).hhId
+    private val month = HbycFragmentArgs.fromSavedStateHandle(state).month
     private lateinit var ben: BenRegCache
     private lateinit var household: HouseholdCache
     private lateinit var user: User
@@ -81,7 +82,7 @@ class HbycViewModel @Inject constructor(
                 _state.value = State.SUCCESS
             }
             else {
-                Timber.d("saving fpot to local db failed!!")
+                Timber.d("saving hbyc to local db failed!!")
                 _state.value = State.FAIL
             }
         }
@@ -94,7 +95,7 @@ class HbycViewModel @Inject constructor(
                 ben = benRepo.getBeneficiaryRecord(benId, hhId)!!
                 household = benRepo.getHousehold(hhId)!!
                 user = preferenceDao.getLoggedInUser()!!
-                hbyc = database.hbycDao.getHbyc(hhId, benId)
+                hbyc = database.hbycDao.getHbyc(hhId, benId, month.toString())
             }
             _benName.value = "${ben.firstName} ${if(ben.lastName== null) "" else ben.lastName}"
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
@@ -102,7 +103,8 @@ class HbycViewModel @Inject constructor(
             _exists.value = hbyc != null
             dataset.setUpPage(
                 ben,
-                if (_exists.value == true) hbyc else null
+                if (_exists.value == true) hbyc else null,
+                month.toString()
             )
         }
     }

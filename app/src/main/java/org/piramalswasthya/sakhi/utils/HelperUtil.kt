@@ -157,19 +157,40 @@ object HelperUtil {
      * get date string in yyyy-MM-dd format from given long date
      */
     fun getDateStrFromLong(dateLong: Long?): String? {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-        val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
         dateLong?.let {
+            if (dateLong == 0L) return null
             val dateString = dateFormat.format(dateLong)
             val timeString = timeFormat.format(dateLong)
             return dateString
         } ?: run {
             return null
         }
+
     }
 
+    fun getDateTimeStringFromLong(dateLong: Long?): String? {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+        dateLong?.let {
+            if (dateLong == 0L) return null
+            val dateString = dateFormat.format(dateLong)
+            val timeString = timeFormat.format(dateLong)
+            return "${dateString}T${timeString}.000Z"
+        } ?: run {
+            return null
+        }
+
+    }
     fun getLongFromDateStr(dateString: String?): Long {
         val f =  SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        val date = dateString?.let { f.parse(it) }
+        return date?.time ?: 0L
+    }
+
+    fun getLongFromDateMDY(dateString: String?): Long {
+        val f =  SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH)
         val date = dateString?.let { f.parse(it) }
         return date?.time ?: 0L
     }

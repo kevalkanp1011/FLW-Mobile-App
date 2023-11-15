@@ -172,7 +172,7 @@ data class HBNCCache(
                 motherLessNoMilk = it.motherLessNoMilk != 0,
                 motherBreastProblem = it.motherBreastProblem != 0,
                 babyEyesSwollen = it.babyEyesSwollen != 0,
-                babyWeight = (if (it.babyWeight != null) it.babyWeight.toFloat() else 0) as Float,
+                babyWeight = (if (it.babyWeight != null) it.babyWeight.toFloat() else null),
                 babyTemperature = if (it.babyTemperature != null) it.babyTemperature.toInt() else 0,
                 babyYellow = it.babyYellow != 0,
                 babyImmunizationStatus = it.babyImmunizationStatus,
@@ -358,18 +358,18 @@ data class HBNCPart1Post(
 ) {
     fun toCache(): HbncPartI {
         return HbncPartI(
-            dateOfVisit = HelperUtil.getLongFromDateStr(dateOfVisit),
+            dateOfVisit = HelperUtil.getLongFromDateMDY(dateOfVisit),
             babyAlive = if (babyAlive) 1 else 0,
-            dateOfBabyDeath = HelperUtil.getLongFromDateStr(dateOfBabyDeath),
+            dateOfBabyDeath = HelperUtil.getLongFromDateMDY(dateOfBabyDeath),
             timeOfBabyDeath = timeOfBabyDeath,
             placeOfBabyDeath = placeOfBabyDeath.toInt(),
             otherPlaceOfBabyDeath = otherPlaceOfBabyDeath,
             isBabyPreterm = if (isBabyPreterm) 1 else 0,
             gestationalAge = gestationalAge.toInt(),
-            dateOfFirstExamination = HelperUtil.getLongFromDateStr(dateOfFirstExamination),
+            dateOfFirstExamination = HelperUtil.getLongFromDateMDY(dateOfFirstExamination),
             timeOfFirstExamination = timeOfFirstExamination,
             motherAlive = if (motherAlive) 1 else 0,
-            dateOfMotherDeath = HelperUtil.getLongFromDateStr(dateOfMotherDeath),
+            dateOfMotherDeath = HelperUtil.getLongFromDateMDY(dateOfMotherDeath),
             timeOfMotherDeath = timeOfMotherDeath,
             placeOfMotherDeath = placeOfMotherDeath.toInt(),
             otherPlaceOfMotherDeath = otherPlaceOfMotherDeath,
@@ -412,7 +412,7 @@ data class HBNCPart2Post(
 ) {
     fun toCache(): HbncPartII {
         return HbncPartII(
-            dateOfVisit = HelperUtil.getLongFromDateStr(dateOfVisit),
+            dateOfVisit = HelperUtil.getLongFromDateMDY(dateOfVisit),
             babyTemperature = babyTemperature,
             babyEyeCondition = babyEyeCondition.toInt(),
             babyUmbilicalBleed = if (babyUmbilicalBleed) 1 else 0,
@@ -450,7 +450,7 @@ data class HBNCVisitPost(
     var motherLessNoMilk: Boolean,
     var motherBreastProblem: Boolean,
     var babyEyesSwollen: Boolean,
-    var babyWeight: Float,
+    var babyWeight: Float?,
     var babyTemperature: Int,
     var babyYellow: Boolean,
     var babyImmunizationStatus: String?,
@@ -481,7 +481,7 @@ data class HBNCVisitPost(
 ) {
     fun toCache(): HbncHomeVisit {
         return HbncHomeVisit(
-            dateOfVisit = HelperUtil.getLongFromDateStr(dateOfVisit),
+            dateOfVisit = HelperUtil.getLongFromDateMDY(dateOfVisit),
             babyAlive = if (babyAlive) 1 else 0,
             numTimesFullMeal24hr = numTimesFullMeal24hr,
             numPadChanged24hr = numPadChanged24hr,
@@ -503,7 +503,7 @@ data class HBNCVisitPost(
             placeOfBabyReferral = placeOfBabyReferral.toInt(),
             otherPlaceOfBabyReferral = otherPlaceOfBabyReferral,
             motherReferred = if (motherBreastProblem) 1 else 0,
-            dateOfMotherReferral = HelperUtil.getLongFromDateStr(dateOfMotherReferral),
+            dateOfMotherReferral = HelperUtil.getLongFromDateMDY(dateOfMotherReferral),
             placeOfMotherReferral = placeOfMotherReferral.toInt(),
             otherPlaceOfMotherReferral = otherPlaceOfMotherReferral,
             allLimbsLimp = if (motherBreastProblem) 1 else 0,
@@ -517,7 +517,7 @@ data class HBNCVisitPost(
             sup = supervisor.toInt(),
             supName = supervisorName,
             supComment = supervisorComment,
-            supSignDate = HelperUtil.getLongFromDateStr(supervisorSignDate)
+            supSignDate = HelperUtil.getLongFromDateMDY(supervisorSignDate)
         )
     }
 }
@@ -556,14 +556,14 @@ data class HBNCVisitCardPost(
             blockName = blockName,
             motherName = motherName,
             fatherName = fatherName,
-            dateOfDelivery = HelperUtil.getLongFromDateStr(dateOfDelivery),
+            dateOfDelivery = HelperUtil.getLongFromDateMDY(dateOfDelivery),
             placeOfDelivery = placeOfDelivery?.toInt() ?: 0,
             babyGender = babyGender?.toInt() ?: 0,
             typeOfDelivery = typeOfDelivery?.toInt() ?: 0,
             stillBirth = if (stillBirth) 1 else 0,
             startedBreastFeeding = startedBreastFeeding?.toInt() ?: 0,
-            dischargeDateMother = HelperUtil.getLongFromDateStr(dischargeDateMother),
-            dischargeDateBaby = HelperUtil.getLongFromDateStr(dischargeDateBaby),
+            dischargeDateMother = HelperUtil.getLongFromDateMDY(dischargeDateMother),
+            dischargeDateBaby = HelperUtil.getLongFromDateMDY(dischargeDateBaby),
             weightInGrams = weightInGrams,
             registrationOfBirth = if (registrationOfBirth) 1 else 0
         )
@@ -581,7 +581,7 @@ data class HBNCPost(
     val hbncPart2DTO: HBNCPart2Post?,
     val hbncVisitDTO: HBNCVisitPost?,
 ) {
-    fun toCache(): HBNCCache {
+    fun toCache(householdId: Long): HBNCCache {
         var visitCard: HbncVisitCard? = null
         var part1: HbncPartI? = null
         var part2: HbncPartII? = null
@@ -595,14 +595,14 @@ data class HBNCPost(
                 blockName = it.blockName,
                 motherName = it.motherName,
                 fatherName = it.fatherName,
-                dateOfDelivery = HelperUtil.getLongFromDateStr(it.dateOfDelivery),
+                dateOfDelivery = HelperUtil.getLongFromDateMDY(it.dateOfDelivery),
                 placeOfDelivery = if (it.placeOfDelivery != null) it.placeOfDelivery.toInt() else 0,
                 babyGender = if (it.babyGender != null) it.babyGender.toInt() else 0,
                 typeOfDelivery = if (it.typeOfDelivery != null) it.typeOfDelivery.toInt() else 0,
                 stillBirth = if (it.stillBirth) 1 else 0,
                 startedBreastFeeding = if (it.startedBreastFeeding != null) it.startedBreastFeeding.toInt() else 0,
-                dischargeDateMother = HelperUtil.getLongFromDateStr(it.dischargeDateMother),
-                dischargeDateBaby = HelperUtil.getLongFromDateStr(it.dischargeDateBaby),
+                dischargeDateMother = HelperUtil.getLongFromDateMDY(it.dischargeDateMother),
+                dischargeDateBaby = HelperUtil.getLongFromDateMDY(it.dischargeDateBaby),
                 weightInGrams = it.weightInGrams,
                 registrationOfBirth = if (it.registrationOfBirth) 1 else 0
             )
@@ -610,18 +610,18 @@ data class HBNCPost(
 
         hbncPart1DTO?.let {
             part1 = HbncPartI(
-                dateOfVisit = HelperUtil.getLongFromDateStr(it.dateOfVisit),
+                dateOfVisit = HelperUtil.getLongFromDateMDY(it.dateOfVisit),
                 babyAlive = if (it.babyAlive) 1 else 0,
-                dateOfBabyDeath = HelperUtil.getLongFromDateStr(it.dateOfBabyDeath),
+                dateOfBabyDeath = HelperUtil.getLongFromDateMDY(it.dateOfBabyDeath),
                 timeOfBabyDeath = it.timeOfBabyDeath,
                 placeOfBabyDeath = it.placeOfBabyDeath.toInt(),
                 otherPlaceOfBabyDeath = it.otherPlaceOfBabyDeath,
                 isBabyPreterm = if (it.isBabyPreterm) 1 else 0,
                 gestationalAge = it.gestationalAge.toInt(),
-                dateOfFirstExamination = HelperUtil.getLongFromDateStr(it.dateOfFirstExamination),
+                dateOfFirstExamination = HelperUtil.getLongFromDateMDY(it.dateOfFirstExamination),
                 timeOfFirstExamination = it.timeOfFirstExamination,
                 motherAlive = if (it.motherAlive) 1 else 0,
-                dateOfMotherDeath = HelperUtil.getLongFromDateStr(it.dateOfMotherDeath),
+                dateOfMotherDeath = HelperUtil.getLongFromDateMDY(it.dateOfMotherDeath),
                 timeOfMotherDeath = it.timeOfMotherDeath,
                 placeOfMotherDeath = it.placeOfMotherDeath.toInt(),
                 otherPlaceOfMotherDeath = it.otherPlaceOfMotherDeath,
@@ -637,7 +637,7 @@ data class HBNCPost(
 
         hbncPart2DTO?.let {
             part2 = HbncPartII(
-                dateOfVisit = HelperUtil.getLongFromDateStr(it.dateOfVisit),
+                dateOfVisit = HelperUtil.getLongFromDateMDY(it.dateOfVisit),
                 babyTemperature = it.babyTemperature,
                 babyEyeCondition = it.babyEyeCondition.toInt(),
                 babyUmbilicalBleed = if (it.babyUmbilicalBleed) 1 else 0,
@@ -659,7 +659,7 @@ data class HBNCPost(
 
         hbncVisitDTO?.let {
             homeVisitForm = HbncHomeVisit(
-                dateOfVisit = HelperUtil.getLongFromDateStr(it.dateOfVisit),
+                dateOfVisit = HelperUtil.getLongFromDateMDY(it.dateOfVisit),
                 babyAlive = if (it.babyAlive) 1 else 0,
                 numTimesFullMeal24hr = it.numTimesFullMeal24hr,
                 numPadChanged24hr = it.numPadChanged24hr,
@@ -677,11 +677,11 @@ data class HBNCPost(
                 babyYellow = if (it.babyYellow) 1 else 0,
                 babyImmunizationStatus = it.babyImmunizationStatus,
                 babyReferred = if (it.babyReferred) 1 else 0,
-                dateOfBabyReferral = it.dateOfBabyReferral?.toLong(),
+                dateOfBabyReferral = HelperUtil.getLongFromDateMDY(it.dateOfBabyReferral),
                 placeOfBabyReferral = it.placeOfBabyReferral.toInt(),
                 otherPlaceOfBabyReferral = it.otherPlaceOfBabyReferral,
                 motherReferred = if (it.motherBreastProblem) 1 else 0,
-                dateOfMotherReferral = HelperUtil.getLongFromDateStr(it.dateOfMotherReferral),
+                dateOfMotherReferral = HelperUtil.getLongFromDateMDY(it.dateOfMotherReferral),
                 placeOfMotherReferral = it.placeOfMotherReferral.toInt(),
                 otherPlaceOfMotherReferral = it.otherPlaceOfMotherReferral,
                 allLimbsLimp = if (it.motherBreastProblem) 1 else 0,
@@ -695,14 +695,14 @@ data class HBNCPost(
                 sup = it.supervisor.toInt(),
                 supName = it.supervisorName,
                 supComment = it.supervisorComment,
-                supSignDate = HelperUtil.getLongFromDateStr(it.supervisorSignDate)
+                supSignDate = HelperUtil.getLongFromDateMDY(it.supervisorSignDate)
             )
         }
 
         return HBNCCache(
             id = 0,
             benId = benId,
-            hhId = hhId,
+            hhId = householdId,
             homeVisitDate = homeVisitDate,
             visitCard = visitCard,
             part1 = part1,

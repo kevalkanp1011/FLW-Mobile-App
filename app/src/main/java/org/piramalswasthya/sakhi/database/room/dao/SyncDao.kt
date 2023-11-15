@@ -94,6 +94,14 @@ interface SyncDao {
                 "    FROM IMMUNIZATION imm " +
                 "    INNER JOIN beneficiary b ON b.beneficiaryId = imm.beneficiaryId " +
 //                "    WHERE b.loc_village_id = :villageId " +
+                "    UNION ALL " +
+                "    SELECT 18 as id, 'HBYC' as name, hbyc.syncState as syncState " +
+                "    FROM HBYC hbyc " +
+                "    INNER JOIN beneficiary b ON b.beneficiaryId = hbyc.benId " +
+                "    UNION ALL " +
+                "    SELECT 19 as id, 'HBNC' as name, hbnc.syncState as syncState " +
+                "    FROM HBNC hbnc " +
+                "    INNER JOIN beneficiary b ON b.beneficiaryId = hbnc.benId " +
                 ") AS combined_data " +
                 "GROUP BY id, name, syncState " +
                 "ORDER BY id; "

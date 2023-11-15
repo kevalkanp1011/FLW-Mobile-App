@@ -6,6 +6,8 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
+import org.piramalswasthya.sakhi.database.room.dao.BenDao
+import org.piramalswasthya.sakhi.database.room.dao.BenDao_Impl
 import org.piramalswasthya.sakhi.database.room.dao.HbncDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
@@ -25,7 +27,8 @@ class HbncRepo @Inject constructor(
     private val amritApiService: AmritApiService,
     private val userRepo: UserRepo,
     private val preferenceDao: PreferenceDao,
-    private val hbncDao: HbncDao
+    private val hbncDao: HbncDao,
+    private val benDao: BenDao
 ) {
 
 
@@ -116,13 +119,14 @@ class HbncRepo @Inject constructor(
 
             val hbncList = database.hbncDao.getAllUnprocessedHbnc()
 
+            if (hbncList.isEmpty()) return@withContext 1
             val hbncPostSet = mutableSetOf<HBNCPost>()
 
             try {
                 hbncList.forEach {
                     hbncPostSet.add(it.asPostModel(user))
                 }
-                val response = amritApiService.pushHBNCDetailsFromServer(
+                val response = amritApiService.pushHBNCDetailsToServer(
                     hbncPostSet.toList()
                 )
                 val statusCode = response.code()
@@ -271,18 +275,20 @@ class HbncRepo @Inject constructor(
 
         hbncList.forEach { hbncPost ->
             var cache = hbncDao.getHbnc(hbncPost.hhId, hbncPost.benId, hbncPost.homeVisitDate)
-            if (cache == null) {
-                cache = hbncPost.toCache()
-                hbncDao.update(cache)
-            } else {
-                if (cache.visitCard == null) cache.visitCard = hbncPost.hbncVisitCardDTO?.toCache()
-                if (cache.part1 == null) cache.part1 = hbncPost.hbncPart1DTO?.toCache()
-                if (cache.part2 == null) cache.part2 = hbncPost.hbncPart2DTO?.toCache()
-                if (cache.homeVisitForm == null) cache.homeVisitForm = hbncPost.hbncVisitDTO?.toCache()
-                cache.processed = "P"
-                cache.syncState = SyncState.SYNCED
+            cache?.let {
+                if (it.visitCard == null) it.visitCard = hbncPost.hbncVisitCardDTO?.toCache()
+                if (it.part1 == null) it.part1 = hbncPost.hbncPart1DTO?.toCache()
+                if (it.part2 == null) it.part2 = hbncPost.hbncPart2DTO?.toCache()
+                if (it.homeVisitForm == null) it.homeVisitForm = hbncPost.hbncVisitDTO?.toCache()
+                it.processed = "P"
+                it.syncState = SyncState.SYNCED
+                hbncDao.upsert(it)
+            } ?: run {
+                benDao.getBen(hbncPost.benId)?.let {
+                    cache = hbncPost.toCache(it.householdId)
+                    hbncDao.upsert(cache!!)
+                }
             }
-            hbncDao.update(cache)
         }
     }
 

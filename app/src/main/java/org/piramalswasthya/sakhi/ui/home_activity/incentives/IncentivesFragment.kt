@@ -1,6 +1,5 @@
 package org.piramalswasthya.sakhi.ui.home_activity.incentives
 
-import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
@@ -18,12 +17,14 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
@@ -242,53 +243,217 @@ class IncentivesFragment : Fragment() {
 
         var currentPage = 1
 
+//        canvas.drawText(
+//            resources.getString(R.string.asha_incentive_master_claim_form),
+//            (x + columnWidth).toFloat(),
+//            y.toFloat(),
+//            paint
+//        )
+//        y += 5
+//
+//        canvas.drawLine(x.toFloat(), y.toFloat(), (pageWidth - 2 * x).toFloat(), y.toFloat(), paint)
+//        y += rowHeight
+
+        val lineGap = 7
+        paint.textSize = 3.5f
+
+        canvas.drawLine(
+            x.toFloat(), y.toFloat(),
+            (pageWidth - 2 * x).toFloat(), y.toFloat(),
+            paint
+        )
+
+        canvas.drawLine(
+            x.toFloat(), y.toFloat(),
+            x.toFloat(), (pageHeight - lineGap).toFloat(),
+            paint
+        )
+
+        canvas.drawLine(
+            (pageWidth - 2 * x).toFloat(), y.toFloat(),
+            (pageWidth - 2 * x).toFloat(), (pageHeight - lineGap).toFloat(),
+            paint
+        )
+
+        canvas.drawLine(
+            x.toFloat(), (pageHeight - lineGap).toFloat(),
+            (pageWidth - 2 * x).toFloat(), (pageHeight - lineGap).toFloat(),
+            paint
+        )
+
+        // MASTER CLAIM FORMAT FOR ASHAs
+        y += lineGap
         canvas.drawText(
-            resources.getString(R.string.asha_incentive_master_claim_form),
+            "MASTER CLAIM FORMAT FOR ASHAs",
             (x + columnWidth).toFloat(),
             y.toFloat(),
             paint
         )
-        y += 5
+        canvas.drawLine(
+            x.toFloat(), y.toFloat(),
+            x.toFloat(), (y + lineGap).toFloat(),
+            paint
+        )
+        canvas.drawLine(
+            (pageWidth - 2 * x).toFloat(), y.toFloat(),
+            (pageWidth - 2 * x).toFloat(), (y + lineGap).toFloat(),
+            paint
+        )
+        y += lineGap
 
-        canvas.drawLine(x.toFloat(), y.toFloat(), (pageWidth - 2 * x).toFloat(), y.toFloat(), paint)
-        y += rowHeight
-
-        canvas.drawText(resources.getString(R.string.to), x.toFloat(), y.toFloat(), paint)
-        y += rowHeight
+        //(TO BE SUBMITTED ON MONTHLY BASIS BY AN ASHA)
 
         canvas.drawText(
-            resources.getString(R.string.sdm_ho_or_i_c_block_phc),
-            x.toFloat(),
+            "(TO BE SUBMITTED ON MONTHLY BASIS BY AN ASHA)",
+            (x + columnWidth).toFloat(),
             y.toFloat(),
             paint
         )
-        y += rowHeight
-
-        canvas.drawText("_______________________", x.toFloat(), y.toFloat(), paint)
-        y += rowHeight
-
-        canvas.drawText(
-            resources.getString(R.string.sub_submission_of_asha_incentive_claim_for_the_period_from)
-                    + binding.fromMonthsSpinner.selectedItem + binding.fromYearsSpinner.selectedItem + resources.getString(R.string.to_small)
-                    + binding.toMonthsSpinner.selectedItem + binding.toYearsSpinner.selectedItem,
-            x.toFloat(), y.toFloat(), paint
+        canvas.drawLine(
+            x.toFloat(), y.toFloat(),
+            x.toFloat(), (y + lineGap).toFloat(),
+            paint
         )
-        y += rowHeight
+        canvas.drawLine(
+            (pageWidth - 2 * x).toFloat(), y.toFloat(),
+            (pageWidth - 2 * x).toFloat(), (y + lineGap).toFloat(),
+            paint
+        )
+        y += lineGap
 
-        canvas.drawText(resources.getString(R.string.sir_madam), x.toFloat(), y.toFloat(), paint)
+        //Name of the ASHA:_____________________________
+        canvas.drawText(
+            "Name of the ASHA:_____________________________",
+            (x + columnWidth).toFloat(),
+            y.toFloat(),
+            paint
+        )
+        canvas.drawLine(
+            x.toFloat(), y.toFloat(),
+            x.toFloat(), (y + lineGap).toFloat(),
+            paint
+        )
+        canvas.drawLine(
+            (pageWidth - 2 * x).toFloat(), y.toFloat(),
+            (pageWidth - 2 * x).toFloat(), (y + lineGap).toFloat(),
+            paint
+        )
+        y += lineGap
+        //Name of the BPHC:_____________________________
+        canvas.drawText(
+            "Name of the BPHC:_____________________________",
+            (x + columnWidth).toFloat(),
+            y.toFloat(),
+            paint
+        )
+        canvas.drawLine(
+            x.toFloat(), y.toFloat(),
+            x.toFloat(), (y + lineGap).toFloat(),
+            paint
+        )
+        canvas.drawLine(
+            (pageWidth - 2 * x).toFloat(), y.toFloat(),
+            (pageWidth - 2 * x).toFloat(), (y + lineGap).toFloat(),
+            paint
+        )
+        y += lineGap
+        //Name of HI: ___________________________________
+        canvas.drawText(
+            "Name of HI: ___________________________________",
+            (x + columnWidth).toFloat(),
+            y.toFloat(),
+            paint
+        )
+        canvas.drawLine(
+            x.toFloat(), y.toFloat(),
+            x.toFloat(), (y + lineGap).toFloat(),
+            paint
+        )
+        canvas.drawLine(
+            (pageWidth - 2 * x).toFloat(), y.toFloat(),
+            (pageWidth - 2 * x).toFloat(), (y + lineGap).toFloat(),
+            paint
+        )
+        y += lineGap
+        //FY: ___________________________________________
+        canvas.drawText(
+            "FY: ___________________________________________",
+            (x + columnWidth).toFloat(),
+            y.toFloat(),
+            paint
+        )
+        canvas.drawLine(
+            x.toFloat(), y.toFloat(),
+            x.toFloat(), (y + lineGap).toFloat(),
+            paint
+        )
+        canvas.drawLine(
+            (pageWidth - 2 * x).toFloat(), y.toFloat(),
+            (pageWidth - 2 * x).toFloat(), (y + lineGap).toFloat(),
+            paint
+        )
+        y += lineGap
+        //Claim from: _______________ to ___________________
+        canvas.drawText(
+            "Claim from: _______________ to ___________________",
+            (x + columnWidth).toFloat(),
+            y.toFloat(),
+            paint
+        )
+        canvas.drawLine(
+            x.toFloat(), y.toFloat(),
+            x.toFloat(), (y + lineGap).toFloat(),
+            paint
+        )
+        canvas.drawLine(
+            (pageWidth - 2 * x).toFloat(), y.toFloat(),
+            (pageWidth - 2 * x).toFloat(), (y + lineGap).toFloat(),
+            paint
+        )
+        y += lineGap
+
+        canvas.drawLine(x.toFloat(), y.toFloat(), x.toFloat(), (y + rowHeight).toFloat(), paint)
+        canvas.drawLine((pageWidth - 2 * x).toFloat(), y.toFloat(), (pageWidth - 2 * x).toFloat(), (y + rowHeight).toFloat(), paint)
+
+//        canvas.drawText(resources.getString(R.string.to), x.toFloat(), y.toFloat(), paint)
 //        y += rowHeight
 
-        canvas.drawMultilineText(
-            text = resources.getString(R.string.with_reference_to_)
-                    + binding.fromMonthsSpinner.selectedItem + binding.fromYearsSpinner.selectedItem + resources.getString(R.string.to_small)
-                    + binding.toMonthsSpinner.selectedItem + binding.toYearsSpinner.selectedItem + resources.getString(R.string.as_per_statement),
-            textPaint = textPaint,
-            width = pageWidth - 2 * x,
-            x = x.toFloat(),
-            y = y.toFloat(),
-            0
-        )
-        y += 2*rowHeight
+//        canvas.drawText(
+//            resources.getString(R.string.sdm_ho_or_i_c_block_phc),
+//            x.toFloat(),
+//            y.toFloat(),
+//            paint
+//        )
+//        y += rowHeight
+
+//        canvas.drawText("_______________________", x.toFloat(), y.toFloat(), paint)
+//        y += rowHeight
+
+//        canvas.drawText(
+//            resources.getString(R.string.sub_submission_of_asha_incentive_claim_for_the_period_from)
+//                    + binding.fromMonthsSpinner.selectedItem + binding.fromYearsSpinner.selectedItem + resources.getString(R.string.to_small)
+//                    + binding.toMonthsSpinner.selectedItem + binding.toYearsSpinner.selectedItem,
+//            x.toFloat(), y.toFloat(), paint
+//        )
+//        y += rowHeight
+
+//        canvas.drawText(resources.getString(R.string.sir_madam), x.toFloat(), y.toFloat(), paint)
+//        y += rowHeight
+
+//        canvas.drawMultilineText(
+//            text = resources.getString(R.string.with_reference_to_)
+//                    + binding.fromMonthsSpinner.selectedItem + binding.fromYearsSpinner.selectedItem + resources.getString(R.string.to_small)
+//                    + binding.toMonthsSpinner.selectedItem + binding.toYearsSpinner.selectedItem + resources.getString(R.string.as_per_statement),
+//            textPaint = textPaint,
+//            width = pageWidth - 2 * x,
+//            x = x.toFloat(),
+//            y = y.toFloat(),
+//            0
+//        )
+//        canvas.drawLine(x.toFloat(), y.toFloat(), x.toFloat(), (y + rowHeight).toFloat(), paint)
+//        canvas.drawLine((pageWidth - 2 * x).toFloat(), y.toFloat(), (pageWidth - 2 * x).toFloat(), (y + rowHeight).toFloat(), paint)
+//
+//        y += 2*rowHeight
 
         textPaint.textSize = 3.5f
 
@@ -306,7 +471,7 @@ class IncentivesFragment : Fragment() {
         )
 
         x = 10
-        var items: List<IncentiveDomainDTO> = viewModel.mapToView(incentiveDomainList)
+        val items: List<IncentiveDomainDTO> = viewModel.mapToView(incentiveDomainList)
         var currentGroup = ""
         var slNo = 1
         y += rowHeight
@@ -348,7 +513,7 @@ class IncentivesFragment : Fragment() {
                     it.noOfClaims.toString(),
                     it.amountClaimed.toString(),
                     "",
-                    "",
+                    it.fmrCode,
                     "lia"
                 )
                 total += it.amountClaimed
@@ -380,6 +545,31 @@ class IncentivesFragment : Fragment() {
         val canvas1 = page1.canvas
         y = 50 // Reset y position
 
+
+        canvas1.drawLine(
+            x.toFloat(), y.toFloat(),
+            (pageWidth - 2 * x).toFloat(), y.toFloat(),
+            paint
+        )
+
+        canvas1.drawLine(
+            x.toFloat(), y.toFloat(),
+            x.toFloat(), (pageHeight - lineGap).toFloat(),
+            paint
+        )
+
+        canvas1.drawLine(
+            (pageWidth - 2 * x).toFloat(), y.toFloat(),
+            (pageWidth - 2 * x).toFloat(), (pageHeight - lineGap).toFloat(),
+            paint
+        )
+
+        canvas1.drawLine(
+            x.toFloat(), (pageHeight - lineGap).toFloat(),
+            (pageWidth - 2 * x).toFloat(), (pageHeight - lineGap).toFloat(),
+            paint
+        )
+        x = 20
         canvas1.drawMultilineText(
             text = "Activity wise claim forms along with supporting documents are also enclosed as per guideline.",
             textPaint = textPaint,
@@ -557,27 +747,25 @@ class IncentivesFragment : Fragment() {
 
         try {
             document.writeTo(FileOutputStream(file))
-//            val snackbar = Snackbar.make(binding.root, "File downloaded!", Snackbar.LENGTH_LONG)
-//
-//            snackbar.setAction("Show File") {
-//                showFile(file.absolutePath)
-//            }
-//
-//            snackbar.show()
+            val snackbar = Snackbar.make(binding.root, "File downloaded!", Snackbar.LENGTH_LONG)
+
+            snackbar.setAction("Show File") {
+                showFile(file.toUri())
+            }
+
+            snackbar.show()
         } catch (e: IOException) {
             e.printStackTrace()
         }
         document.close()
 
+
     }
 
-    private fun showFile(absolutePath: String) {
-        val filePath = absolutePath
-
+    private fun showFile(uri: Uri) {
         // Create an Intent to open the file
         val openFileIntent = Intent(Intent.ACTION_VIEW)
-        val fileUri = Uri.parse("file://$filePath")
-        openFileIntent.setDataAndType(fileUri, "application/*") // Adjust the MIME type as per your file type
+        openFileIntent.setDataAndType(uri, "application/*") // Adjust the MIME type as per your file type
 
         // Check if there's an app to handle this intent
         if (openFileIntent.resolveActivity(requireActivity().packageManager) != null) {

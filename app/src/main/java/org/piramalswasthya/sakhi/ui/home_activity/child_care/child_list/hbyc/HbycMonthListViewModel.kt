@@ -27,7 +27,7 @@ class HbycMonthListViewModel @Inject constructor(
                 hhId = hhId,
                 benId = benId,
                 count = month,
-                isFilled = false,
+                isFilled = daysList.contains(month.toString()),
                 syncState = SyncState.UNSYNCED,
                 destination = HbycMonthListFragmentDirections.actionHbycMonthListFragmentToHbycFragment(
                     hhId, benId, month

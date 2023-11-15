@@ -1114,8 +1114,8 @@ data class BenRegCache(
             benRegId = benRegId,
             countyid = locationRecord.country.id,
             processed = processed,
-//            providerServiceMapID = user.serviceMapId,
-//            vanID = user.vanId,
+            providerServiceMapID = user.serviceMapId,
+            vanID = user.vanId,
             aadhaNo = aadharNum ?: "",
             aadha_no = when (hasAadhar) {
                 true -> "Yes"

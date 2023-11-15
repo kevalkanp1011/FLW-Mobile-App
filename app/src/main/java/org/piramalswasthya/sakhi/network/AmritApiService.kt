@@ -191,13 +191,13 @@ interface AmritApiService {
     suspend fun getAllIncentiveRecords(@Body requestBody: IncentiveRecordListRequest): Response<ResponseBody>
 
     @POST("/flw-0.0.1/child-care/hbncVisit/getAll")
-    suspend fun getHBNCDetailsFromServer(getDataPaginatedRequest: GetDataPaginatedRequest): Response<ResponseBody>
+    suspend fun getHBNCDetailsFromServer(@Body getDataPaginatedRequest: GetDataPaginatedRequest): Response<ResponseBody>
 
     @POST("/flw-0.0.1/child-care/hbncVisit/saveAll")
-    suspend fun pushHBNCDetailsFromServer(@Body hbncPostList: List<HBNCPost>): Response<ResponseBody>
+    suspend fun pushHBNCDetailsToServer(@Body hbncPostList: List<HBNCPost>): Response<ResponseBody>
 
     @POST("/flw-0.0.1/child-care/hbyc/getAll")
-    suspend fun getHBYCFromServer(getDataPaginatedRequest: GetDataPaginatedRequest): Response<ResponseBody>
+    suspend fun getHBYCFromServer(@Body getDataPaginatedRequest: GetDataPaginatedRequest): Response<ResponseBody>
 
     @POST("/flw-0.0.1/child-care/hbyc/saveAll")
     suspend fun pushHBYCToServer(@Body hbncPostList: List<HbycPost>): Response<ResponseBody>

@@ -77,8 +77,8 @@ data class BeneficiaryDataSending(
     @Json(name = "bankName")
     val bankName: String? = null,
 //
-//    @Json(name = "providerServiceMapID")
-//    val providerServiceMapID: String,
+    @Json(name = "providerServiceMapID")
+    val providerServiceMapID: String,
 
     @Json(name = "maritalStatusID")
     val maritalStatusID: String? = null,
@@ -101,8 +101,8 @@ data class BeneficiaryDataSending(
     @Json(name = "branchName")
     val branchName: String? = null,
 
-//    @Json(name = "providerServiceMapId")
-//    val providerServiceMapId: String,
+    @Json(name = "providerServiceMapId")
+    val providerServiceMapId: String,
 
 
     @Json(name = "maritalStatusName")
@@ -256,8 +256,8 @@ fun BenRegCache.asNetworkSendingModel(
         maritalStatusID = if (isKid) null else genDetails?.maritalStatusId?.toString() ?: "",
         maritalStatusName = if(isKid) null else genDetails?.maritalStatus ?: "",
         email = "",
-//        providerServiceMapID = user.serviceMapId.toString(),
-//        providerServiceMapId = user.serviceMapId.toString(),
+        providerServiceMapID = user.serviceMapId.toString(),
+        providerServiceMapId = user.serviceMapId.toString(),
         benDemographics = BenDemographics(
             communityID = communityId.toString(),
             communityName = community ?: "",
