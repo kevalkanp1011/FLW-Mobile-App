@@ -89,6 +89,7 @@ class ChildRegFragment : Fragment() {
             false
         }
     }
+
     override fun onStart() {
         super.onStart()
         activity?.let {
@@ -98,6 +99,7 @@ class ChildRegFragment : Fragment() {
             )
         }
     }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

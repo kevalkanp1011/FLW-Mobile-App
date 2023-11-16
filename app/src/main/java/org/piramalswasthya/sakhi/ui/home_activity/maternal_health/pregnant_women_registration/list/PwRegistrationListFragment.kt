@@ -90,9 +90,13 @@ class PwRegistrationListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__pwr, getString(R.string.icon_title_pmr))
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__pwr,
+                getString(R.string.icon_title_pmr)
+            )
         }
     }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

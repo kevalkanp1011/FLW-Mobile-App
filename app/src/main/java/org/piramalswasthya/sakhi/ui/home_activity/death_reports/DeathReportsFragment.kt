@@ -40,8 +40,8 @@ class DeathReportsFragment : Fragment() {
                 viewModel.navigateToCdrListCompleted()
             }
         }
-        viewModel.navigateToMdsrList.observe(viewLifecycleOwner){
-            if(it) {
+        viewModel.navigateToMdsrList.observe(viewLifecycleOwner) {
+            if (it) {
                 findNavController().navigate(
                     DeathReportsFragmentDirections.actionDeathReportsFragmentToMdsrListFragment()
                 )
@@ -54,18 +54,28 @@ class DeathReportsFragment : Fragment() {
                 binding.rbCdr.id -> {
                     viewModel.navigateToDeathReportList(isChild = true)
                 }
+
                 binding.rbMdsr.id -> {
                     viewModel.navigateToDeathReportList(isChild = false)
                 }
-                else -> Toast.makeText(context, resources.getString(R.string.please_select_type_of_beneficiary), Toast.LENGTH_SHORT).show()
+
+                else -> Toast.makeText(
+                    context,
+                    resources.getString(R.string.please_select_type_of_beneficiary),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
         }
     }
+
     override fun onStart() {
         super.onStart()
-        activity?.let{
-            (it as HomeActivity).updateActionBar(R.drawable.ic__death, getString(R.string.icon_title_dr))
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__death,
+                getString(R.string.icon_title_dr)
+            )
         }
     }
 

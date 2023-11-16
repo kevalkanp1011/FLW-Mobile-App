@@ -90,7 +90,11 @@ class IncentivesFragment : Fragment() {
 
         val fromYear: Spinner = binding.fromYearsSpinner
         val fromYearsAdapter: ArrayAdapter<Int> =
-            ArrayAdapter<Int>(requireContext(), android.R.layout.simple_spinner_dropdown_item, myArrayList)
+            ArrayAdapter<Int>(
+                requireContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                myArrayList
+            )
         fromYear.adapter = fromYearsAdapter
         fromYear.setSelection(0)
 
@@ -145,7 +149,10 @@ class IncentivesFragment : Fragment() {
 
         binding.fetchData.setOnClickListener {
             val calendar = Calendar.getInstance()
-            calendar.set(Calendar.MONTH, resources.getStringArray(R.array.months).indexOf(fromMonth.selectedItem))
+            calendar.set(
+                Calendar.MONTH,
+                resources.getStringArray(R.array.months).indexOf(fromMonth.selectedItem)
+            )
             calendar.set(Calendar.YEAR, fromYear.selectedItem.toString().toInt())
             calendar.set(Calendar.DAY_OF_MONTH, 1)
             calendar.setToStartOfTheDay()
@@ -413,7 +420,13 @@ class IncentivesFragment : Fragment() {
         y += lineGap
 
         canvas.drawLine(x.toFloat(), y.toFloat(), x.toFloat(), (y + rowHeight).toFloat(), paint)
-        canvas.drawLine((pageWidth - 2 * x).toFloat(), y.toFloat(), (pageWidth - 2 * x).toFloat(), (y + rowHeight).toFloat(), paint)
+        canvas.drawLine(
+            (pageWidth - 2 * x).toFloat(),
+            y.toFloat(),
+            (pageWidth - 2 * x).toFloat(),
+            (y + rowHeight).toFloat(),
+            paint
+        )
 
 //        canvas.drawText(resources.getString(R.string.to), x.toFloat(), y.toFloat(), paint)
 //        y += rowHeight
@@ -539,7 +552,8 @@ class IncentivesFragment : Fragment() {
         document.finishPage(page)
 
         // Start a new page
-        val pageInfo1 = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, currentPage + 1).create()
+        val pageInfo1 =
+            PdfDocument.PageInfo.Builder(pageWidth, pageHeight, currentPage + 1).create()
         val page1 = document.startPage(pageInfo1)
 
         val canvas1 = page1.canvas
@@ -765,13 +779,20 @@ class IncentivesFragment : Fragment() {
     private fun showFile(uri: Uri) {
         // Create an Intent to open the file
         val openFileIntent = Intent(Intent.ACTION_VIEW)
-        openFileIntent.setDataAndType(uri, "application/*") // Adjust the MIME type as per your file type
+        openFileIntent.setDataAndType(
+            uri,
+            "application/*"
+        ) // Adjust the MIME type as per your file type
 
         // Check if there's an app to handle this intent
         if (openFileIntent.resolveActivity(requireActivity().packageManager) != null) {
             startActivity(openFileIntent)
         } else {
-            Toast.makeText(requireContext(), "cant open this file check in downloads", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                "cant open this file check in downloads",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -817,7 +838,7 @@ class IncentivesFragment : Fragment() {
         canvas.drawMultilineText(
             text = s1,
             textPaint = textPaint,
-            width = 5*colWidth,
+            width = 5 * colWidth,
             alignment = Layout.Alignment.ALIGN_CENTER,
             x = x.toFloat(),
             y = y.toFloat(),
@@ -826,17 +847,17 @@ class IncentivesFragment : Fragment() {
         canvas.drawRect(
             x.toFloat(),
             y.toFloat(),
-            (x + 5*colWidth).toFloat(),
+            (x + 5 * colWidth).toFloat(),
             (y + rowHeight).toFloat(),
             boxPaint
         )
-        x += 5*colWidth
+        x += 5 * colWidth
 
 
         canvas.drawMultilineText(
             text = s2,
             textPaint = textPaint,
-            width = 2*colWidth,
+            width = 2 * colWidth,
             alignment = Layout.Alignment.ALIGN_CENTER,
             x = x.toFloat(),
             y = y.toFloat(),
@@ -845,11 +866,11 @@ class IncentivesFragment : Fragment() {
         canvas.drawRect(
             x.toFloat(),
             y.toFloat(),
-            (x + 2*colWidth).toFloat(),
+            (x + 2 * colWidth).toFloat(),
             (y + rowHeight).toFloat(),
             boxPaint
         )
-        x += 2*colWidth
+        x += 2 * colWidth
 
         canvas.drawMultilineText(
             text = s3,
@@ -890,7 +911,7 @@ class IncentivesFragment : Fragment() {
         canvas.drawMultilineText(
             text = s5,
             textPaint = textPaint,
-            width = 2*colWidth,
+            width = 2 * colWidth,
             alignment = Layout.Alignment.ALIGN_CENTER,
             x = x.toFloat(),
             y = y.toFloat(),
@@ -899,16 +920,16 @@ class IncentivesFragment : Fragment() {
         canvas.drawRect(
             x.toFloat(),
             y.toFloat(),
-            (x + 2*colWidth).toFloat(),
+            (x + 2 * colWidth).toFloat(),
             (y + rowHeight).toFloat(),
             boxPaint
         )
-        x += 2*colWidth
+        x += 2 * colWidth
 
         canvas.drawMultilineText(
             text = s6,
             textPaint = textPaint,
-            width = 2*colWidth,
+            width = 2 * colWidth,
             alignment = Layout.Alignment.ALIGN_CENTER,
             x = x.toFloat(),
             y = y.toFloat(),
@@ -917,16 +938,16 @@ class IncentivesFragment : Fragment() {
         canvas.drawRect(
             x.toFloat(),
             y.toFloat(),
-            (x + 2*colWidth).toFloat(),
+            (x + 2 * colWidth).toFloat(),
             (y + rowHeight).toFloat(),
             boxPaint
         )
-        x += 2*colWidth
+        x += 2 * colWidth
 
         canvas.drawMultilineText(
             text = s7,
             textPaint = textPaint,
-            width = 2*colWidth,
+            width = 2 * colWidth,
             alignment = Layout.Alignment.ALIGN_CENTER,
             x = x.toFloat(),
             y = y.toFloat(),
@@ -935,16 +956,16 @@ class IncentivesFragment : Fragment() {
         canvas.drawRect(
             x.toFloat(),
             y.toFloat(),
-            (x + 2*colWidth).toFloat(),
+            (x + 2 * colWidth).toFloat(),
             (y + rowHeight).toFloat(),
             boxPaint
         )
-        x += 2*colWidth
+        x += 2 * colWidth
 
         canvas.drawMultilineText(
             text = s8,
             textPaint = textPaint,
-            width = 2*colWidth,
+            width = 2 * colWidth,
             alignment = Layout.Alignment.ALIGN_CENTER,
             x = x.toFloat(),
             y = y.toFloat(),
@@ -953,11 +974,11 @@ class IncentivesFragment : Fragment() {
         canvas.drawRect(
             x.toFloat(),
             y.toFloat(),
-            (x + 2*colWidth).toFloat(),
+            (x + 2 * colWidth).toFloat(),
             (y + rowHeight).toFloat(),
             boxPaint
         )
-        x += 2*colWidth
+        x += 2 * colWidth
 
 
     }

@@ -1,6 +1,10 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_otp
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.network.AbhaResendAadhaarOtpRequest
@@ -67,13 +71,15 @@ class AadhaarOtpViewModel @Inject constructor(
                     _txnId = result.data.txnId
                     _state.value = State.OTP_VERIFY_SUCCESS
                 }
+
                 is NetworkResult.Error -> {
                     _errorMessage.value = result.message
-                    if (result.message.contains("exit your browser", true)){
+                    if (result.message.contains("exit your browser", true)) {
                         _showExit.value = true
                     }
                     _state.value = State.ERROR_SERVER
                 }
+
                 is NetworkResult.NetworkError -> {
                     _showExit.value = true
                     _state.value = State.ERROR_NETWORK
@@ -91,13 +97,15 @@ class AadhaarOtpViewModel @Inject constructor(
                     txnIdFromArgs = result.data.txnId
                     _state.value = State.OTP_GENERATED_SUCCESS
                 }
+
                 is NetworkResult.Error -> {
                     _errorMessage.value = result.message
-                    if (result.message.contains("exit", true)){
+                    if (result.message.contains("exit", true)) {
                         _showExit.value = true
                     }
                     _state.value = State.ERROR_SERVER
                 }
+
                 is NetworkResult.NetworkError -> {
                     _state.value = State.ERROR_NETWORK
                 }

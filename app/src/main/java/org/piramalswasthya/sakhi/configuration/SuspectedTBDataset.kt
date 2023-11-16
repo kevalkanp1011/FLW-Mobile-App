@@ -3,7 +3,10 @@ package org.piramalswasthya.sakhi.configuration
 import android.content.Context
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.helpers.Languages
-import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.FormElement
+import org.piramalswasthya.sakhi.model.InputType
+import org.piramalswasthya.sakhi.model.TBSuspectedCache
 
 class SuspectedTBDataset(
     context: Context, currentLanguage: Languages
@@ -97,16 +100,34 @@ class SuspectedTBDataset(
                     followUps
                 )
                 dateOfVisit.value = getDateFromLong(saved.visitDate)
-                isSputumCollected.value = if (saved.isSputumCollected == true) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(R.array.yes_no)[1]
-                sputumSubmittedAt.value = if (saved.sputumSubmittedAt == null) null else resources.getStringArray(R.array.tb_submitted_yet)[englishResources.getStringArray(R.array.tb_submitted_yet).indexOf(saved.sputumSubmittedAt)]
+                isSputumCollected.value =
+                    if (saved.isSputumCollected == true) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(
+                        R.array.yes_no
+                    )[1]
+                sputumSubmittedAt.value =
+                    if (saved.sputumSubmittedAt == null) null else resources.getStringArray(R.array.tb_submitted_yet)[englishResources.getStringArray(
+                        R.array.tb_submitted_yet
+                    ).indexOf(saved.sputumSubmittedAt)]
                 nikshayId.value = saved.nikshayId
-                sputumTestResult.value = if (saved.sputumTestResult == null) null else resources.getStringArray(R.array.tb_test_result)[englishResources.getStringArray(R.array.tb_test_result).indexOf(saved.sputumTestResult)]
-                referred.value = if (saved.referred == true) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(R.array.yes_no)[1]
+                sputumTestResult.value =
+                    if (saved.sputumTestResult == null) null else resources.getStringArray(R.array.tb_test_result)[englishResources.getStringArray(
+                        R.array.tb_test_result
+                    ).indexOf(saved.sputumTestResult)]
+                referred.value =
+                    if (saved.referred == true) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(
+                        R.array.yes_no
+                    )[1]
                 followUps.value = saved.followUps
             } else {
                 dateOfVisit.value = getDateFromLong(saved.visitDate)
-                isSputumCollected.value = if (saved.isSputumCollected == true) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(R.array.yes_no)[1]
-                referred.value = if (saved.referred == true) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(R.array.yes_no)[1]
+                isSputumCollected.value =
+                    if (saved.isSputumCollected == true) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(
+                        R.array.yes_no
+                    )[1]
+                referred.value =
+                    if (saved.referred == true) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(
+                        R.array.yes_no
+                    )[1]
                 followUps.value = saved.followUps
             }
         }
@@ -118,6 +139,7 @@ class SuspectedTBDataset(
         setUpPage(list)
 
     }
+
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
             isSputumCollected.id -> {
@@ -140,6 +162,7 @@ class SuspectedTBDataset(
                     target = sputumSubmittedAt
                 )
             }
+
             else -> -1
         }
     }
@@ -147,10 +170,17 @@ class SuspectedTBDataset(
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
         (cacheModel as TBSuspectedCache).let { form ->
             form.visitDate = getLongFromDate(dateOfVisit.value)
-            form.isSputumCollected = isSputumCollected.value == resources.getStringArray(R.array.yes_no)[0]
-            form.sputumSubmittedAt = if (sputumSubmittedAt.value == null) null else englishResources.getStringArray(R.array.tb_submitted_yet)[sputumSubmittedAt.entries!!.indexOf(sputumSubmittedAt.value)]
+            form.isSputumCollected =
+                isSputumCollected.value == resources.getStringArray(R.array.yes_no)[0]
+            form.sputumSubmittedAt =
+                if (sputumSubmittedAt.value == null) null else englishResources.getStringArray(R.array.tb_submitted_yet)[sputumSubmittedAt.entries!!.indexOf(
+                    sputumSubmittedAt.value
+                )]
             form.nikshayId = nikshayId.value
-            form.sputumTestResult = if (sputumTestResult.value == null) null else englishResources.getStringArray(R.array.tb_test_result)[sputumTestResult.entries!!.indexOf(sputumTestResult.value)]
+            form.sputumTestResult =
+                if (sputumTestResult.value == null) null else englishResources.getStringArray(R.array.tb_test_result)[sputumTestResult.entries!!.indexOf(
+                    sputumTestResult.value
+                )]
             form.referred = referred.value == resources.getStringArray(R.array.yes_no)[0]
             form.followUps = followUps.value
         }
@@ -158,7 +188,7 @@ class SuspectedTBDataset(
 
 
     fun isTestPositive(): String? {
-        return if ( sputumTestResult.value == resources.getStringArray(R.array.tb_test_result)[0] )
+        return if (sputumTestResult.value == resources.getStringArray(R.array.tb_test_result)[0])
             resources.getString(R.string.tb_suspected_alert_positive) else null
     }
 

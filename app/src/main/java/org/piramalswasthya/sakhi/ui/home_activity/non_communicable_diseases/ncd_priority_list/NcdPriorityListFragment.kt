@@ -44,7 +44,7 @@ class NcdPriorityListFragment : Fragment() {
 
         val benAdapter = BenListAdapter(
 //            showAbha = false,
-            showBeneficiaries =true
+            showBeneficiaries = true
         )
         binding.rvAny.adapter = benAdapter
 
@@ -83,7 +83,10 @@ class NcdPriorityListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__ncd_priority, getString(R.string.ncd_priority_list))
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__ncd_priority,
+                getString(R.string.ncd_priority_list)
+            )
         }
     }
 

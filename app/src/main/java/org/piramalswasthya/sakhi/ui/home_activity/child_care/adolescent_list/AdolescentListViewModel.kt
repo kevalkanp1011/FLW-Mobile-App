@@ -16,8 +16,8 @@ class AdolescentListViewModel @Inject constructor(
 ) : ViewModel() {
     private val allBenList = recordsRepo.adolescentList
     private val filter = MutableStateFlow("")
-    val benList = allBenList.combine(filter){
-            list, filter -> filterBenList(list, filter)
+    val benList = allBenList.combine(filter) { list, filter ->
+        filterBenList(list, filter)
     }
 
 

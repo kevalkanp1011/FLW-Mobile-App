@@ -62,7 +62,7 @@ class AncVisitListAdapter(private val clickListener: PregnancyVisitClickListener
     class PregnancyVisitClickListener(
         private val showVisits: (benId: Long) -> Unit,
         private val addVisit: (benId: Long, visitNumber: Int) -> Unit,
-        private val pmsma: (benId: Long, hhId : Long) -> Unit,
+        private val pmsma: (benId: Long, hhId: Long) -> Unit,
 
         ) {
         fun showVisits(item: BenWithAncListDomain) = showVisits(

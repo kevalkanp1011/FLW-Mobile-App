@@ -87,10 +87,12 @@ class HbncVisitCardFragment : Fragment() {
                     binding.cvPatientInformation.visibility = View.GONE
                     binding.pbForm.visibility = View.VISIBLE
                 }
+
                 State.SUCCESS -> {
                     findNavController().navigateUp()
                     WorkerUtils.triggerD2dSyncWorker(requireContext())
                 }
+
                 State.FAIL -> {
                     binding.form.rvInputForm.visibility = View.VISIBLE
                     binding.btnSubmit.visibility = View.VISIBLE
@@ -102,6 +104,7 @@ class HbncVisitCardFragment : Fragment() {
                         Toast.LENGTH_LONG
                     ).show()
                 }
+
                 else -> {
                     binding.form.rvInputForm.visibility = View.VISIBLE
                     binding.btnSubmit.visibility = View.VISIBLE

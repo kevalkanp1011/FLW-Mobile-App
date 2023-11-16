@@ -61,9 +61,4 @@ class PncBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
 
-    override fun dismiss() {
-//        submitListToAncRv(emptyList())
-        super.dismiss()
-    }
-
 }

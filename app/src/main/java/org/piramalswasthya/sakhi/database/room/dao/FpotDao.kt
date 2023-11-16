@@ -2,7 +2,6 @@ package org.piramalswasthya.sakhi.database.room.dao
 
 import androidx.room.*
 import org.piramalswasthya.sakhi.model.FPOTCache
-import org.piramalswasthya.sakhi.model.PMJAYCache
 
 @Dao
 interface FpotDao {

@@ -19,7 +19,7 @@ import org.piramalswasthya.sakhi.databinding.FragmentDisplaySearchRvButtonBindin
 import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 
 @AndroidEntryPoint
-class TBScreeningListFragment: Fragment() {
+class TBScreeningListFragment : Fragment() {
     private var _binding: FragmentDisplaySearchRvButtonBinding? = null
     private val binding: FragmentDisplaySearchRvButtonBinding
         get() = _binding!!
@@ -40,11 +40,13 @@ class TBScreeningListFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.btnNextPage.visibility = View.GONE
         val benAdapter = TbScreeningListAdapter(
-            TbScreeningListAdapter.ClickListener{ hhId, benId ->
-                    findNavController().navigate(
-                        TBScreeningListFragmentDirections.actionTBScreeningListFragmentToTBScreeningFormFragment(benId = benId)
+            TbScreeningListAdapter.ClickListener { hhId, benId ->
+                findNavController().navigate(
+                    TBScreeningListFragmentDirections.actionTBScreeningListFragmentToTBScreeningFormFragment(
+                        benId = benId
                     )
-                }
+                )
+            }
         )
         binding.rvAny.adapter = benAdapter
 

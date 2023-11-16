@@ -209,8 +209,10 @@ open class DeliveryOutcomeDataset(
             )
             dateOfDelivery.value = saved.dateOfDelivery?.let { getDateFromLong(it) }
             timeOfDelivery.value = saved.timeOfDelivery
-            placeOfDelivery.value = getLocalValueInArray(placeOfDelivery.arrayId, saved.placeOfDelivery)
-            typeOfDelivery.value = getLocalValueInArray(typeOfDelivery.arrayId, saved.typeOfDelivery)
+            placeOfDelivery.value =
+                getLocalValueInArray(placeOfDelivery.arrayId, saved.placeOfDelivery)
+            typeOfDelivery.value =
+                getLocalValueInArray(typeOfDelivery.arrayId, saved.typeOfDelivery)
             hadComplications.value = if (saved.hadComplications == true) "Yes" else "No"
             complication.value = getLocalValueInArray(complication.arrayId, saved.complication)
             causeOfDeath.value = getLocalValueInArray(causeOfDeath.arrayId, saved.causeOfDeath)
@@ -223,9 +225,12 @@ open class DeliveryOutcomeDataset(
             timeOfDischarge.value = saved.timeOfDischarge
             isJSYBenificiary.value = if (saved.isJSYBenificiary == true) "Yes" else "No"
         }
-        dateOfDelivery.min = maxOf(pwr.lmpDate + TimeUnit.DAYS.toMillis(21*7), anc.ancDate)
+        dateOfDelivery.min = maxOf(pwr.lmpDate + TimeUnit.DAYS.toMillis(21 * 7), anc.ancDate)
         dateOfDelivery.max =
-            minOf(System.currentTimeMillis(), getEddFromLmp(pwr.lmpDate) + TimeUnit.DAYS.toMillis(25))
+            minOf(
+                System.currentTimeMillis(),
+                getEddFromLmp(pwr.lmpDate) + TimeUnit.DAYS.toMillis(25)
+            )
         setUpPage(list)
 
     }

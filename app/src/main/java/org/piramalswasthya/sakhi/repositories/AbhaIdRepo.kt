@@ -107,7 +107,8 @@ class AbhaIdRepo @Inject constructor(
                 if (response.isSuccessful) {
                     val responseBody = response.body()?.string()
                     val typeToken = object : TypeToken<List<StateCodeResponse>>() {}.type
-                    val stateCodes = Gson().fromJson<List<StateCodeResponse>>(responseBody, typeToken)
+                    val stateCodes =
+                        Gson().fromJson<List<StateCodeResponse>>(responseBody, typeToken)
                     NetworkResult.Success(stateCodes)
                 } else {
                     sendErrorResponse(response)
@@ -374,16 +375,22 @@ class AbhaIdRepo @Inject constructor(
                         val result = Gson().fromJson(data, CreateHIDResponse::class.java)
                         NetworkResult.Success(result)
                     }
+
                     5000, 5002 -> {
                         if (JSONObject(responseBody).getString("errorMessage")
-                                .contentEquals("Invalid login key or session is expired")) {
+                                .contentEquals("Invalid login key or session is expired")
+                        ) {
                             val user = prefDao.getLoggedInUser()!!
                             userRepo.refreshTokenTmc(user.userName, user.password)
                             createHealthIdWithUid(createHealthIdRequest)
                         } else {
-                            NetworkResult.Error(0,JSONObject(responseBody).getString("errorMessage"))
+                            NetworkResult.Error(
+                                0,
+                                JSONObject(responseBody).getString("errorMessage")
+                            )
                         }
                     }
+
                     else -> {
                         NetworkResult.Error(0, responseBody.toString())
                     }
@@ -403,22 +410,28 @@ class AbhaIdRepo @Inject constructor(
     suspend fun mapHealthIDToBeneficiary(mapHIDtoBeneficiary: MapHIDtoBeneficiary): NetworkResult<String> {
         return withContext((Dispatchers.IO)) {
             try {
-                val user = prefDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
+                val user =
+                    prefDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
                 mapHIDtoBeneficiary.providerServiceMapId = user.serviceMapId
                 mapHIDtoBeneficiary.createdBy = user.userName
                 val response = amritApiService.mapHealthIDToBeneficiary(mapHIDtoBeneficiary)
                 val responseBody = response.body()?.string()
-                when(responseBody?.let { JSONObject(it).getInt("statusCode") }) {
+                when (responseBody?.let { JSONObject(it).getInt("statusCode") }) {
                     200 -> NetworkResult.Success(responseBody)
                     5000, 5002 -> {
                         if (JSONObject(responseBody).getString("errorMessage")
-                                .contentEquals("Invalid login key or session is expired")){
+                                .contentEquals("Invalid login key or session is expired")
+                        ) {
                             userRepo.refreshTokenTmc(user.userName, user.password)
                             mapHealthIDToBeneficiary(mapHIDtoBeneficiary)
                         } else {
-                            NetworkResult.Error(0, JSONObject(responseBody).getString("errorMessage"))
+                            NetworkResult.Error(
+                                0,
+                                JSONObject(responseBody).getString("errorMessage")
+                            )
                         }
                     }
+
                     else -> NetworkResult.Error(0, responseBody.toString())
                 }
             } catch (e: IOException) {
@@ -438,18 +451,22 @@ class AbhaIdRepo @Inject constructor(
             try {
                 val response = amritApiService.generateOtpHealthId(generateOtpHid)
                 val responseBody = response.body()?.string()
-                when(responseBody?.let { JSONObject(it).getInt("statusCode") }) {
-                    200 -> NetworkResult.Success(JSONObject(responseBody).getJSONObject("data").getString("txnId"))
+                when (responseBody?.let { JSONObject(it).getInt("statusCode") }) {
+                    200 -> NetworkResult.Success(
+                        JSONObject(responseBody).getJSONObject("data").getString("txnId")
+                    )
+
                     5000, 5002 -> {
                         val error = JSONObject(responseBody).getString("errorMessage")
-                        if ( error.contentEquals("Invalid login key or session is expired")){
+                        if (error.contentEquals("Invalid login key or session is expired")) {
                             val user = prefDao.getLoggedInUser()!!
                             userRepo.refreshTokenTmc(user.userName, user.password)
                             generateOtpHid(generateOtpHid)
                         } else {
-                            NetworkResult.Error(0,error)
+                            NetworkResult.Error(0, error)
                         }
                     }
+
                     else -> NetworkResult.Error(0, responseBody.toString())
                 }
             } catch (e: IOException) {
@@ -469,18 +486,26 @@ class AbhaIdRepo @Inject constructor(
             try {
                 val response = amritApiService.verifyOtpAndGenerateHealthCard(validateOtpHid)
                 val responseBody = response.body()?.string()
-                when(responseBody?.let { JSONObject(it).getInt("statusCode") }) {
-                    200 -> NetworkResult.Success(JSONObject(responseBody).getJSONObject("data").getString("data"))
+                when (responseBody?.let { JSONObject(it).getInt("statusCode") }) {
+                    200 -> NetworkResult.Success(
+                        JSONObject(responseBody).getJSONObject("data").getString("data")
+                    )
+
                     5000, 5002 -> {
                         if (JSONObject(responseBody).getString("errorMessage")
-                                .contentEquals("Invalid login key or session is expired")){
+                                .contentEquals("Invalid login key or session is expired")
+                        ) {
                             val user = prefDao.getLoggedInUser()!!
                             userRepo.refreshTokenTmc(user.userName, user.password)
                             verifyOtpAndGenerateHealthCard(validateOtpHid)
                         } else {
-                            NetworkResult.Error(0, JSONObject(responseBody).getString("errorMessage"))
+                            NetworkResult.Error(
+                                0,
+                                JSONObject(responseBody).getString("errorMessage")
+                            )
                         }
                     }
+
                     else -> NetworkResult.Error(0, responseBody.toString())
 
                 }

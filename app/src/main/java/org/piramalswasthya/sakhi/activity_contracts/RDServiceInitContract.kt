@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
 
-class RDServiceInitContract: ActivityResultContract<Unit, String?>() {
+class RDServiceInitContract : ActivityResultContract<Unit, String?>() {
     val ACTION_RDINIT = "in.secugen.rdservice.INIT"
 
     override fun createIntent(context: Context, input: Unit): Intent {

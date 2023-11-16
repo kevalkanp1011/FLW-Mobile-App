@@ -168,8 +168,10 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
             if (anyRemoved) {
 
                 targetSideEffect?.let { sideEffectList ->
-                    sideEffectList.forEach { it.value = null
-                    it.errorText = null}
+                    sideEffectList.forEach {
+                        it.value = null
+                        it.errorText = null
+                    }
                     list.removeAll(sideEffectList)
                 }
                 target.forEach {

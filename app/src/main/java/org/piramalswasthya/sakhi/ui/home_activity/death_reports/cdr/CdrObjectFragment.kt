@@ -22,8 +22,8 @@ import timber.log.Timber
 @AndroidEntryPoint
 class CdrObjectFragment : Fragment() {
 
-    private var _binding : FragmentNewFormBinding? = null
-    private val binding : FragmentNewFormBinding
+    private var _binding: FragmentNewFormBinding? = null
+    private val binding: FragmentNewFormBinding
         get() = _binding!!
 
     private val viewModel: CdrObjectViewModel by viewModels()
@@ -74,10 +74,12 @@ class CdrObjectFragment : Fragment() {
                     binding.cvPatientInformation.visibility = View.GONE
                     binding.pbForm.visibility = View.VISIBLE
                 }
+
                 CdrObjectViewModel.State.SUCCESS -> {
                     findNavController().navigateUp()
                     WorkerUtils.triggerAmritPushWorker(requireContext())
                 }
+
                 CdrObjectViewModel.State.FAIL -> {
                     binding.form.rvInputForm.visibility = View.VISIBLE
                     binding.btnSubmit.visibility = View.VISIBLE
@@ -89,6 +91,7 @@ class CdrObjectFragment : Fragment() {
                         Toast.LENGTH_LONG
                     ).show()
                 }
+
                 else -> {
                     binding.form.rvInputForm.visibility = View.VISIBLE
                     binding.btnSubmit.visibility = View.VISIBLE

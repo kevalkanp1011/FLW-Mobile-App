@@ -833,7 +833,11 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     private var lastDeliveryDate = 0L
 
-    suspend fun setUpPage(ben: BenRegCache?, assess: HRPNonPregnantAssessCache?, saved: EligibleCoupleRegCache?) {
+    suspend fun setUpPage(
+        ben: BenRegCache?,
+        assess: HRPNonPregnantAssessCache?,
+        saved: EligibleCoupleRegCache?
+    ) {
         val list = mutableListOf(
             dateOfReg,
             rchId,
@@ -892,24 +896,32 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
         }
         assess?.let {
             noOfDeliveries.value = getLocalValueInArray(R.array.yes_no, it.noOfDeliveries)
-            timeLessThan18m.value = getLocalValueInArray(R.array.yes_no,it.timeLessThan18m)
-            heightShort.value = getLocalValueInArray(R.array.yes_no,it.heightShort)
+            timeLessThan18m.value = getLocalValueInArray(R.array.yes_no, it.timeLessThan18m)
+            heightShort.value = getLocalValueInArray(R.array.yes_no, it.heightShort)
 //            ageCheck.value = getLocalValueInArray(R.array.yes_no,it.age)
-            misCarriage.value = getLocalValueInArray(R.array.yes_no,it.misCarriage)
-            homeDelivery.value = getLocalValueInArray(R.array.yes_no,it.homeDelivery)
-            medicalIssues.value = getLocalValueInArray(R.array.yes_no,it.medicalIssues)
-            pastCSection.value = getLocalValueInArray(R.array.yes_no,it.pastCSection)
+            misCarriage.value = getLocalValueInArray(R.array.yes_no, it.misCarriage)
+            homeDelivery.value = getLocalValueInArray(R.array.yes_no, it.homeDelivery)
+            medicalIssues.value = getLocalValueInArray(R.array.yes_no, it.medicalIssues)
+            pastCSection.value = getLocalValueInArray(R.array.yes_no, it.pastCSection)
 
             infoChildLabel.showHighRisk =
-                (noOfDeliveries.value == resources.getStringArray(R.array.yes_no)[0] || timeLessThan18m.value == resources.getStringArray(R.array.yes_no)[0])
+                (noOfDeliveries.value == resources.getStringArray(R.array.yes_no)[0] || timeLessThan18m.value == resources.getStringArray(
+                    R.array.yes_no
+                )[0])
 
             physicalObsLabel.showHighRisk =
-                (heightShort.value == resources.getStringArray(R.array.yes_no)[0] || ageCheck.value == resources.getStringArray(R.array.yes_no)[0])
+                (heightShort.value == resources.getStringArray(R.array.yes_no)[0] || ageCheck.value == resources.getStringArray(
+                    R.array.yes_no
+                )[0])
 
             obsHistoryLabel.showHighRisk =
-                (misCarriage.value == resources.getStringArray(R.array.yes_no)[0] || homeDelivery.value == resources.getStringArray(R.array.yes_no)[0]
-                        || medicalIssues.value == resources.getStringArray(R.array.yes_no)[0] || pastCSection.value == resources.getStringArray(R.array.yes_no)[0])
-       }
+                (misCarriage.value == resources.getStringArray(R.array.yes_no)[0] || homeDelivery.value == resources.getStringArray(
+                    R.array.yes_no
+                )[0]
+                        || medicalIssues.value == resources.getStringArray(R.array.yes_no)[0] || pastCSection.value == resources.getStringArray(
+                    R.array.yes_no
+                )[0])
+        }
         saved?.let { ecCache ->
             dateOfReg.value = getDateFromLong(ecCache.dateOfReg)
             bankAccount.value = ecCache.bankAccount?.toString()
@@ -1085,7 +1097,13 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ) {
                         BenBasicCache.getAgeFromDob(it).toString()
                     } else "0"
-                    ecCache.dob7?.let { it1 -> setSiblingAgeDiff(it1, it, seventhAndEighthChildGap) }
+                    ecCache.dob7?.let { it1 ->
+                        setSiblingAgeDiff(
+                            it1,
+                            it,
+                            seventhAndEighthChildGap
+                        )
+                    }
                 }
                 ecCache.gender8?.let {
                     gender8.value =
@@ -1189,7 +1207,7 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     validateIntMinMax(noOfLiveChildren)
                     validateIntMinMax(noOfChildren)
                     noOfChildren.value?.let {
-                        if (it.toInt() >3) {
+                        if (it.toInt() > 3) {
                             noOfDeliveries.value = resources.getStringArray(R.array.yes_no)[0]
                             noOfDeliveries.isEnabled = false
                         } else {
@@ -1644,27 +1662,36 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
             noOfDeliveries.id, timeLessThan18m.id -> {
                 infoChildLabel.showHighRisk =
-                    (noOfDeliveries.value == resources.getStringArray(R.array.yes_no)[0] || timeLessThan18m.value == resources.getStringArray(R.array.yes_no)[0])
+                    (noOfDeliveries.value == resources.getStringArray(R.array.yes_no)[0] || timeLessThan18m.value == resources.getStringArray(
+                        R.array.yes_no
+                    )[0])
                 -1
             }
 
             heightShort.id, ageCheck.id -> {
                 physicalObsLabel.showHighRisk =
-                    (heightShort.value == resources.getStringArray(R.array.yes_no)[0] || ageCheck.value == resources.getStringArray(R.array.yes_no)[0])
+                    (heightShort.value == resources.getStringArray(R.array.yes_no)[0] || ageCheck.value == resources.getStringArray(
+                        R.array.yes_no
+                    )[0])
                 -1
             }
 
             misCarriage.id, homeDelivery.id, medicalIssues.id, pastCSection.id -> {
                 obsHistoryLabel.showHighRisk =
-                    (misCarriage.value == resources.getStringArray(R.array.yes_no)[0] || homeDelivery.value == resources.getStringArray(R.array.yes_no)[0]
-                            || medicalIssues.value == resources.getStringArray(R.array.yes_no)[0] || pastCSection.value == resources.getStringArray(R.array.yes_no)[0])
+                    (misCarriage.value == resources.getStringArray(R.array.yes_no)[0] || homeDelivery.value == resources.getStringArray(
+                        R.array.yes_no
+                    )[0]
+                            || medicalIssues.value == resources.getStringArray(R.array.yes_no)[0] || pastCSection.value == resources.getStringArray(
+                        R.array.yes_no
+                    )[0])
                 -1
             }
+
             else -> -1
         }
     }
 
-    private suspend fun updateAgeCheck(dob:Long, current: Long) {
+    private suspend fun updateAgeCheck(dob: Long, current: Long) {
         val calReg = Calendar.getInstance()
         calReg.timeInMillis = current
         val calDob = Calendar.getInstance()
@@ -1868,14 +1895,38 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
     fun mapValuesToAssess(assess: HRPNonPregnantAssessCache?, pageNumber: Int) {
         assess?.let { form ->
-            form.noOfDeliveries = if (noOfDeliveries.value != null) getEnglishValueInArray(R.array.yes_no, noOfDeliveries.value) else null
-            form.heightShort = if (heightShort.value != null) getEnglishValueInArray(R.array.yes_no, heightShort.value) else null
-            form.age = if (ageCheck.value != null) getEnglishValueInArray(R.array.yes_no, ageCheck.value) else null
-            form.misCarriage = if (misCarriage.value != null) getEnglishValueInArray(R.array.yes_no, misCarriage.value) else null
-            form.homeDelivery = if (homeDelivery.value != null) getEnglishValueInArray(R.array.yes_no, homeDelivery.value) else null
-            form.medicalIssues = if (medicalIssues.value != null) getEnglishValueInArray(R.array.yes_no, medicalIssues.value) else null
-            form.timeLessThan18m = if (timeLessThan18m.value != null) getEnglishValueInArray(R.array.yes_no, timeLessThan18m.value) else null
-            form.pastCSection = if (pastCSection.value != null) getEnglishValueInArray(R.array.yes_no, pastCSection.value) else null
+            form.noOfDeliveries = if (noOfDeliveries.value != null) getEnglishValueInArray(
+                R.array.yes_no,
+                noOfDeliveries.value
+            ) else null
+            form.heightShort = if (heightShort.value != null) getEnglishValueInArray(
+                R.array.yes_no,
+                heightShort.value
+            ) else null
+            form.age = if (ageCheck.value != null) getEnglishValueInArray(
+                R.array.yes_no,
+                ageCheck.value
+            ) else null
+            form.misCarriage = if (misCarriage.value != null) getEnglishValueInArray(
+                R.array.yes_no,
+                misCarriage.value
+            ) else null
+            form.homeDelivery = if (homeDelivery.value != null) getEnglishValueInArray(
+                R.array.yes_no,
+                homeDelivery.value
+            ) else null
+            form.medicalIssues = if (medicalIssues.value != null) getEnglishValueInArray(
+                R.array.yes_no,
+                medicalIssues.value
+            ) else null
+            form.timeLessThan18m = if (timeLessThan18m.value != null) getEnglishValueInArray(
+                R.array.yes_no,
+                timeLessThan18m.value
+            ) else null
+            form.pastCSection = if (pastCSection.value != null) getEnglishValueInArray(
+                R.array.yes_no,
+                pastCSection.value
+            ) else null
             form.isHighRisk = isHighRisk()
             form.syncState = SyncState.UNSYNCED
         }

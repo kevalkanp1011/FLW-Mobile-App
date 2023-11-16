@@ -17,8 +17,8 @@ class ChildListViewModel @Inject constructor(
 
     private val allBenList = recordsRepo.childList
     private val filter = MutableStateFlow("")
-    val benList = allBenList.combine(filter){
-            list, filter -> filterBenList(list, filter)
+    val benList = allBenList.combine(filter) { list, filter ->
+        filterBenList(list, filter)
     }
 
     fun filterText(text: String) {

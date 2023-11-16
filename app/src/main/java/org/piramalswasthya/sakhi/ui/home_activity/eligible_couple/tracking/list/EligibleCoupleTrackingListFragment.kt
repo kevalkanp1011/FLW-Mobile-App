@@ -28,7 +28,7 @@ class EligibleCoupleTrackingListFragment : Fragment() {
 
     private val viewModel: EligibleCoupleTrackingListViewModel by viewModels()
 
-    private val bottomSheet by lazy{
+    private val bottomSheet by lazy {
         ECTrackingListBottomSheetFragment()
     }
 
@@ -46,17 +46,21 @@ class EligibleCoupleTrackingListFragment : Fragment() {
 
         binding.btnNextPage.visibility = View.GONE
         val benAdapter = ECTrackingListAdapter(
-            ECTrackingListAdapter.ECTrackListClickListener(addNewTrack = {benId, canAdd ->
-                if(canAdd)
+            ECTrackingListAdapter.ECTrackListClickListener(addNewTrack = { benId, canAdd ->
+                if (canAdd)
                     findNavController().navigate(
-                    EligibleCoupleTrackingListFragmentDirections.actionEligibleCoupleTrackingListFragmentToEligibleCoupleTrackingFormFragment(
-                        benId
-                    )
-                )else
-                    Toast.makeText(requireContext(), "Already filled for this Month!", Toast.LENGTH_LONG).show()
+                        EligibleCoupleTrackingListFragmentDirections.actionEligibleCoupleTrackingListFragmentToEligibleCoupleTrackingFormFragment(
+                            benId
+                        )
+                    ) else
+                    Toast.makeText(
+                        requireContext(),
+                        "Already filled for this Month!",
+                        Toast.LENGTH_LONG
+                    ).show()
             }, showAllTracks = {
                 viewModel.setClickedBenId(it)
-                bottomSheet.show(childFragmentManager,"ECT")
+                bottomSheet.show(childFragmentManager, "ECT")
             })
 //            BenListAdapterForForm.ClickListener(
 //                {

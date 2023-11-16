@@ -102,7 +102,8 @@ class AadhaarNumberAshaFragment : Fragment() {
         viewModel.ben.observe(viewLifecycleOwner) {
             it?.let {
                 binding.benName.visibility = View.VISIBLE
-                binding.benName.text = String.format("%s%s%s",getString(R.string.generating_abha_for)," ",it)
+                binding.benName.text =
+                    String.format("%s%s%s", getString(R.string.generating_abha_for), " ", it)
             }
         }
 

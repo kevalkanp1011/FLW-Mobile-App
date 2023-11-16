@@ -27,12 +27,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HbncPartIViewModel @Inject constructor(
-    @ApplicationContext context : Context,
+    @ApplicationContext context: Context,
     state: SavedStateHandle,
     preferenceDao: PreferenceDao,
     private val hbncRepo: HbncRepo,
     benRepo: BenRepo,
-    userRepo : UserRepo
+    userRepo: UserRepo
 ) : ViewModel() {
 
     enum class State {
@@ -59,7 +59,8 @@ class HbncPartIViewModel @Inject constructor(
     val exists: LiveData<Boolean>
         get() = _exists
 
-    private val dataset = HBNCFormDataset(context, preferenceDao.getCurrentLanguage(), Konstants.hbncPart1Day)
+    private val dataset =
+        HBNCFormDataset(context, preferenceDao.getCurrentLanguage(), Konstants.hbncPart1Day)
     val formList = dataset.listFlow
     val alertError = dataset.alertErrorMessageFlow
 
@@ -105,7 +106,7 @@ class HbncPartIViewModel @Inject constructor(
 
     fun updateListOnValueChanged(formId: Int, index: Int) {
         viewModelScope.launch {
-            dataset.updateList( formId, index)
+            dataset.updateList(formId, index)
         }
 
     }

@@ -17,8 +17,8 @@ class CdrListViewModel @Inject constructor(
 
     private val allBenList = recordsRepo.cdrList
     private val filter = MutableStateFlow("")
-    val benList = allBenList.combine(filter){
-            list, filter -> filterBenFormList(list, filter)
+    val benList = allBenList.combine(filter) { list, filter ->
+        filterBenFormList(list, filter)
     }
 
     fun filterText(text: String) {

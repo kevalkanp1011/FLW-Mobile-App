@@ -40,6 +40,7 @@ class NcdListFragment : Fragment() {
             .setPositiveButton(resources.getString(R.string.ok)) { dialog, _ -> dialog.dismiss() }
             .create()
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,7 +54,7 @@ class NcdListFragment : Fragment() {
         binding.btnNextPage.visibility = View.GONE
         val benAdapter = BenListAdapter(
             BenListAdapter.BenClickListener(
-            { hhId, benId, isKid ->
+                { hhId, benId, isKid ->
 
 //                findNavController().navigate(
 //                    if (isKid) AllBenFragmentDirections.actionAllBenFragmentToNewBenRegL15Fragment(
@@ -66,22 +67,23 @@ class NcdListFragment : Fragment() {
 //                            benId
 //                        )
 //                )
-            },
-            {
+                },
+                {
 //                findNavController().navigate(
 //                    AllBenFragmentDirections.actionAllBenFragmentToNewBenRegTypeFragment(
 //                        it
 //                    )
 //                )
-            },
-            { benId, hhId ->
+                },
+                { benId, hhId ->
 //                checkAndGenerateABHA(benId)
-            },
+                },
 
-            ),true)
+                ), true
+        )
         binding.rvAny.adapter = benAdapter
         lifecycleScope.launch {
-            viewModel.benList.collect{
+            viewModel.benList.collect {
                 if (it.isEmpty())
                     binding.flEmpty.visibility = View.VISIBLE
                 else
@@ -117,7 +119,7 @@ class NcdListFragment : Fragment() {
 
         viewModel.abha.observe(viewLifecycleOwner) {
             it.let {
-                if (it != null){
+                if (it != null) {
                     abhaDisclaimer.setMessage(it)
                     abhaDisclaimer.show()
                 }
@@ -126,7 +128,7 @@ class NcdListFragment : Fragment() {
 
         viewModel.benRegId.observe(viewLifecycleOwner) {
             if (it != null) {
-                val intent = Intent (requireActivity(), AbhaIdActivity::class.java)
+                val intent = Intent(requireActivity(), AbhaIdActivity::class.java)
                 intent.putExtra("benId", viewModel.benId.value)
                 intent.putExtra("benRegId", it)
                 requireActivity().startActivity(intent)
@@ -143,7 +145,7 @@ class NcdListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__ben , getString(R.string.ncd_list))
+            (it as HomeActivity).updateActionBar(R.drawable.ic__ben, getString(R.string.ncd_list))
         }
     }
 

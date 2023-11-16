@@ -148,6 +148,7 @@ class PncFormFragment : Fragment() {
             }
         }
     }
+
     override fun onStart() {
         super.onStart()
         activity?.let {

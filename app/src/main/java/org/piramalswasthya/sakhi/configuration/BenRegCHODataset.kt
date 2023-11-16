@@ -7,10 +7,11 @@ import org.piramalswasthya.sakhi.model.AgeUnit
 import org.piramalswasthya.sakhi.model.BenRegCache
 import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.InputType
-import java.util.*
+import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
-class BenRegCHODataset (context: Context, currentLanguage: Languages
+class BenRegCHODataset(
+    context: Context, currentLanguage: Languages
 ) : Dataset(context, currentLanguage) {
 
     private val dateOfReg = FormElement(
@@ -99,6 +100,7 @@ class BenRegCHODataset (context: Context, currentLanguage: Languages
         max = 99,
         hasDependants = true
     )
+
     suspend fun setUpPage() {
         val list = mutableListOf(
             dateOfReg,
@@ -121,7 +123,7 @@ class BenRegCHODataset (context: Context, currentLanguage: Languages
     }
 
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
-        return when(formId) {
+        return when (formId) {
             dob.id -> {
                 age.value = calculateAge(getLongFromDate(dob.value)).toString()
                 validateIntMinMax(age)
@@ -134,6 +136,7 @@ class BenRegCHODataset (context: Context, currentLanguage: Languages
             husbandName.id -> {
                 validateAllCapsOrSpaceOnEditText(husbandName)
             }
+
             age.id -> {
                 age.value?.let {
                     validateIntMinMax(age)
@@ -143,6 +146,7 @@ class BenRegCHODataset (context: Context, currentLanguage: Languages
                 }
                 -1
             }
+
             contactNumber.id -> validateMobileNumberOnEditText(contactNumber)
             else -> -1
         }

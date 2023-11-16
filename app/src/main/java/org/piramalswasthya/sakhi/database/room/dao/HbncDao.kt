@@ -18,7 +18,7 @@ interface HbncDao {
     suspend fun hbncCount(): Int
 
     @Query("SELECT * FROM HBNC WHERE benId =:benId AND hhId = :hhId and homeVisitDate = :nthDay LIMIT 1")
-    suspend fun getHbnc(hhId: Long, benId: Long, nthDay : Int): HBNCCache?
+    suspend fun getHbnc(hhId: Long, benId: Long, nthDay: Int): HBNCCache?
 
     @Query("SELECT * FROM HBNC WHERE benId =:benId AND hhId = :hhId ORDER BY homeVisitDate")
     fun getAllHbncEntries(hhId: Long, benId: Long): Flow<List<HBNCCache>>

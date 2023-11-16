@@ -61,8 +61,6 @@ class PncRepo @Inject constructor(
 
             pncList.forEach {
                 pncPostList.clear()
-//                val ben = benDao.getBen(it.benId)
-                    ?: throw IllegalStateException("No beneficiary exists for benId: ${it.benId}!!")
                 pncPostList.add(it.asNetworkModel())
                 it.syncState = SyncState.SYNCING
                 pncDao.update(it)

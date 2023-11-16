@@ -64,7 +64,7 @@ class DeliveryOutcomeFragment : Fragment() {
             submitDeliveryOutcomeForm()
         }
 
-        viewModel.state.observe(viewLifecycleOwner) {state ->
+        viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state!!) {
                 DeliveryOutcomeViewModel.State.IDLE -> {
                 }
@@ -89,6 +89,7 @@ class DeliveryOutcomeFragment : Fragment() {
                     binding.llContent.visibility = View.VISIBLE
                     binding.pbForm.visibility = View.GONE
                 }
+
                 else -> {}
             }
         }
@@ -120,9 +121,11 @@ class DeliveryOutcomeFragment : Fragment() {
                 1 -> {
                     notifyItemChanged(13)
                 }
+
                 11, 12 -> {
                     notifyItemChanged(10)
                 }
+
                 10 -> {
                     notifyItemChanged(11)
                     notifyItemChanged(12)

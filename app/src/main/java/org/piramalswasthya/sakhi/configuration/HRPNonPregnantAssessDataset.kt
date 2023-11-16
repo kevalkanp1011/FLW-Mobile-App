@@ -136,66 +136,83 @@ class HRPNonPregnantAssessDataset(
             it.noOfDeliveries?.let {
                 noOfDeliveries.isEnabled = false
             }
-            timeLessThan18m.value = getLocalValueInArray(R.array.yes_no,it.timeLessThan18m)
+            timeLessThan18m.value = getLocalValueInArray(R.array.yes_no, it.timeLessThan18m)
             it.timeLessThan18m?.let {
                 timeLessThan18m.isEnabled = false
             }
-            heightShort.value = getLocalValueInArray(R.array.yes_no,it.heightShort)
+            heightShort.value = getLocalValueInArray(R.array.yes_no, it.heightShort)
             it.heightShort?.let {
                 heightShort.isEnabled = false
             }
-            age.value = getLocalValueInArray(R.array.yes_no,it.age)
+            age.value = getLocalValueInArray(R.array.yes_no, it.age)
             it.age?.let {
                 age.isEnabled = false
             }
-            misCarriage.value = getLocalValueInArray(R.array.yes_no,it.misCarriage)
+            misCarriage.value = getLocalValueInArray(R.array.yes_no, it.misCarriage)
             it.misCarriage?.let {
                 misCarriage.isEnabled = false
             }
-            homeDelivery.value = getLocalValueInArray(R.array.yes_no,it.homeDelivery)
+            homeDelivery.value = getLocalValueInArray(R.array.yes_no, it.homeDelivery)
             it.homeDelivery?.let {
                 homeDelivery.isEnabled = false
             }
-            medicalIssues.value = getLocalValueInArray(R.array.yes_no,it.medicalIssues)
+            medicalIssues.value = getLocalValueInArray(R.array.yes_no, it.medicalIssues)
             it.medicalIssues?.let {
                 medicalIssues.isEnabled = false
             }
-            pastCSection.value = getLocalValueInArray(R.array.yes_no,it.pastCSection)
+            pastCSection.value = getLocalValueInArray(R.array.yes_no, it.pastCSection)
             it.pastCSection?.let {
                 pastCSection.isEnabled = false
             }
 
             infoChildLabel.showHighRisk =
-                (noOfDeliveries.value == resources.getStringArray(R.array.yes_no)[0] || timeLessThan18m.value == resources.getStringArray(R.array.yes_no)[0])
+                (noOfDeliveries.value == resources.getStringArray(R.array.yes_no)[0] || timeLessThan18m.value == resources.getStringArray(
+                    R.array.yes_no
+                )[0])
 
             physicalObsLabel.showHighRisk =
-                (heightShort.value == resources.getStringArray(R.array.yes_no)[0] || age.value == resources.getStringArray(R.array.yes_no)[0])
+                (heightShort.value == resources.getStringArray(R.array.yes_no)[0] || age.value == resources.getStringArray(
+                    R.array.yes_no
+                )[0])
 
             obsHistoryLabel.showHighRisk =
-                (misCarriage.value == resources.getStringArray(R.array.yes_no)[0] || homeDelivery.value == resources.getStringArray(R.array.yes_no)[0]
-                        || medicalIssues.value == resources.getStringArray(R.array.yes_no)[0] || pastCSection.value == resources.getStringArray(R.array.yes_no)[0])
+                (misCarriage.value == resources.getStringArray(R.array.yes_no)[0] || homeDelivery.value == resources.getStringArray(
+                    R.array.yes_no
+                )[0]
+                        || medicalIssues.value == resources.getStringArray(R.array.yes_no)[0] || pastCSection.value == resources.getStringArray(
+                    R.array.yes_no
+                )[0])
         }
 
         setUpPage(list)
     }
+
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
             noOfDeliveries.id, timeLessThan18m.id -> {
                 infoChildLabel.showHighRisk =
-                    (noOfDeliveries.value == resources.getStringArray(R.array.yes_no)[0] || timeLessThan18m.value == resources.getStringArray(R.array.yes_no)[0])
+                    (noOfDeliveries.value == resources.getStringArray(R.array.yes_no)[0] || timeLessThan18m.value == resources.getStringArray(
+                        R.array.yes_no
+                    )[0])
                 -1
             }
 
             heightShort.id, age.id -> {
                 physicalObsLabel.showHighRisk =
-                    (heightShort.value == resources.getStringArray(R.array.yes_no)[0] || age.value == resources.getStringArray(R.array.yes_no)[0])
+                    (heightShort.value == resources.getStringArray(R.array.yes_no)[0] || age.value == resources.getStringArray(
+                        R.array.yes_no
+                    )[0])
                 -1
             }
 
             misCarriage.id, homeDelivery.id, medicalIssues.id, pastCSection.id -> {
                 obsHistoryLabel.showHighRisk =
-                    (misCarriage.value == resources.getStringArray(R.array.yes_no)[0] || homeDelivery.value == resources.getStringArray(R.array.yes_no)[0]
-                            || medicalIssues.value == resources.getStringArray(R.array.yes_no)[0] || pastCSection.value == resources.getStringArray(R.array.yes_no)[0])
+                    (misCarriage.value == resources.getStringArray(R.array.yes_no)[0] || homeDelivery.value == resources.getStringArray(
+                        R.array.yes_no
+                    )[0]
+                            || medicalIssues.value == resources.getStringArray(R.array.yes_no)[0] || pastCSection.value == resources.getStringArray(
+                        R.array.yes_no
+                    )[0])
                 -1
             }
 

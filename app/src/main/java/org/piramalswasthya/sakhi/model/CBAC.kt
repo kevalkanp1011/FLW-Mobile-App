@@ -787,5 +787,5 @@ data class BenWithCbacDomain(
     val savedCbacRecords: List<CbacCache>,
     val allSynced: SyncState? = if (savedCbacRecords.isEmpty()) null else
         if (savedCbacRecords.map { it.syncState }
-                .all { it == SyncState.SYNCED}) SyncState.SYNCED else SyncState.UNSYNCED
+                .all { it == SyncState.SYNCED }) SyncState.SYNCED else SyncState.UNSYNCED
 )

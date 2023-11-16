@@ -62,7 +62,7 @@ class DeliveryOutcomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val asha  = preferenceDao.getLoggedInUser()!!
+            val asha = preferenceDao.getLoggedInUser()!!
             val pwr = pwrRepo.getLatestActiveRegistrationRecord(benId)!!
             val anc = pwrRepo.getLatestAncRecord(benId)!!
             benRepo.getBenFromId(benId)?.also { ben ->
@@ -74,7 +74,7 @@ class DeliveryOutcomeViewModel @Inject constructor(
                     syncState = SyncState.UNSYNCED,
                     createdBy = asha.userName,
                     updatedBy = asha.userName,
-                    isActive =  true
+                    isActive = true
                 )
             }
 
@@ -85,7 +85,8 @@ class DeliveryOutcomeViewModel @Inject constructor(
                 _recordExists.value = false
             }
 
-            dataset.setUpPage(pwr, anc,
+            dataset.setUpPage(
+                pwr, anc,
                 if (recordExists.value == true) deliveryOutcome else null
             )
 
@@ -115,7 +116,7 @@ class DeliveryOutcomeViewModel @Inject constructor(
                         deliveryOutcome.deliveryOutcome?.let {
                             ecr.noOfChildren = ecr.noOfChildren + it
                         }
-                        if(ecr.processed!="N")ecr.processed = "U"
+                        if (ecr.processed != "N") ecr.processed = "U"
                         ecr.syncState = SyncState.UNSYNCED
                         ecrRepo.persistRecord(ecr)
                     }

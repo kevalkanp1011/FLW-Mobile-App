@@ -54,19 +54,19 @@ class SchedulerFragment : Fragment() {
             binding.calendarView.date = it
         }
         lifecycleScope.launch {
-            viewModel.ancDueCount.collect{
+            viewModel.ancDueCount.collect {
                 binding.tvAnc.text = it.toString()
             }
         }
 
         lifecycleScope.launch {
-            viewModel.immunizationDue.collect{
+            viewModel.immunizationDue.collect {
                 binding.tvImm.text = it.toString()
             }
         }
 
         lifecycleScope.launch {
-            viewModel.lowWeightBabiesCount.collect{
+            viewModel.lowWeightBabiesCount.collect {
                 binding.tvLbwb.text = it.toString()
             }
         }
@@ -87,12 +87,12 @@ class SchedulerFragment : Fragment() {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToInfantRegListFragment())
         }
         lifecycleScope.launch {
-            viewModel.hrpDueCount.collect{
+            viewModel.hrpDueCount.collect {
                 binding.tvHrp.text = it.toString()
             }
         }
         lifecycleScope.launch {
-            viewModel.hrpCountEC.collect{
+            viewModel.hrpCountEC.collect {
                 binding.tvHrEcCount.text = it.toString()
             }
         }

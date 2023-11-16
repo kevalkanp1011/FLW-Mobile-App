@@ -127,12 +127,14 @@ class PwAncFormFragment : Fragment() {
             when (formId) {
                 1 -> {
                     notifyItemChanged(viewModel.getIndexOfWeeksOfPregnancy())
-                    notifyItemChanged(viewModel.getIndexOfWeeksOfPregnancy()+1)
+                    notifyItemChanged(viewModel.getIndexOfWeeksOfPregnancy() + 1)
                 }
-                16 ->{
+
+                16 -> {
                     notifyItemChanged(viewModel.getIndexOfTTBooster())
                 }
-                18 ->{
+
+                18 -> {
                     notifyItemChanged(viewModel.getIndexOfTT1())
                     notifyItemChanged(viewModel.getIndexOfTT2())
 
@@ -158,10 +160,14 @@ class PwAncFormFragment : Fragment() {
             }
         }
     }
+
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__anc_visit, getString(R.string.anc_visit))
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__anc_visit,
+                getString(R.string.anc_visit)
+            )
         }
     }
 

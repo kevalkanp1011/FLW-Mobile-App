@@ -22,8 +22,8 @@ class NcdListViewModel @Inject constructor(
 ) {
     private val allBenList = recordsRepo.allBenList
     private val filter = MutableStateFlow("")
-    val benList = allBenList.combine(filter){
-            list, filter -> filterBenList(list, filter)
+    val benList = allBenList.combine(filter) { list, filter ->
+        filterBenList(list, filter)
     }
 
 

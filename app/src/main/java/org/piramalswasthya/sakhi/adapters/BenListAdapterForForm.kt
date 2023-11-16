@@ -55,12 +55,14 @@ class BenListAdapterForForm(
                         binding.btnForm1.text = btnText[0]
 //                        binding.btnForm1Cho.text = btnText[0]
                     }
+
                     2 -> {
                         binding.btnForm1.text = btnText[0]
 //                        binding.btnForm1Cho.text = btnText[0]
                         binding.btnForm2.text = btnText[1]
 //                        binding.btnForm2Cho.text = btnText[1]
                     }
+
                     3 -> {
                         binding.btnForm1.text = btnText[0]
 //                        binding.btnForm1Cho.text = btnText[0]
@@ -90,18 +92,21 @@ class BenListAdapterForForm(
                         formEnabled = item.form1Enabled
                     }
                 }
+
                 2 -> {
                     binding.btnForm2.also {
                         hasForm = item.form2Filled
                         formEnabled = item.form2Enabled
                     }
                 }
+
                 3 -> {
                     binding.btnForm3.also {
                         hasForm = item.form3Filled
                         formEnabled = item.form3Enabled
                     }
                 }
+
                 else -> throw IllegalStateException("FormNumber>3")
             }
             formButton.visibility = if (formEnabled) View.VISIBLE else View.INVISIBLE

@@ -112,7 +112,7 @@ data class BenWithEcTrackingCache(
             cal.apply { timeInMillis = recentFill.visitDate }
             val lastVisitMonth = cal.get(Calendar.MONTH)
             val lastVisitYear = cal.get(Calendar.YEAR)
-            !(currentYear==lastVisitYear && currentMonth == lastVisitMonth)
+            !(currentYear == lastVisitYear && currentMonth == lastVisitMonth)
         } ?: true
         return BenWithEctListDomain(
 //            ecBenId,

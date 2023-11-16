@@ -308,7 +308,7 @@ class CbacRepo @Inject constructor(
     }
 
     suspend fun getLastFilledCbac(benId: Long): CbacCache? {
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             database.cbacDao.getLastFilledCbacFromBenId(benId = benId)
 
         }

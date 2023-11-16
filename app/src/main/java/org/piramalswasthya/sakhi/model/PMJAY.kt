@@ -10,15 +10,15 @@ import com.squareup.moshi.JsonClass
     tableName = "PMJAY",
     foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
-        parentColumns = arrayOf("beneficiaryId",/* "householdId"*/),
-        childColumns = arrayOf("benId", /*"hhId"*/),
+        parentColumns = arrayOf("beneficiaryId"/* "householdId"*/),
+        childColumns = arrayOf("benId" /*"hhId"*/),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "ind_pmjay", value = ["benId",/* "hhId"*/])]
+    indices = [Index(name = "ind_pmjay", value = ["benId"/* "hhId"*/])]
 )
 
-data class PMJAYCache (
+data class PMJAYCache(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val benId: Long,
@@ -38,8 +38,13 @@ data class PMJAYCache (
     var createdBy: String? = null,
     var createdDate: Long? = System.currentTimeMillis(),
     var processed: String? = null,
-){
-    fun asPostModel(user: User, household: HouseholdCache, ben: BenRegCache, pmjayCount: Int): PMJAYPost {
+) {
+    fun asPostModel(
+        user: User,
+        household: HouseholdCache,
+        ben: BenRegCache,
+        pmjayCount: Int
+    ): PMJAYPost {
         return PMJAYPost(
             age = ben.age.toString(),
             beneficiaryid = benId,
@@ -77,7 +82,7 @@ data class PMJAYCache (
 }
 
 @JsonClass(generateAdapter = true)
-data class PMJAYPost (
+data class PMJAYPost(
     val age: String? = null,
     val beneficiaryid: Long,
     val bioMetricVerfied: String? = null,

@@ -19,13 +19,14 @@ import java.util.Locale
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "delOutInd", value = ["benId"])])
+    indices = [Index(name = "delOutInd", value = ["benId"])]
+)
 
-data class DeliveryOutcomeCache (
+data class DeliveryOutcomeCache(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val benId : Long,
-    var isActive : Boolean,
+    val benId: Long,
+    var isActive: Boolean,
     var dateOfDelivery: Long? = null,
     var timeOfDelivery: String? = null,
     var placeOfDelivery: String? = null,
@@ -59,7 +60,8 @@ data class DeliveryOutcomeCache (
             return null
         }
     }
-    fun asPostModel() :DeliveryOutcomePost {
+
+    fun asPostModel(): DeliveryOutcomePost {
         return DeliveryOutcomePost(
             id = id,
             benId = benId,
@@ -87,10 +89,10 @@ data class DeliveryOutcomeCache (
     }
 }
 
-data class DeliveryOutcomePost (
+data class DeliveryOutcomePost(
     val id: Long = 0,
     val benId: Long,
-    val isActive : Boolean,
+    val isActive: Boolean,
     val dateOfDelivery: String? = null,
     val timeOfDelivery: String? = null,
     val placeOfDelivery: String? = null,
@@ -110,7 +112,7 @@ data class DeliveryOutcomePost (
     val createdBy: String,
     val updatedDate: String? = null,
     val updatedBy: String
-    ) {
+) {
     fun toDeliveryCache(): DeliveryOutcomeCache {
         return DeliveryOutcomeCache(
             id = id,
@@ -123,7 +125,7 @@ data class DeliveryOutcomePost (
             hadComplications = hadComplications,
             complication = complication,
             causeOfDeath = causeOfDeath,
-            otherCauseOfDeath  = otherCauseOfDeath,
+            otherCauseOfDeath = otherCauseOfDeath,
             otherComplication = otherComplication,
             deliveryOutcome = deliveryOutcome,
             liveBirth = liveBirth,

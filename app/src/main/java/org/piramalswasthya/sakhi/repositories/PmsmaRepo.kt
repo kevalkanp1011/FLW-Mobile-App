@@ -67,12 +67,11 @@ class PmsmaRepo @Inject constructor(
                 if (uploadDone) {
                     it.processed = "P"
                     it.syncState = SyncState.SYNCED
-                }
-                else{
+                } else {
                     it.syncState = SyncState.UNSYNCED
                 }
                 pmsmaDao.updatePmsmaRecord(it)
-                if(!uploadDone)
+                if (!uploadDone)
                     return@withContext false
             }
 

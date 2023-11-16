@@ -2,7 +2,7 @@ package org.piramalswasthya.sakhi.model
 
 import androidx.room.PrimaryKey
 
-data class NewBornRegNetwork (
+data class NewBornRegNetwork(
     var id: Int = 0,
     @PrimaryKey
     var benficieryid: Long = 0,

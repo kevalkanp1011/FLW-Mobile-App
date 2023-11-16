@@ -59,7 +59,7 @@ class ImmunizationFormViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val asha  = preferenceDao.getLoggedInUser()!!
+                val asha = preferenceDao.getLoggedInUser()!!
                 val savedRecord = vaccineDao.getImmunizationRecord(benId, vaccineId)
                 immCache = savedRecord?.also { _recordExists.postValue(true) } ?: run {
                     ImmunizationCache(
@@ -67,7 +67,8 @@ class ImmunizationFormViewModel @Inject constructor(
                         vaccineId = vaccineId,
                         createdBy = asha.userName,
                         updatedBy = asha.userName,
-                        syncState = SyncState.UNSYNCED)
+                        syncState = SyncState.UNSYNCED
+                    )
                 }.also { _recordExists.postValue(false) }
                 val ben = benDao.getBen(benId)!!
                 _benName.postValue("${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}")
@@ -79,6 +80,7 @@ class ImmunizationFormViewModel @Inject constructor(
         }
 
     }
+
     fun saveForm() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {

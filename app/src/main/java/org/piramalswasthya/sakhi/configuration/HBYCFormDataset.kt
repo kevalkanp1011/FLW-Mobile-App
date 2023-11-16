@@ -23,7 +23,6 @@ class HBYCFormDataset(
     }
 
 
-
     private val month = FormElement(
         id = 1,
         inputType = InputType.EDIT_TEXT,
@@ -168,8 +167,21 @@ class HBYCFormDataset(
         inputType = InputType.DROPDOWN,
         title = "Mark age (in month) at the time of death",
         required = false,
-        entries = arrayOf("3 Month", "4 Month", "5 Month", "6 Month", "7 Month", "8 Month", "9 Month", "10 Month", "11 Month",
-            "12 Month", "13 Month", "14 Month", "15 Month", )
+        entries = arrayOf(
+            "3 Month",
+            "4 Month",
+            "5 Month",
+            "6 Month",
+            "7 Month",
+            "8 Month",
+            "9 Month",
+            "10 Month",
+            "11 Month",
+            "12 Month",
+            "13 Month",
+            "14 Month",
+            "15 Month",
+        )
     )
     private val deathCause = FormElement(
         id = 22,
@@ -214,17 +226,67 @@ class HBYCFormDataset(
     )
 
     val firstPage by lazy {
-        listOf(month, subCenterName, year, primaryHealthCenterName, villagePopulation, infantPopulation, visitDate, hbycAgeCategory,
-        orsPacketDelivered, ironFolicAcidGiven, isVaccinatedByAge, wasIll, referred, supplementsGiven, byHeightLength,
-        childrenWeighingLessReferred, weightAccordingToAge, delayInDevelopment, referredToHealthInstitite, vitaminASupplementsGiven,
-        deathAge, deathCause, qmOrAnmInformed, deathPlace, superVisorOn, orsShortage, ifaDecreased)
+        listOf(
+            month,
+            subCenterName,
+            year,
+            primaryHealthCenterName,
+            villagePopulation,
+            infantPopulation,
+            visitDate,
+            hbycAgeCategory,
+            orsPacketDelivered,
+            ironFolicAcidGiven,
+            isVaccinatedByAge,
+            wasIll,
+            referred,
+            supplementsGiven,
+            byHeightLength,
+            childrenWeighingLessReferred,
+            weightAccordingToAge,
+            delayInDevelopment,
+            referredToHealthInstitite,
+            vitaminASupplementsGiven,
+            deathAge,
+            deathCause,
+            qmOrAnmInformed,
+            deathPlace,
+            superVisorOn,
+            orsShortage,
+            ifaDecreased
+        )
     }
 
     suspend fun setUpPage(ben: BenRegCache?, saved: HBYCCache?, monthVal: String) {
-        val list = listOf(month, subCenterName, year, primaryHealthCenterName, villagePopulation, infantPopulation, visitDate, hbycAgeCategory,
-            orsPacketDelivered, ironFolicAcidGiven, isVaccinatedByAge, wasIll, referred, supplementsGiven, byHeightLength,
-            childrenWeighingLessReferred, weightAccordingToAge, delayInDevelopment, referredToHealthInstitite, vitaminASupplementsGiven,
-            deathAge, deathCause, qmOrAnmInformed, deathPlace, superVisorOn, orsShortage, ifaDecreased)
+        val list = listOf(
+            month,
+            subCenterName,
+            year,
+            primaryHealthCenterName,
+            villagePopulation,
+            infantPopulation,
+            visitDate,
+            hbycAgeCategory,
+            orsPacketDelivered,
+            ironFolicAcidGiven,
+            isVaccinatedByAge,
+            wasIll,
+            referred,
+            supplementsGiven,
+            byHeightLength,
+            childrenWeighingLessReferred,
+            weightAccordingToAge,
+            delayInDevelopment,
+            referredToHealthInstitite,
+            vitaminASupplementsGiven,
+            deathAge,
+            deathCause,
+            qmOrAnmInformed,
+            deathPlace,
+            superVisorOn,
+            orsShortage,
+            ifaDecreased
+        )
 
         month.value = monthVal
 
@@ -235,27 +297,46 @@ class HBYCFormDataset(
             primaryHealthCenterName.value = hbycCache.primaryHealthCenterName
             villagePopulation.value = hbycCache.villagePopulation
             infantPopulation.value = hbycCache.infantPopulation
-            visitDate.value = getDateStrFromLong( hbycCache.visitdate)
+            visitDate.value = getDateStrFromLong(hbycCache.visitdate)
             hbycAgeCategory.value = hbycCache.hbycAgeCategory
-            orsPacketDelivered.value = if (hbycCache.orsPacketDelivered == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.orsPacketDelivered - 1]
-            ironFolicAcidGiven.value = if (hbycCache.ironFolicAcidGiven == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.ironFolicAcidGiven - 1]
-            isVaccinatedByAge.value = if (hbycCache.isVaccinatedByAge == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.isVaccinatedByAge - 1]
-            wasIll.value = if (hbycCache.wasIll == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.wasIll - 1]
-            referred.value = if (hbycCache.referred == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.referred - 1]
-            supplementsGiven.value = if (hbycCache.supplementsGiven == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.supplementsGiven - 1]
-            byHeightLength.value = if (hbycCache.byHeightLength == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.byHeightLength - 1]
-            childrenWeighingLessReferred.value = if (hbycCache.childrenWeighingLessReferred == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.childrenWeighingLessReferred - 1]
-            weightAccordingToAge.value = if (hbycCache.weightAccordingToAge == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.weightAccordingToAge - 1]
-            delayInDevelopment.value = if (hbycCache.delayInDevelopment == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.delayInDevelopment - 1]
-            referredToHealthInstitite.value = if (hbycCache.referredToHealthInstitite == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.referredToHealthInstitite - 1]
-            vitaminASupplementsGiven.value = if (hbycCache.vitaminASupplementsGiven == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.vitaminASupplementsGiven - 1]
+            orsPacketDelivered.value =
+                if (hbycCache.orsPacketDelivered == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.orsPacketDelivered - 1]
+            ironFolicAcidGiven.value =
+                if (hbycCache.ironFolicAcidGiven == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.ironFolicAcidGiven - 1]
+            isVaccinatedByAge.value =
+                if (hbycCache.isVaccinatedByAge == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.isVaccinatedByAge - 1]
+            wasIll.value =
+                if (hbycCache.wasIll == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.wasIll - 1]
+            referred.value =
+                if (hbycCache.referred == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.referred - 1]
+            supplementsGiven.value =
+                if (hbycCache.supplementsGiven == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.supplementsGiven - 1]
+            byHeightLength.value =
+                if (hbycCache.byHeightLength == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.byHeightLength - 1]
+            childrenWeighingLessReferred.value =
+                if (hbycCache.childrenWeighingLessReferred == 0) null else resources.getStringArray(
+                    R.array.yes_no
+                )[hbycCache.childrenWeighingLessReferred - 1]
+            weightAccordingToAge.value =
+                if (hbycCache.weightAccordingToAge == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.weightAccordingToAge - 1]
+            delayInDevelopment.value =
+                if (hbycCache.delayInDevelopment == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.delayInDevelopment - 1]
+            referredToHealthInstitite.value =
+                if (hbycCache.referredToHealthInstitite == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.referredToHealthInstitite - 1]
+            vitaminASupplementsGiven.value =
+                if (hbycCache.vitaminASupplementsGiven == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.vitaminASupplementsGiven - 1]
             deathAge.value = hbycCache.deathAge
             deathCause.value = hbycCache.deathCause
-            qmOrAnmInformed.value = if (hbycCache.qmOrAnmInformed == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.qmOrAnmInformed - 1]
-            deathPlace.value = if (hbycCache.deathPlace != null) resources.getStringArray(R.array.do_cause_of_death_array)[hbycCache.deathPlace!!] else null
-            superVisorOn.value = if (hbycCache.superVisorOn == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.superVisorOn - 1]
-            orsShortage.value = if (hbycCache.orsShortage == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.orsShortage - 1]
-            ifaDecreased.value = if (hbycCache.ifaDecreased == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.ifaDecreased - 1]
+            qmOrAnmInformed.value =
+                if (hbycCache.qmOrAnmInformed == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.qmOrAnmInformed - 1]
+            deathPlace.value =
+                if (hbycCache.deathPlace != null) resources.getStringArray(R.array.do_cause_of_death_array)[hbycCache.deathPlace!!] else null
+            superVisorOn.value =
+                if (hbycCache.superVisorOn == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.superVisorOn - 1]
+            orsShortage.value =
+                if (hbycCache.orsShortage == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.orsShortage - 1]
+            ifaDecreased.value =
+                if (hbycCache.ifaDecreased == 0) null else resources.getStringArray(R.array.yes_no)[hbycCache.ifaDecreased - 1]
         }
         setUpPage(list)
     }

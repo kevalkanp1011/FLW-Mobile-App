@@ -171,7 +171,12 @@ class HouseholdFormDataset(context: Context, language: Languages) : Dataset(cont
         }
         val thirdPage =
             listOf(
-                houseHoldDAmenities, separateKitchen, fuelForCooking, sourceOfWater, sourceOfElectricity, availOfToilet
+                houseHoldDAmenities,
+                separateKitchen,
+                fuelForCooking,
+                sourceOfWater,
+                sourceOfElectricity,
+                availOfToilet
             )
         list.addAll(thirdPage)
         hh?.amenities?.let { saved ->

@@ -235,10 +235,14 @@ class HRPRepo @Inject constructor(
                     if (hrpPregnantAssessCache == null) {
                         database.hrpDao.saveRecord(entry.toPregnantAssess())
                     } else {
-                        if (hrpPregnantAssessCache.noOfDeliveries == null) hrpPregnantAssessCache.noOfDeliveries = entry.noOfDeliveries
-                        if (hrpPregnantAssessCache.timeLessThan18m == null) hrpPregnantAssessCache.timeLessThan18m = entry.timeLessThan18m
-                        if (hrpPregnantAssessCache.heightShort == null) hrpPregnantAssessCache.heightShort = entry.heightShort
-                        if (hrpPregnantAssessCache.age == null) hrpPregnantAssessCache.age = entry.age
+                        if (hrpPregnantAssessCache.noOfDeliveries == null) hrpPregnantAssessCache.noOfDeliveries =
+                            entry.noOfDeliveries
+                        if (hrpPregnantAssessCache.timeLessThan18m == null) hrpPregnantAssessCache.timeLessThan18m =
+                            entry.timeLessThan18m
+                        if (hrpPregnantAssessCache.heightShort == null) hrpPregnantAssessCache.heightShort =
+                            entry.heightShort
+                        if (hrpPregnantAssessCache.age == null) hrpPregnantAssessCache.age =
+                            entry.age
                         isHighRisk(hrpPregnantAssessCache)
                         database.hrpDao.saveRecord(hrpPregnantAssessCache)
                     }
@@ -248,10 +252,14 @@ class HRPRepo @Inject constructor(
                     if (hrpNonPregnantAssessCache == null) {
                         database.hrpDao.saveRecord(entry.toNonPregnantAssess())
                     } else {
-                        if (hrpNonPregnantAssessCache.noOfDeliveries == null) hrpNonPregnantAssessCache.noOfDeliveries = entry.noOfDeliveries
-                        if (hrpNonPregnantAssessCache.timeLessThan18m == null) hrpNonPregnantAssessCache.timeLessThan18m = entry.timeLessThan18m
-                        if (hrpNonPregnantAssessCache.heightShort == null) hrpNonPregnantAssessCache.heightShort = entry.heightShort
-                        if (hrpNonPregnantAssessCache.age == null) hrpNonPregnantAssessCache.age = entry.age
+                        if (hrpNonPregnantAssessCache.noOfDeliveries == null) hrpNonPregnantAssessCache.noOfDeliveries =
+                            entry.noOfDeliveries
+                        if (hrpNonPregnantAssessCache.timeLessThan18m == null) hrpNonPregnantAssessCache.timeLessThan18m =
+                            entry.timeLessThan18m
+                        if (hrpNonPregnantAssessCache.heightShort == null) hrpNonPregnantAssessCache.heightShort =
+                            entry.heightShort
+                        if (hrpNonPregnantAssessCache.age == null) hrpNonPregnantAssessCache.age =
+                            entry.age
                         isHighRisk(hrpNonPregnantAssessCache)
                         database.hrpDao.saveRecord(hrpNonPregnantAssessCache)
                     }
@@ -449,7 +457,12 @@ class HRPRepo @Inject constructor(
                 entry.visitDate?.let {
                     val track = entry.visit?.let { it1 ->
                         database
-                            .hrpDao.getHRPTrack(entry.benId, it1, getLongFromDate(it), getLongFromDate(it) - 19_800_000)
+                            .hrpDao.getHRPTrack(
+                                entry.benId,
+                                it1,
+                                getLongFromDate(it),
+                                getLongFromDate(it) - 19_800_000
+                            )
                     }
                     if (track == null) {
                         database.hrpDao.saveRecord(entry.toCache())
@@ -623,7 +636,11 @@ class HRPRepo @Inject constructor(
                 val entry = Gson().fromJson(dto.toString(), HRPNonPregnantTrackDTO::class.java)
                 entry.visitDate?.let {
                     val track = database
-                        .hrpDao.getHRPNonTrack(entry.benId, getLongFromDate(it), getLongFromDate(it) - 19_800_000)
+                        .hrpDao.getHRPNonTrack(
+                            entry.benId,
+                            getLongFromDate(it),
+                            getLongFromDate(it) - 19_800_000
+                        )
                     if (track == null) {
                         database.hrpDao.saveRecord(entry.toCache())
                     }
@@ -665,10 +682,8 @@ class HRPRepo @Inject constructor(
             }
 
             if (maternalHealthRepo.postPwrToAmritServer(pwrDtos)) {
-                pwrDtos.forEach {
-                    pwr ->
-                    maternalHealthRepo.getSavedRegistrationRecord(pwr.benId)?.let {
-                        pwrCache ->
+                pwrDtos.forEach { pwr ->
+                    maternalHealthRepo.getSavedRegistrationRecord(pwr.benId)?.let { pwrCache ->
                         pwrCache.processed = "P"
                         pwrCache.syncState = SyncState.SYNCED
                         maternalHealthRepo.persistRegisterRecord(pwrCache)
@@ -901,7 +916,6 @@ class HRPRepo @Inject constructor(
     }
 
 
-
     private suspend fun pushUnSyncedRecordsHRNonPTrack(): Int {
 
         return withContext(Dispatchers.IO) {
@@ -1011,7 +1025,7 @@ class HRPRepo @Inject constructor(
     }
 
     private suspend fun mapPWR(cache: HRPPregnantAssessCache): PwrPost {
-        val pwr : PregnantWomanRegistrationCache? =
+        val pwr: PregnantWomanRegistrationCache? =
             maternalHealthRepo.getSavedRegistrationRecord(cache.benId)
 
         val pwrPost: PwrPost
@@ -1046,9 +1060,9 @@ class HRPRepo @Inject constructor(
     }
 
     private suspend fun mapECR(cache: HRPNonPregnantAssessCache): EcrPost {
-        val ecr : EligibleCoupleRegCache? = ecrRepo.getSavedRecord(cache.benId)
+        val ecr: EligibleCoupleRegCache? = ecrRepo.getSavedRecord(cache.benId)
 
-        val ecrPost : EcrPost
+        val ecrPost: EcrPost
         val user = preferenceDao.getLoggedInUser()!!
 
         if (ecr == null) {
@@ -1075,6 +1089,7 @@ class HRPRepo @Inject constructor(
         }
         return ecrPost
     }
+
     companion object {
         private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
         private val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)

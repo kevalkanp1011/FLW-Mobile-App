@@ -9,9 +9,10 @@ data class Icon(
     val title: String,
     val count: Flow<Int>?,
     val navAction: NavDirections,
-    var colorPrimary : Boolean = true,
-    val allowRedBorder : Boolean = false
+    var colorPrimary: Boolean = true,
+    val allowRedBorder: Boolean = false
 )
+
 data class ImmunizationIcon(
     val benId: Long,
     val hhId: Long,
@@ -27,17 +28,17 @@ data class HbncIcon(
     val benId: Long,
     val count: Int,
     val isFilled: Boolean,
-    val syncState : SyncState?,
-    val title : String = "Day $count",
+    val syncState: SyncState?,
+    val title: String = "Day $count",
     val destination: NavDirections
-    )
+)
 
 data class HbycIcon(
     val hhId: Long,
     val benId: Long,
     val count: Int,
     val isFilled: Boolean,
-    val syncState : SyncState?,
-    val title : String = "Month $count",
+    val syncState: SyncState?,
+    val title: String = "Month $count",
     val destination: NavDirections
 )

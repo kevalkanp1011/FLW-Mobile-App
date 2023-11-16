@@ -406,8 +406,10 @@ class PregnantWomanAncVisitDataset(
             isAborted.value =
                 if (savedAnc.isAborted) isAborted.entries!!.last() else isAborted.entries!!.first()
             if (savedAnc.isAborted) {
-                abortionType.value = getLocalValueInArray(abortionType.arrayId, savedAnc.abortionType)
-                abortionFacility.value = getLocalValueInArray(abortionFacility.arrayId, saved.abortionFacility)
+                abortionType.value =
+                    getLocalValueInArray(abortionType.arrayId, savedAnc.abortionType)
+                abortionFacility.value =
+                    getLocalValueInArray(abortionFacility.arrayId, saved.abortionFacility)
                 abortionDate.value = savedAnc.abortionDate?.let { getDateFromLong(it) }
                 list.addAll(
                     list.indexOf(isAborted) + 1,
@@ -422,7 +424,8 @@ class PregnantWomanAncVisitDataset(
             hb.value = savedAnc.hb?.toString()
             fundalHeight.value = savedAnc.fundalHeight?.toString()
             urineAlbumin.value = getLocalValueInArray(urineAlbumin.arrayId, saved.urineAlbumin)
-            randomBloodSugarTest.value = getLocalValueInArray(randomBloodSugarTest.arrayId, saved.randomBloodSugarTest)
+            randomBloodSugarTest.value =
+                getLocalValueInArray(randomBloodSugarTest.arrayId, saved.randomBloodSugarTest)
             dateOfTTOrTd1.value = regis.tt1?.let { getDateFromLong(it) }
             dateOfTTOrTd2.value = regis.tt2?.let { getDateFromLong(it) }
             dateOfTTOrTdBooster.value = regis.ttBooster?.let { getDateFromLong(it) }
@@ -432,7 +435,8 @@ class PregnantWomanAncVisitDataset(
                 anyHighRisk.value =
                     if (it) anyHighRisk.entries!!.last() else anyHighRisk.entries!!.first()
                 if (it) {
-                    highRiskCondition.value = getLocalValueInArray(highRiskCondition.arrayId, saved.highRisk)
+                    highRiskCondition.value =
+                        getLocalValueInArray(highRiskCondition.arrayId, saved.highRisk)
                     list.add(list.indexOf(anyHighRisk) + 1, highRiskCondition)
                     if (highRiskCondition.value == highRiskCondition.entries!!.last()) {
                         otherHighRiskCondition.value = savedAnc.otherHighRisk
@@ -441,11 +445,13 @@ class PregnantWomanAncVisitDataset(
                 }
             }
 
-            highRiskReferralFacility.value = getLocalValueInArray(highRiskReferralFacility.arrayId, saved.referralFacility)
+            highRiskReferralFacility.value =
+                getLocalValueInArray(highRiskReferralFacility.arrayId, saved.referralFacility)
             hrpConfirm.value =
                 savedAnc.hrpConfirmed?.let { if (it) hrpConfirm.entries!!.last() else hrpConfirm.entries!!.first() }
             if (savedAnc.hrpConfirmed == true) {
-                hrpConfirmedBy.value = getLocalValueInArray(hrpConfirmedBy.arrayId, saved.hrpConfirmedBy)
+                hrpConfirmedBy.value =
+                    getLocalValueInArray(hrpConfirmedBy.arrayId, saved.hrpConfirmedBy)
                 list.add(list.indexOf(hrpConfirm) + 1, hrpConfirmedBy)
             }
             savedAnc.maternalDeath?.let {
@@ -453,7 +459,10 @@ class PregnantWomanAncVisitDataset(
                     if (it) maternalDeath.entries!!.last() else maternalDeath.entries!!.first()
                 if (it) {
                     maternalDeathProbableCause.value =
-                        getLocalValueInArray(maternalDeathProbableCause.arrayId, saved.maternalDeathProbableCause)
+                        getLocalValueInArray(
+                            maternalDeathProbableCause.arrayId,
+                            saved.maternalDeathProbableCause
+                        )
                     maternalDateOfDeath.value =
                         savedAnc.deathDate?.let { it1 -> getDateFromLong(it1) }
                     list.addAll(

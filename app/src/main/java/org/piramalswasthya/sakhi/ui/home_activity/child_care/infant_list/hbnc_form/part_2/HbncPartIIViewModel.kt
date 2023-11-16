@@ -59,7 +59,8 @@ class HbncPartIIViewModel @Inject constructor(
     val exists: LiveData<Boolean>
         get() = _exists
 
-    private val dataset = HBNCFormDataset(context, preferenceDao.getCurrentLanguage(), Konstants.hbncPart2Day)
+    private val dataset =
+        HBNCFormDataset(context, preferenceDao.getCurrentLanguage(), Konstants.hbncPart2Day)
     val formList = dataset.listFlow
     fun submitForm() {
         _state.value = State.LOADING

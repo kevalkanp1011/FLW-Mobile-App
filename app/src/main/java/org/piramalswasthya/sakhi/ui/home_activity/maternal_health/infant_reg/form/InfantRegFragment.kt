@@ -90,6 +90,7 @@ class InfantRegFragment : Fragment() {
                     binding.llContent.visibility = View.VISIBLE
                     binding.pbForm.visibility = View.GONE
                 }
+
                 else -> {}
             }
         }
@@ -114,6 +115,7 @@ class InfantRegFragment : Fragment() {
             false
         }
     }
+
     override fun onStart() {
         super.onStart()
         activity?.let {

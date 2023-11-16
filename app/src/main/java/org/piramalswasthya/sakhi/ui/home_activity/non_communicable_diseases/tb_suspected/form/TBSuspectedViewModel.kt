@@ -1,7 +1,11 @@
 package org.piramalswasthya.sakhi.ui.home_activity.non_communicable_diseases.tb_suspected.form
 
 import android.content.Context
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -90,7 +94,7 @@ class TBSuspectedViewModel @Inject constructor(
     }
 
 
-//    fun getAlerts() {
+    //    fun getAlerts() {
 //        suspectedTB = dataset.isTbSuspected()
 //        suspectedTBFamily = dataset.isTbSuspectedFamily()
 //    }
@@ -114,7 +118,7 @@ class TBSuspectedViewModel @Inject constructor(
         _state.value = State.IDLE
     }
 
-    fun getAlerts():String? {
+    fun getAlerts(): String? {
         return dataset.isTestPositive()
     }
 

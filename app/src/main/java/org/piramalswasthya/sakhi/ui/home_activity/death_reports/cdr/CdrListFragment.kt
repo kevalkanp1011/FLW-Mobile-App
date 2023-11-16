@@ -23,7 +23,7 @@ import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 class CdrListFragment : Fragment() {
 
     private var _binding: FragmentDisplaySearchRvButtonBinding? = null
-    private val binding : FragmentDisplaySearchRvButtonBinding
+    private val binding: FragmentDisplaySearchRvButtonBinding
         get() = _binding!!
 
     private val viewModel: CdrListViewModel by viewModels()
@@ -32,7 +32,7 @@ class CdrListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding =  FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false )
+        _binding = FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false)
 
         return binding.root
     }
@@ -46,14 +46,18 @@ class CdrListFragment : Fragment() {
                     Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
                 },
                 { hhId, benId ->
-                findNavController().navigate(
-                    CdrListFragmentDirections.actionCdrListFragmentToCdrObjectFragment(hhId, benId)
-                )
-            }), resources.getString(R.string.cdr_form))
+                    findNavController().navigate(
+                        CdrListFragmentDirections.actionCdrListFragmentToCdrObjectFragment(
+                            hhId,
+                            benId
+                        )
+                    )
+                }), resources.getString(R.string.cdr_form)
+        )
         binding.rvAny.adapter = benAdapter
 
         lifecycleScope.launch {
-            viewModel.benList.collect{
+            viewModel.benList.collect {
                 if (it.isEmpty())
                     binding.flEmpty.visibility = View.VISIBLE
                 else

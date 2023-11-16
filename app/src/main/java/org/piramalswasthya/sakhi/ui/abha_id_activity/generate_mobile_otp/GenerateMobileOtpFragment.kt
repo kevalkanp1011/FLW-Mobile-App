@@ -65,7 +65,7 @@ class GenerateMobileOtpFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentGenerateMobileOtpBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -108,6 +108,7 @@ class GenerateMobileOtpFragment : Fragment() {
                     binding.progressBarGmotp.visibility = View.VISIBLE
                     binding.clError.visibility = View.INVISIBLE
                 }
+
                 State.SUCCESS -> {
                     if (viewModel.apiResponse.mobileLinked) {
                         navController.navigate(
@@ -125,21 +126,24 @@ class GenerateMobileOtpFragment : Fragment() {
                     }
                     viewModel.resetState()
                 }
+
                 State.ERROR_SERVER -> {
                     binding.progressBarGmotp.visibility = View.INVISIBLE
                     binding.clGenerateMobileOtp.visibility = View.VISIBLE
                     binding.clError.visibility = View.INVISIBLE
                     binding.tvErrorText.visibility = View.VISIBLE
                 }
+
                 State.ERROR_NETWORK -> {
                     binding.progressBarGmotp.visibility = View.INVISIBLE
                     binding.clGenerateMobileOtp.visibility = View.INVISIBLE
                     binding.clError.visibility = View.VISIBLE
                 }
+
                 State.ABHA_GENERATED_SUCCESS -> {
                     navController.navigate(
                         GenerateMobileOtpFragmentDirections.actionGenerateMobileOtpFragmentToCreateAbhaFragment(
-                             viewModel.txnIdFromArgs
+                            viewModel.txnIdFromArgs
                         )
                     )
                 }

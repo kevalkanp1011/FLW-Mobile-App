@@ -139,6 +139,7 @@ class HRPPregnantTrackDataset(
         required = true,
         hasDependants = true
     )
+
     suspend fun setUpPage(ben: BenRegCache?, saved: HRPPregnantTrackCache?, dateOfVisitMin: Long?) {
         val list = mutableListOf(
             followUpLabel,
@@ -159,16 +160,19 @@ class HRPPregnantTrackDataset(
         ben?.let {
             dateOfVisit.min = it.regDate
             dateOfVisitMin?.let { dov ->
-                    val calReg = Calendar.getInstance().setToStartOfTheDay()
-                    calReg.timeInMillis = it.regDate
-                    calReg.setToStartOfTheDay()
-                    val calMaxVisit = Calendar.getInstance()
-                    calMaxVisit.timeInMillis = dov
-                    calMaxVisit.setToStartOfTheDay()
+                val calReg = Calendar.getInstance().setToStartOfTheDay()
+                calReg.timeInMillis = it.regDate
+                calReg.setToStartOfTheDay()
+                val calMaxVisit = Calendar.getInstance()
+                calMaxVisit.timeInMillis = dov
+                calMaxVisit.setToStartOfTheDay()
 
-                    if((calMaxVisit.timeInMillis - calReg.timeInMillis) >= 0) {
-                        dateOfVisit.min = minOf( calMaxVisit.timeInMillis + TimeUnit.DAYS.toMillis(1), System.currentTimeMillis())
-                    }
+                if ((calMaxVisit.timeInMillis - calReg.timeInMillis) >= 0) {
+                    dateOfVisit.min = minOf(
+                        calMaxVisit.timeInMillis + TimeUnit.DAYS.toMillis(1),
+                        System.currentTimeMillis()
+                    )
+                }
             }
             dateOfVisit.max = System.currentTimeMillis()
         }
@@ -180,34 +184,46 @@ class HRPPregnantTrackDataset(
             rdPmsa.showHighRisk = it.rdPmsa == englishResources.getStringArray(R.array.yes_no)[0]
 
             rdDengue.value = getLocalValueInArray(R.array.yes_no, it.rdDengue)
-            rdDengue.showHighRisk = it.rdDengue == englishResources.getStringArray(R.array.yes_no)[0]
+            rdDengue.showHighRisk =
+                it.rdDengue == englishResources.getStringArray(R.array.yes_no)[0]
 
             rdFilaria.value = getLocalValueInArray(R.array.yes_no, it.rdFilaria)
-            rdFilaria.showHighRisk = it.rdFilaria == englishResources.getStringArray(R.array.yes_no)[0]
+            rdFilaria.showHighRisk =
+                it.rdFilaria == englishResources.getStringArray(R.array.yes_no)[0]
 
             severeAnemia.value = getLocalValueInArray(R.array.yes_no, it.severeAnemia)
-            severeAnemia.showHighRisk = it.severeAnemia == englishResources.getStringArray(R.array.yes_no)[0]
+            severeAnemia.showHighRisk =
+                it.severeAnemia == englishResources.getStringArray(R.array.yes_no)[0]
 
-            pregInducedHypertension.value = getLocalValueInArray(R.array.yes_no, it.pregInducedHypertension)
-            pregInducedHypertension.showHighRisk = it.pregInducedHypertension == englishResources.getStringArray(R.array.yes_no)[0]
+            pregInducedHypertension.value =
+                getLocalValueInArray(R.array.yes_no, it.pregInducedHypertension)
+            pregInducedHypertension.showHighRisk =
+                it.pregInducedHypertension == englishResources.getStringArray(R.array.yes_no)[0]
 
-            gestDiabetesMellitus.value = getLocalValueInArray(R.array.yes_no, it.gestDiabetesMellitus)
-            gestDiabetesMellitus.showHighRisk = it.gestDiabetesMellitus == englishResources.getStringArray(R.array.yes_no)[0]
+            gestDiabetesMellitus.value =
+                getLocalValueInArray(R.array.yes_no, it.gestDiabetesMellitus)
+            gestDiabetesMellitus.showHighRisk =
+                it.gestDiabetesMellitus == englishResources.getStringArray(R.array.yes_no)[0]
 
             hypothyroidism.value = getLocalValueInArray(R.array.yes_no, it.hypothyrodism)
-            hypothyroidism.showHighRisk = it.hypothyrodism == englishResources.getStringArray(R.array.yes_no)[0]
+            hypothyroidism.showHighRisk =
+                it.hypothyrodism == englishResources.getStringArray(R.array.yes_no)[0]
 
             polyhydromnios.value = getLocalValueInArray(R.array.yes_no, it.polyhydromnios)
-            polyhydromnios.showHighRisk = it.polyhydromnios == englishResources.getStringArray(R.array.yes_no)[0]
+            polyhydromnios.showHighRisk =
+                it.polyhydromnios == englishResources.getStringArray(R.array.yes_no)[0]
 
             oligohydromnios.value = getLocalValueInArray(R.array.yes_no, it.oligohydromnios)
-            oligohydromnios.showHighRisk = it.oligohydromnios == englishResources.getStringArray(R.array.yes_no)[0]
+            oligohydromnios.showHighRisk =
+                it.oligohydromnios == englishResources.getStringArray(R.array.yes_no)[0]
 
             antepartumHem.value = getLocalValueInArray(R.array.yes_no, it.antepartumHem)
-            antepartumHem.showHighRisk = it.antepartumHem == englishResources.getStringArray(R.array.yes_no)[0]
+            antepartumHem.showHighRisk =
+                it.antepartumHem == englishResources.getStringArray(R.array.yes_no)[0]
 
             malPresentation.value = getLocalValueInArray(R.array.yes_no, it.malPresentation)
-            malPresentation.showHighRisk = it.malPresentation == englishResources.getStringArray(R.array.yes_no)[0]
+            malPresentation.showHighRisk =
+                it.malPresentation == englishResources.getStringArray(R.array.yes_no)[0]
 
             hivsyph.value = getLocalValueInArray(R.array.yes_no, it.hivsyph)
             hivsyph.showHighRisk = it.hivsyph == englishResources.getStringArray(R.array.yes_no)[0]
@@ -223,52 +239,62 @@ class HRPPregnantTrackDataset(
             }
 
             rdDengue.id -> {
-                rdDengue.showHighRisk = rdDengue.value == resources.getStringArray(R.array.yes_no)[0]
+                rdDengue.showHighRisk =
+                    rdDengue.value == resources.getStringArray(R.array.yes_no)[0]
                 -1
             }
 
             rdFilaria.id -> {
-                rdFilaria.showHighRisk = rdFilaria.value == resources.getStringArray(R.array.yes_no)[0]
+                rdFilaria.showHighRisk =
+                    rdFilaria.value == resources.getStringArray(R.array.yes_no)[0]
                 -1
             }
 
             severeAnemia.id -> {
-                severeAnemia.showHighRisk = severeAnemia.value == resources.getStringArray(R.array.yes_no)[0]
+                severeAnemia.showHighRisk =
+                    severeAnemia.value == resources.getStringArray(R.array.yes_no)[0]
                 -1
             }
 
             pregInducedHypertension.id -> {
-                pregInducedHypertension.showHighRisk = pregInducedHypertension.value == resources.getStringArray(R.array.yes_no)[0]
+                pregInducedHypertension.showHighRisk =
+                    pregInducedHypertension.value == resources.getStringArray(R.array.yes_no)[0]
                 -1
             }
 
             gestDiabetesMellitus.id -> {
-                gestDiabetesMellitus.showHighRisk = gestDiabetesMellitus.value == resources.getStringArray(R.array.yes_no)[0]
+                gestDiabetesMellitus.showHighRisk =
+                    gestDiabetesMellitus.value == resources.getStringArray(R.array.yes_no)[0]
                 -1
             }
 
             hypothyroidism.id -> {
-                hypothyroidism.showHighRisk = hypothyroidism.value == resources.getStringArray(R.array.yes_no)[0]
+                hypothyroidism.showHighRisk =
+                    hypothyroidism.value == resources.getStringArray(R.array.yes_no)[0]
                 -1
             }
 
             polyhydromnios.id -> {
-                polyhydromnios.showHighRisk = polyhydromnios.value == resources.getStringArray(R.array.yes_no)[0]
+                polyhydromnios.showHighRisk =
+                    polyhydromnios.value == resources.getStringArray(R.array.yes_no)[0]
                 -1
             }
 
             oligohydromnios.id -> {
-                oligohydromnios.showHighRisk = oligohydromnios.value == resources.getStringArray(R.array.yes_no)[0]
+                oligohydromnios.showHighRisk =
+                    oligohydromnios.value == resources.getStringArray(R.array.yes_no)[0]
                 -1
             }
 
             antepartumHem.id -> {
-                antepartumHem.showHighRisk = antepartumHem.value == resources.getStringArray(R.array.yes_no)[0]
+                antepartumHem.showHighRisk =
+                    antepartumHem.value == resources.getStringArray(R.array.yes_no)[0]
                 -1
             }
 
             malPresentation.id -> {
-                malPresentation.showHighRisk = malPresentation.value == resources.getStringArray(R.array.yes_no)[0]
+                malPresentation.showHighRisk =
+                    malPresentation.value == resources.getStringArray(R.array.yes_no)[0]
                 -1
             }
 
@@ -288,8 +314,10 @@ class HRPPregnantTrackDataset(
             form.rdDengue = getEnglishValueInArray(R.array.yes_no, rdDengue.value)
             form.rdFilaria = getEnglishValueInArray(R.array.yes_no, rdFilaria.value)
             form.severeAnemia = getEnglishValueInArray(R.array.yes_no, severeAnemia.value)
-            form.pregInducedHypertension = getEnglishValueInArray(R.array.yes_no, pregInducedHypertension.value)
-            form.gestDiabetesMellitus = getEnglishValueInArray(R.array.yes_no, gestDiabetesMellitus.value)
+            form.pregInducedHypertension =
+                getEnglishValueInArray(R.array.yes_no, pregInducedHypertension.value)
+            form.gestDiabetesMellitus =
+                getEnglishValueInArray(R.array.yes_no, gestDiabetesMellitus.value)
             form.hypothyrodism = getEnglishValueInArray(R.array.yes_no, hypothyroidism.value)
             form.polyhydromnios = getEnglishValueInArray(R.array.yes_no, polyhydromnios.value)
             form.oligohydromnios = getEnglishValueInArray(R.array.yes_no, oligohydromnios.value)

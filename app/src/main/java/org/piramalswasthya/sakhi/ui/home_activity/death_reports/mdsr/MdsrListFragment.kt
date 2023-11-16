@@ -23,7 +23,7 @@ import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 class MdsrListFragment : Fragment() {
 
     private var _binding: FragmentDisplaySearchRvButtonBinding? = null
-    private val binding : FragmentDisplaySearchRvButtonBinding
+    private val binding: FragmentDisplaySearchRvButtonBinding
         get() = _binding!!
 
     private val viewModel: MdsrListViewModel by viewModels()
@@ -32,7 +32,7 @@ class MdsrListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding =  FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false )
+        _binding = FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -45,17 +45,18 @@ class MdsrListFragment : Fragment() {
                     Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
                 },
                 { hhId, benId ->
-                findNavController().navigate(
-                    MdsrListFragmentDirections.actionMdsrListFragmentToMdsrObjectFragment(
-                        hhId,
-                        benId
+                    findNavController().navigate(
+                        MdsrListFragmentDirections.actionMdsrListFragmentToMdsrObjectFragment(
+                            hhId,
+                            benId
+                        )
                     )
-                )
-            }), resources.getString(R.string.mdsr_form))
+                }), resources.getString(R.string.mdsr_form)
+        )
         binding.rvAny.adapter = benAdapter
 
         lifecycleScope.launch {
-            viewModel.benList.collect{
+            viewModel.benList.collect {
                 if (it.isEmpty())
                     binding.flEmpty.visibility = View.VISIBLE
                 else
@@ -88,7 +89,10 @@ class MdsrListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__death, getString(R.string.mdsr_list))
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__death,
+                getString(R.string.mdsr_list)
+            )
         }
     }
 

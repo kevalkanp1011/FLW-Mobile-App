@@ -389,7 +389,8 @@ class FormInputAdapter(
                                         android.R.color.darker_gray,
                                     ) // enabled
                                 )
-                            )                        }
+                            )
+                        }
 
                         if (!isEnabled) rdBtn.buttonTintList = colorStateList
                         rdBtn.text = it
@@ -715,7 +716,7 @@ class FormInputAdapter(
             val agePicker = AgePickerDialog(binding.root.context)
 
             val calDob = Calendar.getInstance()
-            val ageUnitDTO = AgeUnitDTO(0,0,0)
+            val ageUnitDTO = AgeUnitDTO(0, 0, 0)
             val isOk = true
             item.value?.let {
                 calDob.timeInMillis = getLongFromDate(it)
@@ -747,7 +748,7 @@ class FormInputAdapter(
                         isOk
                     )
                 }
-                agePicker.setOnDismissListener{
+                agePicker.setOnDismissListener {
                     binding.etNum.setText(getAgeStrFromAgeUnit(ageUnitDTO))
                     calDob.timeInMillis =
                         getDobFromAge(ageUnitDTO)

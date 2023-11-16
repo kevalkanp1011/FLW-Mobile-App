@@ -1,11 +1,10 @@
 package org.piramalswasthya.sakhi.ui.home_activity.village_level_forms.survey_register
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import org.piramalswasthya.sakhi.R
 
 class SurveyRegisterFragment : Fragment() {

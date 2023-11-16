@@ -5,7 +5,7 @@ import org.piramalswasthya.sakhi.model.FormInputOld
 import org.piramalswasthya.sakhi.model.InputType
 import org.piramalswasthya.sakhi.model.PMJAYCache
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 class PMJAYFormDataset(context: Context) {
 
@@ -21,12 +21,14 @@ class PMJAYFormDataset(context: Context) {
         pmjayCache.registrationDate = registrationDate.value.value?.let { getLongFromDate(it) }
         pmjayCache.registeredHospital = registeredHospital.value.value
         pmjayCache.contactNumber = contactNumber.value.value?.let { it.toLong() } ?: 0L
-        pmjayCache.communicationContactNumber = communicationContactNumber.value.value?.let { it.toLong() } ?: 0L
+        pmjayCache.communicationContactNumber =
+            communicationContactNumber.value.value?.let { it.toLong() } ?: 0L
         pmjayCache.patientAddress = patientAddress.value.value
         pmjayCache.communicationAddress = communicationAddress.value.value
         pmjayCache.hospitalAddress = hospitalAddress.value.value
         pmjayCache.familyId = familyId.value.value?.let { it.toLong() } ?: 0L
-        pmjayCache.isAadhaarBeneficiary = isAadhaarBeneficiary.value.value?.let { it.toLong() } ?: 0L
+        pmjayCache.isAadhaarBeneficiary =
+            isAadhaarBeneficiary.value.value?.let { it.toLong() } ?: 0L
         pmjayCache.memberType = memberType.value.value
         pmjayCache.patientType = patientType.value.value
         pmjayCache.scheme = scheme.value.value
@@ -103,7 +105,20 @@ class PMJAYFormDataset(context: Context) {
     )
 
     val firstPage by lazy {
-        listOf(id, registrationDate, registeredHospital, contactNumber, communicationContactNumber, patientAddress,
-            communicationAddress, hospitalAddress, familyId, isAadhaarBeneficiary, memberType, patientType, scheme)
+        listOf(
+            id,
+            registrationDate,
+            registeredHospital,
+            contactNumber,
+            communicationContactNumber,
+            patientAddress,
+            communicationAddress,
+            hospitalAddress,
+            familyId,
+            isAadhaarBeneficiary,
+            memberType,
+            patientType,
+            scheme
+        )
     }
 }

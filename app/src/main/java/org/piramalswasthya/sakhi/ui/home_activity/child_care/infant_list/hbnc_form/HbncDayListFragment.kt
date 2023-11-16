@@ -21,11 +21,11 @@ import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 class HbncDayListFragment : Fragment() {
 
 
-    private var _binding : RvIconGridBinding? = null
+    private var _binding: RvIconGridBinding? = null
 
     private val viewModel: HbncDayListViewModel by viewModels()
 
-    private val binding : RvIconGridBinding
+    private val binding: RvIconGridBinding
         get() = _binding!!
 
     override fun onCreateView(
@@ -42,7 +42,10 @@ class HbncDayListFragment : Fragment() {
     }
 
     private fun setUpImmunizationIconRvAdapter() {
-        val rvLayoutManager = GridLayoutManager(context, requireContext().resources.getInteger(R.integer.icon_grid_span))
+        val rvLayoutManager = GridLayoutManager(
+            context,
+            requireContext().resources.getInteger(R.integer.icon_grid_span)
+        )
         binding.rvIconGrid.layoutManager = rvLayoutManager
         val iconAdapter = HBNCDayGridAdapter(
             HBNCDayGridAdapter.HbncIconClickListener {
@@ -53,8 +56,8 @@ class HbncDayListFragment : Fragment() {
 
         binding.rvIconGrid.adapter = iconAdapter
 
-        lifecycleScope.launch{
-            viewModel.dayList.collect{
+        lifecycleScope.launch {
+            viewModel.dayList.collect {
                 iconAdapter.submitList(it)
             }
         }

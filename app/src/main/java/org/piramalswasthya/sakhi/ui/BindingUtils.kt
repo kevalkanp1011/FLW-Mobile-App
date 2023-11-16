@@ -93,11 +93,11 @@ fun Button.setVaccineState(syncState: VaccineState?) {
 fun TextView.setRecordCount(scope: CoroutineScope, count: Flow<Int>?) {
     count?.let { flow ->
         scope.launch {
-            try{
+            try {
                 flow.collect {
                     text = it.toString()
                 }
-            }catch (e : Exception){
+            } catch (e: Exception) {
                 Timber.d("Exception at record count : $e collected")
             }
 

@@ -59,9 +59,7 @@ data class PregnantWomenVisitDomain(
     val eddString: String? = getDateString(edd),
     val weeksOfPregnancy: Int,
     val weeksOfPregnancyString: String = if (weeksOfPregnancy <= 40) weeksOfPregnancy.toString() else "NA",
-) {
-
-}
+)
 
 data class AncStatus(
     val benId: Long,

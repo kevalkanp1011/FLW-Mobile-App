@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.widget.NumberPicker
 import androidx.fragment.app.DialogFragment
 import org.piramalswasthya.sakhi.R
-import java.util.*
+import java.util.Calendar
 
 class MonthYearPickerDialog : DialogFragment() {
 
@@ -33,7 +33,7 @@ class MonthYearPickerDialog : DialogFragment() {
         monthPicker.minValue = 0
         monthPicker.maxValue = 11
         monthPicker.value = cal.get(Calendar.MONTH)
-        monthPicker.displayedValues  = resources.getStringArray(R.array.months)
+        monthPicker.displayedValues = resources.getStringArray(R.array.months)
 
         val year = cal.get(Calendar.YEAR)
         yearPicker.minValue = MIN_YEAR

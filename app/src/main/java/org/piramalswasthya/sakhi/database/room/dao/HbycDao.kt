@@ -2,7 +2,6 @@ package org.piramalswasthya.sakhi.database.room.dao
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import org.piramalswasthya.sakhi.model.HBNCCache
 import org.piramalswasthya.sakhi.model.HBYCCache
 
 @Dao

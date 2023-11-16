@@ -23,9 +23,9 @@ import org.piramalswasthya.sakhi.work.WorkerUtils
 class NewBenRegTypeFragment : Fragment() {
 
 
-    private var _binding : FragmentNewBenRegTypeBinding? = null
+    private var _binding: FragmentNewBenRegTypeBinding? = null
 
-    private val binding  : FragmentNewBenRegTypeBinding
+    private val binding: FragmentNewBenRegTypeBinding
         get() = _binding!!
 
 
@@ -38,7 +38,7 @@ class NewBenRegTypeFragment : Fragment() {
 
 
     private val consentAlert by lazy {
-        val alertBinding = AlertConsentBinding.inflate(layoutInflater,binding.root,false)
+        val alertBinding = AlertConsentBinding.inflate(layoutInflater, binding.root, false)
         alertBinding.textView4.text = getString(R.string.consent_alert_title)
         alertBinding.checkBox.text = getString(R.string.consent_text)
         val alertDialog = MaterialAlertDialogBuilder(requireContext())
@@ -50,13 +50,16 @@ class NewBenRegTypeFragment : Fragment() {
             findNavController().navigateUp()
         }
         alertBinding.btnPositive.setOnClickListener {
-            if(alertBinding.checkBox.isChecked) {
+            if (alertBinding.checkBox.isChecked) {
                 alertDialog.dismiss()
                 alertBinding.checkBox.isChecked = false
                 viewModel.setConsentAgreed()
-            }
-            else
-                Toast.makeText(context,resources.getString(R.string.please_tick_the_checkbox), Toast.LENGTH_SHORT).show()
+            } else
+                Toast.makeText(
+                    context,
+                    resources.getString(R.string.please_tick_the_checkbox),
+                    Toast.LENGTH_SHORT
+                ).show()
         }
         alertDialog
     }
@@ -65,10 +68,9 @@ class NewBenRegTypeFragment : Fragment() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(resources.getString(R.string.incomplete_form_found))
             .setMessage(resources.getString(R.string.do_you_want_to_continue_with_previous_form_or_create_a_new_form_and_discard_the_previous_form))
-            .setPositiveButton(resources.getString(R.string.open_draft)){
-                    dialog,_->
-                val isKid = binding.rgBenType.checkedRadioButtonId==binding.rbKidPath.id
-                viewModel.navigateToNewBenRegistration(hhId,false, isKid)
+            .setPositiveButton(resources.getString(R.string.open_draft)) { dialog, _ ->
+                val isKid = binding.rgBenType.checkedRadioButtonId == binding.rbKidPath.id
+                viewModel.navigateToNewBenRegistration(hhId, false, isKid)
                 dialog.dismiss()
 
             }
@@ -125,12 +127,14 @@ class NewBenRegTypeFragment : Fragment() {
                         WorkerUtils.triggerGenBenIdWorker(requireContext())
 
                     }
+
                     0 -> {
                         binding.btnContinue.visibility = View.GONE
                         binding.errorText.text =
                             resources.getString(R.string.error_no_more_ben_ids_available_connect_to_internet_to_get_some)
                         WorkerUtils.triggerGenBenIdWorker(requireContext())
                     }
+
                     else -> {
                         binding.btnContinue.visibility = View.VISIBLE
                         binding.errorText.text = null
@@ -150,8 +154,8 @@ class NewBenRegTypeFragment : Fragment() {
                 viewModel.navigateToBenKidRegistrationCompleted()
             }
         }
-        viewModel.navigateToNewBenGenRegistration.observe(viewLifecycleOwner){
-            if(it) {
+        viewModel.navigateToNewBenGenRegistration.observe(viewLifecycleOwner) {
+            if (it) {
                 findNavController().navigate(
                     NewBenRegTypeFragmentDirections.actionNewBenRegTypeFragmentToNewBenRegG15Fragment(
                         hhId
@@ -164,17 +168,27 @@ class NewBenRegTypeFragment : Fragment() {
         binding.btnContinue.setOnClickListener {
             when (binding.rgBenType.checkedRadioButtonId) {
                 R.id.rb_kid_path -> {
-                    if(hasDraftKid)
+                    if (hasDraftKid)
                         draftLoadAlert.show()
                     else
-                        viewModel.navigateToNewBenRegistration(hhId=hhId, delete = false, isKid = true)
+                        viewModel.navigateToNewBenRegistration(
+                            hhId = hhId,
+                            delete = false,
+                            isKid = true
+                        )
                 }
+
                 R.id.rb_adult_path -> {
-                    if(hasDraftGen)
+                    if (hasDraftGen)
                         draftLoadAlert.show()
                     else
-                        viewModel.navigateToNewBenRegistration(hhId=hhId, delete = false, isKid = false)
+                        viewModel.navigateToNewBenRegistration(
+                            hhId = hhId,
+                            delete = false,
+                            isKid = false
+                        )
                 }
+
                 else -> Toast.makeText(
                     context,
                     resources.getString(R.string.please_select_type_of_beneficiary),

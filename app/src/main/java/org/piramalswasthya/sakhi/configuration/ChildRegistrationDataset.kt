@@ -203,8 +203,8 @@ class ChildRegistrationDataset(
         motherBen?.let {
             it.genDetails?.spouseName?.let {
                 fatherName.value = it
-            }?:run{
-                fatherName.inputType= InputType.EDIT_TEXT
+            } ?: run {
+                fatherName.inputType = InputType.EDIT_TEXT
             }
             motherName.value = "${it.firstName} ${it.lastName ?: ""}"
             mobileNumberOf.value = mobileNumberOf.entries?.first()

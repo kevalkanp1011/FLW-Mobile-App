@@ -41,10 +41,11 @@ class VerifyMobileOtpFragment : Fragment() {
             binding.timerResendOtp.visibility = View.INVISIBLE
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentVerifyMobileOtpBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -78,14 +79,14 @@ class VerifyMobileOtpFragment : Fragment() {
         viewModel.showExit.observe(viewLifecycleOwner) {
             it?.let {
                 if (it) {
-                    binding.exit.visibility =  View.VISIBLE
+                    binding.exit.visibility = View.VISIBLE
                 } else {
-                    binding.exit.visibility =  View.GONE
+                    binding.exit.visibility = View.GONE
                 }
             }
         }
 
-        binding.exit.setOnClickListener{
+        binding.exit.setOnClickListener {
             requireActivity().finish()
         }
 
@@ -97,6 +98,7 @@ class VerifyMobileOtpFragment : Fragment() {
                     binding.pbVmotp.visibility = View.VISIBLE
                     binding.clError.visibility = View.INVISIBLE
                 }
+
                 State.OTP_VERIFY_SUCCESS -> {
                     findNavController().navigate(
                         VerifyMobileOtpFragmentDirections.actionVerifyMobileOtpFragmentToCreateAbhaFragment(
@@ -105,28 +107,36 @@ class VerifyMobileOtpFragment : Fragment() {
                     )
                     viewModel.resetState()
                 }
+
                 State.ERROR_NETWORK -> {
                     binding.clVerifyMobileOtp.visibility = View.INVISIBLE
                     binding.pbVmotp.visibility = View.INVISIBLE
                     binding.clError.visibility = View.VISIBLE
                 }
+
                 State.ERROR_SERVER -> {
                     binding.clVerifyMobileOtp.visibility = View.VISIBLE
                     binding.pbVmotp.visibility = View.INVISIBLE
                     binding.clError.visibility = View.INVISIBLE
                     binding.tvErrorText.visibility = View.VISIBLE
                 }
+
                 State.OTP_GENERATED_SUCCESS -> {
                     binding.clVerifyMobileOtp.visibility = View.VISIBLE
                     binding.pbVmotp.visibility = View.INVISIBLE
                     binding.clError.visibility = View.INVISIBLE
-                    Toast.makeText(activity, resources.getString(R.string.otp_was_resent), Toast.LENGTH_LONG)
+                    Toast.makeText(
+                        activity,
+                        resources.getString(R.string.otp_was_resent),
+                        Toast.LENGTH_LONG
+                    )
                         .show()
                 }
+
                 State.ABHA_GENERATED_SUCCESS -> {
                     findNavController().navigate(
                         VerifyMobileOtpFragmentDirections.actionVerifyMobileOtpFragmentToCreateAbhaFragment(
-                             viewModel.txnID
+                            viewModel.txnID
                         )
                     )
                     viewModel.resetState()

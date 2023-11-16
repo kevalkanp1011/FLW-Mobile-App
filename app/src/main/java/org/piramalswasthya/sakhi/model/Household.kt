@@ -279,5 +279,5 @@ data class HouseHoldBasicDomain(
     val headSurname: String,
     val contactNumber: String,
     val headFullName: String = "$headName $headSurname",
-    val numMembers : Int,
+    val numMembers: Int,
 )

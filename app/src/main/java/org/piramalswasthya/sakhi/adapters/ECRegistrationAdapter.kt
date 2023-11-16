@@ -6,9 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.RvItemBenEcWithFormBinding
-import org.piramalswasthya.sakhi.model.BenBasicDomain
 import org.piramalswasthya.sakhi.model.BenWithEcrDomain
 
 class ECRegistrationAdapter(
@@ -45,8 +43,8 @@ class ECRegistrationAdapter(
         ) {
             binding.benWithEcr = item
 
-            binding.ivSyncState.visibility = if(item.ecr==null) View.INVISIBLE else View.VISIBLE
-            binding.btnFormEc1.text = if(item.ecr==null) "Register" else "View"
+            binding.ivSyncState.visibility = if (item.ecr == null) View.INVISIBLE else View.VISIBLE
+            binding.btnFormEc1.text = if (item.ecr == null) "Register" else "View"
 
             binding.btnFormEc1.setBackgroundColor(binding.root.resources.getColor(if (item.ecr == null) android.R.color.holo_red_dark else android.R.color.holo_green_dark))
             binding.clickListener = clickListener

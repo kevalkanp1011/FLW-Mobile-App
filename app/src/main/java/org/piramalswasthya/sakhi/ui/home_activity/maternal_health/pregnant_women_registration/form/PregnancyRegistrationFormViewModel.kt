@@ -69,7 +69,7 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val asha  = preferenceDao.getLoggedInUser()!!
+            val asha = preferenceDao.getLoggedInUser()!!
             val ben = maternalHealthRepo.getBenFromId(benId)?.also { ben ->
                 _benName.value =
                     "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
@@ -106,7 +106,7 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
                 ecr,
                 latestTrack?.visitDate
             )
-            dataset.updateList(30,getIndexOfHRP())
+            dataset.updateList(30, getIndexOfHRP())
 
 
         }
@@ -148,7 +148,8 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
                     }
                     assess = hrpRepo.getPregnantAssess(benId)
                     if (assess == null) {
-                        assess = HRPPregnantAssessCache(benId = benId, syncState = SyncState.UNSYNCED)
+                        assess =
+                            HRPPregnantAssessCache(benId = benId, syncState = SyncState.UNSYNCED)
                     }
                     dataset.mapValuesForAssess(assess, 1)
                     assess?.let {

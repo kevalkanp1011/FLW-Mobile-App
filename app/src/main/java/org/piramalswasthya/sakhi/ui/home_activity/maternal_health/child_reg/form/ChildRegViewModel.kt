@@ -46,7 +46,7 @@ class ChildRegViewModel @Inject constructor(
     val recordExists: LiveData<Boolean>
         get() = _recordExists
 
-    private lateinit var infantReg : InfantRegCache
+    private lateinit var infantReg: InfantRegCache
 
     private val dataset =
         ChildRegistrationDataset(context, preferenceDao.getCurrentLanguage())
@@ -55,8 +55,12 @@ class ChildRegViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val ben = benRepo.getBenFromId(motherBenId)
-            val deliveryOutcome = childRegRepo.getDeliveryOutcomeRepoFromMotherBenId(motherBenId = motherBenId)
-            infantReg = childRegRepo.getInfantRegFromMotherBenId(motherBenId = motherBenId, babyIndex = babyIndex)!!
+            val deliveryOutcome =
+                childRegRepo.getDeliveryOutcomeRepoFromMotherBenId(motherBenId = motherBenId)
+            infantReg = childRegRepo.getInfantRegFromMotherBenId(
+                motherBenId = motherBenId,
+                babyIndex = babyIndex
+            )!!
             dataset.setUpPage(
                 motherBen = ben,
                 deliveryOutcomeCache = deliveryOutcome,
@@ -79,7 +83,11 @@ class ChildRegViewModel @Inject constructor(
                 try {
                     _state.postValue(State.SAVING)
                     val motherBen = benRepo.getBenFromId(motherBenId)!!
-                    val childBen = dataset.mapAsBeneficiary(motherBen,preferenceDao.getLoggedInUser()!!, preferenceDao.getLocationRecord()!!)
+                    val childBen = dataset.mapAsBeneficiary(
+                        motherBen,
+                        preferenceDao.getLoggedInUser()!!,
+                        preferenceDao.getLocationRecord()!!
+                    )
                     benRepo.substituteBenIdForDraft(childBen)
                     benRepo.persistRecord(childBen)
                     infantReg.childBenId = childBen.beneficiaryId

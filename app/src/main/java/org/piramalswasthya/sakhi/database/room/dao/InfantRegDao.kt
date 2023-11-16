@@ -11,7 +11,7 @@ import org.piramalswasthya.sakhi.model.InfantRegCache
 interface InfantRegDao {
 
     @Query("SELECT * FROM INFANT_REG WHERE motherBenId =:benId and babyIndex = :babyIndex and isActive = 1 limit 1")
-    suspend fun getInfantReg(benId: Long, babyIndex : Int): InfantRegCache?
+    suspend fun getInfantReg(benId: Long, babyIndex: Int): InfantRegCache?
 
     @Query("SELECT * FROM INFANT_REG WHERE childBenId =:benId limit 1")
     suspend fun getInfantRegFromChildBenId(benId: Long): InfantRegCache?

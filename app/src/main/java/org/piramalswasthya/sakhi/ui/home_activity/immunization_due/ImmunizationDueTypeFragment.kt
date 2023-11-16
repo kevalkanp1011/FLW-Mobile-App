@@ -23,9 +23,9 @@ class ImmunizationDueTypeFragment : Fragment() {
     @Inject
     lateinit var iconDataset: IconDataset
 
-    private var _binding : RvIconGridBinding? = null
+    private var _binding: RvIconGridBinding? = null
 
-    private val binding  : RvIconGridBinding
+    private val binding: RvIconGridBinding
         get() = _binding!!
 
 
@@ -47,7 +47,10 @@ class ImmunizationDueTypeFragment : Fragment() {
     }
 
     private fun setUpImmunizationIconRvAdapter() {
-        val rvLayoutManager = GridLayoutManager(context, requireContext().resources.getInteger(R.integer.icon_grid_span))
+        val rvLayoutManager = GridLayoutManager(
+            context,
+            requireContext().resources.getInteger(R.integer.icon_grid_span)
+        )
         binding.rvIconGrid.layoutManager = rvLayoutManager
         val iconAdapter = IconGridAdapter(
             IconGridAdapter.GridIconClickListener {
@@ -58,10 +61,14 @@ class ImmunizationDueTypeFragment : Fragment() {
         binding.rvIconGrid.adapter = iconAdapter
         iconAdapter.submitList(iconDataset.getImmunizationDataset())
     }
+
     override fun onStart() {
         super.onStart()
-        activity?.let{
-            (it as HomeActivity).updateActionBar(R.drawable.ic__immunization, getString(R.string.icon_title_imm))
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__immunization,
+                getString(R.string.icon_title_imm)
+            )
         }
     }
 

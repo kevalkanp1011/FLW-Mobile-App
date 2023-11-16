@@ -114,6 +114,7 @@ class MDSRFormDataset(
         }
         setUpPage(list)
     }
+
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
             causeOfDeath.id -> triggerDependants(
@@ -126,12 +127,13 @@ class MDSRFormDataset(
             else -> -1
         }
     }
+
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
         (cacheModel as MDSRCache).let { mdsrCache ->
             mdsrCache.dateOfDeath = getLongFromDate(dateOfDeath.value!!)
             mdsrCache.address = address.value
             mdsrCache.husbandName = husbandName.value
-            mdsrCache.causeOfDeath =causeOfDeath.value
+            mdsrCache.causeOfDeath = causeOfDeath.value
             mdsrCache.reasonOfDeath = reasonOfDeath.value
             mdsrCache.actionTaken = actionTaken.value?.let { actionTaken.value == "Yes" }
             mdsrCache.investigationDate = investigationDate.value?.let { getLongFromDate(it) }

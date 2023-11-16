@@ -108,7 +108,7 @@ data class BenBasicCache(
     val benSurname: String? = null,
     val gender: Gender,
     val dob: Long,
-    val relToHeadId : Int,
+    val relToHeadId: Int,
     val mobileNo: Long,
     val fatherName: String? = null,
     val familyHeadName: String? = null,
@@ -233,10 +233,10 @@ data class BenBasicCache(
             abhaId = abhaId,
             relToHeadId = relToHeadId,
             mobileNo = mobileNo.toString(),
-            fatherName = fatherName?.takeIf { it.isNotEmpty() }  ?: "Not Available",
+            fatherName = fatherName?.takeIf { it.isNotEmpty() } ?: "Not Available",
             familyHeadName = familyHeadName ?: "Not Available",
 //            typeOfList = typeOfList.name,
-            spouseName = spouseName?.takeIf { it.isNotEmpty() }  ?: "Not Available",
+            spouseName = spouseName?.takeIf { it.isNotEmpty() } ?: "Not Available",
             rchId = rchId?.takeIf { it.isNotEmpty() } ?: "Not Available",
             hrpStatus = hrpStatus,
             syncState = syncState
@@ -250,7 +250,7 @@ data class BenBasicCache(
             regDate = dateFormat.format(Date(regDate)),
             benName = benName,
             benSurname = benSurname ?: "",
-            spouseName =  spouseName?: "Not Available",
+            spouseName = spouseName ?: "Not Available",
             gender = gender.name,
             dob = dob,
             abhaId = abhaId,
@@ -487,8 +487,8 @@ data class BenBasicCache(
             dob = dob,
             mobileNo = mobileNo.toString(),
             fatherName = fatherName,
-            familyHeadName = familyHeadName?: "",
-            spouseName = spouseName?: "",
+            familyHeadName = familyHeadName ?: "",
+            spouseName = spouseName ?: "",
             lastMenstrualPeriod = getDateStringFromLong(lastMenstrualPeriod),
             edd = getEddFromLmp(lastMenstrualPeriod),
 //            typeOfList = typeOfList.name,
@@ -687,7 +687,7 @@ data class BenBasicDomain(
     val ageInt: Int = getAgeFromDob(dob),
     val ageUnit: AgeUnit = getAgeUnitFromDob(dob),
     val age: String = "$ageInt ${ageUnit.name}",
-    val relToHeadId : Int,
+    val relToHeadId: Int,
     val mobileNo: String,
     val abhaId: String? = null,
     val fatherName: String? = null,
@@ -728,9 +728,7 @@ data class BenBasicDomainForForm(
     val formsFilled: Int = 0,
     var syncState: SyncState?
 ) {
-    companion object {
-
-    }
+    companion object
 }
 
 data class BenRegKid(
@@ -785,7 +783,7 @@ data class BenRegKid(
     var vitaminKGivenDueDate: String? = null,
     var vitaminKDate: String? = null,
     var deliveryTypeOther: String? = null,
-    var birthCertificateNumber : String? = null,
+    var birthCertificateNumber: String? = null,
     var motherBenId: Long? = null,
     var childMotherName: String? = null,
     var motherPosition: Int? = null,

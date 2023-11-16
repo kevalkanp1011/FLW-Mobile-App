@@ -26,7 +26,6 @@ class NcdNonEligibleListFragment : Fragment() {
     private val viewModel: NcdNonEligibleListViewModel by viewModels()
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,7 +45,7 @@ class NcdNonEligibleListFragment : Fragment() {
 
 
         lifecycleScope.launch {
-            viewModel.benList.collect{
+            viewModel.benList.collect {
                 if (it.isEmpty())
                     binding.flEmpty.visibility = View.VISIBLE
                 else
@@ -76,10 +75,14 @@ class NcdNonEligibleListFragment : Fragment() {
 
         }
     }
+
     override fun onStart() {
         super.onStart()
-        activity?.let{
-            (it as HomeActivity).updateActionBar(R.drawable.ic_ncd_noneligible, getString(R.string.ncd_non_eligible_list))
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic_ncd_noneligible,
+                getString(R.string.ncd_non_eligible_list)
+            )
         }
     }
 }

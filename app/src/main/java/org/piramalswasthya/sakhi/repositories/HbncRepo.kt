@@ -7,7 +7,6 @@ import org.json.JSONObject
 import org.piramalswasthya.sakhi.database.room.InAppDb
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.database.room.dao.BenDao
-import org.piramalswasthya.sakhi.database.room.dao.BenDao_Impl
 import org.piramalswasthya.sakhi.database.room.dao.HbncDao
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
 import org.piramalswasthya.sakhi.helpers.Konstants
@@ -40,7 +39,7 @@ class HbncRepo @Inject constructor(
         }
     }
 
-    suspend fun getHbncRecord(benId: Long, hhId: Long, day : Int): HBNCCache? {
+    suspend fun getHbncRecord(benId: Long, hhId: Long, day: Int): HBNCCache? {
         return withContext(Dispatchers.IO) {
             database.hbncDao.getHbnc(benId, hhId, day)
         }

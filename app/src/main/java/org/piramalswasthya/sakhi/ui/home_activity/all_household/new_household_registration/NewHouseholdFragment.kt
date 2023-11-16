@@ -247,7 +247,10 @@ class NewHouseholdFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__hh, getString(R.string.frag_nhhr_title))
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__hh,
+                getString(R.string.frag_nhhr_title)
+            )
         }
         viewModel.readRecord.observe(viewLifecycleOwner) {
             if (!it && !viewModel.getIsConsentAgreed()) consentAlert.show()

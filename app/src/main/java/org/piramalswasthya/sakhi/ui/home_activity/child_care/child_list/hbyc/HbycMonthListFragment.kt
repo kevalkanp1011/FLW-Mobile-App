@@ -1,10 +1,10 @@
 package org.piramalswasthya.sakhi.ui.home_activity.child_care.child_list.hbyc
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -14,16 +14,15 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.HbycMonthGridAdapter
 import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
-import org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list.hbnc_form.HbncDayListFragmentDirections
 
 @AndroidEntryPoint
 class HbycMonthListFragment : Fragment() {
 
-    private var _binding : RvIconGridBinding? = null
+    private var _binding: RvIconGridBinding? = null
 
     private val viewModel: HbycMonthListViewModel by viewModels()
 
-    private val binding : RvIconGridBinding
+    private val binding: RvIconGridBinding
         get() = _binding!!
 
     override fun onCreateView(
@@ -40,7 +39,10 @@ class HbycMonthListFragment : Fragment() {
     }
 
     private fun setUpHbycIconRvAdapter() {
-        val rvLayoutManager = GridLayoutManager(context, requireContext().resources.getInteger(R.integer.icon_grid_span))
+        val rvLayoutManager = GridLayoutManager(
+            context,
+            requireContext().resources.getInteger(R.integer.icon_grid_span)
+        )
         binding.rvIconGrid.layoutManager = rvLayoutManager
         val iconAdapter = HbycMonthGridAdapter(
             HbycMonthGridAdapter.HbycIconClickListener {
@@ -49,8 +51,8 @@ class HbycMonthListFragment : Fragment() {
 
         binding.rvIconGrid.adapter = iconAdapter
 
-        lifecycleScope.launch{
-            viewModel.dayList.collect{
+        lifecycleScope.launch {
+            viewModel.dayList.collect {
                 iconAdapter.submitList(it)
             }
         }

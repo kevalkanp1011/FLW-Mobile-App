@@ -36,7 +36,7 @@ class InfantRegViewModel @Inject constructor(
 ) : ViewModel() {
     val benId =
         InfantRegFragmentArgs.fromSavedStateHandle(savedStateHandle).benId
-    val babyIndex : Int =
+    val babyIndex: Int =
         InfantRegFragmentArgs.fromSavedStateHandle(savedStateHandle).babyIndex
 
     enum class State {
@@ -68,7 +68,7 @@ class InfantRegViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val asha  = preferenceDao.getLoggedInUser()!!
+            val asha = preferenceDao.getLoggedInUser()!!
             val ben = benRepo.getBenFromId(benId)?.also { ben ->
                 _benName.value =
                     "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
@@ -78,7 +78,7 @@ class InfantRegViewModel @Inject constructor(
                     syncState = SyncState.UNSYNCED,
                     createdBy = asha.userName,
                     updatedBy = asha.userName,
-                    babyIndex = babyIndex  ,
+                    babyIndex = babyIndex,
                     isActive = true
                 )
             }
@@ -90,7 +90,7 @@ class InfantRegViewModel @Inject constructor(
                 _recordExists.value = false
             }
 
-            deliveryOutcome =deliveryOutcomeRepo.getDeliveryOutcome(benId)!!
+            deliveryOutcome = deliveryOutcomeRepo.getDeliveryOutcome(benId)!!
             maternalHealthRepo.getSavedRegistrationRecord(benId)?.let {
                 pwrCache = it
             }

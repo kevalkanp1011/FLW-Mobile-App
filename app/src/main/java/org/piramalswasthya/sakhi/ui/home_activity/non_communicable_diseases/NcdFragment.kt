@@ -60,11 +60,14 @@ class NcdFragment : Fragment() {
         iconAdapter.submitList(iconDataset.getNCDDataset(resources))
     }
 
-override fun onStart() {
-    super.onStart()
-    activity?.let {
-        (it as HomeActivity).updateActionBar(R.drawable.ic__ncd, getString(R.string.icon_title_ncd))
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__ncd,
+                getString(R.string.icon_title_ncd)
+            )
+        }
     }
-}
 
 }

@@ -38,7 +38,10 @@ class VillageLevelFormsFragment : Fragment() {
     }
 
     private fun setUpVillageLevelFormsIconRvAdapter() {
-        val rvLayoutManager = GridLayoutManager(context, requireContext().resources.getInteger(R.integer.icon_grid_span))
+        val rvLayoutManager = GridLayoutManager(
+            context,
+            requireContext().resources.getInteger(R.integer.icon_grid_span)
+        )
         binding.rvIconGrid.layoutManager = rvLayoutManager
         binding.rvIconGrid.adapter = IconGridAdapter(
             //IconDataset.getVillageLevelFormsDataset(),
@@ -48,10 +51,14 @@ class VillageLevelFormsFragment : Fragment() {
             viewModel.scope
         )
     }
+
     override fun onStart() {
         super.onStart()
-        activity?.let{
-            (it as HomeActivity).updateActionBar(R.drawable.ic__village_level_form, getString(R.string.icon_title_vlf))
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__village_level_form,
+                getString(R.string.icon_title_vlf)
+            )
         }
     }
 }

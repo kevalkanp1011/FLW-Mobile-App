@@ -4,12 +4,15 @@ import org.piramalswasthya.sakhi.database.room.SyncState
 
 data class SyncStatusCache(
 
-   val id : Int, val name: String, val syncState: SyncState, val count: Int
+    val id: Int, val name: String, val syncState: SyncState, val count: Int
 
 )
 
 
-fun List<SyncStatusCache>.asDomainModel(localNames: Array<String>, englishNames: Array<String>): List<SyncStatusDomain> {
+fun List<SyncStatusCache>.asDomainModel(
+    localNames: Array<String>,
+    englishNames: Array<String>
+): List<SyncStatusDomain> {
     return groupBy { it.name }.map { mapEntry ->
         SyncStatusDomain(
             name = if (englishNames.contains(mapEntry.key)) localNames[englishNames.indexOf(mapEntry.key)] else mapEntry.key,

@@ -124,7 +124,8 @@ class RecordsRepo @Inject constructor(
         .map { list -> list.filterMdsr() }
 
     val childrenImmunizationDueListCount = vaccineDao.getChildrenImmunizationDueListCount()
-//    val childrenImmunizationList = benDao.getAllChildrenImmunizationList(selectedVillage)
+
+    //    val childrenImmunizationList = benDao.getAllChildrenImmunizationList(selectedVillage)
 //        .map { list -> list.map { it.asBasicDomainModel() } }
     val childrenImmunizationList = vaccineDao.getBenWithImmunizationRecords(
         minDob = Calendar.getInstance().apply {
@@ -133,7 +134,8 @@ class RecordsRepo @Inject constructor(
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
             add(Calendar.YEAR, -16)
-        }.timeInMillis, maxDob = System.currentTimeMillis())
+        }.timeInMillis, maxDob = System.currentTimeMillis()
+    )
     val childrenImmunizationListCount = childrenImmunizationList.map { it.size }
 
     val motherImmunizationList = benDao.getAllMotherImmunizationList(selectedVillage)

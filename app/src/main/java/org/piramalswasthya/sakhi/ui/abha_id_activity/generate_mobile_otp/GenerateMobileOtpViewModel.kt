@@ -1,13 +1,19 @@
 package org.piramalswasthya.sakhi.ui.abha_id_activity.generate_mobile_otp
 
-import androidx.lifecycle.*
-import com.google.gson.Gson
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.network.*
+import org.piramalswasthya.sakhi.network.AbhaCheckAndGenerateMobileOtpResponse
+import org.piramalswasthya.sakhi.network.AbhaGenerateMobileOtpRequest
+import org.piramalswasthya.sakhi.network.CreateAbhaIdRequest
+import org.piramalswasthya.sakhi.network.CreateAbhaIdResponse
+import org.piramalswasthya.sakhi.network.NetworkResult
 import org.piramalswasthya.sakhi.network.interceptors.TokenInsertAbhaInterceptor
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
-import org.piramalswasthya.sakhi.ui.abha_id_activity.verify_mobile_otp.VerifyMobileOtpViewModel
 import javax.inject.Inject
 
 @HiltViewModel
@@ -67,10 +73,12 @@ class GenerateMobileOtpViewModel @Inject constructor(
                     _apiResponse = result.data
                     _state.value = State.SUCCESS
                 }
+
                 is NetworkResult.Error -> {
                     _errorMessage.value = result.message
                     _state.value = State.ERROR_SERVER
                 }
+
                 is NetworkResult.NetworkError -> {
                     _state.value = State.ERROR_NETWORK
                 }
@@ -96,10 +104,12 @@ class GenerateMobileOtpViewModel @Inject constructor(
                     abha.value = result.data
                     _state.value = State.ABHA_GENERATED_SUCCESS
                 }
+
                 is NetworkResult.Error -> {
                     _errorMessage.value = result.message
                     _state.value = State.ERROR_SERVER
                 }
+
                 is NetworkResult.NetworkError -> {
                     _state.value = State.ERROR_NETWORK
                 }

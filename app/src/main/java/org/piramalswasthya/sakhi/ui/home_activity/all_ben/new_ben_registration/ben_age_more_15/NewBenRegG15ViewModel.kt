@@ -132,11 +132,11 @@ class NewBenRegG15ViewModel @Inject constructor(
     fun getIndexOfMotherName() = dataset.getIndexOfMotherName()
     fun getIndexOfSpouseName() = dataset.getIndexOfSpouseName()
     fun getIndexOfMaritalStatus() = dataset.getIndexOfMaritalStatus()
-    fun getIndexOfElement(id : Int)  = dataset.getIndexById(id)
+    fun getIndexOfElement(id: Int) = dataset.getIndexById(id)
 
-    fun updateValueByIdAndReturnListIndex ( id : Int, value : String?)  : Int{
+    fun updateValueByIdAndReturnListIndex(id: Int, value: String?): Int {
         dataset.setValueById(id, value)
-        return dataset.getIndexById(id )
+        return dataset.getIndexById(id)
     }
 
     fun saveForm() {
@@ -718,8 +718,6 @@ class NewBenRegG15ViewModel @Inject constructor(
 //    }
 
 
-
-
 //    fun persistFirstPage() {
 //        Timber.d("Persist first page called!")
 //        viewModelScope.launch {
@@ -742,8 +740,6 @@ class NewBenRegG15ViewModel @Inject constructor(
     fun resetErrorMessage() {
         _errorMessage.value = null
     }
-
-
 
 
 }

@@ -67,6 +67,7 @@ class HBNCFormDataset(
                         )
                     )
                 }
+
                 2 -> babyAlive.entries?.get(0)
                 else -> null
             }
@@ -131,11 +132,11 @@ class HBNCFormDataset(
     }
 
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
-        when(nthDay){
-            Konstants.hbncCardDay ->mapCardValues(cacheModel as HBNCCache)
-            Konstants.hbncPart1Day ->mapPartIValues(cacheModel as HBNCCache)
-            Konstants.hbncPart2Day ->mapPartIIValues(cacheModel as HBNCCache)
-            else->mapVisitValues(cacheModel as HBNCCache)
+        when (nthDay) {
+            Konstants.hbncCardDay -> mapCardValues(cacheModel as HBNCCache)
+            Konstants.hbncPart1Day -> mapPartIValues(cacheModel as HBNCCache)
+            Konstants.hbncPart2Day -> mapPartIIValues(cacheModel as HBNCCache)
+            else -> mapVisitValues(cacheModel as HBNCCache)
         }
     }
 
@@ -179,12 +180,14 @@ class HBNCFormDataset(
                     targetSideEffect = listOf(otherPlaceOfBabyDeath)
                 )
             }
+
             placeOfBabyDeath.id -> triggerDependants(
                 source = placeOfBabyDeath,
                 passedIndex = index,
                 triggerIndex = placeOfBabyDeath.entries!!.size - 1,
                 target = otherPlaceOfBabyDeath
             )
+
             motherAlive.id -> {
                 if (index == motherAlive.entries!!.size - 1) emitAlertErrorMessage(
                     R.string.hbnc_mother_dead_alert
@@ -201,31 +204,37 @@ class HBNCFormDataset(
                     targetSideEffect = listOf(otherPlaceOfMotherDeath)
                 )
             }
+
             placeOfMotherDeath.id -> triggerDependants(
                 source = placeOfMotherDeath,
                 passedIndex = index,
                 triggerIndex = placeOfMotherDeath.entries!!.size - 1,
                 target = otherPlaceOfMotherDeath
             )
+
             babyPreterm.id -> triggerDependants(
                 source = babyPreterm, passedIndex = index, triggerIndex = 0, target = gestationalAge
             )
+
             gestationalAge.id -> {
                 if (index == 0) emitAlertErrorMessage(R.string.hbnc_baby_gestational_age_alert)
                 -1
             }
+
             motherProblems.id -> {
                 emitAlertErrorMessage(
                     errorMessage = R.string.hbnc_mother_problem_alert
                 )
                 -1
             }
+
             babyFedAfterBirth.id -> triggerDependants(
                 source = babyFedAfterBirth,
                 passedIndex = index,
                 triggerIndex = babyFedAfterBirth.entries!!.size - 1,
                 target = otherBabyFedAfterBirth
             )
+
             motherHasBreastFeedProblem.id -> triggerDependants(
                 motherHasBreastFeedProblem, index, 0, motherBreastFeedProblem
             )
@@ -242,6 +251,7 @@ class HBNCFormDataset(
                 triggerIndex = 2,
                 target = otherUnusualWithBaby
             )
+
             else -> -1
         }
     }
@@ -254,24 +264,29 @@ class HBNCFormDataset(
                 }
                 -1
             }
+
             timesPadChanged.id -> {
                 timesPadChanged.value?.takeIf { it.isNotEmpty() }?.toInt()?.let {
                     if (it > 5) emitAlertErrorMessage(R.string.hbnc_mother_num_pad_alert)
                 }
                 -1
             }
+
             babyKeptWarmWinter.id -> {
                 if (index == 1) emitAlertErrorMessage(R.string.hbnc_baby_warm_winter_alert)
                 -1
             }
+
             babyBreastFedProperly.id -> {
                 if (index == 1) emitAlertErrorMessage(R.string.hbnc_baby_fed_properly_alert)
                 -1
             }
+
             babyCryContinuously.id -> {
                 if (index == 0) emitAlertErrorMessage(R.string.hbnc_baby_cry_incessant_alert)
                 -1
             }
+
             motherBodyTemperature.id -> {
                 motherBodyTemperature.value?.takeIf { it.isNotEmpty() }?.toInt()?.let {
                     if (it in 99..102) {
@@ -280,26 +295,32 @@ class HBNCFormDataset(
                 }
                 -1
             }
+
             motherWaterDischarge.id -> {
                 if (index == 0) emitAlertErrorMessage(R.string.hbnc_mother_foul_discharge_alert)
                 -1
             }
+
             motherSpeakAbnormalFits.id -> {
                 if (index == 0) emitAlertErrorMessage(R.string.hbnc_mother_speak_abnormal_fits_alert)
                 -1
             }
+
             motherNoOrLessMilk.id -> {
                 if (index == 0) emitAlertErrorMessage(R.string.hbnc_mother_less_no_milk_alert)
                 -1
             }
+
             motherBreastProblem.id -> {
                 if (index == 0) emitAlertErrorMessage(R.string.hbnc_mother_breast_problem_alert)
                 -1
             }
+
             babyEyesSwollen.id -> {
                 if (index == 0) emitAlertErrorMessage(R.string.hbnc_baby_eye_pus_alert)
                 -1
             }
+
             babyWeight.id -> {
                 babyWeight.value?.takeIf { it.isNotEmpty() }?.toDouble()?.let {
                     if (it <= 1.8) emitAlertErrorMessage(R.string.hbnc_baby_weight_1_8_alert)
@@ -307,6 +328,7 @@ class HBNCFormDataset(
                 }
                 -1
             }
+
             babyTemperature.id -> {
                 babyTemperature.value?.takeIf { it.isNotEmpty() }?.toInt()?.let {
                     if (it < 96) emitAlertErrorMessage(R.string.hbnc_baby_temp_96_alert)
@@ -315,6 +337,7 @@ class HBNCFormDataset(
                 }
                 -1
             }
+
             babyReferred.id -> triggerDependants(
                 source = babyReferred,
                 passedIndex = index,
@@ -322,12 +345,14 @@ class HBNCFormDataset(
                 target = listOf(dateOfBabyReferral, placeOfBabyReferral),
                 targetSideEffect = listOf(otherPlaceOfBabyReferral)
             )
+
             placeOfBabyReferral.id -> triggerDependants(
                 source = placeOfBabyReferral,
                 passedIndex = index,
                 triggerIndex = placeOfBabyReferral.entries!!.size - 1,
                 target = otherPlaceOfBabyReferral,
             )
+
             motherReferred.id -> triggerDependants(
                 source = motherReferred,
                 passedIndex = index,
@@ -335,12 +360,14 @@ class HBNCFormDataset(
                 target = listOf(dateOfMotherReferral, placeOfMotherReferral),
                 targetSideEffect = listOf(otherPlaceOfMotherReferral)
             )
+
             placeOfMotherReferral.id -> triggerDependants(
                 source = placeOfMotherReferral,
                 passedIndex = index,
                 triggerIndex = placeOfMotherReferral.entries!!.size - 1,
                 target = otherPlaceOfMotherReferral,
             )
+
             else -> -1
         }
     }
@@ -473,15 +500,28 @@ class HBNCFormDataset(
 
 
     private val healthSubCenterName = FormElement(
-        id = 2, inputType = InputType.EDIT_TEXT, title = "Health Subcenter Name ", arrayId = -1,
+        id = 2,
+        inputType = InputType.EDIT_TEXT,
+        title = "Health Subcenter Name ",
+        arrayId = -1,
 //        etMaxLength = 6,
-        required = false, allCaps = true, etInputType = TYPE_CLASS_TEXT or TYPE_TEXT_FLAG_CAP_CHARACTERS
+        required = false,
+        allCaps = true,
+        etInputType = TYPE_CLASS_TEXT or TYPE_TEXT_FLAG_CAP_CHARACTERS
     )
     private val motherName = FormElement(
-        id = 4, inputType = InputType.TEXT_VIEW, title = "Mother Name", arrayId = -1, required = false
+        id = 4,
+        inputType = InputType.TEXT_VIEW,
+        title = "Mother Name",
+        arrayId = -1,
+        required = false
     )
     private val fatherName = FormElement(
-        id = 5, inputType = InputType.TEXT_VIEW, title = "Father Name", arrayId = -1, required = false
+        id = 5,
+        inputType = InputType.TEXT_VIEW,
+        title = "Father Name",
+        arrayId = -1,
+        required = false
     )
 
     private val dateOfDelivery = FormElement(
@@ -495,12 +535,17 @@ class HBNCFormDataset(
     )
 
     private val placeOfDelivery = FormElement(
-        id = 7, inputType = InputType.DROPDOWN, title = "Place of Delivery", arrayId = -1, entries = arrayOf(
+        id = 7,
+        inputType = InputType.DROPDOWN,
+        title = "Place of Delivery",
+        arrayId = -1,
+        entries = arrayOf(
             "House",
             "Health center",
             "CHC",
             "PHC",
-        ), required = false
+        ),
+        required = false
     )
     private val gender = FormElement(
         id = 8, inputType = InputType.RADIO, title = "Baby Gender", arrayId = -1, entries = arrayOf(
@@ -511,9 +556,14 @@ class HBNCFormDataset(
     )
 
     private val typeOfDelivery = FormElement(
-        id = 9, inputType = InputType.RADIO, title = "Type of Delivery", arrayId = -1, entries = arrayOf(
+        id = 9,
+        inputType = InputType.RADIO,
+        title = "Type of Delivery",
+        arrayId = -1,
+        entries = arrayOf(
             "Normal Delivery", "C - Section", "Assisted"
-        ), required = false
+        ),
+        required = false
     )
     private val startedBreastFeeding = FormElement(
         id = 10,
@@ -552,10 +602,15 @@ class HBNCFormDataset(
         min = 0
     )
     private val registrationOfBirth = FormElement(
-        id = 15, inputType = InputType.RADIO, title = "Registration Of Birth", arrayId = -1, entries = arrayOf(
+        id = 15,
+        inputType = InputType.RADIO,
+        title = "Registration Of Birth",
+        arrayId = -1,
+        entries = arrayOf(
             "Yes",
             "No",
-        ), required = false
+        ),
+        required = false
     )
 
     private val childImmunizationStatus = FormElement(
@@ -600,9 +655,14 @@ class HBNCFormDataset(
         required = false
     )
     private val babyEyeCondition = FormElement(
-        id = 32, inputType = InputType.RADIO, title = "Baby eye condition", arrayId = -1, entries = arrayOf(
+        id = 32,
+        inputType = InputType.RADIO,
+        title = "Baby eye condition",
+        arrayId = -1,
+        entries = arrayOf(
             "Normal ", "Swelling", "oozing pus"
-        ), required = false
+        ),
+        required = false
     )
     private val babyBleedUmbilicalCord = FormElement(
         id = 33,
@@ -852,22 +912,43 @@ class HBNCFormDataset(
 
 
     private val pusNavel = FormElement(
-        id = 77, inputType = InputType.EDIT_TEXT, title = "Pus in the navel", arrayId = -1, required = false
+        id = 77,
+        inputType = InputType.EDIT_TEXT,
+        title = "Pus in the navel",
+        arrayId = -1,
+        required = false
     )
     private val ashaName = FormElement(
-        id = 78, inputType = InputType.TEXT_VIEW, title = "ASHA NAME", arrayId = -1, required = false
+        id = 78,
+        inputType = InputType.TEXT_VIEW,
+        title = "ASHA NAME",
+        arrayId = -1,
+        required = false
     )
     private val villageName = FormElement(
-        id = 79, inputType = InputType.TEXT_VIEW, title = "Village Name", arrayId = -1, required = false
+        id = 79,
+        inputType = InputType.TEXT_VIEW,
+        title = "Village Name",
+        arrayId = -1,
+        required = false
     )
     private val blockName = FormElement(
-        id = 80, inputType = InputType.TEXT_VIEW, title = "Block Name", arrayId = -1, required = false
+        id = 80,
+        inputType = InputType.TEXT_VIEW,
+        title = "Block Name",
+        arrayId = -1,
+        required = false
     )
     private val stillBirth = FormElement(
-        id = 81, inputType = InputType.RADIO, title = "Still Birth", arrayId = -1, entries = arrayOf(
+        id = 81,
+        inputType = InputType.RADIO,
+        title = "Still Birth",
+        arrayId = -1,
+        entries = arrayOf(
             "Yes",
             "No",
-        ), required = false
+        ),
+        required = false
     )
     private val supRemark = FormElement(
         id = 82,
@@ -879,11 +960,16 @@ class HBNCFormDataset(
         multiLine = true
     )
     private val sup = FormElement(
-        id = 83, inputType = InputType.DROPDOWN, title = "Supervisor", arrayId = -1, entries = arrayOf(
+        id = 83,
+        inputType = InputType.DROPDOWN,
+        title = "Supervisor",
+        arrayId = -1,
+        entries = arrayOf(
             "ASHA Facilitator",
             "ANM",
             "MPW",
-        ), required = false
+        ),
+        required = false
     )
     private val supName = FormElement(
         id = 84,
@@ -927,10 +1013,16 @@ class HBNCFormDataset(
         required = false
     )
     private val babyAlive = FormElement(
-        id = 90, inputType = InputType.RADIO, title = "Is the baby alive?", arrayId = -1, entries = arrayOf(
+        id = 90,
+        inputType = InputType.RADIO,
+        title = "Is the baby alive?",
+        arrayId = -1,
+        entries = arrayOf(
             "Yes",
             "No",
-        ), required = false, hasDependants = true
+        ),
+        required = false,
+        hasDependants = true
     )
     private val dateOfBabyDeath = FormElement(
         id = 91,
@@ -1016,10 +1108,16 @@ class HBNCFormDataset(
 
 
     private val motherAlive = FormElement(
-        id = 99, inputType = InputType.RADIO, title = "Is the mother alive?", arrayId = -1, entries = arrayOf(
+        id = 99,
+        inputType = InputType.RADIO,
+        title = "Is the mother alive?",
+        arrayId = -1,
+        entries = arrayOf(
             "Yes",
             "No",
-        ), required = false, hasDependants = true
+        ),
+        required = false,
+        hasDependants = true
     )
     private val dateOfMotherDeath = FormElement(
         id = 100,
@@ -1153,16 +1251,26 @@ class HBNCFormDataset(
         required = false
     )
     private val babyDry = FormElement(
-        id = 114, inputType = InputType.RADIO, title = "Dry the baby", arrayId = -1, entries = arrayOf(
+        id = 114,
+        inputType = InputType.RADIO,
+        title = "Dry the baby",
+        arrayId = -1,
+        entries = arrayOf(
             "Yes",
             "No",
-        ), required = false
+        ),
+        required = false
     )
     private val cryWeakStopped = FormElement(
-        id = 115, inputType = InputType.RADIO, title = "Cry weak/ stopped", arrayId = -1, entries = arrayOf(
+        id = 115,
+        inputType = InputType.RADIO,
+        title = "Cry weak/ stopped",
+        arrayId = -1,
+        entries = arrayOf(
             "Yes",
             "No",
-        ), required = false
+        ),
+        required = false
     )
     private val cordCleanDry = FormElement(
         id = 116,

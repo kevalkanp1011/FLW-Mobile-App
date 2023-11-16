@@ -129,7 +129,11 @@ class TBRepo @Inject constructor(
         requestDTO?.tbScreeningList?.forEach { tbScreeningDTO ->
             tbScreeningDTO.visitDate?.let {
                 var tbScreeningCache: TBScreeningCache? =
-                    tbDao.getTbScreening(tbScreeningDTO.benId, getLongFromDate(tbScreeningDTO.visitDate), getLongFromDate(tbScreeningDTO.visitDate) - 19_800_000)
+                    tbDao.getTbScreening(
+                        tbScreeningDTO.benId,
+                        getLongFromDate(tbScreeningDTO.visitDate),
+                        getLongFromDate(tbScreeningDTO.visitDate) - 19_800_000
+                    )
                 if (tbScreeningCache == null) {
                     benDao.getBen(tbScreeningDTO.benId)?.let {
                         tbDao.saveTbScreening(tbScreeningDTO.toCache())
@@ -385,12 +389,14 @@ class TBRepo @Inject constructor(
             tbDao.saveTbScreening(it)
         }
     }
+
     private suspend fun updateSyncStatusSuspected(tbspList: List<TBSuspectedCache>) {
         tbspList.forEach {
             it.syncState = SyncState.SYNCED
             tbDao.saveTbSuspected(it)
         }
     }
+
     companion object {
         private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
         private val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)

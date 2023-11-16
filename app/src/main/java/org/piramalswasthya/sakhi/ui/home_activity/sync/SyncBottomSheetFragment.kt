@@ -32,22 +32,20 @@ class SyncBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter =  SyncStatusAdapter()
+        val adapter = SyncStatusAdapter()
         val divider = DividerItemDecoration(context, LinearLayout.VERTICAL)
         binding.rvSync.adapter = adapter
         binding.rvSync.addItemDecoration(divider)
 
         val localNames = viewModel.getLocalNames(requireContext())
         val englishNames = viewModel.getEnglishNames(requireContext())
-        lifecycleScope.launch{
-            viewModel.syncStatus.collect{
+        lifecycleScope.launch {
+            viewModel.syncStatus.collect {
                 binding.nsv.layoutParams.height = if (it.size * 150 < 800) it.size * 150 else 800
                 adapter.submitList(it.asDomainModel(localNames, englishNames))
             }
         }
     }
-
-
 
 
     override fun onDestroy() {

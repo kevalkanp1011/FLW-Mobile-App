@@ -93,7 +93,7 @@ class EcrRepo @Inject constructor(
                     it.syncState = SyncState.UNSYNCED
                 }
                 database.ecrDao.update(it)
-                if(!uploadDone)
+                if (!uploadDone)
                     return@withContext false
             }
 
@@ -181,7 +181,7 @@ class EcrRepo @Inject constructor(
                     it.syncState = SyncState.UNSYNCED
                 }
                 database.ecrDao.updateEligibleCoupleTracking(it)
-                if(!uploadDone)
+                if (!uploadDone)
                     return@withContext false
             }
 
@@ -428,8 +428,9 @@ class EcrRepo @Inject constructor(
                 val ecr = EligibleCoupleRegCache(
                     benId = ecrJson.getLong("benId"),
                     dateOfReg = if (ecrJson.has("registrationDate"))
-                        getLongFromDate(ecrJson.getString("registrationDate")
-                    ) else getLongFromDate(
+                        getLongFromDate(
+                            ecrJson.getString("registrationDate")
+                        ) else getLongFromDate(
                         ecrJson.getString("createdDate")
                     ),
                     bankAccount = if (ecrJson.has("bankAccountNumber")) ecrJson.getLong("bankAccountNumber") else null,
@@ -606,7 +607,7 @@ class EcrRepo @Inject constructor(
     }
 
     suspend fun getLatestEctByBenId(benId: Long): EligibleCoupleTrackingCache? {
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             database.ecrDao.getLatestEct(benId)
         }
     }

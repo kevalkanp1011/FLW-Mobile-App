@@ -67,11 +67,6 @@ class MotherImmunizationVaccineBottomSheetFragment : BottomSheetDialogFragment()
         (_binding?.rvImmCat?.adapter as ImmunizationCategoryAdapter?)?.submitList(list)
     }
 
-    override fun dismiss() {
-//        submitListToAncRv(emptyList())
-        super.dismiss()
-    }
-
     fun setContentFlow(bottomSheetContent: Flow<ImmunizationDetailsDomain?>) {
         lifecycleScope.launchWhenResumed {
             findNavController().currentBackStackEntry

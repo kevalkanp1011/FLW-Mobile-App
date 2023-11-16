@@ -237,22 +237,25 @@ class HRPPregnantAssessDataset(
     override suspend fun handleListOnValueChanged(formId: Int, index: Int): Int {
         return when (formId) {
             noOfDeliveries.id, timeLessThan18m.id -> {
-                childInfoLabel.showHighRisk = noOfDeliveries.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
-                        timeLessThan18m.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+                childInfoLabel.showHighRisk =
+                    noOfDeliveries.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            timeLessThan18m.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
                 -1
             }
 
             heightShort.id, age.id -> {
-                physicalObservationLabel.showHighRisk = heightShort.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
-                        age.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+                physicalObservationLabel.showHighRisk =
+                    heightShort.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            age.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
                 -1
             }
 
             rhNegative.id, homeDelivery.id, badObstetric.id, multiplePregnancy.id -> {
-                obstetricHistoryLabel.showHighRisk = rhNegative.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
-                        homeDelivery.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
-                        badObstetric.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
-                        multiplePregnancy.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
+                obstetricHistoryLabel.showHighRisk =
+                    rhNegative.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            homeDelivery.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            badObstetric.value.contentEquals(resources.getStringArray(R.array.yes_no)[0]) ||
+                            multiplePregnancy.value.contentEquals(resources.getStringArray(R.array.yes_no)[0])
                 -1
             }
 
@@ -262,6 +265,7 @@ class HRPPregnantAssessDataset(
                 validateEmptyOnEditText(edd)
                 -1
             }
+
             else -> -1
         }
     }

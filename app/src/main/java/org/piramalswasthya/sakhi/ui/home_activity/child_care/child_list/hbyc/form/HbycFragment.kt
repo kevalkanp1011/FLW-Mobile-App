@@ -20,8 +20,8 @@ import timber.log.Timber
 @AndroidEntryPoint
 class HbycFragment : Fragment() {
 
-    private var _binding : FragmentHbycBinding? = null
-    private val binding : FragmentHbycBinding
+    private var _binding: FragmentHbycBinding? = null
+    private val binding: FragmentHbycBinding
         get() = _binding!!
 
     private val viewModel: HbycViewModel by viewModels()
@@ -45,7 +45,7 @@ class HbycFragment : Fragment() {
         binding.btnHbycSubmit.setOnClickListener {
             if (validate()) viewModel.submitForm()
         }
-        viewModel.exists.observe(viewLifecycleOwner) {exists ->
+        viewModel.exists.observe(viewLifecycleOwner) { exists ->
             val adapter = FormInputAdapter(
                 formValueListener = FormInputAdapter.FormValueListener { formId, index ->
                     viewModel.updateListOnValueChanged(formId, index)
@@ -71,10 +71,12 @@ class HbycFragment : Fragment() {
                     binding.cvPatientInformation.visibility = View.GONE
                     binding.pbHbyc.visibility = View.VISIBLE
                 }
+
                 HbycViewModel.State.SUCCESS -> {
                     findNavController().navigateUp()
                     WorkerUtils.triggerD2dSyncWorker(requireContext())
                 }
+
                 HbycViewModel.State.FAIL -> {
                     binding.hbycForm.rvInputForm.visibility = View.VISIBLE
                     binding.btnHbycSubmit.visibility = View.VISIBLE
@@ -86,6 +88,7 @@ class HbycFragment : Fragment() {
                         Toast.LENGTH_LONG
                     ).show()
                 }
+
                 else -> {
                     binding.hbycForm.rvInputForm.visibility = View.VISIBLE
                     binding.btnHbycSubmit.visibility = View.VISIBLE
@@ -120,6 +123,7 @@ class HbycFragment : Fragment() {
             }
         }
     }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

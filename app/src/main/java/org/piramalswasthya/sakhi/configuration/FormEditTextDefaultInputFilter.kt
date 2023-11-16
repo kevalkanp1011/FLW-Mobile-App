@@ -4,7 +4,7 @@ import android.text.InputFilter
 import android.text.Spanned
 import java.util.regex.Pattern
 
-object FormEditTextDefaultInputFilter  : InputFilter{
+object FormEditTextDefaultInputFilter : InputFilter {
 
     private val pattern = Pattern.compile("[A-Z ]+")
 
@@ -17,7 +17,7 @@ object FormEditTextDefaultInputFilter  : InputFilter{
         dend: Int
     ): CharSequence? {
 
-        return if(source.matches(pattern.toRegex())) null else ""
+        return if (source.matches(pattern.toRegex())) null else ""
 //        if (source == "") {
 //            return source;
 //        }

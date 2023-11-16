@@ -11,14 +11,18 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.piramalswasthya.sakhi.adapters.BenListAdapter
 import org.piramalswasthya.sakhi.adapters.GetBenPageNumberAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentGetBenBinding
-import org.piramalswasthya.sakhi.ui.home_activity.get_ben_data.GetBenViewModel.State.*
+import org.piramalswasthya.sakhi.ui.home_activity.get_ben_data.GetBenViewModel.State.ERROR_NETWORK
+import org.piramalswasthya.sakhi.ui.home_activity.get_ben_data.GetBenViewModel.State.ERROR_SERVER
+import org.piramalswasthya.sakhi.ui.home_activity.get_ben_data.GetBenViewModel.State.IDLE
+import org.piramalswasthya.sakhi.ui.home_activity.get_ben_data.GetBenViewModel.State.LOADING
+import org.piramalswasthya.sakhi.ui.home_activity.get_ben_data.GetBenViewModel.State.SUCCESS
 import timber.log.Timber
 
 @AndroidEntryPoint
 class GetBenFragment : Fragment() {
 
-    private var _binding : FragmentGetBenBinding? = null
-    private val binding : FragmentGetBenBinding
+    private var _binding: FragmentGetBenBinding? = null
+    private val binding: FragmentGetBenBinding
         get() = _binding!!
 
 
@@ -37,7 +41,7 @@ class GetBenFragment : Fragment() {
         val benAdapter = BenListAdapter()
         binding.rvBenServer.adapter = benAdapter
 
-        viewModel.state.observe(viewLifecycleOwner){
+        viewModel.state.observe(viewLifecycleOwner) {
             it?.let {
                 when (it) {
                     IDLE -> {} //TODO()
@@ -46,11 +50,13 @@ class GetBenFragment : Fragment() {
                         binding.clContent.visibility = View.GONE
                         binding.flLoading.visibility = View.VISIBLE
                     }
+
                     ERROR_SERVER -> {
                         binding.clError.visibility = View.VISIBLE
                         binding.clContent.visibility = View.GONE
                         binding.flLoading.visibility = View.GONE
                     }
+
                     ERROR_NETWORK -> {} //TODO()
                     SUCCESS -> {
                         setUpPagesAdapter()

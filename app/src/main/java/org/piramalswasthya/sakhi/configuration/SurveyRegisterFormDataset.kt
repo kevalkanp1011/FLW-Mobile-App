@@ -5,7 +5,10 @@ import org.piramalswasthya.sakhi.model.FormInputOld
 import org.piramalswasthya.sakhi.model.InputType
 import org.piramalswasthya.sakhi.model.SurveyRegisterCache
 
-class SurveyRegisterFormDataset(context: Context, private val surveyRegister: SurveyRegisterCache? = null) {
+class SurveyRegisterFormDataset(
+    context: Context,
+    private val surveyRegister: SurveyRegisterCache? = null
+) {
 
     private val facilitatorSupervisor = FormInputOld(
         inputType = InputType.EDIT_TEXT,

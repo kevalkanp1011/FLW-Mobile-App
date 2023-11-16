@@ -12,19 +12,19 @@ import org.piramalswasthya.sakhi.model.TBSuspectedCache
 interface TBDao {
 
     @Query("SELECT * FROM TB_SCREENING WHERE benId =:benId limit 1")
-    suspend fun getTbScreening(benId: Long) : TBScreeningCache?
+    suspend fun getTbScreening(benId: Long): TBScreeningCache?
 
     @Query("SELECT * FROM TB_SCREENING WHERE benId =:benId and (visitDate = :visitDate or visitDate = :visitDateGMT) limit 1")
-    suspend fun getTbScreening(benId: Long, visitDate: Long, visitDateGMT: Long) : TBScreeningCache?
+    suspend fun getTbScreening(benId: Long, visitDate: Long, visitDateGMT: Long): TBScreeningCache?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveTbScreening(tbScreeningCache: TBScreeningCache)
 
     @Query("SELECT * FROM TB_SUSPECTED WHERE benId =:benId limit 1")
-    suspend fun getTbSuspected(benId: Long) : TBSuspectedCache?
+    suspend fun getTbSuspected(benId: Long): TBSuspectedCache?
 
     @Query("SELECT * FROM TB_SUSPECTED WHERE benId =:benId and (visitDate = :visitDate or visitDate = :visitDateGMT) limit 1")
-    suspend fun getTbSuspected(benId: Long, visitDate: Long, visitDateGMT: Long) : TBSuspectedCache?
+    suspend fun getTbSuspected(benId: Long, visitDate: Long, visitDateGMT: Long): TBSuspectedCache?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveTbSuspected(tbSuspectedCache: TBSuspectedCache)

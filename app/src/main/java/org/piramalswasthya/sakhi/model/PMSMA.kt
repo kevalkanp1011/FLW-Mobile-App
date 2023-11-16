@@ -16,22 +16,23 @@ import java.util.Locale
     tableName = "PMSMA",
     foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
-        parentColumns = arrayOf("beneficiaryId",/* "householdId"*/),
-        childColumns = arrayOf("benId", /*"hhId"*/),
+        parentColumns = arrayOf("beneficiaryId"/* "householdId"*/),
+        childColumns = arrayOf("benId" /*"hhId"*/),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "ind_pmsma", value = ["benId",/* "hhId"*/])])
+    indices = [Index(name = "ind_pmsma", value = ["benId"/* "hhId"*/])]
+)
 
 data class PMSMACache(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val benId: Long,
 //    val hhId: Long,
-    var isActive : Boolean,
+    var isActive: Boolean,
     var mctsNumberOrRchNumber: String? = null,
     var haveMCPCard: Boolean = false,
-    var givenMCPCard : Boolean? = null,
+    var givenMCPCard: Boolean? = null,
     var husbandName: String? = null,
     var address: String? = null,
     var mobileNumber: Long? = null,
@@ -69,7 +70,7 @@ data class PMSMACache(
     var updatedBy: String,
     var updatedDate: Long = System.currentTimeMillis(),
     var syncState: SyncState
-) : FormDataModel{
+) : FormDataModel {
 
 
     private fun getDateStringFromLong(dateLong: Long?): String? {
@@ -126,7 +127,7 @@ data class PMSMACache(
             createdDate = getDateStringFromLong(createdDate),
             updatedDate = getDateStringFromLong(updatedDate),
             updatedBy = updatedBy
-            )
+        )
     }
 }
 
@@ -135,10 +136,10 @@ data class PmsmaPost(
 
     val id: Long = 0,
     val benId: Long = 0,
-    val isActive : Boolean,
+    val isActive: Boolean,
     val rchNumber: String? = null,
-    val haveMCPCard:Boolean = false,
-    val givenMCPCard:Boolean? = null,
+    val haveMCPCard: Boolean = false,
+    val givenMCPCard: Boolean? = null,
     val husbandName: String? = null,
     val address: String? = null,
     val mobileNumber: Long? = null,
@@ -148,34 +149,34 @@ data class PmsmaPost(
     val diastolicBloodPressure: Int? = null,
     val abdominalCheckUp: String? = null,
     val fetalHRPM: Int = 0,
-    val twinPregnancy:Boolean = false,
+    val twinPregnancy: Boolean = false,
     val urineAlbumin: String? = null,
     val haemoglobinAndBloodGroup: String? = null,
     val hiv: String? = null,
     val vdrl: String? = null,
     val hbsc: String? = null,
     val malaria: String? = null,
-    val hivTestDuringANC:Boolean? = null,
-    val swollenCondition:Boolean? = null,
-    val bloodSugarTest:Boolean? = null,
-    val ultraSound:Boolean? = null,
-    val ironFolicAcid:Boolean? = null,
-    val calciumSupplementation:Boolean? = null,
+    val hivTestDuringANC: Boolean? = null,
+    val swollenCondition: Boolean? = null,
+    val bloodSugarTest: Boolean? = null,
+    val ultraSound: Boolean? = null,
+    val ironFolicAcid: Boolean? = null,
+    val calciumSupplementation: Boolean? = null,
     val tetanusToxoid: String? = null,
     val lastMenstrualPeriod: String? = null,
     val expectedDateOfDelivery: String? = null,
-    val highriskSymbols:Boolean? = null,
+    val highriskSymbols: Boolean? = null,
     val highRiskReason: String? = null,
-    val highRiskPregnant:Boolean? = null,
-    val highRiskPregnancyReferred:Boolean? = null,
-    val birthPrepNutriAndFamilyPlanning:Boolean? = null,
+    val highRiskPregnant: Boolean? = null,
+    val highRiskPregnancyReferred: Boolean? = null,
+    val birthPrepNutriAndFamilyPlanning: Boolean? = null,
     val medicalOfficerSign: String? = null,
     val createdBy: String,
     val createdDate: String? = null,
     val updatedDate: String? = null,
     val updatedBy: String
 ) {
-    fun toPmsmaCache (): PMSMACache {
+    fun toPmsmaCache(): PMSMACache {
         return PMSMACache(
             id = id,
             benId = benId,

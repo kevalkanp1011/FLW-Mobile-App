@@ -79,7 +79,7 @@ data class BenWithHRNPACache(
     val assess: HRPNonPregnantAssessCache?,
 
     ) {
-    fun asDomainModel() : BenWithHRNPADomain{
+    fun asDomainModel(): BenWithHRNPADomain {
         return BenWithHRNPADomain(
             ben = ben.asBasicDomainModel(),
             assess = assess

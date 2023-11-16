@@ -23,8 +23,8 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    private val _devModeState : MutableLiveData<Boolean> = MutableLiveData(pref.isDevModeEnabled)
-    val devModeEnabled : LiveData<Boolean>
+    private val _devModeState: MutableLiveData<Boolean> = MutableLiveData(pref.isDevModeEnabled)
+    val devModeEnabled: LiveData<Boolean>
         get() = _devModeState
 
 
@@ -32,7 +32,7 @@ class HomeViewModel @Inject constructor(
 
     val numBenIdsAvail = database.benIdGenDao.liveCount()
 
-    var profilePicUri : Uri?
+    var profilePicUri: Uri?
         get() = pref.getProfilePicUri()
         set(value) = pref.saveProfilePicUri(value)
 
@@ -55,11 +55,13 @@ class HomeViewModel @Inject constructor(
 //            _user = pref.getLoggedInUser()!!
             launch {
                 userRepo.unProcessedRecordCount.collect { value ->
-                    _unprocessedRecords = value.filter { it.syncState != SyncState.SYNCED }.sumOf { it.count }
+                    _unprocessedRecords =
+                        value.filter { it.syncState != SyncState.SYNCED }.sumOf { it.count }
                 }
             }
         }
     }
+
     fun logout() {
         viewModelScope.launch {
 //            withContext(Dispatchers.IO){
@@ -77,11 +79,11 @@ class HomeViewModel @Inject constructor(
     }
 
 
-    fun setDevMode(boolean :Boolean){
+    fun setDevMode(boolean: Boolean) {
         pref.isDevModeEnabled = boolean
         _devModeState.value = boolean
     }
 
-    fun getDebMode () = pref.isDevModeEnabled
+    fun getDebMode() = pref.isDevModeEnabled
 
 }

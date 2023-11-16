@@ -53,7 +53,8 @@ class NcdCbacBenListAdapter(
                     binding.spouse = false
                 } else if (item.ben.gender == "FEMALE") {
                     if (item.ben.ageInt > 15) {
-                        binding.father = item.ben.fatherName != "Not Available"  && item.ben.spouseName == "Not Available"
+                        binding.father =
+                            item.ben.fatherName != "Not Available" && item.ben.spouseName == "Not Available"
                         binding.husband = item.ben.spouseName != "Not Available"
                         binding.spouse = false
                     } else {
@@ -62,7 +63,8 @@ class NcdCbacBenListAdapter(
                         binding.spouse = false
                     }
                 } else {
-                    binding.father = item.ben.fatherName != "Not Available"  && item.ben.spouseName == "Not Available"
+                    binding.father =
+                        item.ben.fatherName != "Not Available" && item.ben.spouseName == "Not Available"
                     binding.spouse = item.ben.spouseName != "Not Available"
                     binding.husband = false
                 }
@@ -95,10 +97,10 @@ class NcdCbacBenListAdapter(
 
             clickedNew(
                 item.ben.benId,
-                if(item.savedCbacRecords.isEmpty()) null else {
+                if (item.savedCbacRecords.isEmpty()) null else {
                     val lastFillDate = item.savedCbacRecords.maxBy { it.fillDate }.fillDate
                     val nextAvailFilDate = lastFillDate + Konstants.minMillisBwtweenCbacFiling
-                    if(System.currentTimeMillis() > nextAvailFilDate)
+                    if (System.currentTimeMillis() > nextAvailFilDate)
                         null
                     else
                         nextAvailFilDate

@@ -5,7 +5,11 @@ import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
-import org.piramalswasthya.sakhi.model.*
+import org.piramalswasthya.sakhi.model.BenRegCache
+import org.piramalswasthya.sakhi.model.FormElement
+import org.piramalswasthya.sakhi.model.HRPNonPregnantTrackCache
+import org.piramalswasthya.sakhi.model.HRPPregnantAssessCache
+import org.piramalswasthya.sakhi.model.InputType
 import timber.log.Timber
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
@@ -126,7 +130,12 @@ class HRPNonPregnantTrackDataset(
         required = false
     )
     private var lmpMinVar: Long? = null
-    suspend fun setUpPage(ben: BenRegCache?, saved: HRPNonPregnantTrackCache?, lmpMin: Long?, dateOfVisitMin: Long?) {
+    suspend fun setUpPage(
+        ben: BenRegCache?,
+        saved: HRPNonPregnantTrackCache?,
+        lmpMin: Long?,
+        dateOfVisitMin: Long?
+    ) {
         val list = mutableListOf(
             followUpLabel,
             dateOfVisit,
@@ -145,22 +154,30 @@ class HRPNonPregnantTrackDataset(
 
         saved?.let {
             dateOfVisit.value = it.visitDate?.let { it1 -> getDateFromLong(it1) }
-            anemia.value = getLocalValueInArray(R.array.yes_no,it.anemia)
-            hypertension.value = getLocalValueInArray(R.array.yes_no,it.hypertension)
-            diabetes.value = getLocalValueInArray(R.array.yes_no,it.diabetes)
-            severeAnemia.value = getLocalValueInArray(R.array.yes_no,it.severeAnemia)
-            fp.value = getLocalValueInArray(R.array.yes_no,it.fp)
+            anemia.value = getLocalValueInArray(R.array.yes_no, it.anemia)
+            hypertension.value = getLocalValueInArray(R.array.yes_no, it.hypertension)
+            diabetes.value = getLocalValueInArray(R.array.yes_no, it.diabetes)
+            severeAnemia.value = getLocalValueInArray(R.array.yes_no, it.severeAnemia)
+            fp.value = getLocalValueInArray(R.array.yes_no, it.fp)
             lmp.value = it.lmp?.let { it2 -> getDateFromLong(it2) }
-            missedPeriod.value = getLocalValueInArray(R.array.yes_no,it.missedPeriod)
-            isPregnant.value = getLocalValueInArray(R.array.yes_no,it.isPregnant)
+            missedPeriod.value = getLocalValueInArray(R.array.yes_no, it.missedPeriod)
+            isPregnant.value = getLocalValueInArray(R.array.yes_no, it.isPregnant)
 
             anemia.showHighRisk = anemia.value == resources.getStringArray(R.array.yes_no)[0]
 
-            ancLabel.showHighRisk = (hypertension.value == resources.getStringArray(R.array.yes_no)[0]
-                    || diabetes.value == resources.getStringArray(R.array.yes_no)[0] || severeAnemia.value == resources.getStringArray(R.array.yes_no)[0])
+            ancLabel.showHighRisk =
+                (hypertension.value == resources.getStringArray(R.array.yes_no)[0]
+                        || diabetes.value == resources.getStringArray(R.array.yes_no)[0] || severeAnemia.value == resources.getStringArray(
+                    R.array.yes_no
+                )[0])
 
-            riskStatus.showHighRisk = (anemia.value == resources.getStringArray(R.array.yes_no)[0] || hypertension.value == resources.getStringArray(R.array.yes_no)[0]
-                    || diabetes.value == resources.getStringArray(R.array.yes_no)[0] || severeAnemia.value == resources.getStringArray(R.array.yes_no)[0])
+            riskStatus.showHighRisk =
+                (anemia.value == resources.getStringArray(R.array.yes_no)[0] || hypertension.value == resources.getStringArray(
+                    R.array.yes_no
+                )[0]
+                        || diabetes.value == resources.getStringArray(R.array.yes_no)[0] || severeAnemia.value == resources.getStringArray(
+                    R.array.yes_no
+                )[0])
         }
 
         lmp.min = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(40)
@@ -181,8 +198,11 @@ class HRPNonPregnantTrackDataset(
                 calMaxVisit.timeInMillis = dov
                 calMaxVisit.setToStartOfTheDay()
 
-                if((calMaxVisit.timeInMillis - calReg.timeInMillis) >= 0) {
-                    dateOfVisit.min = minOf( calMaxVisit.timeInMillis + TimeUnit.DAYS.toMillis(1), System.currentTimeMillis())
+                if ((calMaxVisit.timeInMillis - calReg.timeInMillis) >= 0) {
+                    dateOfVisit.min = minOf(
+                        calMaxVisit.timeInMillis + TimeUnit.DAYS.toMillis(1),
+                        System.currentTimeMillis()
+                    )
                 }
             }
             dateOfVisit.max = System.currentTimeMillis()
@@ -195,16 +215,29 @@ class HRPNonPregnantTrackDataset(
         return when (formId) {
             anemia.id -> {
                 anemia.showHighRisk = anemia.value == resources.getStringArray(R.array.yes_no)[0]
-                riskStatus.showHighRisk = (anemia.value == resources.getStringArray(R.array.yes_no)[0] || hypertension.value == resources.getStringArray(R.array.yes_no)[0]
-                        || diabetes.value == resources.getStringArray(R.array.yes_no)[0] || severeAnemia.value == resources.getStringArray(R.array.yes_no)[0])
+                riskStatus.showHighRisk =
+                    (anemia.value == resources.getStringArray(R.array.yes_no)[0] || hypertension.value == resources.getStringArray(
+                        R.array.yes_no
+                    )[0]
+                            || diabetes.value == resources.getStringArray(R.array.yes_no)[0] || severeAnemia.value == resources.getStringArray(
+                        R.array.yes_no
+                    )[0])
                 -1
             }
 
             hypertension.id, diabetes.id, severeAnemia.id -> {
-                ancLabel.showHighRisk = (hypertension.value == resources.getStringArray(R.array.yes_no)[0]
-                        || diabetes.value == resources.getStringArray(R.array.yes_no)[0] || severeAnemia.value == resources.getStringArray(R.array.yes_no)[0])
-                riskStatus.showHighRisk = (anemia.value == resources.getStringArray(R.array.yes_no)[0] || hypertension.value == resources.getStringArray(R.array.yes_no)[0]
-                        || diabetes.value == resources.getStringArray(R.array.yes_no)[0] || severeAnemia.value == resources.getStringArray(R.array.yes_no)[0])
+                ancLabel.showHighRisk =
+                    (hypertension.value == resources.getStringArray(R.array.yes_no)[0]
+                            || diabetes.value == resources.getStringArray(R.array.yes_no)[0] || severeAnemia.value == resources.getStringArray(
+                        R.array.yes_no
+                    )[0])
+                riskStatus.showHighRisk =
+                    (anemia.value == resources.getStringArray(R.array.yes_no)[0] || hypertension.value == resources.getStringArray(
+                        R.array.yes_no
+                    )[0]
+                            || diabetes.value == resources.getStringArray(R.array.yes_no)[0] || severeAnemia.value == resources.getStringArray(
+                        R.array.yes_no
+                    )[0])
                 -1
             }
 
@@ -219,6 +252,7 @@ class HRPNonPregnantTrackDataset(
                 lmp.max = getLongFromDate(dateOfVisit.value)
                 -1
             }
+
             else -> -1
         }
     }

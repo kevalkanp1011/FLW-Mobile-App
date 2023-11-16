@@ -49,24 +49,29 @@ class CbacFragment : Fragment() {
     private val raAlertDialog by lazy {
         AlertDialog.Builder(requireContext()).setTitle(getString(R.string.alert))
 //            .setMessage(context?.getString(R.string.ncd_sus_valid))
-            .setPositiveButton(resources.getString(R.string.ok)) { dialog, _ -> dialog.dismiss() }.create()
+            .setPositiveButton(resources.getString(R.string.ok)) { dialog, _ -> dialog.dismiss() }
+            .create()
     }
     private val ast1AlertDialog by lazy {
-        AlertDialog.Builder(requireContext()).setTitle(getString(R.string.suspected_hrp_and_ncd_case))
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.suspected_hrp_and_ncd_case))
             .setMessage(resources.getString(R.string.tb_suspected_alert))
-            .setPositiveButton(resources.getString(R.string.ok)) { dialog, _ -> dialog.dismiss() }.create()
+            .setPositiveButton(resources.getString(R.string.ok)) { dialog, _ -> dialog.dismiss() }
+            .create()
     }
     private val ast2AlertDialog by lazy {
         AlertDialog.Builder(requireContext()).setTitle(getString(R.string.suspected_hrp_case))
             .setMessage(resources.getString(R.string.tb_suspected_family_alert))
-            .setPositiveButton(resources.getString(R.string.ok)) { dialog, _ -> dialog.dismiss() }.create()
+            .setPositiveButton(resources.getString(R.string.ok)) { dialog, _ -> dialog.dismiss() }
+            .create()
     }
     private val ast0AlertDialog by lazy {
         AlertDialog.Builder(requireContext()).setTitle(getString(R.string.alert))
             .setMessage(
                 resources.getString(R.string.suspected_ncd_case_please_visit_nearest_hwc_or_call)
             )
-            .setPositiveButton(resources.getString(R.string.ok)) { dialog, _ -> dialog.dismiss() }.create()
+            .setPositiveButton(resources.getString(R.string.ok)) { dialog, _ -> dialog.dismiss() }
+            .create()
     }
 
     override fun onCreateView(
@@ -259,6 +264,7 @@ class CbacFragment : Fragment() {
         }
 
     }
+
     private fun handleAst0Alert() {
         if (
             binding.cbacHistb.cbacEdRg.checkedRadioButtonId != -1 &&
@@ -899,14 +905,19 @@ class CbacFragment : Fragment() {
         binding.ddLiScore.text = cbac.cbac_little_interest_score.toString()
         binding.ddFdScore.text = cbac.cbac_feeling_down_score.toString()
         binding.cbacPhq2TotalScore.text =
-            String.format("%s%s%s", resources.getString(R.string.total_score_wihout_semi_colon),
-                ": ", cbac.cbac_little_interest_score + cbac.cbac_feeling_down_score)
+            String.format(
+                "%s%s%s", resources.getString(R.string.total_score_wihout_semi_colon),
+                ": ", cbac.cbac_little_interest_score + cbac.cbac_feeling_down_score
+            )
     }
 
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__ncd_eligibility, getString(R.string.cbac))
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__ncd_eligibility,
+                getString(R.string.cbac)
+            )
         }
     }
 

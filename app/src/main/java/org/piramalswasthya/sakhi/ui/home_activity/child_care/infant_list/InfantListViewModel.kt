@@ -1,6 +1,7 @@
 package org.piramalswasthya.sakhi.ui.home_activity.child_care.infant_list
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -16,8 +17,8 @@ class InfantListViewModel @Inject constructor(
 
     private val allBenList = recordsRepo.infantList
     private val filter = MutableStateFlow("")
-    val benList = allBenList.combine(filter){
-            list, filter -> filterBenList(list, filter)
+    val benList = allBenList.combine(filter) { list, filter ->
+        filterBenList(list, filter)
     }
 
     fun filterText(text: String) {

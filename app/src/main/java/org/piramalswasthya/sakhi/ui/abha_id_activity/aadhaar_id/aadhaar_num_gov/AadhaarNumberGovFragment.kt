@@ -12,10 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.databinding.FragmentAadhaarNumberGovBinding
 import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdViewModel
-import java.util.*
+import java.util.Calendar
 
 @AndroidEntryPoint
 class AadhaarNumberGovFragment : Fragment() {

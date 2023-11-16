@@ -7,8 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.piramalswasthya.sakhi.databinding.RvItemBenPwRegistrationListWithFormBinding
-import org.piramalswasthya.sakhi.model.BenBasicDomain
-import org.piramalswasthya.sakhi.model.BenWithEcrDomain
 import org.piramalswasthya.sakhi.model.BenWithPwrDomain
 
 class PwRegistrationListAdapter(
@@ -34,7 +32,11 @@ class PwRegistrationListAdapter(
         companion object {
             fun from(parent: ViewGroup): BenViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = RvItemBenPwRegistrationListWithFormBinding.inflate(layoutInflater, parent, false)
+                val binding = RvItemBenPwRegistrationListWithFormBinding.inflate(
+                    layoutInflater,
+                    parent,
+                    false
+                )
                 return BenViewHolder(binding)
             }
         }
@@ -44,8 +46,8 @@ class PwRegistrationListAdapter(
             clickListener: ClickListener?,
         ) {
             binding.benWithPwr = item
-            binding.ivSyncState.visibility = if(item.pwr==null) View.INVISIBLE else View.VISIBLE
-            binding.btnFormEc1.text = if(item.pwr==null) "Register" else "View"
+            binding.ivSyncState.visibility = if (item.pwr == null) View.INVISIBLE else View.VISIBLE
+            binding.btnFormEc1.text = if (item.pwr == null) "Register" else "View"
 
             binding.btnFormEc1.setBackgroundColor(binding.root.resources.getColor(if (item.pwr == null) android.R.color.holo_red_dark else android.R.color.holo_green_dark))
             binding.clickListener = clickListener

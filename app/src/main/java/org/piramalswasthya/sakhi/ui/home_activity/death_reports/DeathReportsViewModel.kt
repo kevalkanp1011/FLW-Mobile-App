@@ -21,7 +21,7 @@ class DeathReportsViewModel @Inject constructor() : ViewModel() {
 
     fun navigateToDeathReportList(isChild: Boolean) {
         viewModelScope.launch {
-            if(isChild)
+            if (isChild)
                 _navigateToCdrList.value = true
             else
                 _navigateToMdsrList.value = true
@@ -31,6 +31,7 @@ class DeathReportsViewModel @Inject constructor() : ViewModel() {
     fun navigateToCdrListCompleted() {
         _navigateToCdrList.value = false
     }
+
     fun navigateToMdsrListCompleted() {
         _navigateToMdsrList.value = false
     }

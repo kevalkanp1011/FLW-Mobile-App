@@ -15,16 +15,16 @@ import java.io.File
 
 object NotificationUtils {
 
-    fun showDownloadedFile(appContext : Context, fileName: String, title: String) {
+    fun showDownloadedFile(appContext: Context, fileName: String, title: String) {
         val notificationManager =
             appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(title,title,NotificationManager.IMPORTANCE_HIGH)
+            val channel = NotificationChannel(title, title, NotificationManager.IMPORTANCE_HIGH)
             notificationManager.createNotificationChannel(channel)
         }
 
-        val notificationBuilder = NotificationCompat.Builder(appContext,title)
+        val notificationBuilder = NotificationCompat.Builder(appContext, title)
             .setSmallIcon(R.drawable.ic_download)
             .setChannelId(title)
             .setContentTitle(fileName)

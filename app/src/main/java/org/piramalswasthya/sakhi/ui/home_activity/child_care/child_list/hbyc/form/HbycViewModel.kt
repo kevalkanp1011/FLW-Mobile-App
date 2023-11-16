@@ -29,7 +29,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HbycViewModel @Inject constructor(
     state: SavedStateHandle,
-    @ApplicationContext context : Context,
+    @ApplicationContext context: Context,
     private val database: InAppDb,
     private val hbycRepo: HbycRepo,
     private val benRepo: BenRepo,
@@ -72,7 +72,8 @@ class HbycViewModel @Inject constructor(
     val formList = dataset.listFlow
     fun submitForm() {
         _state.value = State.LOADING
-        val hbycCache = HBYCCache(benId = benId, hhId = hhId, processed = "N", syncState = SyncState.UNSYNCED)
+        val hbycCache =
+            HBYCCache(benId = benId, hhId = hhId, processed = "N", syncState = SyncState.UNSYNCED)
         dataset.mapValues(hbycCache)
         Timber.d("saving hbyc: $hbycCache")
         viewModelScope.launch {
@@ -80,8 +81,7 @@ class HbycViewModel @Inject constructor(
             if (saved) {
                 Timber.d("saved hbyc: $hbycCache")
                 _state.value = State.SUCCESS
-            }
-            else {
+            } else {
                 Timber.d("saving hbyc to local db failed!!")
                 _state.value = State.FAIL
             }
@@ -97,7 +97,7 @@ class HbycViewModel @Inject constructor(
                 user = preferenceDao.getLoggedInUser()!!
                 hbyc = database.hbycDao.getHbyc(hhId, benId, month.toString())
             }
-            _benName.value = "${ben.firstName} ${if(ben.lastName== null) "" else ben.lastName}"
+            _benName.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
             _address.value = getAddress(household)
             _exists.value = hbyc != null
@@ -142,6 +142,7 @@ class HbycViewModel @Inject constructor(
             dataset.updateList(formId, index)
         }
     }
+
     private fun getDateFromLong(dateLong: Long?): String? {
         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
         dateLong?.let {

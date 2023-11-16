@@ -81,13 +81,15 @@ class VerifyMobileOtpViewModel @Inject constructor(
                     _txnId = result.data.txnId
                     _state.value = State.OTP_VERIFY_SUCCESS
                 }
+
                 is NetworkResult.Error -> {
                     _errorMessage.value = result.message
-                    if (result.message.contains("exit your browser", true)){
+                    if (result.message.contains("exit your browser", true)) {
                         _showExit.value = true
                     }
                     _state.value = State.ERROR_SERVER
                 }
+
                 is NetworkResult.NetworkError -> {
                     _state.value = State.ERROR_NETWORK
                 }
@@ -110,10 +112,12 @@ class VerifyMobileOtpViewModel @Inject constructor(
                     _txnId = result.data.txnId
                     _state.value = State.OTP_GENERATED_SUCCESS
                 }
+
                 is NetworkResult.Error -> {
                     _errorMessage.value = result.message
                     _state.value = State.ERROR_SERVER
                 }
+
                 is NetworkResult.NetworkError -> {
                     _state.value = State.ERROR_NETWORK
                 }
@@ -138,10 +142,12 @@ class VerifyMobileOtpViewModel @Inject constructor(
                     abha.value = result.data
                     _state.value = State.ABHA_GENERATED_SUCCESS
                 }
+
                 is NetworkResult.Error -> {
                     _errorMessage.value = result.message
                     _state.value = State.ERROR_SERVER
                 }
+
                 is NetworkResult.NetworkError -> {
                     _state.value = State.ERROR_NETWORK
                 }

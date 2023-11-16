@@ -19,19 +19,19 @@ import javax.inject.Inject
 @HiltViewModel
 class HbncDayListViewModel @Inject constructor(
     private val context: Application,
-    benRepo : BenRepo,
+    benRepo: BenRepo,
     hbncRepo: HbncRepo,
     preferenceDao: PreferenceDao,
     state: SavedStateHandle,
 
     ) : ViewModel() {
-    
+
     private val resources by lazy {
         val configuration = Configuration(context.resources.configuration)
         configuration.setLocale(Locale(preferenceDao.getCurrentLanguage().symbol))
         context.createConfigurationContext(configuration).resources
     }
-    
+
     private val benId = HbncDayListFragmentArgs.fromSavedStateHandle(state).benId
     private val hhId = HbncDayListFragmentArgs.fromSavedStateHandle(state).hhId
 
@@ -71,25 +71,25 @@ class HbncDayListViewModel @Inject constructor(
             )
         )
         val headerList = mutableListOf(visitCardIcon)
-        if(visitCardIcon.isFilled) headerList.add(partIIcon)
-        if(partIIcon.isFilled) headerList.add(partIIIcon)
-        val ben = benRepo.getBeneficiaryRecord(benId,hhId)!!
+        if (visitCardIcon.isFilled) headerList.add(partIIcon)
+        if (partIIcon.isFilled) headerList.add(partIIIcon)
+        val ben = benRepo.getBeneficiaryRecord(benId, hhId)!!
         val allDayList = listOf(1, 3, 7, 14, 21, 28, 42)
-        val dayList = allDayList.filter { it<=ben.age }
+        val dayList = allDayList.filter { it <= ben.age }
 
-        if(partIIIcon.isFilled)
+        if (partIIIcon.isFilled)
             headerList.addAll(dayList.map { day ->
-            HbncIcon(
-                hhId = hhId,
-                benId = benId,
-                count = day,
-                isFilled = daysList.contains(day),
-                syncState = dateList.firstOrNull { it.homeVisitDate == day }?.syncState,
-                destination = HbncDayListFragmentDirections.actionHbncDayListFragmentToHbncFragment(
-                    hhId, benId, day
+                HbncIcon(
+                    hhId = hhId,
+                    benId = benId,
+                    count = day,
+                    isFilled = daysList.contains(day),
+                    syncState = dateList.firstOrNull { it.homeVisitDate == day }?.syncState,
+                    destination = HbncDayListFragmentDirections.actionHbncDayListFragmentToHbncFragment(
+                        hhId, benId, day
+                    )
                 )
-            )
-        })
+            })
         emit(headerList)
     }
 

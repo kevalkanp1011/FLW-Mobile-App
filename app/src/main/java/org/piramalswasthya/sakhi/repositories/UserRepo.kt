@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 class UserRepo @Inject constructor(
     benDao: BenDao,
-    private val db : InAppDb,
+    private val db: InAppDb,
     private val vaccineDao: ImmunizationDao,
     private val preferenceDao: PreferenceDao,
     private val syncDao: SyncDao,
@@ -471,7 +471,12 @@ class UserRepo @Inject constructor(
         return withContext(Dispatchers.IO) {
             try {
                 val response =
-                    amritApiService.getJwtToken(json = TmcAuthUserRequest(userName, encrypt(password)))
+                    amritApiService.getJwtToken(
+                        json = TmcAuthUserRequest(
+                            userName,
+                            encrypt(password)
+                        )
+                    )
                 Timber.d("JWT : $response")
                 if (!response.isSuccessful) {
                     return@withContext false

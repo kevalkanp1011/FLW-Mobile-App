@@ -10,8 +10,6 @@ import com.squareup.moshi.Json
 import org.piramalswasthya.sakhi.configuration.FormDataModel
 import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.utils.HelperUtil.getDateStringFromLong
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 @Entity(
     tableName = "ELIGIBLE_COUPLE_REG",
@@ -140,8 +138,6 @@ data class EligibleCoupleRegCache(
 }
 
 
-
-
 data class BenWithECRCache(
     @Embedded
     val ben: BenBasicCache,
@@ -150,8 +146,8 @@ data class BenWithECRCache(
     )
     val ecr: EligibleCoupleRegCache?,
 
-) {
-    fun asDomainModel() : BenWithEcrDomain{
+    ) {
+    fun asDomainModel(): BenWithEcrDomain {
         return BenWithEcrDomain(
             ben = ben.asBasicDomainModel(),
             ecr = ecr

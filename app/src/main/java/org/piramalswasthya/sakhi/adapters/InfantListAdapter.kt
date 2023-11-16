@@ -11,7 +11,8 @@ import org.piramalswasthya.sakhi.model.BenBasicDomain
 
 class InfantListAdapter(
     private val clickListener: InfantListClickListener,
-    private val showSyncIcon: Boolean = false) :
+    private val showSyncIcon: Boolean = false
+) :
     ListAdapter<BenBasicDomain, InfantListAdapter.BenViewHolder>(BenDiffUtilCallBack) {
     private object BenDiffUtilCallBack : DiffUtil.ItemCallback<BenBasicDomain>() {
         override fun areItemsTheSame(
@@ -39,7 +40,7 @@ class InfantListAdapter(
             clickListener: InfantListClickListener,
             showSyncIcon: Boolean,
         ) {
-            if(!showSyncIcon) item.syncState = null
+            if (!showSyncIcon) item.syncState = null
             binding.ben = item
             binding.clickListener = clickListener
             binding.executePendingBindings()
@@ -57,7 +58,7 @@ class InfantListAdapter(
 
 
     class InfantListClickListener(
-        val goToHbnc : (benId : Long, hhId : Long) -> Unit
+        val goToHbnc: (benId: Long, hhId: Long) -> Unit
 
     ) {
         fun onClickedHbnc(item: BenBasicDomain) = goToHbnc(

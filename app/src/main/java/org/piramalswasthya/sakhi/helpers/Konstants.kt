@@ -4,8 +4,8 @@ import java.util.concurrent.TimeUnit
 
 object Konstants {
 
-    val minMillisBwtweenCbacFiling : Long = TimeUnit.DAYS.toMillis(365)
-    const val  amritTokenTimeoutDuration: Int = 100
+    val minMillisBwtweenCbacFiling: Long = TimeUnit.DAYS.toMillis(365)
+    const val amritTokenTimeoutDuration: Int = 100
 
     //Dev
     const val devCode = 112
@@ -32,8 +32,8 @@ object Konstants {
     const val minAgeForAdolescent: Int = 6
     const val maxAgeForAdolescent: Int = 14
     const val maxAgeForCdr: Int = 14
-    const val minAgeForGenBen : Int = 15
-    const val maxAgeForGenBen : Int = 99
+    const val minAgeForGenBen: Int = 15
+    const val maxAgeForGenBen: Int = 99
     const val minAgeForMarriage: Int = 12
 
     //HBNC
@@ -57,8 +57,8 @@ object Konstants {
     const val babyLowWeight: Double = 2.5
 
 
-        //PNC-EC cycle
-    const val pncEcGap : Long = 45
+    //PNC-EC cycle
+    const val pncEcGap: Long = 45
 
 
     const val defaultTimeStamp = 1577817001000L

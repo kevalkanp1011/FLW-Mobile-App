@@ -24,10 +24,11 @@ class SpeechToTextContract : ActivityResultContract<Unit, String>() {
     }
 
     override fun parseResult(resultCode: Int, intent: Intent?): String {
-        return intent?.takeIf { resultCode== RESULT_OK }?.let {
+        return intent?.takeIf { resultCode == RESULT_OK }?.let {
             it.getStringArrayListExtra(
-                RecognizerIntent.EXTRA_RESULTS)?.first()
-        }?:""
+                RecognizerIntent.EXTRA_RESULTS
+            )?.first()
+        } ?: ""
 
     }
 }

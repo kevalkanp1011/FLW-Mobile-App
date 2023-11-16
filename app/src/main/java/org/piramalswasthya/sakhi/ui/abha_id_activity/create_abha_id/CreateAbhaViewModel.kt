@@ -60,23 +60,33 @@ class CreateAbhaViewModel @Inject constructor(
     fun createHID(benId: Long, benRegId: Long) {
         viewModelScope.launch {
             when (val result =
-                abhaIdRepo.createHealthIdWithUid(CreateHealthIdRequest(
-                    "", txnId, "", "", "", "", "",
-                    "", "", "", "", "", "",
-                    "","", 0, "", 34, ""))) {
+                abhaIdRepo.createHealthIdWithUid(
+                    CreateHealthIdRequest(
+                        "", txnId, "", "", "", "", "",
+                        "", "", "", "", "", "",
+                        "", "", 0, "", 34, ""
+                    )
+                )) {
                 is NetworkResult.Success -> {
                     hidResponse.value = result.data
                     Timber.d("mapping abha to beneficiary with id $benId")
                     if ((benId != 0L) or (benRegId != 0L)) {
-                        mapBeneficiary(benId, if (benRegId != 0L) benRegId else null, result.data.hID.toString(), result.data.healthIdNumber)
+                        mapBeneficiary(
+                            benId,
+                            if (benRegId != 0L) benRegId else null,
+                            result.data.hID.toString(),
+                            result.data.healthIdNumber
+                        )
                     } else {
                         _state.value = State.ABHA_GENERATE_SUCCESS
                     }
                 }
+
                 is NetworkResult.Error -> {
                     _errorMessage.value = result.message
                     _state.value = State.ERROR_SERVER
                 }
+
                 is NetworkResult.NetworkError -> {
                     Timber.i(result.toString())
                     _state.value = State.ERROR_NETWORK
@@ -93,31 +103,38 @@ class CreateAbhaViewModel @Inject constructor(
         _errorMessage.value = null
     }
 
-    private suspend fun mapBeneficiary(benId: Long, benRegId: Long?, healthId: String, healthIdNumber: String?) {
+    private suspend fun mapBeneficiary(
+        benId: Long,
+        benRegId: Long?,
+        healthId: String,
+        healthIdNumber: String?
+    ) {
         val ben = benRepo.getBenFromId(benId)
 
-        val req = MapHIDtoBeneficiary(benRegId, benId, healthId, healthIdNumber,34, "")
+        val req = MapHIDtoBeneficiary(benRegId, benId, healthId, healthIdNumber, 34, "")
 
         viewModelScope.launch {
             when (val result =
                 abhaIdRepo.mapHealthIDToBeneficiary(req)) {
                 is NetworkResult.Success -> {
                     ben?.let {
-                        ben.firstName?.let {
-                                firstName -> _benMapped.value = firstName
+                        ben.firstName?.let { firstName ->
+                            _benMapped.value = firstName
                         }
-                        ben.lastName?.let {
-                                lastName -> _benMapped.value = ben.firstName + " $lastName"
+                        ben.lastName?.let { lastName ->
+                            _benMapped.value = ben.firstName + " $lastName"
                         }
                         it.healthIdDetails = BenHealthIdDetails(healthId, healthIdNumber)
                         benRepo.updateRecord(ben)
                     }
                     _state.value = State.ABHA_GENERATE_SUCCESS
                 }
+
                 is NetworkResult.Error -> {
                     _errorMessage.value = result.message
                     _state.value = State.ERROR_SERVER
                 }
+
                 is NetworkResult.NetworkError -> {
                     Timber.i(result.toString())
                     _state.value = State.ERROR_NETWORK
@@ -129,12 +146,17 @@ class CreateAbhaViewModel @Inject constructor(
     fun generateOtp() {
         viewModelScope.launch {
             when (val result =
-                abhaIdRepo.generateOtpHid(GenerateOtpHid("AADHAAR_OTP", hidResponse.value?.healthId,
-                    hidResponse.value?.healthIdNumber))) {
+                abhaIdRepo.generateOtpHid(
+                    GenerateOtpHid(
+                        "AADHAAR_OTP", hidResponse.value?.healthId,
+                        hidResponse.value?.healthIdNumber
+                    )
+                )) {
                 is NetworkResult.Success -> {
                     otpTxnID.value = result.data
                     _state.value = State.OTP_GENERATE_SUCCESS
                 }
+
                 is NetworkResult.Error -> {
                     if (result.code == 0) {
                         _errorMessage.value = result.message
@@ -144,6 +166,7 @@ class CreateAbhaViewModel @Inject constructor(
                         _state.value = State.ERROR_SERVER
                     }
                 }
+
                 is NetworkResult.NetworkError -> {
                     Timber.i(result.toString())
                     _state.value = State.ERROR_NETWORK
@@ -156,11 +179,18 @@ class CreateAbhaViewModel @Inject constructor(
         _state.value = State.LOADING
         viewModelScope.launch {
             when (val result =
-                abhaIdRepo.verifyOtpAndGenerateHealthCard(ValidateOtpHid(otp,otpTxnID.value,"AADHAAR_OTP"))) {
+                abhaIdRepo.verifyOtpAndGenerateHealthCard(
+                    ValidateOtpHid(
+                        otp,
+                        otpTxnID.value,
+                        "AADHAAR_OTP"
+                    )
+                )) {
                 is NetworkResult.Success -> {
                     cardBase64.value = result.data
                     _state.value = State.OTP_VERIFY_SUCCESS
                 }
+
                 is NetworkResult.Error -> {
                     if (result.code == 0) {
                         _errorMessage.value = result.message
@@ -170,6 +200,7 @@ class CreateAbhaViewModel @Inject constructor(
                         _state.value = State.ERROR_SERVER
                     }
                 }
+
                 is NetworkResult.NetworkError -> {
                     Timber.i(result.toString())
                     _state.value = State.ERROR_NETWORK

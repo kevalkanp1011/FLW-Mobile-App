@@ -59,7 +59,7 @@ class EligibleCoupleFragment : Fragment() {
         binding.rvIconGrid.adapter = rvAdapter
         rvAdapter.submitList(iconDataset.getEligibleCoupleDataset(resources))
 
-    setUpEligibleCouple()
+        setUpEligibleCouple()
     }
 
     private fun setUpEligibleCouple() {
@@ -82,7 +82,10 @@ class EligibleCoupleFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__eligible_couple, getString(R.string.icon_title_ec))
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__eligible_couple,
+                getString(R.string.icon_title_ec)
+            )
         }
     }
 }

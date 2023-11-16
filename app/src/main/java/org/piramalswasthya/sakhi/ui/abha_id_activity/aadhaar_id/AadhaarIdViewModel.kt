@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
 import timber.log.Timber
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,14 +23,16 @@ AadhaarIdViewModel @Inject constructor(
         ABHA_GENERATED_SUCCESS
     }
 
-//    val aadhaarVerificationTypeValues = arrayOf("Aadhaar ID", "Fingerprint")
+    //    val aadhaarVerificationTypeValues = arrayOf("Aadhaar ID", "Fingerprint")
     val aadhaarVerificationTypeValues = arrayOf("Aadhaar ID")
     private val _aadhaarVerificationTypes = MutableLiveData(aadhaarVerificationTypeValues[0])
     val aadhaarVerificationTypes: LiveData<String>
         get() = _aadhaarVerificationTypes
+
     init {
         Timber.d("initialised at ${Date().time}")
     }
+
     @Inject
     lateinit var abhaIdRepo: AbhaIdRepo
 

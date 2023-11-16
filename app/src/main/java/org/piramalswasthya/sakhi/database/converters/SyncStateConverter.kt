@@ -11,7 +11,7 @@ object SyncStateConverter {
     }
 
     @TypeConverter
-    fun fromInt(value : Int): SyncState {
+    fun fromInt(value: Int): SyncState {
         return SyncState.values()[value]
     }
 }

@@ -23,9 +23,9 @@ class ChildCareFragment : Fragment() {
     @Inject
     lateinit var iconDataset: IconDataset
 
-    private var _binding : RvIconGridBinding? = null
+    private var _binding: RvIconGridBinding? = null
 
-    private val binding  : RvIconGridBinding
+    private val binding: RvIconGridBinding
         get() = _binding!!
 
 
@@ -47,7 +47,10 @@ class ChildCareFragment : Fragment() {
     }
 
     private fun setUpChildCareIconRvAdapter() {
-        val rvLayoutManager = GridLayoutManager(context, requireContext().resources.getInteger(R.integer.icon_grid_span))
+        val rvLayoutManager = GridLayoutManager(
+            context,
+            requireContext().resources.getInteger(R.integer.icon_grid_span)
+        )
         binding.rvIconGrid.layoutManager = rvLayoutManager
         val iconAdapter = IconGridAdapter(
             IconGridAdapter.GridIconClickListener {
@@ -58,10 +61,14 @@ class ChildCareFragment : Fragment() {
         binding.rvIconGrid.adapter = iconAdapter
         iconAdapter.submitList(iconDataset.getChildCareDataset(resources))
     }
+
     override fun onStart() {
         super.onStart()
-        activity?.let{
-            (it as HomeActivity).updateActionBar(R.drawable.ic__child_care, getString(R.string.icon_title_cc))
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__child_care,
+                getString(R.string.icon_title_cc)
+            )
         }
     }
 

@@ -53,7 +53,7 @@ class SignInFragment : Fragment() {
                 " want to override? "
         viewModel.unprocessedRecordsCount.value?.let {
             if (it > 0) {
-                str += "there are"+  viewModel.unprocessedRecordsCount.value + " unprocessed records, wait till records are synced"
+                str += "there are" + viewModel.unprocessedRecordsCount.value + " unprocessed records, wait till records are synced"
             }
         }
 
@@ -77,6 +77,7 @@ class SignInFragment : Fragment() {
                 dialog.dismiss()
             }.create()
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -147,6 +148,7 @@ class SignInFragment : Fragment() {
                     }
                     if (hasRememberMeUsername && hasRememberMePassword) validateInput()
                 }
+
                 is NetworkResponse.Loading -> validateInput()
                 is NetworkResponse.Error -> {
                     binding.pbSignIn.visibility = View.GONE
@@ -154,6 +156,7 @@ class SignInFragment : Fragment() {
                     binding.tvError.text = state.message
                     binding.tvError.visibility = View.VISIBLE
                 }
+
                 is NetworkResponse.Success -> {
                     if (binding.cbRemember.isChecked) {
                         val username = binding.etUsername.text.toString()
@@ -202,7 +205,7 @@ class SignInFragment : Fragment() {
             viewModel.authUser(username, password)
         } else {
             if (loggedInUser.userName.equals(username.trim(), true)) {
-                if(loggedInUser.password == password) {
+                if (loggedInUser.password == password) {
                     viewModel.updateState(NetworkResponse.Success(loggedInUser))
                 } else {
                     viewModel.updateState(NetworkResponse.Error("Invalid Password"))

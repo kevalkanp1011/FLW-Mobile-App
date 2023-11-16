@@ -135,14 +135,17 @@ class PregnancyRegistrationFormFragment : Fragment() {
                     notifyItemChanged(viewModel.getIndexOfPastIllness())
                     notifyItemChanged(viewModel.getIndexOfHRP())
                 }
-                27,28 -> {
+
+                27, 28 -> {
                     notifyItemChanged(viewModel.getIndexOfChildLabel())
                     notifyItemChanged(viewModel.getIndexOfHRP())
                 }
+
                 29, 30 -> {
                     notifyItemChanged(viewModel.getIndexOfPhysicalObservationLabel())
                     notifyItemChanged(viewModel.getIndexOfHRP())
                 }
+
                 31, 32, 33, 34 -> {
                     notifyItemChanged(viewModel.getIndexOfObstetricHistoryLabel())
                     notifyItemChanged(viewModel.getIndexOfHRP())
@@ -152,11 +155,13 @@ class PregnancyRegistrationFormFragment : Fragment() {
     }
 
 
-
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__pwr, getString(R.string.pregnancy_registration))
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__pwr,
+                getString(R.string.pregnancy_registration)
+            )
         }
     }
 

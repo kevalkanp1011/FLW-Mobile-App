@@ -48,7 +48,7 @@ class NewBenRegTypeViewModel @Inject constructor(
 
     fun navigateToNewBenRegistration(hhId: Long, delete: Boolean, isKid: Boolean) {
         viewModelScope.launch {
-            if(isKid)
+            if (isKid)
                 _navigateToNewBenKidRegistration.value = true
             else
                 _navigateToNewBenGenRegistration.value = true
@@ -58,6 +58,7 @@ class NewBenRegTypeViewModel @Inject constructor(
     fun navigateToBenKidRegistrationCompleted() {
         _navigateToNewBenKidRegistration.value = false
     }
+
     fun navigateToBenGenRegistrationCompleted() {
         _navigateToNewBenGenRegistration.value = false
     }

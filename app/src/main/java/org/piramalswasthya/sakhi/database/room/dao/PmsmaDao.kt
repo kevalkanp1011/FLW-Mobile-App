@@ -22,6 +22,6 @@ interface PmsmaDao {
     suspend fun getAllPmsma(benId: Set<Long>): List<PMSMACache>
 
     @Update
-    abstract fun updatePmsmaRecord(it: PMSMACache)
+    fun updatePmsmaRecord(it: PMSMACache)
 
 }

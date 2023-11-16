@@ -33,9 +33,10 @@ class ChildRegRepo @Inject constructor(
             deliveryOutcomeDao.getDeliveryOutcome(motherBenId)
         }
     }
-    suspend fun getInfantRegFromMotherBenId(motherBenId: Long, babyIndex : Int): InfantRegCache? {
+
+    suspend fun getInfantRegFromMotherBenId(motherBenId: Long, babyIndex: Int): InfantRegCache? {
         return withContext(Dispatchers.IO) {
-            infantRegDao.getInfantReg(motherBenId,babyIndex)
+            infantRegDao.getInfantReg(motherBenId, babyIndex)
         }
     }
 }

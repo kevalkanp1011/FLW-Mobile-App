@@ -303,11 +303,13 @@ data class ValidateOtpHid(
     val txnId: String?,
     val authMethod: String?
 )
+
 @JsonClass(generateAdapter = true)
 data class GetBenHealthIdRequest(
     val beneficiaryRegID: Long?,
     val beneficiaryID: Long?,
 )
+
 @JsonClass(generateAdapter = true)
 data class CreateHealthIdRequest(
     val otp: String?,
@@ -352,11 +354,11 @@ data class UserDataDTO<T>(
 
 data class HRPPregnantTrackDTO(
     var id: Int = 0,
-    val benId : Long,
+    val benId: Long,
     var visitDate: String?,
-    var rdPmsa : String? = null,
-    var rdDengue : String? = null,
-    var rdFilaria : String? = null,
+    var rdPmsa: String? = null,
+    var rdDengue: String? = null,
+    var rdFilaria: String? = null,
     var severeAnemia: String? = null,
     var pregInducedHypertension: String? = null,
     var gestDiabetesMellitus: String? = null,
@@ -368,7 +370,7 @@ data class HRPPregnantTrackDTO(
     var hivsyph: String? = null,
     var visit: String?
 ) {
-    fun toCache() : HRPPregnantTrackCache {
+    fun toCache(): HRPPregnantTrackCache {
         return HRPPregnantTrackCache(
             benId = benId,
             visitDate = getLongFromDate(visitDate),
@@ -389,23 +391,24 @@ data class HRPPregnantTrackDTO(
         )
     }
 }
+
 data class HRPPregnantAssessDTO(
     var id: Int = 0,
-    val benId : Long,
-    var noOfDeliveries : String? = null,
-    var timeLessThan18m : String? = null,
-    var heightShort : String? = null,
-    var age : String? = null,
-    var rhNegative : String? = null,
-    var homeDelivery : String? = null,
-    var badObstetric : String? = null,
-    var multiplePregnancy : String? = null,
+    val benId: Long,
+    var noOfDeliveries: String? = null,
+    var timeLessThan18m: String? = null,
+    var heightShort: String? = null,
+    var age: String? = null,
+    var rhNegative: String? = null,
+    var homeDelivery: String? = null,
+    var badObstetric: String? = null,
+    var multiplePregnancy: String? = null,
     var lmpDate: String?,
     var edd: String?,
     var isHighRisk: Boolean = false,
     var visitDate: String?
 ) {
-    fun toCache() : HRPPregnantAssessCache {
+    fun toCache(): HRPPregnantAssessCache {
         return HRPPregnantAssessCache(
             benId = benId,
             noOfDeliveries = noOfDeliveries,
@@ -424,9 +427,10 @@ data class HRPPregnantAssessDTO(
         )
     }
 }
-data class  HRPNonPregnantTrackDTO(
+
+data class HRPNonPregnantTrackDTO(
     var id: Int = 0,
-    val benId : Long,
+    val benId: Long,
     var visitDate: String?,
     var anemia: String? = null,
     var hypertension: String? = null,
@@ -437,7 +441,7 @@ data class  HRPNonPregnantTrackDTO(
     var missedPeriod: String? = null,
     var isPregnant: String? = null,
 ) {
-    fun toCache() : HRPNonPregnantTrackCache {
+    fun toCache(): HRPNonPregnantTrackCache {
         return HRPNonPregnantTrackCache(
             benId = benId,
             visitDate = getLongFromDate(visitDate),
@@ -453,21 +457,22 @@ data class  HRPNonPregnantTrackDTO(
         )
     }
 }
+
 data class HRPNonPregnantAssessDTO(
     val id: Int = 0,
-    val benId : Long,
-    var noOfDeliveries : String? = null,
-    var timeLessThan18m : String? = null,
-    var heightShort : String? = null,
-    var age : String? = null,
-    var misCarriage : String? = null,
-    var homeDelivery : String? = null,
-    var medicalIssues : String? = null,
-    var pastCSection : String? = null,
+    val benId: Long,
+    var noOfDeliveries: String? = null,
+    var timeLessThan18m: String? = null,
+    var heightShort: String? = null,
+    var age: String? = null,
+    var misCarriage: String? = null,
+    var homeDelivery: String? = null,
+    var medicalIssues: String? = null,
+    var pastCSection: String? = null,
     var isHighRisk: Boolean = false,
     var visitDate: String?
 ) {
-    fun toCache() : HRPNonPregnantAssessCache {
+    fun toCache(): HRPNonPregnantAssessCache {
         return HRPNonPregnantAssessCache(
             benId = benId,
             noOfDeliveries = noOfDeliveries,
@@ -484,6 +489,7 @@ data class HRPNonPregnantAssessDTO(
         )
     }
 }
+
 data class TBScreeningDTO(
     val id: Long,
     val benId: Long,
@@ -525,7 +531,7 @@ data class TBSuspectedDTO(
     val referred: Boolean?,
     val followUps: String?
 ) {
-    fun toCache() : TBSuspectedCache {
+    fun toCache(): TBSuspectedCache {
         return TBSuspectedCache(
             benId = benId,
             visitDate = getLongFromDate(visitDate),
@@ -539,10 +545,12 @@ data class TBSuspectedDTO(
         )
     }
 }
+
 data class TBSuspectedRequestDTO(
     val userId: Int,
     val tbSuspectedList: List<TBSuspectedDTO>
 )
+
 fun getLongFromDate(dateString: String?): Long {
     val f = SimpleDateFormat("MMM d, yyyy h:mm:ss a", Locale.ENGLISH)
     val date = dateString?.let { f.parse(it) }

@@ -98,7 +98,6 @@ class HomeFragment : Fragment() {
         setUpWorkerProgress()
 
 
-
     }
 
     private fun setUpWorkerProgress() {
@@ -148,14 +147,13 @@ class HomeFragment : Fragment() {
                 1 -> requireActivity().getString(R.string.menu_home_home)
                 else -> "NA"
             }
-            if(position==1){
+            if (position == 1) {
                 tab.view.setOnLongClickListener {
                     if (viewModel.getDebMode()) {
                         viewModel.setDevMode(false)
                         Toast.makeText(context, "Dev Mode Disabled!", Toast.LENGTH_LONG).show()
 
-                    }
-                    else {
+                    } else {
                         if (!enableDevMode.isVisible)
                             enableDevMode.show(childFragmentManager, "DEV_MODE")
                     }

@@ -14,18 +14,18 @@ import org.piramalswasthya.sakhi.network.TBSuspectedDTO
     tableName = "TB_SUSPECTED",
     foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
-        parentColumns = arrayOf("beneficiaryId",/* "householdId"*/),
-        childColumns = arrayOf("benId", /*"hhId"*/),
+        parentColumns = arrayOf("beneficiaryId"/* "householdId"*/),
+        childColumns = arrayOf("benId" /*"hhId"*/),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "ind_tbs", value = ["benId",/* "hhId"*/])]
+    indices = [Index(name = "ind_tbs", value = ["benId"/* "hhId"*/])]
 )
 
-data class TBSuspectedCache (
+data class TBSuspectedCache(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val benId : Long,
+    val benId: Long,
     var visitDate: Long = System.currentTimeMillis(),
     var isSputumCollected: Boolean? = null,
     var sputumSubmittedAt: String? = null,
@@ -34,7 +34,7 @@ data class TBSuspectedCache (
     var referred: Boolean? = null,
     var followUps: String? = null,
     var syncState: SyncState = SyncState.UNSYNCED,
-    ) : FormDataModel {
+) : FormDataModel {
     fun toDTO(): TBSuspectedDTO {
         return TBSuspectedDTO(
             id = 0,
@@ -59,7 +59,7 @@ data class BenWithTbSuspectedCache(
     val tb: TBSuspectedCache?,
 
     ) {
-    fun asTbSuspectedDomainModel() : BenWithTbSuspectedDomain{
+    fun asTbSuspectedDomainModel(): BenWithTbSuspectedDomain {
         return BenWithTbSuspectedDomain(
             ben = ben.asBasicDomainModel(),
             tb = tb

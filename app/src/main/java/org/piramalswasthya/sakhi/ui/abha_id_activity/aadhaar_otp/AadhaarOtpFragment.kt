@@ -42,6 +42,7 @@ class AadhaarOtpFragment : Fragment() {
             binding.timerResendOtp.visibility = View.INVISIBLE
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -79,28 +80,34 @@ class AadhaarOtpFragment : Fragment() {
         viewModel.showExit.observe(viewLifecycleOwner) {
             it?.let {
                 if (it) {
-                    binding.exit.visibility =  View.VISIBLE
+                    binding.exit.visibility = View.VISIBLE
                 } else {
-                    binding.exit.visibility =  View.GONE
+                    binding.exit.visibility = View.GONE
                 }
             }
         }
 
-        binding.exit.setOnClickListener{
+        binding.exit.setOnClickListener {
             requireActivity().finish()
         }
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state!!) {
                 State.IDLE -> {
-                    binding.tvOtpMsg.text = String.format("%s%s",resources.getString(R.string.otp_sent_to), args.mobileNumber)
+                    binding.tvOtpMsg.text = String.format(
+                        "%s%s",
+                        resources.getString(R.string.otp_sent_to),
+                        args.mobileNumber
+                    )
                     binding.tvOtpMsg.visibility = View.VISIBLE
                 }
+
                 State.LOADING -> {
                     binding.clContent.visibility = View.INVISIBLE
                     binding.pbLoadingAadharOtp.visibility = View.VISIBLE
                     binding.clError.visibility = View.INVISIBLE
                 }
+
                 State.OTP_VERIFY_SUCCESS -> {
                     findNavController().navigate(
                         AadhaarOtpFragmentDirections.actionAadhaarOtpFragmentToGenerateMobileOtpFragment(
@@ -109,23 +116,30 @@ class AadhaarOtpFragment : Fragment() {
                     )
                     viewModel.resetState()
                 }
+
                 State.ERROR_SERVER -> {
                     binding.pbLoadingAadharOtp.visibility = View.INVISIBLE
                     binding.clContent.visibility = View.VISIBLE
                     binding.tvErrorText.visibility = View.VISIBLE
                     binding.clError.visibility = View.INVISIBLE
                 }
+
                 State.ERROR_NETWORK -> {
                     binding.clContent.visibility = View.INVISIBLE
                     binding.pbLoadingAadharOtp.visibility = View.INVISIBLE
                     binding.clError.visibility = View.VISIBLE
                 }
+
                 State.OTP_GENERATED_SUCCESS -> {
                     binding.clContent.visibility = View.VISIBLE
                     binding.pbLoadingAadharOtp.visibility = View.INVISIBLE
                     binding.clError.visibility = View.INVISIBLE
                     binding.tvErrorText.visibility = View.INVISIBLE
-                    Toast.makeText(activity, resources.getString(R.string.otp_was_resent), Toast.LENGTH_LONG)
+                    Toast.makeText(
+                        activity,
+                        resources.getString(R.string.otp_was_resent),
+                        Toast.LENGTH_LONG
+                    )
                         .show()
                 }
             }

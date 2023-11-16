@@ -24,7 +24,7 @@ class AadhaarIdFragment : Fragment() {
     private val binding: FragmentAadhaarIdBinding
         get() = _binding!!
 
-    private val viewModel: AadhaarIdViewModel by viewModels({requireActivity()})
+    private val viewModel: AadhaarIdViewModel by viewModels({ requireActivity() })
 
     private lateinit var navController: NavController
     private val aadhaarNavController by lazy {
@@ -40,6 +40,7 @@ class AadhaarIdFragment : Fragment() {
             }
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -57,13 +58,13 @@ class AadhaarIdFragment : Fragment() {
             onBackPressedCallback
         )
 
-        binding.rgGovAsha.setOnCheckedChangeListener{
-                _, id ->
-            when(id) {
+        binding.rgGovAsha.setOnCheckedChangeListener { _, id ->
+            when (id) {
                 R.id.rb_asha -> {
                     viewModel.setUserType("ASHA")
                     aadhaarNavController.navigate(R.id.aadhaarNumberAshaFragment)
                 }
+
                 R.id.rb_gov -> {
                     viewModel.setUserType("GOV")
                     aadhaarNavController.navigate(R.id.aadhaarNumberGovFragment)
@@ -74,10 +75,11 @@ class AadhaarIdFragment : Fragment() {
         binding.actvAadharVerificationDropdown.id = 0
 
         binding.actvAadharVerificationDropdown.setOnItemClickListener { _, _, i, _ ->
-            when(i) {
+            when (i) {
                 0 -> {
                     viewModel.setVerificationType("OTP")
                 }
+
                 1 -> {
                     viewModel.setVerificationType("FP")
                     binding.rgGovAsha.visibility = View.INVISIBLE
@@ -93,6 +95,7 @@ class AadhaarIdFragment : Fragment() {
                     binding.pbLoadingAadharId.visibility = View.VISIBLE
                     binding.clError.visibility = View.INVISIBLE
                 }
+
                 State.SUCCESS -> {
                     if (viewModel.userType.value == "ASHA") {
                         viewModel.resetState()
@@ -111,20 +114,24 @@ class AadhaarIdFragment : Fragment() {
                         }
                     }
                 }
+
                 State.ERROR_SERVER -> {
                     binding.pbLoadingAadharId.visibility = View.INVISIBLE
                     binding.clContentAadharId.visibility = View.VISIBLE
                     binding.clError.visibility = View.INVISIBLE
                 }
+
                 State.ERROR_NETWORK -> {
                     binding.clContentAadharId.visibility = View.INVISIBLE
                     binding.pbLoadingAadharId.visibility = View.INVISIBLE
                     binding.clError.visibility = View.VISIBLE
                 }
+
                 State.STATE_DETAILS_SUCCESS -> {
                     binding.clContentAadharId.visibility = View.VISIBLE
                     binding.pbLoadingAadharId.visibility = View.INVISIBLE
                 }
+
                 State.ABHA_GENERATED_SUCCESS -> {
                     findNavController().navigate(
                         AadhaarIdFragmentDirections.actionAadhaarIdFragmentToCreateAbhaFragment(

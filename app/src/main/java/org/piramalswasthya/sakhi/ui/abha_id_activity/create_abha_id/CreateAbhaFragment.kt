@@ -101,7 +101,7 @@ class CreateAbhaFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentCreateAbhaBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -124,7 +124,12 @@ class CreateAbhaFragment : Fragment() {
 
         viewModel.benMapped.observe(viewLifecycleOwner) {
             it?.let {
-                binding.abhBenMappedTxt.text = String.format("%s%s%s", resources.getString(R.string.linked_to_beneficiary), " ",it)
+                binding.abhBenMappedTxt.text = String.format(
+                    "%s%s%s",
+                    resources.getString(R.string.linked_to_beneficiary),
+                    " ",
+                    it
+                )
                 binding.llAbhaBenMapped.visibility = View.VISIBLE
             }
         }
@@ -144,7 +149,7 @@ class CreateAbhaFragment : Fragment() {
             viewModel.verifyOtp(binding.tietAadhaarOtp.text.toString())
         }
 
-        binding.btnDownloadAbhaNo.setOnClickListener{
+        binding.btnDownloadAbhaNo.setOnClickListener {
             binding.txtDownloadAbha.visibility = View.INVISIBLE
             binding.clDownloadAbha.visibility = View.GONE
         }
@@ -161,28 +166,33 @@ class CreateAbhaFragment : Fragment() {
                     binding.clCreateAbhaId.visibility = View.INVISIBLE
                     binding.clError.visibility = View.INVISIBLE
                 }
+
                 State.ERROR_NETWORK -> {
                     binding.pbCai.visibility = View.INVISIBLE
                     binding.clCreateAbhaId.visibility = View.INVISIBLE
                     binding.clError.visibility = View.VISIBLE
                 }
+
                 State.ERROR_SERVER -> {
                     binding.pbCai.visibility = View.INVISIBLE
                     binding.clError.visibility = View.INVISIBLE
                     binding.tvErrorText.visibility = View.VISIBLE
                 }
+
                 State.ABHA_GENERATE_SUCCESS -> {
                     binding.pbCai.visibility = View.INVISIBLE
                     binding.clCreateAbhaId.visibility = View.VISIBLE
                     binding.clVerifyMobileOtp.visibility = View.INVISIBLE
                     binding.clError.visibility = View.INVISIBLE
                 }
+
                 State.OTP_GENERATE_SUCCESS -> {
                     binding.clVerifyMobileOtp.visibility = View.VISIBLE
                     binding.clDownloadAbha.visibility = View.GONE
                     binding.clError.visibility = View.INVISIBLE
                     startResendTimer()
                 }
+
                 State.OTP_VERIFY_SUCCESS -> {
                     binding.pbCai.visibility = View.INVISIBLE
                     binding.clCreateAbhaId.visibility = View.VISIBLE
@@ -190,11 +200,13 @@ class CreateAbhaFragment : Fragment() {
                     binding.clVerifyMobileOtp.visibility = View.INVISIBLE
                     binding.clError.visibility = View.INVISIBLE
                 }
+
                 State.DOWNLOAD_SUCCESS -> {
                     binding.pbCai.visibility = View.INVISIBLE
                     binding.clCreateAbhaId.visibility = View.VISIBLE
                     binding.clError.visibility = View.INVISIBLE
                 }
+
                 State.DOWNLOAD_ERROR -> {
                     binding.pbCai.visibility = View.INVISIBLE
                     binding.clCreateAbhaId.visibility = View.VISIBLE
@@ -203,6 +215,7 @@ class CreateAbhaFragment : Fragment() {
                     binding.tvErrorTextVerify.visibility = View.VISIBLE
                     startResendTimer()
                 }
+
                 State.ERROR_INTERNAL -> {}
             }
         }
@@ -244,8 +257,10 @@ class CreateAbhaFragment : Fragment() {
         val notificationManager =
             requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId,channelId,
-                NotificationManager.IMPORTANCE_HIGH)
+            val channel = NotificationChannel(
+                channelId, channelId,
+                NotificationManager.IMPORTANCE_HIGH
+            )
             notificationManager.createNotificationChannel(channel)
 
 //            val notification = NotificationCompat.Builder(requireContext(),channelId)
@@ -261,7 +276,7 @@ class CreateAbhaFragment : Fragment() {
         val file = File(directory, fileName)
 //        val inputStream = fileStr.byteInputStream(Charset.defaultCharset())
 //        val outputStream = FileOutputStream(file)
-        val data: ByteArray = Base64.decode(fileStr,0)
+        val data: ByteArray = Base64.decode(fileStr, 0)
         FileOutputStream(file).use { stream -> stream.write(data) }
 
 //        val buffer = ByteArray(1024)
@@ -287,7 +302,7 @@ class CreateAbhaFragment : Fragment() {
     }
 
     private fun showDownload(fileName: String, uri: Uri, notificationManager: NotificationManager) {
-        val notificationBuilder = NotificationCompat.Builder(requireContext(),fileName)
+        val notificationBuilder = NotificationCompat.Builder(requireContext(), fileName)
             .setSmallIcon(R.drawable.ic_download)
             .setChannelId(channelId)
             .setContentTitle(fileName)
@@ -321,6 +336,7 @@ class CreateAbhaFragment : Fragment() {
             )
         }
     }
+
     private fun startResendTimer() {
         binding.resendOtp.isEnabled = false
         binding.timerResendOtp.visibility = View.VISIBLE
@@ -333,11 +349,13 @@ class CreateAbhaFragment : Fragment() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationManager =
                 requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val channel = NotificationChannel(channelId,channelId,
-                NotificationManager.IMPORTANCE_HIGH)
+            val channel = NotificationChannel(
+                channelId, channelId,
+                NotificationManager.IMPORTANCE_HIGH
+            )
             notificationManager.createNotificationChannel(channel)
 
-            val notification = NotificationCompat.Builder(requireContext(),channelId)
+            val notification = NotificationCompat.Builder(requireContext(), channelId)
                 .setContentTitle(resources.getString(R.string.downloading_abha_card))
                 .setContentText(resources.getString(R.string.downloading))
                 .setSmallIcon(R.drawable.ic_download)
@@ -350,14 +368,18 @@ class CreateAbhaFragment : Fragment() {
             .triggerDownloadCardWorker(requireContext(), fileName, viewModel.otpTxnID)
 
         state.observe(viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 is Operation.State.SUCCESS -> {
                     binding.clDownloadAbha.visibility = View.INVISIBLE
-                    Snackbar.make(binding.root,
-                        "Downloading $fileName ", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(
+                        binding.root,
+                        "Downloading $fileName ", Snackbar.LENGTH_SHORT
+                    ).show()
                 }
+
                 is Operation.State.FAILURE -> {
-                    Toast.makeText(context, "Failed to download , Please retry", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Failed to download , Please retry", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }

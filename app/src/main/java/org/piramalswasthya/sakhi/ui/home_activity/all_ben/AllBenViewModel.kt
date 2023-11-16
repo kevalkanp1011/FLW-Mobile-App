@@ -17,14 +17,14 @@ import javax.inject.Inject
 @HiltViewModel
 class AllBenViewModel @Inject constructor(
     recordsRepo: RecordsRepo,
-    private val benRepo:BenRepo
+    private val benRepo: BenRepo
 ) : ViewModel() {
 
 
     private val allBenList = recordsRepo.allBenList
     private val filter = MutableStateFlow("")
-    val benList = allBenList.combine(filter){
-       list, filter -> filterBenList(list, filter)
+    val benList = allBenList.combine(filter) { list, filter ->
+        filterBenList(list, filter)
     }
 
     private val _abha = MutableLiveData<String?>()

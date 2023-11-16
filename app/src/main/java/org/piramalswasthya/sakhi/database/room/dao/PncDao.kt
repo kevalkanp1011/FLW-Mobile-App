@@ -24,6 +24,7 @@ interface PncDao {
 
     @Update
     suspend fun update(vararg pnc: PNCVisitCache)
+
     @Query("select * from pnc_visit where benId in (:eligBenIds) and isActive = 1")
     suspend fun getAllPNCs(eligBenIds: Set<Long>): List<PNCVisitCache>
 

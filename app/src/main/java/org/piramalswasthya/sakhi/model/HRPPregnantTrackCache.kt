@@ -133,11 +133,11 @@ data class BenWithHRPTrackingCache(
     fun asDomainModel(): BenWithHRPTListDomain {
         return BenWithHRPTListDomain(
             ben.asBasicDomainModel(),
-        lmpString = getDateString(assessCache.lmpDate),
-         eddString = getDateString(assessCache.lmpDate + TimeUnit.DAYS.toMillis(280)),
-         weeksOfPregnancy = (TimeUnit.MILLISECONDS.toDays(getTodayMillis() - assessCache.lmpDate) / 7).takeIf { it <= 40 }
-             ?.toString() ?: "NA",
-        savedTrackings.map {
+            lmpString = getDateString(assessCache.lmpDate),
+            eddString = getDateString(assessCache.lmpDate + TimeUnit.DAYS.toMillis(280)),
+            weeksOfPregnancy = (TimeUnit.MILLISECONDS.toDays(getTodayMillis() - assessCache.lmpDate) / 7).takeIf { it <= 40 }
+                ?.toString() ?: "NA",
+            savedTrackings.map {
                 HRPTDomain(
                     it.benId,
                     it.visitDate,
@@ -164,6 +164,6 @@ data class BenWithHRPTListDomain(
     val savedTrackings: List<HRPTDomain>,
     val allSynced: SyncState? = if (savedTrackings.isEmpty()) null else
         if (savedTrackings.map { it.syncState }
-                .all { it == SyncState.SYNCED}) SyncState.SYNCED else SyncState.UNSYNCED
+                .all { it == SyncState.SYNCED }) SyncState.SYNCED else SyncState.UNSYNCED
 
 )

@@ -378,7 +378,7 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         val list = firstPage.toMutableList()
         contactNumberFamilyHead.value = familyHeadPhoneNo?.toString()
         this.familyHeadPhoneNo = familyHeadPhoneNo?.toString()
-        if(dateOfReg.value==null)
+        if (dateOfReg.value == null)
             dateOfReg.value = getCurrentDateString()
         ben?.takeIf { !it.isDraft }?.let { saved ->
             pic.value = saved.userImage
@@ -506,7 +506,6 @@ class BenGenRegFormDataset(context: Context, language: Languages) : Dataset(cont
         }
         setUpPage(list)
     }
-
 
 
     fun hasThirdPage(): Boolean {

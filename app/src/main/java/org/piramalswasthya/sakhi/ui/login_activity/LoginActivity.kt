@@ -32,11 +32,13 @@ class LoginActivity : AppCompatActivity() {
             newBase,
             WrapperEntryPoint::class.java
         ).preferenceDao
-        super.attachBaseContext(MyContextWrapper.wrap(
-            newBase,
-            newBase.applicationContext,
-            pref.getCurrentLanguage().symbol
-        ))
+        super.attachBaseContext(
+            MyContextWrapper.wrap(
+                newBase,
+                newBase.applicationContext,
+                pref.getCurrentLanguage().symbol
+            )
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,9 +54,14 @@ class LoginActivity : AppCompatActivity() {
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = resources.getString(R.string.notification_sync_channel_name)
-            val descriptionText = resources.getString(R.string.notification_sync_channel_description)
+            val descriptionText =
+                resources.getString(R.string.notification_sync_channel_description)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(resources.getString(R.string.notification_sync_channel_id), name, importance).apply {
+            val channel = NotificationChannel(
+                resources.getString(R.string.notification_sync_channel_id),
+                name,
+                importance
+            ).apply {
                 description = descriptionText
             }
             // Register the channel with the system

@@ -2,7 +2,6 @@ package org.piramalswasthya.sakhi.configuration
 
 import android.text.InputFilter
 import android.text.Spanned
-import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 
@@ -19,11 +18,11 @@ object DecimalDigitsInputFilter :
         dend: Int
     ): CharSequence {
         if (source == "") {
-            return source;
+            return source
         }
         if (source.toString().matches(regex.toRegex())) {
-            return source;
+            return source
         }
-        return "";
+        return ""
     }
 }

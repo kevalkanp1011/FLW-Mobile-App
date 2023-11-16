@@ -111,7 +111,10 @@ class HouseholdMembersFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__hh, getString(R.string.household_members))
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__hh,
+                getString(R.string.household_members)
+            )
         }
     }
 

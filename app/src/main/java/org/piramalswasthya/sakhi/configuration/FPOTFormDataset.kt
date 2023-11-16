@@ -5,7 +5,7 @@ import org.piramalswasthya.sakhi.model.FPOTCache
 import org.piramalswasthya.sakhi.model.FormInputOld
 import org.piramalswasthya.sakhi.model.InputType
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 class FPOTFormDataset(context: Context, private val fpot: FPOTCache? = null) {
 
@@ -20,6 +20,7 @@ class FPOTFormDataset(context: Context, private val fpot: FPOTCache? = null) {
     fun mapValues(fpot: FPOTCache) {
 
     }
+
     private val monthlySerialNumber = FormInputOld(
         inputType = InputType.EDIT_TEXT,
         title = "Monthly serial number",
@@ -128,7 +129,7 @@ class FPOTFormDataset(context: Context, private val fpot: FPOTCache? = null) {
         inputType = InputType.RADIO,
         title = "Menstruation stared after female sterilization",
         required = false,
-        entries = arrayOf("Yes","No")
+        entries = arrayOf("Yes", "No")
     )
     private val spermatozoaFoundInSemen = FormInputOld(
         inputType = InputType.RADIO,
@@ -164,10 +165,32 @@ class FPOTFormDataset(context: Context, private val fpot: FPOTCache? = null) {
     )
 
     val firstPage by lazy {
-        listOf(monthlySerialNumber, annualSerialNumber, spouseName, category, benAddress, contactNumber, educationalQualification,
-            numChildren, youngestChildAge, sterilization, mrCheckListFilled, dateOfOperation, femaleSterilization, secondFollowUpExpectedDate,
-            followUpActualDate, followUpDetails, secondPostFollowUpCounselling, thirdFollowUpExpectedDate, menstruationStarted,
-            spermatozoaFoundInSemen, thirdPostFollowUpCounselling, sterilizationOrVasectomyIssueDate, notIssuedReason,
-            sterilizationOrVasectomyDocSubmitted, remarks)
+        listOf(
+            monthlySerialNumber,
+            annualSerialNumber,
+            spouseName,
+            category,
+            benAddress,
+            contactNumber,
+            educationalQualification,
+            numChildren,
+            youngestChildAge,
+            sterilization,
+            mrCheckListFilled,
+            dateOfOperation,
+            femaleSterilization,
+            secondFollowUpExpectedDate,
+            followUpActualDate,
+            followUpDetails,
+            secondPostFollowUpCounselling,
+            thirdFollowUpExpectedDate,
+            menstruationStarted,
+            spermatozoaFoundInSemen,
+            thirdPostFollowUpCounselling,
+            sterilizationOrVasectomyIssueDate,
+            notIssuedReason,
+            sterilizationOrVasectomyDocSubmitted,
+            remarks
+        )
     }
 }

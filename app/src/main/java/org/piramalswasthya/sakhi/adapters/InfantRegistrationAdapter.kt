@@ -17,7 +17,8 @@ class InfantRegistrationAdapter(
         override fun areItemsTheSame(
             oldItem: InfantRegDomain,
             newItem: InfantRegDomain
-        ) = oldItem.motherBen.benId == newItem.motherBen.benId && oldItem.babyIndex==newItem.babyIndex
+        ) =
+            oldItem.motherBen.benId == newItem.motherBen.benId && oldItem.babyIndex == newItem.babyIndex
 
         override fun areContentsTheSame(
             oldItem: InfantRegDomain,
@@ -37,11 +38,11 @@ class InfantRegistrationAdapter(
         }
 
         fun bind(
-            item: InfantRegDomain ,
+            item: InfantRegDomain,
             clickListener: ClickListener?,
         ) {
             binding.item = item
-            binding.btnFormEc1.text = if(item.savedIr==null) "Register" else "View"
+            binding.btnFormEc1.text = if (item.savedIr == null) "Register" else "View"
 
             binding.btnFormEc1.setBackgroundColor(binding.root.resources.getColor(if (item.savedIr == null) android.R.color.holo_red_dark else android.R.color.holo_green_dark))
             binding.clickListener = clickListener
@@ -64,7 +65,7 @@ class InfantRegistrationAdapter(
 
 
     class ClickListener(
-        private val clickedForm: ((benId: Long, babyIndex : Int) -> Unit)? = null
+        private val clickedForm: ((benId: Long, babyIndex: Int) -> Unit)? = null
 
     ) {
         fun onClickForm(item: InfantRegDomain) =

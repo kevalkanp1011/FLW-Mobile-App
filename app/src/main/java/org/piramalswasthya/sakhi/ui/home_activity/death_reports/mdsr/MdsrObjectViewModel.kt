@@ -74,7 +74,7 @@ class MdsrObjectViewModel @Inject constructor(
                 ben = benRepo.getBeneficiaryRecord(benId, hhId)!!
                 household = benRepo.getHousehold(hhId)!!
                 user = preferenceDao.getLoggedInUser()!!
-                mdsr = database.mdsrDao.getMDSR( benId)
+                mdsr = database.mdsrDao.getMDSR(benId)
             }
             _benName.value = "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
             _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"

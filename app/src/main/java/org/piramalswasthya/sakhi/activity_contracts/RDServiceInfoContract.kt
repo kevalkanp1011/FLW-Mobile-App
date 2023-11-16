@@ -22,7 +22,7 @@ class RDServiceInfoContract : ActivityResultContract<Unit, String?>() {
         intent?.let {
             if (resultCode == Activity.RESULT_OK) {
 
-                val deviceInfo : String? = it.getStringExtra("DEVICE_INFO")
+                val deviceInfo: String? = it.getStringExtra("DEVICE_INFO")
                 val rdServiceInfo: String? = it.getStringExtra("RD_SERVICE_INFO")
                 val a = it.getStringExtra("PID_DATA")
                 return Base64.encodeToString(a?.toByteArray(StandardCharsets.UTF_8), Base64.NO_WRAP)

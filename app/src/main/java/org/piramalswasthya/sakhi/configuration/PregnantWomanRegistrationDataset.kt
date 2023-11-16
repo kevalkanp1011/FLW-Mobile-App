@@ -504,13 +504,13 @@ class PregnantWomanRegistrationDataset(
                 weekOfPregnancy.value =
                     weekOfPreg.toString()
 //                if (weekOfPreg > 26)
-                    lmp.inputType = InputType.TEXT_VIEW
+                lmp.inputType = InputType.TEXT_VIEW
                 edd.value = getDateFromLong(getEddFromLmp(it.lmpDate))
                 ben?.regDate?.let { it1 ->
                     if (lastTrackTimestamp != null) {
-                        dateOfReg.min =  maxOf( it.lmpDate, it1, lastTrackTimestamp)
+                        dateOfReg.min = maxOf(it.lmpDate, it1, lastTrackTimestamp)
                     } else {
-                        dateOfReg.min =  maxOf( it.lmpDate, it1)
+                        dateOfReg.min = maxOf(it.lmpDate, it1)
                     }
                 }
                 dateOfReg.max = minOf(it.edd, System.currentTimeMillis())
@@ -573,7 +573,8 @@ class PregnantWomanRegistrationDataset(
             bloodGroup.value = getLocalValueInArray(bloodGroup.arrayId, saved.bloodGroup)
             weight.value = it.weight?.toString()
             height.value = it.height?.toString()
-            vdrlrprTestResult.value = getLocalValueInArray(vdrlrprTestResult.arrayId, saved.vdrlRprTestResult)
+            vdrlrprTestResult.value =
+                getLocalValueInArray(vdrlrprTestResult.arrayId, saved.vdrlRprTestResult)
             it.vdrlRprTestResult?.let { it1 ->
                 if (it1 == vdrlrprTestResult.entries?.get(0) || it1 == vdrlrprTestResult.entries?.get(
                         1
@@ -598,7 +599,8 @@ class PregnantWomanRegistrationDataset(
                 }
             }
             hivTestResult.value = getLocalValueInArray(hivTestResult.arrayId, saved.hivTestResult)
-            hbsAgTestResult.value = getLocalValueInArray(hbsAgTestResult.arrayId, saved.hbsAgTestResult)
+            hbsAgTestResult.value =
+                getLocalValueInArray(hbsAgTestResult.arrayId, saved.hbsAgTestResult)
             pastIllness.value = getLocalValueInArray(pastIllness.arrayId, saved.pastIllness)
             otherPastIllness.value = it.otherPastIllness
             if (pastIllness.value == pastIllness.entries!!.last())
@@ -607,7 +609,10 @@ class PregnantWomanRegistrationDataset(
             if (isFirstPregnancy.value == isFirstPregnancy.entries!!.last()) {
                 totalNumberOfPreviousPregnancy.value = it.numPrevPregnancy?.toString()
                 complicationsDuringLastPregnancy.value =
-                    getLocalValueInArray(complicationsDuringLastPregnancy.arrayId, saved.complicationPrevPregnancy)
+                    getLocalValueInArray(
+                        complicationsDuringLastPregnancy.arrayId,
+                        saved.complicationPrevPregnancy
+                    )
                 list.addAll(
                     list.indexOf(isFirstPregnancy) + 1,
                     listOf(totalNumberOfPreviousPregnancy, complicationsDuringLastPregnancy)

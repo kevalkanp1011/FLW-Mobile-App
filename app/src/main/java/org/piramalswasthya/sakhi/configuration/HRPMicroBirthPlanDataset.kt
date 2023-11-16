@@ -184,7 +184,7 @@ class HRPMicroBirthPlanDataset(
         required = true,
         etInputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
     )
-    
+
     private val mbp_label = FormElement(
         id = 19,
         inputType = InputType.HEADLINE,
@@ -217,7 +217,8 @@ class HRPMicroBirthPlanDataset(
 
         saved?.let {
             nearestSc.value = it.nearestSc
-            bloodGroup.value = getLocalValueInArray(R.array.maternal_health_blood_group, it.bloodGroup)
+            bloodGroup.value =
+                getLocalValueInArray(R.array.maternal_health_blood_group, it.bloodGroup)
             contactNumber1.value = it.contactNumber1
             contactNumber2.value = it.contactNumber2
             scHosp.value = it.scHosp
@@ -248,48 +249,63 @@ class HRPMicroBirthPlanDataset(
                 validateMobileNumberOnEditText(contactNumber1)
                 -1
             }
+
             contactNumber2.id -> {
                 validateMobileNumberOnEditText(contactNumber2)
             }
+
             scHosp.id -> {
                 validateAllAlphaNumericSpaceOnEditText(scHosp)
             }
+
             usg.id -> {
                 validateAllAlphaNumericSpaceOnEditText(usg)
             }
+
             block.id -> {
                 validateAllAlphaNumericSpaceOnEditText(block)
             }
+
             bankac.id -> {
                 validateIntMinMax(bankac)
             }
+
             nearestPhc.id -> {
                 validateAllAlphaNumericSpaceOnEditText(nearestPhc)
             }
+
             nearestFru.id -> {
                 validateAllAlphaNumericSpaceOnEditText(nearestFru)
             }
+
             bloodDonors1.id -> {
                 validateAllAlphabetsSpaceOnEditText(bloodDonors1)
             }
+
             bloodDonors2.id -> {
                 validateAllAlphabetsSpaceOnEditText(bloodDonors2)
             }
+
             birthCompanion.id -> {
                 validateAllAlphabetsSpaceOnEditText(birthCompanion)
             }
+
             careTaker.id -> {
                 validateAllAlphabetsSpaceOnEditText(careTaker)
             }
+
             communityMember.id -> {
                 validateAllAlphabetsSpaceOnEditText(communityMember)
             }
+
             communityMemberContact.id -> {
                 validateMobileNumberOnEditText(communityMemberContact)
             }
+
             modeOfTransportation.id -> {
                 validateAllAlphabetsSpaceOnEditText(modeOfTransportation)
             }
+
             else -> {
                 -1
             }
@@ -299,7 +315,8 @@ class HRPMicroBirthPlanDataset(
     override fun mapValues(cacheModel: FormDataModel, pageNumber: Int) {
         (cacheModel as HRPMicroBirthPlanCache).let { form ->
             form.nearestSc = nearestSc.value
-            form.bloodGroup = getEnglishValueInArray(R.array.maternal_health_blood_group, bloodGroup.value)
+            form.bloodGroup =
+                getEnglishValueInArray(R.array.maternal_health_blood_group, bloodGroup.value)
             form.contactNumber1 = contactNumber1.value
             form.contactNumber2 = contactNumber2.value
             form.scHosp = scHosp.value

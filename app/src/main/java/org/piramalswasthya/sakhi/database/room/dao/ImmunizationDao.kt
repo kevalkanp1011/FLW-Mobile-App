@@ -23,7 +23,7 @@ interface ImmunizationDao {
     suspend fun addVaccine(vararg vaccine: Vaccine)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addImmunizationRecord( imm: ImmunizationCache)
+    suspend fun addImmunizationRecord(imm: ImmunizationCache)
 
     @Query("SELECT * FROM IMMUNIZATION WHERE beneficiaryId=:benId AND vaccineId =:vaccineId limit 1")
     suspend fun getImmunizationRecord(benId: Long, vaccineId: Int): ImmunizationCache?
@@ -33,7 +33,7 @@ interface ImmunizationDao {
     suspend fun getUnsyncedImmunization(syncState: SyncState): List<ImmunizationCache>
 
     @Query("select count(*) as count from (select * from beneficiary b inner join vaccine v on  (strftime('%s', 'now') * 1000)  - b.dob between v.minAllowedAgeInMillis and v.overdueDurationSinceMinInMillis and v.vaccineId not in (select vaccineId from immunization i where i.beneficiaryId = b.beneficiaryId) group by b.beneficiaryId)")
-    fun getChildrenImmunizationDueListCount() : Flow<Int>
+    fun getChildrenImmunizationDueListCount(): Flow<Int>
 
 
     @Transaction
@@ -45,17 +45,18 @@ interface ImmunizationDao {
         maxDob: Long,
 //        vaccineIdList: List<Int>
     ): Flow<List<ChildImmunizationDetailsCache>>
+
     @Transaction
     @Query(
         "SELECT ben.*, reg.lmpDate as lmp, imm.* FROM BEN_BASIC_CACHE ben inner join pregnancy_register reg on ben.benId = reg.benId LEFT OUTER JOIN IMMUNIZATION imm WHERE ben.reproductiveStatusId = :reproductiveStatusId "
     )
     fun getBenWithImmunizationRecords(
-        reproductiveStatusId : Int = 2
+        reproductiveStatusId: Int = 2
 //        vaccineIdList: List<Int>
     ): Flow<List<MotherImmunizationDetailsCache>>
 
     @Query("SELECT * FROM VACCINE where category = :immCat order by vaccineId")
-    suspend fun getVaccinesForCategory(immCat : ImmunizationCategory): List<Vaccine>
+    suspend fun getVaccinesForCategory(immCat: ImmunizationCategory): List<Vaccine>
 
     @Query("SELECT * FROM VACCINE WHERE vaccineId = :vaccineId limit 1")
     suspend fun getVaccineById(vaccineId: Int): Vaccine?

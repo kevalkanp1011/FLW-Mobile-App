@@ -17,8 +17,8 @@ class TBScreeningListViewModel @Inject constructor(
 
     private val allBenList = recordsRepo.tbScreeningList
     private val filter = MutableStateFlow("")
-    val benList = allBenList.combine(filter){
-            list, filter -> filterTbScreeningList(list, filter)
+    val benList = allBenList.combine(filter) { list, filter ->
+        filterTbScreeningList(list, filter)
     }
 
     fun filterText(text: String) {

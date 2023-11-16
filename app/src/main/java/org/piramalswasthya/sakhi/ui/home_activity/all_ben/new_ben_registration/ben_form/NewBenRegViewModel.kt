@@ -166,7 +166,7 @@ class NewBenRegViewModel @Inject constructor(
                         )
                     }
                     dataset.mapValues(ben, 2)
-                    if(isHoF) {
+                    if (isHoF) {
                         dataset.updateHouseholdWithHoFDetails(household, ben)
                         householdRepo.updateHousehold(household)
                     }

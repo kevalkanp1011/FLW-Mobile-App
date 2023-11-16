@@ -39,16 +39,15 @@ class AllHouseholdViewModel @Inject constructor(
     private var _selectedHouseholdId: Long = 0
 
     private val _householdBenList = mutableListOf<BenRegCache>()
-    val householdBenList : List<BenRegCache>
+    val householdBenList: List<BenRegCache>
         get() = _householdBenList
 
     val selectedHouseholdId: Long
         get() = _selectedHouseholdId
 
-    private var _selectedHousehold : HouseholdCache? = null
-    val selectedHousehold : HouseholdCache?
+    private var _selectedHousehold: HouseholdCache? = null
+    val selectedHousehold: HouseholdCache?
         get() = _selectedHousehold
-
 
 
     fun checkDraft() {
@@ -97,7 +96,7 @@ class AllHouseholdViewModel @Inject constructor(
     fun setSelectedHouseholdId(id: Long) {
         _selectedHouseholdId = id
         viewModelScope.launch {
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
                 _selectedHousehold = householdRepo.getRecord(id)
             }
             _householdBenList.clear()

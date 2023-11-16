@@ -53,16 +53,19 @@ class AbhaIdActivity : AppCompatActivity() {
                     binding.navHostFragmentAbhaId.visibility = View.GONE
                     binding.clError.visibility = View.GONE
                 }
+
                 State.SUCCESS -> {
                     binding.progressBarAbhaActivity.visibility = View.GONE
                     binding.clError.visibility = View.GONE
                     binding.navHostFragmentAbhaId.visibility = View.VISIBLE
                 }
+
                 State.ERROR_NETWORK -> {
                     binding.clError.visibility = View.VISIBLE
                     binding.progressBarAbhaActivity.visibility = View.GONE
                     binding.navHostFragmentAbhaId.visibility = View.GONE
                 }
+
                 State.ERROR_SERVER -> {
                     binding.clError.visibility = View.VISIBLE
                     binding.progressBarAbhaActivity.visibility = View.GONE
@@ -77,10 +80,10 @@ class AbhaIdActivity : AppCompatActivity() {
             mainViewModel.generateAccessToken()
         }
 
-        binding.toolbarMenuHome.setOnClickListener{
+        binding.toolbarMenuHome.setOnClickListener {
             finish()
         }
-        countDownTimer = object : CountDownTimer(30*60*1000, 1000) {
+        countDownTimer = object : CountDownTimer(30 * 60 * 1000, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 binding.sessionTimer.text = formatMilliseconds(millisUntilFinished)
@@ -98,10 +101,12 @@ class AbhaIdActivity : AppCompatActivity() {
                 exitAlert.show()
                 true
             }
+
             R.id.createAbhaFragment -> {
                 exitActivityAlert.show()
                 true
             }
+
             else -> {
                 navController.popBackStack()
                 navController.navigateUp() || super.onSupportNavigateUp()
@@ -113,7 +118,7 @@ class AbhaIdActivity : AppCompatActivity() {
 //        binding.ivToolbarAbha.setImageResource(logoResource)
 //        binding.toolbar.setLogo(logoResource)
         title?.let {
-            binding.toolbar.title= null
+            binding.toolbar.title = null
             binding.tvToolbarAbha.text = it
         }
     }
@@ -179,10 +184,12 @@ class AbhaIdActivity : AppCompatActivity() {
             newBase,
             WrapperEntryPoint::class.java
         ).preferenceDao
-        super.attachBaseContext(MyContextWrapper.wrap(
-            newBase,
-            newBase.applicationContext,
-            pref.getCurrentLanguage().symbol
-        ))
+        super.attachBaseContext(
+            MyContextWrapper.wrap(
+                newBase,
+                newBase.applicationContext,
+                pref.getCurrentLanguage().symbol
+            )
+        )
     }
 }

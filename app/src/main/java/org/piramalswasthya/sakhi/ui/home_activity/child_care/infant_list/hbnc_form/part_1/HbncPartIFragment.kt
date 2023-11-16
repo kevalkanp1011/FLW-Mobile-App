@@ -104,7 +104,7 @@ class HbncPartIFragment : Fragment() {
                     viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED
                 ).collect {
                     Timber.d("Collecting error : $it")
-                    it?.let{showErrorAlert(it)}
+                    it?.let { showErrorAlert(it) }
                 }
             }
         }
@@ -117,19 +117,24 @@ class HbncPartIFragment : Fragment() {
                     binding.cvPatientInformation.visibility = View.GONE
                     binding.pbForm.visibility = View.VISIBLE
                 }
+
                 State.SUCCESS -> {
                     findNavController().navigateUp()
                     WorkerUtils.triggerD2dSyncWorker(requireContext())
                 }
+
                 State.FAIL -> {
                     binding.form.rvInputForm.visibility = View.VISIBLE
                     binding.btnSubmit.visibility = View.VISIBLE
                     binding.cvPatientInformation.visibility = View.VISIBLE
                     binding.pbForm.visibility = View.GONE
                     Toast.makeText(
-                        context, resources.getString(R.string.saving_mdsr_to_database_failed), Toast.LENGTH_LONG
+                        context,
+                        resources.getString(R.string.saving_mdsr_to_database_failed),
+                        Toast.LENGTH_LONG
                     ).show()
                 }
+
                 else -> {
                     binding.form.rvInputForm.visibility = View.VISIBLE
                     binding.btnSubmit.visibility = View.VISIBLE

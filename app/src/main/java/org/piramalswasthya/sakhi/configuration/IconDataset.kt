@@ -24,9 +24,9 @@ import javax.inject.Inject
 class IconDataset @Inject constructor(
     private val recordsRepo: RecordsRepo,
     private val preferenceDao: PreferenceDao
-    ) {
+) {
 
-    fun getHomeIconDataset(resources: Resources) : List<Icon> {
+    fun getHomeIconDataset(resources: Resources): List<Icon> {
         val showAll = preferenceDao.isDevModeEnabled
         Timber.d("currently : $showAll")
         return if (/*showAll*/true) {
@@ -302,10 +302,10 @@ class IconDataset @Inject constructor(
 //            MotherCareFragmentDirections.actionMotherCareFragmentToReproductiveAgeListFragment()
 //        )
     ).apply {
-            forEachIndexed { index, icon ->
-                icon.colorPrimary = index % 2 == 0
-            }
+        forEachIndexed { index, icon ->
+            icon.colorPrimary = index % 2 == 0
         }
+    }
 
     fun getNCDDataset(resources: Resources) = listOf(
         Icon(
@@ -333,10 +333,10 @@ class IconDataset @Inject constructor(
             NcdFragmentDirections.actionNcdFragmentToNcdNonEligibleListFragment()
         ),
     ).apply {
-            forEachIndexed { index, icon ->
-                icon.colorPrimary = index % 2 == 0
-            }
+        forEachIndexed { index, icon ->
+            icon.colorPrimary = index % 2 == 0
         }
+    }
 
     fun getImmunizationDataset() = listOf(
         Icon(
@@ -353,10 +353,10 @@ class IconDataset @Inject constructor(
 //        ),
 
     ).apply {
-            forEachIndexed { index, icon ->
-                icon.colorPrimary = index % 2 == 0
-            }
+        forEachIndexed { index, icon ->
+            icon.colorPrimary = index % 2 == 0
         }
+    }
 
     fun getVillageLevelFormsDataset(resources: Resources) = listOf(
         Icon(

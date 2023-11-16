@@ -277,7 +277,11 @@ class NewBenRegG15Fragment : Fragment() {
                 State.SAVE_SUCCESS -> {
                     binding.clContent.visibility = View.VISIBLE
                     binding.rlSaving.visibility = View.GONE
-                    Toast.makeText(context, resources.getString(R.string.save_successful), Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        resources.getString(R.string.save_successful),
+                        Toast.LENGTH_LONG
+                    ).show()
                     WorkerUtils.triggerAmritPushWorker(requireContext())
                     findNavController().navigate(NewBenRegG15FragmentDirections.actionNewBenRegG15FragmentToHomeFragment())
                 }
@@ -285,7 +289,9 @@ class NewBenRegG15Fragment : Fragment() {
                 State.SAVE_FAILED -> {
                     Toast.makeText(
 
-                        context, resources.getString(R.string.something_wend_wong_contact_testing), Toast.LENGTH_LONG
+                        context,
+                        resources.getString(R.string.something_wend_wong_contact_testing),
+                        Toast.LENGTH_LONG
                     ).show()
                     binding.clContent.visibility = View.VISIBLE
                     binding.rlSaving.visibility = View.GONE

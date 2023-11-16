@@ -2,7 +2,6 @@ package org.piramalswasthya.sakhi.repositories
 
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.piramalswasthya.sakhi.database.room.InAppDb
@@ -259,7 +258,8 @@ class HbycRepo @Inject constructor(
 
         hbycList.forEach { hbycPost ->
             benDao.getBen(hbycPost.beneficiaryid)?.let {
-                var cache = hbycDao.getHbyc(it.householdId, it.beneficiaryId, hbycPost.month.toString())
+                var cache =
+                    hbycDao.getHbyc(it.householdId, it.beneficiaryId, hbycPost.month.toString())
                 cache?.let { it1 ->
                     it1.processed = "P"
                     it1.syncState = SyncState.SYNCED

@@ -49,11 +49,13 @@ class SignInViewModel @Inject constructor(
         viewModelScope.launch {
             launch {
                 userRepo.unProcessedRecordCount.collect { value ->
-                    _unprocessedRecordsCount.value = value.filter { it.syncState != SyncState.SYNCED }.sumOf { it.count }
+                    _unprocessedRecordsCount.value =
+                        value.filter { it.syncState != SyncState.SYNCED }.sumOf { it.count }
                 }
             }
         }
     }
+
     fun loginInClicked() {
         _state.value = NetworkResponse.Loading()
     }
@@ -77,7 +79,7 @@ class SignInViewModel @Inject constructor(
         }
     }
 
-    fun getLoggedInUser() : User? {
+    fun getLoggedInUser(): User? {
         return pref.getLoggedInUser()
     }
 

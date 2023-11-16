@@ -29,10 +29,14 @@ class GeneralOpCareFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(GeneralOpCareViewModel::class.java)
         // TODO: Use the ViewModel
     }
+
     override fun onStart() {
         super.onStart()
-        activity?.let{
-            (it as HomeActivity).updateActionBar(R.drawable.ic__general_op, getString(R.string.icon_title_gop))
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__general_op,
+                getString(R.string.icon_title_gop)
+            )
         }
     }
 

@@ -17,8 +17,8 @@ class TBSuspectedListViewModel @Inject constructor(
 
     private val allBenList = recordsRepo.tbSuspectedList
     private val filter = MutableStateFlow("")
-    val benList = allBenList.combine(filter){
-            list, filter -> filterTbSuspectedList(list, filter)
+    val benList = allBenList.combine(filter) { list, filter ->
+        filterTbSuspectedList(list, filter)
     }
 
     fun filterText(text: String) {

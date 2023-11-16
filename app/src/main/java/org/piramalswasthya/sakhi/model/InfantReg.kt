@@ -70,7 +70,7 @@ data class InfantRegCache(
             id = id,
             benId = motherBenId,
             childBenId = childBenId,
-            isActive  = isActive,
+            isActive = isActive,
             babyName = babyName,
             babyIndex = babyIndex,
             infantTerm = infantTerm,
@@ -148,7 +148,7 @@ data class InfantRegPost(
     val id: Long = 0,
     val benId: Long,
     val childBenId: Long,
-    val isActive : Boolean,
+    val isActive: Boolean,
     val babyName: String? = null,
     val babyIndex: Int,
     val infantTerm: String? = null,
@@ -207,7 +207,7 @@ data class InfantRegPost(
 data class ChildRegDomain(
     val motherBen: BenBasicDomain,
     val infant: InfantRegCache,
-    val childBen : BenBasicDomain?
+    val childBen: BenBasicDomain?
 )
 
 data class InfantRegWithBen(

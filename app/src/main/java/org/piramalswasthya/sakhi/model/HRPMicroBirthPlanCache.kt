@@ -11,18 +11,18 @@ import org.piramalswasthya.sakhi.database.room.SyncState
     tableName = "HRP_MICRO_BIRTH_PLAN",
     foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
-        parentColumns = arrayOf("beneficiaryId",/* "householdId"*/),
-        childColumns = arrayOf("benId", /*"hhId"*/),
+        parentColumns = arrayOf("beneficiaryId"/* "householdId"*/),
+        childColumns = arrayOf("benId" /*"hhId"*/),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "ind_mbp", value = ["benId",/* "hhId"*/])]
+    indices = [Index(name = "ind_mbp", value = ["benId"/* "hhId"*/])]
 )
 
-data class HRPMicroBirthPlanCache (
+data class HRPMicroBirthPlanCache(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val benId : Long,
+    val benId: Long,
     var nearestSc: String? = null,
     var bloodGroup: String? = null,
     var contactNumber1: String? = null,

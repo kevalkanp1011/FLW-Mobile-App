@@ -18,23 +18,24 @@ class SchedulerViewModel @Inject constructor(
     maternalHealthRepo: MaternalHealthRepo,
     recordsRepo: RecordsRepo
 ) : ViewModel() {
-    enum class State{
+    enum class State {
         LOADING,
         LOADED,
     }
+
     private val _state = MutableLiveData(State.LOADING)
-    val state : LiveData<State>
+    val state: LiveData<State>
         get() = _state
 
-    val ancDueCount : Flow<Int> = maternalHealthRepo.ancDueCount
+    val ancDueCount: Flow<Int> = maternalHealthRepo.ancDueCount
 
-    val hrpDueCount : Flow<Int> = recordsRepo.hrpTrackingPregListCount
+    val hrpDueCount: Flow<Int> = recordsRepo.hrpTrackingPregListCount
 
-    val hrpCountEC : Flow<Int> = recordsRepo.hrpTrackingNonPregListCount
+    val hrpCountEC: Flow<Int> = recordsRepo.hrpTrackingNonPregListCount
 
-    val immunizationDue : Flow<Int> = recordsRepo.childrenImmunizationDueListCount
+    val immunizationDue: Flow<Int> = recordsRepo.childrenImmunizationDueListCount
 
-    val lowWeightBabiesCount : Flow<Int> = recordsRepo.lowWeightBabiesCount
+    val lowWeightBabiesCount: Flow<Int> = recordsRepo.lowWeightBabiesCount
 
     private val _date = MutableLiveData(
         Calendar.getInstance().apply {
@@ -43,10 +44,10 @@ class SchedulerViewModel @Inject constructor(
             set(Calendar.SECOND, 0)
         }.timeInMillis
     )
-    val date : LiveData<Long>
+    val date: LiveData<Long>
         get() = _date
 
-    fun setDate(dateLong : Long){
+    fun setDate(dateLong: Long) {
         _date.value = dateLong
         _state.value = State.LOADING
         viewModelScope.launch {
@@ -62,7 +63,7 @@ class SchedulerViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updateData(){
+    private suspend fun updateData() {
         _state.value = State.LOADED
     }
 

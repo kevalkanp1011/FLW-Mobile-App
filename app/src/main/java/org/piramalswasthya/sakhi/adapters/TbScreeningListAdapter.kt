@@ -43,7 +43,7 @@ class TbScreeningListAdapter(
         ) {
             binding.benWithTb = item
 
-            binding.ivSyncState.visibility = if(item.tb==null) View.INVISIBLE else View.VISIBLE
+            binding.ivSyncState.visibility = if (item.tb == null) View.INVISIBLE else View.VISIBLE
 
             if (item.ben.spouseName == "Not Available" && item.ben.fatherName == "Not Available") {
                 binding.father = true
@@ -56,7 +56,8 @@ class TbScreeningListAdapter(
                     binding.spouse = false
                 } else if (item.ben.gender == "FEMALE") {
                     if (item.ben.ageInt > 15) {
-                        binding.father = item.ben.fatherName != "Not Available"  && item.ben.spouseName == "Not Available"
+                        binding.father =
+                            item.ben.fatherName != "Not Available" && item.ben.spouseName == "Not Available"
                         binding.husband = item.ben.spouseName != "Not Available"
                         binding.spouse = false
                     } else {
@@ -65,13 +66,14 @@ class TbScreeningListAdapter(
                         binding.spouse = false
                     }
                 } else {
-                    binding.father = item.ben.fatherName != "Not Available"  && item.ben.spouseName == "Not Available"
+                    binding.father =
+                        item.ben.fatherName != "Not Available" && item.ben.spouseName == "Not Available"
                     binding.spouse = item.ben.spouseName != "Not Available"
                     binding.husband = false
                 }
             }
 
-            binding.btnFormTb.text = if(item.tb==null) "Screen" else "View Screen"
+            binding.btnFormTb.text = if (item.tb == null) "Screen" else "View Screen"
             binding.btnFormTb.setBackgroundColor(binding.root.resources.getColor(if (item.tb == null) android.R.color.holo_red_dark else android.R.color.holo_green_dark))
             binding.clickListener = clickListener
 

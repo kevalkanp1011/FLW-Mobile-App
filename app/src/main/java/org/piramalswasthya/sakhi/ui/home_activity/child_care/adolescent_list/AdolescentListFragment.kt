@@ -21,9 +21,9 @@ import org.piramalswasthya.sakhi.ui.home_activity.home.HomeViewModel
 @AndroidEntryPoint
 class AdolescentListFragment : Fragment() {
 
-    private var _binding : FragmentDisplaySearchRvButtonBinding? = null
+    private var _binding: FragmentDisplaySearchRvButtonBinding? = null
 
-    private val binding  : FragmentDisplaySearchRvButtonBinding
+    private val binding: FragmentDisplaySearchRvButtonBinding
         get() = _binding!!
 
 
@@ -35,7 +35,7 @@ class AdolescentListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding  = FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentDisplaySearchRvButtonBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -51,12 +51,12 @@ class AdolescentListFragment : Fragment() {
                 {
 
                 },
-                {_,_ ->}
-            ),true)
+                { _, _ -> }
+            ), true)
         binding.rvAny.adapter = benAdapter
 
         lifecycleScope.launch {
-            viewModel.benList.collect{
+            viewModel.benList.collect {
                 if (it.isEmpty())
                     binding.flEmpty.visibility = View.VISIBLE
                 else
@@ -86,12 +86,17 @@ class AdolescentListFragment : Fragment() {
 
         }
     }
+
     override fun onStart() {
         super.onStart()
-        activity?.let{
-            (it as HomeActivity).updateActionBar(R.drawable.ic__adolescent, getString(R.string.child_care_icon_title_adolescent_list))
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__adolescent,
+                getString(R.string.child_care_icon_title_adolescent_list)
+            )
         }
     }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

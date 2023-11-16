@@ -67,7 +67,6 @@ data class HRPNonPregnantTrackCache(
 }
 
 
-
 data class BenWithHRNPTrackingCache(
 
     @Embedded
@@ -118,6 +117,6 @@ data class BenWithHRNPTListDomain(
     val savedTrackings: List<HRNPTDomain>,
     val allSynced: SyncState? = if (savedTrackings.isEmpty()) null else
         if (savedTrackings.map { it.syncState }
-                .all { it == SyncState.SYNCED}) SyncState.SYNCED else SyncState.UNSYNCED
+                .all { it == SyncState.SYNCED }) SyncState.SYNCED else SyncState.UNSYNCED
 
 )

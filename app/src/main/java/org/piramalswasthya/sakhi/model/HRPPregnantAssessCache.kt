@@ -83,7 +83,7 @@ data class AgeUnitDTO(
     var days: Int
 )
 
-data class HighRiskAssessDTO (
+data class HighRiskAssessDTO(
     val id: Int = 0,
     val benId: Long = 0,
     var noOfDeliveries: String? = null,
@@ -134,15 +134,16 @@ data class BenWithHRPACache(
     val mbp: HRPMicroBirthPlanCache?,
 
     ) {
-    fun asDomainModel() : BenWithHRPADomain{
+    fun asDomainModel(): BenWithHRPADomain {
         var lmpString: String? = null
         var eddString: String? = null
         var weeksOfPregnancy: String? = null
-        assess?.lmpDate?.let {lmp ->
+        assess?.lmpDate?.let { lmp ->
             lmpString = getDateString(lmp)
             eddString = getDateString(lmp + TimeUnit.DAYS.toMillis(280))
-            weeksOfPregnancy = (TimeUnit.MILLISECONDS.toDays(getTodayMillis() - lmp) / 7).takeIf { it <= 40 }
-                ?.toString() ?: "NA"
+            weeksOfPregnancy =
+                (TimeUnit.MILLISECONDS.toDays(getTodayMillis() - lmp) / 7).takeIf { it <= 40 }
+                    ?.toString() ?: "NA"
 
         }
         return BenWithHRPADomain(

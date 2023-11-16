@@ -51,11 +51,11 @@ class ServiceTypeViewModel @Inject constructor(
     private var _selectedVillage: LocationEntity? = null
     val selectedVillage: LocationEntity?
         get() = _selectedVillage
-    val selectedVillageName : String?
-        get() = when(pref.getCurrentLanguage()){
+    val selectedVillageName: String?
+        get() = when (pref.getCurrentLanguage()) {
             ENGLISH -> selectedVillage?.name
-            HINDI -> selectedVillage?.nameHindi?:selectedVillage?.name
-            ASSAMESE -> selectedVillage?.nameAssamese?:selectedVillage?.name
+            HINDI -> selectedVillage?.nameHindi ?: selectedVillage?.name
+            ASSAMESE -> selectedVillage?.nameAssamese ?: selectedVillage?.name
         }
 
 
@@ -65,7 +65,7 @@ class ServiceTypeViewModel @Inject constructor(
 
 
     private var currentLocation: LocationRecord? = null
-    private lateinit var user : User
+    private lateinit var user: User
 
     init {
         viewModelScope.launch {
@@ -82,6 +82,7 @@ class ServiceTypeViewModel @Inject constructor(
                         villageDropdownEntries = user.villages.map { it.name }.toTypedArray()
 
                     }
+
                     HINDI -> {
                         stateDropdownEntry =
                             user.state.let { it.nameHindi ?: it.name }
@@ -94,6 +95,7 @@ class ServiceTypeViewModel @Inject constructor(
 //                        _selectedVillage =
 //                            currentLocation?.villages?.let { it.nameHindi ?: it.name }
                     }
+
                     ASSAMESE -> {
                         stateDropdownEntry =
                             user.state.let { it.nameAssamese ?: it.name }

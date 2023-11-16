@@ -24,8 +24,8 @@ data class Vaccine(
     @PrimaryKey
     val vaccineId: Int,
     val vaccineName: String,
-    val minAllowedAgeInMillis : Long,
-    val maxAllowedAgeInMillis : Long,
+    val minAllowedAgeInMillis: Long,
+    val maxAllowedAgeInMillis: Long,
     val category: ImmunizationCategory,
     val immunizationService: ChildImmunizationCategory,
 //    val dueDuration: Long,
@@ -35,7 +35,9 @@ data class Vaccine(
 )
 
 @Entity(
-    tableName = "IMMUNIZATION", primaryKeys = ["beneficiaryId", "vaccineId"], foreignKeys = [ForeignKey(
+    tableName = "IMMUNIZATION",
+    primaryKeys = ["beneficiaryId", "vaccineId"],
+    foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
         parentColumns = arrayOf("beneficiaryId"),
         childColumns = arrayOf("beneficiaryId"),
@@ -46,7 +48,8 @@ data class Vaccine(
         parentColumns = arrayOf("vaccineId"),
         childColumns = arrayOf("vaccineId"),
         onDelete = ForeignKey.CASCADE
-    )], indices = [Index(
+    )],
+    indices = [Index(
         name = "ind_imm", value = ["beneficiaryId"]
     ), Index(name = "ind_vaccine", value = ["vaccineId"])]
 )
@@ -55,10 +58,10 @@ data class ImmunizationCache(
     val beneficiaryId: Long,
     var vaccineId: Int,
     var date: Long? = null,
-    var placeId: Int=0,
-    var place: String="",
-    var byWhoId: Int=0,
-    var byWho: String="",
+    var placeId: Int = 0,
+    var place: String = "",
+    var byWhoId: Int = 0,
+    var byWho: String = "",
     var processed: String? = "N",
     var createdBy: String,
     var createdDate: Long = System.currentTimeMillis(),
@@ -98,7 +101,7 @@ data class MotherImmunizationDetailsCache(
     @Embedded
     val ben: BenBasicCache,
 
-    val lmp : Long,
+    val lmp: Long,
 //    @ColumnInfo(name = "benName") val benName : String,
     @Relation(
         parentColumn = "benId", entityColumn = "beneficiaryId"
@@ -106,22 +109,23 @@ data class MotherImmunizationDetailsCache(
 )
 
 data class ImmunizationDetailsDomain(
-    val ben : BenBasicDomain,
+    val ben: BenBasicDomain,
     val vaccineStateList: List<VaccineDomain>,
 //    val onClick: (Long, Int) -> Unit
 )
 
 data class VaccineCategoryDomain(
-    val category : ChildImmunizationCategory,
-    val categoryString : String = category.name,
+    val category: ChildImmunizationCategory,
+    val categoryString: String = category.name,
     val vaccineStateList: List<VaccineDomain>,
 //    val onClick: (Long, Int) -> Unit
 )
+
 data class VaccineDomain(
 //    val benId: Long,
     val vaccineId: Int,
-    val vaccineName : String,
-    val vaccineCategory : ChildImmunizationCategory,
+    val vaccineName: String,
+    val vaccineCategory: ChildImmunizationCategory,
     val state: VaccineState,
 )
 
@@ -138,7 +142,7 @@ enum class VaccineState {
     PENDING, OVERDUE, DONE, MISSED, UNAVAILABLE
 }
 
-data class ImmunizationPost (
+data class ImmunizationPost(
     val id: Long = 0,
     val beneficiaryId: Long,
     val vaccineId: Int,
@@ -158,9 +162,9 @@ data class ImmunizationPost (
             vaccineId = vaccineId,
             date = getLongFromDate(receivedDate),
 //            placeId = 0,
-            place = if(vaccinationreceivedat.isNullOrEmpty()) "" else vaccinationreceivedat,
+            place = if (vaccinationreceivedat.isNullOrEmpty()) "" else vaccinationreceivedat,
 //            byWhoId = 0,
-            byWho = if(vaccinatedBy.isNullOrEmpty()) "" else vaccinatedBy,
+            byWho = if (vaccinatedBy.isNullOrEmpty()) "" else vaccinatedBy,
             processed = "P",
             createdBy = createdBy,
             createdDate = getLongFromDate(createdDate),

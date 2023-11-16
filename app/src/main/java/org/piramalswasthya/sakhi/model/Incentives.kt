@@ -17,7 +17,7 @@ data class IncentiveActivityCache(
     val name: String,
     val description: String,
     val paymentParam: String,
-    val isPaid : Boolean = false,
+    val isPaid: Boolean = false,
     val rate: Int,
     val state: Int,
     val district: Int,

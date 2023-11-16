@@ -10,6 +10,6 @@ import javax.inject.Inject
 class MotherCareViewModel @Inject constructor() : ViewModel() {
 
 
-    val scope : CoroutineScope
+    val scope: CoroutineScope
         get() = viewModelScope
 }

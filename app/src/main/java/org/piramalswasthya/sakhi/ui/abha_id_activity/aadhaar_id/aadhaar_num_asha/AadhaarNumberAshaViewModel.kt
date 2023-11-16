@@ -6,7 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import org.piramalswasthya.sakhi.network.*
+import org.piramalswasthya.sakhi.network.AadhaarVerifyBioRequest
+import org.piramalswasthya.sakhi.network.AbhaGenerateAadhaarOtpRequest
+import org.piramalswasthya.sakhi.network.CreateAbhaIdResponse
+import org.piramalswasthya.sakhi.network.NetworkResult
 import org.piramalswasthya.sakhi.repositories.AbhaIdRepo
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.ui.abha_id_activity.aadhaar_id.AadhaarIdViewModel
@@ -37,7 +40,7 @@ class AadhaarNumberAshaViewModel @Inject constructor(
     val mobileNumber: LiveData<String?>
         get() = _mobileNumber
 
-    private val _aadhaarNumber =  MutableLiveData<String?>(null)
+    private val _aadhaarNumber = MutableLiveData<String?>(null)
     val aadhaarNumber: LiveData<String?>
         get() = _aadhaarNumber
 
@@ -57,6 +60,7 @@ class AadhaarNumberAshaViewModel @Inject constructor(
         _state.value = AadhaarIdViewModel.State.LOADING
         generateAadhaarOtp(aadhaarNo)
     }
+
     private fun generateAadhaarOtp(aadhaarNo: String) {
         viewModelScope.launch {
             when (val result =
@@ -66,10 +70,12 @@ class AadhaarNumberAshaViewModel @Inject constructor(
                     _mobileNumber.value = result.data.mobileNumber
                     _state.value = AadhaarIdViewModel.State.SUCCESS
                 }
+
                 is NetworkResult.Error -> {
                     _errorMessage.value = result.message
                     _state.value = AadhaarIdViewModel.State.ERROR_SERVER
                 }
+
                 is NetworkResult.NetworkError -> {
                     Timber.i(result.toString())
                     _state.value = AadhaarIdViewModel.State.ERROR_NETWORK
@@ -89,10 +95,12 @@ class AadhaarNumberAshaViewModel @Inject constructor(
                     _mobileNumber.value = result.data.mobile
                     _state.value = AadhaarIdViewModel.State.SUCCESS
                 }
+
                 is NetworkResult.Error -> {
                     _errorMessage.value = result.message
                     _state.value = AadhaarIdViewModel.State.ERROR_SERVER
                 }
+
                 is NetworkResult.NetworkError -> {
                     Timber.i(result.toString())
                     _state.value = AadhaarIdViewModel.State.ERROR_NETWORK
@@ -104,11 +112,11 @@ class AadhaarNumberAshaViewModel @Inject constructor(
     fun getBen(benId: Long) {
         viewModelScope.launch {
             benRepo.getBenFromId(benId)?.let {
-                it.firstName?.let {
-                        first -> _ben.value = first
+                it.firstName?.let { first ->
+                    _ben.value = first
                 }
-                it.lastName?.let {
-                    last -> _ben.value += " $last"
+                it.lastName?.let { last ->
+                    _ben.value += " $last"
                 }
             }
         }

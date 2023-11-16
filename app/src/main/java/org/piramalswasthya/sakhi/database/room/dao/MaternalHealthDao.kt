@@ -9,13 +9,16 @@ interface MaternalHealthDao {
 
     @Query("select * from pregnancy_register where benId = :benId and active = 1 limit 1")
     fun getSavedRecord(benId: Long): PregnantWomanRegistrationCache?
+
     @Query("select * from pregnancy_register where benId = :benId and active = 1 order by createdDate limit 1")
     fun getSavedActiveRecord(benId: Long): PregnantWomanRegistrationCache?
 
     @Query("select * from pregnancy_anc where benId = :benId and visitNumber = :visitNumber limit 1")
     fun getSavedRecord(benId: Long, visitNumber: Int): PregnantWomanAncCache?
+
     @Query("select * from pregnancy_anc where isActive== 1 and benId = :benId")
     fun getAllActiveAncRecords(benId: Long): List<PregnantWomanAncCache>
+
     @Query("select * from pregnancy_anc where benId in (:benId) and isActive = 1")
     fun getAllActiveAncRecords(benId: Set<Long>): List<PregnantWomanAncCache>
 
@@ -47,11 +50,13 @@ interface MaternalHealthDao {
 
     @Query("SELECT * FROM pregnancy_register WHERE processed in ('N', 'U')")
     suspend fun getAllUnprocessedPWRs(): List<PregnantWomanRegistrationCache>
+
     @Update
     suspend fun updateANC(vararg it: PregnantWomanAncCache)
 
     @Update
     suspend fun updatePwr(it: PregnantWomanRegistrationCache)
+
     @Query("select * from HRP_NON_PREGNANT_ASSESS assess where ((select count(*) from BEN_BASIC_CACHE b where benId = assess.benId and b.reproductiveStatusId = 1) = 1)")
     fun getAllNonPregnancyAssessRecords(): Flow<List<HRPNonPregnantAssessCache>>
 

@@ -13,14 +13,15 @@ import org.piramalswasthya.sakhi.utils.HelperUtil
     tableName = "HBYC",
     foreignKeys = [ForeignKey(
         entity = BenRegCache::class,
-        parentColumns = arrayOf("beneficiaryId",/* "householdId"*/),
-        childColumns = arrayOf("benId", /*"hhId"*/),
+        parentColumns = arrayOf("beneficiaryId"/* "householdId"*/),
+        childColumns = arrayOf("benId" /*"hhId"*/),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(name = "hbycInd", value = ["benId",/* "hhId"*/])])
+    indices = [Index(name = "hbycInd", value = ["benId"/* "hhId"*/])]
+)
 
-data class HBYCCache (
+data class HBYCCache(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val benId: Long,
@@ -52,12 +53,17 @@ data class HBYCCache (
     var superVisorOn: Int = 0,
     var orsShortage: Int = 0,
     var ifaDecreased: Int = 0,
-    var processed : String,
-    var syncState : SyncState,
+    var processed: String,
+    var syncState: SyncState,
     var createdBy: String? = null,
     var createdDate: Long? = System.currentTimeMillis(),
 ) : FormDataModel {
-    fun asPostModel(user: User, household: HouseholdCache, ben: BenRegCache, hbycCount: Int): HbycPost {
+    fun asPostModel(
+        user: User,
+        household: HouseholdCache,
+        ben: BenRegCache,
+        hbycCount: Int
+    ): HbycPost {
         return HbycPost(
             anmNameNumber = user.userId.toString(),
             ashaWorkerNameNumber = user.userName,
@@ -107,7 +113,7 @@ data class HBYCCache (
 }
 
 @JsonClass(generateAdapter = true)
-data class HbycPost (
+data class HbycPost(
     val anmNameNumber: String? = null,
     val ashaWorkerNameNumber: String? = null,
     val beneficiaryid: Long,

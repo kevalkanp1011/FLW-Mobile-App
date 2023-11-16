@@ -6,19 +6,19 @@ import android.os.Bundle
 import org.piramalswasthya.sakhi.databinding.AlertAgePickerBinding
 import org.piramalswasthya.sakhi.model.AgeUnitDTO
 
-class AgePickerDialog (context: Context) : AlertDialog(context) {
+class AgePickerDialog(context: Context) : AlertDialog(context) {
 
-    private var _binding : AlertAgePickerBinding? = null
+    private var _binding: AlertAgePickerBinding? = null
 
     private val binding: AlertAgePickerBinding
         get() = _binding!!
 
-    private var yearsMin : Int = 0
-    private var yearsMax : Int = 0
-    private var montsMin : Int = 0
-    private var monthsMax : Int = 0
-    private var daysMin : Int = 0
-    private var daysMax : Int = 0
+    private var yearsMin: Int = 0
+    private var yearsMax: Int = 0
+    private var montsMin: Int = 0
+    private var monthsMax: Int = 0
+    private var daysMin: Int = 0
+    private var daysMax: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         _binding = AlertAgePickerBinding.inflate(layoutInflater, null, false)
         setContentView(binding.root)
@@ -30,7 +30,7 @@ class AgePickerDialog (context: Context) : AlertDialog(context) {
      * - setting default values from dto
      * - trigger show to open the dialog
      */
-    fun  setLimitsAndShow(
+    fun setLimitsAndShow(
         yearsMin: Int,
         yearsMax: Int,
         monthsMin: Int,
@@ -48,6 +48,7 @@ class AgePickerDialog (context: Context) : AlertDialog(context) {
         this.daysMax = daysMax
         show(ageUnitDTO, isOk)
     }
+
     fun show(ageUnitDTO: AgeUnitDTO, isOk: Boolean) {
         super.show()
         binding.dialogNumberPickerYears.minValue = yearsMin
@@ -62,14 +63,14 @@ class AgePickerDialog (context: Context) : AlertDialog(context) {
         binding.dialogNumberPickerDays.maxValue = daysMax
         binding.dialogNumberPickerDays.value = ageUnitDTO.days
 
-        binding.btnOk.setOnClickListener{
+        binding.btnOk.setOnClickListener {
             ageUnitDTO.years = binding.dialogNumberPickerYears.value
             ageUnitDTO.months = binding.dialogNumberPickerMonths.value
             ageUnitDTO.days = binding.dialogNumberPickerDays.value
             dismiss()
         }
 
-        binding.btnCancel.setOnClickListener{
+        binding.btnCancel.setOnClickListener {
             cancel()
         }
     }

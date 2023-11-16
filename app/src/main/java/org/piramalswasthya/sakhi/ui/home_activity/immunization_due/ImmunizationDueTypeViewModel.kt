@@ -18,15 +18,17 @@ class ImmunizationDueTypeViewModel @Inject constructor(
     val navigateToMotherImmunization: LiveData<Boolean>
         get() = _navigateToMotherImmunization
 
-    fun resetNavigation(){
+    fun resetNavigation() {
         _navigateToChildrenImmunization.value = false
         _navigateToMotherImmunization.value = false
     }
-    fun navToChildren(){
+
+    fun navToChildren() {
         _navigateToChildrenImmunization.value = true
     }
-    fun navToMother(){
-        _navigateToMotherImmunization.value  = true
+
+    fun navToMother() {
+        _navigateToMotherImmunization.value = true
 
     }
 }

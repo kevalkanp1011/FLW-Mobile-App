@@ -35,7 +35,7 @@ class InfantRegRepo @Inject constructor(
         }
     }
 
-    suspend fun getInfantRegFromChildBenId(childBenId : Long): InfantRegCache? {
+    suspend fun getInfantRegFromChildBenId(childBenId: Long): InfantRegCache? {
         return withContext(Dispatchers.IO) {
             infantRegDao.getInfantRegFromChildBenId(childBenId)
         }
@@ -239,8 +239,8 @@ class InfantRegRepo @Inject constructor(
         }
     }
 
-    suspend fun update(infantRegCache: InfantRegCache){
-        withContext(Dispatchers.IO){
+    suspend fun update(infantRegCache: InfantRegCache) {
+        withContext(Dispatchers.IO) {
             infantRegDao.updateInfantReg(infantRegCache)
         }
     }

@@ -16,7 +16,7 @@ interface MdsrDao {
     suspend fun mdsrCount(): Int
 
     @Query("SELECT * FROM MDSR WHERE benId =:benId LIMIT 1")
-    suspend fun getMDSR( benId: Long): MDSRCache?
+    suspend fun getMDSR(benId: Long): MDSRCache?
 
     @Update
     suspend fun updateMdsrRecord(it: MDSRCache)

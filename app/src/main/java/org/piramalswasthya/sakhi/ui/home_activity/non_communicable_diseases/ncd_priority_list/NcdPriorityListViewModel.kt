@@ -12,12 +12,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NcdPriorityListViewModel @Inject constructor(
-recordsRepo: RecordsRepo
+    recordsRepo: RecordsRepo
 ) : ViewModel() {
     private val allBenList = recordsRepo.getNcdPriorityList
     private val filter = MutableStateFlow("")
-    val benList = allBenList.combine(filter){
-            list, filter -> filterBenList(list.map { it.ben.asBasicDomainModel() }, filter)
+    val benList = allBenList.combine(filter) { list, filter ->
+        filterBenList(list.map { it.ben.asBasicDomainModel() }, filter)
     }
 
     fun filterText(text: String) {

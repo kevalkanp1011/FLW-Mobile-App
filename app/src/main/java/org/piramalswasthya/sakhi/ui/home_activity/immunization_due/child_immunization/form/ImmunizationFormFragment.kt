@@ -65,14 +65,20 @@ class ImmunizationFormFragment : Fragment() {
                 State.SAVE_SUCCESS -> {
                     binding.llContent.visibility = View.VISIBLE
                     binding.pbForm.visibility = View.GONE
-                    Toast.makeText(context, resources.getString(R.string.save_successful), Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        resources.getString(R.string.save_successful),
+                        Toast.LENGTH_LONG
+                    ).show()
                     WorkerUtils.triggerAmritPushWorker(requireContext())
                     findNavController().navigateUp()
                 }
 
                 State.SAVE_FAILED -> {
                     Toast.makeText(
-                        context, resources.getString(R.string.something_wend_wong_contact_testing), Toast.LENGTH_LONG
+                        context,
+                        resources.getString(R.string.something_wend_wong_contact_testing),
+                        Toast.LENGTH_LONG
                     ).show()
                     binding.llContent.visibility = View.VISIBLE
                     binding.pbForm.visibility = View.GONE
@@ -130,12 +136,12 @@ class ImmunizationFormFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         activity?.let {
-            (it as HomeActivity).updateActionBar(R.drawable.ic__immunization, getString(R.string.immunization))
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__immunization,
+                getString(R.string.immunization)
+            )
         }
     }
-
-
-
 
 
 }

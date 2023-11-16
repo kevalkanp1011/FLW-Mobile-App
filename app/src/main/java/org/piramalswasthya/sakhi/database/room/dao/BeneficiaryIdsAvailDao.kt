@@ -18,6 +18,7 @@ interface BeneficiaryIdsAvailDao {
 
     @Delete
     suspend fun delete(idEntry: BeneficiaryIdsAvail)
+
     @Query("SELECT COUNT(*) FROM BEN_ID_LIST")
     fun liveCount(): Flow<Int>
 

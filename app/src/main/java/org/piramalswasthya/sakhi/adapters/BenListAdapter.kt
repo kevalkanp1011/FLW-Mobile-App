@@ -16,7 +16,8 @@ class BenListAdapter(
     private val showRegistrationDate: Boolean = false,
     private val showSyncIcon: Boolean = false,
     private val showAbha: Boolean = false,
- private val role: Int? = 0) :
+    private val role: Int? = 0
+) :
     ListAdapter<BenBasicDomain, BenListAdapter.BenViewHolder>(BenDiffUtilCallBack) {
     private object BenDiffUtilCallBack : DiffUtil.ItemCallback<BenBasicDomain>() {
         override fun areItemsTheSame(
@@ -47,13 +48,15 @@ class BenListAdapter(
             showRegistrationDate: Boolean,
             showBeneficiaries: Boolean, role: Int?
         ) {
-            if(!showSyncIcon) item.syncState = null
+            if (!showSyncIcon) item.syncState = null
             binding.ben = item
             binding.clickListener = clickListener
             binding.showAbha = showAbha
             binding.showRegistrationDate = showRegistrationDate
-            binding.registrationDate.visibility = if(showRegistrationDate) View.VISIBLE else View.INVISIBLE
-            binding.blankSpace.visibility = if(showRegistrationDate) View.VISIBLE else View.INVISIBLE
+            binding.registrationDate.visibility =
+                if (showRegistrationDate) View.VISIBLE else View.INVISIBLE
+            binding.blankSpace.visibility =
+                if (showRegistrationDate) View.VISIBLE else View.INVISIBLE
             binding.hasAbha = !item.abhaId.isNullOrEmpty()
             binding.role = role
 
@@ -69,7 +72,8 @@ class BenListAdapter(
                         binding.spouse = false
                     } else if (item.gender == "FEMALE") {
                         if (item.ageInt > 15) {
-                            binding.father = item.fatherName != "Not Available"  && item.spouseName == "Not Available"
+                            binding.father =
+                                item.fatherName != "Not Available" && item.spouseName == "Not Available"
                             binding.husband = item.spouseName != "Not Available"
                             binding.spouse = false
                         } else {
@@ -78,7 +82,8 @@ class BenListAdapter(
                             binding.spouse = false
                         }
                     } else {
-                        binding.father = item.fatherName != "Not Available"  && item.spouseName == "Not Available"
+                        binding.father =
+                            item.fatherName != "Not Available" && item.spouseName == "Not Available"
                         binding.spouse = item.spouseName != "Not Available"
                         binding.husband = false
                     }
@@ -98,7 +103,15 @@ class BenListAdapter(
     ) = BenViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: BenViewHolder, position: Int) {
-        holder.bind(getItem(position), clickListener, showAbha, showSyncIcon, showRegistrationDate, showBeneficiaries, role)
+        holder.bind(
+            getItem(position),
+            clickListener,
+            showAbha,
+            showSyncIcon,
+            showRegistrationDate,
+            showBeneficiaries,
+            role
+        )
     }
 
 
@@ -110,7 +123,7 @@ class BenListAdapter(
         fun onClickedBen(item: BenBasicDomain) = clickedBen(
             item.hhId,
             item.benId,
-            item.relToHeadId -1
+            item.relToHeadId - 1
         )
 
         fun onClickedHouseHold(item: BenBasicDomain) = clickedHousehold(item.hhId)

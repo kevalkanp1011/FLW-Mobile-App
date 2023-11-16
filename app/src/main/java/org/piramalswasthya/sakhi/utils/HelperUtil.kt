@@ -13,7 +13,6 @@ import androidx.collection.lruCache
 import androidx.core.graphics.withTranslation
 import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.model.AgeUnitDTO
-import java.lang.StringBuilder
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -44,7 +43,7 @@ object HelperUtil {
     fun formatNumber(number: Int, languages: Languages): Int {
         val locale = Locale(languages.symbol)
         val numberFormatter = NumberFormat.getInstance(locale)
-        return numberFormatter.format(number).replace(",","").toInt()
+        return numberFormatter.format(number).replace(",", "").toInt()
     }
 
     fun getDateStringFromLong(dateLong: Long?): String? {
@@ -61,7 +60,7 @@ object HelperUtil {
     /**
      * gets millis from given years months days
      */
-    fun getDobFromAge(ageUnit: AgeUnitDTO) : Long {
+    fun getDobFromAge(ageUnit: AgeUnitDTO): Long {
         val cal = Calendar.getInstance()
         cal.add(Calendar.YEAR, 0 - ageUnit.years)
         cal.add(Calendar.MONTH, 0 - ageUnit.months)
@@ -183,17 +182,19 @@ object HelperUtil {
         }
 
     }
+
     fun getLongFromDateStr(dateString: String?): Long {
-        val f =  SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        val f = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
         val date = dateString?.let { f.parse(it) }
         return date?.time ?: 0L
     }
 
     fun getLongFromDateMDY(dateString: String?): Long {
-        val f =  SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH)
+        val f = SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH)
         val date = dateString?.let { f.parse(it) }
         return date?.time ?: 0L
     }
+
     fun Canvas.drawMultilineText(
         text: CharSequence,
         textPaint: TextPaint,
@@ -207,27 +208,30 @@ object HelperUtil {
         spacingAdd: Float = 0f,
         includePad: Boolean = true,
         ellipsizedWidth: Int = width,
-        ellipsize: TextUtils.TruncateAt? = null) {
+        ellipsize: TextUtils.TruncateAt? = null
+    ) {
 
         val cacheKey = "$text-$start-$end-$textPaint-$width-$alignment-" +
                 "$spacingMult-$spacingAdd-$includePad-$ellipsizedWidth-$ellipsize"
 
         // The public constructor was deprecated in API level 28,
         // but the builder is only available from API level 23 onwards
-        val staticLayout = StaticLayoutCache[cacheKey] ?:
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            StaticLayout.Builder.obtain(text, start, end, textPaint, width)
-                .setAlignment(alignment)
-                .setLineSpacing(spacingAdd, spacingMult)
-                .setIncludePad(includePad)
-                .setEllipsizedWidth(ellipsizedWidth)
-                .setEllipsize(ellipsize)
-                .build()
-        } else {
-            StaticLayout(text, start, end, textPaint, width, alignment,
-                spacingMult, spacingAdd, includePad, ellipsize, ellipsizedWidth)
-                .apply { StaticLayoutCache[cacheKey] = this }
-        }
+        val staticLayout =
+            StaticLayoutCache[cacheKey] ?: if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                StaticLayout.Builder.obtain(text, start, end, textPaint, width)
+                    .setAlignment(alignment)
+                    .setLineSpacing(spacingAdd, spacingMult)
+                    .setIncludePad(includePad)
+                    .setEllipsizedWidth(ellipsizedWidth)
+                    .setEllipsize(ellipsize)
+                    .build()
+            } else {
+                StaticLayout(
+                    text, start, end, textPaint, width, alignment,
+                    spacingMult, spacingAdd, includePad, ellipsize, ellipsizedWidth
+                )
+                    .apply { StaticLayoutCache[cacheKey] = this }
+            }
 
         staticLayout.draw(this, x, y)
     }

@@ -11,7 +11,7 @@ import org.piramalswasthya.sakhi.repositories.RecordsRepo
 import javax.inject.Inject
 
 @HiltViewModel
-class DeliveryOutcomeListViewModel@Inject constructor(
+class DeliveryOutcomeListViewModel @Inject constructor(
     recordsRepo: RecordsRepo
 ) : ViewModel() {
     private val allBenList = recordsRepo.getDeliveredWomenList()

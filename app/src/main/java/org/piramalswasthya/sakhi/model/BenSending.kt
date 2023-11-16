@@ -254,7 +254,7 @@ fun BenRegCache.asNetworkSendingModel(
             null -> "NA"
         },
         maritalStatusID = if (isKid) null else genDetails?.maritalStatusId?.toString() ?: "",
-        maritalStatusName = if(isKid) null else genDetails?.maritalStatus ?: "",
+        maritalStatusName = if (isKid) null else genDetails?.maritalStatus ?: "",
         email = "",
         providerServiceMapID = user.serviceMapId.toString(),
         providerServiceMapId = user.serviceMapId.toString(),
@@ -307,8 +307,8 @@ fun BenRegCache.asNetworkSendingModel(
 }
 
 fun BenRegCache.asNetworkSendingModelCHO(
-user: User,
-context : Context
+    user: User,
+    context: Context
 ): BenCHOPost {
 
     return BenCHOPost(
@@ -387,7 +387,7 @@ context : Context
         createdBy = user.userName,
         emergencyRegistration = false,
         literacyStatus = null
-        )
+    )
 }
 
 

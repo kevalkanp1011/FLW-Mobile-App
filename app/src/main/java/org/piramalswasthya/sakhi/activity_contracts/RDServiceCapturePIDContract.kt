@@ -14,7 +14,8 @@ class RDServiceCapturePIDContract : ActivityResultContract<Unit, String?>() {
     override fun createIntent(context: Context, input: Unit): Intent {
         val intent = Intent()
         intent.action = ACTION_RDCAPTURE
-        val pidOptions = "<PidOptions><Opts fCount=\"1\" fType=\"2\" iCount=\"0\" iType=\"\" pCount=\"0\" pType=\"\" format=\"0\" pidVer=\"2.0\" timeout=\"20000\" env=\"P\" wadh=\"E0jzJ/P8UopUHAieZn8CKqS4WPMi5ZSYXgfnlfkWjrc=\" posh=\"UNKNOWN\"/></PidOptions>"
+        val pidOptions =
+            "<PidOptions><Opts fCount=\"1\" fType=\"2\" iCount=\"0\" iType=\"\" pCount=\"0\" pType=\"\" format=\"0\" pidVer=\"2.0\" timeout=\"20000\" env=\"P\" wadh=\"E0jzJ/P8UopUHAieZn8CKqS4WPMi5ZSYXgfnlfkWjrc=\" posh=\"UNKNOWN\"/></PidOptions>"
 //        val pidOptions = "<PidOptions ver=\"1.0\"><Opts env=\"PP\" fCount=\"1\" fType=\"0\" format=\"0\" pidVer=\"2.0\"></Opts><Demo><Pi ms=\"E\" gender=\"M\"></Pi></Demo><CustOpts></CustOpts></PidOptions>"
         intent.putExtra("PID_OPTIONS", pidOptions)
 

@@ -59,7 +59,8 @@ class HbncVisitCardViewModel @Inject constructor(
     val exists: LiveData<Boolean>
         get() = _exists
 
-    private val dataset = HBNCFormDataset(context, preferenceDao.getCurrentLanguage(), Konstants.hbncCardDay)
+    private val dataset =
+        HBNCFormDataset(context, preferenceDao.getCurrentLanguage(), Konstants.hbncCardDay)
     val formList = dataset.listFlow
 
     fun submitForm() {
@@ -105,7 +106,13 @@ class HbncVisitCardViewModel @Inject constructor(
                 }
                 dataset.setAshaName(user.userName)
             }
-            dataset.setCardPageToList(preferenceDao.getLocationRecord(),user, ben, null, hbnc?.visitCard)
+            dataset.setCardPageToList(
+                preferenceDao.getLocationRecord(),
+                user,
+                ben,
+                null,
+                hbnc?.visitCard
+            )
         }
     }
 
