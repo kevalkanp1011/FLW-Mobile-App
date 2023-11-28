@@ -102,6 +102,20 @@ object HelperUtil {
         return str.toString()
     }
 
+    fun getDiffYears(a: Calendar, b: Calendar): Int {
+        var diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR)
+        if (a.get(Calendar.MONTH) >= b.get(Calendar.MONTH)
+            && a.get(
+                Calendar.DAY_OF_MONTH
+            ) > b.get(
+                Calendar.DAY_OF_MONTH
+            )
+        ) {
+            diff--
+        }
+        return diff
+    }
+
     /**
      * calculates age in years, months, days from calendar and sets it to age dto
      */

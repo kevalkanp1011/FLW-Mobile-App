@@ -19,7 +19,9 @@ import org.piramalswasthya.sakhi.model.HRPNonPregnantAssessCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.EcrRepo
 import org.piramalswasthya.sakhi.repositories.HRPRepo
+import org.piramalswasthya.sakhi.utils.HelperUtil.getDiffYears
 import timber.log.Timber
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -67,9 +69,11 @@ class EligibleCoupleRegViewModel @Inject constructor(
         viewModelScope.launch {
             val asha = preferenceDao.getLoggedInUser()!!
             val ben = ecrRepo.getBenFromId(benId)?.also { ben ->
+                val calDob = Calendar.getInstance()
+                calDob.timeInMillis = ben.dob
                 _benName.value =
                     "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
-                _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
+                _benAgeGender.value = "${getDiffYears(calDob, Calendar.getInstance())} ${ben.ageUnit?.name} | ${ben.gender?.name}"
                 ecrForm = EligibleCoupleRegCache(
                     benId = ben.beneficiaryId,
                     syncState = SyncState.UNSYNCED,

@@ -11,6 +11,7 @@ import org.piramalswasthya.sakhi.helpers.Languages
 import org.piramalswasthya.sakhi.helpers.setToStartOfTheDay
 import org.piramalswasthya.sakhi.model.FormElement
 import org.piramalswasthya.sakhi.model.InputType
+import org.piramalswasthya.sakhi.utils.HelperUtil.getDiffYears
 import org.piramalswasthya.sakhi.utils.HelperUtil.getLocalizedResources
 import timber.log.Timber
 import java.text.SimpleDateFormat
@@ -328,20 +329,6 @@ abstract class Dataset(context: Context, currentLanguage: Languages) {
 //        }
     }
 
-
-    protected fun getDiffYears(a: Calendar, b: Calendar): Int {
-        var diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR)
-        if (a.get(Calendar.MONTH) >= b.get(Calendar.MONTH)
-            && a.get(
-                Calendar.DAY_OF_MONTH
-            ) > b.get(
-                Calendar.DAY_OF_MONTH
-            )
-        ) {
-            diff--
-        }
-        return diff
-    }
 
     protected fun getDiffMonths(a: Calendar, b: Calendar): Int {
         var diffY = b.get(Calendar.YEAR) - a.get(Calendar.YEAR)

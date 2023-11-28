@@ -20,7 +20,9 @@ import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.EcrRepo
 import org.piramalswasthya.sakhi.repositories.HRPRepo
 import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
+import org.piramalswasthya.sakhi.utils.HelperUtil.getDiffYears
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -71,9 +73,11 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
         viewModelScope.launch {
             val asha = preferenceDao.getLoggedInUser()!!
             val ben = maternalHealthRepo.getBenFromId(benId)?.also { ben ->
+                val calDob = Calendar.getInstance()
+                calDob.timeInMillis = ben.dob
                 _benName.value =
                     "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
-                _benAgeGender.value = "${ben.age} ${ben.ageUnit?.name} | ${ben.gender?.name}"
+                _benAgeGender.value = "${getDiffYears(calDob, Calendar.getInstance())} ${ben.ageUnit?.name} | ${ben.gender?.name}"
                 pregnancyRegistrationForm = PregnantWomanRegistrationCache(
                     benId = ben.beneficiaryId,
                     syncState = SyncState.UNSYNCED,
