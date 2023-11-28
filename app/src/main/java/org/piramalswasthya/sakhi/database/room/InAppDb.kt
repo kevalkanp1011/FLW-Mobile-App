@@ -96,7 +96,7 @@ import org.piramalswasthya.sakhi.model.Vaccine
         IncentiveRecordCache::class,
     ],
     views = [BenBasicCache::class],
-    version = 13, exportSchema = false
+    version = 14, exportSchema = false
 )
 
 @TypeConverters(LocationEntityListConverter::class, SyncStateConverter::class)
@@ -137,6 +137,30 @@ abstract class InAppDb : RoomDatabase() {
                 it.execSQL("select count(*) from beneficiary")
             })
 
+            val MIGRATION_13_14 = Migration(13, 14, migrate = {
+                it.execSQL("alter table INCENTIVE_ACTIVITY add column fmrCode String")
+                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column systolic Int")
+                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column diastolic Int")
+                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column bloodGlucoseTest String")
+                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column fbg Int")
+                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column rbg Int")
+                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column ppbg Int")
+                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column hemoglobinTest String")
+                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column ifaGiven Int")
+                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column ifaQuantity Int")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column systolic Int")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column diastolic Int")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column bloodGlucoseTest String")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column fbg Int")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column rbg Int")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column ppbg Int")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column hemoglobinTest String")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column ifaGiven Int")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column ifaQuantity Int")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column fastingOgtt Int")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column after2hrsOgtt Int")
+            })
+
             synchronized(this) {
                 var instance = INSTANCE
                 if (instance == null) {
@@ -146,7 +170,7 @@ abstract class InAppDb : RoomDatabase() {
                         "Sakhi-2.0-In-app-database"
                     )
                         .addMigrations(
-//                            MIGRATION_1_2
+                            MIGRATION_13_14
                         )
                         .build()
 

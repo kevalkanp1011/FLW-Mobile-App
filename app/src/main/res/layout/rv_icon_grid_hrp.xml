@@ -9,6 +9,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,14 +17,17 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:textColor="?attr/colorOnPrimary"
             android:layout_gravity="bottom|center_horizontal"
             android:padding="@dimen/padding_normal"
-            android:text="Pregnant Women (PW) section"
+            android:text="@string/non_pregnant_women_eligible_couple_section"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium">
         </TextView>
     </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_icon_grid_1"
+        android:id="@+id/rv_icon_grid_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:splitMotionEvents="false"
@@ -40,14 +44,17 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:textColor="?attr/colorOnPrimary"
             android:layout_gravity="bottom|center_horizontal"
             android:padding="@dimen/padding_normal"
-            android:text="Non-Pregnant Women (Eligible Couple) section"
+            android:text="@string/pregnant_women_pw_section"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium">
         </TextView>
     </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_icon_grid_2"
+        android:id="@+id/rv_icon_grid_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:splitMotionEvents="false"
@@ -56,6 +63,7 @@
         android:clipToPadding="false"
         tools:itemCount="1"
         tools:listitem="@layout/rv_item_icon_grid" />
+
 </LinearLayout>
 
 </ScrollView>

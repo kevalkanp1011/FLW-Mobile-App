@@ -143,14 +143,14 @@ class HRPPregnantTrackDataset(
     private val bpLabel = FormElement(
         id = 15,
         inputType = InputType.HEADLINE,
-        title = "Blood Pressure (BP)",
+        title = resources.getString(R.string.blood_pressure),
         required = false
     )
 
     private val systolic = FormElement(
         id = 16,
         inputType = InputType.EDIT_TEXT,
-        title = "Systolic (mm Hg)",
+        title = resources.getString(R.string.systolic),
         arrayId = -1,
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
@@ -160,7 +160,7 @@ class HRPPregnantTrackDataset(
     private val diastolic = FormElement(
         id = 17,
         inputType = InputType.EDIT_TEXT,
-        title = "Diastolic (mm Hg)",
+        title = resources.getString(R.string.diastolic),
         arrayId = -1,
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
@@ -170,7 +170,7 @@ class HRPPregnantTrackDataset(
     private val bloodGlucoseTest = FormElement(
         id = 18,
         inputType = InputType.RADIO,
-        title = "Blood Glucose (Sugar) Test",
+        title = resources.getString(R.string.blood_glucose_test),
         entries = resources.getStringArray(R.array.sugar_test_preg_types),
         required = false,
         hasDependants = true
@@ -179,7 +179,7 @@ class HRPPregnantTrackDataset(
     private val rbg = FormElement(
         id = 19,
         inputType = InputType.EDIT_TEXT,
-        title = "Random blood Glucose (RBG) (mg/dL)",
+        title = resources.getString(R.string.random_blood_glucose),
         arrayId = -1,
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
@@ -189,7 +189,7 @@ class HRPPregnantTrackDataset(
     private val fbg = FormElement(
         id = 20,
         inputType = InputType.EDIT_TEXT,
-        title = "Fasting Blood Glucose Test (FBG) (mg/dL)",
+        title = resources.getString(R.string.fasting_glucose_test),
         arrayId = -1,
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
@@ -199,7 +199,7 @@ class HRPPregnantTrackDataset(
     private val ppbg = FormElement(
         id = 21,
         inputType = InputType.EDIT_TEXT,
-        title = "Post-Prandial Blood Glucose Test (PPBG) (mg/dL)",
+        title = resources.getString(R.string.post_prandial_glucose_test),
         arrayId = -1,
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
@@ -209,14 +209,14 @@ class HRPPregnantTrackDataset(
     private val usingOgttLabel = FormElement(
         id = 22,
         inputType = InputType.HEADLINE,
-        title = "Using 75 gm OGTT",
+        title = resources.getString(R.string.using_75gm_ogtt),
         required = false
     )
 
     private val fastingGlucose = FormElement(
         id = 23,
         inputType = InputType.EDIT_TEXT,
-        title = "Fasting Glucose (mg/dL)",
+        title = resources.getString(R.string.fasting_glucose_test),
         arrayId = -1,
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
@@ -226,7 +226,7 @@ class HRPPregnantTrackDataset(
     private val after2hrs = FormElement(
         id = 24,
         inputType = InputType.EDIT_TEXT,
-        title = "After 2 Hours (mg/dL)",
+        title = resources.getString(R.string.after_2hrs),
         arrayId = -1,
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
@@ -236,7 +236,7 @@ class HRPPregnantTrackDataset(
     private val hemoglobinTest = FormElement(
         id = 25,
         inputType = InputType.EDIT_TEXT,
-        title = "Hemoglobin (Hb) Test (g/dl)",
+        title = resources.getString(R.string.hemoglobin_test),
         arrayId = -1,
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER  or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL,
@@ -246,7 +246,7 @@ class HRPPregnantTrackDataset(
     private val ifaGiven = FormElement(
         id = 26,
         inputType = InputType.RADIO,
-        title = "Whether IFA supplement is provided ?",
+        title = resources.getString(R.string.whether_ifa_supplement_or_folic_acid_provided),
         entries = resources.getStringArray(R.array.yes_no),
         required = true,
         hasDependants = true
@@ -255,7 +255,7 @@ class HRPPregnantTrackDataset(
     private val ifaQuantity = FormElement(
         id = 27,
         inputType = InputType.EDIT_TEXT,
-        title = "Issued quantity of IFA supplement",
+        title = resources.getString(R.string.issued_quantity_ifa_or_folic_acid),
         arrayId = -1,
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER,

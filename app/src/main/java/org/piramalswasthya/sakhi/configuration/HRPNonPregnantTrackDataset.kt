@@ -21,7 +21,7 @@ class HRPNonPregnantTrackDataset(
     private var dateOfVisit = FormElement(
         id = 1,
         inputType = InputType.DATE_PICKER,
-        title = context.getString(R.string.tracking_date),
+        title = resources.getString(R.string.tracking_date),
         arrayId = -1,
         required = true,
         max = System.currentTimeMillis(),
@@ -134,14 +134,14 @@ class HRPNonPregnantTrackDataset(
     private val bpLabel = FormElement(
         id = 14,
         inputType = InputType.HEADLINE,
-        title = "Blood Pressure (BP)",
+        title = resources.getString(R.string.blood_pressure),
         required = false
     )
 
     private val systolic = FormElement(
         id = 15,
         inputType = InputType.EDIT_TEXT,
-        title = "Systolic (mm Hg)",
+        title = resources.getString(R.string.systolic),
         arrayId = -1,
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
@@ -151,7 +151,7 @@ class HRPNonPregnantTrackDataset(
     private val diastolic = FormElement(
         id = 16,
         inputType = InputType.EDIT_TEXT,
-        title = "Diastolic (mm Hg)",
+        title = resources.getString(R.string.diastolic),
         arrayId = -1,
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
@@ -161,7 +161,7 @@ class HRPNonPregnantTrackDataset(
     private val bloodGlucoseTest = FormElement(
         id = 17,
         inputType = InputType.RADIO,
-        title = "Blood Glucose (Sugar) Test",
+        title = resources.getString(R.string.blood_glucose_test),
         entries = resources.getStringArray(R.array.sugar_test_types),
         required = false,
         hasDependants = true
@@ -170,7 +170,7 @@ class HRPNonPregnantTrackDataset(
     private val rbg = FormElement(
         id = 18,
         inputType = InputType.EDIT_TEXT,
-        title = "Random blood Glucose (RBG) (mg/dL)",
+        title = resources.getString(R.string.random_blood_glucose),
         arrayId = -1,
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
@@ -180,7 +180,7 @@ class HRPNonPregnantTrackDataset(
     private val fbg = FormElement(
         id = 19,
         inputType = InputType.EDIT_TEXT,
-        title = "Fasting Blood Glucose Test (FBG) (mg/dL)",
+        title = resources.getString(R.string.fasting_glucose_test),
         arrayId = -1,
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
@@ -190,7 +190,7 @@ class HRPNonPregnantTrackDataset(
     private val ppbg = FormElement(
         id = 20,
         inputType = InputType.EDIT_TEXT,
-        title = "Post-Prandial Blood Glucose Test (PPBG) (mg/dL)",
+        title = resources.getString(R.string.post_prandial_glucose_test),
         arrayId = -1,
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
@@ -200,7 +200,7 @@ class HRPNonPregnantTrackDataset(
     private val hemoglobinTest = FormElement(
         id = 21,
         inputType = InputType.EDIT_TEXT,
-        title = "Hemoglobin (Hb) Test (g/dl)",
+        title = resources.getString(R.string.hemoglobin_test),
         arrayId = -1,
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER  or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL,
@@ -210,7 +210,7 @@ class HRPNonPregnantTrackDataset(
     private val ifaGiven = FormElement(
         id = 22,
         inputType = InputType.RADIO,
-        title = "Whether IFA supplement is provided ?",
+        title = resources.getString(R.string.whether_ifa_supplement_provided),
         entries = resources.getStringArray(R.array.yes_no),
         required = true,
         hasDependants = true
@@ -219,7 +219,7 @@ class HRPNonPregnantTrackDataset(
     private val ifaQuantity = FormElement(
         id = 23,
         inputType = InputType.EDIT_TEXT,
-        title = "Issued quantity of IFA supplement",
+        title = resources.getString(R.string.issued_quantity_ifa),
         arrayId = -1,
         required = false,
         etInputType = android.text.InputType.TYPE_CLASS_NUMBER,
