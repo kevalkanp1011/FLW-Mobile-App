@@ -134,33 +134,33 @@ abstract class InAppDb : RoomDatabase() {
         fun getInstance(appContext: Context): InAppDb {
 
             val MIGRATION_1_2 = Migration(1, 2, migrate = {
-                it.execSQL("select count(*) from beneficiary")
+//                it.execSQL("select count(*) from beneficiary")
             })
 
             val MIGRATION_13_14 = Migration(13, 14, migrate = {
-                it.execSQL("alter table INCENTIVE_ACTIVITY add column fmrCode String")
-                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column systolic Int")
-                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column diastolic Int")
-                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column bloodGlucoseTest String")
-                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column fbg Int")
-                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column rbg Int")
-                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column ppbg Int")
-                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column hemoglobinTest String")
-                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column ifaGiven Int")
-                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column ifaQuantity Int")
-                it.execSQL("alter table HRP_PREGNANT_TRACK add column systolic Int")
-                it.execSQL("alter table HRP_PREGNANT_TRACK add column diastolic Int")
-                it.execSQL("alter table HRP_PREGNANT_TRACK add column bloodGlucoseTest String")
-                it.execSQL("alter table HRP_PREGNANT_TRACK add column fbg Int")
-                it.execSQL("alter table HRP_PREGNANT_TRACK add column rbg Int")
-                it.execSQL("alter table HRP_PREGNANT_TRACK add column ppbg Int")
-                it.execSQL("alter table HRP_PREGNANT_TRACK add column hemoglobinTest String")
-                it.execSQL("alter table HRP_PREGNANT_TRACK add column ifaGiven Int")
-                it.execSQL("alter table HRP_PREGNANT_TRACK add column ifaQuantity Int")
-                it.execSQL("alter table HRP_PREGNANT_TRACK add column fastingOgtt Int")
-                it.execSQL("alter table HRP_PREGNANT_TRACK add column after2hrsOgtt Int")
+                it.execSQL("alter table INCENTIVE_ACTIVITY add column fmrCode TEXT")
+                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column systolic INTEGER")
+                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column diastolic INTEGER")
+                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column bloodGlucoseTest TEXT")
+                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column fbg INTEGER")
+                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column rbg INTEGER")
+                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column ppbg INTEGER")
+                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column hemoglobinTest TEXT")
+                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column ifaGiven INTEGER")
+                it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column ifaQuantity INTEGER")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column systolic INTEGER")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column diastolic INTEGER")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column bloodGlucoseTest TEXT")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column fbg INTEGER")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column rbg INTEGER")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column ppbg INTEGER")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column hemoglobinTest TEXT")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column ifaGiven INTEGER")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column ifaQuantity INTEGER")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column fastingOgtt INTEGER")
+                it.execSQL("alter table HRP_PREGNANT_TRACK add column after2hrsOgtt INTEGER")
             })
-
+//        _db.execSQL("CREATE TABLE IF NOT EXISTS `HRP_PREGNANT_TRACK` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `benId` INTEGER NOT NULL, `visitDate` INTEGER, `rdPmsa` TEXT, `rdDengue` TEXT, `rdFilaria` TEXT, `severeAnemia` TEXT, `hemoglobinTest` TEXT, `ifaGiven` TEXT, `ifaQuantity` INTEGER, `pregInducedHypertension` TEXT, `systolic` INTEGER, `diastolic` INTEGER, `gestDiabetesMellitus` TEXT, `bloodGlucoseTest` TEXT, `fbg` INTEGER, `rbg` INTEGER, `ppbg` INTEGER, `fastingOgtt` INTEGER, `after2hrsOgtt` INTEGER, `hypothyrodism` TEXT, `polyhydromnios` TEXT, `oligohydromnios` TEXT, `antepartumHem` TEXT, `malPresentation` TEXT, `hivsyph` TEXT, `visit` TEXT, `syncState` INTEGER NOT NULL, FOREIGN KEY(`benId`) REFERENCES `BENEFICIARY`(`beneficiaryId`) ON UPDATE CASCADE ON DELETE CASCADE )");
             synchronized(this) {
                 var instance = INSTANCE
                 if (instance == null) {
