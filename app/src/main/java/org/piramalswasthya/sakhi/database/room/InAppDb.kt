@@ -139,6 +139,7 @@ abstract class InAppDb : RoomDatabase() {
 
             val MIGRATION_13_14 = Migration(13, 14, migrate = {
                 it.execSQL("alter table INCENTIVE_ACTIVITY add column fmrCode TEXT")
+                it.execSQL("alter table INCENTIVE_ACTIVITY add column fmrCodeOld TEXT")
                 it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column systolic INTEGER")
                 it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column diastolic INTEGER")
                 it.execSQL("alter table HRP_NON_PREGNANT_TRACK add column bloodGlucoseTest TEXT")
