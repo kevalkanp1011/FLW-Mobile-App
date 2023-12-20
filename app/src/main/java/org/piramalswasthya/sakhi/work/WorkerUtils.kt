@@ -94,7 +94,7 @@ object WorkerUtils {
             .then(pullECWorkRequest)
             .then(pullImmunizationWorkRequest)
 //            .then(pullHBYCFromAmritWorker)
-//            .then(pullHBNCFromAmritWorker)
+            .then(pullHBNCFromAmritWorker)
             .then(pushWorkRequest)
             .then(pushCbacWorkRequest)
             .then(pushImmunizationWorkRequest)
@@ -102,7 +102,7 @@ object WorkerUtils {
             .then(pushTBWorkRequest)
             .then(pushECWorkRequest)
 //            .then(pushChildHBYCToAmritWorker)
-//            .then(pushChildHBNCToAmritWorker)
+            .then(pushChildHBNCToAmritWorker)
             .enqueue()
     }
 
@@ -191,7 +191,7 @@ object WorkerUtils {
             .then(pushCdrWorkRequest)
             .then(pushImmunizationWorkRequest)
 //            .then(pushChildHBYCToAmritWorker)
-//            .then(pushChildHBNCToAmritWorker)
+            .then(pushChildHBNCToAmritWorker)
             .then(pullIncentiveActivityWorkRequest)
             .enqueue()
     }
@@ -280,21 +280,12 @@ object WorkerUtils {
             .then(pullMdsrWorkRequest)
             .then(pullCdrWorkRequest)
 //            .then(pullHBYCFromAmritWorker)
-//            .then(pullHBNCFromAmritWorker)
+            .then(pullHBNCFromAmritWorker)
             .then(setSyncCompleteWorker)
             .enqueue()
     }
 
     fun triggerD2dSyncWorker(context: Context) {
-//        val workRequest = OneTimeWorkRequestBuilder<PushToD2DWorker>()
-//            .setConstraints(PushToD2DWorker.constraint)
-//            .build()
-//        WorkManager.getInstance(context)
-//            .enqueueUniqueWork(
-//                PushToD2DWorker.name,
-//                ExistingWorkPolicy.APPEND_OR_REPLACE,
-//                workRequest
-//            )
     }
 
     fun triggerCbacPullWorker(context: Context) {

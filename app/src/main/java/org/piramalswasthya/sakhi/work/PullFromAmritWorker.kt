@@ -36,10 +36,6 @@ class PullFromAmritWorker @AssistedInject constructor(
         const val n = 4 // Number of threads!
     }
 
-//    private val notificationManager =
-//        appContext.getSystemService(Context.NOTIFICATION_SERVICE) as
-//                NotificationManager
-
     private var page1: Int = 0
     private var page2: Int = 0
     private var page3: Int = 0
@@ -67,8 +63,6 @@ class PullFromAmritWorker @AssistedInject constructor(
                     do {
                         numPages = benRepo.getBeneficiariesFromServerForWorker(startPage)
                     } while (numPages == -2)
-//                for (i in 1 until numPages)
-//                    benRepo.getBeneficiariesFromServerForWorker(i)
                     if (numPages == 0)
                         return@withContext Result.success()
                     val result1 =
@@ -83,8 +77,6 @@ class PullFromAmritWorker @AssistedInject constructor(
                     Timber.d("Full load took $timeTaken seconds for $numPages pages  $result1")
 
                     if (result1.all { it }) {
-//                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
-
                         return@withContext Result.success()
                     }
                     return@withContext Result.failure()
@@ -92,13 +84,6 @@ class PullFromAmritWorker @AssistedInject constructor(
                     Timber.d("exception $e raised ${e.message} with stacktrace : ${e.stackTrace}")
                     return@withContext Result.failure()
                 }
-
-
-//                for (j in 0 until n) {
-//                    if (j < numPages)
-//                        getBenForPage(numPages, j)
-//                }
-
 
             }
 
@@ -110,9 +95,6 @@ class PullFromAmritWorker @AssistedInject constructor(
     }
 
     private fun createForegroundInfo(progress: String): ForegroundInfo {
-        // This PendingIntent can be used to cancel the worker
-//        val intent = WorkManager.getInstance(applicationContext)
-//            .createCancelPendingIntent(id)
 
         val notification = NotificationCompat.Builder(
             appContext,

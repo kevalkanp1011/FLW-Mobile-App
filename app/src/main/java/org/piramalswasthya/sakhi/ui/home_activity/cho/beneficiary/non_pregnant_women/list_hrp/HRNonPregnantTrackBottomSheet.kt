@@ -64,7 +64,6 @@ class HRNonPregnantTrackBottomSheet : BottomSheetDialogFragment() {
 
 
     private fun listOfHrpPregTrack(list: List<HRPNonPregnantTrackCache>) {
-//        Timber.d("Called list at bottom sheet ${_binding?.rvHrpTract?.adapter} ${detail.ben.benId} $list")
         Timber.d("Called list at bottom sheet   ${list.size}")
 
         (_binding?.rvHrpTract?.adapter as HRPPregTrackAdapter?)?.submitList(

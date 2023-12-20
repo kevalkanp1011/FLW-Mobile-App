@@ -28,10 +28,6 @@ class HomeIconsFragment : Fragment() {
 
     private val viewModel: HomeViewModel by viewModels({ requireActivity() })
 
-//    private val enableDevMode: EnableDevModeBottomSheetFragment by lazy {
-//        EnableDevModeBottomSheetFragment()
-//    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,15 +58,6 @@ class HomeIconsFragment : Fragment() {
             Timber.d("update called!~~ $it")
             rvAdapter.submitList(iconDataset.getHomeIconDataset(resources))
         }
-//        binding.root.setOnLongClickListener {
-//            if (viewModel.getDebMode())
-//                viewModel.setDevMode(false)
-//            else {
-//                if (!enableDevMode.isVisible)
-//                    enableDevMode.show(childFragmentManager, "DEV_MODE")
-//            }
-//            true
-//        }
 
     }
 }

@@ -36,10 +36,8 @@ class PullChildHBNCFromAmritWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         return try {
             try {
-                // This ensures that you waiting for the Notification update to be done.
                 setForeground(createForegroundInfo("Downloading Child HBNC Data"))
             } catch (throwable: Throwable) {
-                // Handle this exception gracefully
                 Timber.d("error", "Something bad happened", throwable)
             }
             withContext(Dispatchers.IO) {
@@ -56,7 +54,6 @@ class PullChildHBNCFromAmritWorker @AssistedInject constructor(
                     Timber.d("Full HBNC fetching took $timeTaken seconds $result1")
 
                     if (result1.all { it }) {
-//                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
                         return@withContext Result.success()
                     }
                     return@withContext Result.failure()

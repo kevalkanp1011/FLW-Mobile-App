@@ -37,37 +37,6 @@ class HrpCasesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-//        binding.btnNextPage.visibility = View.GONE
-//        val benAdapter = BenListAdapter(
-//            BenListAdapter.BenClickListener(
-//                { hhId, benId, isKid ->
-//
-//
-//                },
-//                {
-//
-//                },{_,_ ->}
-//            ),true)
-//        binding.rvAny.adapter = benAdapter
-//
-//        lifecycleScope.launch {
-//            viewModel.benList.collect{
-//                if (it.isEmpty())
-//                    binding.flEmpty.visibility = View.VISIBLE
-//                else
-//                    binding.flEmpty.visibility = View.GONE
-//                benAdapter.submitList(it)
-//            }
-//        }
-//        val searchTextWatcher = object : TextWatcher {
-//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//
-//            }
-//
-//            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//
-//            }
         getHrpIconsDataset()
     }
 

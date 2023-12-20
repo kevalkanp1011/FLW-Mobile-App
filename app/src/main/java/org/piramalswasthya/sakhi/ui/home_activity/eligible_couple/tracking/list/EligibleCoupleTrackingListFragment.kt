@@ -62,17 +62,6 @@ class EligibleCoupleTrackingListFragment : Fragment() {
                 viewModel.setClickedBenId(it)
                 bottomSheet.show(childFragmentManager, "ECT")
             })
-//            BenListAdapterForForm.ClickListener(
-//                {
-//                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
-//                },
-//                { hhId, benId ->
-//                    findNavController().navigate(
-//                        EligibleCoupleTrackingListFragmentDirections.actionEligibleCoupleTrackingListFragmentToEligibleCoupleTrackingFormFragment(
-//                            benId
-//                        )
-//                    )
-//                }), "Track"
         )
         binding.rvAny.adapter = benAdapter
 
@@ -82,7 +71,6 @@ class EligibleCoupleTrackingListFragment : Fragment() {
                     binding.flEmpty.visibility = View.VISIBLE
                 else
                     binding.flEmpty.visibility = View.GONE
-//                viewModel.updateFilledStatus(it)
                 benAdapter.submitList(it)
             }
         }

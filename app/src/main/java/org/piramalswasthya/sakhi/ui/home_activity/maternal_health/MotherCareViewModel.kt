@@ -8,8 +8,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MotherCareViewModel @Inject constructor() : ViewModel() {
-
-
     val scope: CoroutineScope
         get() = viewModelScope
 }

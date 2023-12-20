@@ -36,20 +36,6 @@ import org.piramalswasthya.sakhi.model.VaccineState.*
 import timber.log.Timber
 
 
-//@BindingAdapter("vaccine_items", "vaccine_click")
-//fun VaccinationElement.setItems(
-//    data: ImmunizationDetailsDomain?,
-//    clickListener: VaccineClickListener?
-//) {
-//    setData(data, clickListener)
-//}
-//
-//
-//@BindingAdapter("vaccine_headers")
-//fun VaccinationListHeader.setItems(data: ImmunizationDetailsHeader?) {
-//    data?.let { setData(it) }
-//}
-
 @BindingAdapter("vaccineState")
 fun ImageView.setVaccineState(syncState: VaccineState?) {
     syncState?.let {
@@ -115,15 +101,9 @@ fun CardView.setRedBorder(allowRedBorder: Boolean, scope: CoroutineScope, count:
                 if (it > 0 && allowRedBorder) {
                     setBackgroundResource(R.drawable.red_border)
                 }
-                //                else{
-//                    this@setRedBorder.setBackgroundResource(0)
-//                }
             }
         }
     }
-//        ?: run {
-//        this@setRedBorder.setBackgroundResource(0)
-//    }
 }
 
 @BindingAdapter("benIdText")
@@ -223,51 +203,10 @@ fun ViewGroup.setVisibilityOfLayout(show: Boolean?) {
 
 @BindingAdapter("radioForm")
 fun ConstraintLayout.setItems(form: FormInputOld?) {
-//    if(this.childCount!=0)
-//        return
-
-//    val rg = this.findViewById<RadioGroup>(R.id.rg)
-//    rg.removeAllViews()
-//    rg.apply {
-//        form?.entries?.let { items ->
-//            orientation = form.orientation ?: LinearLayout.HORIZONTAL
-//            weightSum = items.size.toFloat()
-//            items.forEach {
-//                val rdBtn = RadioButton(this.context)
-//                rdBtn.layoutParams =
-//                    LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1.0F).apply {
-//                        gravity = Gravity.CENTER_HORIZONTAL
-//                    }
-//                rdBtn.id = View.generateViewId()
-//
-//                rdBtn.text = it
-//                addView(rdBtn)
-//                if (form.value.value == it)
-//                    rdBtn.isChecked = true
-//                rdBtn.setOnCheckedChangeListener { _, b ->
-//                    if (b) {
-//                        form.value.value = it
-//                    }
-//                    form.errorText = null
-//                    this@setItems.setBackgroundResource(0)
-//                }
-//            }
-//            form.value.value?.let { value ->
-//                children.forEach {
-//                    if ((it as RadioButton).text == value) {
-//                        clearCheck()
-//                        check(it.id)
-//                    }
-//                }
-//            }
-//        }
-//    }
 }
 
 @BindingAdapter("checkBoxesForm")
 fun ConstraintLayout.setItemsCheckBox(form: FormInputOld?) {
-//    if (this.childCount != 0)
-//        return
     val ll = this.findViewById<LinearLayout>(R.id.ll_checks)
     ll.removeAllViews()
     ll.apply {
@@ -373,21 +312,6 @@ fun ImageView.setBenImage(uriString: String?) {
             .into(this)
     }
 }
-
-//fun EditText.afterTextChanged(afterTextChanged: (String?) -> Unit) {
-//    this.addTextChangedListener(object : TextWatcher {
-//        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-//        }
-//
-//        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//        }
-//
-//        override fun afterTextChanged(editable: Editable?) {
-//            if(!editable.isNullOrBlank())
-//                afterTextChanged.invoke(editable.toString())
-//        }
-//    })
-//}
 
 
 @BindingAdapter("list_avail")

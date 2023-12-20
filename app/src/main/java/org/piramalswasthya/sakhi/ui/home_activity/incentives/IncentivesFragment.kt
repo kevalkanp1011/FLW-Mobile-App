@@ -183,16 +183,6 @@ class IncentivesFragment : Fragment() {
             }
             pd.show(requireFragmentManager(), "MonthYearPickerDialog1")
         }
-
-//        binding.et2.setOnClickListener {
-//            val pd = MonthYearPickerDialog()
-//            pd.setListener { picker, i, i2, i3 ->
-//                run {
-//                    binding.et2.setText("$i2/$i")
-//                }
-//            }
-//            pd.show(requireFragmentManager(), "MonthYearPickerDialog2")
-//        }
     }
 
 
@@ -254,17 +244,6 @@ class IncentivesFragment : Fragment() {
         var maxPages = incentiveDomainList.size / 20 + 2
 
         var currentPage = 1
-
-//        canvas.drawText(
-//            resources.getString(R.string.asha_incentive_master_claim_form),
-//            (x + columnWidth).toFloat(),
-//            y.toFloat(),
-//            paint
-//        )
-//        y += 5
-//
-//        canvas.drawLine(x.toFloat(), y.toFloat(), (pageWidth - 2 * x).toFloat(), y.toFloat(), paint)
-//        y += rowHeight
 
         val lineGap = 7
         paint.textSize = 3.5f
@@ -432,46 +411,6 @@ class IncentivesFragment : Fragment() {
             (y + rowHeight).toFloat(),
             paint
         )
-
-//        canvas.drawText(resources.getString(R.string.to), x.toFloat(), y.toFloat(), paint)
-//        y += rowHeight
-
-//        canvas.drawText(
-//            resources.getString(R.string.sdm_ho_or_i_c_block_phc),
-//            x.toFloat(),
-//            y.toFloat(),
-//            paint
-//        )
-//        y += rowHeight
-
-//        canvas.drawText("_______________________", x.toFloat(), y.toFloat(), paint)
-//        y += rowHeight
-
-//        canvas.drawText(
-//            resources.getString(R.string.sub_submission_of_asha_incentive_claim_for_the_period_from)
-//                    + binding.fromMonthsSpinner.selectedItem + binding.fromYearsSpinner.selectedItem + resources.getString(R.string.to_small)
-//                    + binding.toMonthsSpinner.selectedItem + binding.toYearsSpinner.selectedItem,
-//            x.toFloat(), y.toFloat(), paint
-//        )
-//        y += rowHeight
-
-//        canvas.drawText(resources.getString(R.string.sir_madam), x.toFloat(), y.toFloat(), paint)
-//        y += rowHeight
-
-//        canvas.drawMultilineText(
-//            text = resources.getString(R.string.with_reference_to_)
-//                    + binding.fromMonthsSpinner.selectedItem + binding.fromYearsSpinner.selectedItem + resources.getString(R.string.to_small)
-//                    + binding.toMonthsSpinner.selectedItem + binding.toYearsSpinner.selectedItem + resources.getString(R.string.as_per_statement),
-//            textPaint = textPaint,
-//            width = pageWidth - 2 * x,
-//            x = x.toFloat(),
-//            y = y.toFloat(),
-//            0
-//        )
-//        canvas.drawLine(x.toFloat(), y.toFloat(), x.toFloat(), (y + rowHeight).toFloat(), paint)
-//        canvas.drawLine((pageWidth - 2 * x).toFloat(), y.toFloat(), (pageWidth - 2 * x).toFloat(), (y + rowHeight).toFloat(), paint)
-//
-//        y += 2*rowHeight
 
         textPaint.textSize = 3.5f
 

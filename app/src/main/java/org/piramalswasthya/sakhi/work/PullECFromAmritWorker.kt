@@ -58,7 +58,6 @@ class PullECFromAmritWorker @AssistedInject constructor(
                     Timber.d("Full Eligible couple fetching took $timeTaken seconds $result1")
 
                     if (result1.all { it }) {
-//                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
                         return@withContext Result.success()
                     }
                     return@withContext Result.failure()

@@ -155,16 +155,6 @@ class CbacFragment : Fragment() {
         }
         viewModel.raFhScore.observe(viewLifecycleOwner) {
             binding.ddFhScore.text = it
-//            viewModel.raTotalScore.value?.let { total ->
-//                run {
-//                    if (total.substring(total.lastIndexOf(' ') + 1).toInt() >= 4) {
-//                        if (!totalScorePopupShown) {
-//                            raAlertDialog.show()
-//                            totalScorePopupShown = true
-//                        }
-//                    }
-//                }
-//            }
         }
         viewModel.raTotalScore.observe(viewLifecycleOwner) {
             val score = it.substring(it.lastIndexOf(' ') + 1).toInt()
@@ -194,9 +184,7 @@ class CbacFragment : Fragment() {
                     resources.getString(R.string.refer_to_ncd_screening_day_vhsnd_hwc_for_ncd_screening_less_priority)
                 )
             }
-//            if(!totalScorePopupShown)
             raAlertDialog.show()
-//            totalScorePopupShown = true
         }
 
     }

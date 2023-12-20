@@ -43,7 +43,6 @@ class HRPPregnantListFragment : Fragment() {
         val benAdapter = HRPTListAdapter(
             clickListener = HRPTListAdapter.HRPTClickListener(
                 {
-//                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
                 },
                 { _, benId ->
                     findNavController().navigate(

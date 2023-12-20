@@ -194,10 +194,8 @@ class HomeActivity : AppCompatActivity() {
                 menuInflater.inflate(R.menu.home_toolbar, menu)
                 val homeMenu = menu.findItem(R.id.toolbar_menu_home)
                 val langMenu = menu.findItem(R.id.toolbar_menu_language)
-//                val servMenu = menu.findItem(R.id.change_service_location)
                 homeMenu.isVisible = showMenuHome
                 langMenu.isVisible = !showMenuHome
-//                servMenu.isVisible = !showMenuHome
 
             }
 
@@ -269,9 +267,6 @@ class HomeActivity : AppCompatActivity() {
                 resources.getString(R.string.nav_item_2_text, it.userName)
             headerView.findViewById<TextView>(R.id.tv_nav_id).text =
                 resources.getString(R.string.nav_item_3_text, it.userId)
-
-//                headerView.findViewById<TextView>(R.id.tv_nav_version).text =
-//                    getString(R.string.version)
         }
         viewModel.profilePicUri?.let {
             Glide.with(this).load(it).placeholder(R.drawable.ic_person).circleCrop()
@@ -281,8 +276,6 @@ class HomeActivity : AppCompatActivity() {
 
         binding.navView.getHeaderView(0).findViewById<ImageView>(R.id.iv_profile_pic)
             .setOnClickListener {
-//            val galleryIntent = Intent(Intent.ACTION_PICK)
-//            galleryIntent.type = "image/*"
                 imagePickerActivityResult.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
             }
     }
@@ -329,24 +322,6 @@ class HomeActivity : AppCompatActivity() {
 
         }
     }
-
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        if (item.itemId == android.R.id.home) {
-//            hideKeyboard(this)
-//            Toast.makeText(this, "onOptionsItemSelected called!", Toast.LENGTH_SHORT).show()
-//            onBackPressedDispatcher.onBackPressed()
-//            return true // must return true to consume it here
-//
-//        }
-//        return super.onOptionsItemSelected(item)
-//    }
-
-//    fun hideKeyboard(activity: Activity) {
-//        this.currentFocus?.let { view ->
-//            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-//            imm?.hideSoftInputFromWindow(view.windowToken, 0)
-//        }
-//    }
 
 
     fun updateActionBar(logoResource: Int, title: String? = null) {

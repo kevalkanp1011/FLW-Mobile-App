@@ -215,18 +215,6 @@ class RecordsRepo @Inject constructor(
 
     fun getInfantRegisterCount() = benDao.getInfantRegisterCount(selectedVillage)
 
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    val hrpCount = maternalHealthDao.getAllPregnancyRecords().transformLatest {
-//        var count = 0
-//        it.map {
-//            val regis = it.key
-//            val anc = it.value
-//            if (regis.isHrp || anc.any { it.hrpConfirmed == true })
-//                count++
-//        }
-//        emit(count)
-//    }
-
     @OptIn(ExperimentalCoroutinesApi::class)
     val hrpCount = maternalHealthDao.getAllPregnancyAssessRecords().transformLatest { it ->
         var count = 0

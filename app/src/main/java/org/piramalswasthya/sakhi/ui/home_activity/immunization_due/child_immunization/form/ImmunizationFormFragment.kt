@@ -39,9 +39,6 @@ class ImmunizationFormFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        binding.btnNext.visibility = View.INVISIBLE
-//        binding.btnPrev.visibility = View.INVISIBLE
-//        binding.btnSubmitForm.visibility = View.VISIBLE
         viewModel.benName.observe(viewLifecycleOwner) {
             binding.tvBenName.text = it
         }

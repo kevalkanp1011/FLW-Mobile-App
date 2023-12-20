@@ -46,48 +46,6 @@ class HouseholdRepo @Inject constructor(
             benDao.getAllBenForHousehold(householdId)
         }
     }
-//
-//    suspend fun persistSecondPage(form: HouseholdFormDataset) {
-//        val household =
-//            form.getHouseholdForSecondPage()
-//        dao.upsert(household)
-//    }
-//
-//    suspend fun persistThirdPage(form: HouseholdFormDataset, locationRecord: LocationRecord): Long {
-//        val household =
-//            form.getHouseholdForThirdPage()
-//        val user =
-//            database.userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
-//        household.apply {
-//            if (householdId == 0L) {
-//                val newId = HouseholdFormDataset.getHHidFromUserId(ashaId)
-//                dao.substituteHouseholdId(householdId, newId)
-//                householdId = newId
-//                serverUpdatedStatus = 1
-//                processed = "N"
-//            } else {
-//                serverUpdatedStatus = 2
-//            }
-//
-//            if (createdTimeStamp == null) {
-//                createdTimeStamp = System.currentTimeMillis()
-//                createdBy = user.userName
-//            }
-//            updatedTimeStamp = System.currentTimeMillis()
-//            updatedBy = user.userName
-//            stateId = locationRecord.stateId
-//            state = locationRecord.state
-//            districtId = locationRecord.districtId
-//            district = locationRecord.district
-//            blockId = locationRecord.blockId
-//            block = locationRecord.block
-//            villageId = locationRecord.villageId
-//            villages = locationRecord.villages
-//            countyId = locationRecord.countryId
-//        }
-//        dao.upsert(household)
-//        return household.householdId
-//    }
 
     suspend fun deleteHouseholdDraft() {
         withContext(Dispatchers.IO) {

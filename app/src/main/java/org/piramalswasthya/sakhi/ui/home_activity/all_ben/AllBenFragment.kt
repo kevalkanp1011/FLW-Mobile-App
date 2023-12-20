@@ -74,25 +74,8 @@ class AllBenFragment : Fragment() {
 
                         )
                     )
-
-//                    findNavController().navigate(
-//                        if (isKid) AllBenFragmentDirections.actionAllBenFragmentToNewBenRegL15Fragment(
-//                            hhId,
-//                            benId
-//                        )
-//                        else
-//                            AllBenFragmentDirections.actionAllBenFragmentToNewBenRegG15Fragment(
-//                                hhId,
-//                                benId
-//                            )
-//                    )
                 },
                 {
-//                    findNavController().navigate(
-//                        AllBenFragmentDirections.actionAllBenFragmentToNewBenRegTypeFragment(
-//                            it
-//                        )
-//                    )
                 },
                 { benId, hhId ->
                     checkAndGenerateABHA(benId)

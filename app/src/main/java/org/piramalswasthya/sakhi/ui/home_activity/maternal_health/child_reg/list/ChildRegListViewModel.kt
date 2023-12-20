@@ -18,9 +18,6 @@ class ChildRegListViewModel @Inject constructor(
     private val filter = MutableStateFlow("")
     val benList
         get() = allBenList
-//    = allBenList.combine(filter) { list, filter ->
-//        filterBenFormList(list, filter)
-//    }
 
     init {
         viewModelScope.launch {

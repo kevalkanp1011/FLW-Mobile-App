@@ -128,15 +128,6 @@ class HbycViewModel @Inject constructor(
         return address
     }
 
-//    fun getFirstPage(): List<FormInputOld> {
-//        return dataset.firstPage
-//    }
-
-//    fun setAutoPopulatedValues(it: String?, adapter: FormInputAdapterOld) {
-////        dataset.contactNumber.value.value = ben.contactNumber.toString()
-////        dataset.spouseName.value.value = ben.genDetails?.spouseName
-//    }
-
     fun updateListOnValueChanged(formId: Int, index: Int) {
         viewModelScope.launch {
             dataset.updateList(formId, index)
@@ -152,27 +143,4 @@ class HbycViewModel @Inject constructor(
         }
     }
 
-    fun setExistingValues() {
-//        dataset.address.value.value = cdr?.address
-//        dataset.childName.value.value = cdr?.childName
-//        dataset.gender.value.value = cdr?.gender
-//        dataset.age.value.value = "${cdr?.age} ${ben.ageUnit?.name}"
-//        dataset.dateOfBirth.value.value = getDateFromLong(cdr?.dateOfBirth)
-//        dataset.firstInformant.value.value = cdr?.firstInformant
-//        dataset.motherName.value.value = cdr?.motherName
-//        dataset.fatherName.value.value = cdr?.fatherName
-//        dataset.mobileNumber.value.value = cdr?.mobileNumber.toString()
-//        dataset.dateOfNotification.value.value = getDateFromLong(cdr?.dateOfNotification)
-//        dataset.childName.value.value = cdr?.childName
-//        dataset.visitDate.value.value = getDateFromLong(cdr?.visitDate)
-//        dataset.houseNumber.value.value = cdr?.houseNumber
-//        dataset.mohalla.value.value = cdr?.mohalla
-//        dataset.landmarks.value.value = cdr?.landmarks
-//        dataset.pincode.value.value = cdr?.pincode.toString()
-//        dataset.landline.value.value = cdr?.landline.toString()
-//        dataset.dateOfDeath.value.value = getDateFromLong(cdr?.dateOfDeath)
-//        dataset.timeOfDeath.value.value = cdr?.timeOfDeath?.toString()
-//        dataset.ashaSign.value.value = cdr?.ashaSign
-//        dataset.placeOfDeath.value.value = cdr?.placeOfDeath
-    }
 }

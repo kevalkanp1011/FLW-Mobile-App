@@ -78,44 +78,8 @@ class BenRepo @Inject constructor(
     suspend fun substituteBenIdForDraft(ben: BenRegCache) {
         val extract = extractBenId()
         ben.beneficiaryId = extract.benId
-//        ben.benRegId = extract.benRegId
-//        benDao.substituteBenId(ben.householdId, -2, ben.beneficiaryId, extract.benRegId)
         ben.isDraft = false
     }
-//    suspend fun persistBenKid(
-//        form: BenKidRegFormDataset, hhId: Long, locationRecord: LocationRecord
-//    ) {
-////        val draftBen = benDao.getDraftBenKidForHousehold(hhId)
-////            ?: throw IllegalStateException("no draft saved!!")
-//        val user = userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
-//        val ben = form.getBenForSecondPage(user.userId, hhId)
-//
-//        ben.apply {
-//            if (ben.beneficiaryId == -2L) {
-//                Timber.d("saving...")
-//                val benIdObj = extractBenId()
-//                benDao.substituteBenId(
-//                    ben.householdId, ben.beneficiaryId, benIdObj.benId, benIdObj.benRegId
-//                )
-//                this.beneficiaryId = benIdObj.benId
-//                this.benRegId = benIdObj.benRegId
-//            }
-//            if (this.createdDate == null) {
-//                this.processed = "N"
-//                this.serverUpdatedStatus = 0
-//                this.createdDate = System.currentTimeMillis()
-//                this.createdBy = user.userName
-//            }
-//            this.updatedDate = System.currentTimeMillis()
-//            this.updatedBy = user.userName
-//            this.locationRecord = locationRecord
-//            this.isDraft = false
-//        }
-//
-//        benDao.upsert(ben)
-//
-//        return
-//    }
 
     suspend fun persistRecord(ben: BenRegCache) {
         withContext(Dispatchers.IO) {
@@ -132,111 +96,6 @@ class BenRepo @Inject constructor(
         }
     }
 
-    suspend fun persistBenGen1(
-        hhId: Long, form: BenGenRegFormDataset, locationRecord: LocationRecord?
-    ) {
-//        val draftBen = benDao.getDraftBenKidForHousehold(hhId)
-//            ?: throw IllegalStateException("no draft saved!!")
-        val user =
-            preferenceDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
-//        val ben = form.getBenForSecondPage(user.userId, hhId)
-
-//        locationRecord?.let {
-//
-//            ben.apply {
-//                if (ben.beneficiaryId == -1L) {
-//                    Timber.d("saving...")
-//                    val benIdObj = extractBenId()
-//                    benDao.substituteBenId(
-//                        ben.householdId, ben.beneficiaryId, benIdObj.benId, benIdObj.benRegId
-//                    )
-//                    this.beneficiaryId = benIdObj.benId
-//                    this.benRegId = benIdObj.benRegId
-////                    if (ben.familyHeadRelationPosition == 19) {
-////                        val household = householdDao.getHousehold(ben.householdId)
-////                        household?.benId = ben.beneficiaryId
-////                        household?.familyHeadName = ben.firstName
-////                        household?.processed = "N"
-////                        household?.let { it1 -> householdDao.upsert(it1) }
-////                    }
-//                }
-//                if (this.createdDate == null) {
-//                    this.processed = "N"
-//                    this.createdDate = System.currentTimeMillis()
-//                    this.createdBy = user.userName
-//                } else {
-//                    this.processed = "U"
-//                }
-//
-//                this.updatedDate = System.currentTimeMillis()
-//                this.updatedBy = user.userName
-//                this.serverUpdatedStatus = 0
-//                this.locationRecord = it
-//                this.isDraft = false
-//
-//            }
-//        }
-//        benDao.upsert(ben)
-//        try {
-//            if (locationRecord != null)
-//                createBenIdAtServerByBeneficiarySending(ben, locationRecord)
-//        } catch (e: java.lang.Exception) {
-//            Timber.d("Exception raised $e")
-//        }
-        return
-    }
-
-    suspend fun persistBenGen2(
-        hhId: Long, form: BenGenRegFormDataset, locationRecord: LocationRecord
-    ) {
-//        val draftBen = benDao.getDraftBenKidForHousehold(hhId)
-//            ?: throw IllegalStateException("no draft saved!!")
-//        val user = userDao.getLoggedInUser() ?: throw IllegalStateException("No user logged in!!")
-//        val ben = form.getBenForThirdPage(user.userId, hhId)
-//        ben.apply {
-//            if (ben.beneficiaryId == -1L) {
-//                Timber.d("saving...")
-//                val benIdObj = extractBenId()
-//                benDao.substituteBenId(
-//                    ben.householdId, ben.beneficiaryId, benIdObj.benId, benIdObj.benRegId
-//                )
-//                this.beneficiaryId = benIdObj.benId
-//                this.benRegId = benIdObj.benRegId
-////                if (ben.familyHeadRelationPosition == 19) {
-////                    val household = householdDao.getHousehold(ben.householdId)
-////                    household?.benId = ben.beneficiaryId
-////                    household?.familyHeadName = ben.firstName
-////                    household?.processed = "N"
-////                    household?.let { it1 -> householdDao.upsert(it1) }
-////                }
-//            }
-//            if (this.createdDate == null) {
-//                this.processed = "N"
-//
-//                this.createdDate = System.currentTimeMillis()
-//                this.createdBy = user.userName
-//            } else {
-//                this.processed = "U"
-//            }
-//            this.serverUpdatedStatus = 0
-//            this.updatedDate = System.currentTimeMillis()
-//            this.updatedBy = user.userName
-//            this.locationRecord = locationRecord
-//            this.isDraft = false
-//        }
-//
-//        benDao.upsert(ben)
-//
-//
-////        try {
-////            createBenIdAtServerByBeneficiarySending(ben, locationRecord)
-////        } catch (e: java.lang.Exception) {
-////            Timber.d("Exception raised $e")
-////        }
-//        return
-    }
-
-
     suspend fun getHousehold(hhId: Long): HouseholdCache? {
         return withContext(Dispatchers.IO) {
             householdDao.getHousehold(hhId)
@@ -252,26 +111,6 @@ class BenRepo @Inject constructor(
         }
 
     }
-
-//    suspend fun getBenKidForm(benId: Long, hhId: Long): BenKidRegFormDataset {
-//        return withContext(Dispatchers.IO) {
-//            BenKidRegFormDataset(context, getBeneficiaryRecord(benId, hhId)!!)
-////                .also {
-////                it.setPic()
-////            }
-//        }
-//    }
-
-
-//    suspend fun getBenGenForm(benId: Long, hhId: Long): BenGenRegFormDataset {
-//        return withContext(Dispatchers.IO) {
-//            BenGenRegFormDataset(context, getBeneficiaryRecord(benId, hhId)!!)
-////                .also {
-////                it.setPic()
-////            }
-//        }
-//    }
-
 
     private suspend fun extractBenId(): BeneficiaryIdsAvail {
         return withContext(Dispatchers.IO) {
@@ -311,127 +150,11 @@ class BenRepo @Inject constructor(
         benIdGenDao.insert(*benIdList.toTypedArray())
     }
 
-    /*    private suspend fun getBenIdsFromServer(count: Int, user: UserCache) {
-            val response =
-                tmcNetworkApiService.generateBeneficiaryIDs(
-                    TmcGenerateBenIdsRequest(
-                        count,
-                        user.userId
-                    )
-                )
-            val statusCode = response.code()
-            if (statusCode == 200) {
-                val responseString = response.body()?.string()
-                    ?: throw IllegalStateException("response body empty here!")
-                val jsonObj = JSONObject(responseString)
-                val jsonObject2 = jsonObj.getJSONObject("response")
-                val responseStatusCode = jsonObject2.getInt("statusCode")
-                val errorMessage = jsonObject2.getString("statusMessage")
-                if (responseStatusCode == 200) {
-                    val data = jsonObject2.getString("data")
-                    val jsonArray = JSONArray(data)
-                    val benIdList = mutableListOf<BeneficiaryIdsAvail>()
-                    for (i in 0 until jsonArray.length()) {
-                        val jObj = jsonArray.getJSONObject(i)
-                        val beneficiaryId = jObj.getLong("beneficiaryId")
-                        val benRegId = jObj.getLong("benRegId")
-                        benIdList.add(
-                            BeneficiaryIdsAvail(
-                                userId = user.userId, benId = beneficiaryId, benRegId = benRegId
-                            )
-                        )
-                    }
-                    benIdGenDao.insert(*benIdList.toTypedArray())
-                } else {
-                    Timber.d("getBenIdsGeneratedFromServer() returned error message : $errorMessage")
-                }
-
-            }
-        }*/
-
-    /*    suspend fun syncUnprocessedRecords(): Boolean {
-            return withContext(Dispatchers.IO) {
-                val user =
-                    preferenceDao.getLoggedInUser()
-                        ?: throw IllegalStateException("No user logged in!!")
-
-                val benUnprocessedList = benDao.getAllUnsyncedBen()
-                val hhUnprocessedList = householdDao.getAllUnprocessedHousehold()
-                val cbacUnprocessedList = cbacDao.getAllUnprocessedCbac()
-
-                val benNetworkPostList = mutableSetOf<BenPost>()
-                val householdNetworkPostList = mutableSetOf<HouseholdNetwork>()
-                val kidNetworkPostList = mutableSetOf<BenRegKidNetwork>()
-                val cbacPostList = mutableSetOf<CbacPost>()
-
-                benUnprocessedList.forEach {
-                    benNetworkPostList.add(it.asNetworkPostModel(context, user))
-                    val hh = householdDao.getHousehold(it.householdId)!!.asNetworkModel()
-                    householdNetworkPostList.add(hh)
-                    benDao.setSyncState(it.householdId, it.beneficiaryId, SyncState.SYNCING)
-                    if (it.isKid) kidNetworkPostList.add(it.asKidNetworkModel())
-                }
-
-                hhUnprocessedList.forEach {
-                    householdNetworkPostList.add(
-                        householdDao.getHousehold(it.householdId)!!.asNetworkModel()
-                    )
-                }
-                cbacUnprocessedList.forEach {
-                    val ben = getBenFromId(it.benId)!!
-                    cbacPostList.add(it.asPostModel(ben, context.resources))
-                }
-
-                val uploadDone = postDataToAmritServer(
-                    benNetworkPostList, householdNetworkPostList, kidNetworkPostList, cbacPostList
-                )
-                if (!uploadDone) {
-                    benNetworkPostList.map { ben -> ben.benId }.takeIf { it.isNotEmpty() }
-                        ?.toTypedArray()?.toLongArray()?.let {
-                            benDao.benSyncWithServerFailed(*it)
-                        }
-                }
-
-    //            val updateBenList = benDao.getAllBenForSyncWithServer()
-    //            updateBenList.forEach {
-    //                benDao.setSyncState(it.householdId, it.beneficiaryId, SyncState.SYNCING)
-    //                benNetworkPostList.add(it.asNetworkPostModel(user))
-    //                householdNetworkPostList.add(
-    //                    householdDao.getHousehold(it.householdId)!!.asNetworkModel(user)
-    //                )
-    //                if (it.isKid)
-    //                    kidNetworkPostList.add(it.asKidNetworkModel(user))
-    //                val cbac = cbacDao.getCbacFromBenId(it.beneficiaryId)
-    //                cbac?.let { form ->
-    //                    cbacPostList.add(
-    //                        form.asPostModel(
-    //                            it.gender!!,
-    //                            context.resources
-    //                        )
-    //                    )
-    //                }
-    //                val uploadDone = postDataToAmritServer(
-    //                    benNetworkPostList,
-    //                    householdNetworkPostList,
-    //                    kidNetworkPostList,
-    //                    cbacPostList
-    //                )
-    //                if (!uploadDone)
-    //                    benDao.benSyncWithServerFailed(*benNetworkPostList.map { ben -> ben.benId }
-    //                        .toTypedArray().toLongArray())
-    //
-    //            }
-                return@withContext true
-            }
-        }*/
-
     private suspend fun createBenIdAtServerByBeneficiarySending(
         ben: BenRegCache, user: User, locationRecord: LocationRecord
     ): Boolean {
 
         val sendingData = ben.asNetworkSendingModel(user, locationRecord, context)
-        //val sendingDataString = Gson().toJson(sendingData)
-//        benDao.setSyncState(ben.householdId, ben.beneficiaryId, SyncState.SYNCING)
         try {
             val response = tmcNetworkApiService.getBenIdFromBeneficiarySending(sendingData)
             val responseString = response.body()?.string()
@@ -510,31 +233,6 @@ class BenRepo @Inject constructor(
 //                val isSuccess =
                 createBenIdAtServerByBeneficiarySending(it, user, it.locationRecord)
                 Timber.d("YTR 429 $it")
-//                if (isSuccess) {
-//                    benNetworkPostList.add(it.asNetworkPostModel(user))
-//                    householdNetworkPostList.add(
-//                        householdDao.getHousehold(it.householdId)!!.asNetworkModel(user)
-//                    )
-//                    if (it.isKid)
-//                        kidNetworkPostList.add(it.asKidNetworkModel(user))
-//                    val cbac = cbacDao.getCbacFromBenId(it.beneficiaryId)
-//                    cbac?.let { form ->
-//                        cbacPostList.add(
-//                            form.asPostModel(
-//                                context.resources
-//                            )
-//                        )
-//                    }
-//                    val uploadDone = postDataToAmritServer(
-//                        benNetworkPostList,
-//                        householdNetworkPostList,
-//                        kidNetworkPostList,
-//                        cbacPostList
-//                    )
-//                    if (!uploadDone)
-//                        benDao.benSyncWithServerFailed(*benNetworkPostList.map { ben -> ben.benId }
-//                            .toTypedArray().toLongArray())
-//                }
             }
 
             val updateBenList = benDao.getAllBenForSyncWithServer()
@@ -552,16 +250,6 @@ class BenRepo @Inject constructor(
 
 
             }
-//            val cbac = cbacDao.getAllUnprocessedCbac()
-//            cbac.forEach {
-//                val ben = getBenFromId(it.benId)!!
-//                cbacPostList.add(it.asPostModel(ben, context.resources))
-//                benNetworkPostList.add(ben.asNetworkPostModel(context, user))
-//            }
-//            cbac.takeIf { it.isNotEmpty() }?.map { it.benId }?.let {
-//                cbacDao.setCbacSyncing(*it.toLongArray())
-//            }
-//            cbacDao.setCbacSyncing(*cbac.map {it.benId }.toLongArray())
 
             val uploadDone = postDataToAmritServer(
                 benNetworkPostList, householdNetworkPostList, kidNetworkPostList,
@@ -570,11 +258,6 @@ class BenRepo @Inject constructor(
                 benNetworkPostList.takeIf { it.isNotEmpty() }?.map { it.benId }?.let {
                     benDao.benSyncWithServerFailed(*it.toLongArray())
                 }
-//                cbacPostList.takeIf { it.isNotEmpty() }?.map { it.benficieryid }?.let {
-//                    cbacDao.cbacSyncWithServerFailed(*it.toLongArray())
-//                }
-//                benDao.benSyncWithServerFailed(*benNetworkPostList.map { ben -> ben.benId }.toLongArray())
-//                cbacDao.cbacSyncWithServerFailed(*cbacPostList.map { cbacElement -> cbacElement.benficieryid}.toLongArray())
             }
             return@withContext true
         }
@@ -607,35 +290,14 @@ class BenRepo @Inject constructor(
                     val errorMessage = jsonObj.getString("errorMessage")
                     if (responseStatusCode == 200) {
                         Timber.d("response : $jsonObj")
-//                        val data = jsonObj.getJSONObject("data")
-//                        val hhCount = if (data.getJSONArray("houseHoldDetails").get(0)
-//                                .equals(null)
-//                        ) 0 else data.getJSONArray("houseHoldDetails").getInt(0)
-//                        val benCount = if (data.getJSONArray("beneficiaryDetails").get(0)
-//                                .equals(null)
-//                        ) 0 else data.getJSONArray("beneficiaryDetails").getInt(0)
-//                        val kidCount = if (data.getJSONArray("bornBirthDeatils").length() == 0)
-//                            0 else if (data.getJSONArray("bornBirthDeatils").get(0).equals(null))
-//                            0 else data.getJSONArray("beneficiaryDetails").getInt(0)
-//                        Timber.d("Currently checking... $hhCount $benCount $kidCount \n${householdNetworkPostSet.size}\n${benNetworkPostSet.size}\n${kidNetworkPostSet.size}\n $hhCount $benCount $kidCount")
-//                        if (hhCount != householdNetworkPostSet.size || benCount != benNetworkPostSet.size || kidCount != kidNetworkPostSet.size) {
-//                            Timber.d("Bad Response from server, need to check $householdNetworkPostSet\n$benNetworkPostSet\n$kidNetworkPostSet $data ")
-//                            return false
-//                        }
                         val benToUpdateList =
                             benNetworkPostSet.takeIf { it.isNotEmpty() }?.map { it.benId }
                                 ?.toTypedArray()?.toLongArray()
                         val hhToUpdateList = householdNetworkPostSet.takeIf { it.isNotEmpty() }
                             ?.map { it.householdId.toLong() }?.toTypedArray()?.toLongArray()
-//                        val cbacToUpdateList =
-//                            cbacPostList.takeIf { it.isNotEmpty() }?.map { it.benficieryid }
-//                                ?.toTypedArray()?.toLongArray()
                         Timber.d("ben : ${benNetworkPostSet.size}, hh: ${householdNetworkPostSet.size}")
-//                        Timber.d("Yuuhooo  -- ---${benNetworkPostSet.first().benId}  ${householdNetworkPostSet.first().householdId}")
                         benToUpdateList?.let { benDao.benSyncedWithServer(*it) }
                         hhToUpdateList?.let { householdDao.householdSyncedWithServer(*it) }
-//                        cbacToUpdateList?.let { cbacDao.cbacSyncedWithServer(*it) }
-                        //householdNetworkPostSet.map { it.householdId }
                         return true
                     } else if (responseStatusCode == 5002) {
                         val user = preferenceDao.getLoggedInUser()
@@ -774,11 +436,6 @@ class BenRepo @Inject constructor(
                             val pageSize = dataObj.getInt("totalPage")
 
                             if (jsonArray.length() != 0) {
-//                                lay_recy.setVisibility(View.VISIBLE)
-//                                lay_no_ben.setVisibility(View.GONE)
-//                                draftLists.clear()
-//                                benServerDataList.clear()
-//                                houseHoldServerData.clear()
 
                                 for (i in 0 until jsonArray.length()) {
                                     val jsonObject = jsonArray.getJSONObject(i)
@@ -1357,11 +1014,6 @@ class BenRepo @Inject constructor(
         return result
     }
 
-//    private suspend fun getCompressedByteArray(benId: Long, benDataObj: JSONObject) =
-//        if (benDataObj.has("user_image")) ImageUtils.compressImage(
-//            context, benId, benDataObj.getString("user_image")
-//        ) else null
-
     private suspend fun getHouseholdCacheFromServerResponse(response: String): MutableList<HouseholdCache> {
         val jsonObj = JSONObject(response)
         val result = mutableListOf<HouseholdCache>()
@@ -1497,10 +1149,6 @@ class BenRepo @Inject constructor(
         }
         return result
     }
-
-//    suspend fun getPncMothersFromHhId(hhId: Long): List<BenBasicCache> {
-//        return benDao.getAllPNCMotherListFromHousehold(hhId)
-//    }
 
 
     suspend fun getBeneficiaryWithId(benRegId: Long): BenHealthDetails? {

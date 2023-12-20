@@ -108,10 +108,6 @@ class EligibleCoupleTrackingFormViewModel @Inject constructor(
 
     }
 
-//    fun getIndexOfEdd(): Int = dataset.getIndexOfEdd()
-//    fun getIndexOfWeeksOfPregnancy(): Int = dataset.getIndexOfWeeksPregnancy()
-//    fun getIndexOfPastIllness(): Int = dataset.getIndexOfPastIllness()
-
     fun saveForm() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {

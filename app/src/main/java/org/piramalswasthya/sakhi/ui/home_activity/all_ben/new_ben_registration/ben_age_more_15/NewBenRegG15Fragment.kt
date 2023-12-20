@@ -68,10 +68,6 @@ class NewBenRegG15Fragment : Fragment() {
             if (success) {
                 latestTmpUri?.let { uri ->
                     viewModel.setImageUriToFormElement(uri)
-//                    context?.openFileOutput("Hello", Context.MODE_PRIVATE)?.use {
-//                        context?.contentResolver?.openInputStream(uri)!!
-//                        it.write(byteArray.)
-//                    }
 
                     binding.inputForm.rvInputForm.apply {
                         val adapter = this.adapter as FormInputAdapter
@@ -120,14 +116,6 @@ class NewBenRegG15Fragment : Fragment() {
             .create()
     }
 
-//    private val pageChangeCallback: ViewPager2.OnPageChangeCallback by lazy {
-//        object : ViewPager2.OnPageChangeCallback() {
-//            override fun onPageSelected(i: Int) {
-//                onPageChange(i)
-//            }
-//        }
-//    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -137,45 +125,6 @@ class NewBenRegG15Fragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        binding.btnSubmitForm.text = context?.getString(R.string.btn_submit)
-//        binding.vp2Nhhr.adapter = NewBenGenPagerAdapter(
-//            mutableListOf(
-//                "Ben Details",
-//                "ID Details"
-//            ), this
-//        )
-//        when (viewModel.mTabPosition) {
-//            0 -> {
-//                binding.btnPrev.visibility = View.GONE
-//                binding.btnNext.visibility = View.VISIBLE
-//            }
-//            1 -> {
-//                binding.btnPrev.visibility = View.VISIBLE
-//                binding.btnNext.visibility = View.GONE
-//            }
-//        }
-//
-//        when (viewModel.mTabPosition) {
-//            0 -> {
-//                binding.btnPrev.visibility = View.GONE
-//                binding.btnNext.visibility = View.VISIBLE
-//                binding.btnSubmitForm.visibility = View.GONE
-//            }
-//            1 -> {
-//                binding.btnNext.visibility = View.VISIBLE
-//                binding.btnPrev.visibility = View.VISIBLE
-//                binding.btnSubmitForm.visibility = View.GONE
-//            }
-//            2 -> {
-//                binding.btnPrev.visibility = View.VISIBLE
-//                binding.btnNext.visibility = View.GONE
-//                binding.btnSubmitForm.visibility = View.VISIBLE
-//            }
-//        }
-//        TabLayoutMediator(binding.tlNhhr, binding.vp2Nhhr) { tab, position ->
-//            tab.text = (binding.vp2Nhhr.adapter as NewBenGenPagerAdapter).getPageName(position)
-//            tab.view.isClickable = false
-//        }.attach()
         lifecycleScope.launch {
             viewModel.currentPage.collect {
                 binding.tvTitle.text = when (it) {
@@ -184,24 +133,6 @@ class NewBenRegG15Fragment : Fragment() {
                     3 -> resources.getString(R.string.reproductive_status_ben)
                     else -> null
                 }
-//                binding.tlNhhr.selectTab(binding.tlNhhr.getTabAt(it - 1), true)
-//                when (it) {
-//                    1 -> {
-//                        binding.btnPrev.visibility = View.INVISIBLE
-//                        binding.btnNext.visibility = View.VISIBLE
-//                        binding.btnSubmitForm.visibility = View.INVISIBLE
-//                    }
-//                    2 -> {
-//                        binding.btnNext.visibility = View.VISIBLE
-//                        binding.btnPrev.visibility = View.VISIBLE
-//                        binding.btnSubmitForm.visibility = View.INVISIBLE
-//                    }
-//                    3 -> {
-//                        binding.btnPrev.visibility = View.VISIBLE
-//                        binding.btnNext.visibility = View.INVISIBLE
-//                        binding.btnSubmitForm.visibility = View.VISIBLE
-//                    }
-//                }
             }
         }
         lifecycleScope.launch {
@@ -307,12 +238,6 @@ class NewBenRegG15Fragment : Fragment() {
             }
         }
 
-//        viewModel.hasReproductiveStatus.observe(viewLifecycleOwner) {
-//            val adapter = (binding.vp2Nhhr.adapter as NewBenGenPagerAdapter)
-//            if (it) adapter.addPage("Reproductive Status")
-//            else if (adapter.itemCount == 3) adapter.removePage(2)
-//        }
-
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -335,25 +260,8 @@ class NewBenRegG15Fragment : Fragment() {
 
                 8 -> {
                     notifyDataSetChanged()
-                    /*viewModel.getIndexOfFatherName().takeIf { it > 0 }?.let {
-                        Timber.d("Update Father index called! $it")
-                        notifyItemChanged(it)
-                    }
-                    viewModel.getIndexOfMotherName().takeIf { it > 0 }?.let {
-                        Timber.d("Update Mother index called! $it")
-                        notifyItemChanged(it)
-                    }
-                    viewModel.getIndexOfSpouseName().takeIf { it > 0 }?.let {
-                        Timber.d("Update Spouse index called! $it")
-                        notifyItemChanged(it)
-                    }*/
 
                 }
-
-//                27 ->
-//                    viewModel.getIndexOfExpectedDateOfDelivery().takeIf { it > 0 }?.let {
-//                        notifyItemChanged(it)
-//                    }
 
                 28 -> notifyItemChanged(1)
 
@@ -404,66 +312,6 @@ class NewBenRegG15Fragment : Fragment() {
         requestLocationPermission()
     }
 
-
-//    private fun onPageChange(i: Int) {
-//        if (i == viewModel.mTabPosition) {
-//            return
-//        }
-//        if (i < viewModel.mTabPosition) viewModel.setMTabPosition(i)
-//        else {
-//            val validated = validateFormForPage(i)
-//            if (validated) {
-//                viewModel.setMTabPosition(i)
-////                when (viewModel.mTabPosition) {
-////                    1 -> {
-////                        viewModel.persistRegisterRecord()
-////                    }
-////                    2 -> {
-////                        viewModel.persistSecondPage()
-////                    }
-////                }
-//            }
-//        }
-//        binding.vp2Nhhr.currentItem = viewModel.mTabPosition
-//        if (binding.vp2Nhhr.adapter?.itemCount == 2) {
-//            when (viewModel.mTabPosition) {
-//                0 -> {
-//                    binding.btnPrev.visibility = View.GONE
-//                    binding.btnNext.visibility = View.VISIBLE
-//                    binding.btnSubmitForm.visibility = View.GONE
-//                }
-//                1 -> {
-//                    binding.btnPrev.visibility = View.VISIBLE
-//                    binding.btnNext.visibility = View.GONE
-//                    if (viewModel.recordExists.value == false) binding.btnSubmitForm.visibility =
-//                        View.VISIBLE
-//                }
-//            }
-//        } else {
-//            when (viewModel.mTabPosition) {
-//                0 -> {
-//                    binding.btnPrev.visibility = View.GONE
-//                    binding.btnNext.visibility = View.VISIBLE
-//                    binding.btnSubmitForm.visibility = View.GONE
-//
-//                }
-//                1 -> {
-//                    binding.btnNext.visibility = View.VISIBLE
-//                    binding.btnPrev.visibility = View.VISIBLE
-//                    binding.btnSubmitForm.visibility = View.GONE
-//
-//                }
-//                2 -> {
-//                    binding.btnPrev.visibility = View.VISIBLE
-//                    binding.btnNext.visibility = View.GONE
-//                    if (viewModel.recordExists.value == false) binding.btnSubmitForm.visibility =
-//                        View.VISIBLE
-//
-//                }
-//            }
-//        }
-//    }
-
     private fun requestLocationPermission() {
         val locationManager =
             requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -488,18 +336,6 @@ class NewBenRegG15Fragment : Fragment() {
             false
         }
     }
-
-//    private fun validateFormForPage(i: Int): Boolean {
-//        val currentItem = "f${viewModel.mTabPosition}"
-//        Timber.d(
-//            "item :Current mTab position : $currentItem toChange position $i \n Fragment : ${
-//                childFragmentManager.findFragmentByTag(
-//                    currentItem
-//                )
-//            }"
-//        )
-//        return (childFragmentManager.findFragmentByTag(currentItem) as NewBenRegG15ObjectFragment).validate()
-//    }
 
     override fun onDestroy() {
         super.onDestroy()

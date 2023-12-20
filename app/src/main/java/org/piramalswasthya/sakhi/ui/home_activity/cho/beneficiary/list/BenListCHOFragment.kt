@@ -149,15 +149,6 @@ class BenListCHOFragment : Fragment() {
     }
 
     private fun checkAndGenerateABHA(benId: Long) {
-//        try {
-//            val text = "This is a test\n new lin emate" // Replace with your message.
-//            val toNumber = "918179784993"
-//            val intent = Intent(Intent.ACTION_VIEW)
-//            intent.data = Uri.parse("http://api.whatsapp.com/send?phone=$toNumber&text=$text")
-//            startActivity(intent)
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
         viewModel.fetchAbha(benId)
     }
 

@@ -93,14 +93,6 @@ class HbncRepo @Inject constructor(
 //                hbncPostSet.add(it.asPostModel(user, household, hbncCount))
                 it.syncState = SyncState.SYNCING
                 database.hbncDao.update(it)
-//                val uploadDone = postDataToD2dServer(hbncPostSet)
-//                if (uploadDone) {
-//                    it.processed = "P"
-//                    it.syncState = SyncState.SYNCED
-//                } else {
-//                    it.syncState = SyncState.UNSYNCED
-//                }
-//                database.hbncDao.update(it)
             }
             return@withContext true
         }

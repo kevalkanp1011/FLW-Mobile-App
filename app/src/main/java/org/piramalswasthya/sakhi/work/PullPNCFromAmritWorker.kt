@@ -56,7 +56,6 @@ class PullPNCFromAmritWorker @AssistedInject constructor(
                     Timber.d("Full pregnant women details fetching took $timeTaken seconds $result1")
 
                     if (result1.all { it }) {
-//                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
                         return@withContext Result.success()
                     }
                     return@withContext Result.failure()

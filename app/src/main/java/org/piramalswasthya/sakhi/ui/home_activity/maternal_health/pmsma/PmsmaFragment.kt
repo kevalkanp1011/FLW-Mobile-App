@@ -33,7 +33,6 @@ class PmsmaFragment : Fragment() {
     private val errorAlert by lazy {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(resources.getString(R.string.alert))
-            //.setMessage("Do you want to continue with previous form, or create a new form and discard the previous form?")
             .setPositiveButton(resources.getString(R.string.ok)) { dialog, _ ->
                 dialog.dismiss()
             }
@@ -160,11 +159,6 @@ class PmsmaFragment : Fragment() {
     }
 
     private fun hardCodedListUpdate(formId: Int) {
-//        binding.form.rvInputForm.adapter?.apply {
-//            when (formId) {
-//
-//            }
-//        }
     }
 
 

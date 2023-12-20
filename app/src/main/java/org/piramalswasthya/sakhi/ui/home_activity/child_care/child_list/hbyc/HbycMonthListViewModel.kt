@@ -21,14 +21,17 @@ class HbycMonthListViewModel @Inject constructor(
 
     val dayList = hbycRepo.hbycList(benId, hhId).transform { dateList ->
         val daysList = dateList.map { it.month }
+        val syncList = dateList.map { it.syncState }
 
         val headerList = mutableListOf(3, 6, 9, 12, 15).map { month ->
+            val monthCache = dateList.filter { it.month == month.toString() }
+            val syncState = if (monthCache.isNotEmpty()) monthCache[0].syncState else SyncState.UNSYNCED
             HbycIcon(
                 hhId = hhId,
                 benId = benId,
                 count = month,
                 isFilled = daysList.contains(month.toString()),
-                syncState = SyncState.UNSYNCED,
+                syncState = syncState,
                 destination = HbycMonthListFragmentDirections.actionHbycMonthListFragmentToHbycFragment(
                     hhId, benId, month
                 )

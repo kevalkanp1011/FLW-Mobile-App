@@ -71,14 +71,6 @@ class HbycRepo @Inject constructor(
                 hbycPostList.add(it.asPostModel(user, household, ben, hbycCount))
                 it.syncState = SyncState.SYNCING
                 database.hbycDao.setSynced(it)
-//                val uploadDone = postDataToD2dServer(hbycPostList)
-//                if (uploadDone) {
-//                    it.processed = "P"
-//                    it.syncState = SyncState.SYNCED
-//                } else {
-//                    it.syncState = SyncState.UNSYNCED
-//                }
-//                database.hbycDao.setSynced(it)
             }
 
             return@withContext true

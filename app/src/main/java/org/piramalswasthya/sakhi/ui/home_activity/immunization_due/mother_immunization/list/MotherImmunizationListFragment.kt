@@ -49,14 +49,6 @@ class MotherImmunizationListFragment : Fragment() {
                 }
             }
         }
-
-//        bottomSheet.setContentFlow(viewModel.bottomSheetContent)
-//        lifecycleScope.launch {
-//            viewModel.bottomSheetContent.collect {
-//                Timber.d("Collecting list : $it")
-//                it?.let { bottomSheet.submitListToVaccinationRv(it) }
-//            }
-//        }
     }
 
 }

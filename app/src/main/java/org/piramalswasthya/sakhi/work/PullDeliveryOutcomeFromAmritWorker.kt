@@ -54,7 +54,6 @@ class PullDeliveryOutcomeFromAmritWorker @AssistedInject constructor(
                     Timber.d("Full delivery outcome details fetching took $timeTaken seconds $result1")
 
                     if (result1.all { it }) {
-//                        preferenceDao.setLastSyncedTimeStamp(System.currentTimeMillis())
                         return@withContext Result.success()
                     }
                     return@withContext Result.failure()

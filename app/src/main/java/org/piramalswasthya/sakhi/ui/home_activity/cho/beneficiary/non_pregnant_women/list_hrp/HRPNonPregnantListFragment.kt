@@ -43,7 +43,6 @@ class HRPNonPregnantListFragment : Fragment() {
         val benAdapter = HRNPTListAdapter(
             clickListener = HRNPTListAdapter.HRNPTClickListener(
                 {
-//                    Toast.makeText(context, "Ben : $it clicked", Toast.LENGTH_SHORT).show()
                 },
                 { _, benId ->
                     findNavController().navigate(

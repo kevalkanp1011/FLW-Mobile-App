@@ -83,7 +83,7 @@ class HbncPartIIFragment : Fragment() {
 
                 State.SUCCESS -> {
                     findNavController().navigateUp()
-                    WorkerUtils.triggerD2dSyncWorker(requireContext())
+                    WorkerUtils.triggerAmritPushWorker(requireContext())
                 }
 
                 State.FAIL -> {

@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.HbycMonthGridAdapter
 import org.piramalswasthya.sakhi.databinding.RvIconGridBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 
 @AndroidEntryPoint
 class HbycMonthListFragment : Fragment() {
@@ -55,6 +56,16 @@ class HbycMonthListFragment : Fragment() {
             viewModel.dayList.collect {
                 iconAdapter.submitList(it)
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__child,
+                getString(R.string.child_care_icon_title_child_list)
+            )
         }
     }
 

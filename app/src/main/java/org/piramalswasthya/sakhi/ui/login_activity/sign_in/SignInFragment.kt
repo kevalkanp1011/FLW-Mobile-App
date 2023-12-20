@@ -96,14 +96,6 @@ class SignInFragment : Fragment() {
             }
             viewModel.loginInClicked()
         }
-//        var ee = 0
-//        binding.ivNhmLogo.setOnLongClickListener {
-//            if (ee == 0) {
-//                Toast.makeText(context, "Madhav Rocks!#?/!", Toast.LENGTH_SHORT / 4).show()
-//                ee++
-//            }
-//            true
-//        }
 
         when (prefDao.getCurrentLanguage()) {
             ENGLISH -> binding.rgLangSelect.check(binding.rbEng.id)

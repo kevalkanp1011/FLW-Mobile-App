@@ -86,13 +86,6 @@ class NewBenRegTypeFragment : Fragment() {
 
     private val homeViewModel: HomeViewModel by viewModels({ requireActivity() })
 
-//    private val onBackPressedCallback by lazy {
-//        object : OnBackPressedCallback(true) {
-//            override fun handleOnBackPressed() {
-//                Toast.makeText(context, "Back Pressed", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -107,9 +100,6 @@ class NewBenRegTypeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         if (!viewModel.isConsentAgreed)
             consentAlert.show()
-//        activity?.onBackPressedDispatcher?.addCallback(
-//            viewLifecycleOwner, onBackPressedCallback
-//        )
 
         viewModel.hasDraftForKid.observe(viewLifecycleOwner) {
             this.hasDraftKid = it
@@ -146,11 +136,6 @@ class NewBenRegTypeFragment : Fragment() {
 
         viewModel.navigateToNewBenKidRegistration.observe(viewLifecycleOwner) {
             if (it) {
-//                findNavController().navigate(
-//                    NewBenRegTypeFragmentDirections.actionNewBenRegTypeFragmentToNewBenRegL15Fragment(
-//                        hhId
-//                    )
-//                )
                 viewModel.navigateToBenKidRegistrationCompleted()
             }
         }

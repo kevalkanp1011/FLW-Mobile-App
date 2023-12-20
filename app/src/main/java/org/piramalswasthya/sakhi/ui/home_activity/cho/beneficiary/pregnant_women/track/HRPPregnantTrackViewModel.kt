@@ -157,10 +157,6 @@ constructor(
 
                     dataset.mapValues(hrpPregnantTrackCache, 1)
                     hrpReo.saveRecord(hrpPregnantTrackCache)
-//                    isHighRisk = true
-//                    if (isHighRisk) {
-//                        // save
-//                    }
 
                     _state.postValue(State.SAVE_SUCCESS)
                 } catch (e: Exception) {

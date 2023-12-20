@@ -80,11 +80,6 @@ class HbncPartIFragment : Fragment() {
             if (exists) {
                 binding.btnSubmit.visibility = View.GONE
             }
-//            else {
-//                viewModel.address.observe(viewLifecycleOwner) {
-//                    viewModel.setAddress(it, adapter)
-//                }
-//            }
         }
 
 
@@ -120,7 +115,7 @@ class HbncPartIFragment : Fragment() {
 
                 State.SUCCESS -> {
                     findNavController().navigateUp()
-                    WorkerUtils.triggerD2dSyncWorker(requireContext())
+                    WorkerUtils.triggerAmritPushWorker(requireContext())
                 }
 
                 State.FAIL -> {

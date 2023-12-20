@@ -23,7 +23,6 @@ class GenerateBenIdsWorker @AssistedInject constructor(
     companion object {
         const val name = "GenBenIDWorker"
         val constraint = Constraints.Builder()
-//            .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
     }
@@ -33,10 +32,7 @@ class GenerateBenIdsWorker @AssistedInject constructor(
         return try {
             benRepo.getBenIdsGeneratedFromServer()
             Result.success()
-        } /*catch (e: SocketTimeoutException) {
-            Timber.e("Caught Exception for Gen Ben iD worker $e")
-            doWork()
-        } */ catch (e: Exception) {
+        } catch (e: Exception) {
             Timber.e("Caught Exception for Gen Ben iD worker $e")
             Result.failure()
         }

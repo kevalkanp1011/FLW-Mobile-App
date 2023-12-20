@@ -64,11 +64,6 @@ class HomeViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
-//            withContext(Dispatchers.IO){
-//                database.clearAllTables()
-//            }
-//            pref.deleteForLogout()
-//            pref.setLastSyncedTimeStamp(Konstants.defaultTimeStamp)
             pref.deleteLoginCred()
             _navigateToLoginPage.value = true
         }

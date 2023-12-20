@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
 import org.piramalswasthya.sakhi.databinding.FragmentHbycBinding
+import org.piramalswasthya.sakhi.ui.home_activity.HomeActivity
 import org.piramalswasthya.sakhi.work.WorkerUtils
 import timber.log.Timber
 
@@ -74,7 +75,7 @@ class HbycFragment : Fragment() {
 
                 HbycViewModel.State.SUCCESS -> {
                     findNavController().navigateUp()
-                    WorkerUtils.triggerD2dSyncWorker(requireContext())
+                    WorkerUtils.triggerAmritPushWorker(requireContext())
                 }
 
                 HbycViewModel.State.FAIL -> {
@@ -124,6 +125,15 @@ class HbycFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        activity?.let {
+            (it as HomeActivity).updateActionBar(
+                R.drawable.ic__child,
+                getString(R.string.hbyc)
+            )
+        }
+    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

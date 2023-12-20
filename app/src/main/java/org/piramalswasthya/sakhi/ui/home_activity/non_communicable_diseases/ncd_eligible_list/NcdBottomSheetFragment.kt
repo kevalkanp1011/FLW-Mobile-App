@@ -61,15 +61,4 @@ class NcdBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-
-//    private fun submitListToVaccinationRv(detail: ImmunizationDetailsDomain) {
-//        val list = ChildImmunizationCategory.values().map { category ->
-//            VaccineCategoryDomain(category,
-//                vaccineStateList = detail.vaccineStateList.filter { it.vaccineCategory == category })
-//        }.filter { it.vaccineStateList.isNotEmpty() }
-//        Timber.d("Called list at bottom sheet ${_binding?.rvImmCat?.adapter} ${detail.ben.benId} $list")
-//
-//        (_binding?.rvImmCat?.adapter as ImmunizationCategoryAdapter?)?.submitList(list)
-//    }
-
 }

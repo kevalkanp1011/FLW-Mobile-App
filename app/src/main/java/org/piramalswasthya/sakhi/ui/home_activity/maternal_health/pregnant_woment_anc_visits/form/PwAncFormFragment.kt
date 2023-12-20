@@ -139,24 +139,6 @@ class PwAncFormFragment : Fragment() {
                     notifyItemChanged(viewModel.getIndexOfTT2())
 
                 }
-
-//                9 ->{
-//                    notifyItemChanged(viewModel.getIndexOfDiastolic())
-//                    if(viewModel.triggerBpToggle() ){
-//                        notifyItemChanged(viewModel.getIndexOfSystolic())
-//                        viewModel.resetBpToggle()
-//
-//                    }
-//                }
-//                10 ->{
-//                    notifyItemChanged(viewModel.getIndexOfSystolic())
-//                    if(viewModel.triggerBpToggle()){
-//                        notifyItemChanged(viewModel.getIndexOfDiastolic())
-//                        viewModel.resetBpToggle()
-//
-//                    }
-//                }
-//                19 -> notifyItemChanged(viewModel.getIndexOfPastIllness())
             }
         }
     }

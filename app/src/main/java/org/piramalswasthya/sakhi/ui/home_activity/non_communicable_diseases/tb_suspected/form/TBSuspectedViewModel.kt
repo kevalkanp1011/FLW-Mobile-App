@@ -54,10 +54,6 @@ class TBSuspectedViewModel @Inject constructor(
         SuspectedTBDataset(context, preferenceDao.getCurrentLanguage())
     val formList = dataset.listFlow
 
-//    var suspectedTB: String? = null
-//
-//    var suspectedTBFamily: String? = null
-
     private lateinit var tbSuspected: TBSuspectedCache
 
     init {
@@ -93,11 +89,6 @@ class TBSuspectedViewModel @Inject constructor(
 
     }
 
-
-    //    fun getAlerts() {
-//        suspectedTB = dataset.isTbSuspected()
-//        suspectedTBFamily = dataset.isTbSuspectedFamily()
-//    }
     fun saveForm() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {

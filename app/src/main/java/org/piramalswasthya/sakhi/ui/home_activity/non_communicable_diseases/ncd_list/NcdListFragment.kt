@@ -55,28 +55,10 @@ class NcdListFragment : Fragment() {
         val benAdapter = BenListAdapter(
             BenListAdapter.BenClickListener(
                 { hhId, benId, isKid ->
-
-//                findNavController().navigate(
-//                    if (isKid) AllBenFragmentDirections.actionAllBenFragmentToNewBenRegL15Fragment(
-//                        hhId,
-//                        benId
-//                    )
-//                    else
-//                        AllBenFragmentDirections.actionAllBenFragmentToNewBenRegG15Fragment(
-//                            hhId,
-//                            benId
-//                        )
-//                )
                 },
                 {
-//                findNavController().navigate(
-//                    AllBenFragmentDirections.actionAllBenFragmentToNewBenRegTypeFragment(
-//                        it
-//                    )
-//                )
                 },
                 { benId, hhId ->
-//                checkAndGenerateABHA(benId)
                 },
 
                 ), true
@@ -136,10 +118,6 @@ class NcdListFragment : Fragment() {
             }
 
         }
-    }
-
-    private fun checkAndGenerateABHA(benId: Long) {
-//        viewModel.fetchAbha(benId)
     }
 
     override fun onStart() {

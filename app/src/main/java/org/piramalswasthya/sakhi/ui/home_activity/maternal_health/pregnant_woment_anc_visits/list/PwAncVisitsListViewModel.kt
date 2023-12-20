@@ -44,17 +44,6 @@ class PwAncVisitsListViewModel @Inject constructor(
 
     fun updateBottomSheetData(benId: Long) {
         viewModelScope.launch {
-//            val _list = mutableListOf<AncStatus>()
-//            val regis = maternalHealthRepo.getSavedRegistrationRecord(benId)!!
-//            val filledForms = maternalHealthRepo.getAllAncRecords(benId)
-//            val millisToday = Calendar.getInstance().setToStartOfTheDay().timeInMillis
-//            val list = getAncStatusList(filledForms, regis.lmpDate, benId, millisToday)
-//                listOf(1, 2, 3, 4).map {
-//                getAncStatus(filledForms, regis.lmpDate, it, benId, millisToday)
-//            }
-//            Timber.d("list emitted $list")
-//            _bottomSheetList.emit(emptyList())
-//            _bottomSheetList.emit(list)
             benIdSelected.emit(benId)
         }
     }

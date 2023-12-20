@@ -219,12 +219,6 @@ class NewBenRegFragment : Fragment() {
                             adapter.submitList(it)
                     }
                 }
-//                viewModel.listUpdateState.observe(viewLifecycleOwner) {
-//                    if (it is NewBenRegViewModel.ListUpdateState.Updated) {
-//                        hardCodedListUpdate(it.formElementId)
-//                        viewModel.resetListUpdateState()
-//                    }
-//                }
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
                         viewModel.setUpPage()
@@ -282,18 +276,6 @@ class NewBenRegFragment : Fragment() {
             when (formId) {
                 1008 -> {
                     notifyDataSetChanged()
-                    /*viewModel.getIndexOfFatherName().takeIf { it > 0 }?.let {
-                        Timber.d("Update Father index called! $it")
-                        notifyItemChanged(it)
-                    }
-                    viewModel.getIndexOfMotherName().takeIf { it > 0 }?.let {
-                        Timber.d("Update Mother index called! $it")
-                        notifyItemChanged(it)
-                    }
-                    viewModel.getIndexOfSpouseName().takeIf { it > 0 }?.let {
-                        Timber.d("Update Spouse index called! $it")
-                        notifyItemChanged(it)
-                    }*/
 
                 }
 
