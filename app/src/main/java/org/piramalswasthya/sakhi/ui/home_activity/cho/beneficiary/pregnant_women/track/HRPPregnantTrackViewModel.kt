@@ -14,6 +14,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.configuration.HRPPregnantTrackDataset
 import org.piramalswasthya.sakhi.database.shared_preferences.PreferenceDao
+import org.piramalswasthya.sakhi.model.BenBasicCache
+import org.piramalswasthya.sakhi.model.BenWithHRPTrackingCache
 import org.piramalswasthya.sakhi.model.HRPPregnantTrackCache
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.HRPRepo
@@ -47,6 +49,11 @@ constructor(
     private val _benName = MutableLiveData<String>()
     val benName: LiveData<String>
         get() = _benName
+
+    private val _benWithHrpt = MutableLiveData<BenWithHRPTrackingCache>()
+    val benWithHrpt: LiveData<BenWithHRPTrackingCache>
+        get() = _benWithHrpt
+
     private val _benAgeGender = MutableLiveData<String>()
     val benAgeGender: LiveData<String>
         get() = _benAgeGender
@@ -81,6 +88,7 @@ constructor(
 
     fun loadData() {
         viewModelScope.launch {
+            _benWithHrpt.value = benRepo.getBenWithHRPT(benId)
             val ben = benRepo.getBenFromId(benId)?.also { ben ->
                 _benName.value =
                     "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
@@ -126,6 +134,7 @@ constructor(
             }
             dataset.setUpPage(
                 ben,
+                hrpPregnantTrackCache.visit,
                 if (recordExists.value == true) hrpPregnantTrackCache else null,
                 maxDov
             )

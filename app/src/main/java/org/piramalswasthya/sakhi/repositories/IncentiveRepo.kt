@@ -94,7 +94,12 @@ class IncentiveRepo @Inject constructor(
             Gson().fromJson(dataObj, Array<IncentiveActivityNetwork>::class.java).toList()
 
         val activityList = activities.map { it.asCacheModel() }
-        incentiveDao.insert(*activityList.toTypedArray())
+        activityList.forEach { activity ->
+            val activityCache = incentiveDao.getActivityById(activity.id)
+            if (activityCache == null) {
+                incentiveDao.insert(activity)
+            }
+        }
     }
 
     suspend fun pullAndSaveAllIncentiveRecords(user: User): Boolean {
@@ -164,6 +169,12 @@ class IncentiveRepo @Inject constructor(
     private suspend fun saveIncentiveRecordsData(dataObj: String) {
         val records = Gson().fromJson(dataObj, Array<IncentiveRecordNetwork>::class.java).toList()
         val recordList = records.map { it.asCacheModel() }
-        incentiveDao.insert(*recordList.toTypedArray())
+        recordList.forEach {
+            val record =
+                incentiveDao.getRecordById(it.id)
+            if (record == null) {
+                incentiveDao.insert(it)
+            }
+        }
     }
 }

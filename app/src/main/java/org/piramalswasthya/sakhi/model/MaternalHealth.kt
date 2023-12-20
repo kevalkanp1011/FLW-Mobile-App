@@ -373,7 +373,7 @@ data class PregnantWomanAncCache(
             weightOfPW = weight,
             bpSystolic = bpSystolic,
             bpDiastolic = bpDiastolic,
-            pulseRate = pulseRate?.toInt(),
+            pulseRate = if (pulseRate == "null") null else pulseRate?.toInt(),
             hb = hb,
             fundalHeight = fundalHeight,
             urineAlbuminPresent = urineAlbumin == "Present",

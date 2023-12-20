@@ -7,7 +7,7 @@
     <string name="other_enter_religion">Other - Enter Religion</string>
     <string name="has_aadhaar_number">Has Aadhaar Number</string>
     <string name="enter_aadhaar_number_ben">Enter Aadhaar Number</string>
-    <string name="reproductive_status">Reproductive Status</string>
+    <string name="reproductive_status">Status Of Women</string>
     <string name="birth_certificate_number">Birth Certificate No.</string>
     <string name="beneficiary_details">Beneficiary Details</string>
     <string name="wife_s_name">Wife\'s Name</string>
@@ -30,7 +30,7 @@
     <string name="nbr_nb_last_name">Last Name / Surname</string>
     <string name="beneficiary_details_ben">Beneficiary Details</string>
     <string name="id_details">ID Details</string>
-    <string name="reproductive_status_ben">Reproductive Status</string>
+    <string name="reproductive_status_ben">Status Of Women</string>
     <string name="enable_gps">Enable GPS</string>
     <string name="gps_is_not_enabled_do_you_want_to_go_to_settings_menu">GPS is not enabled. Do you want to go to settings menu?</string>
     <string name="settings">Settings</string>

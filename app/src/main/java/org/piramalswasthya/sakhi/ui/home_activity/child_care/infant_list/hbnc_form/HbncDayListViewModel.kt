@@ -12,6 +12,7 @@ import org.piramalswasthya.sakhi.helpers.Konstants
 import org.piramalswasthya.sakhi.model.HbncIcon
 import org.piramalswasthya.sakhi.repositories.BenRepo
 import org.piramalswasthya.sakhi.repositories.HbncRepo
+import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
 
@@ -75,7 +76,7 @@ class HbncDayListViewModel @Inject constructor(
         if (partIIcon.isFilled) headerList.add(partIIIcon)
         val ben = benRepo.getBeneficiaryRecord(benId, hhId)!!
         val allDayList = listOf(1, 3, 7, 14, 21, 28, 42)
-        val dayList = allDayList.filter { it <= ben.age }
+        val dayList = allDayList.filter { it <= (Calendar.getInstance().timeInMillis - ben.dob)/1000*60*60*24 }
 
         if (partIIIcon.isFilled)
             headerList.addAll(dayList.map { day ->

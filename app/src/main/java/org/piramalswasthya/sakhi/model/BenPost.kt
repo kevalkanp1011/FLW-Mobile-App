@@ -217,5 +217,28 @@ data class BenPost(
     @Json(name = "diagnosis_status")
     val diagnosis_status: String? = null,
 
+    @Json(name = "benPhoneMaps")
+    val benPhoneMaps: Array<BenPhoneMaps>,
+
+    @Json(name = "dob")
+    val dob: String,
+
+    @Json(name = "emergencyRegistration")
+    val isEmergencyRegistration: Boolean = false,
+
+    @Json(name = "genderId")
+    val genderId: Int = 0,
+
+    @Json(name = "gender")
+    val gender: String,
+
+    @Json(name = "maritalstatusId")
+    val maritalStatusID: String? = null,
+
+    @Json(name = "maritalstatus")
+    val maritalStatusName: String? = null,
+
+    @Json(name = "i_bendemographics")
+    val benDemographics: BenDemographics,
 
     )

@@ -2,9 +2,12 @@ package org.piramalswasthya.sakhi.ui.home_activity.all_ben.new_ben_registration
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.res.Resources
 import android.os.Bundle
+import android.widget.EditText
 import org.piramalswasthya.sakhi.databinding.AlertAgePickerBinding
 import org.piramalswasthya.sakhi.model.AgeUnitDTO
+
 
 class AgePickerDialog(context: Context) : AlertDialog(context) {
 
@@ -64,9 +67,20 @@ class AgePickerDialog(context: Context) : AlertDialog(context) {
         binding.dialogNumberPickerDays.value = ageUnitDTO.days
 
         binding.btnOk.setOnClickListener {
-            ageUnitDTO.years = binding.dialogNumberPickerYears.value
-            ageUnitDTO.months = binding.dialogNumberPickerMonths.value
-            ageUnitDTO.days = binding.dialogNumberPickerDays.value
+            val mInputTextYears: EditText = binding.dialogNumberPickerYears.findViewById(
+                Resources.getSystem().getIdentifier("numberpicker_input", "id", "android")
+            )
+            ageUnitDTO.years = mInputTextYears.text.toString().toInt()
+
+            val mInputTextMonths: EditText = binding.dialogNumberPickerMonths.findViewById(
+                Resources.getSystem().getIdentifier("numberpicker_input", "id", "android")
+            )
+            ageUnitDTO.months = mInputTextMonths.text.toString().toInt()
+
+            val mInputTextDays: EditText = binding.dialogNumberPickerDays.findViewById(
+                Resources.getSystem().getIdentifier("numberpicker_input", "id", "android")
+            )
+            ageUnitDTO.days =  mInputTextDays.text.toString().toInt()
             dismiss()
         }
 

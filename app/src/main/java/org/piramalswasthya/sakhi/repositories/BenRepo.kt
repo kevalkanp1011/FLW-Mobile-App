@@ -69,6 +69,12 @@ class BenRepo @Inject constructor(
         }
     }
 
+    suspend fun getBenWithHRPT(benId: Long): BenWithHRPTrackingCache? {
+        return withContext(Dispatchers.IO) {
+            benDao.getHRPTrackingPregForBen(benId)
+        }
+    }
+
     suspend fun substituteBenIdForDraft(ben: BenRegCache) {
         val extract = extractBenId()
         ben.beneficiaryId = extract.benId

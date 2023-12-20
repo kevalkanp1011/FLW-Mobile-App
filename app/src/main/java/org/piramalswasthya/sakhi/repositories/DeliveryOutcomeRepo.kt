@@ -116,6 +116,9 @@ class DeliveryOutcomeRepo @Inject constructor(
                             }
                         }
                     }
+                } catch (e: SocketTimeoutException) {
+                    Timber.d("Caught exception $e here")
+                    return postDataToAmritServer(deliveryOutcomePostList)
                 } catch (e: IOException) {
                     e.printStackTrace()
                 } catch (e: Exception) {

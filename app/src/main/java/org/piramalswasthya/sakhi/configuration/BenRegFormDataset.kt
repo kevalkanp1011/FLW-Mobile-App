@@ -472,13 +472,30 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
 //            age.value = getAgeFromDob(saved.dob).toString()
 //            ageUnit.value = ageUnit.getStringFromPosition(saved.ageUnitId)
             gender.value = gender.getStringFromPosition(saved.genderId)
+            gender.inputType = TEXT_VIEW
             fatherName.value = saved.fatherName
+            saved.fatherName?.let {
+                if (it.isNotEmpty()) fatherName.inputType = TEXT_VIEW
+            }
             motherName.value = saved.motherName
+            saved.motherName?.let {
+                if (it.isNotEmpty()) motherName.inputType = TEXT_VIEW
+            }
             saved.genDetails?.spouseName?.let {
+                maritalStatus.inputType = TEXT_VIEW
                 when (saved.genderId) {
-                    1 -> wifeName.value = it
-                    2 -> husbandName.value = it
-                    3 -> spouseName.value = it
+                    1 ->  {
+                        wifeName.value = it
+                        if (it.isNotEmpty()) wifeName.inputType = TEXT_VIEW
+                    }
+                    2 -> {
+                        husbandName.value = it
+                        if (it.isNotEmpty()) husbandName.inputType = TEXT_VIEW
+                    }
+                    3 -> {
+                        spouseName.value = it
+                        if (it.isNotEmpty()) spouseName.inputType = TEXT_VIEW
+                    }
                 }
             }
             maritalStatus.entries = when (saved.gender) {
@@ -523,18 +540,18 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             rchId.value = saved.rchId
 
 
-            relationToHead.entries = when (saved.gender) {
-                MALE -> relationToHeadListMale
-                FEMALE -> relationToHeadListFemale
-                TRANSGENDER -> relationToHeadListDefault
-                null -> null
-            }
-            relationToHead.arrayId = when (saved.gender) {
-                MALE -> R.array.nbr_relationship_to_head_male
-                FEMALE -> R.array.nbr_relationship_to_head_female
-                TRANSGENDER -> R.array.nbr_relationship_to_head
-                null -> -1
-            }
+//            relationToHead.entries = when (saved.gender) {
+//                MALE -> relationToHeadListMale
+//                FEMALE -> relationToHeadListFemale
+//                TRANSGENDER -> relationToHeadListDefault
+//                null -> null
+//            }
+//            relationToHead.arrayId = when (saved.gender) {
+//                MALE -> R.array.nbr_relationship_to_head_male
+//                FEMALE -> R.array.nbr_relationship_to_head_female
+//                TRANSGENDER -> R.array.nbr_relationship_to_head
+//                null -> -1
+//            }
 //            hasAadharNo.value = hasAadharNo.getStringFromPosition(saved.hasAadharId)
 //            aadharNo.value = saved.aadharNum
             rchId.value = saved.rchId
@@ -699,8 +716,15 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
 //            age.value = getAgeFromDob(saved.dob).toString()
 //            ageUnit.value = ageUnit.getStringFromPosition(saved.ageUnitId)
             gender.value = gender.getStringFromPosition(saved.genderId)
+            gender.inputType = TEXT_VIEW
             fatherName.value = saved.fatherName
+            saved.fatherName?.let {
+                if (it.isNotEmpty()) fatherName.inputType = TEXT_VIEW
+            }
             motherName.value = saved.motherName
+            saved.motherName?.let {
+                if (it.isNotEmpty()) motherName.inputType = TEXT_VIEW
+            }
             saved.genDetails?.spouseName?.let {
                 when (saved.genderId) {
                     1 -> wifeName.value = it
@@ -750,18 +774,18 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             rchId.value = saved.rchId
 
 
-            relationToHead.entries = when (saved.gender) {
-                MALE -> relationToHeadListMale
-                FEMALE -> relationToHeadListFemale
-                TRANSGENDER -> relationToHeadListDefault
-                null -> null
-            }
-            relationToHead.arrayId = when (saved.gender) {
-                MALE -> R.array.nbr_relationship_to_head_male
-                FEMALE -> R.array.nbr_relationship_to_head_female
-                TRANSGENDER -> R.array.nbr_relationship_to_head
-                null -> -1
-            }
+//            relationToHead.entries = when (saved.gender) {
+//                MALE -> relationToHeadListMale
+//                FEMALE -> relationToHeadListFemale
+//                TRANSGENDER -> relationToHeadListDefault
+//                null -> null
+//            }
+//            relationToHead.arrayId = when (saved.gender) {
+//                MALE -> R.array.nbr_relationship_to_head_male
+//                FEMALE -> R.array.nbr_relationship_to_head_female
+//                TRANSGENDER -> R.array.nbr_relationship_to_head
+//                null -> -1
+//            }
         }
         if (mobileNoOfRelation.value == mobileNoOfRelation.entries!!.last()) {
             list.add(list.indexOf(mobileNoOfRelation) + 1, otherMobileNoOfRelation)
@@ -848,7 +872,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             if (relationToHeadId == relationToHead.entries!!.lastIndex) {
                 list.add(list.indexOf(relationToHead) + 1, otherRelationToHead)
             }
-
+        }
             agePopup.min = getMinDobMillis()
             agePopup.max = System.currentTimeMillis()
 //            dob.min = getMinDobMillis()
@@ -863,7 +887,6 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                 setUpForParents(it, benGender)
             }
 
-        }
 
 
 
@@ -873,12 +896,20 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             firstName.value = saved.firstName
             lastName.value = saved.lastName
             agePopup.value = getDateFromLong(saved.dob)
+            ageAtMarriage.max = getAgeFromDob(saved.dob).toLong()
 //            dob.value = getDateFromLong(saved.dob)
 //            age.value = getAgeFromDob(saved.dob).toString()
 //            ageUnit.value = ageUnit.getStringFromPosition(saved.ageUnitId)
             gender.value = gender.getStringFromPosition(saved.genderId)
+            gender.inputType = TEXT_VIEW
             fatherName.value = saved.fatherName
+            saved.fatherName?.let {
+                if (it.isNotEmpty()) fatherName.inputType = TEXT_VIEW
+            }
             motherName.value = saved.motherName
+            saved.motherName?.let {
+                if (it.isNotEmpty()) motherName.inputType = TEXT_VIEW
+            }
             saved.genDetails?.spouseName?.let {
                 when (saved.genderId) {
                     1 -> wifeName.value = it
@@ -896,7 +927,11 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                 mobileNoOfRelation.getStringFromPosition(saved.mobileNoOfRelationId)
             otherMobileNoOfRelation.value = saved.mobileOthers
             contactNumber.value = saved.contactNumber.toString()
-            relationToHead.value = relationToHeadListDefault[saved.familyHeadRelationPosition - 1]
+//            relationToHead.entries = relationToHeadListDefault
+            relationToHead.value = relationToHead.getStringFromPosition(relationToHeadId + 1)
+            if (relationToHeadId == relationToHead.entries!!.lastIndex) {
+                list.add(list.indexOf(relationToHead) + 1, otherRelationToHead)
+            }
             otherRelationToHead.value = saved.familyHeadRelationOther
             community.value = community.getStringFromPosition(saved.communityId)
             religion.value = religion.getStringFromPosition(saved.religionId)
@@ -931,7 +966,8 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                 null -> -1
             }
         }
-        if (maritalStatus.value != maritalStatus.entries!![0] && gender.value != null) {
+
+        if (maritalStatus.value != null && maritalStatus.value != maritalStatus.entries!![0] && gender.value != null) {
 //            if(maritalStatus.value ==maritalStatus.entries!![1])
 //            list.removeAll(listOf(fatherName, motherName))
             list.add(
@@ -942,11 +978,13 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                     else -> throw java.lang.IllegalStateException("Gender unspecified with non empty marital status value!")
                 }
             )
-            if (!(relationToHeadId == 4 || relationToHeadId == 5)) list.add(
-                list.indexOf(maritalStatus) + 4,
-                ageAtMarriage
-            )
+
+//            list.add(
+//                list.indexOf(maritalStatus) + 4,
+//                ageAtMarriage
+//            )
         }
+
         if (maritalStatus.value == maritalStatus.entries!![1] && gender.value == gender.entries!![1]) {
             fatherName.required = false
             motherName.required = false
@@ -990,6 +1028,61 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
         if (!isKid() and !hasThirdPage()) {
             list.remove(rchId)
         }
+
+        if (relationToHeadId == 4 || relationToHeadId == 5) hoF?.let {
+            if (it.genDetails?.maritalStatusId == 2) {
+                agePopup.min = getHoFMinDobMillis()
+                agePopup.max = getHofMaxDobMillis()
+            }
+        }
+
+        if (relationToHeadId == 8 || relationToHeadId == 9) hoF?.let {
+            val hoFAge = getAgeFromDob(it.dob)
+            val hoFSpouseAge = hoFSpouse.firstOrNull()?.dob?.let { h -> getAgeFromDob(h) }
+            val maxAge = (if (hoFSpouseAge == null) hoFAge else minOf(
+                hoFAge,
+                hoFSpouseAge
+            )) - Konstants.minAgeForGenBen
+
+            agePopup.min = Calendar.getInstance().setToStartOfTheDay().let { cal ->
+                cal.add(Calendar.YEAR, -1 * maxAge)
+                cal.timeInMillis
+            }
+            maxAgeYear = maxAge
+
+        }
+        if (relationToHeadId == 0 || relationToHeadId == 1) hoF?.let {
+            val hoFAge = getAgeFromDob(it.dob)
+            val minAge = hoFAge + Konstants.minAgeForGenBen
+            agePopup.max = Calendar.getInstance().setToStartOfTheDay().let { age ->
+                age.add(Calendar.YEAR, -1 * minAge)
+                age.timeInMillis
+            }
+            minAgeYear = minAge
+            ageAtMarriage.max = getAgeFromDob(it.dob).toLong()
+        }
+        if (isKid()) {
+            list.removeAll(
+                listOf(
+                    maritalStatus,
+                    husbandName,
+                    wifeName,
+                    spouseName,
+                    ageAtMarriage,
+                    dateOfMarriage,
+                    reproductiveStatus
+                )
+            )
+            list.addAll(
+                listOf(
+                    birthCertificateNumber,
+                    placeOfBirth
+                )
+            )
+        }
+        if (!isKid() and !hasThirdPage()) {
+            list.remove(rchId)
+        }
         setUpPage(list)
     }
 
@@ -1000,11 +1093,23 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                 "${it.firstName} ${it.lastName ?: ""}"
             } ?: hoF.genDetails?.spouseName
 
+            fatherName.value?.let {
+                if (it.isNotEmpty()) fatherName.inputType = TEXT_VIEW
+            }
+            motherName.value?.let {
+                if (it.isNotEmpty()) motherName.inputType = TEXT_VIEW
+            }
         } else {
             motherName.value = "${hoF.firstName} ${hoF.lastName ?: ""}"
             fatherName.value = hoFSpouse?.let {
                 "${it.firstName} ${it.lastName ?: ""}"
             } ?: hoF.genDetails?.spouseName
+            fatherName.value?.let {
+                if (it.isNotEmpty()) fatherName.inputType = TEXT_VIEW
+            }
+            motherName.value?.let {
+                if (it.isNotEmpty()) motherName.inputType = TEXT_VIEW
+            }
         }
         val hoFAge = getAgeFromDob(hoF.dob)
         val hoFSpouseAge = hoFSpouse?.dob?.let { getAgeFromDob(it) }
@@ -1066,7 +1171,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
 //            ageUnit.inputType = TEXT_VIEW
             maritalStatus.value = maritalStatus.getStringFromPosition(2)
             maritalStatus.inputType = TEXT_VIEW
-            ageAtMarriage.inputType = TEXT_VIEW
+//            ageAtMarriage.inputType = TEXT_VIEW
             timeStampDateOfMarriageFromSpouse = hoFSpouse.genDetails?.marriageDate
 //            dob.min = getHoFMinDobMillis()
 //            dob.max = getHofMaxDobMillis()
@@ -1848,7 +1953,7 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                 relationToHeadListDefault.indexOf(relationToHead.value) + 1
             }
             ben.familyHeadRelation =
-                relationToHead.getEnglishStringFromPosition(ben.familyHeadRelationPosition)
+                getEnglishValueInArray(R.array.nbr_relationship_to_head_src, relationToHead.value)
             ben.familyHeadRelationOther = otherRelationToHead.value
             ben.mobileNoOfRelationId = if (isHoF) 1 else mobileNoOfRelation.getPosition()
             ben.mobileNoOfRelation =

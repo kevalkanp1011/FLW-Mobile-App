@@ -66,6 +66,19 @@ class HRPPregnantTrackFragment : Fragment() {
         viewModel.benAgeGender.observe(viewLifecycleOwner) {
             binding.tvAgeGender.text = it
         }
+        viewModel.benWithHrpt.observe(viewLifecycleOwner) {
+            it?.let {
+                binding.llPatientInformation2.visibility = View.VISIBLE
+                binding.husbandName.text = it.ben.spouseName
+                binding.benId.text = it.ben.benId.toString()
+                binding.rchId.text = it.ben.rchId ?: "Not Available"
+                binding.mobileNumber.text = it.ben.mobileNo.toString()
+                binding.lmp.text = it.asDomainModel().lmpString
+                binding.edd.text = it.asDomainModel().eddString
+                binding.weeksOfPreg.text = it.asDomainModel().weeksOfPregnancy
+            }
+
+        }
         binding.btnSubmit.setOnClickListener {
             submitTrackingForm()
         }

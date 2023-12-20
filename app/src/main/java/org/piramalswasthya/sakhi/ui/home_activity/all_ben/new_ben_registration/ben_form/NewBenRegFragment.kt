@@ -21,7 +21,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.piramalswasthya.sakhi.BuildConfig
 import org.piramalswasthya.sakhi.R
 import org.piramalswasthya.sakhi.adapters.FormInputAdapter
@@ -188,7 +190,8 @@ class NewBenRegFragment : Fragment() {
 
         viewModel.recordExists.observe(viewLifecycleOwner) { notIt ->
             notIt?.let { recordExists ->
-                if (recordExists) binding.btnSubmit.visibility = View.GONE
+                binding.fabEdit.visibility = if (recordExists) View.VISIBLE else View.GONE
+                binding.btnSubmit.visibility = if (recordExists) View.GONE else View.VISIBLE
                 val adapter =
                     FormInputAdapter(imageClickListener = FormInputAdapter.ImageClickListener {
                         viewModel.setCurrentImageFormId(it)
@@ -213,7 +216,6 @@ class NewBenRegFragment : Fragment() {
                     viewModel.formList.collect {
                         Timber.d("Collecting $it")
                         if (it.isNotEmpty())
-
                             adapter.submitList(it)
                     }
                 }
@@ -223,6 +225,11 @@ class NewBenRegFragment : Fragment() {
 //                        viewModel.resetListUpdateState()
 //                    }
 //                }
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        viewModel.setUpPage()
+                    }
+                }
             }
         }
 
@@ -265,7 +272,9 @@ class NewBenRegFragment : Fragment() {
             }
         }
 
-
+        binding.fabEdit.setOnClickListener {
+            viewModel.setRecordExist(false)
+        }
     }
 
     private fun hardCodedListUpdate(formId: Int) {

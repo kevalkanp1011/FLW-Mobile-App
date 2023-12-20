@@ -31,7 +31,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NewBenRegViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    preferenceDao: PreferenceDao,
+    private val preferenceDao: PreferenceDao,
     @ApplicationContext context: Context,
     private val benRepo: BenRepo,
     private val householdRepo: HouseholdRepo,
@@ -99,16 +99,41 @@ class NewBenRegViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
+                setUpPage()
+            }
+        }
+    }
+
+    suspend fun setUpPage() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
                 user = preferenceDao.getLoggedInUser()!!
                 household = benRepo.getHousehold(hhId)!!
                 locationRecord = preferenceDao.getLocationRecord()!!
 
-                if (benIdFromArgs != 0L) {
+                if (benIdFromArgs != 0L && recordExists.value == true) {
                     ben = benRepo.getBeneficiaryRecord(benIdFromArgs, hhId)!!
                     dataset.setFirstPageToRead(
                         ben,
                         familyHeadPhoneNo = household.family?.familyHeadPhoneNo
                     )
+                } else if (benIdFromArgs != 0L && recordExists.value != true) {
+                    ben = benRepo.getBeneficiaryRecord(benIdFromArgs, hhId)!!
+
+                    if (isHoF) dataset.setPageForHof(
+                        if (this@NewBenRegViewModel::ben.isInitialized) ben else null,
+                        household
+                    ) else {
+                        val familyList = benRepo.getBenListFromHousehold(hhId)
+                        val hoFBen = familyList.firstOrNull { it.beneficiaryId == household.benId }
+                        dataset.setPageForFamilyMember(
+                            ben = if (this@NewBenRegViewModel::ben.isInitialized) ben else null,
+                            household = household,
+                            hoF = hoFBen, benGender = ben.gender!!,
+                            relationToHeadId = relToHeadId,
+                            hoFSpouse = familyList.filter { it.familyHeadRelationPosition == 5 || it.familyHeadRelationPosition == 6 }
+                        )
+                    }
                 } else {
                     if (isHoF) dataset.setPageForHof(
                         if (this@NewBenRegViewModel::ben.isInitialized) ben else null,
@@ -126,24 +151,10 @@ class NewBenRegViewModel @Inject constructor(
                         )
                     }
                 }
-//                ?: BenRegCache(
-//                    ashaId = user.userId,
-//                    beneficiaryId = benIdToSet,
-//                    householdId = hhId,
-//                    isAdult = false,
-//                    isKid = true,
-//                    isDraft = true,
-//                    kidDetails = BenRegKid(),
-//                    syncState = SyncState.UNSYNCED,
-//                    locationRecord = preferenceDao.getLocationRecord()!!
-//                )
-
             }
         }
 
-
     }
-
 
     fun saveForm() {
         viewModelScope.launch {
@@ -178,6 +189,7 @@ class NewBenRegViewModel @Inject constructor(
                             serverUpdatedStatus = 2
                             processed = "U"
                         }
+                        syncState = SyncState.UNSYNCED
 
                         if (createdDate == null) {
                             createdDate = System.currentTimeMillis()
@@ -236,5 +248,9 @@ class NewBenRegViewModel @Inject constructor(
     fun getIndexOfAgeAtMarriage() = dataset.getIndexOfAgeAtMarriage()
     fun getIndexOfMaritalStatus() = dataset.getIndexOfMaritalStatus()
     fun getIndexOfContactNumber() = dataset.getIndexOfContactNumber()
+
+    fun setRecordExist(b: Boolean) {
+        _recordExists.value = b
+    }
 
 }

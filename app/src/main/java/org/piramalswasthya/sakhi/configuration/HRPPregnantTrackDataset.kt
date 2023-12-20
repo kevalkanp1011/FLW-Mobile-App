@@ -269,9 +269,17 @@ class HRPPregnantTrackDataset(
         required = false
     )
 
-    suspend fun setUpPage(ben: BenRegCache?, saved: HRPPregnantTrackCache?, dateOfVisitMin: Long?) {
+    private val visit = FormElement(
+        id = 29,
+        inputType = InputType.HEADLINE,
+        title = "",
+        required = false
+    )
+
+    suspend fun setUpPage(ben: BenRegCache?, visitStr: String?,saved: HRPPregnantTrackCache?, dateOfVisitMin: Long?) {
         val list = mutableListOf(
             followUpLabel,
+            visit,
             highRiskLabel,
             dateOfVisit,
             rdPmsa,
@@ -314,6 +322,10 @@ class HRPPregnantTrackDataset(
             dateOfVisit.max = System.currentTimeMillis()
         }
 
+        visitStr?.let {
+            followUpLabel.title += it
+            visit.title = it
+        }
         saved?.let {
             dateOfVisit.value = it.visitDate?.let { it1 -> getDateFromLong(it1) }
             rdPmsa.value = getLocalValueInArray(R.array.yes_no, it.rdPmsa)

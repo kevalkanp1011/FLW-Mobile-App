@@ -52,7 +52,7 @@
                     android:text="@{item.ben.benFullName}"
                     android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                     android:textColor="?attr/colorPrimaryVariant"
-                    app:drawableLeftCompat="@drawable/ic__hh"
+                    app:drawableLeftCompat="@drawable/ic__high_risk_preg"
                     app:drawableTint="?attr/colorPrimary"
                     tools:text="Hello Meister" />
                 <ImageView

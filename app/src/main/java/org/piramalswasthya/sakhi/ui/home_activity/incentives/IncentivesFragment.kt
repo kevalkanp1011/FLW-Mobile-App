@@ -56,6 +56,9 @@ class IncentivesFragment : Fragment() {
 
     private val viewModel: IncentivesViewModel by viewModels()
 
+    var selectedMonth: String = ""
+
+    var selectedYear: String = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -153,7 +156,9 @@ class IncentivesFragment : Fragment() {
                 Calendar.MONTH,
                 resources.getStringArray(R.array.months).indexOf(fromMonth.selectedItem)
             )
+            selectedMonth = fromMonth.selectedItem.toString()
             calendar.set(Calendar.YEAR, fromYear.selectedItem.toString().toInt())
+            selectedYear = fromYear.selectedItem.toString()
             calendar.set(Calendar.DAY_OF_MONTH, 1)
             calendar.setToStartOfTheDay()
             val firstDay = calendar.timeInMillis
@@ -754,14 +759,14 @@ class IncentivesFragment : Fragment() {
         // You can continue with more pages if needed
 
         // Save the PDF file
-        val fileName = "incentives_" + (Calendar.getInstance().timeInMillis) + ".pdf"
+        val fileName = "Incentives_" + selectedMonth + "_"  + selectedYear + ".pdf"
         val directory =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         val file = File(directory, fileName)
 
         try {
             document.writeTo(FileOutputStream(file))
-            val snackbar = Snackbar.make(binding.root, "File downloaded!", Snackbar.LENGTH_LONG)
+            val snackbar = Snackbar.make(binding.root, "$fileName downloaded", Snackbar.LENGTH_LONG)
 
             snackbar.setAction("Show File") {
                 showFile(file.toUri())

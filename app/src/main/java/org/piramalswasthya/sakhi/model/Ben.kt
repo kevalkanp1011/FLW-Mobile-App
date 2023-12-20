@@ -14,6 +14,7 @@ import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.model.BenBasicCache.Companion.getAgeFromDob
 import org.piramalswasthya.sakhi.model.BenBasicCache.Companion.getAgeUnitFromDob
+import org.piramalswasthya.sakhi.utils.HelperUtil
 import org.piramalswasthya.sakhi.utils.HelperUtil.getDateStringFromLong
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -1243,7 +1244,42 @@ data class BenRegCache(
             userImage = ImageUtils.getEncodedStringForBenImage(
                 context,
                 beneficiaryId
-            ) ?: ""// Base64.encodeToString(userImageBlob, Base64.DEFAULT),
+            ) ?: "",// Base64.encodeToString(userImageBlob, Base64.DEFAULT),
+            benDemographics = BenDemographics(
+                    communityID = communityId.toString(),
+            communityName = community ?: "",
+            religionID = religionId.toString(),
+            religionName = religion ?: "",
+            countryID = 1,
+            countryName = "India",
+            stateID = locationRecord.state.id,
+            stateName = locationRecord.state.name,
+            districtID = locationRecord.district.id,
+            districtName = locationRecord.district.name,
+            blockID = locationRecord.block.id,
+            districtBranchID = locationRecord.village.id,
+            districtBranchName = locationRecord.village.name,
+//            zoneID = user.zoneId,
+//            zoneName = user.zoneName,
+//            parkingPlaceName = user.parkingPlaceName,
+//            parkingPlaceID = user.parkingPlaceId,
+//            servicePointID = user.servicePointId.toString(),
+//            servicePointName = user.servicePointName,
+            addressLine1 = "D.No 3-160E",
+            addressLine2 = "ARS Road",
+            addressLine3 = "Neggipudi",
+        ),
+        benPhoneMaps = arrayOf(
+            BenPhoneMaps(
+                phoneNo = contactNumber.toString(),
+                createdBy = user.userName,
+            )
+        ),
+            dob = getDateStringFromLong(dob) ?: "",
+            gender = gender.toString(),
+            genderId = genderId,
+            maritalStatusID = if (isKid) null else genDetails?.maritalStatusId?.toString() ?: "",
+            maritalStatusName = if (isKid) null else genDetails?.maritalStatus ?: "",
         )
     }
 
