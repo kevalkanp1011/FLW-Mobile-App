@@ -80,7 +80,7 @@ class AgePickerDialog(context: Context) : AlertDialog(context) {
             val mInputTextDays: EditText = binding.dialogNumberPickerDays.findViewById(
                 Resources.getSystem().getIdentifier("numberpicker_input", "id", "android")
             )
-            ageUnitDTO.days =  mInputTextDays.text.toString().toInt()
+            ageUnitDTO.days = mInputTextDays.text.toString().toInt()
             dismiss()
         }
 

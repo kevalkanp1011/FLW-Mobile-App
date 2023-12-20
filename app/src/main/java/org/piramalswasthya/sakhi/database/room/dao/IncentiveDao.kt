@@ -26,7 +26,11 @@ interface IncentiveDao {
     fun getRecordById(recordId: Long): IncentiveRecordCache?
 
     @Query("select * from INCENTIVE_RECORD where activityId = :activityId and createdDate = :createdDate")
-    fun getRecordByActivityAndCreatedDate(activityId: Long, createdDate: Long): IncentiveRecordCache?
+    fun getRecordByActivityAndCreatedDate(
+        activityId: Long,
+        createdDate: Long
+    ): IncentiveRecordCache?
+
     @Query("select * from INCENTIVE_ACTIVITY where id = :id")
     fun getActivityById(id: Long): IncentiveActivityCache?
 

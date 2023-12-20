@@ -176,6 +176,7 @@ class HRPPregnantTrackFragment : Fragment() {
                     notifyItemChanged(viewModel.getIndexOfFasting())
                     notifyItemChanged(viewModel.getIndexOfAfter())
                 }
+
                 26 -> {
                     notifyItemChanged(viewModel.getIndexOfIfaQuantity())
                 }

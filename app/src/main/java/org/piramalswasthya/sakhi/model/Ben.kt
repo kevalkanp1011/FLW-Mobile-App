@@ -14,7 +14,6 @@ import org.piramalswasthya.sakhi.database.room.SyncState
 import org.piramalswasthya.sakhi.helpers.ImageUtils
 import org.piramalswasthya.sakhi.model.BenBasicCache.Companion.getAgeFromDob
 import org.piramalswasthya.sakhi.model.BenBasicCache.Companion.getAgeUnitFromDob
-import org.piramalswasthya.sakhi.utils.HelperUtil
 import org.piramalswasthya.sakhi.utils.HelperUtil.getDateStringFromLong
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -1142,7 +1141,7 @@ data class BenRegCache(
             literacyId = literacyId,
             religionOthers = religionOthers ?: "",
             rchId = rchId ?: "",
-            registrationType = if (kidDetails == null) "General Beneficiary" else "NewBorn"
+            registrationType = if (kidDetails == null) "General Beneficiary" else "NewBorn",
             /*when (registrationType) {
                 TypeOfList.INFANT,
                 TypeOfList.CHILD,
@@ -1155,7 +1154,7 @@ data class BenRegCache(
                 TypeOfList.MENOPAUSE,
                 TypeOfList.TEENAGER -> "General Beneficiary"
                 else -> "Other"
-            }*/,
+            }*/
             latitude = latitude,
             longitude = longitude,
             needOpCare = needOpCare ?: "null",
@@ -1246,35 +1245,35 @@ data class BenRegCache(
                 beneficiaryId
             ) ?: "",// Base64.encodeToString(userImageBlob, Base64.DEFAULT),
             benDemographics = BenDemographics(
-                    communityID = communityId.toString(),
-            communityName = community ?: "",
-            religionID = religionId.toString(),
-            religionName = religion ?: "",
-            countryID = 1,
-            countryName = "India",
-            stateID = locationRecord.state.id,
-            stateName = locationRecord.state.name,
-            districtID = locationRecord.district.id,
-            districtName = locationRecord.district.name,
-            blockID = locationRecord.block.id,
-            districtBranchID = locationRecord.village.id,
-            districtBranchName = locationRecord.village.name,
+                communityID = communityId.toString(),
+                communityName = community ?: "",
+                religionID = religionId.toString(),
+                religionName = religion ?: "",
+                countryID = 1,
+                countryName = "India",
+                stateID = locationRecord.state.id,
+                stateName = locationRecord.state.name,
+                districtID = locationRecord.district.id,
+                districtName = locationRecord.district.name,
+                blockID = locationRecord.block.id,
+                districtBranchID = locationRecord.village.id,
+                districtBranchName = locationRecord.village.name,
 //            zoneID = user.zoneId,
 //            zoneName = user.zoneName,
 //            parkingPlaceName = user.parkingPlaceName,
 //            parkingPlaceID = user.parkingPlaceId,
 //            servicePointID = user.servicePointId.toString(),
 //            servicePointName = user.servicePointName,
-            addressLine1 = "D.No 3-160E",
-            addressLine2 = "ARS Road",
-            addressLine3 = "Neggipudi",
-        ),
-        benPhoneMaps = arrayOf(
-            BenPhoneMaps(
-                phoneNo = contactNumber.toString(),
-                createdBy = user.userName,
-            )
-        ),
+                addressLine1 = "D.No 3-160E",
+                addressLine2 = "ARS Road",
+                addressLine3 = "Neggipudi",
+            ),
+            benPhoneMaps = arrayOf(
+                BenPhoneMaps(
+                    phoneNo = contactNumber.toString(),
+                    createdBy = user.userName,
+                )
+            ),
             dob = getDateStringFromLong(dob) ?: "",
             gender = gender.toString(),
             genderId = genderId,

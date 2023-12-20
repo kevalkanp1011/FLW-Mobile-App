@@ -239,7 +239,7 @@ class HRPPregnantTrackDataset(
         title = resources.getString(R.string.hemoglobin_test),
         arrayId = -1,
         required = false,
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER  or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL,
         etMaxLength = 4
     )
 
@@ -276,7 +276,12 @@ class HRPPregnantTrackDataset(
         required = false
     )
 
-    suspend fun setUpPage(ben: BenRegCache?, visitStr: String?,saved: HRPPregnantTrackCache?, dateOfVisitMin: Long?) {
+    suspend fun setUpPage(
+        ben: BenRegCache?,
+        visitStr: String?,
+        saved: HRPPregnantTrackCache?,
+        dateOfVisitMin: Long?
+    ) {
         val list = mutableListOf(
             followUpLabel,
             visit,
@@ -361,18 +366,21 @@ class HRPPregnantTrackDataset(
             gestDiabetesMellitus.showHighRisk =
                 it.gestDiabetesMellitus == englishResources.getStringArray(R.array.yes_no)[0]
 
-            bloodGlucoseTest.value = getLocalValueInArray(R.array.sugar_test_preg_types, it.bloodGlucoseTest)
-            when(bloodGlucoseTest.value) {
+            bloodGlucoseTest.value =
+                getLocalValueInArray(R.array.sugar_test_preg_types, it.bloodGlucoseTest)
+            when (bloodGlucoseTest.value) {
                 resources.getStringArray(R.array.sugar_test_preg_types)[0] -> {
                     list.add(list.indexOf(bloodGlucoseTest) + 1, rbg)
                     rbg.value = it.rbg?.toString()
                 }
+
                 resources.getStringArray(R.array.sugar_test_preg_types)[1] -> {
                     list.add(list.indexOf(bloodGlucoseTest) + 1, fbg)
                     list.add(list.indexOf(fbg) + 1, ppbg)
                     fbg.value = it.fbg?.toString()
                     ppbg.value = it.ppbg?.toString()
                 }
+
                 resources.getStringArray(R.array.sugar_test_preg_types)[2] -> {
                     list.add(list.indexOf(bloodGlucoseTest) + 1, usingOgttLabel)
                     list.add(list.indexOf(usingOgttLabel) + 1, fastingGlucose)
@@ -380,6 +388,7 @@ class HRPPregnantTrackDataset(
                     fastingGlucose.value = it.fastingOgtt?.toString()
                     after2hrs.value = it.after2hrsOgtt?.toString()
                 }
+
                 else -> {
                     // not expected
                 }
@@ -484,7 +493,7 @@ class HRPPregnantTrackDataset(
             }
 
             bloodGlucoseTest.id -> {
-                when(bloodGlucoseTest.value) {
+                when (bloodGlucoseTest.value) {
                     resources.getStringArray(R.array.sugar_test_preg_types)[0] -> {
                         triggerDependants(
                             source = bloodGlucoseTest,
@@ -496,6 +505,7 @@ class HRPPregnantTrackDataset(
                             )
                         )
                     }
+
                     resources.getStringArray(R.array.sugar_test_preg_types)[1] -> {
                         triggerDependants(
                             source = bloodGlucoseTest,
@@ -507,6 +517,7 @@ class HRPPregnantTrackDataset(
                             )
                         )
                     }
+
                     resources.getStringArray(R.array.sugar_test_preg_types)[2] -> {
                         triggerDependants(
                             source = bloodGlucoseTest,
@@ -538,6 +549,7 @@ class HRPPregnantTrackDataset(
                 }
                 1
             }
+
             else -> -1
         }
     }
@@ -558,7 +570,8 @@ class HRPPregnantTrackDataset(
             form.diastolic = diastolic.value?.toInt()
             form.gestDiabetesMellitus =
                 getEnglishValueInArray(R.array.yes_no, gestDiabetesMellitus.value)
-            form.bloodGlucoseTest = getEnglishValueInArray(R.array.sugar_test_preg_types, bloodGlucoseTest.value)
+            form.bloodGlucoseTest =
+                getEnglishValueInArray(R.array.sugar_test_preg_types, bloodGlucoseTest.value)
             form.rbg = rbg.value?.toInt()
             form.fbg = fbg.value?.toInt()
             form.ppbg = ppbg.value?.toInt()

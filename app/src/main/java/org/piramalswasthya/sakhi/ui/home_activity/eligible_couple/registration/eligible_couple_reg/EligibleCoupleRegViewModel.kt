@@ -73,7 +73,12 @@ class EligibleCoupleRegViewModel @Inject constructor(
                 calDob.timeInMillis = ben.dob
                 _benName.value =
                     "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
-                _benAgeGender.value = "${getDiffYears(calDob, Calendar.getInstance())} ${ben.ageUnit?.name} | ${ben.gender?.name}"
+                _benAgeGender.value = "${
+                    getDiffYears(
+                        calDob,
+                        Calendar.getInstance()
+                    )
+                } ${ben.ageUnit?.name} | ${ben.gender?.name}"
                 ecrForm = EligibleCoupleRegCache(
                     benId = ben.beneficiaryId,
                     syncState = SyncState.UNSYNCED,

@@ -203,7 +203,7 @@ class HRPNonPregnantTrackDataset(
         title = resources.getString(R.string.hemoglobin_test),
         arrayId = -1,
         required = false,
-        etInputType = android.text.InputType.TYPE_CLASS_NUMBER  or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL,
+        etInputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL,
         etMaxLength = 4
     )
 
@@ -263,7 +263,8 @@ class HRPNonPregnantTrackDataset(
             systolic.value = it.systolic?.toString()
             diastolic.value = it.diastolic?.toString()
             diabetes.value = getLocalValueInArray(R.array.yes_no, it.diabetes)
-            bloodGlucoseTest.value = getLocalValueInArray(R.array.sugar_test_types, it.bloodGlucoseTest)
+            bloodGlucoseTest.value =
+                getLocalValueInArray(R.array.sugar_test_types, it.bloodGlucoseTest)
             if (bloodGlucoseTest.value == resources.getStringArray(R.array.sugar_test_types)[0]) {
                 list.add(list.indexOf(bloodGlucoseTest) + 1, rbg)
                 rbg.value = it.rbg?.toString()
@@ -416,6 +417,7 @@ class HRPNonPregnantTrackDataset(
                 }
                 1
             }
+
             else -> -1
         }
     }
@@ -428,7 +430,8 @@ class HRPNonPregnantTrackDataset(
             form.systolic = systolic.value?.toInt()
             form.diastolic = diastolic.value?.toInt()
             form.diabetes = getEnglishValueInArray(R.array.yes_no, diabetes.value)
-            form.bloodGlucoseTest = getEnglishValueInArray(R.array.sugar_test_types, bloodGlucoseTest.value)
+            form.bloodGlucoseTest =
+                getEnglishValueInArray(R.array.sugar_test_types, bloodGlucoseTest.value)
             form.rbg = rbg.value?.toInt()
             form.fbg = fbg.value?.toInt()
             form.ppbg = ppbg.value?.toInt()

@@ -69,7 +69,7 @@ class BenRepo @Inject constructor(
         }
     }
 
-    suspend fun getBenWithHRPT(benId: Long): BenWithHRPTrackingCache? {
+    suspend fun getBenWithHRPT(benId: Long): BenWithHRPTrackingCache {
         return withContext(Dispatchers.IO) {
             benDao.getHRPTrackingPregForBen(benId)
         }

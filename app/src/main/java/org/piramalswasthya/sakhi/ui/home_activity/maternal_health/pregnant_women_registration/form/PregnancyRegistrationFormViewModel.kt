@@ -22,7 +22,7 @@ import org.piramalswasthya.sakhi.repositories.HRPRepo
 import org.piramalswasthya.sakhi.repositories.MaternalHealthRepo
 import org.piramalswasthya.sakhi.utils.HelperUtil.getDiffYears
 import timber.log.Timber
-import java.util.*
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -77,7 +77,12 @@ class PregnancyRegistrationFormViewModel @Inject constructor(
                 calDob.timeInMillis = ben.dob
                 _benName.value =
                     "${ben.firstName} ${if (ben.lastName == null) "" else ben.lastName}"
-                _benAgeGender.value = "${getDiffYears(calDob, Calendar.getInstance())} ${ben.ageUnit?.name} | ${ben.gender?.name}"
+                _benAgeGender.value = "${
+                    getDiffYears(
+                        calDob,
+                        Calendar.getInstance()
+                    )
+                } ${ben.ageUnit?.name} | ${ben.gender?.name}"
                 pregnancyRegistrationForm = PregnantWomanRegistrationCache(
                     benId = ben.beneficiaryId,
                     syncState = SyncState.UNSYNCED,

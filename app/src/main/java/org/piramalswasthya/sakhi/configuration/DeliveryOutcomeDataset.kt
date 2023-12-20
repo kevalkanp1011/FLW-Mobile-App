@@ -214,8 +214,10 @@ open class DeliveryOutcomeDataset(
             typeOfDelivery.value =
                 getLocalValueInArray(R.array.do_type_of_delivery_array, saved.typeOfDelivery)
             hadComplications.value = if (saved.hadComplications == true) "Yes" else "No"
-            complication.value = getLocalValueInArray(R.array.do_complications_array, saved.complication)
-            causeOfDeath.value = getLocalValueInArray(R.array.do_cause_of_death_array, saved.causeOfDeath)
+            complication.value =
+                getLocalValueInArray(R.array.do_complications_array, saved.complication)
+            causeOfDeath.value =
+                getLocalValueInArray(R.array.do_cause_of_death_array, saved.causeOfDeath)
             otherCauseOfDeath.value = saved.otherCauseOfDeath
             otherComplication.value = saved.otherComplication
             deliveryOutcome.value = saved.deliveryOutcome.toString()

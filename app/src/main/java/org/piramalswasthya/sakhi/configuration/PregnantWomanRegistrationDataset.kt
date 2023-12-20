@@ -932,31 +932,42 @@ class PregnantWomanRegistrationDataset(
             form.mcpCardNumber = mcpCardNumber.value?.takeIf { it.isNotEmpty() }?.toLong() ?: 0
             form.rchId = rchId.value?.takeIf { it.isNotEmpty() }?.toLong() ?: 0
             form.lmpDate = getLongFromDate(lmp.value)
-            form.bloodGroup = getEnglishValueInArray(R.array.maternal_health_blood_group, bloodGroup.value)
+            form.bloodGroup =
+                getEnglishValueInArray(R.array.maternal_health_blood_group, bloodGroup.value)
             form.bloodGroupId = bloodGroup.getPosition()
             form.weight = weight.value?.toInt()
             form.height = height.value?.toInt()
-            form.vdrlRprTestResult = getEnglishValueInArray(R.array.maternal_health_test_result, vdrlrprTestResult.value)
+            form.vdrlRprTestResult =
+                getEnglishValueInArray(R.array.maternal_health_test_result, vdrlrprTestResult.value)
             form.vdrlRprTestResultId = vdrlrprTestResult.getPosition()
             form.dateOfVdrlRprTest =
                 dateOfVdrlTestDone.value?.let { getLongFromDate(dateOfVdrlTestDone.value) }
-            form.hivTestResult = getEnglishValueInArray(R.array.maternal_health_test_result, hivTestResult.value)
+            form.hivTestResult =
+                getEnglishValueInArray(R.array.maternal_health_test_result, hivTestResult.value)
             form.hivTestResultId = hivTestResult.getPosition()
             form.dateOfHivTest =
                 dateOfhivTestDone.value?.let { getLongFromDate(dateOfhivTestDone.value) }
-            form.hbsAgTestResult = getEnglishValueInArray(R.array.maternal_health_test_result_2, hbsAgTestResult.value)
+            form.hbsAgTestResult =
+                getEnglishValueInArray(R.array.maternal_health_test_result_2, hbsAgTestResult.value)
             form.hbsAgTestResultId = hbsAgTestResult.getPosition()
             form.dateOfHbsAgTest =
                 dateOfhbsAgTestDone.value?.let { getLongFromDate(dateOfhbsAgTestDone.value) }
-            form.pastIllness = getEnglishValueInArray(R.array.maternal_health_past_illness, pastIllness.value)
+            form.pastIllness =
+                getEnglishValueInArray(R.array.maternal_health_past_illness, pastIllness.value)
             form.otherPastIllness = otherPastIllness.value
             form.is1st = isFirstPregnancy.value == isFirstPregnancy.entries!!.first()
             form.numPrevPregnancy = totalNumberOfPreviousPregnancy.value?.toInt()
-            form.complicationPrevPregnancy = getEnglishValueInArray(R.array.maternal_health_past_del_complications, complicationsDuringLastPregnancy.value)
+            form.complicationPrevPregnancy = getEnglishValueInArray(
+                R.array.maternal_health_past_del_complications,
+                complicationsDuringLastPregnancy.value
+            )
             form.complicationPrevPregnancyId = complicationsDuringLastPregnancy.getPosition()
             form.otherComplication = otherComplicationsDuringLastPregnancy.value
             form.isHrp = isHrpCase.value == isHrpCase.entries!!.first()
-            form.hrpIdBy = getEnglishValueInArray(R.array.maternal_health_reg_hrp_confirm_by, assignedAsHrpBy.value)
+            form.hrpIdBy = getEnglishValueInArray(
+                R.array.maternal_health_reg_hrp_confirm_by,
+                assignedAsHrpBy.value
+            )
             form.hrpIdById = assignedAsHrpBy.getPosition()
         }
     }

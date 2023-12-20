@@ -142,7 +142,8 @@ class EligibleCoupleTrackingDataset(
             financialYear.value = getFinancialYear(dateString = dateOfVisit.value)
             month.value =
                 resources.getStringArray(R.array.visit_months)[Companion.getMonth(dateOfVisit.value)!!]
-            isPregnancyTestDone.value = getLocalValueInArray(R.array.yes_no, saved.isPregnancyTestDone)
+            isPregnancyTestDone.value =
+                getLocalValueInArray(R.array.yes_no, saved.isPregnancyTestDone)
             if (isPregnancyTestDone.value == resources.getStringArray(R.array.yes_no)[0]) {
                 list.add(list.indexOf(isPregnancyTestDone) + 1, pregnancyTestResult)
                 pregnancyTestResult.value = saved.pregnancyTestResult
@@ -151,9 +152,15 @@ class EligibleCoupleTrackingDataset(
             if (isPregnant.value == resources.getStringArray(R.array.yes_no)[1]) {
                 list.add(usingFamilyPlanning)
                 saved.usingFamilyPlanning?.let {
-                    usingFamilyPlanning.value = if (it) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(R.array.yes_no)[1]
+                    usingFamilyPlanning.value =
+                        if (it) resources.getStringArray(R.array.yes_no)[0] else resources.getStringArray(
+                            R.array.yes_no
+                        )[1]
                 }
-                usingFamilyPlanning.value = if (saved.usingFamilyPlanning == true) resources.getStringArray(R.array.yes_no)[1] else resources.getStringArray(R.array.yes_no)[1]
+                usingFamilyPlanning.value =
+                    if (saved.usingFamilyPlanning == true) resources.getStringArray(R.array.yes_no)[1] else resources.getStringArray(
+                        R.array.yes_no
+                    )[1]
                 if (saved.usingFamilyPlanning == true) {
                     list.add(methodOfContraception)
                     if (saved.methodOfContraception in resources.getStringArray(R.array.method_of_contraception)) {
@@ -246,8 +253,11 @@ class EligibleCoupleTrackingDataset(
             form.isPregnancyTestDone = isPregnancyTestDone.value
             form.pregnancyTestResult = pregnancyTestResult.value
             form.isPregnant = isPregnant.value
-            form.usingFamilyPlanning = usingFamilyPlanning.value?.let { it == resources.getStringArray(R.array.yes_no)[0] }
-            if (methodOfContraception.value == resources.getStringArray(R.array.method_of_contraception).last()) {
+            form.usingFamilyPlanning =
+                usingFamilyPlanning.value?.let { it == resources.getStringArray(R.array.yes_no)[0] }
+            if (methodOfContraception.value == resources.getStringArray(R.array.method_of_contraception)
+                    .last()
+            ) {
                 form.methodOfContraception = anyOtherMethod.value
             } else {
                 form.methodOfContraception = methodOfContraception.value

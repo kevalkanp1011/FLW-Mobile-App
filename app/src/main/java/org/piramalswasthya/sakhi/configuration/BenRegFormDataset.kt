@@ -484,14 +484,16 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
             saved.genDetails?.spouseName?.let {
                 maritalStatus.inputType = TEXT_VIEW
                 when (saved.genderId) {
-                    1 ->  {
+                    1 -> {
                         wifeName.value = it
                         if (it.isNotEmpty()) wifeName.inputType = TEXT_VIEW
                     }
+
                     2 -> {
                         husbandName.value = it
                         if (it.isNotEmpty()) husbandName.inputType = TEXT_VIEW
                     }
+
                     3 -> {
                         spouseName.value = it
                         if (it.isNotEmpty()) spouseName.inputType = TEXT_VIEW
@@ -873,19 +875,19 @@ class BenRegFormDataset(context: Context, language: Languages) : Dataset(context
                 list.add(list.indexOf(relationToHead) + 1, otherRelationToHead)
             }
         }
-            agePopup.min = getMinDobMillis()
-            agePopup.max = System.currentTimeMillis()
+        agePopup.min = getMinDobMillis()
+        agePopup.max = System.currentTimeMillis()
 //            dob.min = getMinDobMillis()
 //            dob.max = System.currentTimeMillis()
-            if (relationToHeadId == 4 || relationToHeadId == 5) hoF?.let {
-                setUpForSpouse(it, hoFSpouse)
-            }
-            if (relationToHeadId == 8 || relationToHeadId == 9) hoF?.let {
-                setUpForChild(it, hoFSpouse.firstOrNull())
-            }
-            if (relationToHeadId == 0 || relationToHeadId == 1) hoF?.let {
-                setUpForParents(it, benGender)
-            }
+        if (relationToHeadId == 4 || relationToHeadId == 5) hoF?.let {
+            setUpForSpouse(it, hoFSpouse)
+        }
+        if (relationToHeadId == 8 || relationToHeadId == 9) hoF?.let {
+            setUpForChild(it, hoFSpouse.firstOrNull())
+        }
+        if (relationToHeadId == 0 || relationToHeadId == 1) hoF?.let {
+            setUpForParents(it, benGender)
+        }
 
 
 

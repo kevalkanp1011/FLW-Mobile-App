@@ -24,133 +24,135 @@ class IconDataset @Inject constructor(
     private val preferenceDao: PreferenceDao
 ) {
 
-    enum class Modules{
+    enum class Modules {
         ALL,
         HRP
     }
+
     fun getHomeIconDataset(resources: Resources): List<Icon> {
         val showAll = preferenceDao.isDevModeEnabled
         Timber.d("currently : $showAll")
         val showModules = Modules.ALL
-        return when(showModules) {
-           Modules.ALL ->  listOf(
-               Icon(
-                   R.drawable.ic__hh,
-                   resources.getString(R.string.icon_title_household),
-                   recordsRepo.hhListCount,
-                   HomeFragmentDirections.actionNavHomeToAllHouseholdFragment()
-               ),
-               Icon(
-                   R.drawable.ic__ben,
-                   resources.getString(R.string.icon_title_ben),
-                   recordsRepo.allBenListCount,
-                   HomeFragmentDirections.actionNavHomeToAllBenFragment(),
-               ),
-               Icon(
-                   R.drawable.ic__eligible_couple,
-                   resources.getString(R.string.icon_title_ec),
-                   null,
-                   HomeFragmentDirections.actionNavHomeToEligibleCoupleFragment()
-               ),
-               Icon(
-                   R.drawable.ic__maternal_health,
-                   resources.getString(R.string.icon_title_mc),
-                   null,
-                   HomeFragmentDirections.actionNavHomeToMotherCareFragment(),
-               ),
-               Icon(
-                   R.drawable.ic__child_care,
-                   resources.getString(R.string.icon_title_cc),
-                   null,
-                   HomeFragmentDirections.actionNavHomeToChildCareFragment()
-               ),
-               Icon(
-                   R.drawable.ic__ncd,
-                   resources.getString(R.string.icon_title_ncd),
-                   null,
-                   HomeFragmentDirections.actionNavHomeToNcdFragment(),
-               ),
-               Icon(
-                   R.drawable.ic__ncd,
-                   resources.getString(R.string.icon_title_cd),
-                   null,
-                   HomeFragmentDirections.actionHomeFragmentToCdFragment()
-               ),
-               Icon(
-                   R.drawable.ic__immunization,
-                   resources.getString(R.string.icon_title_imm),
-                   null,
-                   HomeFragmentDirections.actionNavHomeToImmunizationDueFragment(),
-               ),
-               Icon(
-                   icon = R.drawable.ic__hrp,
-                   title = resources.getString(R.string.icon_title_hrp),
+        return when (showModules) {
+            Modules.ALL -> listOf(
+                Icon(
+                    R.drawable.ic__hh,
+                    resources.getString(R.string.icon_title_household),
+                    recordsRepo.hhListCount,
+                    HomeFragmentDirections.actionNavHomeToAllHouseholdFragment()
+                ),
+                Icon(
+                    R.drawable.ic__ben,
+                    resources.getString(R.string.icon_title_ben),
+                    recordsRepo.allBenListCount,
+                    HomeFragmentDirections.actionNavHomeToAllBenFragment(),
+                ),
+                Icon(
+                    R.drawable.ic__eligible_couple,
+                    resources.getString(R.string.icon_title_ec),
+                    null,
+                    HomeFragmentDirections.actionNavHomeToEligibleCoupleFragment()
+                ),
+                Icon(
+                    R.drawable.ic__maternal_health,
+                    resources.getString(R.string.icon_title_mc),
+                    null,
+                    HomeFragmentDirections.actionNavHomeToMotherCareFragment(),
+                ),
+                Icon(
+                    R.drawable.ic__child_care,
+                    resources.getString(R.string.icon_title_cc),
+                    null,
+                    HomeFragmentDirections.actionNavHomeToChildCareFragment()
+                ),
+                Icon(
+                    R.drawable.ic__ncd,
+                    resources.getString(R.string.icon_title_ncd),
+                    null,
+                    HomeFragmentDirections.actionNavHomeToNcdFragment(),
+                ),
+                Icon(
+                    R.drawable.ic__ncd,
+                    resources.getString(R.string.icon_title_cd),
+                    null,
+                    HomeFragmentDirections.actionHomeFragmentToCdFragment()
+                ),
+                Icon(
+                    R.drawable.ic__immunization,
+                    resources.getString(R.string.icon_title_imm),
+                    null,
+                    HomeFragmentDirections.actionNavHomeToImmunizationDueFragment(),
+                ),
+                Icon(
+                    icon = R.drawable.ic__hrp,
+                    title = resources.getString(R.string.icon_title_hrp),
 //                    count = recordsRepo.hrpCount,
-                   count = null,
-                   navAction = HomeFragmentDirections.actionNavHomeToHrpCasesFragment(),
-                   allowRedBorder = false
+                    count = null,
+                    navAction = HomeFragmentDirections.actionNavHomeToHrpCasesFragment(),
+                    allowRedBorder = false
 
-               ),
-               Icon(
-                   R.drawable.ic__general_op,
-                   resources.getString(R.string.icon_title_gop),
-                   null,
-                   HomeFragmentDirections.actionNavHomeToGeneralOpCareFragment(),
-               ),
+                ),
+                Icon(
+                    R.drawable.ic__general_op,
+                    resources.getString(R.string.icon_title_gop),
+                    null,
+                    HomeFragmentDirections.actionNavHomeToGeneralOpCareFragment(),
+                ),
 //                Icon(
 //                    R.drawable.ic__menopause,
 //                    resources.getString(R.string.icon_title_msl),
 //                    recordsRepo.menopauseListCount,
 //                    HomeFragmentDirections.actionNavHomeToMenopauseStageFragment()
 //                ),
-               Icon(
-                   R.drawable.ic__death,
-                   resources.getString(R.string.icon_title_dr),
-                   null,
-                   HomeFragmentDirections.actionNavHomeToDeathReportsFragment(),
-               ),
-               Icon(
-                   R.drawable.ic__village_level_form,
-                   resources.getString(R.string.icon_title_vlf),
-                   null,
-                   HomeFragmentDirections.actionNavHomeToVillageLevelFormsFragment()
-               ),
-           )
-           Modules.HRP -> listOf(
-               Icon(
-                   R.drawable.ic__hh,
-                   resources.getString(R.string.icon_title_household),
-                   recordsRepo.hhListCount,
-                   HomeFragmentDirections.actionNavHomeToAllHouseholdFragment()
-               ),
-               Icon(
-                   R.drawable.ic__ben,
-                   resources.getString(R.string.icon_title_ben),
-                   recordsRepo.allBenListCount,
-                   HomeFragmentDirections.actionNavHomeToAllBenFragment(),
-               ),
-               Icon(
-                   R.drawable.ic__eligible_couple,
-                   resources.getString(R.string.icon_title_ec),
-                   null,
-                   HomeFragmentDirections.actionNavHomeToEligibleCoupleFragment()
-               ),
-               Icon(
-                   R.drawable.ic__maternal_health,
-                   resources.getString(R.string.icon_title_mc),
-                   null,
-                   HomeFragmentDirections.actionNavHomeToMotherCareFragment(),
-               ),
-               Icon(
-                   icon = R.drawable.ic__hrp,
-                   title = resources.getString(R.string.icon_title_hrp),
-//                    count = recordsRepo.hrpCount,
-                   count = null,
-                   navAction = HomeFragmentDirections.actionNavHomeToHrpCasesFragment(),
-                   allowRedBorder = false
+                Icon(
+                    R.drawable.ic__death,
+                    resources.getString(R.string.icon_title_dr),
+                    null,
+                    HomeFragmentDirections.actionNavHomeToDeathReportsFragment(),
+                ),
+                Icon(
+                    R.drawable.ic__village_level_form,
+                    resources.getString(R.string.icon_title_vlf),
+                    null,
+                    HomeFragmentDirections.actionNavHomeToVillageLevelFormsFragment()
+                ),
+            )
 
-               )
-           )
+            Modules.HRP -> listOf(
+                Icon(
+                    R.drawable.ic__hh,
+                    resources.getString(R.string.icon_title_household),
+                    recordsRepo.hhListCount,
+                    HomeFragmentDirections.actionNavHomeToAllHouseholdFragment()
+                ),
+                Icon(
+                    R.drawable.ic__ben,
+                    resources.getString(R.string.icon_title_ben),
+                    recordsRepo.allBenListCount,
+                    HomeFragmentDirections.actionNavHomeToAllBenFragment(),
+                ),
+                Icon(
+                    R.drawable.ic__eligible_couple,
+                    resources.getString(R.string.icon_title_ec),
+                    null,
+                    HomeFragmentDirections.actionNavHomeToEligibleCoupleFragment()
+                ),
+                Icon(
+                    R.drawable.ic__maternal_health,
+                    resources.getString(R.string.icon_title_mc),
+                    null,
+                    HomeFragmentDirections.actionNavHomeToMotherCareFragment(),
+                ),
+                Icon(
+                    icon = R.drawable.ic__hrp,
+                    title = resources.getString(R.string.icon_title_hrp),
+//                    count = recordsRepo.hrpCount,
+                    count = null,
+                    navAction = HomeFragmentDirections.actionNavHomeToHrpCasesFragment(),
+                    allowRedBorder = false
+
+                )
+            )
         }.apply {
             forEachIndexed { index, icon ->
                 icon.colorPrimary = index % 2 == 0

@@ -76,7 +76,8 @@ class HbncDayListViewModel @Inject constructor(
         if (partIIcon.isFilled) headerList.add(partIIIcon)
         val ben = benRepo.getBeneficiaryRecord(benId, hhId)!!
         val allDayList = listOf(1, 3, 7, 14, 21, 28, 42)
-        val dayList = allDayList.filter { it <= (Calendar.getInstance().timeInMillis - ben.dob)/1000*60*60*24 }
+        val dayList =
+            allDayList.filter { it <= (Calendar.getInstance().timeInMillis - ben.dob) / 1000 * 60 * 60 * 24 }
 
         if (partIIIcon.isFilled)
             headerList.addAll(dayList.map { day ->
