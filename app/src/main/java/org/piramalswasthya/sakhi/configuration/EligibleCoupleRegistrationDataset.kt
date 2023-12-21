@@ -944,11 +944,9 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     setSiblingAgeDiff(timeAtMarriage, it, marriageFirstChildGap)
                 }
                 ecCache.gender1?.let {
-                    gender1.value = getLocalValueInArray(R.array.ecr_gender_array, it.name)
-//                        if (it == Gender.MALE) gender1.entries!![0] else gender1.entries!![1]
+                    gender1.value = getLocalValueInArray(R.array.ecr_gender_array, it.name.lowercase().replaceFirstChar { c -> c.uppercase() })
                 }
 
-//                marriageFirstChildGap.value = ecCache.marriageFirstChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(noOfLiveChildren) + 1,
@@ -966,11 +964,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ecCache.dob1?.let { it1 -> setSiblingAgeDiff(it1, it, firstAndSecondChildGap) }
                 }
                 ecCache.gender2?.let {
-                    gender2.value = getLocalValueInArray(R.array.ecr_gender_array, it.name)
-//                        if (it == Gender.MALE) gender2.entries!![0] else gender2.entries!![1]
+                    gender2.value = getLocalValueInArray(R.array.ecr_gender_array, it.name.lowercase().replaceFirstChar { c -> c.uppercase() })
                 }
-
-//                firstAndSecondChildGap.value = ecCache.firstAndSecondChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(marriageFirstChildGap) + 1,
@@ -989,11 +984,8 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
                 }
                 ecCache.gender3?.let {
-                    gender3.value = getLocalValueInArray(R.array.ecr_gender_array, it.name)
-//                        if (it == Gender.MALE) gender3.entries!![0] else gender3.entries!![1]
+                    gender3.value = getLocalValueInArray(R.array.ecr_gender_array, it.name.lowercase().replaceFirstChar { c -> c.uppercase() })
                 }
-
-//                secondAndThirdChildGap.value = ecCache.secondAndThirdChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(firstAndSecondChildGap) + 1,
@@ -1012,11 +1004,9 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
                 }
                 ecCache.gender4?.let {
-                    gender4.value = getLocalValueInArray(R.array.ecr_gender_array, it.name)
-//                        if (it == Gender.MALE) gender4.entries!![0] else gender4.entries!![1]
+                    gender4.value = getLocalValueInArray(R.array.ecr_gender_array, it.name.lowercase().replaceFirstChar { c -> c.uppercase() })
                 }
 
-//                thirdAndFourthChildGap.value = ecCache.thirdAndFourthChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(secondAndThirdChildGap) + 1,
@@ -1034,11 +1024,9 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ecCache.dob4?.let { it1 -> setSiblingAgeDiff(it1, it, fourthAndFifthChildGap) }
                 }
                 ecCache.gender5?.let {
-                    gender5.value = getLocalValueInArray(R.array.ecr_gender_array, it.name)
-//                        if (it == Gender.MALE) gender5.entries!![0] else gender5.entries!![1]
+                    gender5.value = getLocalValueInArray(R.array.ecr_gender_array, it.name.lowercase().replaceFirstChar { c -> c.uppercase() })
                 }
 
-                fourthAndFifthChildGap.value = ecCache.fourthAndFifthChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(thirdAndFourthChildGap) + 1,
@@ -1056,11 +1044,9 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ecCache.dob5?.let { it1 -> setSiblingAgeDiff(it1, it, fifthAndSixthChildGap) }
                 }
                 ecCache.gender6?.let {
-                    gender6.value = getLocalValueInArray(R.array.ecr_gender_array, it.name)
-//                        if (it == Gender.MALE) gender6.entries!![0] else gender6.entries!![1]
+                    gender6.value = getLocalValueInArray(R.array.ecr_gender_array, it.name.lowercase().replaceFirstChar { c -> c.uppercase() })
                 }
 
-//                fifthAndSixthChildGap.value = ecCache.fifthANdSixthChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(fourthAndFifthChildGap) + 1,
@@ -1079,11 +1065,9 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
 
                 }
                 ecCache.gender7?.let {
-                    gender7.value = getLocalValueInArray(R.array.ecr_gender_array, it.name)
-//                        if (it == Gender.MALE) gender7.entries!![0] else gender7.entries!![1]
+                    gender7.value = getLocalValueInArray(R.array.ecr_gender_array, it.name.lowercase().replaceFirstChar { c -> c.uppercase() })
                 }
 
-//                sixthAndSeventhChildGap.value = ecCache.sixthAndSeventhChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(fifthAndSixthChildGap) + 1,
@@ -1107,11 +1091,9 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     }
                 }
                 ecCache.gender8?.let {
-                    gender8.value = getLocalValueInArray(R.array.ecr_gender_array, it.name)
-//                        if (it == Gender.MALE) gender8.entries!![0] else gender8.entries!![1]
+                    gender8.value = getLocalValueInArray(R.array.ecr_gender_array, it.name.lowercase().replaceFirstChar { c -> c.uppercase() })
                 }
 
-//                seventhAndEighthChildGap.value = ecCache.seventhAndEighthChildGap?.toString()
 
                 list.addAll(
                     list.indexOf(sixthAndSeventhChildGap) + 1,
@@ -1129,11 +1111,9 @@ class EligibleCoupleRegistrationDataset(context: Context, language: Languages) :
                     ecCache.dob8?.let { it1 -> setSiblingAgeDiff(it1, it, eighthAndNinthChildGap) }
                 }
                 ecCache.gender9?.let {
-                    gender9.value = getLocalValueInArray(R.array.ecr_gender_array, it.name)
-//                        if (it == Gender.MALE) gender9.entries!![0] else gender9.entries!![1]
+                    gender9.value = getLocalValueInArray(R.array.ecr_gender_array, it.name.lowercase().replaceFirstChar { c -> c.uppercase() })
                 }
 
-//                eighthAndNinthChildGap.value = ecCache.eighthAndNinthChildGap?.toString()
                 list.addAll(
                     list.indexOf(seventhAndEighthChildGap) + 1,
                     listOf(ninthChildDetails, dob9, age9, gender9, eighthAndNinthChildGap)
