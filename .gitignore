@@ -4,3 +4,4 @@
 *.bin
 *.lock
 /app/build/*
+/app/release/*
