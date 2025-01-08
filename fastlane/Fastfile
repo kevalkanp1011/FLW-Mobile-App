@@ -6,8 +6,7 @@ platform :android do
   lane :build_and_distribute_debug do |options|
     # Build the debug variant
     gradle(
-      task: "assemble#{options[:variant]}Debug",
-      build_type: "Debug"
+      task: "assemble#{options[:variant]}Debug"
     )
 
     # Distribute to Firebase App Distribution for Stag and UAT
@@ -24,8 +23,7 @@ platform :android do
   lane :build_and_distribute_release do |options|
     # Build the release variant
     gradle(
-      task: "assemble#{options[:variant]}Release",
-      build_type: "Release"
+      task: "assemble#{options[:variant]}Release"
     )
 
     # Sign the APK using the keystore
