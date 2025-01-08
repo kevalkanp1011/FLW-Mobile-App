@@ -93,11 +93,13 @@ jobs:
 
 
       - name: Build and Distribute app to Firebase
+        id: build-and-distribute
         run:
-
           if [ "${{ inputs.build_type }}" == "debug" ]; then
+          echo "debug"
           bundle exec fastlane build_and_distribute_debug variant:${{ inputs.variant }}
-          elif [ "${{ inputs.build_type }}" == "release" ]; then
+          else
+          echo "release"
           bundle exec fastlane build_and_distribute_release variant:${{ inputs.variant }}
           fi
 
