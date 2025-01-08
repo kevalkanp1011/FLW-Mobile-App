@@ -9,6 +9,7 @@ platform :android do
       task: "assemble#{options[:variant]}Debug"
     )
 
+
     # Distribute to Firebase App Distribution for Stag and UAT
     firebase_app_distribution(
       app: ENV['FIREBASE_APP_ID'],
