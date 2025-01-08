@@ -31,7 +31,7 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v2
 
-      - name: Setup Android NDK
+      - name: Set up Android NDK
         uses: nttld/setup-ndk@v1.5.0
         with:
           ndk-version: r27c
@@ -73,7 +73,13 @@ jobs:
         run: echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
 
 
-      - name: Set Environment Variables
+
+      
+      
+      
+
+      - name: Build and Distribute app to Firebase
+        id: build-and-distribute
         run: |
           export ENCRYPTED_PASS_KEY=${{ secrets.ENCRYPTED_PASS_KEY }}
           export ABHA_CLIENT_ID=${{ secrets.ABHA_CLIENT_ID }}
@@ -89,30 +95,8 @@ jobs:
           export KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
           export KEY_ALIAS=${{ secrets.KEY_ALIAS }}
           export KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
-
-      - name: Verify Environment Variables
-        run: |
-          echo "ENCRYPTED_PASS_KEY: $ENCRYPTED_PASS_KEY"
-          echo "ABHA_CLIENT_ID: $ABHA_CLIENT_ID"
-          echo "ABHA_CLIENT_SECRET: $ABHA_CLIENT_SECRET"
-          echo "BASE_TMC_URL: $BASE_TMC_URL"
-          echo "BASE_ABHA_URL: $BASE_ABHA_URL"
-          echo "ABHA_TOKEN_URL: $ABHA_TOKEN_URL"
-          echo "ABHA_AUTH_URL: $ABHA_AUTH_URL"
-          echo "FIREBASE_APP_ID: $FIREBASE_APP_ID"
-          echo "FIREBASE_CLI_TOKEN: $FIREBASE_CLI_TOKEN"
-          echo "GOOGLE_PLAY_JSON_KEY: $GOOGLE_PLAY_JSON_KEY"
-          echo "KEYSTORE_PATH: $KEYSTORE_PATH"
-          echo "KEYSTORE_PASSWORD: $KEYSTORE_PASSWORD"
-          echo "KEY_ALIAS: $KEY_ALIAS"
-          echo "KEY_PASSWORD: $KEY_PASSWORD"
-      
-      
-      
-
-      - name: Build and Distribute app to Firebase
-        id: build-and-distribute
-        run: |
+          
+          
           if [ "${{ inputs.build_type }}" == "debug" ]; then
             echo "debug"
             bundle exec fastlane build_and_distribute_debug variant:${{ inputs.variant }}
