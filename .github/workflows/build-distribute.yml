@@ -94,14 +94,15 @@ jobs:
 
       - name: Build and Distribute app to Firebase
         id: build-and-distribute
-        run:
+        run: |
           if [ "${{ inputs.build_type }}" == "debug" ]; then
-          echo "debug"
-          bundle exec fastlane build_and_distribute_debug variant:${{ inputs.variant }}
+            echo "debug"
+            bundle exec fastlane build_and_distribute_debug variant:${{ inputs.variant }}
           else
-          echo "release"
-          bundle exec fastlane build_and_distribute_release variant:${{ inputs.variant }}
+            echo "release"
+            bundle exec fastlane build_and_distribute_release variant:${{ inputs.variant }}
           fi
+
 
 
       - name: Upload APKs
