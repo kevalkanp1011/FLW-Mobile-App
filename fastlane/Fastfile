@@ -38,11 +38,11 @@ platform :android do
     )
 
     # Deploy to Google Play for Production
-    supply(
-      track: "internal",
-      aab: "app/build/outputs/bundle/#{options[:variant]}Release/app-#{options[:variant]}-release.aab"
-      json_key: "./google_play_service_account.json"
-    )
+#     supply(
+#       track: "internal",
+#       aab: "app/build/outputs/bundle/#{options[:variant]}Release/app-#{options[:variant]}-release.aab",
+#       json_key: "./google_play_service_account.json"
+#     )
   end
 
 
