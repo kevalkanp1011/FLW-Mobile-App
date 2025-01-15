@@ -9,12 +9,13 @@ platform :android do
       task: "assemble#{options[:variant]}Debug"
     )
 
+    puts "Testers group: #{ENV['TESTER_GROUPS']}"
 
     # Distribute to Firebase App Distribution for Stag and UAT
     firebase_app_distribution(
       app: ENV['FIREBASE_APP_ID'],
       firebase_cli_token: ENV['FIREBASE_CLI_TOKEN'],
-      groups: "kevaltesters",
+      groups: "#{ENV['TESTER_GROUPS']}",
       release_notes: "#{options[:variant]}-Debug version out!",
       debug: true
     )
