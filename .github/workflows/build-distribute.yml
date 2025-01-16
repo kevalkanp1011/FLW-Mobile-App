@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+        
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -72,6 +72,22 @@ jobs:
       - name: Create local.properties
         run: echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
 
+      - name: Get version from build.gradle 
+        id: get-version 
+        run: | 
+          VERSION_NAME=$(grep 'versionName' app/build.gradle | sed -E "s/.*versionName ['\"]([0-9.]+)['\"].*/\1/") 
+          echo "version=$VERSION_NAME" >> $GITHUB_ENV 
+        env: 
+          GITHUB_ENV: $GITHUB_ENV
+
+      - name: Verify version 
+        run: | 
+          if [ -z "$VERSION_NAME" ]; then 
+            echo "Version name could not be extracted. Exiting." exit 1 
+          else 
+            echo "Version name is $VERSION_NAME" 
+          fi
+          
       - name: Build and Distribute app to Firebase
         id: build-and-distribute
         run: |
@@ -109,5 +125,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: FLW-Mobile-App - APK(s) ${{ inputs.variant }} generated
-          path: app/build/outputs/apk/**/debug/*.apk
+          path: app/build/outputs/apk/**/${{ inputs.build_type }}/*.apk
+      
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "app/build/outputs/apk/**/${{ inputs.build_type }}/*.apk"
+          tag: v${{ env.version }}-${{ inputs.environment }}-${{ github.run_number }}
+          token: ${{secrets.GITHUB_TOKEN}}
 

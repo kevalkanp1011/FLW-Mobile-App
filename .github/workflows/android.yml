@@ -30,6 +30,14 @@ jobs:
       variant: SakshamUat
       build_type: debug
     secrets: inherit
+    
+  niramay_production_job:
+     uses: ./.github/workflows/build-distribute.yml
+     with:
+       environment: NIRAMAY_PRODUCTION
+       variant: Niramay
+       build_type: release
+     secrets: inherit
 
 #  saksham_production_job:
 #    uses: ./.github/workflows/build-distribute.yml
@@ -46,13 +54,7 @@ jobs:
 #      variant: Xushrukha
 #      build_type: release
 #    secrets: inherit
-#
-#  niramay_production_job:
-#    uses: ./.github/workflows/build-distribute.yml
-#    with:
-#      environment: NIRAMAY_PRODUCTION
-#      variant: Niramay
-#      build_type: release
-#    secrets: inherit
+
+   
 
 

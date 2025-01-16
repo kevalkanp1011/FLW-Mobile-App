@@ -2,6 +2,12 @@
 default_platform(:android)
 platform :android do
 
+  desc "Get App Version" 
+  lane :get_app_version do 
+    app_version = android_get_version_name 
+    puts "App version name: #{app_version}" 
+  end
+
   desc "Build and Distribute Debug APK to Firebase"
   lane :build_and_distribute_debug do |options|
     # Build the debug variant
