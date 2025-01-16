@@ -86,7 +86,7 @@ jobs:
           export ABHA_AUTH_URL=${{ secrets.ABHA_AUTH_URL }}
 
           # Set app release version signing credentials
-          export KEYSTORE_PATH=${{ secrets.KEYSTORE_PATH }}
+          export KEYSTORE_FILE=$(echo ${{ secrets.KEYSTORE_FILE }} | base64 --decode)
           export KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
           export KEY_ALIAS=${{ secrets.KEY_ALIAS }}
           export KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
@@ -95,7 +95,7 @@ jobs:
           export FIREBASE_APP_ID=${{ secrets.FIREBASE_APP_ID }}
           export FIREBASE_CLI_TOKEN=${{ secrets.FIREBASE_CLI_TOKEN }}
           export TESTER_GROUPS=${{ secrets.TESTER_GROUPS }}
-          # export GOOGLE_PLAY_JSON_KEY=$(echo ${{ secrets.GOOGLE_PLAY_JSON_KEY }} | base64 --decode)
+          export GOOGLE_PLAY_JSON_KEY=$(echo ${{ secrets.GOOGLE_PLAY_JSON_KEY }} | base64 --decode)
 
           if [ "${{ inputs.build_type }}" == "debug" ]; then
             bundle exec fastlane build_and_distribute_debug variant:${{ inputs.variant }}
