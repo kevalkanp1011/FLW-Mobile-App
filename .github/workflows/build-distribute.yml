@@ -142,15 +142,6 @@ jobs:
       #          fi
       #
 
-      - name: List APK Folder Structure
-        run: |
-          echo "Listing all subdirectories and files in the APK folder..."
-          echo "Listing APK subdirectories..."
-          find app/build/outputs/apk/**/${{ inputs.variant }} -type d
-          echo "Listing APK files in debug directory..."
-          find app/build/outputs/apk/**/${{ inputs.variant }}/debug/*.apk
-          echo "Listing all files in the debug directory..."
-          find app/build/outputs/apk/**/${{ inputs.variant }}/debug -type f
 
       - name: Verify Output Files
         run: |
