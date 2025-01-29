@@ -54,6 +54,7 @@ platform :android do
 
   desc "Test Build r"
     lane :build_test_r do |options|
+        keystore_path = File.expand_path('../keystore.jks')
         gradle(
                   task: "clean bundle#{options[:variant]}Release",
                   properties: {
