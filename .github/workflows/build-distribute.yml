@@ -1,4 +1,4 @@
-name: Build and Distribute to Firebase
+name: Build and Distribute to Firebase or PlayStore
 
 on:
   workflow_call:
@@ -101,54 +101,6 @@ jobs:
 
       - name: Create local.properties
         run: echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
-
-      - name: Test Build
-        run: |
-          
-          if [ "${{ inputs.build_type }}" == "debug" ]; then
-              bundle exec fastlane build_test variant:"$capitalizedVariant"
-          else
-              bundle exec fastlane build_test_r variant:"$capitalizedVariant"
-          fi
-
-      #      - name: Build and Distribute app to Firebase
-      #        id: build-and-distribute
-      #        run: |
-      #
-      #          # Set app URLs used in the codebase
-      #          export ENCRYPTED_PASS_KEY=${{ secrets.ENCRYPTED_PASS_KEY }}
-      #          export ABHA_CLIENT_ID=${{ secrets.ABHA_CLIENT_ID }}
-      #          export ABHA_CLIENT_SECRET=${{ secrets.ABHA_CLIENT_SECRET }}
-      #          export BASE_TMC_URL=${{ secrets.BASE_TMC_URL }}
-      #          export BASE_ABHA_URL=${{ secrets.BASE_ABHA_URL }}
-      #          export ABHA_TOKEN_URL=${{ secrets.ABHA_TOKEN_URL }}
-      #          export ABHA_AUTH_URL=${{ secrets.ABHA_AUTH_URL }}
-      #          export CHAT_URL=${{secrets.CHAT_URL}}
-      #
-      #          # Set app release version signing credentials
-      #          export KEYSTORE_PASSWORD=$(echo ${{ secrets.KEYSTORE_PASSWORD }} | base64 --decode)
-      #          export KEY_ALIAS=${{ secrets.KEY_ALIAS }}
-      #          export KEY_PASSWORD=$(echo ${{ secrets.KEY_PASSWORD }} | base64 --decode)
-      #
-      #
-      #          # Set Firebase App Distribution and Google Play authentication tokens
-      #          export FIREBASE_APP_ID=${{ secrets.FIREBASE_APP_ID }}
-      #
-      #          echo "Capitalized Variant: $capitalizedVariant"
-      #          if [ "${{ inputs.build_type }}" == "debug" ]; then
-      #            bundle exec fastlane build_and_distribute_debug variant:"$capitalizedVariant"
-      #          else
-      #            bundle exec fastlane build_and_distribute_release variant:"$capitalizedVariant"
-      #          fi
-      #
-
-      - name: List All Files and Directories in Bundle Folder
-        run: |
-          if [ "${{ inputs.build_type }}" != "debug" ]; then
-            echo "Listing all files and directories inside app/build/outputs/bundle/..."
-            find app/build/outputs/bundle/ -type d    # List all directories
-            find app/build/outputs/bundle/ -type f    # List all files
-          fi
 
 
       - name: Verify Output Files
