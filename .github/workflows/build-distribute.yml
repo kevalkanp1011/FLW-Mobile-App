@@ -102,38 +102,45 @@ jobs:
       - name: Create local.properties
         run: echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
 
-      - name: Build and Distribute app to Firebase
-        id: build-and-distribute
+      - name: Test Build
         run: |
           
-          # Set app URLs used in the codebase
-          export ENCRYPTED_PASS_KEY=${{ secrets.ENCRYPTED_PASS_KEY }}
-          export ABHA_CLIENT_ID=${{ secrets.ABHA_CLIENT_ID }}
-          export ABHA_CLIENT_SECRET=${{ secrets.ABHA_CLIENT_SECRET }}
-          export BASE_TMC_URL=${{ secrets.BASE_TMC_URL }}
-          export BASE_ABHA_URL=${{ secrets.BASE_ABHA_URL }}
-          export ABHA_TOKEN_URL=${{ secrets.ABHA_TOKEN_URL }}
-          export ABHA_AUTH_URL=${{ secrets.ABHA_AUTH_URL }}
-          export CHAT_URL=${{secrets.CHAT_URL}}
-          
-          # Set app release version signing credentials
-          export KEYSTORE_PASSWORD=$(echo ${{ secrets.KEYSTORE_PASSWORD }} | base64 --decode)
-          export KEY_ALIAS=${{ secrets.KEY_ALIAS }}
-          export KEY_PASSWORD=$(echo ${{ secrets.KEY_PASSWORD }} | base64 --decode)
-          
-          
-          # Set Firebase App Distribution and Google Play authentication tokens
-          export FIREBASE_APP_ID=${{ secrets.FIREBASE_APP_ID }}
-          export FIREBASE_CLI_TOKEN=${{ secrets.FIREBASE_CLI_TOKEN }}
-          export TESTER_GROUPS=${{ secrets.TESTER_GROUPS }}
-          
-          echo "Capitalized Variant: $capitalizedVariant"
           if [ "${{ inputs.build_type }}" == "debug" ]; then
-            bundle exec fastlane build_and_distribute_debug variant:"$capitalizedVariant"
+              bundle exec fastlane build_test variant:"$capitalizedVariant"
           else
-            bundle exec fastlane build_and_distribute_release variant:"$capitalizedVariant"
+              bundle exec fastlane build_test variant:"$capitalizedVariant"
           fi
 
+      #      - name: Build and Distribute app to Firebase
+      #        id: build-and-distribute
+      #        run: |
+      #
+      #          # Set app URLs used in the codebase
+      #          export ENCRYPTED_PASS_KEY=${{ secrets.ENCRYPTED_PASS_KEY }}
+      #          export ABHA_CLIENT_ID=${{ secrets.ABHA_CLIENT_ID }}
+      #          export ABHA_CLIENT_SECRET=${{ secrets.ABHA_CLIENT_SECRET }}
+      #          export BASE_TMC_URL=${{ secrets.BASE_TMC_URL }}
+      #          export BASE_ABHA_URL=${{ secrets.BASE_ABHA_URL }}
+      #          export ABHA_TOKEN_URL=${{ secrets.ABHA_TOKEN_URL }}
+      #          export ABHA_AUTH_URL=${{ secrets.ABHA_AUTH_URL }}
+      #          export CHAT_URL=${{secrets.CHAT_URL}}
+      #
+      #          # Set app release version signing credentials
+      #          export KEYSTORE_PASSWORD=$(echo ${{ secrets.KEYSTORE_PASSWORD }} | base64 --decode)
+      #          export KEY_ALIAS=${{ secrets.KEY_ALIAS }}
+      #          export KEY_PASSWORD=$(echo ${{ secrets.KEY_PASSWORD }} | base64 --decode)
+      #
+      #
+      #          # Set Firebase App Distribution and Google Play authentication tokens
+      #          export FIREBASE_APP_ID=${{ secrets.FIREBASE_APP_ID }}
+      #
+      #          echo "Capitalized Variant: $capitalizedVariant"
+      #          if [ "${{ inputs.build_type }}" == "debug" ]; then
+      #            bundle exec fastlane build_and_distribute_debug variant:"$capitalizedVariant"
+      #          else
+      #            bundle exec fastlane build_and_distribute_release variant:"$capitalizedVariant"
+      #          fi
+      #
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4

@@ -45,6 +45,13 @@ end
 default_platform(:android)
 platform :android do
 
+  desc "Test Build"
+  lane :build_test do |options|
+      gradle(
+            task: "clean assemble#{options[:variant]}Debug"
+          )
+  end
+
   desc "Build and Distribute Debug APK to Firebase"
   lane :build_and_distribute_debug do |options|
 
