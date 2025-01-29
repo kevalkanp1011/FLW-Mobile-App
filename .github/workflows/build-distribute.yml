@@ -66,6 +66,8 @@ jobs:
         run: |
           echo "${{ secrets.GOOGLE_SERVICES_JSON_GENERIC }}" | base64 --decode > ./app/google-services.json || exit 1
 
+      - name: Capitalize first letter of variant
+        run: echo "capitalizedVariant=$(echo '${{ inputs.variant }}' | awk '{print toupper(substr($0,1,1)) substr($0,2)}')" >> $GITHUB_ENV
       - name: Decode Firebase Credentials
         run: |
           variant=${{ inputs.variant }}
@@ -125,8 +127,6 @@ jobs:
           export FIREBASE_CLI_TOKEN=${{ secrets.FIREBASE_CLI_TOKEN }}
           export TESTER_GROUPS=${{ secrets.TESTER_GROUPS }}
           
-          capitalizedVariant=$(echo "${{ inputs.variant }}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
-
           echo "Capitalized Variant: $capitalizedVariant"
           if [ "${{ inputs.build_type }}" == "debug" ]; then
             bundle exec fastlane build_and_distribute_debug variant:"$capitalizedVariant"
