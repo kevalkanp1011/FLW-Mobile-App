@@ -127,10 +127,11 @@ jobs:
           
           capitalizedVariant=$(echo "${{ inputs.variant }}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
 
+          echo "Capitalized Variant: $capitalizedVariant"
           if [ "${{ inputs.build_type }}" == "debug" ]; then
-            bundle exec fastlane build_and_distribute_debug variant:${ capitalizedVariant }
+            bundle exec fastlane build_and_distribute_debug variant:"$capitalizedVariant"
           else
-            bundle exec fastlane build_and_distribute_release variant:${ capitalizedVariant }
+            bundle exec fastlane build_and_distribute_release variant:"$capitalizedVariant"
           fi
 
 
