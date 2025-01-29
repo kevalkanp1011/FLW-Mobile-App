@@ -124,11 +124,13 @@ jobs:
           export FIREBASE_APP_ID=${{ secrets.FIREBASE_APP_ID }}
           export FIREBASE_CLI_TOKEN=${{ secrets.FIREBASE_CLI_TOKEN }}
           export TESTER_GROUPS=${{ secrets.TESTER_GROUPS }}
+          
+          capitalizedVariant=$(echo "${{ inputs.variant }}" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
 
           if [ "${{ inputs.build_type }}" == "debug" ]; then
-            bundle exec fastlane build_and_distribute_debug variant:${{ inputs.variant }}
+            bundle exec fastlane build_and_distribute_debug variant:${ capitalizedVariant }
           else
-            bundle exec fastlane build_and_distribute_release variant:${{ inputs.variant }}
+            bundle exec fastlane build_and_distribute_release variant:${ capitalizedVariant }
           fi
 
 
@@ -137,7 +139,11 @@ jobs:
         with:
           name: FLW-Mobile-App - APK(s) ${{ inputs.variant }} generated
           path: |
-            ${{ inputs.build_type == 'debug' && 'app/build/outputs/apk/**/${{inputs.build_type}}/*.apk' || 'app/build/outputs/bundle/**/${{inputs.build_type}}/*.aab' }}
+            ${{ inputs.build_type == 'debug' && 'app/build/outputs/apk/**/${{inputs.variant}}/*.apk' || 'app/build/outputs/bundle/**/${{inputs.variant}}/*.aab' }}
+          if-no-files-found: warn
+          compression-level: 6
+          overwrite: false
+          include-hidden-files: false
 
 
       - name: Push to Releases
