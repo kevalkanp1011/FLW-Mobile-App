@@ -156,9 +156,9 @@ jobs:
         run: |
           echo "Checking output folder..."
           if [ "${{ inputs.build_type }}" == "debug" ]; then
-            OUTPUT_PATH="app/build/outputs/apk/**/${{ inputs.variant }}/debug/*.apk"
+            OUTPUT_PATH="app/build/outputs/apk/**/debug/*.apk"
           else
-            OUTPUT_PATH="app/build/outputs/bundle/**/${{ inputs.variant }}/release/*.aab"
+            OUTPUT_PATH="app/build/outputs/bundle/**/release/*.aab"
           fi
 
           FILES_FOUND=$(find $OUTPUT_PATH 2>/dev/null | wc -l)
