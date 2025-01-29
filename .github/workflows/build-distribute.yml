@@ -176,7 +176,7 @@ jobs:
         with:
           name: FLW-Mobile-App - APK(s) ${{ inputs.variant }} generated
           path: |
-            ${{ inputs.build_type == 'debug' && 'app/build/outputs/apk/**/${{inputs.variant}}/debug/*.apk' || 'app/build/outputs/bundle/**/${{inputs.variant}}/release/*.aab' }}
+            ${{ inputs.build_type == 'debug' && 'app/build/outputs/apk/**/debug/*.apk' || 'app/build/outputs/bundle/**/release/*.aab' }}
           if-no-files-found: warn
           compression-level: 6
           overwrite: false
