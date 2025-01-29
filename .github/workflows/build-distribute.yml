@@ -142,6 +142,12 @@ jobs:
       #          fi
       #
 
+      - name: List All Files and Directories in Bundle Folder
+        run: |
+          echo "Listing all files and directories inside app/build/outputs/bundle/..."
+          find app/build/outputs/bundle/ -type d    # List all directories
+          find app/build/outputs/bundle/ -type f    # List all files
+
 
       - name: Verify Output Files
         run: |
@@ -149,7 +155,7 @@ jobs:
           if [ "${{ inputs.build_type }}" == "debug" ]; then
             OUTPUT_PATH="app/build/outputs/apk/**/debug/*.apk"
           else
-            OUTPUT_PATH="app/${{ inputs.variant }}/release/*.aab"
+            OUTPUT_PATH="app/build/outputs/bundle/*Release/*.aab"
           fi
 
           FILES_FOUND=$(find $OUTPUT_PATH 2>/dev/null | wc -l)
