@@ -70,8 +70,8 @@ jobs:
         run: echo "capitalizedVariant=$(echo '${{ inputs.variant }}' | awk '{print toupper(substr($0,1,1)) substr($0,2)}')" >> $GITHUB_ENV
       - name: Decode Firebase Credentials
         run: |
-          variant=${{ inputs.variant }}
-          case "$variant" in
+          
+          case "$capitalizedVariant" in
             SakshamStag|SakshamUat|Saksham)
               echo "${{ secrets.FIREBASE_CREDENTIALS_JSON_SAKSHAM_ASSAM }}" | base64 --decode > firebase_credentials.json
               ;;
