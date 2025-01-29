@@ -155,7 +155,7 @@ jobs:
           if [ "${{ inputs.build_type }}" == "debug" ]; then
             OUTPUT_PATH="app/build/outputs/apk/**/debug/*.apk"
           else
-            OUTPUT_PATH="app/build/outputs/bundle/*Release/*.aab"
+            OUTPUT_PATH="app/build/outputs/bundle/**/*.aab"
           fi
 
           FILES_FOUND=$(find $OUTPUT_PATH 2>/dev/null | wc -l)
