@@ -52,6 +52,19 @@ platform :android do
           )
   end
 
+  desc "Test Build r"
+    lane :build_test_r do |options|
+        gradle(
+                  task: "clean bundle#{options[:variant]}Release",
+                  properties: {
+                    "android.injected.signing.store.file" => keystore_path,
+                    "android.injected.signing.store.password" => "#{ENV['KEYSTORE_PASSWORD']}",
+                    "android.injected.signing.key.alias" => "#{ENV['KEY_ALIAS']}",
+                    "android.injected.signing.key.password" => "#{ENV['KEY_PASSWORD']}",
+                  }
+              )
+    end
+
   desc "Build and Distribute Debug APK to Firebase"
   lane :build_and_distribute_debug do |options|
 

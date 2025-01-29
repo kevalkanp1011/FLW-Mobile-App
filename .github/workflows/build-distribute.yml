@@ -108,7 +108,7 @@ jobs:
           if [ "${{ inputs.build_type }}" == "debug" ]; then
               bundle exec fastlane build_test variant:"$capitalizedVariant"
           else
-              bundle exec fastlane build_test variant:"$capitalizedVariant"
+              bundle exec fastlane build_test_r variant:"$capitalizedVariant"
           fi
 
       #      - name: Build and Distribute app to Firebase
