@@ -144,9 +144,11 @@ jobs:
 
       - name: List All Files and Directories in Bundle Folder
         run: |
-          echo "Listing all files and directories inside app/build/outputs/bundle/..."
-          find app/build/outputs/bundle/ -type d    # List all directories
-          find app/build/outputs/bundle/ -type f    # List all files
+          if [ "${{ inputs.build_type }}" != "debug" ]; then
+            echo "Listing all files and directories inside app/build/outputs/bundle/..."
+            find app/build/outputs/bundle/ -type d    # List all directories
+            find app/build/outputs/bundle/ -type f    # List all files
+          fi
 
 
       - name: Verify Output Files
