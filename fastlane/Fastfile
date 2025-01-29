@@ -57,12 +57,7 @@ platform :android do
         keystore_path = File.expand_path('../keystore.jks')
         gradle(
                   task: "clean bundle#{options[:variant]}Release",
-                  properties: {
-                    "android.injected.signing.store.file" => keystore_path,
-                    "android.injected.signing.store.password" => "#{ENV['KEYSTORE_PASSWORD']}",
-                    "android.injected.signing.key.alias" => "#{ENV['KEY_ALIAS']}",
-                    "android.injected.signing.key.password" => "#{ENV['KEY_PASSWORD']}",
-                  }
+
               )
     end
 
