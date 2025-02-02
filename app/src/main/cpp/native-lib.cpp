@@ -73,8 +73,8 @@ static string decryptBase64EncodedString(const string &encryptedBase64) {
     vector<uint8_t> decryptedBytes = cipherBytes;
 
     // Initialize AES context with the key and IV.
-    string aes_key_encrypted = ENCRYPTED_AES_KEY;
-    string aes_iv_encrypted = ENCRYPTED_AES_IV;
+    string aes_key_encrypted = ENCODED_AES_KEY;
+    string aes_iv_encrypted = ENCODED_AES_IV;
     vector<uint8_t> AES_KEY = decodeBase64ToBytes(aes_key_encrypted);
     vector<uint8_t> AES_IV = decodeBase64ToBytes(aes_iv_encrypted);
 
