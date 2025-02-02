@@ -20,6 +20,9 @@ object KeyUtils {
     init {
         try {
             System.loadLibrary(NATIVE_JNI_LIB_NAME)
+            Timber.tag("KeyUtils").d(encryptedPassKey())
+            Timber.tag("KeyUtils").d(abhaClientSecret())
+            Timber.tag("KeyUtils").d(abhaClientID())
         } catch (e: UnsatisfiedLinkError) {
             Timber.tag("KeyUtils").e(e, "Failed to load native library")
             throw RuntimeException("Failed to load native library: $NATIVE_JNI_LIB_NAME")
@@ -27,25 +30,25 @@ object KeyUtils {
 
     }
 
-    private external fun isDebuggerAttached(): Boolean
-    private external fun isEmulator(): Boolean
-
-    // Example usage
-    fun checkSecurity() {
-        if (isDebuggerAttached()) {
-            Timber.tag("KeyUtils").e("Debugger detected! Taking action...")
-            // Handle debugger detection logic here (e.g., terminate app, prevent access to sensitive data)
-        } else {
-            Timber.tag("KeyUtils").d("No debugger detected.")
-        }
-
-        if (isEmulator()) {
-            Timber.tag("KeyUtils").e("Running on emulator! Taking action...")
-            // Handle emulator detection logic here (e.g., prevent running on emulators)
-        } else {
-            Timber.tag("KeyUtils").d("Running on a real device.")
-        }
-    }
+//    private external fun isDebuggerAttached(): Boolean
+//    private external fun isEmulator(): Boolean
+//
+//    // Example usage
+//    fun checkSecurity() {
+//        if (isDebuggerAttached()) {
+//            Timber.tag("KeyUtils").e("Debugger detected! Taking action...")
+//            // Handle debugger detection logic here (e.g., terminate app, prevent access to sensitive data)
+//        } else {
+//            Timber.tag("KeyUtils").d("No debugger detected.")
+//        }
+//
+//        if (isEmulator()) {
+//            Timber.tag("KeyUtils").e("Running on emulator! Taking action...")
+//            // Handle emulator detection logic here (e.g., prevent running on emulators)
+//        } else {
+//            Timber.tag("KeyUtils").d("Running on a real device.")
+//        }
+//    }
 
     external fun encryptedPassKey(): String
 

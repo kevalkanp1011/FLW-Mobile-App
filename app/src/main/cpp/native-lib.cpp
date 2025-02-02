@@ -1,9 +1,6 @@
 #include <jni.h>
 #include <string>
 #include <android/log.h>
-#include "base64.h"
-#include "aes.h"
-#include <vector>
 
 using namespace std;
 
@@ -82,5 +79,16 @@ Java_org_piramalswasthya_sakhi_utils_KeyUtils_abhaAuthUrl(JNIEnv *env, jobject t
     // string encryptedBase64 = ABHA_AUTH_URL;
     // string decryptedStr = decryptBase64EncodedString(encryptedBase64);
     string decryptedStr = ABHA_AUTH_URL;
+    return env->NewStringUTF(decryptedStr.c_str());
+}
+
+//---------------------------------------------------------------------------
+// JNI function to retrieve the ABHA Auth URL.
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_org_piramalswasthya_sakhi_utils_KeyUtils_chatUrl(JNIEnv *env, jobject thiz) {
+    // string encryptedBase64 = ABHA_AUTH_URL;
+    // string decryptedStr = decryptBase64EncodedString(encryptedBase64);
+    string decryptedStr = CHAT_URL;
     return env->NewStringUTF(decryptedStr.c_str());
 }
