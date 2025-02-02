@@ -1,5 +1,6 @@
 package org.piramalswasthya.sakhi.utils
 
+import android.util.Log
 import timber.log.Timber
 
 
@@ -26,6 +27,25 @@ object KeyUtils {
 
     }
 
+    private external fun isDebuggerAttached(): Boolean
+    private external fun isEmulator(): Boolean
+
+    // Example usage
+    fun checkSecurity() {
+        if (isDebuggerAttached()) {
+            Timber.tag("KeyUtils").e("Debugger detected! Taking action...")
+            // Handle debugger detection logic here (e.g., terminate app, prevent access to sensitive data)
+        } else {
+            Timber.tag("KeyUtils").d("No debugger detected.")
+        }
+
+        if (isEmulator()) {
+            Timber.tag("KeyUtils").e("Running on emulator! Taking action...")
+            // Handle emulator detection logic here (e.g., prevent running on emulators)
+        } else {
+            Timber.tag("KeyUtils").d("Running on a real device.")
+        }
+    }
 
     external fun encryptedPassKey(): String
 
@@ -45,3 +65,6 @@ object KeyUtils {
 
 
 }
+
+
+
