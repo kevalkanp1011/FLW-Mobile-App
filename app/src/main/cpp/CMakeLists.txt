@@ -9,10 +9,6 @@ set(BASE_TMC_URL "$ENV{BASE_TMC_URL}")
 set(BASE_ABHA_URL "$ENV{BASE_ABHA_URL}")
 set(ABHA_TOKEN_URL "$ENV{ABHA_TOKEN_URL}")
 set(ABHA_AUTH_URL "$ENV{ABHA_AUTH_URL}")
-set(ENCRYPTED_AES_KEY "$ENV{ENCRYPTED_AES_KEY}")
-set(ENCRYPTED_AES_IV "$ENV{ENCRYPTED_AES_IV}")
-set(ENCODED_AES_KEY "$ENV{ENCODED_AES_KEY}")
-set(ENCODED_AES_IV "$ENV{ENCODED_AES_IV}")
 set(CHAT_URL "$ENV{CHAT_URL}")
 
 # Pass the values to the compiler using add_definitions
@@ -24,8 +20,6 @@ add_definitions(
         -DBASE_ABHA_URL=\"${BASE_ABHA_URL}\"
         -DABHA_TOKEN_URL=\"${ABHA_TOKEN_URL}\"
         -DABHA_AUTH_URL=\"${ABHA_AUTH_URL}\"
-        -DENCODED_AES_KEY=\"${ENCODED_AES_KEY}\"
-        -DENCODED_AES_IV=\"${ENCODED_AES_IV}\"
         -DCHAT_URL=\"${CHAT_URL}\"
 )
 
@@ -37,8 +31,6 @@ add_library(
         ${LIBRARY_NAME}
         SHARED
         native-lib.cpp
-        aes.cpp
-        base64.cpp
 )
 
 # Find the log library

@@ -142,16 +142,15 @@ jobs:
           }
 
           # Set app URLs used in the codebase
-          export ENCRYPTED_PASS_KEY=$(echo ${{ secrets.ENCRYPTED_PASS_KEY }} | base64 --decode)
-          export ABHA_CLIENT_ID=$(echo ${{ secrets.ABHA_CLIENT_ID }} | base64 --decode)
-          export ABHA_CLIENT_SECRET=$(echo ${{ secrets.ABHA_CLIENT_SECRET }} | base64 --decode)
-          export BASE_TMC_URL=$(echo ${{ secrets.BASE_TMC_URL }} | base64 --decode)
-          export BASE_ABHA_URL=$(echo ${{ secrets.BASE_ABHA_URL }} | base64 --decode)
-          export ABHA_TOKEN_URL=$(echo ${{ secrets.ABHA_TOKEN_URL }} | base64 --decode)
-          export ABHA_AUTH_URL=$(echo ${{ secrets.ABHA_AUTH_URL }} | base64 --decode)
-          export CHAT_URL=$(echo ${{ secrets.CHAT_URL }} | base64 --decode)
-          
-          
+          export ENCRYPTED_PASS_KEY=${{ secrets.BASE_TMC_URL }}
+          export ABHA_CLIENT_ID=${{secrets.ABHA_CLIENT_ID}}
+          export ABHA_CLIENT_SECRET=${{ secrets.ABHA_CLIENT_SECRET
+          export BASE_TMC_URL=${{ secrets.BASE_TMC_URL }}
+          export BASE_ABHA_URL=${{ secrets.BASE_ABHA_URL }}
+          export ABHA_TOKEN_URL=${{ secrets.ABHA_TOKEN_URL }}
+          export ABHA_AUTH_URL=${{ secrets.ABHA_AUTH_URL }}
+          export CHAT_URL=${{ secrets.CHAT_URL }}
+
           # Set app release version signing credentials
           export KEYSTORE_PASSWORD=$(echo ${{ secrets.KEYSTORE_PASSWORD }} | base64 --decode)
           export KEY_ALIAS=${{ secrets.KEY_ALIAS }}
