@@ -11,6 +11,8 @@ set(ABHA_TOKEN_URL "$ENV{ABHA_TOKEN_URL}")
 set(ABHA_AUTH_URL "$ENV{ABHA_AUTH_URL}")
 set(ENCRYPTED_AES_KEY "$ENV{ENCRYPTED_AES_KEY}")
 set(ENCRYPTED_AES_IV "$ENV{ENCRYPTED_AES_IV}")
+set(ENCODED_AES_KEY "$ENV{ENCODED_AES_KEY}")
+set(ENCODED_AES_IV "$ENV{ENCODED_AES_IV}")
 
 # Pass the values to the compiler using add_definitions
 add_definitions(
@@ -21,8 +23,8 @@ add_definitions(
         -DBASE_ABHA_URL=\"${BASE_ABHA_URL}\"
         -DABHA_TOKEN_URL=\"${ABHA_TOKEN_URL}\"
         -DABHA_AUTH_URL=\"${ABHA_AUTH_URL}\"
-        -DENCRYPTED_AES_KEY=\"${ENCRYPTED_AES_KEY}\"
-        -DENCRYPTED_AES_IV=\"${ENCRYPTED_AES_IV}\"
+        -DENCODED_AES_KEY=\"${ENCODED_AES_KEY}\"
+        -DENCODED_AES_IV=\"${ENCODED_AES_IV}\"
 )
 
 # Define the library name
