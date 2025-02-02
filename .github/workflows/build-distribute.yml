@@ -47,12 +47,7 @@ jobs:
         with:
           ruby-version: 2.7.2
           bundler-cache: true
-
-      - name: Set up OpenSSL
-        uses: stefanzweifel/setup-openssl@v1
-        with:
-          openssl-version: '1.1.1'
-
+          
       - name: Generate AES Key and IV
         run: |
           # Generate 32-byte AES key (256 bits) and 16-byte IV (128 bits)
