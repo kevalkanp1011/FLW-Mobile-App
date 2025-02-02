@@ -48,8 +48,28 @@ jobs:
           ruby-version: 2.7.2
           bundler-cache: true
 
-      - name: Verify Ruby installation
-        run: ruby -v
+      - name: Set up OpenSSL
+        uses: stefanzweifel/setup-openssl@v1
+        with:
+          openssl-version: '1.1.1'
+
+      - name: Generate AES Key and IV
+        run: |
+          # Generate 32-byte AES key (256 bits) and 16-byte IV (128 bits)
+          AES_KEY=$(openssl rand -base64 32)
+          AES_IV=$(openssl rand -base64 16)
+          
+          # Encode AES key and IV to Base64
+          ENCODED_AES_KEY=$(echo -n "$AES_KEY" | base64)
+          ENCODED_AES_IV=$(echo -n "$AES_IV" | base64)
+          
+          # Set them as environment variables for subsequent steps
+          echo "ENCODED_AES_KEY=$ENCODED_AES_KEY" >> $GITHUB_ENV
+          echo "ENCODED_AES_IV=$ENCODED_AES_IV" >> $GITHUB_ENV
+          
+          # Output for debugging
+          echo "Generated and Base64 Encoded AES Key: $ENCODED_AES_KEY"
+          echo "Generated and Base64 Encoded AES IV: $ENCODED_AES_IV"
 
       - name: Decode google-services.json for NIRAMAY_PRODUCTION
         if: inputs.environment == 'NIRAMAY_PRODUCTION'
