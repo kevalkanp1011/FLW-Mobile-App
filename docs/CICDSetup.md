@@ -1,6 +1,6 @@
 # CI-CD Setup 🚀
 
-Our Continuous Integration and Continuous Deployment (CI-CD) pipeline is designed to streamline the development process for the FLW Mobile App. Leveraging **GitHub Actions**, the pipeline automates the entire lifecycle of the Android application—from building and testing to signing and distributing the app. This ensures that every change is validated and delivered quickly and reliably, supporting our mission to provide ASHAs with a modern, digital tool to enhance healthcare services for pregnant women, mothers, and newborns in India.
+Our Continuous Integration and Continuous Deployment (CI-CD) pipeline is designed to streamline the development process for the HLW Mobile App. Leveraging **GitHub Actions**, the pipeline automates the entire lifecycle of the Android application—from building and testing to signing and distributing the app. This ensures that every change is validated and delivered quickly and reliably, supporting our mission to provide ASHAs with a modern, digital tool to enhance healthcare services for pregnant women, mothers, and newborns in India.
 
 ---
 
@@ -24,7 +24,7 @@ Our Continuous Integration and Continuous Deployment (CI-CD) pipeline is designe
 <a id="overview"></a>
 ## Overview
 
-The FLW Mobile App is built for modernizing healthcare processes by enabling ASHAs to provide efficient services to their communities. The app simplifies data collection and management, ensuring higher accuracy and ease of use.
+The HWC Mobile App is designed for healthcare programs to facilitate collaboration among health workers with different roles such as Registrar, Nurse, Pharmacist, Lab Technician, and Doctor, etc. This application aims to eliminate pen and paperwork for different roles, allowing them to enter patient data digitally with increased ease and accuracy.
 
 ---
 
