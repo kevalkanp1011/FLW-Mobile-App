@@ -144,7 +144,7 @@ jobs:
           # Set app URLs used in the codebase
           export ENCRYPTED_PASS_KEY=${{ secrets.BASE_TMC_URL }}
           export ABHA_CLIENT_ID=${{secrets.ABHA_CLIENT_ID}}
-          export ABHA_CLIENT_SECRET=${{ secrets.ABHA_CLIENT_SECRET
+          export ABHA_CLIENT_SECRET=${{ secrets.ABHA_CLIENT_SECRET}}
           export BASE_TMC_URL=${{ secrets.BASE_TMC_URL }}
           export BASE_ABHA_URL=${{ secrets.BASE_ABHA_URL }}
           export ABHA_TOKEN_URL=${{ secrets.ABHA_TOKEN_URL }}
