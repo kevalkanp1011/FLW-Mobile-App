@@ -15,7 +15,7 @@ interface AbhaApiService {
     @Headers("No-Auth: true")
     @POST
     suspend fun getToken(
-        @Url url: String = KeyUtils.abhaTokenUrl(),
+        @Url url: String = KeyUtils.getAbhaTokenUrl(),
         @Body request: AbhaTokenRequest = AbhaTokenRequest()
     ): Response<ResponseBody>
 
@@ -72,7 +72,7 @@ interface AbhaApiService {
 
     @GET
     suspend fun getAuthCert(
-        @Url url: String = KeyUtils.abhaAuthUrl()
+        @Url url: String = KeyUtils.getAbhaAuthUrl()
     ): Response<ResponseBody>
 
     @GET("v2/ha/lgd/states")

@@ -106,8 +106,8 @@ data class BenAbhaResponse(
 
 @JsonClass(generateAdapter = true)
 data class AbhaTokenRequest(
-    val clientId: String = KeyUtils.abhaClientID(),
-    val clientSecret: String = KeyUtils.abhaClientSecret(),
+    val clientId: String = KeyUtils.getAbhaClientID(),
+    val clientSecret: String = KeyUtils.getAbhaClientSecret(),
     val grantType: String = "client_credentials"
 )
 

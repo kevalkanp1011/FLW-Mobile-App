@@ -14,7 +14,7 @@ class CryptoUtil {
     private val keySize = 256
     private val ivSize = 128
     private val iterationCount = 1989
-    private val passPhrase = KeyUtils.encryptedPassKey()
+    private val passPhrase = KeyUtils.getEncryptedPassKey()
 
     private fun generateKey(
         salt: String,

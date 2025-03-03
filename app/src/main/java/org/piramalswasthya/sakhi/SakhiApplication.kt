@@ -28,13 +28,9 @@ class SakhiApplication : Application(), Configuration.Provider {
         val builder = VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
         Timber.plant(Timber.DebugTree())
-        KeyUtils.encryptedPassKey()
-        KeyUtils.baseAbhaUrl()
-        KeyUtils.baseTMCUrl()
-        KeyUtils.abhaAuthUrl()
-        KeyUtils.abhaClientID()
-        KeyUtils.abhaClientSecret()
-        KeyUtils.abhaTokenUrl()
+        KeyUtils.getEncryptedPassKey()
+        KeyUtils.getBaseAbhaUrl()
+
     }
 
 }

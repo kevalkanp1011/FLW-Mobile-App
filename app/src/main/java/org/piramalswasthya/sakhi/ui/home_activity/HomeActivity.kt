@@ -299,7 +299,7 @@ class HomeActivity : AppCompatActivity() {
 
 
 // Load URL
-       web.loadUrl(KeyUtils.chatUrl())
+       web.loadUrl(KeyUtils.getChatUrl())
 
 
 // Handle WebView events
@@ -308,7 +308,7 @@ class HomeActivity : AppCompatActivity() {
                view: WebView,
                request: WebResourceRequest
            ): Boolean {
-               return if (request.url.host == URI(KeyUtils.chatUrl()).host) {
+               return if (request.url.host == URI(KeyUtils.getChatUrl()).host) {
                    false  // Let WebView handle same-origin URLs
                } else {
                    startActivity(Intent(Intent.ACTION_VIEW, request.url))

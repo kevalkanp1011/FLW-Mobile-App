@@ -1,47 +1,107 @@
 package org.piramalswasthya.sakhi.utils
 
+import org.piramalswasthya.sakhi.BuildConfig
 import timber.log.Timber
 
-
 /**
- * Security utility for retrieving sensitive configuration values through native code.
- * This class provides a secure interface to access sensitive information such as keys,
- * secrets, and URLs by leveraging native code to prevent reverse engineering.
+ * Secure configuration provider using JNI for production and BuildConfig for development.
+ * Provides a single source of truth for sensitive configuration values with fallbacks
+ * for different build flavors in development mode.
  *
- * Note: This class requires the native library 'sakhi' to be properly configured
- * and built using CMake. Ensure the native implementation follows security best
- * practices for handling sensitive data.
+ * @throws RuntimeException if native library fails to load
  */
 object KeyUtils {
-
-    private const val NATIVE_JNI_LIB_NAME = "sakhi"
+    private const val NATIVE_LIB_NAME = "sakhi"
 
     init {
         try {
-            System.loadLibrary(NATIVE_JNI_LIB_NAME)
+            System.loadLibrary(NATIVE_LIB_NAME)
         } catch (e: UnsatisfiedLinkError) {
-            Timber.tag("KeyUtils").e(e, "Failed to load native library")
-            throw RuntimeException("Failed to load native library: $NATIVE_JNI_LIB_NAME")
+            Timber.tag("KeyUtils").e(e, "Native library load failed")
+            throw RuntimeException("Failed to load native library: $NATIVE_LIB_NAME")
         }
-
     }
 
+    // Native method declarations
+    private external fun encryptedPassKey(): String
+    private external fun abhaClientSecret(): String
+    private external fun abhaClientID(): String
+    private external fun baseTMCUrl(): String
+    private external fun baseAbhaUrl(): String
+    private external fun abhaTokenUrl(): String
+    private external fun abhaAuthUrl(): String
+    private external fun chatUrl(): String
 
-    external fun encryptedPassKey(): String
+    // Public API
+    fun getEncryptedPassKey() = getConfigValue(ConfigType.ENCRYPTED_PASS_KEY)
+    fun getAbhaClientSecret() = getConfigValue(ConfigType.ABHA_CLIENT_SECRET)
+    fun getAbhaClientID() = getConfigValue(ConfigType.ABHA_CLIENT_ID)
+    fun getBaseTMCUrl() = getConfigValue(ConfigType.BASE_TMC_URL)
+    fun getBaseAbhaUrl() = getConfigValue(ConfigType.BASE_ABHA_URL)
+    fun getAbhaTokenUrl() = getConfigValue(ConfigType.ABHA_TOKEN_URL)
+    fun getAbhaAuthUrl() = getConfigValue(ConfigType.ABHA_AUTH_URL)
+    fun getChatUrl() = getConfigValue(ConfigType.CHAT_URL)
 
-    external fun abhaClientSecret(): String
+    private fun getConfigValue(type: ConfigType): String {
+        return if (isDevelopmentBuild()) {
+            getDevelopmentConfig(type)
+        } else {
+            getProductionConfig(type)
+        }
+    }
 
-    external fun abhaClientID(): String
+    private fun getProductionConfig(type: ConfigType): String = when (type) {
+        ConfigType.ENCRYPTED_PASS_KEY -> encryptedPassKey()
+        ConfigType.ABHA_CLIENT_SECRET -> abhaClientSecret()
+        ConfigType.ABHA_CLIENT_ID -> abhaClientID()
+        ConfigType.BASE_TMC_URL -> baseTMCUrl()
+        ConfigType.BASE_ABHA_URL -> baseAbhaUrl()
+        ConfigType.ABHA_TOKEN_URL -> abhaTokenUrl()
+        ConfigType.ABHA_AUTH_URL -> abhaAuthUrl()
+        ConfigType.CHAT_URL -> chatUrl()
+    }
 
-    external fun baseTMCUrl(): String
+    private fun getDevelopmentConfig(type: ConfigType): String {
+        val flavorPrefix = when (BuildConfig.FLAVOR) {
+            "sakshamStag" -> "SAKSHAMSTAG"
+            "sakshamUat" -> "SAKSHAMUAT"
+            "saksham" -> "SAKSHAM"
+            "xushrukha" -> "XUSHRUKHA"
+            "niramay" -> "NIRAMAY"
+            else -> return ""
+        }
 
-    external fun baseAbhaUrl(): String
+        return when (type) {
+            ConfigType.ENCRYPTED_PASS_KEY -> getBuildConfigField("${flavorPrefix}_ENCRYPTED_PASS_KEY")
+            ConfigType.ABHA_CLIENT_SECRET -> getBuildConfigField("${flavorPrefix}_ABHA_CLIENT_SECRET")
+            ConfigType.ABHA_CLIENT_ID -> getBuildConfigField("${flavorPrefix}_ABHA_CLIENT_ID")
+            ConfigType.BASE_TMC_URL -> getBuildConfigField("${flavorPrefix}_BASE_TMC_URL")
+            ConfigType.BASE_ABHA_URL -> getBuildConfigField("${flavorPrefix}_BASE_ABHA_URL")
+            ConfigType.ABHA_TOKEN_URL -> getBuildConfigField("${flavorPrefix}_ABHA_TOKEN_URL")
+            ConfigType.ABHA_AUTH_URL -> getBuildConfigField("${flavorPrefix}_ABHA_AUTH_URL")
+            ConfigType.CHAT_URL -> getBuildConfigField("${flavorPrefix}_CHAT_URL")
+        }
+    }
 
-    external fun abhaTokenUrl(): String
+    private fun getBuildConfigField(fieldName: String): String {
+        return try {
+            BuildConfig::class.java.getField(fieldName).get(null) as String
+        } catch (e: Exception) {
+            Timber.e("Missing BuildConfig field: $fieldName")
+            ""
+        }
+    }
 
-    external fun abhaAuthUrl(): String
+    private fun isDevelopmentBuild() = BuildConfig.IS_DEVELOPEMENT.toBoolean()
 
-    external fun chatUrl(): String
-
-
+    private enum class ConfigType {
+        ENCRYPTED_PASS_KEY,
+        ABHA_CLIENT_SECRET,
+        ABHA_CLIENT_ID,
+        BASE_TMC_URL,
+        BASE_ABHA_URL,
+        ABHA_TOKEN_URL,
+        ABHA_AUTH_URL,
+        CHAT_URL
+    }
 }
